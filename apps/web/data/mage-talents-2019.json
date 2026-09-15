@@ -1,0 +1,1966 @@
+{
+  "className": "Mage",
+  "version": "2019 Classic (archived October 2019 calculator data)",
+  "source": {
+    "repository": "https://github.com/melv-n/wow-talent-calculator",
+    "commit": "caf9b45055aabd177d3950a13d780f2a0b8869b7",
+    "date": "2019-10-24T14:26:05Z",
+    "files": [
+      {
+        "path": "src/data/talents.ts",
+        "sourceUrl": "https://raw.githubusercontent.com/melv-n/wow-talent-calculator/caf9b45055aabd177d3950a13d780f2a0b8869b7/src/data/talents.ts",
+        "sha256": "bb70a9c54ff58f0949a11d06c137e5722929c3444cd4b918adad5f72f79f7b79",
+        "gitBlobSha1": "3cabed21e674be676255e140fa42baf4cb220673"
+      },
+      {
+        "path": "src/data/spells.json",
+        "sourceUrl": "https://raw.githubusercontent.com/melv-n/wow-talent-calculator/caf9b45055aabd177d3950a13d780f2a0b8869b7/src/data/spells.json",
+        "sha256": "17f16dc43c9678eb76ee88deb774d34960fa0a528a34157218d46be88b2d9c42",
+        "gitBlobSha1": "1157e88eab367e5d7deaeddedab87dd4004381bf"
+      }
+    ]
+  },
+  "coordinateConvention": "row and col are zero-based; 7 rows and 4 columns.",
+  "rules": {
+    "firstTalentLevel": 10,
+    "pointsAtLevel20": 11,
+    "pointsPerRow": 5,
+    "prerequisitesRequireListedRank": true,
+    "notes": "A talent requires row*5 points in the same tree. Prerequisite talent rank must meet qty. Level20 has at most11 total points. All trees included so higher tiers can display locked."
+  },
+  "crossCheck": {
+    "source": "https://nether.wowhead.com/classic/data/talents-classic?dv=18&db=1761625051",
+    "note": "Compared only base talent definitions; ignored SoD runes and abilities. Current source includes SoD data outside this subset.",
+    "differenceCount": 1,
+    "differences": [
+      {
+        "id": 69,
+        "name": "Cold Snap",
+        "archived": {
+          "id": 69,
+          "row": 2,
+          "col": 1,
+          "icon": "spell_frost_wizardmark",
+          "ranks": [
+            12472
+          ],
+          "requires": []
+        },
+        "current": {
+          "id": 69,
+          "row": 2,
+          "col": 1,
+          "icon": "spell_frost_wizardmark",
+          "ranks": [
+            12472
+          ],
+          "requires": [],
+          "spellModifiers": [
+            442543
+          ]
+        }
+      }
+    ]
+  },
+  "trees": [
+    {
+      "id": 81,
+      "name": "Arcane",
+      "talents": [
+        {
+          "id": 74,
+          "row": 0,
+          "col": 0,
+          "icon": "spell_holy_dispelmagic",
+          "ranks": [
+            11210,
+            12592
+          ],
+          "requires": [],
+          "name": "Arcane Subtlety",
+          "maxRank": 2,
+          "requiredTreePoints": 0,
+          "earliestLevel": 10,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11210,
+              "descriptionEn": "Reduces your target's resistance to all your spells by 5 and reduces the threat caused by your Arcane spells by 20%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12592,
+              "descriptionEn": "Reduces your target's resistance to all your spells by 10 and reduces the threat caused by your Arcane spells by 40%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "奥术精妙",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11210?locale=zhCN"
+        },
+        {
+          "id": 76,
+          "row": 0,
+          "col": 1,
+          "icon": "spell_holy_devotion",
+          "ranks": [
+            11222,
+            12839,
+            12840,
+            12841,
+            12842
+          ],
+          "requires": [],
+          "name": "Arcane Focus",
+          "maxRank": 5,
+          "requiredTreePoints": 0,
+          "earliestLevel": 10,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11222,
+              "descriptionEn": "Reduces the chance that the opponent can resist your Arcane spells by 2%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12839,
+              "descriptionEn": "Reduces the chance that the opponent can resist your Arcane spells by 4%."
+            },
+            {
+              "rank": 3,
+              "spellId": 12840,
+              "descriptionEn": "Reduces the chance that the opponent can resist your Arcane spells by 6%."
+            },
+            {
+              "rank": 4,
+              "spellId": 12841,
+              "descriptionEn": "Reduces the chance that the opponent can resist your Arcane spells by 8%."
+            },
+            {
+              "rank": 5,
+              "spellId": 12842,
+              "descriptionEn": "Reduces the chance that the opponent can resist your Arcane spells by 10%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "奥术集中",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11222?locale=zhCN"
+        },
+        {
+          "id": 80,
+          "row": 0,
+          "col": 2,
+          "icon": "spell_nature_starfall",
+          "ranks": [
+            11237,
+            12463,
+            12464,
+            16769,
+            16770
+          ],
+          "requires": [],
+          "name": "Improved Arcane Missiles",
+          "maxRank": 5,
+          "requiredTreePoints": 0,
+          "earliestLevel": 10,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11237,
+              "descriptionEn": "Gives you a 20% chance to avoid interruption caused by damage while channeling Arcane Missiles."
+            },
+            {
+              "rank": 2,
+              "spellId": 12463,
+              "descriptionEn": "Gives you a 40% chance to avoid interruption caused by damage while channeling Arcane Missiles."
+            },
+            {
+              "rank": 3,
+              "spellId": 12464,
+              "descriptionEn": "Gives you a 60% chance to avoid interruption caused by damage while channeling Arcane Missiles."
+            },
+            {
+              "rank": 4,
+              "spellId": 16769,
+              "descriptionEn": "Gives you a 80% chance to avoid interruption caused by damage while channeling Arcane Missiles."
+            },
+            {
+              "rank": 5,
+              "spellId": 16770,
+              "descriptionEn": "Gives you a 100% chance to avoid interruption caused by damage while channeling Arcane Missiles."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化奥术飞弹",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11237?locale=zhCN"
+        },
+        {
+          "id": 78,
+          "row": 1,
+          "col": 0,
+          "icon": "inv_wand_01",
+          "ranks": [
+            6057,
+            6085
+          ],
+          "requires": [],
+          "name": "Wand Specialization",
+          "maxRank": 2,
+          "requiredTreePoints": 5,
+          "earliestLevel": 15,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 6057,
+              "descriptionEn": "Increases your damage with Wands by 13%."
+            },
+            {
+              "rank": 2,
+              "spellId": 6085,
+              "descriptionEn": "Increases your damage with Wands by 25%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "魔杖专精",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6057?locale=zhCN"
+        },
+        {
+          "id": 1650,
+          "row": 1,
+          "col": 1,
+          "icon": "spell_nature_astralrecalgroup",
+          "ranks": [
+            29441,
+            29444,
+            29445,
+            29446,
+            29447
+          ],
+          "requires": [],
+          "name": "Magic Absorption",
+          "maxRank": 5,
+          "requiredTreePoints": 5,
+          "earliestLevel": 15,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 29441,
+              "descriptionEn": "Increases all resistances by 2 and causes all spells you fully resist to restore 1% of your total mana. 聽1 sec. cooldown."
+            },
+            {
+              "rank": 2,
+              "spellId": 29444,
+              "descriptionEn": "Increases all resistances by 4 and causes all spells you fully resist to restore 2% of your total mana. 聽1 sec. cooldown."
+            },
+            {
+              "rank": 3,
+              "spellId": 29445,
+              "descriptionEn": "Increases all resistances by 6 and causes all spells you fully resist to restore 3% of your total mana. 聽1 sec. cooldown."
+            },
+            {
+              "rank": 4,
+              "spellId": 29446,
+              "descriptionEn": "Increases all resistances by 8 and causes all spells you fully resist to restore 4% of your total mana. 聽1 sec. cooldown."
+            },
+            {
+              "rank": 5,
+              "spellId": 29447,
+              "descriptionEn": "Increases all resistances by 10 and causes all spells you fully resist to restore 5% of your total mana. 聽1 sec. cooldown."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "魔法吸收",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/29441?locale=zhCN"
+        },
+        {
+          "id": 75,
+          "row": 1,
+          "col": 2,
+          "icon": "spell_shadow_manaburn",
+          "ranks": [
+            11213,
+            12574,
+            12575,
+            12576,
+            12577
+          ],
+          "requires": [],
+          "name": "Arcane Concentration",
+          "maxRank": 5,
+          "requiredTreePoints": 5,
+          "earliestLevel": 15,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11213,
+              "descriptionEn": "Gives you a 2% chance of entering a Clearcasting state after any damage spell hits a target. 聽The Clearcasting state reduces the mana cost of your next damage spell by 100%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12574,
+              "descriptionEn": "Gives you a 4% chance of entering a Clearcasting state after any damage spell hits a target. 聽The Clearcasting state reduces the mana cost of your next damage spell by 100%."
+            },
+            {
+              "rank": 3,
+              "spellId": 12575,
+              "descriptionEn": "Gives you a 6% chance of entering a Clearcasting state after any damage spell hits a target. 聽The Clearcasting state reduces the mana cost of your next damage spell by 100%."
+            },
+            {
+              "rank": 4,
+              "spellId": 12576,
+              "descriptionEn": "Gives you a 8% chance of entering a Clearcasting state after any damage spell hits a target. 聽The Clearcasting state reduces the mana cost of your next damage spell by 100%."
+            },
+            {
+              "rank": 5,
+              "spellId": 12577,
+              "descriptionEn": "Gives you a 10% chance of entering a Clearcasting state after any damage spell hits a target. 聽The Clearcasting state reduces the mana cost of your next damage spell by 100%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "奥术专注",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11213?locale=zhCN"
+        },
+        {
+          "id": 82,
+          "row": 2,
+          "col": 0,
+          "icon": "spell_nature_abolishmagic",
+          "ranks": [
+            11247,
+            12606
+          ],
+          "requires": [],
+          "name": "Magic Attunement",
+          "maxRank": 2,
+          "requiredTreePoints": 10,
+          "earliestLevel": 20,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11247,
+              "descriptionEn": "Increases the effect of your Amplify Magic and Dampen Magic spells by 25%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12606,
+              "descriptionEn": "Increases the effect of your Amplify Magic and Dampen Magic spells by 50%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "魔法协调",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11247?locale=zhCN"
+        },
+        {
+          "id": 81,
+          "row": 2,
+          "col": 1,
+          "icon": "spell_nature_wispsplode",
+          "ranks": [
+            11242,
+            12467,
+            12469
+          ],
+          "requires": [],
+          "name": "Improved Arcane Explosion",
+          "maxRank": 3,
+          "requiredTreePoints": 10,
+          "earliestLevel": 20,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11242,
+              "descriptionEn": "Increases the critical strike chance of your Arcane Explosion spell by an additional 2%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12467,
+              "descriptionEn": "Increases the critical strike chance of your Arcane Explosion spell by an additional 4%."
+            },
+            {
+              "rank": 3,
+              "spellId": 12469,
+              "descriptionEn": "Increases the critical strike chance of your Arcane Explosion spell by an additional 6%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化魔爆术",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11242?locale=zhCN"
+        },
+        {
+          "id": 85,
+          "row": 2,
+          "col": 2,
+          "icon": "spell_arcane_arcaneresilience",
+          "ranks": [
+            28574
+          ],
+          "requires": [],
+          "name": "Arcane Resilience",
+          "maxRank": 1,
+          "requiredTreePoints": 10,
+          "earliestLevel": 20,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 28574,
+              "descriptionEn": "Increases your armor by an amount equal to 50% of your Intellect."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "奥术充沛",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/28574?locale=zhCN"
+        },
+        {
+          "id": 83,
+          "row": 3,
+          "col": 0,
+          "icon": "spell_shadow_detectlesserinvisibility",
+          "ranks": [
+            11252,
+            12605
+          ],
+          "requires": [],
+          "name": "Improved Mana Shield",
+          "maxRank": 2,
+          "requiredTreePoints": 15,
+          "earliestLevel": 25,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11252,
+              "descriptionEn": "Decreases the mana lost per point of damage taken when Mana Shield is active by 10%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12605,
+              "descriptionEn": "Decreases the mana lost per point of damage taken when Mana Shield is active by 20%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化法力护盾",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11252?locale=zhCN"
+        },
+        {
+          "id": 88,
+          "row": 3,
+          "col": 1,
+          "icon": "spell_frost_iceshock",
+          "ranks": [
+            11255,
+            12598
+          ],
+          "requires": [],
+          "name": "Improved Counterspell",
+          "maxRank": 2,
+          "requiredTreePoints": 15,
+          "earliestLevel": 25,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11255,
+              "descriptionEn": "Gives your Counterspell a 50% chance to silence the target for 4 sec."
+            },
+            {
+              "rank": 2,
+              "spellId": 12598,
+              "descriptionEn": "Gives your Counterspell a 100% chance to silence the target for 4 sec."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化法术反制",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11255?locale=zhCN"
+        },
+        {
+          "id": 1142,
+          "row": 3,
+          "col": 3,
+          "icon": "spell_shadow_siphonmana",
+          "ranks": [
+            18462,
+            18463,
+            18464
+          ],
+          "requires": [],
+          "name": "Arcane Meditation",
+          "maxRank": 3,
+          "requiredTreePoints": 15,
+          "earliestLevel": 25,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 18462,
+              "descriptionEn": "Allows 5% of your Mana regeneration to continue while casting."
+            },
+            {
+              "rank": 2,
+              "spellId": 18463,
+              "descriptionEn": "Allows 10% of your Mana regeneration to continue while casting."
+            },
+            {
+              "rank": 3,
+              "spellId": 18464,
+              "descriptionEn": "Allows 15% of your Mana regeneration to continue while casting."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "奥术冥想",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18462?locale=zhCN"
+        },
+        {
+          "id": 86,
+          "row": 4,
+          "col": 1,
+          "icon": "spell_nature_enchantarmor",
+          "ranks": [
+            12043
+          ],
+          "requires": [],
+          "name": "Presence of Mind",
+          "maxRank": 1,
+          "requiredTreePoints": 20,
+          "earliestLevel": 30,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 12043,
+              "descriptionEn": "When activated, your next Mage spell with a casting time less than 10 sec becomes an instant cast spell."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "气定神闲",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12043?locale=zhCN"
+        },
+        {
+          "id": 77,
+          "row": 4,
+          "col": 2,
+          "icon": "spell_shadow_charm",
+          "ranks": [
+            11232,
+            12500,
+            12501,
+            12502,
+            12503
+          ],
+          "requires": [
+            {
+              "id": 85,
+              "qty": 1
+            }
+          ],
+          "name": "Arcane Mind",
+          "maxRank": 5,
+          "requiredTreePoints": 20,
+          "earliestLevel": 30,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11232,
+              "descriptionEn": "Increases your maximum Mana by 2%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12500,
+              "descriptionEn": "Increases your maximum Mana by 4%."
+            },
+            {
+              "rank": 3,
+              "spellId": 12501,
+              "descriptionEn": "Increases your maximum Mana by 6%."
+            },
+            {
+              "rank": 4,
+              "spellId": 12502,
+              "descriptionEn": "Increases your maximum Mana by 8%."
+            },
+            {
+              "rank": 5,
+              "spellId": 12503,
+              "descriptionEn": "Increases your maximum Mana by 10%."
+            }
+          ],
+          "prerequisites": [
+            {
+              "talentId": 85,
+              "requiredRank": 1,
+              "name": "Arcane Resilience"
+            }
+          ],
+          "nameZhCN": "奥术心智",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11232?locale=zhCN"
+        },
+        {
+          "id": 421,
+          "row": 5,
+          "col": 1,
+          "icon": "spell_shadow_teleport",
+          "ranks": [
+            15058,
+            15059,
+            15060
+          ],
+          "requires": [
+            {
+              "id": 86,
+              "qty": 1
+            }
+          ],
+          "name": "Arcane Instability",
+          "maxRank": 3,
+          "requiredTreePoints": 25,
+          "earliestLevel": 35,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 15058,
+              "descriptionEn": "Increases your spell damage and critical strike chance by 1%."
+            },
+            {
+              "rank": 2,
+              "spellId": 15059,
+              "descriptionEn": "Increases your spell damage and critical strike chance by 2%."
+            },
+            {
+              "rank": 3,
+              "spellId": 15060,
+              "descriptionEn": "Increases your spell damage and critical strike chance by 3%."
+            }
+          ],
+          "prerequisites": [
+            {
+              "talentId": 86,
+              "requiredRank": 1,
+              "name": "Presence of Mind"
+            }
+          ],
+          "nameZhCN": "奥术增效",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15058?locale=zhCN"
+        },
+        {
+          "id": 87,
+          "row": 6,
+          "col": 1,
+          "icon": "spell_nature_lightning",
+          "ranks": [
+            12042
+          ],
+          "requires": [
+            {
+              "id": 421,
+              "qty": 3
+            }
+          ],
+          "name": "Arcane Power",
+          "maxRank": 1,
+          "requiredTreePoints": 30,
+          "earliestLevel": 40,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 12042,
+              "descriptionEn": "When activated, your spells deal 30% more damage while costing 30% more mana to cast. 聽This effect lasts 15 sec."
+            }
+          ],
+          "prerequisites": [
+            {
+              "talentId": 421,
+              "requiredRank": 3,
+              "name": "Arcane Instability"
+            }
+          ],
+          "nameZhCN": "奥术强化",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12042?locale=zhCN"
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "name": "Fire",
+      "talents": [
+        {
+          "id": 26,
+          "row": 0,
+          "col": 1,
+          "icon": "spell_fire_flamebolt",
+          "ranks": [
+            11069,
+            12338,
+            12339,
+            12340,
+            12341
+          ],
+          "requires": [],
+          "name": "Improved Fireball",
+          "maxRank": 5,
+          "requiredTreePoints": 0,
+          "earliestLevel": 10,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11069,
+              "descriptionEn": "Reduces the casting time of your Fireball spell by 0.1 sec."
+            },
+            {
+              "rank": 2,
+              "spellId": 12338,
+              "descriptionEn": "Reduces the casting time of your Fireball spell by 0.2 sec."
+            },
+            {
+              "rank": 3,
+              "spellId": 12339,
+              "descriptionEn": "Reduces the casting time of your Fireball spell by 0.3 sec."
+            },
+            {
+              "rank": 4,
+              "spellId": 12340,
+              "descriptionEn": "Reduces the casting time of your Fireball spell by 0.4 sec."
+            },
+            {
+              "rank": 5,
+              "spellId": 12341,
+              "descriptionEn": "Reduces the casting time of your Fireball spell by 0.5 sec."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化火球术",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11069?locale=zhCN"
+        },
+        {
+          "id": 30,
+          "row": 0,
+          "col": 2,
+          "icon": "spell_fire_meteorstorm",
+          "ranks": [
+            11103,
+            12357,
+            12358,
+            12359,
+            12360
+          ],
+          "requires": [],
+          "name": "Impact",
+          "maxRank": 5,
+          "requiredTreePoints": 0,
+          "earliestLevel": 10,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11103,
+              "descriptionEn": "Gives your Fire spells a 2% chance to stun the target for 2 sec."
+            },
+            {
+              "rank": 2,
+              "spellId": 12357,
+              "descriptionEn": "Gives your Fire spells a 4% chance to stun the target for 2 sec."
+            },
+            {
+              "rank": 3,
+              "spellId": 12358,
+              "descriptionEn": "Gives your Fire spells a 6% chance to stun the target for 2 sec."
+            },
+            {
+              "rank": 4,
+              "spellId": 12359,
+              "descriptionEn": "Gives your Fire spells a 8% chance to stun the target for 2 sec."
+            },
+            {
+              "rank": 5,
+              "spellId": 12360,
+              "descriptionEn": "Gives your Fire spells a 10% chance to stun the target for 2 sec."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "冲击",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11103?locale=zhCN"
+        },
+        {
+          "id": 34,
+          "row": 1,
+          "col": 0,
+          "icon": "spell_fire_incinerate",
+          "ranks": [
+            11119,
+            11120,
+            12846,
+            12847,
+            12848
+          ],
+          "requires": [],
+          "name": "Ignite",
+          "maxRank": 5,
+          "requiredTreePoints": 5,
+          "earliestLevel": 15,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11119,
+              "descriptionEn": "Your critical strikes from Fire damage spells cause the target to burn for an additional 8% of your spell's damage over 4 sec."
+            },
+            {
+              "rank": 2,
+              "spellId": 11120,
+              "descriptionEn": "Your critical strikes from Fire damage spells cause the target to burn for an additional 16% of your spell's damage over 4 sec."
+            },
+            {
+              "rank": 3,
+              "spellId": 12846,
+              "descriptionEn": "Your critical strikes from Fire damage spells cause the target to burn for an additional 24% of your spell's damage over 4 sec."
+            },
+            {
+              "rank": 4,
+              "spellId": 12847,
+              "descriptionEn": "Your critical strikes from Fire damage spells cause the target to burn for an additional 32% of your spell's damage over 4 sec."
+            },
+            {
+              "rank": 5,
+              "spellId": 12848,
+              "descriptionEn": "Your critical strikes from Fire damage spells cause the target to burn for an additional 40% of your spell's damage over 4 sec."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "点燃",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/cn/tooltip/spell/11119"
+        },
+        {
+          "id": 28,
+          "row": 1,
+          "col": 1,
+          "icon": "spell_fire_flare",
+          "ranks": [
+            11100,
+            12353
+          ],
+          "requires": [],
+          "name": "Flame Throwing",
+          "maxRank": 2,
+          "requiredTreePoints": 5,
+          "earliestLevel": 15,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11100,
+              "descriptionEn": "Increases the range of your Fire spells by 3 yards."
+            },
+            {
+              "rank": 2,
+              "spellId": 12353,
+              "descriptionEn": "Increases the range of your Fire spells by 6 yards."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "烈焰投掷",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11100?locale=zhCN"
+        },
+        {
+          "id": 27,
+          "row": 1,
+          "col": 2,
+          "icon": "spell_fire_fireball",
+          "ranks": [
+            11078,
+            11080,
+            12342
+          ],
+          "requires": [],
+          "name": "Improved Fire Blast",
+          "maxRank": 3,
+          "requiredTreePoints": 5,
+          "earliestLevel": 15,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11078,
+              "descriptionEn": "Reduces the cooldown of your Fire Blast spell by 0.5 sec."
+            },
+            {
+              "rank": 2,
+              "spellId": 11080,
+              "descriptionEn": "Reduces the cooldown of your Fire Blast spell by 1 sec."
+            },
+            {
+              "rank": 3,
+              "spellId": 12342,
+              "descriptionEn": "Reduces the cooldown of your Fire Blast spell by 1.5 sec."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化火焰冲击",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11078?locale=zhCN"
+        },
+        {
+          "id": 1141,
+          "row": 2,
+          "col": 0,
+          "icon": "spell_fire_flameshock",
+          "ranks": [
+            18459,
+            18460
+          ],
+          "requires": [],
+          "name": "Incinerate",
+          "maxRank": 2,
+          "requiredTreePoints": 10,
+          "earliestLevel": 20,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 18459,
+              "descriptionEn": "Increases the critical strike chance of your Fire Blast and Scorch spells by 2%."
+            },
+            {
+              "rank": 2,
+              "spellId": 18460,
+              "descriptionEn": "Increases the critical strike chance of your Fire Blast and Scorch spells by 4%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "烧尽",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18459?locale=zhCN"
+        },
+        {
+          "id": 31,
+          "row": 2,
+          "col": 1,
+          "icon": "spell_fire_selfdestruct",
+          "ranks": [
+            11108,
+            12349,
+            12350
+          ],
+          "requires": [],
+          "name": "Improved Flamestrike",
+          "maxRank": 3,
+          "requiredTreePoints": 10,
+          "earliestLevel": 20,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11108,
+              "descriptionEn": "Increases the critical strike chance of your Flamestrike spell by 5%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12349,
+              "descriptionEn": "Increases the critical strike chance of your Flamestrike spell by 10%."
+            },
+            {
+              "rank": 3,
+              "spellId": 12350,
+              "descriptionEn": "Increases the critical strike chance of your Flamestrike spell by 15%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化烈焰风暴",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11108?locale=zhCN"
+        },
+        {
+          "id": 29,
+          "row": 2,
+          "col": 2,
+          "icon": "spell_fire_fireball02",
+          "ranks": [
+            11366
+          ],
+          "requires": [],
+          "name": "Pyroblast",
+          "maxRank": 1,
+          "requiredTreePoints": 10,
+          "earliestLevel": 20,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11366,
+              "descriptionEn": "Hurls an immense fiery boulder that causes 148 to 195 Fire damage and an additional 56 Fire damage over 12 sec."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "炎爆术",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11366?locale=zhCN"
+        },
+        {
+          "id": 23,
+          "row": 2,
+          "col": 3,
+          "icon": "spell_fire_fire",
+          "ranks": [
+            11083,
+            12351
+          ],
+          "requires": [],
+          "name": "Burning Soul",
+          "maxRank": 2,
+          "requiredTreePoints": 10,
+          "earliestLevel": 20,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11083,
+              "descriptionEn": "Gives your Fire spells a 35% chance to not lose casting time when you take damage and reduces the threat caused by your Fire spells by 15%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12351,
+              "descriptionEn": "Gives your Fire spells a 70% chance to not lose casting time when you take damage and reduces the threat caused by your Fire spells by 30%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "燃烧之魂",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11083?locale=4"
+        },
+        {
+          "id": 25,
+          "row": 3,
+          "col": 0,
+          "icon": "spell_fire_soulburn",
+          "ranks": [
+            11095,
+            12872,
+            12873
+          ],
+          "requires": [],
+          "name": "Improved Scorch",
+          "maxRank": 3,
+          "requiredTreePoints": 15,
+          "earliestLevel": 25,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11095,
+              "descriptionEn": "Your Scorch spells have a 33% chance to cause your target to be vulnerable to Fire damage. 聽This vulnerability increases the Fire damage dealt to your target by 3% and lasts 30 sec. 聽Stacks up to 5 times."
+            },
+            {
+              "rank": 2,
+              "spellId": 12872,
+              "descriptionEn": "Your Scorch spells have a 66% chance to cause your target to be vulnerable to Fire damage. 聽This vulnerability increases the Fire damage dealt to your target by 3% and lasts 30 sec. 聽Stacks up to 5 times."
+            },
+            {
+              "rank": 3,
+              "spellId": 12873,
+              "descriptionEn": "Your Scorch spells have a 100% chance to cause your target to be vulnerable to Fire damage. 聽This vulnerability increases the Fire damage dealt to your target by 3% and lasts 30 sec. 聽Stacks up to 5 times."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化灼烧",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11095?locale=4"
+        },
+        {
+          "id": 24,
+          "row": 3,
+          "col": 1,
+          "icon": "spell_fire_firearmor",
+          "ranks": [
+            11094,
+            13043
+          ],
+          "requires": [],
+          "name": "Improved Fire Ward",
+          "maxRank": 2,
+          "requiredTreePoints": 15,
+          "earliestLevel": 25,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11094,
+              "descriptionEn": "Causes your Fire Ward to have a 10% chance to reflect Fire spells while active."
+            },
+            {
+              "rank": 2,
+              "spellId": 13043,
+              "descriptionEn": "Causes your Fire Ward to have a 20% chance to reflect Fire spells while active."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化防护火焰结界",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11094?locale=4"
+        },
+        {
+          "id": 1639,
+          "row": 3,
+          "col": 3,
+          "icon": "spell_fire_masterofelements",
+          "ranks": [
+            29074,
+            29075,
+            29076
+          ],
+          "requires": [],
+          "name": "Master of Elements",
+          "maxRank": 3,
+          "requiredTreePoints": 15,
+          "earliestLevel": 25,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 29074,
+              "descriptionEn": "Your Fire and Frost spell criticals will refund 10% of their base mana cost."
+            },
+            {
+              "rank": 2,
+              "spellId": 29075,
+              "descriptionEn": "Your Fire and Frost spell criticals will refund 20% of their base mana cost."
+            },
+            {
+              "rank": 3,
+              "spellId": 29076,
+              "descriptionEn": "Your Fire and Frost spell criticals will refund 30% of their base mana cost."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "元素大师",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/29074?locale=4"
+        },
+        {
+          "id": 33,
+          "row": 4,
+          "col": 1,
+          "icon": "spell_nature_wispheal",
+          "ranks": [
+            11115,
+            11367,
+            11368
+          ],
+          "requires": [],
+          "name": "Critical Mass",
+          "maxRank": 3,
+          "requiredTreePoints": 20,
+          "earliestLevel": 30,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11115,
+              "descriptionEn": "Increases the critical strike chance of your Fire spells by 2%."
+            },
+            {
+              "rank": 2,
+              "spellId": 11367,
+              "descriptionEn": "Increases the critical strike chance of your Fire spells by 4%."
+            },
+            {
+              "rank": 3,
+              "spellId": 11368,
+              "descriptionEn": "Increases the critical strike chance of your Fire spells by 6%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "火焰重击",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11115?locale=4"
+        },
+        {
+          "id": 32,
+          "row": 4,
+          "col": 2,
+          "icon": "spell_holy_excorcism_02",
+          "ranks": [
+            11113
+          ],
+          "requires": [
+            {
+              "id": 29,
+              "qty": 1
+            }
+          ],
+          "name": "Blast Wave",
+          "maxRank": 1,
+          "requiredTreePoints": 20,
+          "earliestLevel": 30,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11113,
+              "descriptionEn": "A wave of flame radiates outward from the caster, damaging all enemies caught within the blast for 159 to 192 Fire damage, and dazing them for 6 sec."
+            }
+          ],
+          "prerequisites": [
+            {
+              "talentId": 29,
+              "requiredRank": 1,
+              "name": "Pyroblast"
+            }
+          ],
+          "nameZhCN": "冲击波",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11113?locale=4"
+        },
+        {
+          "id": 35,
+          "row": 5,
+          "col": 2,
+          "icon": "spell_fire_immolation",
+          "ranks": [
+            11124,
+            12378,
+            12398,
+            12399,
+            12400
+          ],
+          "requires": [],
+          "name": "Fire Power",
+          "maxRank": 5,
+          "requiredTreePoints": 25,
+          "earliestLevel": 35,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11124,
+              "descriptionEn": "Increases the damage done by your Fire spells by 2%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12378,
+              "descriptionEn": "Increases the damage done by your Fire spells by 4%."
+            },
+            {
+              "rank": 3,
+              "spellId": 12398,
+              "descriptionEn": "Increases the damage done by your Fire spells by 6%."
+            },
+            {
+              "rank": 4,
+              "spellId": 12399,
+              "descriptionEn": "Increases the damage done by your Fire spells by 8%."
+            },
+            {
+              "rank": 5,
+              "spellId": 12400,
+              "descriptionEn": "Increases the damage done by your Fire spells by 10%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "火焰强化",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11124?locale=4"
+        },
+        {
+          "id": 36,
+          "row": 6,
+          "col": 1,
+          "icon": "spell_fire_sealoffire",
+          "ranks": [
+            11129
+          ],
+          "requires": [
+            {
+              "id": 33,
+              "qty": 3
+            }
+          ],
+          "name": "Combustion",
+          "maxRank": 1,
+          "requiredTreePoints": 30,
+          "earliestLevel": 40,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11129,
+              "descriptionEn": "When activated, this spell causes each of your Fire damage spell hits to increase your critical strike chance with Fire damage spells by 10%. 聽This effect lasts until you have caused 3 critical strikes with Fire spells."
+            }
+          ],
+          "prerequisites": [
+            {
+              "talentId": 33,
+              "requiredRank": 3,
+              "name": "Critical Mass"
+            }
+          ],
+          "nameZhCN": "燃烧",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11129?locale=4"
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "name": "Frost",
+      "talents": [
+        {
+          "id": 70,
+          "row": 0,
+          "col": 0,
+          "icon": "spell_frost_frostward",
+          "ranks": [
+            11189,
+            28332
+          ],
+          "requires": [],
+          "name": "Frost Warding",
+          "maxRank": 2,
+          "requiredTreePoints": 0,
+          "earliestLevel": 10,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11189,
+              "descriptionEn": "Increases the armor and resistances given by your Frost Armor and Ice Armor spells by 15%. 聽In addition, gives your Frost Ward a 10% chance to reflect Frost spells and effects while active."
+            },
+            {
+              "rank": 2,
+              "spellId": 28332,
+              "descriptionEn": "Increases the armor and resistances given by your Frost Armor and Ice Armor spells by 30%. 聽In addition, gives your Frost Ward a 20% chance to reflect Frost spells and effects while active."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "冰霜障壁",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11189?locale=4"
+        },
+        {
+          "id": 37,
+          "row": 0,
+          "col": 1,
+          "icon": "spell_frost_frostbolt02",
+          "ranks": [
+            11070,
+            12473,
+            16763,
+            16765,
+            16766
+          ],
+          "requires": [],
+          "name": "Improved Frostbolt",
+          "maxRank": 5,
+          "requiredTreePoints": 0,
+          "earliestLevel": 10,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11070,
+              "descriptionEn": "Reduces the casting time of your Frostbolt spell by 0.1 sec."
+            },
+            {
+              "rank": 2,
+              "spellId": 12473,
+              "descriptionEn": "Reduces the casting time of your Frostbolt spell by 0.2 sec."
+            },
+            {
+              "rank": 3,
+              "spellId": 16763,
+              "descriptionEn": "Reduces the casting time of your Frostbolt spell by 0.3 sec."
+            },
+            {
+              "rank": 4,
+              "spellId": 16765,
+              "descriptionEn": "Reduces the casting time of your Frostbolt spell by 0.4 sec."
+            },
+            {
+              "rank": 5,
+              "spellId": 16766,
+              "descriptionEn": "Reduces the casting time of your Frostbolt spell by 0.5 sec."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化寒冰箭",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11070?locale=4"
+        },
+        {
+          "id": 1649,
+          "row": 0,
+          "col": 2,
+          "icon": "spell_ice_magicdamage",
+          "ranks": [
+            29438,
+            29439,
+            29440
+          ],
+          "requires": [],
+          "name": "Elemental Precision",
+          "maxRank": 3,
+          "requiredTreePoints": 0,
+          "earliestLevel": 10,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 29438,
+              "descriptionEn": "Reduces the chance that the opponent can resist your Frost and Fire spells by 2%."
+            },
+            {
+              "rank": 2,
+              "spellId": 29439,
+              "descriptionEn": "Reduces the chance that the opponent can resist your Frost and Fire spells by 4%."
+            },
+            {
+              "rank": 3,
+              "spellId": 29440,
+              "descriptionEn": "Reduces the chance that the opponent can resist your Frost and Fire spells by 6%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "元素精准",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/29438?locale=4"
+        },
+        {
+          "id": 73,
+          "row": 1,
+          "col": 0,
+          "icon": "spell_frost_iceshard",
+          "ranks": [
+            11207,
+            12672,
+            15047,
+            15052,
+            15053
+          ],
+          "requires": [],
+          "name": "Ice Shards",
+          "maxRank": 5,
+          "requiredTreePoints": 5,
+          "earliestLevel": 15,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11207,
+              "descriptionEn": "Increases the critical strike damage bonus of your Frost spells by 20%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12672,
+              "descriptionEn": "Increases the critical strike damage bonus of your Frost spells by 40%."
+            },
+            {
+              "rank": 3,
+              "spellId": 15047,
+              "descriptionEn": "Increases the critical strike damage bonus of your Frost spells by 60%."
+            },
+            {
+              "rank": 4,
+              "spellId": 15052,
+              "descriptionEn": "Increases the critical strike damage bonus of your Frost spells by 80%."
+            },
+            {
+              "rank": 5,
+              "spellId": 15053,
+              "descriptionEn": "Increases the critical strike damage bonus of your Frost spells by 100%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "寒冰碎片",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11207?locale=4"
+        },
+        {
+          "id": 38,
+          "row": 1,
+          "col": 1,
+          "icon": "spell_frost_frostarmor",
+          "ranks": [
+            11071,
+            12496,
+            12497
+          ],
+          "requires": [],
+          "name": "Frostbite",
+          "maxRank": 3,
+          "requiredTreePoints": 5,
+          "earliestLevel": 15,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11071,
+              "descriptionEn": "Gives your Chill effects a 5% chance to freeze the target for 5 sec."
+            },
+            {
+              "rank": 2,
+              "spellId": 12496,
+              "descriptionEn": "Gives your Chill effects a 10% chance to freeze the target for 5 sec."
+            },
+            {
+              "rank": 3,
+              "spellId": 12497,
+              "descriptionEn": "Gives your Chill effects a 15% chance to freeze the target for 5 sec."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "霜寒刺骨",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11071?locale=4"
+        },
+        {
+          "id": 62,
+          "row": 1,
+          "col": 2,
+          "icon": "spell_frost_freezingbreath",
+          "ranks": [
+            11165,
+            12475
+          ],
+          "requires": [],
+          "name": "Improved Frost Nova",
+          "maxRank": 2,
+          "requiredTreePoints": 5,
+          "earliestLevel": 15,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11165,
+              "descriptionEn": "Reduces the cooldown of your Frost Nova spell by 2 sec."
+            },
+            {
+              "rank": 2,
+              "spellId": 12475,
+              "descriptionEn": "Reduces the cooldown of your Frost Nova spell by 4 sec."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化冰霜新星",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11165?locale=4"
+        },
+        {
+          "id": 65,
+          "row": 1,
+          "col": 3,
+          "icon": "spell_frost_wisp",
+          "ranks": [
+            11175,
+            12569,
+            12571
+          ],
+          "requires": [],
+          "name": "Permafrost",
+          "maxRank": 3,
+          "requiredTreePoints": 5,
+          "earliestLevel": 15,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11175,
+              "descriptionEn": "Increases the duration of your Chill effects by 1 sec and reduces the target's speed by an additional 4%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12569,
+              "descriptionEn": "Increases the duration of your Chill effects by 2 sec and reduces the target's speed by an additional 7%."
+            },
+            {
+              "rank": 3,
+              "spellId": 12571,
+              "descriptionEn": "Increases the duration of your Chill effects by 3 sec and reduces the target's speed by an additional 10%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "极寒冰霜",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11175?locale=4"
+        },
+        {
+          "id": 61,
+          "row": 2,
+          "col": 0,
+          "icon": "spell_frost_frostbolt",
+          "ranks": [
+            11151,
+            12952,
+            12953
+          ],
+          "requires": [],
+          "name": "Piercing Ice",
+          "maxRank": 3,
+          "requiredTreePoints": 10,
+          "earliestLevel": 20,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11151,
+              "descriptionEn": "Increases the damage done by your Frost spells by 2%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12952,
+              "descriptionEn": "Increases the damage done by your Frost spells by 4%."
+            },
+            {
+              "rank": 3,
+              "spellId": 12953,
+              "descriptionEn": "Increases the damage done by your Frost spells by 6%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "刺骨寒冰",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11151?locale=4"
+        },
+        {
+          "id": 69,
+          "row": 2,
+          "col": 1,
+          "icon": "spell_frost_wizardmark",
+          "ranks": [
+            12472
+          ],
+          "requires": [],
+          "name": "Cold Snap",
+          "maxRank": 1,
+          "requiredTreePoints": 10,
+          "earliestLevel": 20,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 12472,
+              "descriptionEn": "When activated, this spell finishes the cooldown on all of your Frost spells."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "急速冷却",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12472?locale=4"
+        },
+        {
+          "id": 63,
+          "row": 2,
+          "col": 3,
+          "icon": "spell_frost_icestorm",
+          "ranks": [
+            11185,
+            12487,
+            12488
+          ],
+          "requires": [],
+          "name": "Improved Blizzard",
+          "maxRank": 3,
+          "requiredTreePoints": 10,
+          "earliestLevel": 20,
+          "availableByLevel20": true,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11185,
+              "descriptionEn": "Adds a chill effect to your Blizzard spell. 聽This effect lowers the target's movement speed by 30%. 聽Lasts 1.50 sec."
+            },
+            {
+              "rank": 2,
+              "spellId": 12487,
+              "descriptionEn": "Adds a chill effect to your Blizzard spell. 聽This effect lowers the target's movement speed by 50%. 聽Lasts 1.50 sec."
+            },
+            {
+              "rank": 3,
+              "spellId": 12488,
+              "descriptionEn": "Adds a chill effect to your Blizzard spell. 聽This effect lowers the target's movement speed by 65%. 聽Lasts 1.50 sec."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化暴风雪",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11185?locale=4"
+        },
+        {
+          "id": 741,
+          "row": 3,
+          "col": 0,
+          "icon": "spell_shadow_darkritual",
+          "ranks": [
+            16757,
+            16758
+          ],
+          "requires": [],
+          "name": "Arctic Reach",
+          "maxRank": 2,
+          "requiredTreePoints": 15,
+          "earliestLevel": 25,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 16757,
+              "descriptionEn": "Increases the range of your Frostbolt and Blizzard spells and the radius of your Frost Nova and Cone of Cold spells by 10%."
+            },
+            {
+              "rank": 2,
+              "spellId": 16758,
+              "descriptionEn": "Increases the range of your Frostbolt and Blizzard spells and the radius of your Frost Nova and Cone of Cold spells by 20%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "极寒延伸",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16757?locale=4"
+        },
+        {
+          "id": 66,
+          "row": 3,
+          "col": 1,
+          "icon": "spell_frost_stun",
+          "ranks": [
+            11160,
+            12518,
+            12519
+          ],
+          "requires": [],
+          "name": "Frost Channeling",
+          "maxRank": 3,
+          "requiredTreePoints": 15,
+          "earliestLevel": 25,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11160,
+              "descriptionEn": "Reduces the mana cost of your Frost spells by 5% and reduces the threat caused by your Frost spells by 10%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12518,
+              "descriptionEn": "Reduces the mana cost of your Frost spells by 10% and reduces the threat caused by your Frost spells by 20%."
+            },
+            {
+              "rank": 3,
+              "spellId": 12519,
+              "descriptionEn": "Reduces the mana cost of your Frost spells by 15% and reduces the threat caused by your Frost spells by 30%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "冰霜导能",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11160?locale=4"
+        },
+        {
+          "id": 67,
+          "row": 3,
+          "col": 2,
+          "icon": "spell_frost_frostshock",
+          "ranks": [
+            11170,
+            12982,
+            12983,
+            12984,
+            12985
+          ],
+          "requires": [
+            {
+              "id": 62,
+              "qty": 2
+            }
+          ],
+          "name": "Shatter",
+          "maxRank": 5,
+          "requiredTreePoints": 15,
+          "earliestLevel": 25,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11170,
+              "descriptionEn": "Increases the critical strike chance of all your spells against frozen targets by 10%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12982,
+              "descriptionEn": "Increases the critical strike chance of all your spells against frozen targets by 20%."
+            },
+            {
+              "rank": 3,
+              "spellId": 12983,
+              "descriptionEn": "Increases the critical strike chance of all your spells against frozen targets by 30%."
+            },
+            {
+              "rank": 4,
+              "spellId": 12984,
+              "descriptionEn": "Increases the critical strike chance of all your spells against frozen targets by 40%."
+            },
+            {
+              "rank": 5,
+              "spellId": 12985,
+              "descriptionEn": "Increases the critical strike chance of all your spells against frozen targets by 50%."
+            }
+          ],
+          "prerequisites": [
+            {
+              "talentId": 62,
+              "requiredRank": 2,
+              "name": "Improved Frost Nova"
+            }
+          ],
+          "nameZhCN": "碎冰",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11170?locale=4"
+        },
+        {
+          "id": 72,
+          "row": 4,
+          "col": 1,
+          "icon": "spell_frost_frost",
+          "ranks": [
+            11958
+          ],
+          "requires": [],
+          "name": "Ice Block",
+          "maxRank": 1,
+          "requiredTreePoints": 20,
+          "earliestLevel": 30,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11958,
+              "descriptionEn": "You become encased in a block of ice, protecting you from all physical attacks and spells for 10 sec, but during that time you cannot attack, move or cast spells."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "寒冰屏障",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11958?locale=4"
+        },
+        {
+          "id": 64,
+          "row": 4,
+          "col": 2,
+          "icon": "spell_frost_glacier",
+          "ranks": [
+            11190,
+            12489,
+            12490
+          ],
+          "requires": [],
+          "name": "Improved Cone of Cold",
+          "maxRank": 3,
+          "requiredTreePoints": 20,
+          "earliestLevel": 30,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11190,
+              "descriptionEn": "Increases the damage dealt by your Cone of Cold spell by 15%."
+            },
+            {
+              "rank": 2,
+              "spellId": 12489,
+              "descriptionEn": "Increases the damage dealt by your Cone of Cold spell by 25%."
+            },
+            {
+              "rank": 3,
+              "spellId": 12490,
+              "descriptionEn": "Increases the damage dealt by your Cone of Cold spell by 35%."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "强化冰锥术",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11190?locale=4"
+        },
+        {
+          "id": 68,
+          "row": 5,
+          "col": 2,
+          "icon": "spell_frost_chillingblast",
+          "ranks": [
+            11180,
+            28592,
+            28593,
+            28594,
+            28595
+          ],
+          "requires": [],
+          "name": "Winter's Chill",
+          "maxRank": 5,
+          "requiredTreePoints": 25,
+          "earliestLevel": 35,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11180,
+              "descriptionEn": "Gives your Frost damage spells a 20% chance to apply the Winter's Chill effect, which increases the chance a Frost spell will critically hit the target by 2% for 15 sec. 聽Stacks up to 5 times."
+            },
+            {
+              "rank": 2,
+              "spellId": 28592,
+              "descriptionEn": "Gives your Frost damage spells a 40% chance to apply the Winter's Chill effect, which increases the chance a Frost spell will critically hit the target by 2% for 15 sec. 聽Stacks up to 5 times."
+            },
+            {
+              "rank": 3,
+              "spellId": 28593,
+              "descriptionEn": "Gives your Frost damage spells a 60% chance to apply the Winter's Chill effect, which increases the chance a Frost spell will critically hit the target by 2% for 15 sec. 聽Stacks up to 5 times."
+            },
+            {
+              "rank": 4,
+              "spellId": 28594,
+              "descriptionEn": "Gives your Frost damage spells a 80% chance to apply the Winter's Chill effect, which increases the chance a Frost spell will critically hit the target by 2% for 15 sec. 聽Stacks up to 5 times."
+            },
+            {
+              "rank": 5,
+              "spellId": 28595,
+              "descriptionEn": "Gives your Frost damage spells a 100% chance to apply the Winter's Chill effect, which increases the chance a Frost spell will critically hit the target by 2% for 15 sec. 聽Stacks up to 5 times."
+            }
+          ],
+          "prerequisites": [],
+          "nameZhCN": "深冬之寒",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11180?locale=4"
+        },
+        {
+          "id": 71,
+          "row": 6,
+          "col": 1,
+          "icon": "spell_ice_lament",
+          "ranks": [
+            11426
+          ],
+          "requires": [
+            {
+              "id": 72,
+              "qty": 1
+            }
+          ],
+          "name": "Ice Barrier",
+          "maxRank": 1,
+          "requiredTreePoints": 30,
+          "earliestLevel": 40,
+          "availableByLevel20": false,
+          "rankEffects": [
+            {
+              "rank": 1,
+              "spellId": 11426,
+              "descriptionEn": "Instantly shields you, absorbing 455 damage. 聽Lasts 1 min. 聽While the shield holds, spells will not be interrupted."
+            }
+          ],
+          "prerequisites": [
+            {
+              "talentId": 72,
+              "requiredRank": 1,
+              "name": "Ice Block"
+            }
+          ],
+          "nameZhCN": "寒冰护体",
+          "localizationSourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11426?locale=4"
+        }
+      ]
+    }
+  ],
+  "localizationStatus": {
+    "source": "Current Classic tooltip API, locale=4 or locale=zhCN",
+    "notes": "Chinese names fetched independently. Archived English rank effects remain gameplay reference.",
+    "completeNames": 49,
+    "totalTalents": 49
+  },
+  "effectDataNote": "Rank effects are the 2019 source descriptions. Numeric damage displayed for active talent spells may include spell-level scaling; use actual learned spell data when calculating combat damage. Passive talent percentages and per-rank effects are explicit here.",
+  "validation": {
+    "talentCount": 49,
+    "rankCount": 143,
+    "allRanksHaveDescriptions": true,
+    "allPrerequisitesResolve": true,
+    "sourceFilesGitBlobVerified": true,
+    "baseStructureMatchesCurrentClassicExcludingModernModifiers": true
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/cmangos/mangos-classic",
+  "commit": "8ec338a1704e7dcb1c0213eb7ed58f9231ade40f",
+  "commitDate": "2026-08-31T08:00:43Z",
+  "status": "reference-only; independently pinned current core, not official verified",
+  "src/game/Quests/QuestDef.cpp": "https://raw.githubusercontent.com/cmangos/mangos-classic/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/Quests/QuestDef.cpp",
+  "src/game/Tools/Formulas.h": "https://raw.githubusercontent.com/cmangos/mangos-classic/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/Tools/Formulas.h"
+}
