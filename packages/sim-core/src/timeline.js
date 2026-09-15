@@ -1,8 +1,14 @@
 import { assertJson } from './json.js';
 import { assertRandomState } from './random.js';
 
+// Call only after JSON validation. Canonical trees have identical alias semantics
+// before and after persistence; structuredClone would preserve in-memory aliases.
+const copyJson = value => JSON.parse(JSON.stringify(value));
+
 function integer(value, name, minimum = 0) {
-  if (!Number.isSafeInteger(value) || value < minimum) throw new RangeError(`${name} must be a safe integer >= ${minimum}`);
+  if (!Number.isSafeInteger(value) || Object.is(value, -0) || value < minimum) {
+    throw new RangeError(`${name} must be a safe integer >= ${minimum}, excluding negative zero`);
+  }
 }
 
 function object(value, name) {
@@ -40,13 +46,13 @@ function enqueue(state, request) {
     if (compareEvents(state.events[mid], event) <= 0) lo = mid + 1;
     else hi = mid;
   }
-  state.events.splice(lo, 0, structuredClone(event));
+  state.events.splice(lo, 0, copyJson(event));
 }
 
 export function createTimeline({ seed, world }) {
   assertRandomState(seed);
   assertJson(world, 'world');
-  return { version: 1, nowMs: 0, rngState: seed, nextSequence: 0, world: structuredClone(world), events: [] };
+  return { version: 1, nowMs: 0, rngState: seed, nextSequence: 0, world: copyJson(world), events: [] };
 }
 
 /** Validate persisted state before it can affect simulation or rewards. */
@@ -68,7 +74,7 @@ export function restoreTimeline(snapshot) {
     }
     sequences.add(event.sequence);
   }
-  const state = structuredClone(snapshot);
+  const state = copyJson(snapshot);
   state.events.sort(compareEvents);
   return state;
 }
@@ -95,7 +101,7 @@ export function advanceTimeline(snapshot, untilMs, handler, { maxEvents = 10000 
     assertJson(result.world, 'handler world');
     assertRandomState(result.rngState);
     if (!Array.isArray(result.events)) throw new TypeError('handler events must be an array');
-    state.world = structuredClone(result.world);
+    state.world = copyJson(result.world);
     state.rngState = result.rngState;
     for (const request of result.events) enqueue(state, request);
     processed++;

@@ -5,6 +5,7 @@ export function isJsonValue(value, ancestors = new Set()) {
   if (typeof value !== 'object' || ancestors.has(value)) return false;
   const array = Array.isArray(value);
   const proto = Object.getPrototypeOf(value);
+  if (array && proto !== Array.prototype) return false;
   if (!array && proto !== Object.prototype && proto !== null) return false;
   const keys = Reflect.ownKeys(value);
   if (array && keys.length !== value.length + 1) return false;

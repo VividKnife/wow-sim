@@ -62,3 +62,8 @@ test('validation does not mutate the record or access a getter', () => {
   invalid({ ...record, value });
   assert.equal(called, false);
 });
+
+test('rejects array subclasses whose inherited serialization changes the value', () => {
+  class JsonArray extends Array { toJSON() { return 'lost'; } }
+  invalid({ ...reference(), value: new JsonArray(1, 2) });
+});

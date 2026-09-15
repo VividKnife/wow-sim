@@ -1,12 +1,14 @@
 # Simulation Foundation Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 建立可验证数值来源、可序列化恢复和按事件推进时间的基础库，为同一套在线/离线游戏规则提供运行基础。
 
 **Architecture:** 无 UI、网络和数据库依赖的纯 ESM 模块。规则回调通过显式世界状态、随机状态及新事件推进模拟；事件时间由调用者传入，核心不读取系统时钟。来源检查验证证据结构，不替代数值研究。
 
 **Tech Stack:** JavaScript ESM、Node.js 内置 `node:test` 与 `node:assert/strict`；无第三方运行时依赖。
+
+**Execution status:** 四项基础功能已实现，46 项测试与语法检查通过；独立评审提出的问题已复现并修复，复核通过，记录见文末。
 
 ---
 
@@ -19,6 +21,7 @@
 - `package.json`：私有 npm 工作区与测试命令。
 - `packages/sim-core/package.json`：纯 ESM 模块入口。
 - `packages/sim-core/src/evidence.js`：数值记录与证据状态的结构检查。
+- `packages/sim-core/src/json.js`：供证据与存档共用的无损 JSON 数据约束。
 - `packages/sim-core/src/random.js`：显式可保存的伪随机状态，含无模偏差的整数采样。
 - `packages/sim-core/src/timeline.js`：可恢复的事件时间线、同时间事件顺序、分段推进和事件预算。
 - `packages/sim-core/src/travel.js`：按实际路线分段计算旅行耗时，不内置未经核对的原版速度常量。
@@ -27,10 +30,10 @@
 
 ## Task 1: Evidence records
 
-- [ ] 写失败测试，运行 `node --test packages/sim-core/test/evidence.test.js`，确认没有实现时拒绝/接受行为失败。
-- [ ] 实现下列结构规则，并重跑测试。
-- [ ] 验证来源 URL、固定版本、数值为合法 JSON 值以及验证记录；不允许只改状态字符串就变成已验证。
-- [ ] 提交此任务的代码、测试与根配置。
+- [x] 写失败测试，运行 `node --test packages/sim-core/test/evidence.test.js`，确认没有实现时拒绝/接受行为失败。
+- [x] 实现下列结构规则，并重跑测试。
+- [x] 验证来源 URL、固定版本、数值为合法 JSON 值以及验证记录；不允许只改状态字符串就变成已验证。
+- [x] 提交此任务的代码、测试与根配置。
 
 API：`validateEvidence(record, expectedRuleset)` 返回问题字符串数组，空数组表示结构有效。记录包含 `id`、`ruleset`、`status`、`value`、`sources`。状态为 `unknown | estimate | reference | verified`。来源包含 `url`、`locator`、`revision`。非 unknown 状态需要 value，reference/verified 必须至少一个来源。verified 还需要 `verification.method`、ISO 日期 `verification.reviewedAt` 和 `verification.notes`。method 为 `official | measurement | cross-check`。已验证状态仍由外部审计产生，结构检查不判定证据真实性。
 
@@ -51,10 +54,10 @@ assert.ok(validateEvidence({...record, value: NaN}, 'fixture').length > 0);
 
 ## Task 2: Serializable randomness
 
-- [ ] 写失败测试并运行 `node --test packages/sim-core/test/random.test.js`。
-- [ ] 实现确定的 xorshift32 状态转换与整数采样，返回新状态，不保存隐藏全局状态。
-- [ ] 核对已知转换、保存恢复、上下界、非法参数与拒绝采样分支。
-- [ ] 提交此任务。
+- [x] 写失败测试并运行 `node --test packages/sim-core/test/random.test.js`。
+- [x] 实现确定的 xorshift32 状态转换与整数采样，返回新状态，不保存隐藏全局状态。
+- [x] 核对已知转换、保存恢复、上下界、非法参数与拒绝采样分支。
+- [x] 提交此任务。
 
 API：`nextRandom(state)` 返回 `{state, value}`，其中 state 为 1 至 0xffffffff 的整数，value 为 `[0, 1)`。`randomInteger(state, min, max)` 返回 `{state, value}`，上下界是非负 uint32，区间包含两端。下列转换为实现算法本身，不是魔兽原版随机数算法：
 
@@ -79,10 +82,10 @@ assert.throws(() => randomInteger(1, 3, 2));
 
 ## Task 3: Timeline and bounded catch-up
 
-- [ ] 写失败测试并运行 `node --test packages/sim-core/test/timeline.test.js`。
-- [ ] 实现创建、排程、推进与快照恢复校验。
-- [ ] 验证同时间排序、重入排程、JSON 恢复、分段等价、事件预算和异常时原状态不变。
-- [ ] 提交此任务。
+- [x] 写失败测试并运行 `node --test packages/sim-core/test/timeline.test.js`。
+- [x] 实现创建、排程、推进与快照恢复校验。
+- [x] 验证同时间排序、重入排程、JSON 恢复、分段等价、事件预算和异常时原状态不变。
+- [x] 提交此任务。
 
 接口：
 
@@ -120,19 +123,15 @@ assert.equal(initial.world.n, 0);
 
 ## Task 4: Travel and integration
 
-- [ ] 写失败测试并运行 `node --test packages/sim-core/test/travel.test.js`。
-- [ ] 实现分段旅行时间与飞行航程时间求和。
-- [ ] 核对不同地面速度、固定等待、空路线、非法输入、只在全程最后向上取整和安全整数溢出。
-- [ ] 通过事件时间线验证抵达前后边界，以及恢复后不会重复抵达。
-- [ ] 更新 README、执行 `npm test` 和 `npm run check`，记录结果与未实现范围并提交。
+- [x] 写失败测试并运行 `node --test packages/sim-core/test/travel.test.js`。
+- [x] 实现分段旅行时间与飞行航程时间求和。
+- [x] 核对不同地面速度、固定等待、空路线、非法输入、只在全程最后向上取整和安全整数溢出。
+- [x] 通过事件时间线验证抵达前后边界，以及恢复后不会重复抵达。
+- [x] 更新 README、执行 `npm test` 和 `npm run check`，记录结果与未实现范围并提交。
 
 API：`groundTravelDuration(segments)` 接受 `{distanceYards, speedYardsPerSecond, delayMs = 0}[]`，返回整数毫秒；`flightTravelDuration(legs)` 接受 `{durationMs}[]`。地面路段必须有非负有限距离、正有限速度、非负安全整数延迟；航程必须为非负安全整数毫秒。空路线不合法。总时长必须是安全整数。
 
-```js
-const ms = segments.reduce((sum, segment) =>
-  sum + segment.distanceYards / segment.speedYardsPerSecond * 1000 + (segment.delayMs ?? 0), 0);
-return Math.ceil(ms);
-```
+实现时将每段运动时长分为整数毫秒与小数毫秒，分别累加；整数相加前检查溢出，小数达到 1 时进位。全程最后仍有正小数才加 1 毫秒。不要把微小的运动时间直接加到接近安全整数上限的固定延迟，否则浮点舍入可能掩盖溢出。具体算法在 `packages/sim-core/src/travel.js`。
 
 整个路线只在最终向上取整，不逐段向上取整。飞行不使用地面距离或坐骑倍率。
 
@@ -147,7 +146,18 @@ assert.throws(() => groundTravelDuration([{distanceYards: 10, speedYardsPerSecon
 
 ## Review and completion
 
-- [ ] 逐项检查测试失败原因是缺失行为，而不是运行环境问题。
-- [ ] 完整测试通过后审阅快照与整数边界。
-- [ ] 代码评审覆盖本阶段要求；不把“核心测试通过”写成“游戏或数值已复刻”。
-- [ ] 更新总路线状态，记录下一阶段的数据证据缺口。
+- [x] 逐项检查测试失败原因是缺失行为，而不是运行环境问题。
+- [x] 完整测试通过后审阅快照与整数边界。
+- [x] 代码评审覆盖本阶段要求；不把“核心测试通过”写成“游戏或数值已复刻”。
+- [x] 更新总路线状态，记录下一阶段的数据证据缺口。
+
+## 执行与评审记录
+
+- 来源校验、随机状态、事件时间线与旅行模块均经历了先失败、后通过的行为测试。
+- 抽出 `json.js` 共享 JSON 数据约束，避免证据和快照分别采用不一致的序列化规则。
+- 独立评审发现并复现四类边界问题：JSON 丢失共享引用关系、负零时间导致不可恢复快照、数组子类改变序列化结果、超大延迟吞掉小数运动时间。
+- 对四类问题增加五个回归测试，分别验证输入与处理器输出的对象别名。状态在引擎边界转换为标准 JSON 树，因此在内存中运行和经过 JSON 保存后的引用语义一致。
+- `npm test`：46 项通过，0 项失败。
+- `npm run check`：JavaScript 语法检查通过。
+- 独立复核重新运行了相关的 39 项测试，确认四类问题已解决，没有发现新的回归；完整测试另包含 7 项随机状态测试。
+- 参考数据库仅固定归档并检查结构，正式游戏数值与完整网页尚未实现。

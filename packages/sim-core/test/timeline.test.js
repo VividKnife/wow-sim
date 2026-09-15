@@ -132,3 +132,38 @@ test('does not process an already consumed event again after restoring', () => {
   const result = advanceTimeline(restored, 200, remember);
   assert.equal(result.state.world.n, 1); assert.equal(result.processed, 0);
 });
+
+test('rejects a negative-zero target instead of returning an unrestorable snapshot', () => {
+  assert.throws(() => advanceTimeline(fresh(), -0, remember));
+});
+
+test('world aliases do not change outcomes across a JSON restore boundary', () => {
+  const shared = { n: 0 };
+  let state = createTimeline({ seed: 1, world: { a: shared, b: shared } });
+  for (const atMs of [10, 20]) state = scheduleEvent(state, { atMs, type: 'tick' });
+  const tick = ({ world, rngState }) => {
+    world.a.n++;
+    return { world, rngState, events: [] };
+  };
+  const once = advanceTimeline(state, 20, tick).state;
+  const halfway = advanceTimeline(state, 10, tick).state;
+  const split = advanceTimeline(restoreTimeline(JSON.parse(JSON.stringify(halfway))), 20, tick).state;
+  assert.deepEqual(split, once);
+  assert.equal(shared.n, 0);
+});
+
+test('aliases produced by a handler are canonicalized before the next event', () => {
+  let state = createTimeline({ seed: 1, world: {} });
+  for (const atMs of [10, 20]) state = scheduleEvent(state, { atMs, type: 'tick' });
+  const tick = ({ world, rngState, nowMs }) => {
+    if (nowMs === 10) {
+      const shared = { n: 0 };
+      return { world: { a: shared, b: shared }, rngState, events: [] };
+    }
+    world.a.n++;
+    return { world, rngState, events: [] };
+  };
+  const once = advanceTimeline(state, 20, tick).state;
+  const halfway = advanceTimeline(state, 10, tick).state;
+  assert.deepEqual(advanceTimeline(restoreTimeline(JSON.parse(JSON.stringify(halfway))), 20, tick).state, once);
+});
