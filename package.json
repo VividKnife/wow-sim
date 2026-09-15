@@ -1,0 +1,8 @@
+{
+  "name": "wow-sim",
+  "private": true,
+  "type": "module",
+  "workspaces": ["packages/*"],
+  "scripts": {"test": "node --test", "check": "node scripts/check.mjs"},
+  "engines": {"node": ">=22"}
+}

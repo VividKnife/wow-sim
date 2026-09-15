@@ -1,0 +1,12 @@
+{
+  "name": "@wow-sim/sim-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./evidence": "./src/evidence.js",
+    "./random": "./src/random.js",
+    "./timeline": "./src/timeline.js",
+    "./travel": "./src/travel.js"
+  }
+}
