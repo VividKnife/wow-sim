@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,questProgress} from '../lib/game/engine.js';
+import {createGame,act,advance,questProgress} from '../../../packages/game-domain/src/rules/engine.js';
 
 function travel(s,to){s=act(s,{type:'travel',to},s.wallAt);return advance(s,s.wallAt+s.activity.endsAt-s.clock).state;}
 test('Fargodeep survey requires accepting the quest and actually entering the mine',()=>{

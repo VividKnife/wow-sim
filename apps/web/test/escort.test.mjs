@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance} from '../lib/game/engine.js';
-import {stats,killXp} from '../lib/game/character.js';
-import {startCombat} from '../lib/game/combat.js';
+import {createGame,act,advance} from '../../../packages/game-domain/src/rules/engine.js';
+import {stats,killXp} from '../../../packages/game-domain/src/rules/character.js';
+import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
 import {creatureVisual} from '../lib/creature-visuals.js';
 
 function ready(){let s=createGame('护送测试',283,0);s.level=20;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.location='sentinel';s.quests[155]={kills:{},event:false,acceptedAt:0,expiresAt:0};for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);return s;}

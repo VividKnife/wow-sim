@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance} from '../lib/game/engine.js';
-import {stats,spellInfo} from '../lib/game/character.js';
-import {summonClassPet} from '../lib/game/class-spell-effects.js';
-import {classUtilityUse,classUtilityView} from '../lib/game/class-utility.js';
+import {createGame,act,advance} from '../../../packages/game-domain/src/rules/engine.js';
+import {stats,spellInfo} from '../../../packages/game-domain/src/rules/character.js';
+import {summonClassPet} from '../../../packages/game-domain/src/rules/class-spell-effects.js';
+import {classUtilityUse,classUtilityView} from '../../../packages/game-domain/src/rules/class-utility.js';
 function state(classId,id){const s=createGame('channel',11,0,{classId,raceId:classId===3?2:1});s.level=60;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.learned.push(id);if([3,9].includes(classId)){summonClassPet(s,s,spellInfo(s,classId===3?883:688));s.pet.hp=10;}return s;}
 test('Mend Pet channels on the actual pet and stops all future healing when interrupted',()=>{
  let s=state(3,136);const mana=s.mana;s=act(s,{type:'cast',id:136},0);

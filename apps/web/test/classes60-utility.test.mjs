@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,view} from '../lib/game/engine.js';
-import {stats,addItem,spellInfo,newCharacter} from '../lib/game/character.js';
-import {spells,talents,items} from '../lib/game/catalog.js';
-import {travelRoute} from '../lib/game/mounts.js';
+import {createGame,act,advance,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {stats,addItem,spellInfo,newCharacter} from '../../../packages/game-domain/src/rules/character.js';
+import {spells,talents,items} from '../../../packages/game-domain/src/rules/catalog.js';
+import {travelRoute} from '../../../packages/game-domain/src/rules/mounts.js';
 const game=(classId,raceId)=>{const s=createGame('职业满级',615,0,{classId,raceId});s.level=60;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.money=10000000;return s;};
 test('class mounts use learned spells and accelerate travel without purchased horse riding',()=>{
  for(const [cls,race,id]of [[2,1,13819],[2,1,23214],[9,2,5784],[9,2,23161]]){let s=game(cls,race);s.learned.push(id);const normal=travelRoute(s,'goldshire').duration;s=act(s,{type:'cast',id},0);assert.equal(s.activity.type,'mount');s=advance(s,s.activity.endsAt).state;assert.equal(s.mounted,id);assert.ok(travelRoute(s,'goldshire').duration<normal);assert.equal(s.riding.horse,undefined);assert.ok(view(s).mounts.collection.find(m=>m.id===id).owned);}

@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,view} from '../lib/game/engine.js';
-import {stats} from '../lib/game/character.js';
-import {petSpellTick} from '../lib/game/class-spell-effects.js';
-import {spells} from '../lib/game/catalog.js';
+import {createGame,act,advance,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {stats} from '../../../packages/game-domain/src/rules/character.js';
+import {petSpellTick} from '../../../packages/game-domain/src/rules/class-spell-effects.js';
+import {spells} from '../../../packages/game-domain/src/rules/catalog.js';
 const game=()=>{const s=createGame('trainer',7,0,{classId:3,raceId:2});s.level=60;s.money=10000000;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rules=[];return s;};
 test('public trainer to tame to pet training preserves actual acquired Growl without unlocking wild skills',()=>{
  let s=game();for(const id of[1515,883,5149,1853])if(!s.learned.includes(id))s=act(s,{type:'train',id},s.wallAt);

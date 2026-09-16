@@ -1,16 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,view} from '../lib/game/engine.js';
-import {route,monsterIdsAt} from '../lib/game/catalog.js';
-import {journeyPosition} from '../lib/game/navigation.js';
-import {startCombat,hurtPlayer} from '../lib/game/combat.js';
-import {mountView} from '../lib/game/mounts.js';
+import {createGame,act,advance,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {route,monsterIdsAt} from '../../../packages/game-domain/src/rules/catalog.js';
+import {journeyPosition} from '../../../packages/game-domain/src/rules/navigation.js';
+import {startCombat,hurtPlayer} from '../../../packages/game-domain/src/rules/combat.js';
+import {mountView} from '../../../packages/game-domain/src/rules/mounts.js';
 
 const command=(s,a)=>act(s,a,s.wallAt);
 const finish=s=>advance(s,s.wallAt+s.activity.endsAt-s.clock).state;
 function buyer(level=20){const s=createGame('骑乘测试',37,0);s.level=level;s.location='logging';s.money=20000000;return s;}
 function owner(level=20,id=5656){let s=command(buyer(level),{type:'trainRiding'});return command(s,{type:'buyMount',id});}
 function rider(level=20,id=5656){return finish(command(owner(level,id),{type:'mount',id}));}
+
+test('a mounted traveler can turn around mid-road without remounting or losing its speed',()=>{
+ let s=rider();s.location='northshire';s=command(s,{type:'travel',to:'goldshire'});
+ const elapsed=10000;s=advance(s,s.wallAt+elapsed).state;const mounted=s.mounted;
+ s=command(s,{type:'travel',to:'northshire'});
+ assert.equal(s.mounted,mounted);assert.ok(Math.abs(s.activity.endsAt-s.clock-elapsed)<=1);
+ s=finish(s);assert.equal(s.location,'northshire');assert.equal(s.mounted,mounted);
+});
 
 test('new characters expose a locked collection without granting riding or mounts',()=>{
  const s=createGame('新存档',37,0);s.level=19;
@@ -79,9 +87,9 @@ test('ground trip, map and quest estimates agree; travel cannot be shortened by 
 });
 
 test('restricted legs remove riding speed and keep later legs on foot; tram time is fixed',()=>{
- let s=rider();s.location='oldtown';s=command(s,{type:'travel',to:'thelsamar'});
+ let s=rider();s.location='dwarven';s=command(s,{type:'travel',to:'thelsamar'});
  assert.equal(s.activity.path[0].duration,180000);
- assert.equal(s.activity.endsAt-s.clock,route('oldtown','thelsamar').duration);
+ assert.equal(s.activity.endsAt-s.clock,route('dwarven','thelsamar').duration);
  assert.equal(s.mounted,null);
  assert.equal(finish(s).mounted,null);
 });

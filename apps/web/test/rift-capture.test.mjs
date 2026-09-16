@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,stats,questProgress} from '../lib/game/engine.js';
-import {countItem} from '../lib/game/character.js';
-import {abilities,monsterIdsAt} from '../lib/game/catalog.js';
+import {createGame,act,advance,stats,questProgress} from '../../../packages/game-domain/src/rules/engine.js';
+import {countItem} from '../../../packages/game-domain/src/rules/character.js';
+import {abilities,monsterIdsAt} from '../../../packages/game-domain/src/rules/catalog.js';
 function finish(s){return advance(s,s.wallAt+s.activity.endsAt-s.clock).state;}
 function command(s,action){return act(s,action,s.wallAt);}
 function prepared(){let s=createGame('封印学徒',8,0);s.level=20;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.learned=[...new Set(abilities.filter(a=>a.requiredLevel<=20).map(a=>a.spellId))];s.location='magetower';s=command(s,{type:'accept',id:1920});for(const id of [105174,105175])s=finish(command(s,{type:'gather',id}));s=finish(command(s,{type:'travel',to:'bluerecluse'}));return s;}

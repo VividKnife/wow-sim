@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,stats,view} from '../lib/game/engine.js';
-import {enterDungeon,dungeonRoute} from '../lib/game/dungeon.js';
-import {addItem} from '../lib/game/character.js';
+import {createGame,act,advance,stats,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {enterDungeon,dungeonRoute} from '../../../packages/game-domain/src/rules/dungeon.js';
+import {addItem} from '../../../packages/game-domain/src/rules/character.js';
 
 function group(){let s=createGame('副本界面测试',283,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);s.location='deadmines';return s;}
 
@@ -27,7 +27,7 @@ test('a dead leader can let the living priest recover before resurrecting them',
  let s=group();enterDungeon(s);s.hp=0;s.activity={type:'dead'};const priest=s.party.find(c=>c.classId===5);priest.mana=0;addItem(s,159,5);
  const status=view(s).recovery;assert.equal(status.canRest,true);assert.equal(status.fallen.find(c=>c.id===s.id).canResurrect,false);
  s=act(s,{type:'rest'},0);assert.ok(s.party.find(c=>c.classId===5).rest);
- s=advance(s,18000,{dungeonOnline:true}).state;assert.equal(s.hp,0);assert.ok(s.party.find(c=>c.classId===5).mana>0);
+ s=advance(s,18000,{}).state;assert.equal(s.hp,0);assert.ok(s.party.find(c=>c.classId===5).mana>0);
 });
 
 test('completed and optional route states remain distinct instead of counting skips as kills',()=>{

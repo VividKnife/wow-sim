@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,stats,advance} from '../lib/game/engine.js';
-import {startCombat,hurtPlayer,combatTick} from '../lib/game/combat.js';
-import * as smite from '../lib/game/smite.js';
-import {hasSpellAura,hasAura} from '../lib/game/combat-auras.js';
-import {castEnemySpell} from '../lib/game/enemy-spells.js';
-import {triggerMeleeProcs} from '../lib/game/enemy-procs.js';
-import {enemyMeleeTick} from '../lib/game/enemy-melee.js';
+import {createGame,stats,advance} from '../../../packages/game-domain/src/rules/engine.js';
+import {startCombat,hurtPlayer,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
+import * as smite from '../../../packages/game-domain/src/rules/smite.js';
+import {hasSpellAura,hasAura} from '../../../packages/sim-core/src/combat-auras.js';
+import {castEnemySpell} from '../../../packages/game-domain/src/rules/enemy-spells.js';
+import {triggerMeleeProcs} from '../../../packages/game-domain/src/rules/enemy-procs.js';
+import {enemyMeleeTick} from '../../../packages/game-domain/src/rules/enemy-melee.js';
 
 function setup(entry=646){const s=createGame('机制测试',283,0);s.level=20;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rules=[];startCombat(s,[entry]);s.nextAction=s.nextSwing=1e9;const e=s.combat.enemies[0];e.position=4;e.target=s.id;e.nextAttack=1e9;return{s,e};}
 test('Smite chest movement obeys two-dimensional speed, slow and root',()=>{

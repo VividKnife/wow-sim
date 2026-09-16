@@ -9,14 +9,15 @@ const input=resolve(process.argv[2]||'../../.cache/playthrough-snapshot-20/final
 const out=resolve(process.argv[3]||`../../.cache/content-playthrough-${Date.now()}`);
 if(existsSync(out))throw new Error('Choose a fresh output directory.');
 const runtime=resolve(out,'runtime');mkdirSync(runtime,{recursive:true});
-for(const part of ['lib','data'])cpSync(resolve(web,part),resolve(runtime,part),{recursive:true});
-mkdirSync(resolve(runtime,'scripts'),{recursive:true});
-for(const name of ['continue-playthrough.mjs','replay-playthrough.mjs'])cpSync(resolve(web,'scripts',name),resolve(runtime,'scripts',name));
+const root=resolve(web,'../..');
+for(const part of ['game-domain/src','game-data','sim-core/src','contracts/src'])cpSync(resolve(root,'packages',part),resolve(runtime,'packages',part),{recursive:true});
+mkdirSync(resolve(runtime,'apps/web/scripts'),{recursive:true});
+for(const name of ['continue-playthrough.mjs','replay-playthrough.mjs'])cpSync(resolve(web,'scripts',name),resolve(runtime,'apps/web/scripts',name));
 writeFileSync(resolve(runtime,'package.json'),JSON.stringify({type:'module',private:true}));
 const hash=raw=>createHash('sha256').update(raw).digest('hex');
 const files=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?files(resolve(dir,e.name)):[resolve(dir,e.name)]);
 writeFileSync(resolve(out,'source-manifest.json'),JSON.stringify(Object.fromEntries(files(runtime).map(p=>[relative(runtime,p).replaceAll('\\','/'),hash(readFileSync(p))])),null,2));
-const moduleAt=name=>import(pathToFileURL(resolve(runtime,'lib/game',name)).href);
+const moduleAt=name=>import(pathToFileURL(resolve(runtime,'packages/game-domain/src/rules',name)).href);
 const {act,advance,stats,shop,view}=await moduleAt('engine.js');
 const {items,spells,quests,abilities,monsterIdsAt,creatureLoot,creatures,nodes}=await moduleAt('catalog.js');
 const {questProgress,gatherables}=await moduleAt('quests.js');
@@ -30,7 +31,7 @@ const journal=resolve(out,'commands.jsonl');writeFileSync(journal,JSON.stringify
 const record=row=>appendFileSync(journal,JSON.stringify(row)+'\n');
 const report={input,initialSha256:hash(initial),quests:[],encounters:[],failures:[]};
 function command(action){s=act(s,action,s.wallAt);record({type:'command',at:s.wallAt,action});}
-function wait(ms){const now=s.wallAt+ms,options={dungeonOnline:true};let r;do{r=advance(s,now,options);s=r.state;}while(!r.complete);record({type:'advance',now,options});}
+function wait(ms){const now=s.wallAt+ms,options={};let r;do{r=advance(s,now,options);s=r.state;}while(!r.complete);record({type:'advance',now,options});}
 function finish(){let n=0;while((s.activity.endsAt||s.activity.type==='prepareDungeon')&&n++<2000)wait(s.activity.endsAt?Math.max(1,s.activity.endsAt-s.clock):100);if(n>=2000)throw new Error('Activity did not finish');}
 function travel(to){if(s.location!==to){command({type:'travel',to});finish();}}
 function members(){return [s,...s.party];}
@@ -163,5 +164,5 @@ try{
 finally{
  report.final={level:s.level,seconds:(s.clock-began)/1000,deaths:s.totals.deaths-originalDeaths,money:s.money,cursor:(s.dungeon||s.dungeonSave)?.cursor,completedAt:(s.dungeon||s.dungeonSave)?.completedAt||null};
  writeFileSync(resolve(out,'final-state.json'),JSON.stringify(s));writeFileSync(resolve(out,'summary.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report.final));
- const replay=spawnSync(process.execPath,[resolve(runtime,'scripts/replay-playthrough.mjs'),out],{stdio:'inherit'});if(replay.status!==0)process.exitCode=1;
+ const replay=spawnSync(process.execPath,[resolve(runtime,'apps/web/scripts/replay-playthrough.mjs'),out],{stdio:'inherit'});if(replay.status!==0)process.exitCode=1;
 }

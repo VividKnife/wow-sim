@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,stats} from '../lib/game/engine.js';
-import {startCombat,combatTick} from '../lib/game/combat.js';
+import {createGame,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
 function fixture(spell){const s=createGame('法术测试',19,0);s.level=20;s.learned.push(spell);s.mana=stats(s).maxMana;s.rules=[{spell,condition:'always',value:0,enabled:true}];startCombat(s,[299]);s.combat.enemies[0].hp=s.combat.enemies[0].maxHp=100000;s.combat.enemies[0].low=s.combat.enemies[0].high=0;return s;}
 test('a single Blizzard channel deals exactly eight ticks and leaves no residual damage aura',()=>{
  const s=fixture(10);s.combat.enemies[0].rootUntil=100000;combatTick(s);s.rules=[];

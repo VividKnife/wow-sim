@@ -1,0 +1,404 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-16T07:08:07.536Z",
+  "environment": {
+    "node": "v24.11.1",
+    "os": {
+      "type": "Windows_NT",
+      "platform": "win32",
+      "release": "10.0.26200",
+      "arch": "x64"
+    },
+    "logicalCpuCount": 32
+  },
+  "fixture": {
+    "authoritativeTime": "2026-09-16T00:00:00.000Z",
+    "accountId": "foundation-benchmark-account",
+    "characterId": "foundation-0001",
+    "character": {
+      "name": "Foundation Mage",
+      "classId": 8,
+      "raceId": 1
+    },
+    "rngSeed": 305419896,
+    "contentVersion": "7e24d480f4eda697bc88d3d696487a9822eb729f99d6fbf47aef146fd45684f8",
+    "store": "MemoryStore"
+  },
+  "scope": {
+    "description": "Local single-process foundation measurement with one deterministic account and loopback HTTP.",
+    "includes": [
+      "DTO projection and UTF-8 JSON serialization",
+      "one workshop page",
+      "quiet 24-hour engine advance",
+      "Node HTTP status/header/decoded-body bytes"
+    ],
+    "excludes": [
+      "production infrastructure",
+      "PostgreSQL/network contention",
+      "TLS",
+      "compression",
+      "concurrency",
+      "TCP framing",
+      "HTTP chunk framing"
+    ],
+    "percentileClaim": null
+  },
+  "response": {
+    "serializedBytes": 408404,
+    "encoding": "UTF-8 JSON",
+    "revision": 1,
+    "initialView": {
+      "encoding": "UTF-8 JSON",
+      "totalBytes": 405904,
+      "fieldCount": 59,
+      "fields": [
+        {
+          "field": "skills",
+          "valueBytes": 130030,
+          "entryBytes": 130039
+        },
+        {
+          "field": "quests",
+          "valueBytes": 97847,
+          "entryBytes": 97856
+        },
+        {
+          "field": "talentTrees",
+          "valueBytes": 44027,
+          "entryBytes": 44041
+        },
+        {
+          "field": "talents",
+          "valueBytes": 43880,
+          "entryBytes": 43890
+        },
+        {
+          "field": "combatSkills",
+          "valueBytes": 30361,
+          "entryBytes": 30376
+        },
+        {
+          "field": "strategyMembers",
+          "valueBytes": 29164,
+          "entryBytes": 29182
+        },
+        {
+          "field": "map",
+          "valueBytes": 7652,
+          "entryBytes": 7658
+        },
+        {
+          "field": "dungeon",
+          "valueBytes": 6397,
+          "entryBytes": 6407
+        },
+        {
+          "field": "shop",
+          "valueBytes": 5032,
+          "entryBytes": 5039
+        },
+        {
+          "field": "professions",
+          "valueBytes": 4445,
+          "entryBytes": 4459
+        },
+        {
+          "field": "mounts",
+          "valueBytes": 1578,
+          "entryBytes": 1587
+        },
+        {
+          "field": "skillUsesByTarget",
+          "valueBytes": 811,
+          "entryBytes": 831
+        },
+        {
+          "field": "inventoryActions",
+          "valueBytes": 611,
+          "entryBytes": 630
+        },
+        {
+          "field": "stats",
+          "valueBytes": 503,
+          "entryBytes": 511
+        },
+        {
+          "field": "candidates",
+          "valueBytes": 414,
+          "entryBytes": 427
+        },
+        {
+          "field": "itemUses",
+          "valueBytes": 414,
+          "entryBytes": 425
+        },
+        {
+          "field": "raceTraits",
+          "valueBytes": 306,
+          "entryBytes": 319
+        },
+        {
+          "field": "skillUses",
+          "valueBytes": 288,
+          "entryBytes": 300
+        },
+        {
+          "field": "recovery",
+          "valueBytes": 258,
+          "entryBytes": 269
+        },
+        {
+          "field": "hearthstone",
+          "valueBytes": 249,
+          "entryBytes": 263
+        },
+        {
+          "field": "environment",
+          "valueBytes": 236,
+          "entryBytes": 250
+        },
+        {
+          "field": "monsters",
+          "valueBytes": 182,
+          "entryBytes": 193
+        },
+        {
+          "field": "location",
+          "valueBytes": 111,
+          "entryBytes": 122
+        },
+        {
+          "field": "journey",
+          "valueBytes": 52,
+          "entryBytes": 62
+        },
+        {
+          "field": "talentResetBlockedReason",
+          "valueBytes": 35,
+          "entryBytes": 62
+        },
+        {
+          "field": "resource",
+          "valueBytes": 39,
+          "entryBytes": 50
+        },
+        {
+          "field": "professionRecipeCount",
+          "valueBytes": 4,
+          "entryBytes": 28
+        },
+        {
+          "field": "canSoulstoneRevive",
+          "valueBytes": 5,
+          "entryBytes": 26
+        },
+        {
+          "field": "canTrainProfession",
+          "valueBytes": 4,
+          "entryBytes": 25
+        },
+        {
+          "field": "canResetTalents",
+          "valueBytes": 5,
+          "entryBytes": 23
+        },
+        {
+          "field": "talentResetCost",
+          "valueBytes": 5,
+          "entryBytes": 23
+        },
+        {
+          "field": "bankUpgradeCost",
+          "valueBytes": 4,
+          "entryBytes": 22
+        },
+        {
+          "field": "trackedTreasures",
+          "valueBytes": 2,
+          "entryBytes": 21
+        },
+        {
+          "field": "className",
+          "valueBytes": 8,
+          "entryBytes": 20
+        },
+        {
+          "field": "faction",
+          "valueBytes": 10,
+          "entryBytes": 20
+        },
+        {
+          "field": "reincarnation",
+          "valueBytes": 4,
+          "entryBytes": 20
+        },
+        {
+          "field": "disenchantable",
+          "valueBytes": 2,
+          "entryBytes": 19
+        },
+        {
+          "field": "raceName",
+          "valueBytes": 8,
+          "entryBytes": 19
+        },
+        {
+          "field": "trackedTargets",
+          "valueBytes": 2,
+          "entryBytes": 19
+        },
+        {
+          "field": "trackingKind",
+          "valueBytes": 4,
+          "entryBytes": 19
+        },
+        {
+          "field": "lockpicking",
+          "valueBytes": 4,
+          "entryBytes": 18
+        },
+        {
+          "field": "petControls",
+          "valueBytes": 4,
+          "entryBytes": 18
+        },
+        {
+          "field": "bankCapacity",
+          "valueBytes": 2,
+          "entryBytes": 17
+        },
+        {
+          "field": "battleView",
+          "valueBytes": 4,
+          "entryBytes": 17
+        },
+        {
+          "field": "classPortals",
+          "valueBytes": 2,
+          "entryBytes": 17
+        },
+        {
+          "field": "hasFlight",
+          "valueBytes": 5,
+          "entryBytes": 17
+        },
+        {
+          "field": "bagCapacity",
+          "valueBytes": 2,
+          "entryBytes": 16
+        },
+        {
+          "field": "bankHere",
+          "valueBytes": 5,
+          "entryBytes": 16
+        },
+        {
+          "field": "escortNpc",
+          "valueBytes": 4,
+          "entryBytes": 16
+        },
+        {
+          "field": "gatherables",
+          "valueBytes": 2,
+          "entryBytes": 16
+        },
+        {
+          "field": "lockTargets",
+          "valueBytes": 2,
+          "entryBytes": 16
+        },
+        {
+          "field": "canTrain",
+          "valueBytes": 4,
+          "entryBytes": 15
+        },
+        {
+          "field": "questTools",
+          "valueBytes": 2,
+          "entryBytes": 15
+        },
+        {
+          "field": "scouting",
+          "valueBytes": 4,
+          "entryBytes": 15
+        },
+        {
+          "field": "itemBuffs",
+          "valueBytes": 2,
+          "entryBytes": 14
+        },
+        {
+          "field": "resources",
+          "valueBytes": 2,
+          "entryBytes": 14
+        },
+        {
+          "field": "escort",
+          "valueBytes": 4,
+          "entryBytes": 13
+        },
+        {
+          "field": "nextXp",
+          "valueBytes": 3,
+          "entryBytes": 12
+        },
+        {
+          "field": "party",
+          "valueBytes": 2,
+          "entryBytes": 10
+        }
+      ]
+    },
+    "timing": {
+      "warmupIterations": 20,
+      "measuredIterations": 100,
+      "operation": "buildGameResponse plus JSON.stringify",
+      "unit": "milliseconds",
+      "samples": 100,
+      "average": 22.228665,
+      "minimum": 19.8056,
+      "maximum": 34.9359
+    }
+  },
+  "workshop": {
+    "query": {
+      "profession": "tailoring",
+      "search": "",
+      "filter": "all",
+      "page": 0,
+      "pageSize": 24
+    },
+    "serializedBytes": 13555,
+    "elapsedMs": 0.0823,
+    "returnedRecipes": 24,
+    "totalRecipes": 226,
+    "page": 0,
+    "pageSize": 24
+  },
+  "quietIdle24Hours": {
+    "requestedElapsedMs": 86400000,
+    "maxTicks": 1,
+    "complete": true,
+    "advancedWallMs": 86400000,
+    "advancedClockMs": 86400000,
+    "elapsedMs": 1.6445
+  },
+  "http": {
+    "transport": "Node HTTP server on 127.0.0.1 ephemeral port",
+    "byteAccounting": "HTTP status line and raw response headers plus decoded response body; excludes chunk framing and lower transport layers.",
+    "initial200": {
+      "status": 200,
+      "headerBytes": 286,
+      "decodedBodyBytes": 408404,
+      "decodedMessageBytes": 408690,
+      "etag": "\"d092a9db2e8f6c552e5a3bfe02848074b89e1395a5aee5f0a7d2d7df9aae37e3\""
+    },
+    "conditional304": {
+      "status": 304,
+      "headerBytes": 221,
+      "decodedBodyBytes": 0,
+      "decodedMessageBytes": 221,
+      "etag": "\"d092a9db2e8f6c552e5a3bfe02848074b89e1395a5aee5f0a7d2d7df9aae37e3\""
+    }
+  }
+}

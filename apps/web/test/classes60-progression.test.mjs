@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,advance,view,act} from '../lib/game/engine.js';
-import {stats,gainXp,killXp,canEquip} from '../lib/game/character.js';
-import {classDefinitions,xpTable} from '../lib/game/catalog.js';
+import {createGame,advance,view,act} from '../../../packages/game-domain/src/rules/engine.js';
+import {stats,gainXp,killXp,canEquip} from '../../../packages/game-domain/src/rules/character.js';
+import {classDefinitions,xpTable} from '../../../packages/game-domain/src/rules/catalog.js';
 
 test('every valid race/class advances beyond20 using its real level60 stats and stops exactly at60',()=>{
  for(const cls of classDefinitions)for(const raceId of cls.races){

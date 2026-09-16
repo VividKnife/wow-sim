@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,stats,act,view,advance} from '../lib/game/engine.js';
-import {startCombat,combatTick,hurtPlayer} from '../lib/game/combat.js';
-import {talents,classTalentTrees,classDefinitions} from '../lib/game/catalog.js';
-import {spellInfo} from '../lib/game/character.js';
-import {validateRules} from '../lib/game/combat-strategy.js';
-import {defaultClassRules} from '../lib/game/class-support.js';
+import {createGame,stats,act,view,advance} from '../../../packages/game-domain/src/rules/engine.js';
+import {startCombat,combatTick,hurtPlayer} from '../../../packages/game-domain/src/rules/combat.js';
+import {talents,classTalentTrees,classDefinitions} from '../../../packages/game-domain/src/rules/catalog.js';
+import {spellInfo} from '../../../packages/game-domain/src/rules/character.js';
+import {validateRules} from '../../../packages/game-domain/src/rules/combat-strategy.js';
+import {defaultClassRules} from '../../../packages/game-domain/src/rules/class-support.js';
 
 function fixture(classId,learned,rules=learned){
  const s=createGame('职业测试',12345,0,{classId,raceId:classId===7?2:classId===11?4:classId===3?3:1});

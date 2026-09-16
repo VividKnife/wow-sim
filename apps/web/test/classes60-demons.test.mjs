@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance} from '../lib/game/engine.js';
-import {stats,addItem,newCharacter,spellInfo} from '../lib/game/character.js';
-import {beginDoomRitual,doomRitualUse,combatTick,startCombat} from '../lib/game/combat.js';
-import {classEffect} from '../lib/game/class-mechanics.js';
+import {createGame,act,advance} from '../../../packages/game-domain/src/rules/engine.js';
+import {stats,addItem,newCharacter,spellInfo} from '../../../packages/game-domain/src/rules/character.js';
+import {beginDoomRitual,doomRitualUse,combatTick,startCombat} from '../../../packages/game-domain/src/rules/combat.js';
+import {classEffect} from '../../../packages/game-domain/src/rules/class-mechanics.js';
 const game=()=>{const s=createGame('Demon source',401,0,{classId:9,raceId:1});s.level=60;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rules=[];return s;};
 const helpers=s=>s.party=Array.from({length:4},(_,i)=>({...newCharacter('helper'+i,5,60,1),id:'helper'+i,hp:100,mana:100,position:0,positionY:0,rules:[]}));
 test('public Inferno consumes its reagent, lands with source summon and loses initial control',()=>{let s=game();s.learned.push(1122);addItem(s,5565);s=act(s,{type:'cast',id:1122},0);assert.equal(s.activity.type,'classSpell');s=advance(s,s.activity.endsAt).state;assert.ok(!s.bag.some(i=>i.id===5565));const demon=s.combat.enemies.find(e=>e.entry===89);assert.ok(demon);assert.equal(demon.controlledBy,s.id);const until=demon.controlUntil;s.clock=until+1;combatTick(s);assert.equal(demon.controlledBy,undefined);assert.ok(demon.despawnAt>s.clock);});

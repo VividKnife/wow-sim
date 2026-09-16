@@ -2,11 +2,11 @@
 // This is a gameplay audit, not proof of original-client numerical fidelity.
 import {mkdirSync,writeFileSync,appendFileSync,existsSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {createGame,act,advance,stats,shop} from '../lib/game/engine.js';
-import {quests,items,creatures,creatureLoot,monsterIdsAt,nodes,route,abilities,trainerNodes,spells,talents} from '../lib/game/catalog.js';
-import {questProgress,gatherables} from '../lib/game/quests.js';
-import {canEquip,slotOf,countItem,knownRank,spellInfo,bagCapacity} from '../lib/game/character.js';
-import {protectedItem} from '../lib/game/inventory.js';
+import {createGame,act,advance,stats,shop} from '../../../packages/game-domain/src/rules/engine.js';
+import {quests,items,creatures,creatureLoot,monsterIdsAt,nodes,route,abilities,trainerNodes,spells,talents} from '../../../packages/game-domain/src/rules/catalog.js';
+import {questProgress,gatherables} from '../../../packages/game-domain/src/rules/quests.js';
+import {canEquip,slotOf,countItem,knownRank,spellInfo,bagCapacity} from '../../../packages/game-domain/src/rules/character.js';
+import {protectedItem} from '../../../packages/game-domain/src/rules/inventory.js';
 
 const targetLevel=Number(process.argv[2]||20),seed=Number(process.argv[3]||283);
 const output=resolve(process.argv[4]||'../../.cache/playthrough');

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,stats,view} from '../lib/game/engine.js';
-import {addItem,countItem} from '../lib/game/character.js';
+import {createGame,act,advance,stats,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {addItem,countItem} from '../../../packages/game-domain/src/rules/character.js';
 
 test('priority rules are editable, validated, and used by the next fight',()=>{
  let s=createGame('优先级',12,0);s=act(s,{type:'strategy',rules:[{spell:133,condition:'manaAbove',value:0,enabled:true}]},0);s=act(s,{type:'hunt',id:299},0);s=advance(s,200).state;assert.equal(s.cast.spell,133);

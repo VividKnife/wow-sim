@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,view} from '../lib/game/engine.js';
+import {createGame,act,advance,view} from '../../../packages/game-domain/src/rules/engine.js';
 
 const fresh=()=>createGame('炉石测试',17,0);
 const command=(s,action)=>act(s,action,s.wallAt);
-const finish=s=>advance(s,s.wallAt+s.activity.endsAt-s.clock,{dungeonOnline:true}).state;
+const finish=s=>advance(s,s.wallAt+s.activity.endsAt-s.clock,{}).state;
 
 test('binding is available at local inns, persists, and does not reset cooldown',()=>{
  let s=fresh();s.location='goldshire';s.hearthReady=30000;

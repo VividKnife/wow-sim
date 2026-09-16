@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act} from '../lib/game/engine.js';
-import {monsterIdsAt,creatureLocations,objectLocations,quests,nodes} from '../lib/game/catalog.js';
+import {createGame,act} from '../../../packages/game-domain/src/rules/engine.js';
+import {monsterIdsAt,creatureLocations,objectLocations,quests,nodes} from '../../../packages/game-domain/src/rules/catalog.js';
 test('instance-only bosses cannot be selected as outdoor offline hunting targets',()=>{
  assert.ok(!monsterIdsAt('deadmines').includes(639));
  const s=createGame('边界',1,0);s.location='deadmines';assert.throws(()=>act(s,{type:'hunt',id:639},0),/没有/);

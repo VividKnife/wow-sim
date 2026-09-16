@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {newCharacter} from '../lib/game/character.js';
-import {items,classAbilities} from '../lib/game/catalog.js';
-import * as acquisition from '../lib/game/class-acquisition.js';
+import {newCharacter} from '../../../packages/game-domain/src/rules/character.js';
+import {items,classAbilities} from '../../../packages/game-domain/src/rules/catalog.js';
+import * as acquisition from '../../../packages/game-domain/src/rules/class-acquisition.js';
 
 function state(classId=8,raceId=1){return{...newCharacter('书籍测试',classId,60,raceId),hp:500,clock:0,location:'northshire',activity:{type:'idle'},bag:[],logs:[],logSequence:0};}
 const book=(id,uid='book')=>({id,uid,count:1});

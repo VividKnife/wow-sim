@@ -1,4 +1,4 @@
-import manifest from '../data/creature-assets-manifest.json' with {type:'json'};
+import manifest from '../../../packages/game-data/data/creature-assets-manifest.json' with {type:'json'};
 
 const assets=Object.fromEntries(manifest.assets.map(asset=>[asset.id,{src:'/'+asset.path,label:asset.label,kind:asset.kind}]));
 // This small manifest avoids bringing server catalogue tables into the renderer.

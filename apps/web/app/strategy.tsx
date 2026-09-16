@@ -2,7 +2,7 @@
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {GameProps,Icon} from './game-ui';
-import {classCombatMeta} from '@/lib/class-combat.js';
+import {classCombatMeta} from '../../../packages/sim-core/src/class-combat.js';
 import type {PotionOption} from './economy-types';
 
 const conditions=[['always','始终可用'],['targetCasting','敌人正在施法'],['enemyNear','敌人距离不超过（码）'],['healthBelow','自身生命低于（%）'],['manaAbove','自身主要资源不低于（%）'],['manaBelow','自身主要资源低于（%）'],['targetHealthBelow','目标生命低于（%）'],['enemyCountAtLeast','技能范围内可攻击敌人数至少']];

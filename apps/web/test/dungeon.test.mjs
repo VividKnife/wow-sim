@@ -1,12 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,stats} from '../lib/game/engine.js';
-import {enterDungeon,leaveDungeon,prepareEncounter,finishDungeonTravel,recordDungeonProgress,interactDungeon,dungeonRoute} from '../lib/game/dungeon.js';
-import {combatTick} from '../lib/game/combat.js';
-import {addItem,countItem} from '../lib/game/character.js';
-import {creatureLoot} from '../lib/game/catalog.js';
-import {lootRows,questProgress} from '../lib/game/quests.js';
-import {stepSession} from '../lib/game/session.js';
+import {createGame,act,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {enterDungeon,leaveDungeon,prepareEncounter,finishDungeonTravel,recordDungeonProgress,interactDungeon,dungeonRoute} from '../../../packages/game-domain/src/rules/dungeon.js';
+import {combatTick} from '../../../packages/game-domain/src/rules/combat.js';
+import {addItem,countItem} from '../../../packages/game-domain/src/rules/character.js';
+import {creatureLoot} from '../../../packages/game-domain/src/rules/catalog.js';
+import {lootRows,questProgress} from '../../../packages/game-domain/src/rules/quests.js';
 
 function group(seed=283){let s=createGame('矿井测试',seed,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
  for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);
@@ -26,7 +25,7 @@ test('a real first encounter advances the route once and cannot reward the same 
  let s=group();enterDungeon(s);pull(s);const firstGuids=s.combat.enemies.map(e=>e.sourceGuid);
  // Genuine combat, source health/damage, recruited equipment and unmodified time.
  s.wallAt=0;s.nextTick=s.clock+100;s.nextRegen=s.clock+2000;
- s=advance(s,120000,{dungeonOnline:true}).state;
+ s=advance(s,120000,{}).state;
  assert.equal(s.combat,null);assert.equal(s.dungeon.cursor,1);assert.equal(s.totals.kills,2);
  assert.ok(firstGuids.every(g=>s.dungeon.defeated[g]));
  const xp=s.totals.xp,kills=s.totals.kills;recordDungeonProgress(s);recordDungeonProgress(s);
@@ -76,19 +75,19 @@ test('Sneed appears 3500ms after the shredder dies and only his death unlocks th
 test('stopping a fired cannon cannot consume powder without opening the door',()=>{
  let s=group();enterDungeon(s);s.dungeon.cursor=dungeonRoute.findIndex(e=>e.id==='dm-cannon');addItem(s,5397);
  s=act(s,{type:'dungeonInteract'},0);assert.throws(()=>act(s,{type:'stop'},0),/火炮/);
- s=advance(s,500,{dungeonOnline:true}).state;assert.equal(s.dungeon.interactions['dm-cannon'],true);
+ s=advance(s,500,{}).state;assert.equal(s.dungeon.interactions['dm-cannon'],true);
  assert.equal(countItem(s,5397),0);
 });
 
-test('party rest consumes individual supplies, restores all living members, and freezes offline',()=>{
+test('party rest consumes individual supplies and restores living members without a browser heartbeat',()=>{
  let s=group();enterDungeon(s);s.bag=[];addItem(s,117,5);addItem(s,159,5);
  for(const c of [s,...s.party]){c.hp=1;c.mana=0;c.lastManaUse=0;}
  s=act(s,{type:'rest'},0);assert.equal(countItem(s,117),0);assert.equal(countItem(s,159),2);
  assert.ok([s,...s.party].every(c=>c.rest));
- const frozen=advance(s,3600000).state;assert.equal(frozen.clock,0);assert.ok(frozen.party.every(c=>c.hp===1));
- const whole=advance(s,18000,{dungeonOnline:true}).state;let chunk=s;
- for(let time=700;time<18000;time+=700)chunk=advance(chunk,time,{dungeonOnline:true}).state;
- chunk=advance(chunk,18000,{dungeonOnline:true}).state;assert.deepEqual(chunk,whole);
+ const background=advance(s,18000).state;assert.ok(background.clock>0);assert.ok(background.party.every(c=>c.hp>1));
+ const whole=advance(s,18000,{}).state;let chunk=s;
+ for(let time=700;time<18000;time+=700)chunk=advance(chunk,time,{}).state;
+ chunk=advance(chunk,18000,{}).state;assert.deepEqual(chunk,whole);
  assert.ok(whole.party.every(c=>c.hp>1));assert.ok(whole.party.filter(c=>[5,8].includes(c.classId)).every(c=>c.mana>0));
 });
 
@@ -96,7 +95,7 @@ test('a wiped party can return to corpses and resume without recreating defeated
  let s=group();enterDungeon(s);pull(s);s.combat.enemies[0].hp=0;combatTick(s);recordDungeonProgress(s);
  const deadGuid=s.combat.enemies[0].sourceGuid;for(const c of [s,...s.party])c.hp=0;combatTick(s);recordDungeonProgress(s);
  s=act(s,{type:'revive'},0);assert.equal(s.activity.type,'revive');
- s=advance(s,10000,{dungeonOnline:true}).state;
+ s=advance(s,10000,{}).state;
  assert.ok([s,...s.party].every(c=>c.hp>0));assert.equal(s.dungeon.defeated[deadGuid],true);
  assert.doesNotThrow(()=>prepareEncounter(s));
 });
@@ -106,12 +105,12 @@ test('priest resurrection has its source cost and cast time, and restores flat h
  const mana=priest.mana,cost=Math.floor(stats(priest).baseMana*.75);
  s=act(s,{type:'resurrect',target:mage.id},0);
  assert.equal(s.party.find(c=>c.classId===5).mana,mana-cost);assert.equal(s.activity.endsAt-s.clock,10000);
- s=advance(s,9900,{dungeonOnline:true}).state;assert.equal(s.party.find(c=>c.classId===8).hp,0);
- s=advance(s,10000,{dungeonOnline:true}).state;const restored=s.party.find(c=>c.classId===8);
+ s=advance(s,9900,{}).state;assert.equal(s.party.find(c=>c.classId===8).hp,0);
+ s=advance(s,10000,{}).state;const restored=s.party.find(c=>c.classId===8);
  // The shared regeneration tick at 10s also occurs after resurrection.
  assert.ok(restored.hp>=70);assert.ok(restored.hp<stats(restored).maxHp/2);assert.ok(restored.mana>=135);
  const oldHp=s.hp;s.party.find(c=>c.classId===1).hp=0;s=act(s,{type:'revive'},10000);
- s=advance(s,20000,{dungeonOnline:true}).state;assert.equal(s.hp,oldHp);assert.ok(s.party.find(c=>c.classId===1).hp>0);
+ s=advance(s,20000,{}).state;assert.equal(s.hp,oldHp);assert.ok(s.party.find(c=>c.classId===1).hp>0);
 });
 
 test('VanCleef drops the Alliance letter before its quest is accepted, enabling the item-started follow-up',()=>{
@@ -120,7 +119,7 @@ test('VanCleef drops the Alliance letter before its quest is accepted, enabling 
  for(const e of s.combat.enemies)e.hp=0;combatTick(s);recordDungeonProgress(s);
  assert.equal(countItem(s,2874),1);assert.equal(questProgress(s,373).canAccept,true);
  s=act(s,{type:'accept',id:373},0);assert.equal(questProgress(s,373).complete,true);
- leaveDungeon(s);s=act(s,{type:'travel',to:'oldtown'},0);s=advance(s,s.activity.endsAt-s.clock).state;
+ leaveDungeon(s);s=act(s,{type:'travel',to:'cathedral'},0);s=advance(s,s.activity.endsAt-s.clock).state;
  s=act(s,{type:'turnin',id:373},s.wallAt);assert.equal(s.completed[373],1);assert.equal(countItem(s,2874),0);
  lootRows(s,creatureLoot[639].filter(r=>r.item===2874));assert.equal(countItem(s,2874),0);
 });
@@ -138,14 +137,11 @@ test('leaving with a fallen companion still permits recovery outside and re-entr
  assert.ok(s.party.every(c=>c.hp>0));assert.doesNotThrow(()=>enterDungeon(s));
 });
 
-test('a genuine instance journey pauses without rerolling profiles, then resumes only on live heartbeats',()=>{
- const clientId='dungeon-test-page';let s=stepSession(group(),{type:'enterDungeon',clientId},0).state;
- s=stepSession(s,{type:'dungeonNext',clientId},0).state;
- s=stepSession(s,{type:'sync',clientId},500).state;const before=structuredClone(s);
- s=stepSession(s,{type:'pause',clientId},500).state;
- s=stepSession(s,{type:'sync',clientId},3600500).state;
- assert.equal(s.clock,before.clock);assert.equal(s.rngState,before.rngState);assert.deepEqual(s.dungeon,before.dungeon);assert.deepEqual(s.activity,before.activity);
- s=stepSession(s,{type:'sync',clientId},3601000).state;assert.equal(s.clock,before.clock+500);
+test('instance journey advances under its runner without a browser heartbeat',()=>{
+ let s=act(group(),{type:'enterDungeon'},0);
+ s=act(s,{type:'dungeonNext'},0);
+ const before=structuredClone(s);s=advance(s,500).state;
+ assert.equal(s.clock,500);assert.deepEqual(s.dungeon.spawns,before.dungeon.spawns);
  assert.throws(()=>act(s,{type:'hunt',id:598},s.wallAt),/离开副本/);
  assert.throws(()=>act(s,{type:'travel',to:'oldtown'},s.wallAt),/离开副本/);
 });

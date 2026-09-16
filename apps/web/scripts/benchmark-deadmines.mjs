@@ -1,7 +1,7 @@
 // Combat fixtures only: grants level/spells, keeps starting gear. Not a normal 1–20 playthrough.
-import {createGame,act,advance,stats} from '../lib/game/engine.js';
-import {startCombat} from '../lib/game/combat.js';
-import {abilities} from '../lib/game/catalog.js';
+import {createGame,act,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
+import {abilities} from '../../../packages/game-domain/src/rules/catalog.js';
 for(const entry of [644,1763,643,647,645,639]){
  let s=createGame('Benchmark',283,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
  s.learned=[...new Set([...s.learned,...abilities.filter(a=>a.requiredLevel<=18).map(a=>a.spellId)])];

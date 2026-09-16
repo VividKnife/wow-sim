@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance} from '../lib/game/engine.js';
-import {newCharacter,stats} from '../lib/game/character.js';
-import {talents,items,creatures} from '../lib/game/catalog.js';
-import {classUtilityUse,beginClassUtility} from '../lib/game/class-utility.js';
-import {classItemUse,useClassItem} from '../lib/game/class-items.js';
-import {buyMount} from '../lib/game/mounts.js';
-import {observationUse,executeObservation} from '../lib/game/class-observation.js';
-import {spells} from '../lib/game/catalog.js';
+import {createGame,act,advance} from '../../../packages/game-domain/src/rules/engine.js';
+import {newCharacter,stats} from '../../../packages/game-domain/src/rules/character.js';
+import {talents,items,creatures} from '../../../packages/game-domain/src/rules/catalog.js';
+import {classUtilityUse,beginClassUtility} from '../../../packages/game-domain/src/rules/class-utility.js';
+import {classItemUse,useClassItem} from '../../../packages/game-domain/src/rules/class-items.js';
+import {buyMount} from '../../../packages/game-domain/src/rules/mounts.js';
+import {observationUse,executeObservation} from '../../../packages/game-domain/src/rules/class-observation.js';
+import {spells} from '../../../packages/game-domain/src/rules/catalog.js';
 const make=(classId,raceId=1)=>{const s=createGame('review',91,0,{classId,raceId});s.level=60;s.money=1e8;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;return s;};
 test('talent reset removes Moonkin form, its armor and its granted spell',()=>{
  let s=make(11,4);const t=Object.values(talents).find(t=>t.classId===11&&t.name==='Moonkin Form');s.talents[t.id]=1;s.learned.push(t.ranks[0]);s.form='moonkin';const armor=stats(s).armor;

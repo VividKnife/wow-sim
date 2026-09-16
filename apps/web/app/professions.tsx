@@ -1,5 +1,5 @@
 "use client";
-import {useState} from 'react';
+import {useEffect,useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {GameProps,Icon,money,duration} from './game-ui';
 import './economy.css';
@@ -13,16 +13,21 @@ export function Gathering({state:s,data:d,busy,send}:GameProps){
 
 const colorNames:Record<string,string>={red:'未解锁',orange:'必定提升',yellow:'较易提升',green:'偶尔提升',gray:'不再提升'};
 const pageSize=24;
-export default function Professions({state:s,data:d,busy,send}:GameProps){
+export default function Professions({state:s,data:d,busy,revision,send}:GameProps){
  const [selected,setSelected]=useState('alchemy'),[count,setCount]=useState(1),[buyMissing,setBuyMissing]=useState(true),[search,setSearch]=useState(''),[filter,setFilter]=useState('全部'),[page,setPage]=useState(0);
+ const [workshop,setWorkshop]=useState<any>({recipes:[],total:0,page:0,pageSize}),[workshopError,setWorkshopError]=useState(''),[workshopLoading,setWorkshopLoading]=useState(false);
+ useEffect(()=>{
+  const controller=new AbortController(),params=new URLSearchParams({characterId:s.id,version:d.contentVersion,profession:selected,search,filter,page:String(page),pageSize:String(pageSize)});
+  setWorkshopLoading(true);setWorkshopError('');
+  fetch(`/api/game/workshop?${params}`,{signal:controller.signal}).then(async response=>{const result:any=await response.json().catch(()=>null);if(!response.ok)throw new Error(response.status<500&&typeof result?.error==='string'?result.error:'工坊报价暂时无法加载。');if(result?.contentVersion!==d.contentVersion||!Array.isArray(result?.recipes)||!Number.isInteger(result?.revision))throw new Error('工坊报价响应不完整。');return result;}).then(result=>{if(!controller.signal.aborted)setWorkshop(result);}).catch(error=>{if(error.name!=='AbortError'&&!controller.signal.aborted)setWorkshopError(error.message);}).finally(()=>{if(!controller.signal.aborted)setWorkshopLoading(false);});
+  return()=>controller.abort();
+ },[s.id,selected,search,filter,page,revision,d.contentVersion]);
  const p:Profession=d.professions.find((p:Profession)=>p.id===selected),rank=p.nextRank;
  const locked=busy||!!s.combat||!!s.dungeon||!['idle','hunt'].includes(s.activity.type),valid=Number.isInteger(count)&&count>=1&&count<=100;
- const query=search.trim().toLowerCase();
- const recipes:Recipe[]=d.recipes.filter((r:Recipe)=>r.profession===selected&&(!query||[r.name,r.nameEn,d.items[r.item]?.name,String(r.spell)].some(x=>x?.toLowerCase().includes(query)))&&(filter==='全部'||filter==='已解锁'&&r.known||filter==='可提升'&&r.known&&r.color!=='gray'||filter==='专精配方'&&r.specialization||filter==='冷却配方'&&r.cooldown)).sort((a:Recipe,b:Recipe)=>a.skill-b.skill||a.spell-b.spell);
- const pages=Math.max(1,Math.ceil(recipes.length/pageSize)),current=Math.min(page,pages-1);
- const pagination=<div className="economy-toolbar recipe-pagination"><small>共 {recipes.length} 条 · 第 {current+1} / {pages} 页</small><Button size="sm" variant="outline" disabled={current===0} onClick={()=>setPage(current-1)}>上一页</Button><Button size="sm" variant="outline" disabled={current>=pages-1} onClick={()=>setPage(current+1)}>下一页</Button></div>;
+ const recipes:Recipe[]=workshop.recipes,pages=Math.max(1,Math.ceil(workshop.total/pageSize)),current=Math.min(page,pages-1);
+ const pagination=<div className="economy-toolbar recipe-pagination"><small>共 {workshop.total} 条 · 第 {current+1} / {pages} 页{workshopLoading?' · 更新中…':''}</small><Button size="sm" variant="outline" disabled={current===0||workshopLoading} onClick={()=>setPage(current-1)}>上一页</Button><Button size="sm" variant="outline" disabled={current>=pages-1||workshopLoading} onClick={()=>setPage(current+1)}>下一页</Button></div>;
  return <div className="economy-layout">
-  <aside className="panel profession-sidebar"><div className="eyebrow">经典旧世 · 1—300</div><h2>艾泽拉斯工坊</h2><p>12 项职业 · {d.professionRecipeCount} 条配方。包含经典旧世各阶段配方；所有职业均可学习。</p><div className="profession-list">{d.professions.map((x:Profession)=><button key={x.id} className={selected===x.id?'active':''} onClick={()=>{setSelected(x.id);setPage(0);setSearch('');}}><span>{x.name}<small>{x.recipeCount?x.recipeCount+' 条配方':x.kind}</small></span><b>{x.learned?`${x.skill} / ${x.cap}`:'未学习'}</b></button>)}</div></aside>
+  <aside className="panel profession-sidebar"><div className="eyebrow">经典旧世 · 1—300</div><h2>艾泽拉斯工坊</h2><p>12 项职业 · {d.professionRecipeCount} 条配方。包含经典旧世各阶段配方；每名角色最多学习两个主要专业，副职业不占名额。</p><div className="profession-list">{d.professions.map((x:Profession)=><button key={x.id} className={selected===x.id?'active':''} onClick={()=>{setSelected(x.id);setPage(0);setSearch('');}}><span>{x.name}<small>{x.recipeCount?x.recipeCount+' 条配方':x.kind}</small></span><b>{x.learned?`${x.skill} / ${x.cap}`:'未学习'}</b></button>)}</div></aside>
   <div className="economy-main"><section className="panel"><div className="section-heading"><div><div className="eyebrow">{p.kind}</div><h2>{p.name}</h2></div>{p.learned&&<span className="skill-number">{p.skill} / {p.cap}</span>}</div><p>{p.description}</p>
    {p.learned&&<div className="profession-progress"><span style={{width:p.skill/p.cap*100+'%'}}/></div>}
    {rank?<div className="action-row"><small>{rank.name} · 上限 {rank.cap} · 需要等级 {rank.level}、熟练度 {rank.skill}{!d.canTrainProfession?' · 请前往城镇':''}</small><Button size="sm" disabled={locked||!d.canTrainProfession||(p.skill||0)<rank.skill||s.level<rank.level||s.money<rank.cost} onClick={()=>send({type:p.learned?'upgradeProfession':'learnProfession',id:p.id})}>{p.learned?'进阶':'学习'} · {money(rank.cost)}</Button></div>:<p>大师级 · 熟练度上限 300</p>}
@@ -33,7 +38,7 @@ export default function Professions({state:s,data:d,busy,send}:GameProps){
   {p.recipeCount>0?<section className="panel"><div className="section-heading"><h2>配方制造 <small>{p.recipeCount} 条</small></h2><input aria-label="搜索配方" placeholder="中文、英文或配方编号…" value={search} onChange={e=>{setSearch(e.target.value);setPage(0);}}/></div>
    <div className="economy-toolbar"><select aria-label="筛选配方" value={filter} onChange={e=>{setFilter(e.target.value);setPage(0);}}>{['全部','已解锁','可提升','专精配方','冷却配方'].map(x=><option key={x}>{x}</option>)}</select><label>制造次数 <input aria-label="制造次数" type="number" min={1} max={100} value={count} onChange={e=>setCount(Number(e.target.value))}/></label><label><input type="checkbox" checked={buyMissing} onChange={e=>setBuyMissing(e.target.checked)}/> 拍卖行自动补齐材料与工具</label></div>
    <p>达到熟练度后自动解锁。优先消耗背包内未锁定材料，工具保留；银行材料需先取出。有冷却的配方每次制造一次。需要熔炉、铁砧、月亮井等设施时，请到城镇工坊。</p>{pagination}
-   <div className="recipe-list">{recipes.slice(current*pageSize,(current+1)*pageSize).map(r=>{
+   {workshopError&&<p className="error" role="alert">{workshopError}</p>}<div className="recipe-list">{recipes.map(r=>{
     const cost=r.materials.reduce((n:number,m:Material)=>n+Math.max(0,m.count*count-m.have)*m.price,0)+r.tools.filter(t=>!t.have).reduce((n,t)=>n+t.price,0);
     const cooldown=r.readyAt>s.clock,reason=!r.known?'熟练度或专精不足':!r.facilityReady?'需要城镇工坊':cooldown?'冷却中':r.cooldown&&count!==1?'每次限制造一次':'';
     return <article className={'recipe-card '+(!r.known?'recipe-locked':'')} key={r.id}>
@@ -44,7 +49,7 @@ export default function Professions({state:s,data:d,busy,send}:GameProps){
      {!!r.tools.length&&<p className="recipe-tools">工具（不消耗）：{r.tools.map(t=><span className={t.have?'':'material-missing'} key={t.id}>{d.items[t.id]?.name} {t.have?'✓':'需补购'}　</span>)}</p>}
      <div className="recipe-actions"><small>补购合计：{money(valid?cost:0)}</small><Button size="sm" variant="outline" disabled={locked||!valid||!r.known||cost===0||s.money<cost} onClick={()=>send({type:'buyMaterials',id:r.id,count})}>一键补齐</Button><Button size="sm" disabled={locked||!valid||!!reason||(buyMissing?s.money<cost:cost>0)} onClick={()=>send({type:'craft',id:r.id,count,buyMissing})}>{reason||(buyMissing&&cost>0?'补齐并制造':'制造')}</Button></div>
     </article>;
-   })}</div>{!recipes.length&&<p className="empty">没有匹配的配方。</p>}{recipes.length>pageSize&&pagination}
+   })}</div>{!recipes.length&&!workshopLoading&&<p className="empty">没有匹配的配方。</p>}{workshop.total>pageSize&&pagination}
   </section>:<Gathering state={s} data={d} busy={busy} send={send}/>}
   <p className="economy-note">配方材料、产量、技能区间、工具与冷却来自 1.12 资料。羊皮纸、远程补购、自动解锁与城镇工坊为便捷规则。配方目录覆盖至 60 级，角色升级与区域地图仍沿用当前开发范围。</p>
  </div></div>;

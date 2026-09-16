@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,stats,advance} from '../lib/game/engine.js';
-import {startCombat,combatTick} from '../lib/game/combat.js';
-import {armorReduction} from '../lib/game/character.js';
-import * as enemySpells from '../lib/game/enemy-spells.js';
-import {armorWithAuras,attackTimeMultiplier,hasAura} from '../lib/game/combat-auras.js';
-import {enemyAITick} from '../lib/game/enemy-ai.js';
-import {spells} from '../lib/game/catalog.js';
-import {leaveDungeon} from '../lib/game/dungeon.js';
+import {createGame,stats,advance} from '../../../packages/game-domain/src/rules/engine.js';
+import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
+import {armorReduction} from '../../../packages/game-domain/src/rules/character.js';
+import * as enemySpells from '../../../packages/game-domain/src/rules/enemy-spells.js';
+import {armorWithAuras,attackTimeMultiplier,hasAura} from '../../../packages/sim-core/src/combat-auras.js';
+import {enemyAITick} from '../../../packages/game-domain/src/rules/enemy-ai.js';
+import {spells} from '../../../packages/game-domain/src/rules/catalog.js';
+import {leaveDungeon} from '../../../packages/game-domain/src/rules/dungeon.js';
 
 function encounter(entry){const s=createGame('测试',283,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rules=[];startCombat(s,[entry]);s.nextAction=s.nextSwing=1e9;const e=s.combat.enemies[0];e.position=s.position+4;e.nextAttack=1e9;return {s,e};}
 const hurt=(s,e,c,amount)=>{c.hp=Math.max(0,c.hp-Math.round(amount));};

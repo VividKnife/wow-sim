@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,advance,act,view} from '../lib/game/engine.js';
+import {createGame,advance,act,view} from '../../../packages/game-domain/src/rules/engine.js';
 
 test('new saves initialize storage and professions before their first simulation',()=>{
  const s=createGame('新角色',283,0),original=JSON.stringify(s);

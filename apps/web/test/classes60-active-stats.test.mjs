@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {createGame,advance} from '../lib/game/engine.js';import {stats} from '../lib/game/character.js';
-import {spellInfo,effectRange} from '../lib/game/character.js';import {classEffect} from '../lib/game/class-mechanics.js';
+import {createGame,advance} from '../../../packages/game-domain/src/rules/engine.js';import {stats} from '../../../packages/game-domain/src/rules/character.js';
+import {spellInfo,effectRange} from '../../../packages/game-domain/src/rules/character.js';import {classEffect} from '../../../packages/game-domain/src/rules/class-mechanics.js';
 const make=()=>{const s=createGame('实际光环',735,0);s.level=60;s.hp=stats(s).maxHp;s.mana=0;s.lastManaUse=0;return s;};
 test('active stat debuffs and crit auras affect real stats and expire',()=>{const s=make(),base=stats(s);s.auras=[{spell:1,effect:1,type:29,misc:0,amount:-10,until:10000},{spell:2,effect:1,type:52,amount:10,until:10000}];assert.equal(stats(s).str,base.str-10);assert.equal(stats(s).crit,base.crit+.1);s.time=10000;assert.equal(stats(s).str,base.str);});
 test('exclusive resistance buffs use strongest bonus and stack with sourced resistance debuffs',()=>{const s=make();s.auras=[{type:143,misc:4,amount:20,until:10000},{type:143,misc:4,amount:30,until:10000},{type:22,misc:4,amount:-10,until:10000}];assert.equal(stats(s).resistances[2],20);});

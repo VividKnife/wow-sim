@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
-import * as catalog from '../lib/game/catalog.js';
-import {supportedSpellNames,supportedTalentNames} from '../lib/game/class-support.js';
-import classReference from '../data/classes-reference.json' with {type:'json'};
+import * as catalog from '../../../packages/game-domain/src/rules/catalog.js';
+import {supportedSpellNames,supportedTalentNames} from '../../../packages/game-domain/src/rules/class-support.js';
+import classReference from '../../../packages/game-data/data/classes-reference.json' with {type:'json'};
 
 const classIds=[1,2,3,4,5,7,8,9,11];
 const raceIds=[1,2,3,4,5,6,7,8];

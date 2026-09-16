@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,advance,stats} from '../lib/game/engine.js';
-import {startCombat,combatTick} from '../lib/game/combat.js';
+import {createGame,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
 
 const clone=value=>JSON.parse(JSON.stringify(value));
 

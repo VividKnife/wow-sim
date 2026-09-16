@@ -1,7 +1,7 @@
 "use client";
 import {useState,type CSSProperties} from 'react';
 import {BarChart3,ChevronDown,ChevronRight,Clock3} from 'lucide-react';
-import {meterRows} from '@/lib/game/combat-metrics.js';
+import {meterRows} from '../../../packages/sim-core/src/combat-meter.js';
 import {Icon} from './game-ui';
 import './damage-meter.css';
 

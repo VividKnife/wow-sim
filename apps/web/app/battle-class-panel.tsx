@@ -1,6 +1,6 @@
 "use client";
 import {Button} from '@/components/ui/button';
-import {classCombatMeta} from '@/lib/class-combat.js';
+import {classCombatMeta} from '../../../packages/sim-core/src/class-combat.js';
 import {actionProgress} from '@/lib/combat-view.js';
 import {Bar,Icon,duration,GameProps} from './game-ui';
 

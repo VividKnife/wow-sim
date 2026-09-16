@@ -1,7 +1,7 @@
 import {mkdir,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-import {creatures,nodes,monsterIdsAt} from '../apps/web/lib/game/catalog.js';
-import deadmines from '../apps/web/data/deadmines-reference.json' with {type:'json'};
+import {creatures,nodes,monsterIdsAt} from '../packages/game-domain/src/rules/catalog.js';
+import deadmines from '../packages/game-data/data/deadmines-reference.json' with {type:'json'};
 
 // Blizzard icon art served unchanged by Wowhead's CDN. These are deliberate
 // family/type fallbacks, never purported renders of individual creature models.
@@ -50,5 +50,5 @@ for(const entry of ids){
 }
 // A reused model with conflicting classifications cannot establish a mapping.
 for(const [model,choices] of modelChoices)if(choices.size===1)manifest.models[model]=[...choices][0];
-await writeFile(new URL('../apps/web/data/creature-assets-manifest.json',import.meta.url),JSON.stringify(manifest,null,2)+'\n');
+await writeFile(new URL('../packages/game-data/data/creature-assets-manifest.json',import.meta.url),JSON.stringify(manifest,null,2)+'\n');
 console.log(`Imported ${manifest.assets.length} original icons for ${ids.length} creature templates.`);

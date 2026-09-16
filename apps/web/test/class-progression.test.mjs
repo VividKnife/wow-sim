@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,view} from '../lib/game/engine.js';
-import {canEquip,newCharacter,stats} from '../lib/game/character.js';
-import {questAvailable} from '../lib/game/quests.js';
-import {healthRegen} from '../lib/game/recovery.js';
+import {createGame,act,advance,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {canEquip,newCharacter,stats} from '../../../packages/game-domain/src/rules/character.js';
+import {questAvailable} from '../../../packages/game-domain/src/rules/quests.js';
+import {healthRegen} from '../../../packages/game-domain/src/rules/recovery.js';
+import {clientContent} from '../../../packages/game-domain/src/rules/client-content.js';
 
 const playableSamples=[
  [1,1],  // human warrior
@@ -113,8 +114,8 @@ test('view publishes current-class progression and explicit blocked reasons',()=
  assert.equal(d.className,'萨满祭司');
  assert.equal(d.raceName,'兽人');
  assert.equal(d.faction,'Horde');
- assert.equal(d.creationOptions.classes.length,9);
- assert.equal(d.creationOptions.races.length,8);
+ assert.equal(clientContent().creationOptions.classes.length,9);
+ assert.equal(clientContent().creationOptions.races.length,8);
  assert.equal(d.talentTrees.length,3);
  assert.ok(d.talentTrees.every(tree=>tree.classId===7));
  assert.ok(d.skills.length>0&&d.skills.every(skill=>skill.classId===7));

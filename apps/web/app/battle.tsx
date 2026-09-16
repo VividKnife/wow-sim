@@ -3,12 +3,11 @@ import {useEffect,useRef,useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {Dialog,DialogContent,DialogTitle,DialogDescription} from '@/components/ui/dialog';
 import {actionProgress,classAttackStatus,meleeStatus,meleeProgress,enemyMeleeProgress,unitCondition,conditionRemaining,recentCombatEvents,mergeCombatEffects,battleLayout,fieldPoint,projectilePoint,presentationProjectiles,schoolColor} from '@/lib/combat-view.js';
-import {distance,effectiveSpeed} from '@/lib/game/combat-space.js';
+import {distance} from '../../../packages/sim-core/src/geometry.js';
 import {combatSoundForEvent,createCombatAudio} from '@/lib/combat-audio.js';
 import DamageMeter from './damage-meter';
 import Strategy from './strategy';
 import {BattleUnitStatus,BattleCompanions,BattleClassHint} from './battle-class-panel';
-import {combatMembers} from '@/lib/game/combat-members.js';
 import {creatureVisual} from '@/lib/creature-visuals.js';
 import type {BattleRenderer,BattleScene} from '@/lib/battle-renderer';
 import {Bar,Icon,GameProps,duration} from './game-ui';
@@ -45,7 +44,7 @@ export default function Battle({state:s,data:d,busy,send,open,onOpenChange}:{ope
  useEffect(()=>{if(!open){cursor.current=s.logSequence;setEffects([]);return;}const timer=setInterval(()=>{if(document.hidden)return;setClock(observed.current.clock+(s.combat?Math.min(2600,Date.now()-observed.current.at):0));setEffects(old=>old.filter(e=>Date.now()-e.shownAt<1500));},50);return()=>clearInterval(timer);},[open,!!s.combat]);
  const battle=s.combat||s.lastCombat;if(!battle)return null;const viewClock=s.combat?clock:battle.endedAt??clock;
  const projection=d.battleView;
- const actors:any[]=s.combat?combatMembers(s,battle):battle.actorsSnapshot;
+ const actors:any[]=projection.actors||battle.actorsSnapshot||[];
  const units=[...actors.map(u=>({...u,foe:false})),...battle.enemies.map((u:any)=>({...u,foe:!projection.units[u.id]?.controlled}))].map(u=>{
   const ui=projection.units[u.id],visual=ui?.portrait?{...ui.portrait,label:ui.className,kind:'class'}:u.totemUnit?{src:skills.find((a:any)=>a.spellId===u.spell)?.icon||'/icons/assets/spell_nature_forceofnature.png',label:'图腾',kind:'icon'}:creatureVisual({...u,creatureType:u.creatureType||(u.petUnit?(u.kind==='beast'?1:3):undefined)});
   return {...u,cast:ui?.cast,maxHp:ui?.maxHp||u.maxHp,visual,swing:s.combat&&!u.petUnit?(u.foe?enemyMeleeProgress(u,actors,viewClock):classAttackStatus(u,battle,viewClock,ui?.attack).progress):0};
@@ -53,9 +52,9 @@ export default function Battle({state:s,data:d,busy,send,open,onOpenChange}:{ope
  const player=units.find(u=>u.id===s.id),playerUi=projection.units[s.id];
  const selected=units.find(u=>u.id===selectedId)||units[0],target=units.find(u=>u.id===selected.cast?.target)||units.find(u=>u.id===selected.target)||(!selected.foe?battle.enemies.find((e:any)=>e.hp>0&&!e.removed):null),castSkill=skills.find((skill:any)=>skill.spellId===selected.cast?.spell),range=Number(castSkill?.range||castSkill?.radius||5);
  const scene:BattleScene={layout,units,clock:viewClock,selectedId:selected.id,range,projectiles:presentationProjectiles(s.combat?battle.projectiles||[]:[],effects,viewClock,Date.now(),units),effects:effects.filter(e=>e.shownAt<=Date.now()),groundEffects:s.combat?[...projection.groundEffects,...actors.filter((u:any)=>u.cast?.channel&&u.cast?.center).map((u:any)=>{const skill=skills.find((a:any)=>a.spellId===u.cast.spell);return {...u.cast,radius:skill?.radius||8,school:skill?.school};})]:[],lowEffects,reducedMotion};
- const attack=classAttackStatus(player,s.combat,viewClock,playerUi.attack),swing=attack.status,swingProgress=attack.progress,speed=selected.hp>0&&!selected.totemUnit?effectiveSpeed(selected,viewClock):0;
+ const attack=classAttackStatus(player,s.combat,viewClock,playerUi.attack),swing=attack.status,swingProgress=attack.progress,speed=projection.units[selected.id].movement.speed;
  const remaining=conditionRemaining(selected,viewClock);
- const baseSpeed=effectiveSpeed({...selected,rootUntil:0,stunUntil:0,polyUntil:0,slowUntil:0,movementSlows:[],auras:[]},viewClock),slow=baseSpeed>0?Math.max(0,1-speed/baseSpeed):0;
+ const baseSpeed=projection.units[selected.id].movement.baseSpeed,slow=baseSpeed>0?Math.max(0,1-speed/baseSpeed):0;
 
  return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="battle-dialog" showCloseButton={false}><header className="battle-heading"><div><div className="eyebrow">{d.location.name} / {battle.dungeon?'五人小队':'野外遭遇'}</div><DialogTitle>{s.combat?'战斗进行中':player.hp<=0?'你倒下了':'战斗结束'}</DialogTitle><DialogDescription>站位、弹道和范围读取实际战斗坐标</DialogDescription></div><Button variant="outline" onClick={()=>onOpenChange(false)}>返回世界 ↙</Button></header><div className="battle-toolbar"><span>{units.filter(u=>u.foe&&u.hp>0&&!u.removed).length} 个敌人 · {actors.filter(a=>a.hp>0&&!a.totemUnit&&!a.petUnit).length} 名队员</span><label><input type="checkbox" checked={lowEffects} onChange={e=>setLowEffects(e.target.checked)}/>简化特效</label>{reducedMotion&&<small>减少动态效果</small>}</div><Field scene={scene} skills={skills} onSelect={setSelectedId} active={open}/><div className="battle-roster" aria-label="选择战斗单位">{units.map(u=><button key={u.id} className={`${selected.id===u.id?'selected':''} ${u.hp<=0?'fallen':''}`} onClick={()=>setSelectedId(u.id)}><span style={{color:u.foe?'#df9e89':colors[u.classId]}}>{u.name}</span><small>{Math.max(0,Math.round(u.hp/Math.max(1,u.maxHp)*100))}%</small></button>)}</div><div className="battle-unit-detail"><strong>{selected.name}</strong><span>{unitCondition(selected,viewClock)|| (selected.cast?`${castSkill?.name||'施法'}中`:selected.hp<=0?'已倒下':'可行动')}{remaining>0?` · ${duration(remaining)}`:''}</span><span>目标距离 {target?distance(selected,target).toFixed(1)+' 码':'—'}</span><span>移速 {speed.toFixed(1)} 码/秒{slow>0?` · 降低 ${Math.round(slow*100)}%`:''}</span><small>{selected.visual.label} · 圆环 {range} 码</small></div>
  {selected.id!==player.id&&<BattleUnitStatus unit={selected} ui={projection.units[selected.id]} clock={viewClock} live={!!s.combat}/>}

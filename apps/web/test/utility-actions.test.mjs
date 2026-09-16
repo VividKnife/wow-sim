@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,view} from '../lib/game/engine.js';
-import {addItem,countItem,stats} from '../lib/game/character.js';
+import {createGame,act,advance,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {addItem,countItem,stats} from '../../../packages/game-domain/src/rules/character.js';
 
 const fresh=()=>{const s=createGame('生活技能',37,0);s.level=20;s.learned.push(5504,5505,587,3561,1459);s.mana=stats(s).maxMana;return s;};
 const command=(s,a)=>act(s,a,s.wallAt);
-const wait=(s,ms)=>advance(s,s.wallAt+ms,{dungeonOnline:true,maxTicks:50000}).state;
+const wait=(s,ms)=>advance(s,s.wallAt+ms,{maxTicks:50000}).state;
 const item=(s,id)=>s.bag.find(i=>i.id===id);
 
 test('spellbook casts the selected conjuration rank, completing only after its cast',()=>{

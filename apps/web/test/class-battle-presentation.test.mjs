@@ -1,14 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,view,act} from '../lib/game/engine.js';
-import {stats,spellInfo,newCharacter,addItem} from '../lib/game/character.js';
-import {classDefinitions} from '../lib/game/catalog.js';
-import {startCombat} from '../lib/game/combat.js';
-import {finishCombat} from '../lib/game/combat-metrics.js';
-import {classEffect} from '../lib/game/class-mechanics.js';
-import {ruleMatches} from '../lib/game/combat-strategy.js';
+import {createGame,view,act} from '../../../packages/game-domain/src/rules/engine.js';
+import {stats,spellInfo,newCharacter,addItem} from '../../../packages/game-domain/src/rules/character.js';
+import {classDefinitions} from '../../../packages/game-domain/src/rules/catalog.js';
+import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
+import {finishCombat} from '../../../packages/game-domain/src/rules/combat-metrics.js';
+import {classEffect} from '../../../packages/game-domain/src/rules/class-mechanics.js';
+import {ruleMatches} from '../../../packages/game-domain/src/rules/combat-strategy.js';
+import {effectiveSpeed} from '../../../packages/game-domain/src/rules/combat-space.js';
 
 const game=id=>{const def=classDefinitions.find(c=>c.id===id),s=createGame('职业战斗',93,0,{classId:id,raceId:def.races[0]});s.level=60;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rules=[];startCombat(s,[299]);return s;};
+test('movement projection derives actor and enemy speed from server rules without mutating them',()=>{
+ const s=game(4),enemy=s.combat.enemies[0];s.stealthed=true;s.sprintUntil=5000;s.moveSpeed=9;s.movementSlows=[{amount:.25,until:4000}];enemy.moveSpeed=10;enemy.rootUntil=2000;
+ const before=structuredClone(s),projection=view(s).battleView;
+ for(const actor of [s,enemy]){const movement=projection.units[actor.id].movement;assert.equal(movement.speed,effectiveSpeed(actor,s.clock));assert.equal(movement.baseSpeed,effectiveSpeed({...actor,rootUntil:0,stunUntil:0,polyUntil:0,slowUntil:0,movementSlows:[],auras:[]},s.clock));}
+ assert.equal(projection.units[enemy.id].movement.speed,0);assert.equal(projection.units[enemy.id].movement.baseSpeed,10);assert.ok(projection.units[s.id].movement.speed<projection.units[s.id].movement.baseSpeed);assert.deepEqual(s,before);
+});
 test('all nine classes expose distinct portraits and their real combat resource',()=>{
  const frames=new Set();for(const id of [1,2,3,4,5,7,8,9,11]){const s=game(id);s.rage=370;s.energy=64;const ui=view(s).battleView?.units[s.id];assert.ok(ui,`class ${id}`);frames.add(ui.portrait.frame.join(','));assert.equal(ui.resource.name,id===1?'怒气':id===4?'能量':'法力');if(id===1)assert.equal(ui.resource.value,37);if(id===4)assert.equal(ui.resource.value,64);assert.ok(ui.mode);}
  assert.equal(frames.size,9);

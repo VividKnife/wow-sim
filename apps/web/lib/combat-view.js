@@ -1,5 +1,5 @@
-import {controlled,hasAura,rooted} from './game/combat-auras.js';
-import {distance,point} from './game/combat-space.js';
+import {controlled,hasAura,rooted} from '../../../packages/sim-core/src/combat-auras.js';
+import {distance,point} from '../../../packages/sim-core/src/geometry.js';
 export function actionProgress(start,end,clock){if(!Number.isFinite(start)||!Number.isFinite(end)||end<=start)return 0;return Math.max(0,Math.min(1,(clock-start)/(end-start)));}
 export function meleeStatus(actor,battle,clock){
  if(!battle)return{kind:'ended',remaining:0};

@@ -1,0 +1,322 @@
+[
+  {
+    "entry": 30,
+    "sourcePage": "https://www.wowhead.com/classic/npc=30",
+    "localReferenceModels": [
+      382
+    ],
+    "creatureType": 1,
+    "family": 3,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 69,
+    "sourcePage": "https://www.wowhead.com/classic/npc=69",
+    "localReferenceModels": [
+      604
+    ],
+    "creatureType": 1,
+    "family": 1,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 89,
+    "sourcePage": "https://www.wowhead.com/classic/npc=89",
+    "localReferenceModels": [
+      169
+    ],
+    "creatureType": 3,
+    "family": 0,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 113,
+    "sourcePage": "https://www.wowhead.com/classic/npc=113",
+    "localReferenceModels": [
+      503
+    ],
+    "creatureType": 1,
+    "family": 5,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 154,
+    "sourcePage": "https://www.wowhead.com/classic/npc=154",
+    "localReferenceModels": [
+      1105
+    ],
+    "creatureType": 1,
+    "family": 7,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 416,
+    "sourcePage": "https://www.wowhead.com/classic/npc=416",
+    "localReferenceModels": [
+      4449
+    ],
+    "creatureType": 3,
+    "family": 23,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 417,
+    "sourcePage": "https://www.wowhead.com/classic/npc=417",
+    "localReferenceModels": [
+      850
+    ],
+    "creatureType": 3,
+    "family": 15,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 441,
+    "sourcePage": "https://www.wowhead.com/classic/npc=441",
+    "localReferenceModels": [
+      387
+    ],
+    "creatureType": 2,
+    "family": 0,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 620,
+    "sourcePage": "https://www.wowhead.com/classic/npc=620",
+    "localReferenceModels": [
+      304
+    ],
+    "creatureType": 8,
+    "family": 0,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 721,
+    "sourcePage": "https://www.wowhead.com/classic/npc=721",
+    "localReferenceModels": [
+      328,
+      4626
+    ],
+    "creatureType": 8,
+    "family": 0,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 822,
+    "sourcePage": "https://www.wowhead.com/classic/npc=822",
+    "localReferenceModels": [
+      1006
+    ],
+    "creatureType": 1,
+    "family": 4,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 1015,
+    "sourcePage": "https://www.wowhead.com/classic/npc=1015",
+    "localReferenceModels": [
+      670
+    ],
+    "creatureType": 1,
+    "family": 11,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 1030,
+    "sourcePage": "https://www.wowhead.com/classic/npc=1030",
+    "localReferenceModels": [
+      360
+    ],
+    "creatureType": 10,
+    "family": 0,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 1039,
+    "sourcePage": "https://www.wowhead.com/classic/npc=1039",
+    "localReferenceModels": [
+      713
+    ],
+    "creatureType": 4,
+    "family": 0,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 1199,
+    "sourcePage": "https://www.wowhead.com/classic/npc=1199",
+    "localReferenceModels": [
+      748
+    ],
+    "creatureType": 1,
+    "family": 2,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 1400,
+    "sourcePage": "https://www.wowhead.com/classic/npc=1400",
+    "localReferenceModels": [
+      1036
+    ],
+    "creatureType": 1,
+    "family": 6,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 1512,
+    "sourcePage": "https://www.wowhead.com/classic/npc=1512",
+    "localReferenceModels": [
+      4732
+    ],
+    "creatureType": 1,
+    "family": 24,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 1860,
+    "sourcePage": "https://www.wowhead.com/classic/npc=1860",
+    "localReferenceModels": [
+      1132
+    ],
+    "creatureType": 3,
+    "family": 16,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 1863,
+    "sourcePage": "https://www.wowhead.com/classic/npc=1863",
+    "localReferenceModels": [
+      4162
+    ],
+    "creatureType": 3,
+    "family": 17,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 1953,
+    "sourcePage": "https://www.wowhead.com/classic/npc=1953",
+    "localReferenceModels": [
+      863
+    ],
+    "creatureType": 4,
+    "family": 0,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 1995,
+    "sourcePage": "https://www.wowhead.com/classic/npc=1995",
+    "localReferenceModels": [
+      10832
+    ],
+    "creatureType": 1,
+    "family": 26,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 2172,
+    "sourcePage": "https://www.wowhead.com/classic/npc=2172",
+    "localReferenceModels": [
+      38
+    ],
+    "creatureType": 1,
+    "family": 12,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 3102,
+    "sourcePage": "https://www.wowhead.com/classic/npc=3102",
+    "localReferenceModels": [
+      850
+    ],
+    "creatureType": 3,
+    "family": 15,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 3124,
+    "sourcePage": "https://www.wowhead.com/classic/npc=3124",
+    "localReferenceModels": [
+      2485
+    ],
+    "creatureType": 1,
+    "family": 20,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 3247,
+    "sourcePage": "https://www.wowhead.com/classic/npc=3247",
+    "localReferenceModels": [
+      1742
+    ],
+    "creatureType": 1,
+    "family": 27,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 3461,
+    "sourcePage": "https://www.wowhead.com/classic/npc=3461",
+    "localReferenceModels": [
+      6368
+    ],
+    "creatureType": 1,
+    "family": 21,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 4127,
+    "sourcePage": "https://www.wowhead.com/classic/npc=4127",
+    "localReferenceModels": [
+      2710
+    ],
+    "creatureType": 1,
+    "family": 25,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 11859,
+    "sourcePage": "https://www.wowhead.com/classic/npc=11859",
+    "localReferenceModels": [
+      1912
+    ],
+    "creatureType": 3,
+    "family": 0,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  },
+  {
+    "entry": 14273,
+    "sourcePage": "https://www.wowhead.com/classic/npc=14273",
+    "localReferenceModels": [
+      5229
+    ],
+    "creatureType": 5,
+    "family": 0,
+    "status": "missing",
+    "reason": "HTTP Error 403: Forbidden"
+  }
+]

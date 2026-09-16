@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame} from '../lib/game/engine.js';
-import {spellInfo,effectRange} from '../lib/game/character.js';
-import {startCombat} from '../lib/game/combat.js';
-import {prepareClassAbility} from '../lib/game/class-spell-effects.js';
+import {createGame} from '../../../packages/game-domain/src/rules/engine.js';
+import {spellInfo,effectRange} from '../../../packages/game-domain/src/rules/character.js';
+import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
+import {prepareClassAbility} from '../../../packages/game-domain/src/rules/class-spell-effects.js';
 
 test('Mind Control respects its source creature mask and maximum target level before casting',()=>{
  const s=createGame('精神控制',775,0,{classId:5,raceId:1});s.level=60;startCombat(s,[299,6]);

@@ -2,10 +2,10 @@
 // Isolated browser harness. Uses the real engine and components; no API or saved user data.
 import React,{useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {createGame,act,advance,stats,view} from '../../lib/game/engine.js';
-import {dungeonRoute,enterDungeon} from '../../lib/game/dungeon.js';
-import {abilities} from '../../lib/game/catalog.js';
-import {addItem} from '../../lib/game/character.js';
+import {createGame,act,advance,stats,view} from '../../../../packages/game-domain/src/rules/engine.js';
+import {dungeonRoute,enterDungeon} from '../../../../packages/game-domain/src/rules/dungeon.js';
+import {abilities} from '../../../../packages/game-domain/src/rules/catalog.js';
+import {addItem} from '../../../../packages/game-domain/src/rules/character.js';
 import Dungeon from '../../app/dungeon';
 import Battle from '../../app/battle';
 import Party from '../../app/party';
@@ -31,7 +31,7 @@ function fixture(scenario:string){
 function Harness(){
  const [s,setState]=useState(()=>fixture('entry')),[open,setOpen]=useState(false),[error,setError]=useState('');
  const current=useRef(s);current.current=s;const key=useRef<string|null>(null);
- useEffect(()=>{const timer=setInterval(()=>setState((s:any)=>advance(s,s.wallAt+500,{dungeonOnline:true}).state),500);return()=>clearInterval(timer);},[]);
+ useEffect(()=>{const timer=setInterval(()=>setState((s:any)=>advance(s,s.wallAt+500,{}).state),500);return()=>clearInterval(timer);},[]);
  useEffect(()=>{const next=s.combat?`${s.combat.runId}:${s.combat.startedAt}`:null;if(next&&next!==key.current)setOpen(true);key.current=next;},[s.combat?.startedAt,!!s.combat]);
  const send=async(action:any)=>{try{const next=act(current.current,action,current.current.wallAt);current.current=next;setState(next);setError('');return true;}catch(e:any){setError(e.message);return false;}};
  const props={state:s,data:view(s),busy:false,send};

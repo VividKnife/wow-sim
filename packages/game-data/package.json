@@ -1,0 +1,1 @@
+{"name":"@wow-sim/game-data","private":true,"type":"module","exports":{"./manifest":"./manifest.json","./data/*":"./data/*"}}

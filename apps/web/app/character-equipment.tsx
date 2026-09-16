@@ -4,22 +4,22 @@ import {useState} from 'react';
 import {Backpack, Shirt, Shield, Sword, Gem, Footprints, Hand, Crown, Circle, WandSparkles} from 'lucide-react';
 import {Bar, GameProps, Icon, money} from './game-ui';
 import CharacterModel from './character-model';
-import {enchants,enchantFits} from '@/lib/game/profession-data.js';
 import './economy.css';
 
 type Instance={uid:string;id:number;count:number;durability?:number;bound?:boolean;locked?:boolean;enchant?:string};
-type ItemData={class:number;subclass:number;name:string;icon?:string;quality:number;level:number;maxDurability:number;armor:number;slot:number;bagSlots:number;sell:number;damage?:number[];speed:number;stats:{type:number;value:number}[]};
+type ItemData={class:number;subclass:number;name:string;icon?:string;quality:number;level:number;maxDurability:number;armor:number;slot:number;bagSlots:number;sell:number;description?:string|null;damage?:number[];speed:number;stats:{type:number;value:number}[]};
 type Slot={id:number;name:string;glyph:typeof Shirt};
 const leftSlots:Slot[]=[{id:1,name:'头部',glyph:Crown},{id:2,name:'颈部',glyph:Gem},{id:3,name:'肩部',glyph:Shield},{id:15,name:'背部',glyph:Shirt},{id:5,name:'胸部',glyph:Shirt},{id:4,name:'衬衣',glyph:Shirt},{id:19,name:'战袍',glyph:Shirt},{id:9,name:'手腕',glyph:Shield}];
 const rightSlots:Slot[]=[{id:10,name:'手部',glyph:Hand},{id:6,name:'腰部',glyph:Shield},{id:7,name:'腿部',glyph:Shirt},{id:8,name:'脚部',glyph:Footprints},{id:11,name:'手指',glyph:Circle},{id:12,name:'手指',glyph:Circle},{id:13,name:'饰品',glyph:Gem},{id:14,name:'饰品',glyph:Gem}];
 const weaponSlots:Slot[]=[{id:16,name:'主手',glyph:Sword},{id:17,name:'副手',glyph:Shield},{id:18,name:'远程',glyph:WandSparkles}];
 const armorTypes:Record<number,string>={1:'布甲',2:'皮甲',3:'锁甲',4:'板甲',6:'盾牌',7:'圣契',8:'神像',9:'图腾'};
 const statNames:Record<number,string>={3:'敏捷',4:'力量',5:'智力',6:'精神',7:'耐力'};
+const enchantFits=(def:any,item:any,slot:number)=>!!(def&&item&&def.slots.includes(slot)&&(def.class<0||def.class===item.class)&&(!def.subclassMask||def.subclassMask<0||def.subclassMask&(1<<item.subclass))&&(!def.inventoryMask||def.inventoryMask&(1<<item.InventoryType)));
 
 function ItemFacts({item,instance}:{item:ItemData;instance:Instance}){
  return <span className="armory-item-facts">
   <strong className={'item-name rarity-'+item.quality}>{item.name}</strong>
-  {instance.bound&&<span>已绑定</span>}{instance.locked&&<span>🔒 已锁定</span>}{instance.enchant&&<span className="enchant-text">{(enchants as Record<string,{description:string}>)[instance.enchant]?.description}</span>}
+  {instance.bound&&<span>已绑定</span>}{instance.locked&&<span>🔒 已锁定</span>}{instance.enchant&&<span className="enchant-text">{item.description||`附魔 ${instance.enchant}`}</span>}
   {item.bagSlots>0&&<span>{item.bagSlots} 格容器</span>}
   {item.class===4&&armorTypes[item.subclass]&&<span>{armorTypes[item.subclass]}</span>}
   {item.armor>0&&<span>{item.armor} 点护甲</span>}

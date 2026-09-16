@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,stats,killXp} from '../lib/game/engine.js';
-import {startCombat,combatTick,hurtPlayer} from '../lib/game/combat.js';
+import {createGame,act,advance,stats,killXp} from '../../../packages/game-domain/src/rules/engine.js';
+import {startCombat,combatTick,hurtPlayer} from '../../../packages/game-domain/src/rules/combat.js';
 
 function group(){let s=createGame('野外小队',29,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);return s;}
 

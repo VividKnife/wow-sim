@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,view} from '../lib/game/engine.js';
-import {addItem,countItem} from '../lib/game/character.js';
-import {items} from '../lib/game/catalog.js';
+import {createGame,act,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {addItem,countItem} from '../../../packages/game-domain/src/rules/character.js';
+import {items} from '../../../packages/game-domain/src/rules/catalog.js';
 
 test('ordinary trade materials remain bankable, sellable and tradable despite appearing in quest objectives',()=>{
  let s=createGame('材料整理',283,0);s.location='stormwind';addItem(s,2589,20);addItem(s,769,10);

@@ -1,0 +1,350 @@
+{
+  "source": ".cache/refactor-content-mage/final-state.json",
+  "sourceSha256": "34f9c835e56966d9d1e62ece66c64d6c7927d422dfc8dd9fb039248a3304ce12",
+  "method": "Clone same earned save, normal revive/rest/strategy/dungeonNext commands only; no state edits. Four variants independent. Retry starts from cc-buffs earned outcome.",
+  "comparison": [
+    {
+      "mode": "baseline",
+      "cursor": 27,
+      "seconds": 24.234,
+      "alive": 0,
+      "enemies": [
+        {
+          "id": "dm-3600049",
+          "entry": 622,
+          "hp": 450,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600052",
+          "entry": 622,
+          "hp": 1316,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600053",
+          "entry": 622,
+          "hp": 1347,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600086",
+          "entry": 1731,
+          "hp": 1224,
+          "max": 1251
+        },
+        {
+          "id": "dm-3600094",
+          "entry": 1731,
+          "hp": 1251,
+          "max": 1251
+        },
+        {
+          "id": "summon-1",
+          "entry": 2520,
+          "hp": 1221,
+          "max": 1251
+        },
+        {
+          "id": "summon-2",
+          "entry": 2520,
+          "hp": 1251,
+          "max": 1251
+        },
+        {
+          "id": "summon-3",
+          "entry": 2520,
+          "hp": 1251,
+          "max": 1251
+        }
+      ],
+      "deaths": [
+        {
+          "t": 17.234,
+          "id": "companion-priest"
+        },
+        {
+          "t": 17.534,
+          "id": "companion-warrior"
+        },
+        {
+          "t": 19.534,
+          "id": "player"
+        },
+        {
+          "t": 21.134,
+          "id": "companion-rogue"
+        },
+        {
+          "t": 24.234,
+          "id": "companion-mage"
+        }
+      ]
+    },
+    {
+      "mode": "cc",
+      "cursor": 27,
+      "seconds": 51.234,
+      "alive": 0,
+      "enemies": [
+        {
+          "id": "dm-3600049",
+          "entry": 622,
+          "hp": 0,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600052",
+          "entry": 622,
+          "hp": 769,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600053",
+          "entry": 622,
+          "hp": 1002,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600086",
+          "entry": 1731,
+          "hp": 1251,
+          "max": 1251
+        },
+        {
+          "id": "dm-3600094",
+          "entry": 1731,
+          "hp": 1170,
+          "max": 1251
+        },
+        {
+          "id": "summon-1",
+          "entry": 2520,
+          "hp": 1221,
+          "max": 1251
+        },
+        {
+          "id": "summon-2",
+          "entry": 2520,
+          "hp": 1251,
+          "max": 1251
+        }
+      ],
+      "deaths": [
+        {
+          "t": 37.234,
+          "id": "companion-priest"
+        },
+        {
+          "t": 41.234,
+          "id": "companion-warrior"
+        },
+        {
+          "t": 45.234,
+          "id": "player"
+        },
+        {
+          "t": 49.234,
+          "id": "companion-rogue"
+        },
+        {
+          "t": 51.234,
+          "id": "companion-mage"
+        }
+      ]
+    },
+    {
+      "mode": "buffs",
+      "cursor": 27,
+      "seconds": 32.7,
+      "alive": 0,
+      "enemies": [
+        {
+          "id": "dm-3600049",
+          "entry": 622,
+          "hp": 86,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600052",
+          "entry": 622,
+          "hp": 1316,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600053",
+          "entry": 622,
+          "hp": 1347,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600086",
+          "entry": 1731,
+          "hp": 1222,
+          "max": 1251
+        },
+        {
+          "id": "dm-3600094",
+          "entry": 1731,
+          "hp": 1222,
+          "max": 1251
+        },
+        {
+          "id": "summon-1",
+          "entry": 2520,
+          "hp": 1251,
+          "max": 1251
+        },
+        {
+          "id": "summon-2",
+          "entry": 2520,
+          "hp": 1219,
+          "max": 1251
+        },
+        {
+          "id": "summon-3",
+          "entry": 2520,
+          "hp": 1251,
+          "max": 1251
+        }
+      ],
+      "deaths": [
+        {
+          "t": 16.4,
+          "id": "companion-priest"
+        },
+        {
+          "t": 18.5,
+          "id": "companion-warrior"
+        },
+        {
+          "t": 22.7,
+          "id": "player"
+        },
+        {
+          "t": 27.2,
+          "id": "companion-rogue"
+        },
+        {
+          "t": 32.7,
+          "id": "companion-mage"
+        }
+      ]
+    },
+    {
+      "mode": "cc-buffs",
+      "cursor": 27,
+      "seconds": 65.7,
+      "alive": 0,
+      "enemies": [
+        {
+          "id": "dm-3600049",
+          "entry": 622,
+          "hp": 0,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600052",
+          "entry": 622,
+          "hp": 0,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600053",
+          "entry": 622,
+          "hp": 1191,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600086",
+          "entry": 1731,
+          "hp": 1251,
+          "max": 1251
+        },
+        {
+          "id": "dm-3600094",
+          "entry": 1731,
+          "hp": 1251,
+          "max": 1251
+        },
+        {
+          "id": "summon-1",
+          "entry": 2520,
+          "hp": 1222,
+          "max": 1251
+        },
+        {
+          "id": "summon-2",
+          "entry": 2520,
+          "hp": 1223,
+          "max": 1251
+        }
+      ],
+      "deaths": [
+        {
+          "t": 43.2,
+          "id": "companion-priest"
+        },
+        {
+          "t": 46.6,
+          "id": "companion-warrior"
+        },
+        {
+          "t": 53.1,
+          "id": "player"
+        },
+        {
+          "t": 59.6,
+          "id": "companion-rogue"
+        },
+        {
+          "t": 65.7,
+          "id": "companion-mage"
+        }
+      ]
+    }
+  ],
+  "retry": [
+    {
+      "mode": "cc-buffs",
+      "cursor": 28,
+      "seconds": 94.2,
+      "alive": 5,
+      "enemies": [
+        {
+          "id": "dm-3600053",
+          "entry": 622,
+          "hp": 0,
+          "max": 1347
+        },
+        {
+          "id": "dm-3600086",
+          "entry": 1731,
+          "hp": 0,
+          "max": 1251
+        },
+        {
+          "id": "dm-3600094",
+          "entry": 1731,
+          "hp": 0,
+          "max": 1251
+        },
+        {
+          "id": "summon-1",
+          "entry": 2520,
+          "hp": 44,
+          "max": 1251
+        }
+      ],
+      "deaths": []
+    }
+  ],
+  "artifacts": {
+    ".cache/analyze-foundry.mjs": "1e9f038f84df423f3f37b505cadbcaa04d06d759e8afbf860b15fd598b2de79b",
+    ".cache/analyze-foundry-retry.mjs": "0961670fb66462c36ee85323d0d1c73a1e3f3d08cc06b8d6a907490b7b45e262",
+    ".cache/foundry-diagnosis/results.json": "11b6d49ea9d4a51dfa7f3b31dfafb8f748c0efa8cb8b69021726325c9ea2913c",
+    ".cache/foundry-diagnosis-retry/results.json": "8ffca644b83701478b84190ecd6a682301b42be983b541535230094e4396e977",
+    "packages/game-domain/src/rules/combat.js": "69c9025f17bfb6f397522048bdcc5a954895751c9d697b1bcc7356b98f21375b",
+    "packages/game-domain/src/rules/companion-combat.js": "8e5e894ce95263cd2fe19be164df0c182fb67eb7f933b819f4bdee3d3b41270f"
+  }
+}

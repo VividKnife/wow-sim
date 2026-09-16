@@ -1,0 +1,1666 @@
+{
+  "schemaVersion": 1,
+  "retrievedAt": "2026-09-16",
+  "provenance": "Original Blizzard icon art served by Wowhead CDN, downloaded unchanged. Third-party reference mirror; not a historical client build archive.",
+  "copyright": "Blizzard Entertainment game assets. Repository source-code licenses do not relicense these files.",
+  "limitation": "All assets are generic species or creature-type icons. No exact NPC portraits, model textures, animation sequences or historical-build byte equivalence are claimed.",
+  "mappingSource": "Entry, ModelId1..4, Family and CreatureType from the pinned local classic-reference, quest-supplement-reference and deadmines-reference data.",
+  "assets": [
+    {
+      "id": "unknown",
+      "icon": "inv_misc_questionmark",
+      "label": "未知生物原版类型图标",
+      "kind": "type-icon",
+      "path": "creatures/inv_misc_questionmark.jpg",
+      "url": "https://wow.zamimg.com/images/wow/icons/large/inv_misc_questionmark.jpg",
+      "sourcePage": "https://wow.zamimg.com/images/wow/icons/large/inv_misc_questionmark.jpg",
+      "sha256": "c2946592d85b6172ea3cf6714832fa867c3b253a06eb2e4ba6f57908863e44a0",
+      "bytes": 1369,
+      "transformation": "none"
+    },
+    {
+      "id": "beast",
+      "icon": "ability_tracking",
+      "label": "野兽原版类型图标",
+      "kind": "type-icon",
+      "path": "creatures/ability_tracking.jpg",
+      "url": "https://wow.zamimg.com/images/wow/icons/large/ability_tracking.jpg",
+      "sourcePage": "https://www.wowhead.com/classic/spell=1494/track-beasts",
+      "sha256": "520287130b97a33d39eeb7d13e1e47076c923ca25df3864dcebc117db55645a3",
+      "bytes": 1670,
+      "transformation": "none"
+    },
+    {
+      "id": "humanoid",
+      "icon": "spell_holy_prayerofhealing",
+      "label": "人型生物原版类型图标",
+      "kind": "type-icon",
+      "path": "creatures/spell_holy_prayerofhealing.jpg",
+      "url": "https://wow.zamimg.com/images/wow/icons/large/spell_holy_prayerofhealing.jpg",
+      "sourcePage": "https://www.wowhead.com/classic/spell=19883/track-humanoids",
+      "sha256": "a4839823cb22783f0392722841d28573d99d0675cac0768ce0416bc18ca0f81a",
+      "bytes": 2021,
+      "transformation": "none"
+    },
+    {
+      "id": "undead",
+      "icon": "spell_shadow_darksummoning",
+      "label": "亡灵原版类型图标",
+      "kind": "type-icon",
+      "path": "creatures/spell_shadow_darksummoning.jpg",
+      "url": "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_darksummoning.jpg",
+      "sourcePage": "https://www.wowhead.com/classic/spell=19884/track-undead",
+      "sha256": "8f6957d865be0a9c2179bad3e95359434f968d860178eabe42d4e13c9831f8ec",
+      "bytes": 2192,
+      "transformation": "none"
+    },
+    {
+      "id": "elemental",
+      "icon": "spell_frost_summonwaterelemental",
+      "label": "元素生物原版类型图标",
+      "kind": "type-icon",
+      "path": "creatures/spell_frost_summonwaterelemental.jpg",
+      "url": "https://wow.zamimg.com/images/wow/icons/large/spell_frost_summonwaterelemental.jpg",
+      "sourcePage": "https://www.wowhead.com/classic/spell=19880/track-elementals",
+      "sha256": "df0286ec18ea040d175190ef8b2da69d71bb749be7a60c223f813c0cc3fe35a1",
+      "bytes": 1919,
+      "transformation": "none"
+    },
+    {
+      "id": "mechanical",
+      "icon": "ability_repair",
+      "label": "机械原版类型图标",
+      "kind": "type-icon",
+      "path": "creatures/ability_repair.jpg",
+      "url": "https://wow.zamimg.com/images/wow/icons/large/ability_repair.jpg",
+      "sourcePage": "https://wow.zamimg.com/images/wow/icons/large/ability_repair.jpg",
+      "sha256": "709be770181fa917cdfa939ac022033af41515785da5e5c101a81ea26dbce464",
+      "bytes": 1632,
+      "transformation": "none"
+    },
+    {
+      "id": "wolf",
+      "icon": "ability_hunter_pet_wolf",
+      "label": "狼原版类型图标",
+      "kind": "species-icon",
+      "path": "creatures/ability_hunter_pet_wolf.jpg",
+      "url": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_wolf.jpg",
+      "sourcePage": "https://www.wowhead.com/classic/pet=1/wolf",
+      "sha256": "f7653738bed4c61c5c068190bbf08baba4fee1d61faa92de82ce03eb5e5da43a",
+      "bytes": 1688,
+      "transformation": "none"
+    },
+    {
+      "id": "spider",
+      "icon": "ability_hunter_pet_spider",
+      "label": "蜘蛛原版类型图标",
+      "kind": "species-icon",
+      "path": "creatures/ability_hunter_pet_spider.jpg",
+      "url": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_spider.jpg",
+      "sourcePage": "https://www.wowhead.com/classic/pet=3/spider",
+      "sha256": "297a49555132a5e621b5ed6de3884243f80798b6c60fbffeab14c171f0038632",
+      "bytes": 1828,
+      "transformation": "none"
+    },
+    {
+      "id": "bear",
+      "icon": "ability_hunter_pet_bear",
+      "label": "熊原版类型图标",
+      "kind": "species-icon",
+      "path": "creatures/ability_hunter_pet_bear.jpg",
+      "url": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_bear.jpg",
+      "sourcePage": "https://www.wowhead.com/classic/pet=4/bear",
+      "sha256": "6ebc67b2b5616f4e13fb01c2b9bdc505c9b7b45c5e54b834424362110be1a814",
+      "bytes": 1900,
+      "transformation": "none"
+    },
+    {
+      "id": "boar",
+      "icon": "ability_hunter_pet_boar",
+      "label": "野猪原版类型图标",
+      "kind": "species-icon",
+      "path": "creatures/ability_hunter_pet_boar.jpg",
+      "url": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_boar.jpg",
+      "sourcePage": "https://www.wowhead.com/classic/pet=5/boar",
+      "sha256": "c6cf53bc41bcf78ca73b51edf06423f5d41ebd99b56325fc92d1b3d23d9d0c70",
+      "bytes": 1781,
+      "transformation": "none"
+    },
+    {
+      "id": "vulture",
+      "icon": "ability_hunter_pet_vulture",
+      "label": "食腐鸟原版类型图标",
+      "kind": "species-icon",
+      "path": "creatures/ability_hunter_pet_vulture.jpg",
+      "url": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_vulture.jpg",
+      "sourcePage": "https://www.wowhead.com/classic/pet=7/carrion-bird",
+      "sha256": "fec4f153006fde63bd6a190bb1f6bb57a2ca253ec12e4cf97e9b305ddd1276b4",
+      "bytes": 1746,
+      "transformation": "none"
+    },
+    {
+      "id": "crab",
+      "icon": "ability_hunter_pet_crab",
+      "label": "螃蟹原版类型图标",
+      "kind": "species-icon",
+      "path": "creatures/ability_hunter_pet_crab.jpg",
+      "url": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_crab.jpg",
+      "sourcePage": "https://www.wowhead.com/classic/pet=8/crab",
+      "sha256": "b2381fc1c74bb4333dc3b0704d2bec038050b1e0e02931bb25a3c2c14ed7a4f2",
+      "bytes": 1978,
+      "transformation": "none"
+    }
+  ],
+  "entries": {
+    "3": {
+      "assetId": "undead",
+      "models": [
+        987
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "6": {
+      "assetId": "humanoid",
+      "models": [
+        10913
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "30": {
+      "assetId": "spider",
+      "models": [
+        382
+      ],
+      "family": 3,
+      "creatureType": 1
+    },
+    "36": {
+      "assetId": "mechanical",
+      "models": [
+        367
+      ],
+      "family": 0,
+      "creatureType": 9
+    },
+    "38": {
+      "assetId": "humanoid",
+      "models": [
+        5035,
+        5036
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "40": {
+      "assetId": "humanoid",
+      "models": [
+        373
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "43": {
+      "assetId": "spider",
+      "models": [
+        368
+      ],
+      "family": 3,
+      "creatureType": 1
+    },
+    "46": {
+      "assetId": "humanoid",
+      "models": [
+        441
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "60": {
+      "assetId": "humanoid",
+      "models": [
+        2153
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "61": {
+      "assetId": "humanoid",
+      "models": [
+        3341
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "69": {
+      "assetId": "wolf",
+      "models": [
+        604
+      ],
+      "family": 1,
+      "creatureType": 1
+    },
+    "79": {
+      "assetId": "humanoid",
+      "models": [
+        774
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "80": {
+      "assetId": "humanoid",
+      "models": [
+        365
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "94": {
+      "assetId": "humanoid",
+      "models": [
+        2361,
+        2362
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "95": {
+      "assetId": "humanoid",
+      "models": [
+        4418,
+        4419
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "97": {
+      "assetId": "humanoid",
+      "models": [
+        10791
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "98": {
+      "assetId": "humanoid",
+      "models": [
+        376
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "99": {
+      "assetId": "humanoid",
+      "models": [
+        3320
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "100": {
+      "assetId": "humanoid",
+      "models": [
+        175
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "103": {
+      "assetId": "humanoid",
+      "models": [
+        2073
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "113": {
+      "assetId": "boar",
+      "models": [
+        503
+      ],
+      "family": 5,
+      "creatureType": 1
+    },
+    "114": {
+      "assetId": "mechanical",
+      "models": [
+        378
+      ],
+      "family": 0,
+      "creatureType": 9
+    },
+    "115": {
+      "assetId": "mechanical",
+      "models": [
+        379
+      ],
+      "family": 0,
+      "creatureType": 9
+    },
+    "116": {
+      "assetId": "humanoid",
+      "models": [
+        2357,
+        2358
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "117": {
+      "assetId": "humanoid",
+      "models": [
+        175
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "118": {
+      "assetId": "wolf",
+      "models": [
+        11415
+      ],
+      "family": 1,
+      "creatureType": 1
+    },
+    "119": {
+      "assetId": "boar",
+      "models": [
+        381
+      ],
+      "family": 5,
+      "creatureType": 1
+    },
+    "121": {
+      "assetId": "humanoid",
+      "models": [
+        2336,
+        2337
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "122": {
+      "assetId": "humanoid",
+      "models": [
+        2342,
+        2343
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "123": {
+      "assetId": "humanoid",
+      "models": [
+        383
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "124": {
+      "assetId": "humanoid",
+      "models": [
+        384
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "125": {
+      "assetId": "humanoid",
+      "models": [
+        10790
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "126": {
+      "assetId": "humanoid",
+      "models": [
+        983
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "127": {
+      "assetId": "humanoid",
+      "models": [
+        1995
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "154": {
+      "assetId": "vulture",
+      "models": [
+        1105
+      ],
+      "family": 7,
+      "creatureType": 1
+    },
+    "157": {
+      "assetId": "boar",
+      "models": [
+        3027
+      ],
+      "family": 5,
+      "creatureType": 1
+    },
+    "171": {
+      "assetId": "humanoid",
+      "models": [
+        1305
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "199": {
+      "assetId": "vulture",
+      "models": [
+        410
+      ],
+      "family": 7,
+      "creatureType": 1
+    },
+    "202": {
+      "assetId": "undead",
+      "models": [
+        9786
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "213": {
+      "assetId": "wolf",
+      "models": [
+        801
+      ],
+      "family": 1,
+      "creatureType": 1
+    },
+    "215": {
+      "assetId": "humanoid",
+      "models": [
+        4276,
+        4278
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "217": {
+      "assetId": "spider",
+      "models": [
+        955
+      ],
+      "family": 3,
+      "creatureType": 1
+    },
+    "218": {
+      "assetId": "humanoid",
+      "models": [
+        4275,
+        4277
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "257": {
+      "assetId": "humanoid",
+      "models": [
+        10912
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "285": {
+      "assetId": "humanoid",
+      "models": [
+        617
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "299": {
+      "assetId": "wolf",
+      "models": [
+        447
+      ],
+      "family": 1,
+      "creatureType": 1
+    },
+    "327": {
+      "assetId": "humanoid",
+      "models": [
+        2299
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "330": {
+      "assetId": "boar",
+      "models": [
+        8871
+      ],
+      "family": 5,
+      "creatureType": 1
+    },
+    "390": {
+      "assetId": "boar",
+      "models": [
+        377
+      ],
+      "family": 5,
+      "creatureType": 1
+    },
+    "391": {
+      "assetId": "humanoid",
+      "models": [
+        5243
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "448": {
+      "assetId": "humanoid",
+      "models": [
+        384
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "449": {
+      "assetId": "humanoid",
+      "models": [
+        2344,
+        2345
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "450": {
+      "assetId": "humanoid",
+      "models": [
+        4420,
+        4421
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "452": {
+      "assetId": "humanoid",
+      "models": [
+        383
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "453": {
+      "assetId": "humanoid",
+      "models": [
+        502
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "454": {
+      "assetId": "boar",
+      "models": [
+        8871
+      ],
+      "family": 5,
+      "creatureType": 1
+    },
+    "456": {
+      "assetId": "humanoid",
+      "models": [
+        486
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "458": {
+      "assetId": "humanoid",
+      "models": [
+        757
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "471": {
+      "assetId": "spider",
+      "models": [
+        2541
+      ],
+      "family": 3,
+      "creatureType": 1
+    },
+    "472": {
+      "assetId": "humanoid",
+      "models": [
+        175
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "473": {
+      "assetId": "humanoid",
+      "models": [
+        2074
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "474": {
+      "assetId": "humanoid",
+      "models": [
+        2359,
+        2360
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "475": {
+      "assetId": "humanoid",
+      "models": [
+        139
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "476": {
+      "assetId": "humanoid",
+      "models": [
+        163
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "478": {
+      "assetId": "humanoid",
+      "models": [
+        512
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "480": {
+      "assetId": "mechanical",
+      "models": [
+        514
+      ],
+      "family": 0,
+      "creatureType": 9
+    },
+    "481": {
+      "assetId": "humanoid",
+      "models": [
+        2333,
+        2335
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "500": {
+      "assetId": "humanoid",
+      "models": [
+        374
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "501": {
+      "assetId": "humanoid",
+      "models": [
+        413
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "502": {
+      "assetId": "humanoid",
+      "models": [
+        4422
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "504": {
+      "assetId": "humanoid",
+      "models": [
+        2331,
+        2332
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "506": {
+      "assetId": "humanoid",
+      "models": [
+        383
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "513": {
+      "assetId": "humanoid",
+      "models": [
+        1994
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "517": {
+      "assetId": "humanoid",
+      "models": [
+        1079
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "520": {
+      "assetId": "humanoid",
+      "models": [
+        652
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "521": {
+      "assetId": "wolf",
+      "models": [
+        11412
+      ],
+      "family": 1,
+      "creatureType": 1
+    },
+    "524": {
+      "assetId": "boar",
+      "models": [
+        389
+      ],
+      "family": 5,
+      "creatureType": 1
+    },
+    "525": {
+      "assetId": "wolf",
+      "models": [
+        903
+      ],
+      "family": 1,
+      "creatureType": 1
+    },
+    "531": {
+      "assetId": "undead",
+      "models": [
+        7550
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "539": {
+      "assetId": "spider",
+      "models": [
+        958
+      ],
+      "family": 3,
+      "creatureType": 1
+    },
+    "547": {
+      "assetId": "boar",
+      "models": [
+        3035
+      ],
+      "family": 5,
+      "creatureType": 1
+    },
+    "550": {
+      "assetId": "humanoid",
+      "models": [
+        2312
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "565": {
+      "assetId": "wolf",
+      "models": [
+        802
+      ],
+      "family": 1,
+      "creatureType": 1
+    },
+    "569": {
+      "assetId": "spider",
+      "models": [
+        2541
+      ],
+      "family": 3,
+      "creatureType": 1
+    },
+    "572": {
+      "assetId": "undead",
+      "models": [
+        1065
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "573": {
+      "assetId": "mechanical",
+      "models": [
+        548
+      ],
+      "family": 0,
+      "creatureType": 9
+    },
+    "589": {
+      "assetId": "humanoid",
+      "models": [
+        2338,
+        2339
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "590": {
+      "assetId": "humanoid",
+      "models": [
+        2340,
+        2341
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "594": {
+      "assetId": "humanoid",
+      "models": [
+        2323,
+        2324
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "596": {
+      "assetId": "humanoid",
+      "models": [
+        3267
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "598": {
+      "assetId": "humanoid",
+      "models": [
+        308,
+        2444
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "599": {
+      "assetId": "humanoid",
+      "models": [
+        2355
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "619": {
+      "assetId": "humanoid",
+      "models": [
+        2329,
+        2330
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "622": {
+      "assetId": "humanoid",
+      "models": [
+        7109
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "623": {
+      "assetId": "undead",
+      "models": [
+        11402
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "624": {
+      "assetId": "undead",
+      "models": [
+        10630
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "625": {
+      "assetId": "undead",
+      "models": [
+        829
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "626": {
+      "assetId": "undead",
+      "models": [
+        10628
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "628": {
+      "assetId": "wolf",
+      "models": [
+        741
+      ],
+      "family": 1,
+      "creatureType": 1
+    },
+    "634": {
+      "assetId": "humanoid",
+      "models": [
+        2316,
+        2317
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "636": {
+      "assetId": "humanoid",
+      "models": [
+        2314,
+        2315
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "639": {
+      "assetId": "humanoid",
+      "models": [
+        2029
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "641": {
+      "assetId": "humanoid",
+      "models": [
+        7111
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "642": {
+      "assetId": "mechanical",
+      "models": [
+        1269
+      ],
+      "family": 0,
+      "creatureType": 9
+    },
+    "643": {
+      "assetId": "humanoid",
+      "models": [
+        7125
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "644": {
+      "assetId": "humanoid",
+      "models": [
+        14403
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "645": {
+      "assetId": "humanoid",
+      "models": [
+        1305
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "646": {
+      "assetId": "humanoid",
+      "models": [
+        2026
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "647": {
+      "assetId": "humanoid",
+      "models": [
+        7113
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "657": {
+      "assetId": "humanoid",
+      "models": [
+        2347,
+        2348
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "732": {
+      "assetId": "humanoid",
+      "models": [
+        983
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "735": {
+      "assetId": "humanoid",
+      "models": [
+        527
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "822": {
+      "assetId": "bear",
+      "models": [
+        1006
+      ],
+      "family": 4,
+      "creatureType": 1
+    },
+    "824": {
+      "assetId": "humanoid",
+      "models": [
+        2441,
+        556
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "831": {
+      "assetId": "crab",
+      "models": [
+        979
+      ],
+      "family": 8,
+      "creatureType": 1
+    },
+    "832": {
+      "assetId": "elemental",
+      "models": [
+        5327
+      ],
+      "family": 0,
+      "creatureType": 4
+    },
+    "833": {
+      "assetId": "wolf",
+      "models": [
+        161
+      ],
+      "family": 1,
+      "creatureType": 1
+    },
+    "834": {
+      "assetId": "wolf",
+      "models": [
+        643
+      ],
+      "family": 1,
+      "creatureType": 1
+    },
+    "846": {
+      "assetId": "undead",
+      "models": [
+        646
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "880": {
+      "assetId": "humanoid",
+      "models": [
+        3322
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "881": {
+      "assetId": "humanoid",
+      "models": [
+        3321
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "909": {
+      "assetId": "humanoid",
+      "models": [
+        4279,
+        4280
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "923": {
+      "assetId": "wolf",
+      "models": [
+        246
+      ],
+      "family": 1,
+      "creatureType": 1
+    },
+    "930": {
+      "assetId": "spider",
+      "models": [
+        368
+      ],
+      "family": 3,
+      "creatureType": 1
+    },
+    "948": {
+      "assetId": "undead",
+      "models": [
+        137
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "949": {
+      "assetId": "spider",
+      "models": [
+        545
+      ],
+      "family": 3,
+      "creatureType": 1
+    },
+    "1065": {
+      "assetId": "humanoid",
+      "models": [
+        204
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "1109": {
+      "assetId": "vulture",
+      "models": [
+        2305
+      ],
+      "family": 7,
+      "creatureType": 1
+    },
+    "1216": {
+      "assetId": "crab",
+      "models": [
+        9570
+      ],
+      "family": 8,
+      "creatureType": 1
+    },
+    "1236": {
+      "assetId": "humanoid",
+      "models": [
+        373
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "1424": {
+      "assetId": "humanoid",
+      "models": [
+        774
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "1426": {
+      "assetId": "humanoid",
+      "models": [
+        374
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "1725": {
+      "assetId": "humanoid",
+      "models": [
+        184
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "1726": {
+      "assetId": "humanoid",
+      "models": [
+        2321,
+        2322
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "1727": {
+      "assetId": "humanoid",
+      "models": [
+        341,
+        2528
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "1729": {
+      "assetId": "humanoid",
+      "models": [
+        2318,
+        2319
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "1731": {
+      "assetId": "humanoid",
+      "models": [
+        7110
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "1732": {
+      "assetId": "humanoid",
+      "models": [
+        2349,
+        2350
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "1763": {
+      "assetId": "humanoid",
+      "models": [
+        7124
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "1922": {
+      "assetId": "wolf",
+      "models": [
+        380
+      ],
+      "family": 1,
+      "creatureType": 1
+    },
+    "3586": {
+      "assetId": "humanoid",
+      "models": [
+        556
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "3947": {
+      "assetId": "humanoid",
+      "models": [
+        7112
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "4416": {
+      "assetId": "humanoid",
+      "models": [
+        2438,
+        341
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "4417": {
+      "assetId": "humanoid",
+      "models": [
+        2440,
+        2443
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "4418": {
+      "assetId": "humanoid",
+      "models": [
+        2447,
+        2448
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "5043": {
+      "assetId": "humanoid",
+      "models": [
+        2148,
+        2145,
+        2146,
+        2147
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "6093": {
+      "assetId": "humanoid",
+      "models": [
+        4947
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "6846": {
+      "assetId": "humanoid",
+      "models": [
+        7849
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "6927": {
+      "assetId": "humanoid",
+      "models": [
+        2357,
+        2358
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "7050": {
+      "assetId": "undead",
+      "models": [
+        5812
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "7051": {
+      "assetId": "humanoid",
+      "models": [
+        5813
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "7052": {
+      "assetId": "humanoid",
+      "models": [
+        5811,
+        5809
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "7053": {
+      "assetId": "humanoid",
+      "models": [
+        5805
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "7056": {
+      "assetId": "humanoid",
+      "models": [
+        5806,
+        5807
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "7067": {
+      "assetId": "undead",
+      "models": [
+        5832
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "12123": {
+      "assetId": "beast",
+      "models": [
+        12193,
+        12194,
+        12195,
+        12196
+      ],
+      "family": 0,
+      "creatureType": 1
+    },
+    "13159": {
+      "assetId": "humanoid",
+      "models": [
+        13091
+      ],
+      "family": 0,
+      "creatureType": 7
+    },
+    "16422": {
+      "assetId": "undead",
+      "models": [
+        12074
+      ],
+      "family": 0,
+      "creatureType": 6
+    },
+    "16423": {
+      "assetId": "undead",
+      "models": [
+        16169
+      ],
+      "family": 0,
+      "creatureType": 6
+    }
+  },
+  "models": {
+    "137": "undead",
+    "139": "humanoid",
+    "161": "wolf",
+    "163": "humanoid",
+    "175": "humanoid",
+    "184": "humanoid",
+    "204": "humanoid",
+    "246": "wolf",
+    "308": "humanoid",
+    "341": "humanoid",
+    "365": "humanoid",
+    "367": "mechanical",
+    "368": "spider",
+    "373": "humanoid",
+    "374": "humanoid",
+    "376": "humanoid",
+    "377": "boar",
+    "378": "mechanical",
+    "379": "mechanical",
+    "380": "wolf",
+    "381": "boar",
+    "382": "spider",
+    "383": "humanoid",
+    "384": "humanoid",
+    "389": "boar",
+    "410": "vulture",
+    "413": "humanoid",
+    "441": "humanoid",
+    "447": "wolf",
+    "486": "humanoid",
+    "502": "humanoid",
+    "503": "boar",
+    "512": "humanoid",
+    "514": "mechanical",
+    "527": "humanoid",
+    "545": "spider",
+    "548": "mechanical",
+    "556": "humanoid",
+    "604": "wolf",
+    "617": "humanoid",
+    "643": "wolf",
+    "646": "undead",
+    "652": "humanoid",
+    "741": "wolf",
+    "757": "humanoid",
+    "774": "humanoid",
+    "801": "wolf",
+    "802": "wolf",
+    "829": "undead",
+    "903": "wolf",
+    "955": "spider",
+    "958": "spider",
+    "979": "crab",
+    "983": "humanoid",
+    "987": "undead",
+    "1006": "bear",
+    "1065": "undead",
+    "1079": "humanoid",
+    "1105": "vulture",
+    "1269": "mechanical",
+    "1305": "humanoid",
+    "1994": "humanoid",
+    "1995": "humanoid",
+    "2026": "humanoid",
+    "2029": "humanoid",
+    "2073": "humanoid",
+    "2074": "humanoid",
+    "2145": "humanoid",
+    "2146": "humanoid",
+    "2147": "humanoid",
+    "2148": "humanoid",
+    "2153": "humanoid",
+    "2299": "humanoid",
+    "2305": "vulture",
+    "2312": "humanoid",
+    "2314": "humanoid",
+    "2315": "humanoid",
+    "2316": "humanoid",
+    "2317": "humanoid",
+    "2318": "humanoid",
+    "2319": "humanoid",
+    "2321": "humanoid",
+    "2322": "humanoid",
+    "2323": "humanoid",
+    "2324": "humanoid",
+    "2329": "humanoid",
+    "2330": "humanoid",
+    "2331": "humanoid",
+    "2332": "humanoid",
+    "2333": "humanoid",
+    "2335": "humanoid",
+    "2336": "humanoid",
+    "2337": "humanoid",
+    "2338": "humanoid",
+    "2339": "humanoid",
+    "2340": "humanoid",
+    "2341": "humanoid",
+    "2342": "humanoid",
+    "2343": "humanoid",
+    "2344": "humanoid",
+    "2345": "humanoid",
+    "2347": "humanoid",
+    "2348": "humanoid",
+    "2349": "humanoid",
+    "2350": "humanoid",
+    "2355": "humanoid",
+    "2357": "humanoid",
+    "2358": "humanoid",
+    "2359": "humanoid",
+    "2360": "humanoid",
+    "2361": "humanoid",
+    "2362": "humanoid",
+    "2438": "humanoid",
+    "2440": "humanoid",
+    "2441": "humanoid",
+    "2443": "humanoid",
+    "2444": "humanoid",
+    "2447": "humanoid",
+    "2448": "humanoid",
+    "2528": "humanoid",
+    "2541": "spider",
+    "3027": "boar",
+    "3035": "boar",
+    "3267": "humanoid",
+    "3320": "humanoid",
+    "3321": "humanoid",
+    "3322": "humanoid",
+    "3341": "humanoid",
+    "4275": "humanoid",
+    "4276": "humanoid",
+    "4277": "humanoid",
+    "4278": "humanoid",
+    "4279": "humanoid",
+    "4280": "humanoid",
+    "4418": "humanoid",
+    "4419": "humanoid",
+    "4420": "humanoid",
+    "4421": "humanoid",
+    "4422": "humanoid",
+    "4947": "humanoid",
+    "5035": "humanoid",
+    "5036": "humanoid",
+    "5243": "humanoid",
+    "5327": "elemental",
+    "5805": "humanoid",
+    "5806": "humanoid",
+    "5807": "humanoid",
+    "5809": "humanoid",
+    "5811": "humanoid",
+    "5812": "undead",
+    "5813": "humanoid",
+    "5832": "undead",
+    "7109": "humanoid",
+    "7110": "humanoid",
+    "7111": "humanoid",
+    "7112": "humanoid",
+    "7113": "humanoid",
+    "7124": "humanoid",
+    "7125": "humanoid",
+    "7550": "undead",
+    "7849": "humanoid",
+    "8871": "boar",
+    "9570": "crab",
+    "9786": "undead",
+    "10628": "undead",
+    "10630": "undead",
+    "10790": "humanoid",
+    "10791": "humanoid",
+    "10912": "humanoid",
+    "10913": "humanoid",
+    "11402": "undead",
+    "11412": "wolf",
+    "11415": "wolf",
+    "12074": "undead",
+    "12193": "beast",
+    "12194": "beast",
+    "12195": "beast",
+    "12196": "beast",
+    "13091": "humanoid",
+    "14403": "humanoid",
+    "16169": "undead"
+  },
+  "families": {
+    "1": "wolf",
+    "3": "spider",
+    "4": "bear",
+    "5": "boar",
+    "7": "vulture",
+    "8": "crab"
+  },
+  "types": {
+    "0": "unknown",
+    "1": "beast",
+    "4": "elemental",
+    "6": "undead",
+    "7": "humanoid",
+    "9": "mechanical"
+  }
+}

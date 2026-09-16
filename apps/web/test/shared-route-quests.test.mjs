@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,view,questProgress} from '../lib/game/engine.js';
-import {quests} from '../lib/game/catalog.js';
-import {questAvailable} from '../lib/game/quests.js';
+import {createGame,act,view,questProgress} from '../../../packages/game-domain/src/rules/engine.js';
+import {quests} from '../../../packages/game-domain/src/rules/catalog.js';
+import {questAvailable} from '../../../packages/game-domain/src/rules/quests.js';
 
 test('an Orc shaman can complete the explicitly adapted shared Northshire opening',()=>{
  let s=createGame('共享路线测试',773,0,{classId:7,raceId:2});

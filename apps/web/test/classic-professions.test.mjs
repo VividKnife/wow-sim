@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {recipes,professionRanks} from '../lib/game/profession-data.js';
-import {createGame,act,stats} from '../lib/game/engine.js';
-import {addItem,countItem,canEquip} from '../lib/game/character.js';
-import {items} from '../lib/game/catalog.js';
-import {recipeQuote,canDisenchant} from '../lib/game/professions.js';
+import {recipes,professionRanks} from '../../../packages/game-domain/src/rules/profession-data.js';
+import {createGame,act,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {addItem,countItem,canEquip} from '../../../packages/game-domain/src/rules/character.js';
+import {items} from '../../../packages/game-domain/src/rules/catalog.js';
+import {recipeQuote,canDisenchant} from '../../../packages/game-domain/src/rules/professions.js';
 const fresh=()=>{const s=createGame('大师工匠',71,0);s.level=60;s.money=1000000000;return s;};
 const action=(s,a)=>act(s,a,s.wallAt);
 const master=(id)=>{const s=fresh();s.professions[id]={skill:300,cap:300};return s;};

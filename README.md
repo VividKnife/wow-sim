@@ -1,10 +1,14 @@
 # wow-sim
 
-面向手机网页的 2D 魔兽冒险模拟器。目标是以 2019 年 Classic 首发阶段为基础，保留角色成长、旅行、配装、五人队伍和副本策略；野外支持离线挂机，副本在线推进。
+面向手机网页的 2D 魔兽冒险模拟器。目标是以 2019 年 Classic 首发阶段为基础，保留角色成长、旅行、配装、队伍和副本策略。权威状态由 Node 游戏服务与 PostgreSQL 保存，后台 worker 独立推进到期活动和实例。
 
 ## 当前进度
 
-已有可玩的网页、确定性战斗引擎、角色存档、AI 小队和死亡矿井流程。职业系统已扩展到经典旧世九职业的 1—60 级；当前世界仍以北郡、艾尔文森林、西部荒野和死亡矿井路线为主。
+已有可玩的网页、确定性战斗引擎、多角色账号、独立资产与活动、共享实例和死亡矿井流程。职业系统已扩展到经典旧世九职业的 1—60 级；当前世界仍以北郡、艾尔文森林、西部荒野和死亡矿井路线为主。
+
+暴风城现已提供分区主城体验：贸易区、法师区、蓝色隐士、旧城区、矮人区、教堂广场、花园与暴风要塞。到达后在世界页查看城区地图，通过卫兵寻找职业训练师、银行、工坊、商人、旅店和交通服务。选区只预览，实际旅行抵达后才能办理当地业务；主城内可直接展开服务面板，查看整备清单并出发。矿道地铁从矮人区开往铁炉堡，任务 NPC 按分区重新归属。拍卖行继续采用远程模拟交易。
+
+主城独立预览：设置 `PREVIEW_PORT=5183` 后运行 `node apps/web/scripts/serve-dungeon-preview.mjs`，打开 `http://127.0.0.1:5183/stormwind.html`。预览使用内存角色，不连接玩家存档。设计与验证见 [暴风城设计](docs/superpowers/specs/2026-09-16-stormwind-design.md) 和 [验证记录](docs/development/stormwind-validation.md)。
 
 职业与角色系统：
 
@@ -15,6 +19,9 @@
 
 基础设施：
 
+- `apps/web` 只负责界面、ChatGPT 身份接入和签名代理；不直接读写游戏数据库。
+- `apps/game-server` 提供 HTTP/WebSocket 边界，`apps/game-worker` 主动结算活动与实例。
+- `packages/game-domain` 集中领域服务与确定性规则，`packages/game-data/data` 保存静态内容，`packages/persistence` 提供 PostgreSQL 事务存储。
 - 数值证据记录的结构校验：区分未知、估计、参考与已验证，检查来源及版本。
 - 可保存恢复的确定性随机状态。
 - 按事件推进的时间线，支持同时间排序、分段结算、处理预算和 JSON 快照恢复。
@@ -26,15 +33,33 @@
 
 ## 本地运行
 
-需要 Node.js 22 或更高版本。基础库没有第三方运行时依赖。
+需要 Node.js 24.11.1+、PostgreSQL，以及 Docker Compose（仅用于按示例启动本地 PostgreSQL）。
+
+```sh
+npm ci
+npm --prefix apps/web ci
+npm run data:check
+docker compose up -d postgres
+```
+
+复制 `.env.example` 为 `.env`，把 `GAME_SERVER_SECRET` 设置为至少 32 字节的随机值。将同一 `GAME_SERVER_URL` 和 `GAME_SERVER_SECRET` 写入忽略提交的 `apps/web/.dev.vars`，再分别启动三个进程：
+
+```sh
+npm run game:server
+npm run game:worker
+npm --prefix apps/web run dev
+```
+
+常用验证命令：
 
 ```sh
 npm test
 npm run check
-npm --prefix apps/web run dev
+npm run typecheck
+npm --prefix apps/web run build
 ```
 
-`npm test` 运行模拟基础库与网页游戏引擎测试。`npm run check` 检查项目 JavaScript 文件语法。网页需要先在 `apps/web` 安装依赖；生产构建使用 `npm --prefix apps/web run build`。
+完整环境变量、进程边界和恢复说明见 [游戏运行环境](docs/development/game-runtime.md)。
 
 ## 基础库示例
 
@@ -62,6 +87,9 @@ console.log(result.state.world.location); // camp
 
 ## 资料与规划
 
+- [重构后架构复核](docs/superpowers/specs/2026-09-16-post-refactor-architecture-review.md)：最终目标对照、新复现问题与下一轮收口门槛。
+- [基础架构重构交付记录](docs/development/foundation-refactor.md)：当前模块边界、验证结果、测量和交付限制。
+- [游戏运行说明](docs/development/game-runtime.md)：PostgreSQL、Node API、worker 与 Web 的本地配置。
 - [首版设计](docs/superpowers/specs/2026-09-15-wow-sim-first-playable-design.md)：人类法师 1—20 级，四名 AI 队友与死亡矿井。
 - [实施路线](docs/superpowers/plans/2026-09-15-wow-sim-roadmap.md)：数据、战斗、活动、存档、副本和手机界面的依赖顺序。
 - [模拟基础计划](docs/superpowers/plans/2026-09-15-simulation-foundation.md)：本阶段的接口和测试要求。

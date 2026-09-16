@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,stats} from '../lib/game/engine.js';
-import {startCombat,combatTick} from '../lib/game/combat.js';
-import {distance,effectiveSpeed,moveToward} from '../lib/game/combat-space.js';
+import {createGame,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
+import {distance} from '../../../packages/sim-core/src/geometry.js';
+import {effectiveSpeed,moveToward} from '../../../packages/game-domain/src/rules/combat-space.js';
 
 function fight(spell=1449){
  const s=createGame('空间',283,0);s.level=20;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.learned=[spell];s.rules=[{spell,condition:'always',value:0,enabled:true}];startCombat(s,[299,299]);

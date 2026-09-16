@@ -1,0 +1,1 @@
+{"name":"@wow-sim/persistence","private":true,"type":"module","exports":{"./memory":"./src/memory.ts","./postgres":"./src/postgres.ts","./store":"./src/store.ts"}}

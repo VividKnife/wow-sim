@@ -1,0 +1,1 @@
+{"name":"@wow-sim/contracts","private":true,"type":"module","exports":{"./game":"./src/game.ts","./events":"./src/events.ts"}}

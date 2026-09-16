@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,advance,stats} from '../lib/game/engine.js';
-import {startCombat,combatTick} from '../lib/game/combat.js';
-import {castEnemySpell,tickEnemySpell,tickEnemyProjectiles} from '../lib/game/enemy-spells.js';
+import {createGame,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
+import {castEnemySpell,tickEnemySpell,tickEnemyProjectiles} from '../../../packages/game-domain/src/rules/enemy-spells.js';
 function fixture(){const s=createGame('弹道',283,0);s.level=20;s.hp=10000;s.mana=stats(s).maxMana;s.learned=[133];s.rules=[{spell:133,condition:'always',value:0,enabled:true}];startCombat(s,[299]);const e=s.combat.enemies[0];e.hp=e.maxHp=10000;e.rootUntil=1e9;e.nextAttack=1e9;return s;}
 test('Fireball launches on cast completion and settles once after its flight',()=>{
  const s=fixture(),e=s.combat.enemies[0];combatTick(s);s.clock=s.cast.until;combatTick(s);

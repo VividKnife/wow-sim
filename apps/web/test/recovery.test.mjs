@@ -1,8 +1,35 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,stats} from '../lib/game/engine.js';
-import {addItem,newCharacter} from '../lib/game/character.js';
-import {healthRegen} from '../lib/game/recovery.js';
+import {createGame,act,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {addItem,newCharacter} from '../../../packages/game-domain/src/rules/character.js';
+import {healthRegen,startRecovery} from '../../../packages/game-domain/src/rules/recovery.js';
+
+for(const disabled of [false,true])test(`hunting waits for natural recovery and continues without supplies (disabled=${disabled})`,()=>{
+ let s=createGame('自然恢复',42,0);s.hp=1;s.mana=0;s.lastManaUse=0;
+ if(disabled){s.settings.autoFood=false;s.settings.autoWater=false;}else s.bag=[];
+ s=act(s,{type:'hunt',id:299},0);
+ const waiting=advance(s,2000).state;
+ assert.equal(waiting.activity.type,'hunt');assert.equal(waiting.combat,null);
+ assert.ok(waiting.hp>1);assert.equal(waiting.mana,0);
+ const recovered=advance(waiting,6000).state;assert.ok(recovered.mana>0);
+ let resumed=recovered;for(let t=6100;t<=120000&&!resumed.combat;t+=100)resumed=advance(resumed,t).state;
+ assert.ok(resumed.combat,'automatically pulls once health and mana recover');
+ assert.equal(resumed.totals.food,0);assert.equal(resumed.totals.water,0);
+});
+
+test('hunting continues after a kill without food or water',()=>{
+ let s=createGame('连续狩猎',42,0);s.bag=[];
+ s=act(s,{type:'hunt',id:299},0);
+ for(let t=100;t<=180000&&s.totals.kills<2;t+=100)s=advance(s,t).state;
+ assert.ok(s.totals.kills>=2);assert.equal(s.totals.food,0);assert.equal(s.totals.water,0);
+});
+
+for(const id of [117,159])test(`available supply ${id} is used even when the other resource has no supply`,()=>{
+ const s=createGame('部分补给',42,0);s.hp=1;s.mana=0;s.bag=[];addItem(s,id);
+ s.activity={type:'hunt',target:299};assert.equal(startRecovery(s),true);
+ assert.equal(s.activity.type,'hunt');assert.ok(s.rest);
+ assert.equal(s.totals.food,id===117?1:0);assert.equal(s.totals.water,id===159?1:0);
+});
 
 test('spring water uses its 18-second duration and MP5 during the five-second rule',()=>{
  let s=createGame('饮水',42,0);s.mana=0;s.lastManaUse=0;s=act(s,{type:'rest'},0);

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import * as catalog from '../lib/game/catalog.js';
-import classReference from '../data/classes-reference.json' with {type:'json'};
+import * as catalog from '../../../packages/game-domain/src/rules/catalog.js';
+import classReference from '../../../packages/game-data/data/classes-reference.json' with {type:'json'};
 
 test('all 40 race/class pairs have complete source stats and XP through 60',()=>{
  const stats=catalog.table('player_levelstats'),base=catalog.table('player_classlevelstats');

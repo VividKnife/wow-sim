@@ -1,5 +1,5 @@
 "use client";
-import {useState} from 'react';
+import {useEffect,useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {GameProps,Icon,money} from './game-ui';
 import ClassCompanion from './class-companion';
@@ -19,7 +19,8 @@ const effectText=(talent:any)=>{
 };
 
 export default function Character({state:s,data:d,busy,send}:GameProps){
- const [section,setSection]=useState('装备与背包'),[tree,setTree]=useState<number>(0),[skillFilter,setSkillFilter]=useState('全部'),[skillSearch,setSkillSearch]=useState(''),[targetId,setTargetId]=useState('player');
+ const [section,setSection]=useState('装备与背包'),[tree,setTree]=useState<number>(0),[skillFilter,setSkillFilter]=useState('全部'),[skillSearch,setSkillSearch]=useState(''),[targetId,setTargetId]=useState(s.id);
+ useEffect(()=>setTargetId(s.id),[s.id]);
  const used=Object.values(s.talents||{}).reduce((n:any,v:any)=>n+Number(v||0),0) as number;
  const trees=d.talentTrees||[],selectedTree=trees.some((item:any)=>treeId(item)===tree)?tree:treeId(trees[0]||{});
  const uses={...d.skillUses,...(d.skillUsesByTarget?.[targetId]||{})};

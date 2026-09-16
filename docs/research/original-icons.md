@@ -1,6 +1,14 @@
 # 原版图标与头像：来源与接入约定
 
-日期：2026-09-15。状态：用户要求已确认，候选来源已调查；尚未完成素材下载、首发版本核对和界面接入。
+更新：2026-09-16。图标、地图、声音已有本地素材和来源记录；当前运行时素材与新增待接入素材分别记录，不宣称已通过 2019 首发客户端逐字节核对。
+
+## 当前素材入口
+
+- [第二轮：物品、生活技能和怪物肖像](import/2026-09-16-assets-round2.md)：新增 1,447 张图片；补齐 9,818 个物品的图标映射、1,289 个生活技能图标，并收录 183 个 NPC 对应的 168 张 2D 模型图片。
+- [本轮扩充与验证报告](import/classic-asset-library/README.md)：新增 715 个文件，含 364 张图标、239 张界面纹理候选、46 张地图和 66 段音效；835 项含复用资产均已核验。
+- [可点击素材目录](import/classic-asset-library/CATALOG.md)与[完整来源清单](import/classic-asset-library/manifest.json)。
+- [现有路线物品素材](import/journey-item-assets/README.md)与[现有战斗音效](import/combat-sounds/README.md)。
+- 运行时图标/地图数据现位于 `packages/game-data/data`，静态文件位于 `apps/web/public`。第二轮物品/技能已接入原有映射入口；新地图、界面纹理、额外声音及怪物肖像的接入状态见各批次报告。
 
 ## 覆盖范围
 
@@ -15,12 +23,12 @@
 
 ## 候选资料
 
-- [Gethe/wow-ui-textures](https://github.com/Gethe/wow-ui-textures)：游戏界面纹理镜像。已确认存在 classic 分支及 ICONS、CHARACTERFRAME、TALENTFRAME、SPELLBOOK 等目录。分支名不是固定版本，必须进一步锁定提交与逐图验证。
+- [Gethe/wow-ui-textures](https://github.com/Gethe/wow-ui-textures)：游戏界面纹理镜像。本项目使用固定提交及 Git 树验证，不直接依赖会变化的 classic 分支。
 - [WoWDBDefs SpellIcon 定义](https://github.com/wowdev/WoWDBDefs/blob/master/definitions/SpellIcon.dbd)：旧版结构提供图标 ID 与纹理文件名的映射线索。
 - [WoWDBDefs SpellMisc 定义](https://github.com/wowdev/WoWDBDefs/blob/master/definitions/SpellMisc.dbd)：不同构建存在 SpellIconID 或 SpellIconFileDataID 等字段，应选取目标构建对应布局。
 - [WoWDBDefs ItemDisplayInfo 定义](https://github.com/wowdev/WoWDBDefs/blob/master/definitions/ItemDisplayInfo.dbd)：物品显示资源的关联结构线索；表定义本身不包含完整素材或物品映射记录。
 
-这些来源用于发现资源和理解映射，不表示所有素材已经与 2019 首发版本一致。查询到的一个早期 classic 历史记录标为 1.13.2 (30550)，日期为 2019-05-27；只能作为早期候选，不能直接认定为首发资源快照。递归文件枚举曾返回服务端错误，尚未验证具体图标文件清单。
+已锁定 Gethe 提交 `b852b560442b31579e77ef3967b3c2d594832da8`，标为 1.13.2 (30550)，日期为 2019-05-27；本轮所用 Git 树与具体文件已经下载和验证。该快照仍不能认定为首发资源快照，其中其他资料片遗留文件未因存在于该库就自动纳入原版范围。
 
 ## 接入约定
 
@@ -31,4 +39,4 @@
 5. 缺失资产在资产清单中显式登记；临时占位不视为原版素材已完成。
 6. 人物的职业图标、种族图标和具体角色肖像使用不同字段，防止把它们混为一个身份图像。
 
-当前仅更新需求与资产方案，没有改动模拟核心，也没有宣称界面已经使用原版图标。
+本页记录素材入口与接入约定；具体下载、覆盖、缺失和接入状态以对应批次清单为准。

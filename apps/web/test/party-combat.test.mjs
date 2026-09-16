@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,stats,advance} from '../lib/game/engine.js';
-import {startCombat,combatTick} from '../lib/game/combat.js';
+import {createGame,act,stats,advance} from '../../../packages/game-domain/src/rules/engine.js';
+import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
 
 function group(){let s=createGame('队长',29,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rules=[];for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);startCombat(s,[636],true);const e=s.combat.enemies[0];e.hp=e.maxHp=100000;e.nextAttack=100000;e.rootUntil=100000;return s;}
 const member=(s,id)=>s.party.find(c=>c.roleId===id);

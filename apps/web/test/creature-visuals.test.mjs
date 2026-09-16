@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {creatureVisual} from '../lib/creature-visuals.js';
-import manifest from '../data/creature-assets-manifest.json' with {type:'json'};
-import {nodes,monsterIdsAt} from '../lib/game/catalog.js';
-import deadmines from '../data/deadmines-reference.json' with {type:'json'};
+import manifest from '../../../packages/game-data/data/creature-assets-manifest.json' with {type:'json'};
+import {nodes,monsterIdsAt} from '../../../packages/game-domain/src/rules/catalog.js';
+import deadmines from '../../../packages/game-data/data/deadmines-reference.json' with {type:'json'};
 
 test('species and type icons never masquerade as an exact creature portrait',()=>{
  const wolf=creatureVisual({entry:69}),boar=creatureVisual({entry:113}),boss=creatureVisual({entry:639});

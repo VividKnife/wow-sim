@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,stats} from '../lib/game/engine.js';
-import {companionSkills} from '../lib/game/party.js';
-import {spellInfo,newCharacter,addItem} from '../lib/game/character.js';
-import {ruleMatches,strategyAllows} from '../lib/game/combat-strategy.js';
-import {prepareAutoBuffs} from '../lib/game/auto-buffs.js';
-import {decideCompanion,stanceAllows} from '../lib/game/companion-combat.js';
+import {createGame,act,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {companionSkills} from '../../../packages/game-domain/src/rules/party.js';
+import {spellInfo,newCharacter,addItem} from '../../../packages/game-domain/src/rules/character.js';
+import {ruleMatches,strategyAllows} from '../../../packages/game-domain/src/rules/combat-strategy.js';
+import {prepareAutoBuffs} from '../../../packages/game-domain/src/rules/auto-buffs.js';
+import {decideCompanion,stanceAllows} from '../../../packages/game-domain/src/rules/companion-combat.js';
 
 test('strategies persist on the selected member and validate class and count threshold',()=>{
  let s=createGame('队长',41,0);s.level=20;s=act(s,{type:'recruit',id:'warrior'},0);
@@ -84,8 +84,8 @@ test('authorized dungeon preparation resumes travel and can be stopped before pu
  for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);
  s.location='deadmines';s=act(s,{type:'enterDungeon'},0);s.autoBuffs={enabled:true,armor:true,int:false,sta:false,targets:'self',refreshSeconds:30};
  s=act(s,{type:'dungeonNext'},0);assert.equal(s.activity.type,'prepareDungeon');
- const stopped=act(s,{type:'stop'},0);assert.equal(advance(stopped,2000,{dungeonOnline:true}).state.combat,null);assert.equal(stopped.preparationTravel,undefined);
- s=advance(s,1600,{dungeonOnline:true}).state;assert.equal(s.activity.type,'dungeonTravel');assert.ok(s.buffs.armor);assert.equal(s.preparationTravel,undefined);
+ const stopped=act(s,{type:'stop'},0);assert.equal(advance(stopped,2000,{}).state.combat,null);assert.equal(stopped.preparationTravel,undefined);
+ s=advance(s,1600,{}).state;assert.equal(s.activity.type,'dungeonTravel');assert.ok(s.buffs.armor);assert.equal(s.preparationTravel,undefined);
 });
 
 test('party preparation assigns shared buffs to the strongest caster without duplicate casts',()=>{
@@ -97,9 +97,10 @@ test('party preparation assigns shared buffs to the strongest caster without dup
  assert.equal(s.logs.filter(l=>l.kind==='buff').length,2);assert.equal(mage.mana,1000);
 });
 
-test('insufficient buff mana uses recovery and stops on missing supplies',()=>{
+test('insufficient buff mana waits for natural recovery without stopping the hunt',()=>{
  const s=createGame('法力',53,0);s.mana=0;s.bag=[];s.activity={type:'hunt',target:299};s.autoBuffs={enabled:true,armor:true,int:false,sta:false,targets:'self',refreshSeconds:30};
- assert.equal(prepareAutoBuffs(s),true);assert.equal(s.activity.type,'idle');assert.match(s.activity.reason,/补给不足/);assert.equal(s.buffs.armor,undefined);
+ assert.equal(prepareAutoBuffs(s),true);assert.equal(s.activity.type,'hunt');assert.equal(s.buffs.armor,undefined);
+ const after=advance(s,30000).state;assert.ok(after.buffs.armor);assert.equal(after.activity.type,'hunt');
 });
 
 for(const dungeon of [false,true])test(`${dungeon?'dungeon':'outdoor'} preparation finishes affordable buffs before drinking`,()=>{
@@ -108,11 +109,11 @@ for(const dungeon of [false,true])test(`${dungeon?'dungeon':'outdoor'} preparati
  s.autoBuffs={enabled:true,armor:true,int:true,sta:false,targets:'self',refreshSeconds:30};
  if(dungeon){for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);s.location='deadmines';s=act(s,{type:'enterDungeon'},0);}
  const initialMana=s.mana,cost=spellInfo(s,168).mana+spellInfo(s,1459).mana;
- s=act(s,{type:dungeon?'dungeonNext':'hunt',id:299},0);s=advance(s,1600,{dungeonOnline:true}).state;
+ s=act(s,{type:dungeon?'dungeonNext':'hunt',id:299},0);s=advance(s,1600,{}).state;
  assert.equal(s.logs.filter(l=>l.kind==='buff').length,2);
  assert.equal(s.totals.water,0,'enough mana for both buffs without an intervening drink');
  assert.equal(s.mana,initialMana-cost);assert.equal(s.combat,null);
- s=advance(s,3200,{dungeonOnline:true}).state;
+ s=advance(s,3200,{}).state;
  assert.equal(s.totals.water,1);assert.equal(s.combat,null);
  const events=s.logs.filter(l=>['buff','rest'].includes(l.kind));
  assert.deepEqual(events.map(e=>e.kind),['buff','buff','rest']);

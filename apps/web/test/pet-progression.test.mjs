@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,advance} from '../lib/game/engine.js';
-import {spellInfo,stats} from '../lib/game/character.js';
-import {summonClassPet,petCommand,gainHunterPetXp} from '../lib/game/class-spell-effects.js';
-import {classEffect} from '../lib/game/class-mechanics.js';
+import {createGame,advance} from '../../../packages/game-domain/src/rules/engine.js';
+import {spellInfo,stats} from '../../../packages/game-domain/src/rules/character.js';
+import {summonClassPet,petCommand,gainHunterPetXp} from '../../../packages/game-domain/src/rules/class-spell-effects.js';
+import {classEffect} from '../../../packages/game-domain/src/rules/class-mechanics.js';
 const make=()=>{const s=createGame('loyalty',99,0,{classId:3,raceId:2});s.level=60;s.hp=stats(s).maxHp;s.learned.push(5149);s.hunterPet={entry:700,level:60};summonClassPet(s,s,spellInfo(s,883));return s;};
 test('new hunter pets start rebellious with source loyalty points and zero unearned training points',()=>{const s=make();assert.equal(s.pet.loyalty,1);assert.equal(s.pet.loyaltyPoints,1000);assert.equal(s.pet.trainingPoints,0);assert.ok(s.pet.loyaltyXpRemaining>0);});
 test('loyalty growth needs source XP gate even when pet and owner are level capped',()=>{let s=make();s.pet.happiness=1000000;s.pet.loyaltyPoints=5500;s=advance(s,12000).state;assert.equal(s.pet.loyalty,1);gainHunterPetXp(s,s,1000000);assert.equal(s.pet.loyalty,2);assert.equal(s.pet.loyaltyPoints,4500);assert.equal(s.pet.trainingPoints,60);});

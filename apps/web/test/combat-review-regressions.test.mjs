@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,stats} from '../lib/game/engine.js';
-import {newCharacter} from '../lib/game/character.js';
-import {startCombat,combatTick} from '../lib/game/combat.js';
-import {effectiveSpeed} from '../lib/game/combat-space.js';
-import {talents,xpTable,creatures} from '../lib/game/catalog.js';
+import {createGame,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {newCharacter} from '../../../packages/game-domain/src/rules/character.js';
+import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
+import {effectiveSpeed} from '../../../packages/game-domain/src/rules/combat-space.js';
+import {talents,xpTable,creatures} from '../../../packages/game-domain/src/rules/catalog.js';
 
 test('a weaker later Frostbolt does not replace a stronger slow and survives its expiry',()=>{
  const s=createGame('冰霜专精',283,0);s.level=20;s.hp=stats(s).maxHp;s.mana=10000;s.learned=[116];s.rules=[];

@@ -1,10 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,view,stats} from '../lib/game/engine.js';
-import {addItem,countItem} from '../lib/game/character.js';
-import {startCombat,combatTick} from '../lib/game/combat.js';
-import {items} from '../lib/game/catalog.js';
-import {recipes,marketIds} from '../lib/game/profession-data.js';
+import {createGame,act,advance,view,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {addItem,countItem} from '../../../packages/game-domain/src/rules/character.js';
+import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
+import {items} from '../../../packages/game-domain/src/rules/catalog.js';
+import {recipes,marketIds} from '../../../packages/game-domain/src/rules/profession-data.js';
+import {clientContent} from '../../../packages/game-domain/src/rules/client-content.js';
+import {workshopView} from '../../../packages/game-domain/src/rules/workshop.js';
 const fresh=()=>{const s=createGame('工匠',71,0);s.money=100000;s.level=20;return s;};
 const action=(s,a)=>act(s,a,s.wallAt);
 const learn=(s,id)=>action(s,{type:'learnProfession',id});
@@ -13,7 +15,7 @@ test('new characters initialize professions and storage',()=>{
  const s=fresh();const v=view(s);assert.ok(v.professions.length>=12);assert.deepEqual(s.bank,[]);assert.deepEqual(s.professions,{});
 });
 test('learn professions and craft with atomic material purchase',()=>{
- let s=learn(fresh(),'alchemy');const quote=view(s).recipes.find(r=>r.id==='spell-2330');assert.ok(quote.missingCost>0);
+ let s=learn(fresh(),'alchemy');const quote=workshopView(s,{profession:'alchemy',search:'spell-2330'}).recipes[0];assert.ok(quote.missingCost>0);
  const before=s.money;s=action(s,{type:'craft',id:'spell-2330',count:2,buyMissing:true});assert.equal(countItem(s,118),2);assert.ok(s.money<before);assert.ok(s.professions.alchemy.skill>1);
  const poor={...s,money:0};const snapshot=JSON.stringify(poor);assert.throws(()=>action(poor,{type:'craft',id:'spell-2330',count:20,buyMissing:true}));assert.equal(JSON.stringify(poor),snapshot);
  for(const count of [0,-1,1.5,NaN,101])assert.throws(()=>action(s,{type:'craft',id:'spell-2330',count,buyMissing:true}));
@@ -25,7 +27,7 @@ test('bank transfers preserve instance identity, enchantments and locks',()=>{
  s.location='northwood';assert.throws(()=>action(s,{type:'bankDeposit',uid:item.uid,count:1}),/银行/);
 });
 test('auction purchases and NPC settlements are priced and credited once',()=>{
- let s=fresh();const row=view(s).market.find(r=>r.id===2447);assert.ok(row.buy>row.sell);
+ let s=fresh();const row=clientContent().market.find(r=>r.id===2447);assert.ok(row.buy>row.sell);
  s=action(s,{type:'auctionBuy',id:2447,count:3});const item=s.bag.find(i=>i.id===2447),before=s.money;
  s=action(s,{type:'auctionSell',uid:item.uid});assert.equal(countItem(s,2447),0);assert.equal(s.money,before);assert.equal(s.auctions.length,1);
  s=advance(s,30000).state;assert.equal(s.money,before+Math.floor(row.sell*3*.95));assert.equal(s.auctions.length,0);const paid=s.money;s=advance(s,60000).state;assert.equal(s.money,paid);
@@ -41,7 +43,7 @@ test('skinning rewards killed beasts once, never humanoids',()=>{
  startCombat(s,[6]);s.combat.enemies[0].hp=0;combatTick(s);assert.equal(countItem(s,2318),skins);
 });
 test('enchant scrolls affect equipped stats and replace rather than stack',()=>{
- let s=fresh();const scroll=view(s).market.find(r=>r.enchant==='7420');assert.ok(scroll);
+ let s=fresh();const scroll=clientContent().market.find(r=>r.enchant==='7420');assert.ok(scroll);
  s=action(s,{type:'auctionBuy',id:scroll.id,count:2});const uid=s.equipment[5].uid,base=stats(s).maxHp;
  s=action(s,{type:'applyEnchant',id:scroll.id,uid});assert.equal(stats(s).maxHp,base+5);
  s=action(s,{type:'applyEnchant',id:scroll.id,uid});assert.equal(stats(s).maxHp,base+5);assert.equal(countItem(s,scroll.id),0);
@@ -83,7 +85,7 @@ test('auto gathering is equivalent when offline time is chunked',()=>{
  let s=learn(fresh(),'herbalism');s.location='northwood';s=action(s,{type:'gatherAll'});const one=advance(s,10000).state;let chunks=s;for(let t=1000;t<=10000;t+=1000)chunks=advance(chunks,t).state;assert.deepEqual(chunks,one);assert.equal(one.activity.type,'idle');assert.ok(countItem(one,2447)>0&&countItem(one,765)>0);
 });
 test('locked materials are not consumed or used to reduce the purchase quote',()=>{
- let s=learn(fresh(),'alchemy');addItem(s,2447,5);s.bag.find(i=>i.id===2447).locked=true;const q=view(s).recipes.find(r=>r.id==='spell-2330');assert.equal(q.materials.find(m=>m.id===2447).have,0);s=action(s,{type:'craft',id:q.id,count:1,buyMissing:true});assert.equal(countItem(s,2447),5);
+ let s=learn(fresh(),'alchemy');addItem(s,2447,5);s.bag.find(i=>i.id===2447).locked=true;const q=workshopView(s,{profession:'alchemy',search:'spell-2330'}).recipes[0];assert.equal(q.materials.find(m=>m.id===2447).have,0);s=action(s,{type:'craft',id:q.id,count:1,buyMissing:true});assert.equal(countItem(s,2447),5);
 });
 test('skinning overflow is retained in pending loot',()=>{
  let s=learn(fresh(),'skinning');while(s.bag.length<16)addItem(s,35);startCombat(s,[299]);s.combat.enemies[0].hp=0;combatTick(s);assert.ok(s.pending.some(i=>i.id===2318));
@@ -99,5 +101,5 @@ test('a larger bag replaces the smallest equipped bag without losing it',()=>{
  let s=fresh();for(let n=0;n<4;n++){addItem(s,4496);s=action(s,{type:'equipBag',uid:s.bag.find(i=>i.id===4496).uid});}const old=s.bags[0];addItem(s,4498);s=action(s,{type:'equipBag',uid:s.bag.find(i=>i.id===4498).uid});assert.equal(s.bags.length,4);assert.ok(s.bags.some(i=>i.id===4498));assert.deepEqual(s.bag.find(i=>i.uid===old.uid),old);assert.equal(view(s).bagCapacity,42);
 });
 test('auction history still includes sold item names after inventory empties',()=>{
- let s=fresh();addItem(s,5207);s=action(s,{type:'auctionSell',uid:s.bag.find(i=>i.id===5207).uid});s=advance(s,30000).state;assert.ok(view(s).items[5207]);
+ let s=fresh();addItem(s,5207);s=action(s,{type:'auctionSell',uid:s.bag.find(i=>i.id===5207).uid});s=advance(s,30000).state;assert.ok(clientContent().items[5207]);
 });

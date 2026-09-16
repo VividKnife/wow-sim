@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {classAbilities,classContentManifest,talents} from '../lib/game/catalog.js';
-import {supportedSpellNames,talentExecutionCoverage} from '../lib/game/class-support.js';
+import {classAbilities,classContentManifest,talents} from '../../../packages/game-domain/src/rules/catalog.js';
+import {supportedSpellNames,talentExecutionCoverage} from '../../../packages/game-domain/src/rules/class-support.js';
 
 test('every exposed player ability has a declared execution registry entry',()=>{
  const missing=Object.entries(classAbilities).flatMap(([classId,rows])=>rows.filter(a=>!supportedSpellNames.has(a.name)).map(a=>`${classId}:${a.spellId}:${a.name}`));assert.deepEqual(missing,[]);

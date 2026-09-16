@@ -1,9 +1,84 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,view} from '../lib/game/engine.js';
-import {questNavigation,journeyPosition} from '../lib/game/navigation.js';
-import {nodes} from '../lib/game/catalog.js';
+import {createGame,act,advance,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {questNavigation,journeyPosition} from '../../../packages/game-domain/src/rules/navigation.js';
+import {nodes} from '../../../packages/game-domain/src/rules/catalog.js';
 import {mapPoints,mapRegion,mapRegions,playerMapPoint} from '../lib/world-map.js';
+import * as worldMap from '../lib/world-map.js';
+import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
+
+test('public travel route supports continuous sampling through corners and completed legs',()=>{
+ const s={location:'northshire',clock:1000,activity:{type:'travel',from:'northshire',to:'echo',startedAt:1000,endsAt:5000,path:[{a:'northshire',b:'northwood',duration:1000},{a:'northwood',b:'echo',duration:3000}]}};
+ const {player}=projectClientSnapshot(s,{});
+ assert.equal(player.activity.path?.length,2);
+ const halfway=worldMap.travelMapFrame(player,500);
+ assert.deepEqual(halfway.journey,{from:'northshire',to:'northwood',progress:.5});
+ assert.deepEqual(halfway.legs.map(l=>l.progress),[.5,0]);
+ const corner=worldMap.travelMapFrame(player,1000);
+ assert.deepEqual(corner.journey,{from:'northwood',to:'echo',progress:0});
+ const later=worldMap.travelMapFrame(player,2500);
+ assert.deepEqual(later.legs.map(l=>l.progress),[1,.5]);
+ assert.deepEqual(later.journey,{from:'northwood',to:'echo',progress:.5});
+ assert.equal(later.remaining,1500);
+ const overdue=worldMap.travelMapFrame(player,9000);
+ assert.equal(overdue.remaining,0);assert.deepEqual(overdue.legs.map(l=>l.progress),[1,1]);
+ assert.equal(player.activity.type,'travel');assert.equal(player.location,'northshire');
+});
+
+test('public flight keeps its mode and map sampling holds cross-region transit until server arrival',()=>{
+ const {player}=projectClientSnapshot({location:'stormwind',clock:1000,activity:{type:'travel',flight:true,from:'stormwind',to:'sentinel',startedAt:1000,endsAt:3000}},{});
+ assert.equal(player.activity.flight,true);
+ const frame=worldMap.travelMapFrame(player,5000),point=playerMapPoint(frame.journey,Object.values(nodes));
+ assert.equal(point.region,'暴风城');assert.equal(point.crossing,true);
+ const arrived=worldMap.travelMapFrame({...player,location:'sentinel',activity:{type:'idle'}},5000);
+ assert.deepEqual(arrived.legs,[]);assert.equal(playerMapPoint(arrived.journey,Object.values(nodes)).region,'西部荒野');
+});
+
+test('redirecting travel preserves the current road position and reaches the new destination',()=>{
+ let s=act(createGame('改道',11,0),{type:'travel',to:'echo'},0);
+ s=advance(s,1000).state;const before=journeyPosition(s),oldEnd=s.activity.endsAt;
+ s=act(s,{type:'travel',to:'vineyard'},s.wallAt);
+ assert.equal(s.activity.to,'vineyard');const afterPoint=playerMapPoint(journeyPosition(s),Object.values(nodes)),beforePoint=playerMapPoint(before,Object.values(nodes));
+ assert.ok(Math.abs(afterPoint.x-beforePoint.x)<.001);assert.ok(Math.abs(afterPoint.y-beforePoint.y)<.001);
+ assert.ok(s.activity.endsAt>s.clock);assert.notEqual(s.activity.endsAt,oldEnd);
+ const end=s.wallAt+s.activity.endsAt-s.clock;
+ const whole=advance(s,end).state;let split=s;
+ for(let t=s.wallAt+500;t<end;t+=500)split=advance(split,t).state;
+ split=advance(split,end).state;assert.deepEqual(split,whole);assert.equal(whole.location,'vineyard');
+});
+
+test('turning back after one minute on a three-minute road takes one minute and preserves map position',()=>{
+ let s=createGame('折返',11,0);
+ s.activity={type:'travel',from:'northshire',to:'northwood',startedAt:0,endsAt:180000,path:[{a:'northshire',b:'northwood',duration:180000}]};
+ s=advance(s,60000).state;
+ const before=playerMapPoint(journeyPosition(s),Object.values(nodes));
+ s=act(s,{type:'travel',to:'northshire'},s.wallAt);
+ assert.ok(Math.abs(s.activity.endsAt-s.clock-60000)<=1);
+ const after=playerMapPoint(journeyPosition(s),Object.values(nodes));
+ assert.ok(Math.abs(after.x-before.x)<.001);assert.ok(Math.abs(after.y-before.y)<.001);
+ const publicState=projectClientSnapshot(s,{}).player;
+ const frame=worldMap.travelMapFrame(publicState,30000);
+ assert.ok(Math.abs(playerMapPoint(frame.journey,Object.values(nodes)).y-40.6666667)<.001);
+ s=advance(s,s.wallAt+s.activity.endsAt-s.clock).state;assert.equal(s.location,'northshire');
+});
+
+test('flight stop requests next landing without teleporting or changing the paid fare',()=>{
+ let s=createGame('停靠',11,0);s.location='stormwind';s.flightPoints=['stormwind','sentinel'];s.money=200;
+ s=act(s,{type:'fly',to:'sentinel'},0);s=advance(s,20000).state;
+ const endsAt=s.activity.endsAt;s=act(s,{type:'stop'},s.wallAt);
+ assert.equal(s.activity.stopAtNext,true);assert.equal(s.activity.endsAt,endsAt);assert.equal(s.location,'stormwind');assert.equal(s.money,90);
+ assert.equal(projectClientSnapshot(s,{}).player.activity.stopAtNext,true);
+ s=act(s,{type:'stop'},s.wallAt);s=advance(s,endsAt).state;
+ assert.equal(s.location,'sentinel');assert.equal(s.activity.type,'idle');assert.equal(s.money,90);
+});
+
+test('travel can redirect back to the origin but not to the same destination or during flight',()=>{
+ let s=act(createGame('返回',11,0),{type:'travel',to:'echo'},0);s=advance(s,1000).state;
+ assert.throws(()=>act(s,{type:'travel',to:'echo'},s.wallAt),/目的地/);
+ assert.ok(view(s).map.find(n=>n.id==='northshire').travel>0);
+ s=act(s,{type:'travel',to:'northshire'},s.wallAt);assert.equal(s.activity.to,'northshire');assert.ok(s.activity.endsAt>s.clock);
+ s.activity.flight=true;assert.throws(()=>act(s,{type:'travel',to:'vineyard'},s.wallAt),/飞行/);
+});
 
 test('quest navigation travels to an unfinished exploration objective, then its turn-in',()=>{
  let s=createGame('导航',11,0);s.level=4;s.location='goldshire';s=act(s,{type:'accept',id:62},0);

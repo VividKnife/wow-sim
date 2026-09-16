@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,stats,view} from '../lib/game/engine.js';
-import {items} from '../lib/game/catalog.js';
-import {canEquip,addItem,bagCapacity,newCharacter} from '../lib/game/character.js';
+import {createGame,act,advance,stats,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {items} from '../../../packages/game-domain/src/rules/catalog.js';
+import {canEquip,addItem,bagCapacity,newCharacter} from '../../../packages/game-domain/src/rules/character.js';
 
 test('recruitment retains starting proficiencies and never issues an unusable weapon',()=>{
  for(const level of [1,10,20]){

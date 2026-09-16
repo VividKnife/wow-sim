@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createGame, act, advance, stats, view, killXp, questProgress } from '../lib/game/engine.js';
-import { route } from '../lib/game/catalog.js';
+import { createGame, act, advance, stats, view, killXp, questProgress } from '../../../packages/game-domain/src/rules/engine.js';
+import { route } from '../../../packages/game-domain/src/rules/catalog.js';
 test('new human mage uses base attributes, original xp, and cannot access mount early',()=>{
  const s=createGame('星落',1,0);assert.equal(s.level,1);assert.equal(s.hp,stats(s).maxHp);assert.equal(s.mana,stats(s).maxMana);assert.equal(view(s).nextXp,400);assert.throws(()=>act(s,{type:'mount'},0),/20/);
 });

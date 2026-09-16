@@ -1,8 +1,8 @@
 // Real engine fixture; does not connect to the API or modify a saved character.
 import React,{useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {createGame,act,stats,view} from '../../lib/game/engine.js';
-import {addItem} from '../../lib/game/character.js';
+import {createGame,act,stats,view} from '../../../../packages/game-domain/src/rules/engine.js';
+import {addItem} from '../../../../packages/game-domain/src/rules/character.js';
 import Character from '../../app/character';
 import '../../app/globals.css';
 

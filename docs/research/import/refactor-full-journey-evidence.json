@@ -1,0 +1,7554 @@
+{
+  "date": "2026-09-16",
+  "scope": "Current imported content; nine rules-engine natural journeys, targeted service fixtures, short real-browser flow. Not every original WoW region, race/class combination, or full browser/service 1–20.",
+  "classes": [
+    {
+      "key": "warrior",
+      "name": "战士",
+      "directory": ".cache/refactor-final-warrior",
+      "classId": 1,
+      "raceId": 1,
+      "seed": 283,
+      "method": "Only normal game commands; simulated elapsed time; no granted levels, currency, gear, skills or healing.",
+      "final": {
+        "level": 20,
+        "xp": 27,
+        "seconds": 273981.095,
+        "money": 28762,
+        "totals": {
+          "kills": 1204,
+          "xp": 167227,
+          "money": 15626,
+          "items": 1516,
+          "deaths": 0,
+          "food": 62,
+          "water": 0
+        },
+        "completed": [
+          6,
+          7,
+          9,
+          11,
+          12,
+          13,
+          14,
+          15,
+          18,
+          21,
+          22,
+          33,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          45,
+          46,
+          47,
+          52,
+          54,
+          59,
+          60,
+          61,
+          62,
+          64,
+          65,
+          71,
+          76,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          103,
+          104,
+          106,
+          107,
+          109,
+          111,
+          112,
+          114,
+          132,
+          135,
+          136,
+          138,
+          139,
+          140,
+          141,
+          142,
+          151,
+          152,
+          153,
+          184,
+          239,
+          332,
+          333,
+          334,
+          353,
+          399,
+          783,
+          1097,
+          2041,
+          2158,
+          3903,
+          3904,
+          3905,
+          5261,
+          5545,
+          6181,
+          6261,
+          6281,
+          6285
+        ],
+        "active": [
+          102,
+          155,
+          167,
+          168,
+          176,
+          2040
+        ],
+        "commands": 6721,
+        "iterations": 2322
+      },
+      "skills": [
+        {
+          "id": 78,
+          "name": "英勇打击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 81,
+          "name": "躲闪",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 107,
+          "name": "格挡",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 196,
+          "name": "单手斧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 197,
+          "name": "双手斧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 198,
+          "name": "单手锤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 199,
+          "name": "双手锤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 201,
+          "name": "单手剑",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 202,
+          "name": "双手剑",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 203,
+          "name": "徒手",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 204,
+          "name": "防御",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 227,
+          "name": "法杖",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 264,
+          "name": "弓",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 266,
+          "name": "枪械",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1180,
+          "name": "匕首",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2457,
+          "name": "战斗姿态",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2567,
+          "name": "投掷",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5011,
+          "name": "弩",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6673,
+          "name": "战斗怒吼",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8737,
+          "name": "锁甲",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9077,
+          "name": "皮革",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9078,
+          "name": "布甲",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9116,
+          "name": "盾牌",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 15590,
+          "name": "拳套",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20597,
+          "name": "剑类武器专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20598,
+          "name": "人类精魂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20599,
+          "name": "外交",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20600,
+          "name": "感知",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20864,
+          "name": "锤类武器专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 100,
+          "name": "冲锋",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 772,
+          "name": "撕裂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 3127,
+          "name": "招架",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6343,
+          "name": "雷霆一击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 284,
+          "name": "英勇打击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1715,
+          "name": "断筋",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 71,
+          "name": "防御姿态",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 355,
+          "name": "嘲讽",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2687,
+          "name": "血性狂暴",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6546,
+          "name": "撕裂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 7386,
+          "name": "破甲攻击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 72,
+          "name": "盾击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5242,
+          "name": "战斗怒吼",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 7384,
+          "name": "压制",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1160,
+          "name": "挫志怒吼",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6572,
+          "name": "复仇",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 285,
+          "name": "英勇打击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 694,
+          "name": "惩戒痛击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2565,
+          "name": "盾牌格挡",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 676,
+          "name": "缴械",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8198,
+          "name": "雷霆一击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 200,
+          "name": "长柄武器",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 674,
+          "name": "双武器",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 845,
+          "name": "顺劈斩",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6547,
+          "name": "撕裂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 12323,
+          "name": "刺耳怒吼",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 12975,
+          "name": "破釜沉舟",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 20230,
+          "name": "反击风暴",
+          "known": true,
+          "reason": "已经学会"
+        }
+      ],
+      "replay": {
+        "equal": true,
+        "operations": 35819,
+        "level": 20,
+        "kills": 1204,
+        "deaths": 0,
+        "completed": 76,
+        "sha256": "7237a4b0e56464aa4cc7a1e4ccb9509d4839f881fe1a277c9675f36ed8068942"
+      },
+      "sourceManifestSha256": "4bc4fca17545bb49e4a42fd4f1dae6648a69ddd40814114ec65de04fbcdd446a"
+    },
+    {
+      "key": "paladin",
+      "name": "圣骑士",
+      "directory": ".cache/refactor-final-paladin",
+      "classId": 2,
+      "raceId": 1,
+      "seed": 283,
+      "method": "Only normal game commands; simulated elapsed time; no granted levels, currency, gear, skills or healing.",
+      "final": {
+        "level": 20,
+        "xp": 108,
+        "seconds": 271834.49,
+        "money": 42983,
+        "totals": {
+          "kills": 1209,
+          "xp": 167308,
+          "money": 16276,
+          "items": 1553,
+          "deaths": 0,
+          "food": 58,
+          "water": 34
+        },
+        "completed": [
+          6,
+          7,
+          9,
+          11,
+          12,
+          13,
+          14,
+          15,
+          18,
+          21,
+          22,
+          33,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          45,
+          46,
+          47,
+          52,
+          54,
+          59,
+          60,
+          61,
+          62,
+          64,
+          65,
+          71,
+          76,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          103,
+          104,
+          106,
+          107,
+          109,
+          111,
+          112,
+          114,
+          132,
+          135,
+          136,
+          138,
+          139,
+          140,
+          141,
+          142,
+          151,
+          152,
+          153,
+          239,
+          332,
+          333,
+          334,
+          353,
+          399,
+          783,
+          1097,
+          2041,
+          2158,
+          3903,
+          3904,
+          3905,
+          5261,
+          5545,
+          6181,
+          6261,
+          6281,
+          6285
+        ],
+        "active": [
+          102,
+          155,
+          167,
+          168,
+          176,
+          2040
+        ],
+        "commands": 6787,
+        "iterations": 2324
+      },
+      "skills": [
+        {
+          "id": 81,
+          "name": "躲闪",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 107,
+          "name": "格挡",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 196,
+          "name": "单手斧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 197,
+          "name": "双手斧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 198,
+          "name": "单手锤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 199,
+          "name": "双手锤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 201,
+          "name": "单手剑",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 202,
+          "name": "双手剑",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 203,
+          "name": "徒手",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 204,
+          "name": "防御",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 465,
+          "name": "虔诚光环",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 635,
+          "name": "圣光术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8737,
+          "name": "锁甲",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9077,
+          "name": "皮革",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9078,
+          "name": "布甲",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9116,
+          "name": "盾牌",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20154,
+          "name": "正义圣印",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20597,
+          "name": "剑类武器专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20598,
+          "name": "人类精魂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20599,
+          "name": "外交",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20600,
+          "name": "感知",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20864,
+          "name": "锤类武器专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 27762,
+          "name": "圣物",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 19740,
+          "name": "力量祝福",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20271,
+          "name": "审判",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 21084,
+          "name": "正义圣印",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 498,
+          "name": "圣佑术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 639,
+          "name": "圣光术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 21082,
+          "name": "十字军圣印",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 853,
+          "name": "制裁之锤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1152,
+          "name": "纯净术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 3127,
+          "name": "招架",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 633,
+          "name": "圣疗术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1022,
+          "name": "保护祝福",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 10290,
+          "name": "虔诚光环",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20287,
+          "name": "正义圣印",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 7328,
+          "name": "救赎",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 19834,
+          "name": "力量祝福",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20162,
+          "name": "十字军圣印",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 647,
+          "name": "圣光术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 19742,
+          "name": "智慧祝福",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 7294,
+          "name": "惩罚光环",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 25780,
+          "name": "正义之怒",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1044,
+          "name": "自由祝福",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5573,
+          "name": "圣佑术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20288,
+          "name": "正义圣印",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 200,
+          "name": "长柄武器",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 643,
+          "name": "虔诚光环",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 879,
+          "name": "驱邪术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5502,
+          "name": "感知亡灵",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 19750,
+          "name": "圣光闪现",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20217,
+          "name": "王者祝福",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 20375,
+          "name": "命令圣印",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 26573,
+          "name": "奉献",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        }
+      ],
+      "replay": {
+        "equal": true,
+        "operations": 29473,
+        "level": 20,
+        "kills": 1209,
+        "deaths": 0,
+        "completed": 75,
+        "sha256": "586630ec8f698bf8fdcbd209a023d9adbbd0e254e6d147a814b06e8c91d26316"
+      },
+      "sourceManifestSha256": "b503a435ea86ca3c2e8f51ef07284dacc6875f1c6f8991e44fcfd63b32808522"
+    },
+    {
+      "key": "hunter",
+      "name": "猎人",
+      "directory": ".cache/refactor-final-hunter",
+      "classId": 3,
+      "raceId": 3,
+      "seed": 283,
+      "method": "Only normal game commands; simulated elapsed time; no granted levels, currency, gear, skills or healing.",
+      "final": {
+        "level": 20,
+        "xp": 2,
+        "seconds": 56918.279,
+        "money": 4856,
+        "totals": {
+          "kills": 1198,
+          "xp": 167202,
+          "money": 18117,
+          "items": 1484,
+          "deaths": 0,
+          "food": 39,
+          "water": 44
+        },
+        "completed": [
+          6,
+          7,
+          9,
+          11,
+          12,
+          13,
+          14,
+          15,
+          18,
+          21,
+          22,
+          33,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          45,
+          46,
+          47,
+          52,
+          54,
+          59,
+          60,
+          61,
+          62,
+          64,
+          65,
+          71,
+          76,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          103,
+          104,
+          106,
+          107,
+          109,
+          111,
+          112,
+          114,
+          123,
+          132,
+          135,
+          136,
+          138,
+          139,
+          140,
+          141,
+          142,
+          147,
+          151,
+          152,
+          153,
+          184,
+          239,
+          332,
+          333,
+          334,
+          353,
+          399,
+          783,
+          1097,
+          2041,
+          2158,
+          3903,
+          3904,
+          3905,
+          5261,
+          5545
+        ],
+        "active": [
+          102,
+          155,
+          167,
+          168,
+          176,
+          2040
+        ],
+        "commands": 4745,
+        "iterations": 1493
+      },
+      "skills": [
+        {
+          "id": 75,
+          "name": "自动射击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 81,
+          "name": "躲闪",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 196,
+          "name": "单手斧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 197,
+          "name": "双手斧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 201,
+          "name": "单手剑",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 202,
+          "name": "双手剑",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 203,
+          "name": "徒手",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 204,
+          "name": "防御",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 227,
+          "name": "法杖",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 264,
+          "name": "弓",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 266,
+          "name": "枪械",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1180,
+          "name": "匕首",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1494,
+          "name": "追踪野兽",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2481,
+          "name": "寻找财宝",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2567,
+          "name": "投掷",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2973,
+          "name": "猛禽一击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5011,
+          "name": "弩",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9077,
+          "name": "皮革",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9078,
+          "name": "布甲",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 15590,
+          "name": "拳套",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20594,
+          "name": "石像形态",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20595,
+          "name": "枪械专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20596,
+          "name": "冰霜抗性",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1978,
+          "name": "毒蛇钉刺",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 13163,
+          "name": "灵猴守护",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1130,
+          "name": "猎人印记",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 3044,
+          "name": "奥术射击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 3127,
+          "name": "招架",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5116,
+          "name": "震荡射击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 14260,
+          "name": "猛禽一击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 883,
+          "name": "召唤宠物",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 982,
+          "name": "复活宠物",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1515,
+          "name": "驯服野兽",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1853,
+          "name": "低吼",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2641,
+          "name": "解散野兽",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5149,
+          "name": "训练野兽",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6991,
+          "name": "喂养宠物",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 13165,
+          "name": "雄鹰守护",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 13549,
+          "name": "毒蛇钉刺",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 14922,
+          "name": "低吼",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 19883,
+          "name": "追踪人型生物",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 136,
+          "name": "治疗宠物",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2974,
+          "name": "摔绊",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 14281,
+          "name": "奥术射击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20736,
+          "name": "扰乱射击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1002,
+          "name": "野兽之眼",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1513,
+          "name": "恐吓野兽",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6197,
+          "name": "鹰眼术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1495,
+          "name": "猫鼬撕咬",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 13795,
+          "name": "献祭陷阱",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 14261,
+          "name": "猛禽一击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2643,
+          "name": "多重射击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 13550,
+          "name": "毒蛇钉刺",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 14318,
+          "name": "雄鹰守护",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 19884,
+          "name": "追踪亡灵",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 200,
+          "name": "长柄武器",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 674,
+          "name": "双武器",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 781,
+          "name": "逃脱",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1499,
+          "name": "冰冻陷阱",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 3111,
+          "name": "治疗宠物",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5118,
+          "name": "猎豹守护",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 14274,
+          "name": "扰乱射击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 14282,
+          "name": "奥术射击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 19263,
+          "name": "威慑",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 19434,
+          "name": "瞄准射击",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 4195,
+          "name": "持久耐力",
+          "known": false,
+          "reason": null
+        },
+        {
+          "id": 24547,
+          "name": "自然护甲",
+          "known": false,
+          "reason": null
+        },
+        {
+          "id": 4196,
+          "name": "持久耐力",
+          "known": false,
+          "reason": "需要先学习前一等级"
+        },
+        {
+          "id": 24556,
+          "name": "自然护甲",
+          "known": false,
+          "reason": "需要先学习前一等级"
+        },
+        {
+          "id": 4197,
+          "name": "持久耐力",
+          "known": false,
+          "reason": "需要先学习前一等级"
+        },
+        {
+          "id": 24557,
+          "name": "自然护甲",
+          "known": false,
+          "reason": "需要先学习前一等级"
+        },
+        {
+          "id": 14923,
+          "name": "低吼",
+          "known": false,
+          "reason": null
+        },
+        {
+          "id": 24440,
+          "name": "火焰抗性",
+          "known": false,
+          "reason": null
+        },
+        {
+          "id": 24475,
+          "name": "冰霜抗性",
+          "known": false,
+          "reason": null
+        },
+        {
+          "id": 24490,
+          "name": "暗影抗性",
+          "known": false,
+          "reason": null
+        },
+        {
+          "id": 24494,
+          "name": "自然抗性",
+          "known": false,
+          "reason": null
+        },
+        {
+          "id": 24495,
+          "name": "奥术抗性",
+          "known": false,
+          "reason": null
+        }
+      ],
+      "replay": {
+        "equal": true,
+        "operations": 31427,
+        "level": 20,
+        "kills": 1198,
+        "deaths": 0,
+        "completed": 74,
+        "sha256": "f35d0170c7652898fc35153eedad50976326e605d06693f5646fc6ba0c9852f2"
+      },
+      "sourceManifestSha256": "9a71a6b71b25a52053a799a454c15c9ddc75fe7717590e2290b6ec2db27d0883"
+    },
+    {
+      "key": "rogue",
+      "name": "潜行者",
+      "directory": ".cache/refactor-final-rogue",
+      "classId": 4,
+      "raceId": 1,
+      "seed": 283,
+      "method": "Only normal game commands; simulated elapsed time; no granted levels, currency, gear, skills or healing.",
+      "final": {
+        "level": 20,
+        "xp": 56,
+        "seconds": 280511.312,
+        "money": 52145,
+        "totals": {
+          "kills": 1230,
+          "xp": 167256,
+          "money": 15757,
+          "items": 1654,
+          "deaths": 13,
+          "food": 76,
+          "water": 0
+        },
+        "completed": [
+          6,
+          7,
+          9,
+          11,
+          12,
+          13,
+          14,
+          15,
+          18,
+          21,
+          22,
+          33,
+          35,
+          36,
+          37,
+          39,
+          40,
+          45,
+          46,
+          47,
+          52,
+          54,
+          59,
+          60,
+          61,
+          62,
+          64,
+          65,
+          71,
+          76,
+          83,
+          84,
+          85,
+          86,
+          87,
+          103,
+          106,
+          107,
+          109,
+          111,
+          112,
+          114,
+          123,
+          132,
+          135,
+          136,
+          138,
+          139,
+          140,
+          141,
+          142,
+          147,
+          151,
+          152,
+          153,
+          184,
+          239,
+          332,
+          333,
+          334,
+          353,
+          399,
+          783,
+          1097,
+          2041,
+          2158,
+          3903,
+          3904,
+          3905,
+          5261,
+          5545,
+          6181,
+          6261,
+          6281,
+          6285
+        ],
+        "active": [
+          38,
+          88,
+          102,
+          104,
+          155,
+          167,
+          168,
+          176,
+          2040
+        ],
+        "commands": 6980,
+        "iterations": 2367
+      },
+      "skills": [
+        {
+          "id": 81,
+          "name": "躲闪",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 198,
+          "name": "单手锤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 201,
+          "name": "单手剑",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 203,
+          "name": "徒手",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 204,
+          "name": "防御",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 264,
+          "name": "弓",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 266,
+          "name": "枪械",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1180,
+          "name": "匕首",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1752,
+          "name": "邪恶攻击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1784,
+          "name": "潜行",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2098,
+          "name": "刺骨",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2567,
+          "name": "投掷",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2764,
+          "name": "投掷",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5011,
+          "name": "弩",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9077,
+          "name": "皮革",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9078,
+          "name": "布甲",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 15590,
+          "name": "拳套",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20597,
+          "name": "剑类武器专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20598,
+          "name": "人类精魂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20599,
+          "name": "外交",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20600,
+          "name": "感知",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20864,
+          "name": "锤类武器专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 53,
+          "name": "背刺",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 921,
+          "name": "偷窃",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1757,
+          "name": "邪恶攻击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1776,
+          "name": "凿击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5277,
+          "name": "闪避",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6760,
+          "name": "刺骨",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 674,
+          "name": "双武器",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2983,
+          "name": "疾跑",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5171,
+          "name": "切割",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6770,
+          "name": "闷棍",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1766,
+          "name": "脚踢",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2589,
+          "name": "背刺",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 3127,
+          "name": "招架",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 703,
+          "name": "绞喉",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1758,
+          "name": "邪恶攻击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8647,
+          "name": "破甲",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1804,
+          "name": "开锁",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1966,
+          "name": "佯攻",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6761,
+          "name": "刺骨",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1777,
+          "name": "凿击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8676,
+          "name": "伏击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1785,
+          "name": "潜行",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1943,
+          "name": "割裂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2590,
+          "name": "背刺",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2842,
+          "name": "毒药",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 3420,
+          "name": "致残毒药",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8681,
+          "name": "速效毒药",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 14251,
+          "name": "还击",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 14278,
+          "name": "鬼魅攻击",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        }
+      ],
+      "replay": {
+        "equal": true,
+        "operations": 34435,
+        "level": 20,
+        "kills": 1230,
+        "deaths": 13,
+        "completed": 75,
+        "sha256": "484f58ccaaeb6e8dab4800e0859697f84007ced3f698e7cf9817b34c9c4aacbd"
+      },
+      "sourceManifestSha256": "2f033d9dcc6603b0441722941c1a9efd7bad2be232788e7c2d86a9347c9486fb"
+    },
+    {
+      "key": "priest",
+      "name": "牧师",
+      "directory": ".cache/refactor-final-priest",
+      "classId": 5,
+      "raceId": 1,
+      "seed": 283,
+      "method": "Only normal game commands; simulated elapsed time; no granted levels, currency, gear, skills or healing.",
+      "final": {
+        "level": 20,
+        "xp": 3,
+        "seconds": 286096.394,
+        "money": 47402,
+        "totals": {
+          "kills": 1208,
+          "xp": 167203,
+          "money": 15847,
+          "items": 1615,
+          "deaths": 0,
+          "food": 21,
+          "water": 36
+        },
+        "completed": [
+          6,
+          7,
+          9,
+          11,
+          12,
+          13,
+          14,
+          15,
+          18,
+          21,
+          22,
+          33,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          45,
+          46,
+          47,
+          52,
+          54,
+          59,
+          60,
+          61,
+          62,
+          64,
+          65,
+          71,
+          76,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          103,
+          104,
+          106,
+          107,
+          109,
+          111,
+          112,
+          114,
+          132,
+          135,
+          136,
+          138,
+          139,
+          140,
+          141,
+          142,
+          151,
+          152,
+          153,
+          184,
+          239,
+          332,
+          333,
+          334,
+          353,
+          399,
+          783,
+          1097,
+          2041,
+          2158,
+          3903,
+          3904,
+          3905,
+          5261,
+          5545,
+          6181,
+          6261,
+          6281,
+          6285
+        ],
+        "active": [
+          102,
+          155,
+          167,
+          168,
+          176,
+          2040
+        ],
+        "commands": 6865,
+        "iterations": 2342
+      },
+      "skills": [
+        {
+          "id": 81,
+          "name": "躲闪",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 198,
+          "name": "单手锤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 203,
+          "name": "徒手",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 204,
+          "name": "防御",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 227,
+          "name": "法杖",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 585,
+          "name": "惩击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1180,
+          "name": "匕首",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1243,
+          "name": "真言术：韧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2050,
+          "name": "次级治疗术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5009,
+          "name": "魔杖",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5019,
+          "name": "射击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9078,
+          "name": "布甲",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20597,
+          "name": "剑类武器专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20598,
+          "name": "人类精魂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20599,
+          "name": "外交",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20600,
+          "name": "感知",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20864,
+          "name": "锤类武器专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 589,
+          "name": "暗言术：痛",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2052,
+          "name": "次级治疗术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 17,
+          "name": "真言术：盾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 591,
+          "name": "惩击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 139,
+          "name": "恢复",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 586,
+          "name": "渐隐术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 594,
+          "name": "暗言术：痛",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2006,
+          "name": "复活术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2053,
+          "name": "次级治疗术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8092,
+          "name": "心灵震爆",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 13908,
+          "name": "绝望祷言",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 588,
+          "name": "心灵之火",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 592,
+          "name": "真言术：盾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1244,
+          "name": "真言术：韧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 528,
+          "name": "祛病术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 598,
+          "name": "惩击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6074,
+          "name": "恢复",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8122,
+          "name": "心灵尖啸",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2054,
+          "name": "治疗术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8102,
+          "name": "心灵震爆",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 527,
+          "name": "驱散魔法",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 600,
+          "name": "真言术：盾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 970,
+          "name": "暗言术：痛",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 19236,
+          "name": "绝望祷言",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 453,
+          "name": "安抚心灵",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2061,
+          "name": "快速治疗",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6075,
+          "name": "恢复",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 7128,
+          "name": "心灵之火",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9484,
+          "name": "束缚亡灵",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9578,
+          "name": "渐隐术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 13896,
+          "name": "回馈",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 14751,
+          "name": "心灵专注",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 14914,
+          "name": "神圣之火",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 15237,
+          "name": "神圣新星",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 15407,
+          "name": "精神鞭笞",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        }
+      ],
+      "replay": {
+        "equal": true,
+        "operations": 36898,
+        "level": 20,
+        "kills": 1208,
+        "deaths": 0,
+        "completed": 76,
+        "sha256": "40b0a956f57e43ab7dcfd4b84a37c886581a90aa13226a0c773da6f3c77bd02a"
+      },
+      "sourceManifestSha256": "8e23a7f445ce82f6aa70ce6afdf84080a59755df91e1360a585cc029e71aef3e"
+    },
+    {
+      "key": "shaman",
+      "name": "萨满祭司",
+      "directory": ".cache/refactor-final-shaman",
+      "classId": 7,
+      "raceId": 2,
+      "seed": 283,
+      "method": "Only normal game commands; simulated elapsed time; no granted levels, currency, gear, skills or healing.",
+      "final": {
+        "level": 20,
+        "xp": 43,
+        "seconds": 75484.401,
+        "money": 24753,
+        "totals": {
+          "kills": 1189,
+          "xp": 167243,
+          "money": 18727,
+          "items": 1404,
+          "deaths": 6,
+          "food": 37,
+          "water": 41
+        },
+        "completed": [
+          6,
+          7,
+          9,
+          11,
+          12,
+          13,
+          14,
+          15,
+          18,
+          21,
+          22,
+          33,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          45,
+          46,
+          47,
+          52,
+          54,
+          59,
+          60,
+          61,
+          62,
+          64,
+          65,
+          71,
+          76,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          103,
+          104,
+          106,
+          107,
+          109,
+          111,
+          112,
+          114,
+          132,
+          135,
+          136,
+          138,
+          139,
+          140,
+          141,
+          142,
+          151,
+          152,
+          153,
+          184,
+          239,
+          332,
+          333,
+          334,
+          353,
+          399,
+          783,
+          1097,
+          2041,
+          2158,
+          3903,
+          3904,
+          3905,
+          5261,
+          5545
+        ],
+        "active": [
+          102,
+          155,
+          167,
+          168,
+          176,
+          2040
+        ],
+        "commands": 4694,
+        "iterations": 1479
+      },
+      "skills": [
+        {
+          "id": 81,
+          "name": "躲闪",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 107,
+          "name": "格挡",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 196,
+          "name": "单手斧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 197,
+          "name": "双手斧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 198,
+          "name": "单手锤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 199,
+          "name": "双手锤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 203,
+          "name": "徒手",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 204,
+          "name": "防御",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 227,
+          "name": "法杖",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 331,
+          "name": "治疗波",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 403,
+          "name": "闪电箭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1180,
+          "name": "匕首",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8017,
+          "name": "石化武器",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9077,
+          "name": "皮革",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9078,
+          "name": "布甲",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9116,
+          "name": "盾牌",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 15590,
+          "name": "拳套",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20572,
+          "name": "血性狂暴",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20573,
+          "name": "坚韧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20574,
+          "name": "斧专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 21563,
+          "name": "命令",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 27763,
+          "name": "图腾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8042,
+          "name": "大地震击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8071,
+          "name": "石肤图腾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 332,
+          "name": "治疗波",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2484,
+          "name": "地缚图腾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 324,
+          "name": "闪电之盾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 529,
+          "name": "闪电箭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5730,
+          "name": "石爪图腾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8018,
+          "name": "石化武器",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8044,
+          "name": "大地震击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 3599,
+          "name": "灼热图腾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8024,
+          "name": "火舌武器",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8050,
+          "name": "烈焰震击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8075,
+          "name": "大地之力图腾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 370,
+          "name": "净化术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 547,
+          "name": "治疗波",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1535,
+          "name": "火焰新星图腾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2008,
+          "name": "先祖之魂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 548,
+          "name": "闪电箭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8045,
+          "name": "大地震击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8154,
+          "name": "石肤图腾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 325,
+          "name": "闪电之盾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 526,
+          "name": "消毒术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8019,
+          "name": "石化武器",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 913,
+          "name": "治疗波",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6390,
+          "name": "石爪图腾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8027,
+          "name": "火舌武器",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8052,
+          "name": "烈焰震击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8143,
+          "name": "战栗图腾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 915,
+          "name": "闪电箭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2645,
+          "name": "幽魂之狼",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5394,
+          "name": "治疗之泉图腾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6363,
+          "name": "灼热图腾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8004,
+          "name": "次级治疗波",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8033,
+          "name": "冰封武器",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8056,
+          "name": "冰霜震击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 16269,
+          "name": "双手斧和锤",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        }
+      ],
+      "replay": {
+        "equal": true,
+        "operations": 43747,
+        "level": 20,
+        "kills": 1189,
+        "deaths": 6,
+        "completed": 72,
+        "sha256": "3c23e3758406779d136cc4ba76f6f7fab54568cbe6e1c22747802712670615c9"
+      },
+      "sourceManifestSha256": "d656dc61bb485cbe138f70226d43db2b38de61c891092886a9109908813e9795"
+    },
+    {
+      "key": "mage",
+      "name": "法师",
+      "directory": ".cache/refactor-final-mage",
+      "classId": 8,
+      "raceId": 1,
+      "seed": 283,
+      "method": "Only normal game commands; simulated elapsed time; no granted levels, currency, gear, skills or healing.",
+      "final": {
+        "level": 20,
+        "xp": 90,
+        "seconds": 62546.834,
+        "money": 24997,
+        "totals": {
+          "kills": 1190,
+          "xp": 167290,
+          "money": 17722,
+          "items": 1504,
+          "deaths": 26,
+          "food": 931,
+          "water": 1273
+        },
+        "completed": [
+          6,
+          7,
+          9,
+          11,
+          12,
+          13,
+          15,
+          18,
+          21,
+          22,
+          33,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          45,
+          46,
+          47,
+          52,
+          54,
+          59,
+          60,
+          61,
+          62,
+          64,
+          65,
+          71,
+          76,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          103,
+          104,
+          106,
+          107,
+          109,
+          111,
+          112,
+          114,
+          132,
+          135,
+          136,
+          138,
+          139,
+          140,
+          141,
+          142,
+          151,
+          152,
+          153,
+          239,
+          332,
+          333,
+          334,
+          353,
+          399,
+          783,
+          1097,
+          1860,
+          1919,
+          2041,
+          2158,
+          3104,
+          3903,
+          3904,
+          3905,
+          5261,
+          5545,
+          6181,
+          6261,
+          6281,
+          6285
+        ],
+        "active": [
+          14,
+          102,
+          155,
+          167,
+          168,
+          176,
+          1861,
+          1920,
+          2040
+        ],
+        "commands": 5199,
+        "iterations": 1524
+      },
+      "skills": [
+        {
+          "id": 81,
+          "name": "躲闪",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 133,
+          "name": "火球术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 168,
+          "name": "霜甲术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 201,
+          "name": "单手剑",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 203,
+          "name": "徒手",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 204,
+          "name": "防御",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 227,
+          "name": "法杖",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1180,
+          "name": "匕首",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1459,
+          "name": "奥术智慧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5009,
+          "name": "魔杖",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5019,
+          "name": "射击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9078,
+          "name": "布甲",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20597,
+          "name": "剑类武器专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20598,
+          "name": "人类精魂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20599,
+          "name": "外交",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20600,
+          "name": "感知",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20864,
+          "name": "锤类武器专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 116,
+          "name": "寒冰箭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5504,
+          "name": "造水术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 143,
+          "name": "火球术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 587,
+          "name": "造食术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2136,
+          "name": "火焰冲击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 118,
+          "name": "变形术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 205,
+          "name": "寒冰箭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5143,
+          "name": "奥术飞弹",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 122,
+          "name": "冰霜新星",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5505,
+          "name": "造水术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 7300,
+          "name": "霜甲术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 130,
+          "name": "缓落术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 145,
+          "name": "火球术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 597,
+          "name": "造食术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 604,
+          "name": "魔法抑制",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 837,
+          "name": "寒冰箭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1449,
+          "name": "魔爆术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1460,
+          "name": "奥术智慧",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2137,
+          "name": "火焰冲击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2120,
+          "name": "烈焰风暴",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2855,
+          "name": "侦测魔法",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5144,
+          "name": "奥术飞弹",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 475,
+          "name": "解除次级诅咒",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1008,
+          "name": "魔法增效",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 3140,
+          "name": "火球术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 10,
+          "name": "暴风雪",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 543,
+          "name": "防护火焰结界",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1463,
+          "name": "法力护盾",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1953,
+          "name": "闪现术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 3561,
+          "name": "传送：暴风城",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 3562,
+          "name": "铁炉堡传送",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5506,
+          "name": "造水术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 7301,
+          "name": "霜甲术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 7322,
+          "name": "寒冰箭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 11366,
+          "name": "炎爆术",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 12051,
+          "name": "唤醒",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 12472,
+          "name": "急速冷却",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 12824,
+          "name": "变形术",
+          "known": true,
+          "reason": "已经学会"
+        }
+      ],
+      "replay": {
+        "equal": true,
+        "operations": 43471,
+        "level": 20,
+        "kills": 1190,
+        "deaths": 26,
+        "completed": 77,
+        "sha256": "b2212afffdd1ce697148b61183c65d3247c8dd2d0bd704ab697b1566e6dc79f2"
+      },
+      "sourceManifestSha256": "e988692d577fc28b0dc48bddab1fc0c8db73dcb38491bea9d31cfb65228175da"
+    },
+    {
+      "key": "warlock",
+      "name": "术士",
+      "directory": ".cache/refactor-final-warlock",
+      "classId": 9,
+      "raceId": 1,
+      "seed": 283,
+      "method": "Only normal game commands; simulated elapsed time; no granted levels, currency, gear, skills or healing.",
+      "final": {
+        "level": 20,
+        "xp": 67,
+        "seconds": 77279.643,
+        "money": 42645,
+        "totals": {
+          "kills": 1187,
+          "xp": 167267,
+          "money": 17795,
+          "items": 1551,
+          "deaths": 19,
+          "food": 25,
+          "water": 32
+        },
+        "completed": [
+          6,
+          7,
+          11,
+          12,
+          13,
+          14,
+          15,
+          18,
+          21,
+          22,
+          33,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          45,
+          46,
+          47,
+          52,
+          54,
+          59,
+          60,
+          61,
+          62,
+          64,
+          65,
+          71,
+          76,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          103,
+          104,
+          106,
+          107,
+          109,
+          111,
+          112,
+          114,
+          132,
+          135,
+          136,
+          138,
+          139,
+          140,
+          141,
+          142,
+          151,
+          152,
+          153,
+          239,
+          332,
+          333,
+          334,
+          353,
+          399,
+          783,
+          1097,
+          2041,
+          2158,
+          3903,
+          3904,
+          3905,
+          5261,
+          5545,
+          6181,
+          6261,
+          6281,
+          6285
+        ],
+        "active": [
+          9,
+          102,
+          155,
+          167,
+          168,
+          176,
+          2040
+        ],
+        "commands": 4871,
+        "iterations": 1494
+      },
+      "skills": [
+        {
+          "id": 81,
+          "name": "躲闪",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 201,
+          "name": "单手剑",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 203,
+          "name": "徒手",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 204,
+          "name": "防御",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 227,
+          "name": "法杖",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 348,
+          "name": "献祭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 686,
+          "name": "暗影箭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 687,
+          "name": "恶魔皮肤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 688,
+          "name": "召唤小鬼",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1180,
+          "name": "匕首",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5009,
+          "name": "魔杖",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5019,
+          "name": "射击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9078,
+          "name": "布甲",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20597,
+          "name": "剑类武器专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20598,
+          "name": "人类精魂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20599,
+          "name": "外交",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20600,
+          "name": "感知",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20864,
+          "name": "锤类武器专精",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 172,
+          "name": "腐蚀术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 702,
+          "name": "虚弱诅咒",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 695,
+          "name": "暗影箭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1454,
+          "name": "生命分流",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 980,
+          "name": "痛苦诅咒",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5782,
+          "name": "恐惧术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 696,
+          "name": "恶魔皮肤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 697,
+          "name": "召唤虚空行者",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 707,
+          "name": "献祭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1120,
+          "name": "吸取灵魂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6201,
+          "name": "制造初级治疗石",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 705,
+          "name": "暗影箭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 755,
+          "name": "生命通道",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1108,
+          "name": "虚弱诅咒",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 689,
+          "name": "吸取生命",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 704,
+          "name": "鲁莽诅咒",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6222,
+          "name": "腐蚀术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1455,
+          "name": "生命分流",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5697,
+          "name": "魔息术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 693,
+          "name": "制造初级灵魂石",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1014,
+          "name": "痛苦诅咒",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5676,
+          "name": "灼热之痛",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 698,
+          "name": "召唤仪式",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 706,
+          "name": "魔甲术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 712,
+          "name": "召唤魅魔",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1088,
+          "name": "暗影箭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1094,
+          "name": "献祭",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 3698,
+          "name": "生命通道",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5740,
+          "name": "火焰之雨",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 17877,
+          "name": "暗影灼烧",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 18288,
+          "name": "诅咒增幅",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 18708,
+          "name": "恶魔支配",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        }
+      ],
+      "replay": {
+        "equal": true,
+        "operations": 43784,
+        "level": 20,
+        "kills": 1187,
+        "deaths": 19,
+        "completed": 74,
+        "sha256": "ec585c3a210e3b19611e5c8b534d40cabfbe79a1ab16ba15851afb3d4b317b8c"
+      },
+      "sourceManifestSha256": "536059fc8469a547b228f241c65e7bdb124b462bb6bd063d417f5707fd429bb4"
+    },
+    {
+      "key": "druid",
+      "name": "德鲁伊",
+      "directory": ".cache/refactor-final-druid",
+      "classId": 11,
+      "raceId": 4,
+      "seed": 283,
+      "method": "Only normal game commands; simulated elapsed time; no granted levels, currency, gear, skills or healing.",
+      "final": {
+        "level": 20,
+        "xp": 75,
+        "seconds": 160008.356,
+        "money": 44151,
+        "totals": {
+          "kills": 1192,
+          "xp": 167275,
+          "money": 15906,
+          "items": 1527,
+          "deaths": 0,
+          "food": 35,
+          "water": 40
+        },
+        "completed": [
+          6,
+          7,
+          9,
+          11,
+          12,
+          13,
+          14,
+          15,
+          18,
+          21,
+          22,
+          33,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          45,
+          46,
+          47,
+          52,
+          54,
+          59,
+          60,
+          61,
+          62,
+          64,
+          65,
+          71,
+          76,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          103,
+          104,
+          106,
+          107,
+          109,
+          111,
+          112,
+          114,
+          123,
+          132,
+          135,
+          136,
+          138,
+          139,
+          140,
+          141,
+          142,
+          147,
+          151,
+          152,
+          153,
+          239,
+          332,
+          333,
+          334,
+          353,
+          399,
+          783,
+          1097,
+          2041,
+          2158,
+          3903,
+          3904,
+          3905,
+          5261,
+          5545
+        ],
+        "active": [
+          102,
+          155,
+          167,
+          168,
+          176,
+          2040
+        ],
+        "commands": 5507,
+        "iterations": 1756
+      },
+      "skills": [
+        {
+          "id": 81,
+          "name": "躲闪",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 198,
+          "name": "单手锤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 199,
+          "name": "双手锤",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 203,
+          "name": "徒手",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 204,
+          "name": "防御",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 227,
+          "name": "法杖",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1126,
+          "name": "野性印记",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1180,
+          "name": "匕首",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5176,
+          "name": "愤怒",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5185,
+          "name": "治疗之触",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9077,
+          "name": "皮革",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 9078,
+          "name": "布甲",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 15590,
+          "name": "拳套",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20580,
+          "name": "影遁",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20582,
+          "name": "迅捷",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20583,
+          "name": "自然抗性",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 20585,
+          "name": "精灵之魂",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 21009,
+          "name": "影遁",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 27764,
+          "name": "神像",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 774,
+          "name": "回春术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8921,
+          "name": "月火术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 467,
+          "name": "荆棘术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5177,
+          "name": "愤怒",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 339,
+          "name": "纠缠根须",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5186,
+          "name": "治疗之触",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 99,
+          "name": "挫志咆哮",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1058,
+          "name": "回春术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5232,
+          "name": "野性印记",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5487,
+          "name": "熊形态",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6795,
+          "name": "低吼",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6807,
+          "name": "重殴",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8924,
+          "name": "月火术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 16689,
+          "name": "自然之握",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 18960,
+          "name": "传送：月光林地",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5229,
+          "name": "狂怒",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8936,
+          "name": "愈合",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 782,
+          "name": "荆棘术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5178,
+          "name": "愤怒",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5187,
+          "name": "治疗之触",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5211,
+          "name": "重击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8946,
+          "name": "消毒术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 779,
+          "name": "挥击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1066,
+          "name": "水栖形态",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1430,
+          "name": "回春术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8925,
+          "name": "月火术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 770,
+          "name": "精灵之火",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1062,
+          "name": "纠缠根须",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2637,
+          "name": "休眠",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 6808,
+          "name": "重殴",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 8938,
+          "name": "愈合",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 16810,
+          "name": "自然之握",
+          "known": false,
+          "reason": "需要先学习前一等级"
+        },
+        {
+          "id": 768,
+          "name": "猎豹形态",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1079,
+          "name": "撕扯",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1082,
+          "name": "爪击",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 1735,
+          "name": "挫志咆哮",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 2912,
+          "name": "星火术",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5188,
+          "name": "治疗之触",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5215,
+          "name": "潜行",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 5570,
+          "name": "虫群",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 6756,
+          "name": "野性印记",
+          "known": true,
+          "reason": "已经学会"
+        },
+        {
+          "id": 16864,
+          "name": "清晰预兆",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 16979,
+          "name": "野性冲锋",
+          "known": false,
+          "reason": "需要通过天赋树学习"
+        },
+        {
+          "id": 20484,
+          "name": "复生",
+          "known": true,
+          "reason": "已经学会"
+        }
+      ],
+      "replay": {
+        "equal": true,
+        "operations": 45742,
+        "level": 20,
+        "kills": 1192,
+        "deaths": 0,
+        "completed": 73,
+        "sha256": "d4816202a752be29d61d3f615be7e565a446167e6fe73eb1d7d0de25d8b848b7"
+      },
+      "sourceManifestSha256": "df07eaf43b866e7a33d65807cad5a34451c214d9a775c659bac562811b40ec4d"
+    }
+  ],
+  "continuations": [
+    {
+      "key": "dungeon",
+      "directory": ".cache/refactor-final-dungeon",
+      "summary": {
+        "input": "C:\\workspace\\wow-sim\\.cache\\refactor-final-mage\\final-state.json",
+        "initialSha256": "2ded6b457d18fcb5a1c3449ff1d15bdc7901f95367a6afff05045d67f35317cd",
+        "quests": [
+          1861,
+          1920,
+          1921,
+          1941,
+          2040,
+          14,
+          102,
+          167,
+          168,
+          176
+        ],
+        "encounters": [
+          {
+            "cursor": 0,
+            "route": "dm-entry-01",
+            "after": 1,
+            "seconds": 87.012,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 1,
+            "route": "dm-entry-02",
+            "after": 2,
+            "seconds": 70.039,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 2,
+            "route": "dm-entry-03",
+            "after": 3,
+            "seconds": 83.475,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 3,
+            "route": "dm-entry-04",
+            "after": 4,
+            "seconds": 82.521,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 4,
+            "route": "dm-entry-05",
+            "after": 5,
+            "seconds": 86.179,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 5,
+            "route": "dm-entry-06",
+            "after": 6,
+            "seconds": 73.6,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 6,
+            "route": "dm-entry-07",
+            "after": 7,
+            "seconds": 76.638,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 7,
+            "route": "dm-entry-08",
+            "after": 8,
+            "seconds": 73.713,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 8,
+            "route": "dm-rhahkzor",
+            "after": 9,
+            "seconds": 145.752,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 9,
+            "route": "dm-patrol-01",
+            "after": 10,
+            "seconds": 62.935,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 10,
+            "route": "dm-junction",
+            "after": 11,
+            "seconds": 128.057,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 11,
+            "route": "dm-johnson-approach",
+            "after": 12,
+            "seconds": 73.481,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 12,
+            "route": "dm-miner-johnson",
+            "after": 14,
+            "seconds": 129.507,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 14,
+            "route": "dm-woodcarver-01",
+            "after": 15,
+            "seconds": 85.457,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 15,
+            "route": "dm-woodcarver-02",
+            "after": 16,
+            "seconds": 108.845,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 16,
+            "route": "dm-woodcarver-03",
+            "after": 17,
+            "seconds": 80.877,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 17,
+            "route": "dm-sneed",
+            "after": 18,
+            "seconds": 82.39,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 18,
+            "route": "dm-patrol-02",
+            "after": 19,
+            "seconds": 62.948,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 19,
+            "route": "dm-mast-exit-01",
+            "after": 20,
+            "seconds": 95.711,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 20,
+            "route": "dm-mast-exit-02",
+            "after": 21,
+            "seconds": 69.74,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 21,
+            "route": "dm-mast-exit-03",
+            "after": 22,
+            "seconds": 49.069,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 22,
+            "route": "dm-mast-exit-04",
+            "after": 23,
+            "seconds": 72.866,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 23,
+            "route": "dm-foundry-upper",
+            "after": 24,
+            "seconds": 62.853,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 24,
+            "route": "dm-foundry-ramp",
+            "after": 25,
+            "seconds": 84.576,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 25,
+            "route": "dm-foundry-01",
+            "after": 26,
+            "seconds": 95.997,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 26,
+            "route": "dm-foundry-02",
+            "after": 27,
+            "seconds": 133.886,
+            "deaths": 0,
+            "alive": 3
+          },
+          {
+            "cursor": 27,
+            "route": "dm-foundry-03",
+            "after": 27,
+            "seconds": 61.952,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 27,
+            "route": "dm-foundry-03",
+            "after": 27,
+            "seconds": 135.984,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 27,
+            "route": "dm-foundry-03",
+            "after": 28,
+            "seconds": 13.1,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 28,
+            "route": "dm-gilnid",
+            "after": 29,
+            "seconds": 101.007,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 29,
+            "route": "dm-patrol-03",
+            "after": 30,
+            "seconds": 97.872,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 30,
+            "route": "dm-powder-01",
+            "after": 31,
+            "seconds": 62.017,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 31,
+            "route": "dm-powder-02",
+            "after": 32,
+            "seconds": 72.529,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 32,
+            "route": "dm-powder-03",
+            "after": 33,
+            "seconds": 71.827,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 33,
+            "route": "dm-gunpowder",
+            "after": 33,
+            "seconds": 39.635,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 34,
+            "route": "dm-cannon-approach",
+            "after": 35,
+            "seconds": 50.125,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 36,
+            "route": "dm-cannon-alarm",
+            "after": 37,
+            "seconds": 85.313,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 37,
+            "route": "dm-cove-01",
+            "after": 38,
+            "seconds": 52.914,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 38,
+            "route": "dm-cove-side",
+            "after": 39,
+            "seconds": 24.458,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 39,
+            "route": "dm-cove-02",
+            "after": 40,
+            "seconds": 61.255,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 40,
+            "route": "dm-cove-03",
+            "after": 41,
+            "seconds": 67.452,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 41,
+            "route": "dm-cove-04",
+            "after": 42,
+            "seconds": 88.805,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 42,
+            "route": "dm-cove-05",
+            "after": 43,
+            "seconds": 97.811,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 43,
+            "route": "dm-smite",
+            "after": 44,
+            "seconds": 150.704,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 44,
+            "route": "dm-foredeck",
+            "after": 45,
+            "seconds": 157.074,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 45,
+            "route": "dm-lowerdeck-01",
+            "after": 46,
+            "seconds": 131.741,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 46,
+            "route": "dm-dock-side",
+            "after": 47,
+            "seconds": 53.86,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 47,
+            "route": "dm-ship-ramp-01",
+            "after": 48,
+            "seconds": 111.392,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 48,
+            "route": "dm-ship-ramp-02",
+            "after": 49,
+            "seconds": 46.42,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 49,
+            "route": "dm-upperdeck-01",
+            "after": 50,
+            "seconds": 91.448,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 50,
+            "route": "dm-upperdeck-02",
+            "after": 51,
+            "seconds": 72.917,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 51,
+            "route": "dm-greenskin",
+            "after": 52,
+            "seconds": 88.171,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 52,
+            "route": "dm-vancleef",
+            "after": 53,
+            "seconds": 159.154,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 53,
+            "route": "dm-cookie-approach-east",
+            "after": 54,
+            "seconds": 113.587,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 54,
+            "route": "dm-cookie",
+            "after": 55,
+            "seconds": 40.998,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 55,
+            "route": "dm-cookie-approach-west",
+            "after": 55,
+            "seconds": 118.609,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 55,
+            "route": "dm-cookie-approach-west",
+            "after": 56,
+            "seconds": 109.019,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 56,
+            "route": "dm-exit-tunnel-01",
+            "after": 57,
+            "seconds": 56.938,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 57,
+            "route": "dm-exit-tunnel-02",
+            "after": 58,
+            "seconds": 84.217,
+            "deaths": 0,
+            "alive": 5
+          }
+        ],
+        "failures": [],
+        "unavailableSkills": [],
+        "final": {
+          "level": 21,
+          "seconds": 16060.38,
+          "deaths": 3,
+          "money": 79985,
+          "cursor": 58,
+          "completedAt": 73272600
+        }
+      },
+      "replay": {
+        "equal": true,
+        "operations": 9785,
+        "level": 21,
+        "kills": 1435,
+        "deaths": 29,
+        "completed": 87,
+        "sha256": "44c8b20cdebfd988ce99ebf491d7a38045bc892369a973facb7069c7af12619f"
+      },
+      "completed": [
+        6,
+        7,
+        9,
+        11,
+        12,
+        13,
+        14,
+        15,
+        18,
+        21,
+        22,
+        33,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        45,
+        46,
+        47,
+        52,
+        54,
+        59,
+        60,
+        61,
+        62,
+        64,
+        65,
+        71,
+        76,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        102,
+        103,
+        104,
+        106,
+        107,
+        109,
+        111,
+        112,
+        114,
+        132,
+        135,
+        136,
+        138,
+        139,
+        140,
+        141,
+        142,
+        151,
+        152,
+        153,
+        167,
+        168,
+        176,
+        239,
+        332,
+        333,
+        334,
+        353,
+        399,
+        783,
+        1097,
+        1860,
+        1861,
+        1919,
+        1920,
+        1921,
+        1941,
+        2040,
+        2041,
+        2158,
+        3104,
+        3903,
+        3904,
+        3905,
+        5261,
+        5545,
+        6181,
+        6261,
+        6281,
+        6285
+      ],
+      "sourceManifestSha256": "b8f7f8555fa28c962ee5a2374dd417c31a26a73108af13c5b65e769171848d9c"
+    },
+    {
+      "key": "escort",
+      "directory": ".cache/refactor-final-escort",
+      "summary": {
+        "input": "C:\\workspace\\wow-sim\\.cache\\refactor-final-dungeon\\final-state.json",
+        "initialSha256": "4105a8929c4a7f46c70154d015f4593619ec323d8e3cd1c1ad286c968dbe64f2",
+        "quests": [
+          155
+        ],
+        "encounters": [],
+        "failures": [],
+        "unavailableSkills": [],
+        "escort": {
+          "seconds": 388,
+          "outcome": {
+            "outcome": "arrived",
+            "at": 79267500
+          },
+          "remaining": false
+        },
+        "final": {
+          "level": 21,
+          "seconds": 757.858,
+          "deaths": 0,
+          "money": 90182,
+          "cursor": 58,
+          "completedAt": 73272600
+        }
+      },
+      "replay": {
+        "equal": true,
+        "operations": 421,
+        "level": 21,
+        "kills": 1446,
+        "deaths": 29,
+        "completed": 88,
+        "sha256": "a846a9e57e0e3161b360092df4a12b688ba755da48170905dcc1d1cc9f1f5330"
+      },
+      "completed": [
+        6,
+        7,
+        9,
+        11,
+        12,
+        13,
+        14,
+        15,
+        18,
+        21,
+        22,
+        33,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        45,
+        46,
+        47,
+        52,
+        54,
+        59,
+        60,
+        61,
+        62,
+        64,
+        65,
+        71,
+        76,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        102,
+        103,
+        104,
+        106,
+        107,
+        109,
+        111,
+        112,
+        114,
+        132,
+        135,
+        136,
+        138,
+        139,
+        140,
+        141,
+        142,
+        151,
+        152,
+        153,
+        155,
+        167,
+        168,
+        176,
+        239,
+        332,
+        333,
+        334,
+        353,
+        399,
+        783,
+        1097,
+        1860,
+        1861,
+        1919,
+        1920,
+        1921,
+        1941,
+        2040,
+        2041,
+        2158,
+        3104,
+        3903,
+        3904,
+        3905,
+        5261,
+        5545,
+        6181,
+        6261,
+        6281,
+        6285
+      ],
+      "sourceManifestSha256": "99f892b919611849fefd318c2958f66c64be88a31d5a5211615cb5d92c18fa29"
+    },
+    {
+      "key": "aftermath",
+      "directory": ".cache/refactor-final-aftermath",
+      "summary": {
+        "input": "C:\\workspace\\wow-sim\\.cache\\refactor-final-escort\\final-state.json",
+        "initialSha256": "3264e8692dabb8f5c768bd52f2dfd5bfd9ca804504fd65317e909761a7b8c864",
+        "quests": [
+          373,
+          166,
+          214
+        ],
+        "encounters": [
+          {
+            "cursor": 0,
+            "route": "dm-entry-01",
+            "after": 1,
+            "seconds": 79.592,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 1,
+            "route": "dm-entry-02",
+            "after": 2,
+            "seconds": 70.039,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 2,
+            "route": "dm-entry-03",
+            "after": 3,
+            "seconds": 73.475,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 3,
+            "route": "dm-entry-04",
+            "after": 4,
+            "seconds": 72.521,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 4,
+            "route": "dm-entry-05",
+            "after": 5,
+            "seconds": 89.179,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 5,
+            "route": "dm-entry-06",
+            "after": 6,
+            "seconds": 96.6,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 6,
+            "route": "dm-entry-07",
+            "after": 7,
+            "seconds": 73.638,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 7,
+            "route": "dm-entry-08",
+            "after": 8,
+            "seconds": 71.713,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 8,
+            "route": "dm-rhahkzor",
+            "after": 9,
+            "seconds": 117.752,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 9,
+            "route": "dm-patrol-01",
+            "after": 10,
+            "seconds": 59.935,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 10,
+            "route": "dm-junction",
+            "after": 11,
+            "seconds": 110.057,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 11,
+            "route": "dm-johnson-approach",
+            "after": 12,
+            "seconds": 72.481,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 12,
+            "route": "dm-miner-johnson",
+            "after": 14,
+            "seconds": 131.507,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 14,
+            "route": "dm-woodcarver-01",
+            "after": 15,
+            "seconds": 84.457,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 15,
+            "route": "dm-woodcarver-02",
+            "after": 16,
+            "seconds": 77.945,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 16,
+            "route": "dm-woodcarver-03",
+            "after": 17,
+            "seconds": 78.877,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 17,
+            "route": "dm-sneed",
+            "after": 18,
+            "seconds": 108.49,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 18,
+            "route": "dm-patrol-02",
+            "after": 19,
+            "seconds": 62.948,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 19,
+            "route": "dm-mast-exit-01",
+            "after": 20,
+            "seconds": 100.711,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 20,
+            "route": "dm-mast-exit-02",
+            "after": 21,
+            "seconds": 69.74,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 21,
+            "route": "dm-mast-exit-03",
+            "after": 22,
+            "seconds": 79.069,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 22,
+            "route": "dm-mast-exit-04",
+            "after": 23,
+            "seconds": 72.866,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 23,
+            "route": "dm-foundry-upper",
+            "after": 24,
+            "seconds": 61.853,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 24,
+            "route": "dm-foundry-ramp",
+            "after": 25,
+            "seconds": 83.576,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 25,
+            "route": "dm-foundry-01",
+            "after": 26,
+            "seconds": 94.997,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 26,
+            "route": "dm-foundry-02",
+            "after": 27,
+            "seconds": 150.886,
+            "deaths": 1,
+            "alive": 2
+          },
+          {
+            "cursor": 27,
+            "route": "dm-foundry-03",
+            "after": 27,
+            "seconds": 72.952,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 27,
+            "route": "dm-foundry-03",
+            "after": 28,
+            "seconds": 126.07,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 28,
+            "route": "dm-gilnid",
+            "after": 29,
+            "seconds": 99.007,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 29,
+            "route": "dm-patrol-03",
+            "after": 30,
+            "seconds": 131.486,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 30,
+            "route": "dm-powder-01",
+            "after": 31,
+            "seconds": 98.017,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 31,
+            "route": "dm-powder-02",
+            "after": 32,
+            "seconds": 70.529,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 32,
+            "route": "dm-powder-03",
+            "after": 33,
+            "seconds": 72.827,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 33,
+            "route": "dm-gunpowder",
+            "after": 33,
+            "seconds": 39.635,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 34,
+            "route": "dm-cannon-approach",
+            "after": 35,
+            "seconds": 89.125,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 36,
+            "route": "dm-cannon-alarm",
+            "after": 37,
+            "seconds": 87.313,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 37,
+            "route": "dm-cove-01",
+            "after": 38,
+            "seconds": 49.914,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 38,
+            "route": "dm-cove-side",
+            "after": 39,
+            "seconds": 21.458,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 39,
+            "route": "dm-cove-02",
+            "after": 40,
+            "seconds": 81.255,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 40,
+            "route": "dm-cove-03",
+            "after": 41,
+            "seconds": 60.452,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 41,
+            "route": "dm-cove-04",
+            "after": 42,
+            "seconds": 81.805,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 42,
+            "route": "dm-cove-05",
+            "after": 43,
+            "seconds": 86.811,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 43,
+            "route": "dm-smite",
+            "after": 44,
+            "seconds": 141.704,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 44,
+            "route": "dm-foredeck",
+            "after": 45,
+            "seconds": 145.474,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 45,
+            "route": "dm-lowerdeck-01",
+            "after": 46,
+            "seconds": 132.741,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 46,
+            "route": "dm-dock-side",
+            "after": 47,
+            "seconds": 82.46,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 47,
+            "route": "dm-ship-ramp-01",
+            "after": 48,
+            "seconds": 114.392,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 48,
+            "route": "dm-ship-ramp-02",
+            "after": 49,
+            "seconds": 46.42,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 49,
+            "route": "dm-upperdeck-01",
+            "after": 50,
+            "seconds": 82.448,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 50,
+            "route": "dm-upperdeck-02",
+            "after": 51,
+            "seconds": 73.917,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 51,
+            "route": "dm-greenskin",
+            "after": 52,
+            "seconds": 89.185,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 52,
+            "route": "dm-vancleef",
+            "after": 53,
+            "seconds": 181.154,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 53,
+            "route": "dm-cookie-approach-east",
+            "after": 54,
+            "seconds": 117.673,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 54,
+            "route": "dm-cookie",
+            "after": 55,
+            "seconds": 43.998,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 55,
+            "route": "dm-cookie-approach-west",
+            "after": 55,
+            "seconds": 138.009,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 55,
+            "route": "dm-cookie-approach-west",
+            "after": 56,
+            "seconds": 78.019,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 56,
+            "route": "dm-exit-tunnel-01",
+            "after": 57,
+            "seconds": 53.938,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 57,
+            "route": "dm-exit-tunnel-02",
+            "after": 58,
+            "seconds": 91.217,
+            "deaths": 0,
+            "alive": 5
+          }
+        ],
+        "failures": [],
+        "unavailableSkills": [],
+        "final": {
+          "level": 21,
+          "seconds": 8906.526,
+          "deaths": 3,
+          "money": 131358,
+          "cursor": 58,
+          "completedAt": 88134800
+        }
+      },
+      "replay": {
+        "equal": true,
+        "operations": 7285,
+        "level": 21,
+        "kills": 1659,
+        "deaths": 32,
+        "completed": 91,
+        "sha256": "1b1d6f0ea0d279872c27f5a8f56d0b9820ce2e70865c263abaf923147ce96223"
+      },
+      "completed": [
+        6,
+        7,
+        9,
+        11,
+        12,
+        13,
+        14,
+        15,
+        18,
+        21,
+        22,
+        33,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        45,
+        46,
+        47,
+        52,
+        54,
+        59,
+        60,
+        61,
+        62,
+        64,
+        65,
+        71,
+        76,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        102,
+        103,
+        104,
+        106,
+        107,
+        109,
+        111,
+        112,
+        114,
+        132,
+        135,
+        136,
+        138,
+        139,
+        140,
+        141,
+        142,
+        151,
+        152,
+        153,
+        155,
+        166,
+        167,
+        168,
+        176,
+        214,
+        239,
+        332,
+        333,
+        334,
+        353,
+        373,
+        399,
+        783,
+        1097,
+        1860,
+        1861,
+        1919,
+        1920,
+        1921,
+        1941,
+        2040,
+        2041,
+        2158,
+        3104,
+        3903,
+        3904,
+        3905,
+        5261,
+        5545,
+        6181,
+        6261,
+        6281,
+        6285
+      ],
+      "sourceManifestSha256": "a444519b19fd53d2c6e26c6badfcebc32d0f00044ebe7eaffe8b9aa11959394a"
+    },
+    {
+      "key": "regional",
+      "directory": ".cache/refactor-final-regional",
+      "summary": {
+        "input": "C:\\workspace\\wow-sim\\.cache\\refactor-final-aftermath\\final-state.json",
+        "initialSha256": "72a540890ad7311d2304808b18dcab9bec070af7e4e53f0bdf080824629d4baf",
+        "quests": [
+          184,
+          16,
+          117
+        ],
+        "encounters": [],
+        "failures": [],
+        "final": {
+          "level": 21,
+          "seconds": 2442.861,
+          "deaths": 0,
+          "money": 139516,
+          "cursor": 58,
+          "completedAt": 88134800
+        }
+      },
+      "replay": {
+        "equal": true,
+        "operations": 945,
+        "level": 21,
+        "kills": 1707,
+        "deaths": 32,
+        "completed": 94,
+        "sha256": "c113cf5cf80fff1680a033fba5433d945f0093f6905ba1559c9e0ccec69cf0b7"
+      },
+      "completed": [
+        6,
+        7,
+        9,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        18,
+        21,
+        22,
+        33,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        45,
+        46,
+        47,
+        52,
+        54,
+        59,
+        60,
+        61,
+        62,
+        64,
+        65,
+        71,
+        76,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        102,
+        103,
+        104,
+        106,
+        107,
+        109,
+        111,
+        112,
+        114,
+        117,
+        132,
+        135,
+        136,
+        138,
+        139,
+        140,
+        141,
+        142,
+        151,
+        152,
+        153,
+        155,
+        166,
+        167,
+        168,
+        176,
+        184,
+        214,
+        239,
+        332,
+        333,
+        334,
+        353,
+        373,
+        399,
+        783,
+        1097,
+        1860,
+        1861,
+        1919,
+        1920,
+        1921,
+        1941,
+        2040,
+        2041,
+        2158,
+        3104,
+        3903,
+        3904,
+        3905,
+        5261,
+        5545,
+        6181,
+        6261,
+        6281,
+        6285
+      ],
+      "sourceManifestSha256": "a444519b19fd53d2c6e26c6badfcebc32d0f00044ebe7eaffe8b9aa11959394a"
+    }
+  ],
+  "questCoverage": {
+    "catalogCount": 97,
+    "completedCount": 96,
+    "completedBy": {
+      "6": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "7": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "9": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "11": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "12": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "13": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "14": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "15": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "16": [
+        "regional"
+      ],
+      "18": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "21": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "22": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "33": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "35": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "36": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "37": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "38": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "39": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "40": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "45": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "46": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "47": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "52": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "54": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "59": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "60": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "61": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "62": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "64": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "65": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "71": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "76": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "83": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "84": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "85": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "86": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "87": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "88": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "102": [
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "103": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "104": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "106": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "107": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "109": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "111": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "112": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "114": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "117": [
+        "regional"
+      ],
+      "123": [
+        "hunter",
+        "rogue",
+        "druid"
+      ],
+      "132": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "135": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "136": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "138": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "139": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "140": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "141": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "142": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "147": [
+        "hunter",
+        "rogue",
+        "druid"
+      ],
+      "151": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "152": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "153": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "155": [
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "166": [
+        "aftermath",
+        "regional"
+      ],
+      "167": [
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "168": [
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "176": [
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "184": [
+        "warrior",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "regional"
+      ],
+      "214": [
+        "aftermath",
+        "regional"
+      ],
+      "239": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "332": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "333": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "334": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "353": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "373": [
+        "aftermath",
+        "regional"
+      ],
+      "399": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "783": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "1097": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "1860": [
+        "mage",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "1861": [
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "1919": [
+        "mage",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "1920": [
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "1921": [
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "1941": [
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "2040": [
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "2041": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "2158": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "3104": [
+        "mage",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "3903": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "3904": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "3905": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "5261": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "5545": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "6181": [
+        "warrior",
+        "paladin",
+        "rogue",
+        "priest",
+        "mage",
+        "warlock",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "6261": [
+        "warrior",
+        "paladin",
+        "rogue",
+        "priest",
+        "mage",
+        "warlock",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "6281": [
+        "warrior",
+        "paladin",
+        "rogue",
+        "priest",
+        "mage",
+        "warlock",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ],
+      "6285": [
+        "warrior",
+        "paladin",
+        "rogue",
+        "priest",
+        "mage",
+        "warlock",
+        "dungeon",
+        "escort",
+        "aftermath",
+        "regional"
+      ]
+    },
+    "uncompleted": [
+      {
+        "id": 579,
+        "title": "Stormwind Library",
+        "requiredItem": 3898
+      }
+    ]
+  },
+  "source": {
+    "sharedFilesSha256": "7941c9bbbcb56f28d638381ba8b40791d840dbf7e8430464376368402887ce96",
+    "currentDifferences": [
+      "package.json",
+      "packages/game-data/data/icon-map.json",
+      "packages/game-data/manifest.json"
+    ]
+  },
+  "checks": {
+    "tests": 682,
+    "passed": 682,
+    "failed": 0,
+    "log": ".cache/refactor-1-20-final.tap",
+    "build": ".cache/refactor-build.log",
+    "webTypes": ".cache/refactor-web-typecheck-fixed.log",
+    "dataManifest": {
+      "formatVersion": 1,
+      "contentVersion": "ad862ce898a04d6f77cce7f1f354051dc29067510b3d30b7277b56b86f6d5f9c",
+      "bundles": {
+        "class-demons-reference.json": {
+          "sha256": "cff264f075ba885d340bbd4df0fe06f0b2e1d96179994dea548f37cc417abb81",
+          "bytes": 37415
+        },
+        "class-icon-map.json": {
+          "sha256": "7a80bdfac25717e69263b12d78d1622cc7655a47f504b5d79fbc801d9854d535",
+          "bytes": 109572
+        },
+        "classes-reference.json": {
+          "sha256": "63ec462dfaccdbd8b5c650a4876dbc7a7a0e982b912d52821480995fa44f22ca",
+          "bytes": 12893377
+        },
+        "classic-reference.json": {
+          "sha256": "aa09210ea8b7834a4c53944e6deb4be590c940efc32041c4abfe318e0c772650",
+          "bytes": 8469602
+        },
+        "client-rules-reference.json": {
+          "sha256": "5e10ea32e6365d25b155263fe4e781b47c44b66df9ae7e05b94aa37aaf4c4241",
+          "bytes": 490882
+        },
+        "companion-passive-reference.json": {
+          "sha256": "482edca5824b4401676fed6ce384a3281206fe164ac197d242a9a1695ce35338",
+          "bytes": 8632
+        },
+        "creature-assets-manifest.json": {
+          "sha256": "59132bb7397b959379a9a0bb795bbbf0a99f985544b2db8fdd9dc3e21da92973",
+          "bytes": 32630
+        },
+        "creature-portraits-manifest.json": {
+          "sha256": "b6fad4e11f00780839ee032717c5b58f29923953c7ac17a06c74185374d8e506",
+          "bytes": 87592
+        },
+        "deadmines-reference.json": {
+          "sha256": "339269040660de072c919e42b9c799427ee7d812c74c9f3f9922ac62c667173d",
+          "bytes": 673148
+        },
+        "escort-reference.json": {
+          "sha256": "1cc7cf69cc5a6e8125d188dd0920a67cddc3b9e91161f41d0b4be78fb98485d8",
+          "bytes": 11471
+        },
+        "gameplay-reference.json": {
+          "sha256": "7614afa61829fd075cefc444730809e6aac8a5cccc22fd79139cae3d78e2b51b",
+          "bytes": 39274
+        },
+        "icon-map.json": {
+          "sha256": "512509a59935fc19bebcbc5fab69ccfbe18d9c7506f9f1e2779e681ecf7af3d6",
+          "bytes": 492767
+        },
+        "journey-item-assets.json": {
+          "sha256": "77585ed14fbad93da31e67f4caaba2de2a6d69ac28714f987c1714a70a9c7d0b",
+          "bytes": 55443
+        },
+        "localization.json": {
+          "sha256": "fdf389b6ab22f92ecf25bd961d1c4e8dbf70df7083171262178f7beccf260328",
+          "bytes": 444529
+        },
+        "mage-talents-2019.json": {
+          "sha256": "920306445c43599c216438b43bd0a4a575138ba0bd26211a52426432dafe57bd",
+          "bytes": 67447
+        },
+        "manifest.json": {
+          "sha256": "69e04b028d062baed1791a0838b74e215e01f2552607b35085d967158491e902",
+          "bytes": 154782
+        },
+        "pet-family-reference.json": {
+          "sha256": "b2ea6bcc38230b2f7d9ee1956de08c126ecc5892b49434358b45be95823137ac",
+          "bytes": 7577
+        },
+        "professions-reference.json": {
+          "sha256": "2f6ea7a046b3492f186ae4193558e64d66f44ed46f0311eec233a7a2d04f63d6",
+          "bytes": 615578
+        },
+        "professions-templates.json": {
+          "sha256": "feedc770ed0a549efdd64e7c40257f7c2917b2be676b5500b27bf29b040580d0",
+          "bytes": 1665923
+        },
+        "quest-supplement-reference.json": {
+          "sha256": "dcc2336d79ce93b3465027a5d58d6d7e8c031f94b64fe5dc0eaac26c5f6b4eea",
+          "bytes": 326941
+        },
+        "world-assets-manifest.json": {
+          "sha256": "aad664250bcf4e7f134f4d30a9cb2974bf0c4310dbf8f588255e8709f1d8b4c7",
+          "bytes": 10817
+        }
+      },
+      "rules": {
+        "../game-domain/src/content.ts": {
+          "sha256": "bf5863c16300acbbeb31f8a9deb2c23fe3655d93930aea0396ca5bcdc4fb1c93",
+          "bytes": 942
+        },
+        "../game-domain/src/rules/auto-buffs.js": {
+          "sha256": "d1c1241706df5c77b421515114b00acdea969eddcc36305065a6f4b219a9e22a",
+          "bytes": 3021
+        },
+        "../game-domain/src/rules/battle-presentation.js": {
+          "sha256": "906c4f665a777d90f777a2be1e171c5fc3ec6f209c56c15e2820376090679243",
+          "bytes": 7986
+        },
+        "../game-domain/src/rules/catalog.js": {
+          "sha256": "c164e6f69ea1bd341cbfa82dc01fec997c38f39b0b87e727068c253bb15513bd",
+          "bytes": 17882
+        },
+        "../game-domain/src/rules/character.js": {
+          "sha256": "25a152231f76d0570b1d46d48ee5beab0e259ee05273f64b03e2d041699280c3",
+          "bytes": 20573
+        },
+        "../game-domain/src/rules/city-data.js": {
+          "sha256": "e2e0e1756efaa3be67e79d288fea17ebbc5cb7534a2c8abaf8d4f57b2dcf3e81",
+          "bytes": 4634
+        },
+        "../game-domain/src/rules/city.js": {
+          "sha256": "b9f269bae5c21f81f83c0ec3010e0c35605f22393987a3c8abb7e01111b3a641",
+          "bytes": 2153
+        },
+        "../game-domain/src/rules/class-acquisition.js": {
+          "sha256": "e30d786f08803cc5d38564242f7d585456e720441a956a4c288999782b960512",
+          "bytes": 7551
+        },
+        "../game-domain/src/rules/class-environment.js": {
+          "sha256": "c331690ab528aab7302ccd632a4d53fb2ee496a67c07ddc32db269d65a0d97e8",
+          "bytes": 6268
+        },
+        "../game-domain/src/rules/class-items.js": {
+          "sha256": "9d3661082b8e394dcfcabd644f924c2ecc7adb8261648f08fc500f40bca18078",
+          "bytes": 5248
+        },
+        "../game-domain/src/rules/class-mechanics.js": {
+          "sha256": "76c79dac693a868602e24b8e67a6f4cb115be3c1eeb176ec3af2d9cd919aafe8",
+          "bytes": 21399
+        },
+        "../game-domain/src/rules/class-observation.js": {
+          "sha256": "37408791aa82b8ca49c1b88e8dde86cbceab0e675316f21f51175a147e8f54b1",
+          "bytes": 5252
+        },
+        "../game-domain/src/rules/class-ritual.js": {
+          "sha256": "b8c88800bdaf89c8cb73e72f10b959cda6d317eafd4352764bef6f535a8e571c",
+          "bytes": 1316
+        },
+        "../game-domain/src/rules/class-spell-effects.js": {
+          "sha256": "756e0baa0d42948070ec8e5de1cc9cea0c401adced9144a704860158462893e6",
+          "bytes": 50634
+        },
+        "../game-domain/src/rules/class-spell-registry.js": {
+          "sha256": "388287059392603c9d7ca9e509d2f5c2a16814801eac16dd3759869aaacc08ac",
+          "bytes": 6275
+        },
+        "../game-domain/src/rules/class-support.js": {
+          "sha256": "8c90f05cd5b1b792d817160d3f527e53d4c274e117d93f5c4493da21c757c15a",
+          "bytes": 10170
+        },
+        "../game-domain/src/rules/class-utility-data.js": {
+          "sha256": "25735c1da6e2a98ec4c56f901150f0befe6a099d8c2174092618256825f5649e",
+          "bytes": 3462
+        },
+        "../game-domain/src/rules/class-utility.js": {
+          "sha256": "35906275d5995d410e95c33f8a11de1af3dd4eb7f40cf6c378aaa9258f42299e",
+          "bytes": 12604
+        },
+        "../game-domain/src/rules/client-content.js": {
+          "sha256": "17c81f57b650e9063d90c3509ddb8995f1be1481c525d836078233466ed79d64",
+          "bytes": 1388
+        },
+        "../game-domain/src/rules/client-snapshot.ts": {
+          "sha256": "0947743a9f4935e712bf6916f89d6008fd456ed8a4cfd7dd24231611eb9d8ea8",
+          "bytes": 7771
+        },
+        "../game-domain/src/rules/combat-members.js": {
+          "sha256": "81e8e458476b40bd0a101b12b01b0096ea04b17c317b1ff2757752c7e3db42b3",
+          "bytes": 573
+        },
+        "../game-domain/src/rules/combat-metrics.js": {
+          "sha256": "fb0543f2a8d58ed7cc8f11eef3b788d9c29e34b03a6750a49fe42d3dd3cdd6f9",
+          "bytes": 4950
+        },
+        "../game-domain/src/rules/combat-projectiles.js": {
+          "sha256": "9542984d2444e1e4f32ba92d514c81581eaf84575557d7acc2f3aad0aea31aa9",
+          "bytes": 1088
+        },
+        "../game-domain/src/rules/combat-space.js": {
+          "sha256": "4f7d8a6805425083be82982586b1b3447ad6ffca959ef70b12445c98e575207f",
+          "bytes": 3728
+        },
+        "../game-domain/src/rules/combat-strategy.js": {
+          "sha256": "9ddb927fe1bf19b6d2aad8bb22e276f72bae986c8b99605742741b539b7ee133",
+          "bytes": 3588
+        },
+        "../game-domain/src/rules/combat.js": {
+          "sha256": "69c9025f17bfb6f397522048bdcc5a954895751c9d697b1bcc7356b98f21375b",
+          "bytes": 36139
+        },
+        "../game-domain/src/rules/companion-combat.js": {
+          "sha256": "8e5e894ce95263cd2fe19be164df0c182fb67eb7f933b819f4bdee3d3b41270f",
+          "bytes": 11821
+        },
+        "../game-domain/src/rules/consumables.js": {
+          "sha256": "f08f2ef83a5cee7d4996483c2e716a7206113c772422ffa3507c62a59efeeeaf",
+          "bytes": 1624
+        },
+        "../game-domain/src/rules/dungeon-view.js": {
+          "sha256": "f096bc107afe0733d5a4c89ec7667f6836f934936d121447767c4cde75c16410",
+          "bytes": 4634
+        },
+        "../game-domain/src/rules/dungeon.js": {
+          "sha256": "903243f5dd04b7e5e31d1ce1262752c4b8446d43d4a661c31aac62a452bc6f5e",
+          "bytes": 7480
+        },
+        "../game-domain/src/rules/enemy-ai.js": {
+          "sha256": "066c944c5c1f80dadd8c17028ee7a5ee642a0cf106d2de586ea92e465d7d6a51",
+          "bytes": 4828
+        },
+        "../game-domain/src/rules/enemy-melee.js": {
+          "sha256": "5bc20976683778a2a49011f9fd974fddefb8e7a48de8b4973a5acf76089bc3c6",
+          "bytes": 3458
+        },
+        "../game-domain/src/rules/enemy-procs.js": {
+          "sha256": "c1139e137d07028a002a1223432478b6b3490f68ead977ca193086e9666ca069",
+          "bytes": 1145
+        },
+        "../game-domain/src/rules/enemy-spells.js": {
+          "sha256": "094cab59546ec7488fd5c037ae8a6a1c7539a242deb6d6e182549e46e9b82b38",
+          "bytes": 9018
+        },
+        "../game-domain/src/rules/engine.js": {
+          "sha256": "bd2cd430c45054aa7b19f7583c16b6e8444c18500404c782c2c92d77640fb58c",
+          "bytes": 29958
+        },
+        "../game-domain/src/rules/escort.js": {
+          "sha256": "fe83090625db214a05be1cf2120a87e4826904d093f899bb4b77c6e45a1e8e6a",
+          "bytes": 4238
+        },
+        "../game-domain/src/rules/hearthstone.js": {
+          "sha256": "04679b017e81b56779612a65c2c960db55ae19672e8f244ab1bf460b508b696c",
+          "bytes": 2344
+        },
+        "../game-domain/src/rules/inventory.js": {
+          "sha256": "7fd3deb9b328fc947ba07b776db0614b2fb6dfba822a98362cfccecdf5f419da",
+          "bytes": 6956
+        },
+        "../game-domain/src/rules/mounts.js": {
+          "sha256": "322e819d020ccf270442bd95d99ad6a0e51e5277d4556772035a7ce732080362",
+          "bytes": 6845
+        },
+        "../game-domain/src/rules/navigation.js": {
+          "sha256": "1efde2e22366e9104eb8297e15428152fc28a13506c9dfd4c46170a1c5afeb98",
+          "bytes": 1652
+        },
+        "../game-domain/src/rules/party.js": {
+          "sha256": "14b68c75c51a6a0c0a3176fcfc57f78e76f37adbbf03c9c838015753dfd11bbf",
+          "bytes": 3396
+        },
+        "../game-domain/src/rules/pet-knowledge.js": {
+          "sha256": "1a50138257a4c4922e81a5bd2aa349fe95792dfe314ccde634f867424c803220",
+          "bytes": 4155
+        },
+        "../game-domain/src/rules/pet-progression.js": {
+          "sha256": "3a260d48d493d678d6dd66b9483927afa317689748b32b3c4d939fc74e427602",
+          "bytes": 5593
+        },
+        "../game-domain/src/rules/polymorph.js": {
+          "sha256": "403332d05fede24072820b63c5ad332b9c50ad53cd3c7b10ee15abdf900241ba",
+          "bytes": 2210
+        },
+        "../game-domain/src/rules/profession-data.js": {
+          "sha256": "4c27e54e3553566a15a3b39b3e5d346a334f8b8d7eb9deb730cfeb6b27080924",
+          "bytes": 3883
+        },
+        "../game-domain/src/rules/professions.js": {
+          "sha256": "95ca3f940de3806e1d69be327229fbe8ab85f59694d45096d8b515cee16e1a1b",
+          "bytes": 12568
+        },
+        "../game-domain/src/rules/quest-tools.js": {
+          "sha256": "4dee55bd10adba8eef5ba90156691503170ea67a57f05adec5ecdfc5344c2b42",
+          "bytes": 2821
+        },
+        "../game-domain/src/rules/quests.js": {
+          "sha256": "57e23cad07556a3442703de32e6350fd77c0bcab7bde48ac061858a52d55d340",
+          "bytes": 12030
+        },
+        "../game-domain/src/rules/racial-effects.js": {
+          "sha256": "a3ebafc059822d28a3fc365b23af3f2517c76adc19241a97d0bef98e08eadbc0",
+          "bytes": 4915
+        },
+        "../game-domain/src/rules/recovery.js": {
+          "sha256": "0de428cf61259ef59d8476f1885a0f62e577e9a5b42c631435bd2cf8ce77344c",
+          "bytes": 5340
+        },
+        "../game-domain/src/rules/server-response.js": {
+          "sha256": "ecf8403db1b74e64ba80615f3e3dfcee3343878fcd974692616fd3d76e28a7f6",
+          "bytes": 1914
+        },
+        "../game-domain/src/rules/smite.js": {
+          "sha256": "6bab4b7ae42309b33a2cdd7cccb8aa75e854ddce9353236ea8aa51e06fe2701f",
+          "bytes": 2948
+        },
+        "../game-domain/src/rules/talent-acquisition.js": {
+          "sha256": "9e7aa606fc6103617920335dd8c11b5893df4c865e7aee730c9839faabb11d5e",
+          "bytes": 2428
+        },
+        "../game-domain/src/rules/talent-effects.js": {
+          "sha256": "089fe66f653fc78584ae2c4e9d49498415dd808841abd68b6af5d550f1f60b7b",
+          "bytes": 13467
+        },
+        "../game-domain/src/rules/talent-runtime.js": {
+          "sha256": "e2e70cf7540cc4de2a7d5c461cfecba3271d665d2f7e0345c961eb6b0b68fa30",
+          "bytes": 21561
+        },
+        "../game-domain/src/rules/utility-actions.js": {
+          "sha256": "52ad5dd91fcae1b76e2d30281a71a3566d29d9a1a204431317847e9738a80b48",
+          "bytes": 10721
+        },
+        "../game-domain/src/rules/utility-data.js": {
+          "sha256": "65f7ca698178329fd9851ef9db9301d2b58486c89bd9b24d1717a32f87fcfc8f",
+          "bytes": 764
+        },
+        "../game-domain/src/rules/workshop.js": {
+          "sha256": "7734c20a57111a667080e1955ece5f54edd5390954394c9b82a49e4a759b8de6",
+          "bytes": 1739
+        },
+        "../sim-core/src/class-combat.js": {
+          "sha256": "60f7d7e5ee0566b0fc8ee166d17364f91561f87ef1bb4d3fe9a7c488c2679d43",
+          "bytes": 2176
+        },
+        "../sim-core/src/combat-auras.js": {
+          "sha256": "7aee1b8407ca06e74fdc26d0d5383560b2714944e0c039d1fc3a8842cc9c9781",
+          "bytes": 2866
+        },
+        "../sim-core/src/combat-meter.js": {
+          "sha256": "d3d466dc8b2ebdf2efba18f128ae88c9725ebc5015b01d4a6e5d42f4069794a8",
+          "bytes": 895
+        },
+        "../sim-core/src/evidence.js": {
+          "sha256": "954d99990e4849ec572bde1253726533ee2200bf21cc34201fafbb289bfe0cbb",
+          "bytes": 2300
+        },
+        "../sim-core/src/geometry.js": {
+          "sha256": "88a0957223846726f145594ad30853fec5ea38b93a71b41a18828f3138685de5",
+          "bytes": 378
+        },
+        "../sim-core/src/json.js": {
+          "sha256": "255f4df5ad1dc9d8e693c9e94bec2cee3fe6e2252dee6825ba934ce692dd11a5",
+          "bytes": 1401
+        },
+        "../sim-core/src/random.js": {
+          "sha256": "c0b34f58fac7058e57a90a2735205d5049c0d7200994ad815599214f5e14dc85",
+          "bytes": 1150
+        },
+        "../sim-core/src/timeline.js": {
+          "sha256": "c2d4ff87ec62143ec9d54125708cfa19e00453a19a198e3dc2a7d4231f4c8a50",
+          "bytes": 4673
+        },
+        "../sim-core/src/travel.js": {
+          "sha256": "54b86cf65b63a8db872e1c748023cfc92738884ccf39d8c68a85c33be3e742e2",
+          "bytes": 2037
+        }
+      }
+    }
+  },
+  "serviceDungeon": {
+    "fixture": {
+      "sourcePath": ".cache/refactor-content-mage-cc/final-state.json",
+      "kind": "explicit normalized initialization; not service natural leveling",
+      "overrides": [
+        "fresh dungeon progress",
+        "deadmines entrance",
+        "stable normalized identities",
+        "empty companion personal inventories"
+      ]
+    },
+    "routes": [
+      {
+        "cursor": 0,
+        "route": "dm-entry-01",
+        "after": 1,
+        "kills": 2,
+        "fallen": []
+      },
+      {
+        "cursor": 1,
+        "route": "dm-entry-02",
+        "after": 2,
+        "kills": 7,
+        "fallen": []
+      },
+      {
+        "cursor": 2,
+        "route": "dm-entry-03",
+        "after": 3,
+        "kills": 12,
+        "fallen": []
+      },
+      {
+        "cursor": 3,
+        "route": "dm-entry-04",
+        "after": 4,
+        "kills": 16,
+        "fallen": []
+      },
+      {
+        "cursor": 4,
+        "route": "dm-entry-05",
+        "after": 5,
+        "kills": 21,
+        "fallen": []
+      },
+      {
+        "cursor": 5,
+        "route": "dm-entry-06",
+        "after": 6,
+        "kills": 26,
+        "fallen": []
+      },
+      {
+        "cursor": 6,
+        "route": "dm-entry-07",
+        "after": 7,
+        "kills": 31,
+        "fallen": []
+      },
+      {
+        "cursor": 7,
+        "route": "dm-entry-08",
+        "after": 8,
+        "kills": 36,
+        "fallen": []
+      },
+      {
+        "cursor": 8,
+        "route": "dm-rhahkzor",
+        "after": 9,
+        "kills": 39,
+        "fallen": []
+      },
+      {
+        "cursor": 9,
+        "route": "dm-patrol-01",
+        "after": 9,
+        "kills": 39,
+        "fallen": []
+      },
+      {
+        "cursor": 9,
+        "route": "dm-patrol-01",
+        "after": 9,
+        "kills": 39,
+        "fallen": []
+      },
+      {
+        "cursor": 9,
+        "route": "dm-patrol-01",
+        "after": 10,
+        "kills": 41,
+        "fallen": []
+      },
+      {
+        "cursor": 10,
+        "route": "dm-junction",
+        "after": 10,
+        "kills": 41,
+        "fallen": []
+      },
+      {
+        "cursor": 10,
+        "route": "dm-junction",
+        "after": 10,
+        "kills": 41,
+        "fallen": []
+      },
+      {
+        "cursor": 10,
+        "route": "dm-junction",
+        "after": 11,
+        "kills": 48,
+        "fallen": []
+      },
+      {
+        "cursor": 11,
+        "route": "dm-johnson-approach",
+        "after": 11,
+        "kills": 48,
+        "fallen": []
+      },
+      {
+        "cursor": 11,
+        "route": "dm-johnson-approach",
+        "after": 11,
+        "kills": 48,
+        "fallen": []
+      },
+      {
+        "cursor": 11,
+        "route": "dm-johnson-approach",
+        "after": 12,
+        "kills": 54,
+        "fallen": []
+      },
+      {
+        "cursor": 12,
+        "route": "dm-miner-johnson",
+        "after": 12,
+        "kills": 54,
+        "fallen": []
+      },
+      {
+        "cursor": 12,
+        "route": "dm-miner-johnson",
+        "after": 12,
+        "kills": 54,
+        "fallen": []
+      },
+      {
+        "cursor": 12,
+        "route": "dm-miner-johnson",
+        "after": 12,
+        "kills": 54,
+        "fallen": []
+      },
+      {
+        "cursor": 12,
+        "route": "dm-miner-johnson",
+        "after": 12,
+        "kills": 54,
+        "fallen": []
+      },
+      {
+        "cursor": 12,
+        "route": "dm-miner-johnson",
+        "after": 12,
+        "kills": 54,
+        "fallen": []
+      },
+      {
+        "cursor": 12,
+        "route": "dm-miner-johnson",
+        "after": 13,
+        "kills": 55,
+        "fallen": []
+      },
+      {
+        "cursor": 13,
+        "route": "dm-mast-approach",
+        "after": 13,
+        "kills": 55,
+        "fallen": []
+      },
+      {
+        "cursor": 13,
+        "route": "dm-mast-approach",
+        "after": 13,
+        "kills": 55,
+        "fallen": []
+      },
+      {
+        "cursor": 13,
+        "route": "dm-mast-approach",
+        "after": 13,
+        "kills": 55,
+        "fallen": []
+      },
+      {
+        "cursor": 13,
+        "route": "dm-mast-approach",
+        "after": 13,
+        "kills": 55,
+        "fallen": []
+      },
+      {
+        "cursor": 13,
+        "route": "dm-mast-approach",
+        "after": 14,
+        "kills": 63,
+        "fallen": []
+      }
+    ],
+    "recoveries": [
+      {
+        "kind": "controlled death fixture before first encounter",
+        "id": "service-dm-31",
+        "method": "priest resurrect command and worker",
+        "persisted": true
+      }
+    ],
+    "failures": [],
+    "beforeLeave": {
+      "cursor": 14,
+      "bosses": {
+        "634": true,
+        "644": true,
+        "1725": true,
+        "1729": true,
+        "3586": true
+      },
+      "kills": 63,
+      "moneyGain": 2974,
+      "ids": [
+        "service-dm-1",
+        "service-dm-12",
+        "service-dm-21",
+        "service-dm-31",
+        "service-dm-40"
+      ],
+      "instanceStatus": "running"
+    },
+    "rewardOwnership": {
+      "newItems": 17,
+      "allLootOwnedByLeader": true,
+      "companionWalletsUnchanged": true
+    },
+    "itemOwners": {
+      "service-dm-1": 48,
+      "service-dm-12": 13,
+      "service-dm-21": 13,
+      "service-dm-31": 12,
+      "service-dm-40": 13
+    },
+    "result": {
+      "passed": true,
+      "checkpoint": 14,
+      "instanceStatus": "completed",
+      "leases": 0,
+      "stableRoster": true,
+      "restartPersistent": true
+    }
+  }
+}

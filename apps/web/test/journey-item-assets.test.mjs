@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {icon,nameOf} from '../lib/game/catalog.js';
+import {icon,nameOf} from '../../../packages/game-domain/src/rules/catalog.js';
 
 const root=new URL('../../../',import.meta.url);
 const raw=path=>readFileSync(new URL(path,root));
@@ -12,7 +12,7 @@ const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 test('normal journey items have traceable display identities and verified original PNGs',()=>{
  const base='docs/research/import/journey-item-assets/';
  const scope=json(base+'scope.json'),manifest=json(base+'manifest.json');
- const mapping=json('apps/web/data/journey-item-assets.json').items;
+ const mapping=json('packages/game-data/data/journey-item-assets.json').items;
  assert.equal(sha(raw(base+'scope.json')),manifest.scopeSha256);
  assert.deepEqual(Object.keys(mapping).map(Number).sort((a,b)=>a-b),scope.itemIds);
  for(const record of manifest.items){

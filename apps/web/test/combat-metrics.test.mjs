@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {newCharacter} from '../lib/game/character.js';
-import {initializeMetrics,recordMetric,finishCombat,meterRows} from '../lib/game/combat-metrics.js';
+import {newCharacter} from '../../../packages/game-domain/src/rules/character.js';
+import {meterRows} from '../../../packages/sim-core/src/combat-meter.js';
+import {initializeMetrics,recordMetric,finishCombat} from '../../../packages/game-domain/src/rules/combat-metrics.js';
 
 const state=()=>({...newCharacter('同名'),bag:[],clock:1000,party:[{...newCharacter('同名'),id:'mage-2'}],logs:[],combat:{startedAt:1000,dungeon:true,runId:'run-1'},dungeon:{runId:'run-1'}});
 test('actor and spell identities survive names, periodic hits and truncated logs',()=>{

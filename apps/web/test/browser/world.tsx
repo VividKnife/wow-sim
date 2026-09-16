@@ -1,7 +1,7 @@
 // Isolated preview: real world UI + engine, no user save or network API.
 import React,{useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {createGame,act,advance,view} from '../../lib/game/engine.js';
+import {createGame,act,advance,view} from '../../../../packages/game-domain/src/rules/engine.js';
 import World from '../../app/world';
 import '../../app/globals.css';
 function fixture(location='goldshire'){

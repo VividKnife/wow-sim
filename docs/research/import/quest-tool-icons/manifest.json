@@ -6,7 +6,7 @@
     "sourceVersionStatus":  "Pinned 2019 prelaunch Classic repository snapshot; not independently verified against August 2019 launch client.",
     "downloadedAtUtc":  "2026-09-16T00:59:55.8509561Z",
     "preservation":  "Original PNG bytes untouched, verified against Git blob SHA-1 from previously saved repository tree. No image generation or modification.",
-    "checkedMappingFile":  "C:/workspace/wow-sim/apps/web/data/icon-map.json",
+    "checkedMappingFile":  "C:/workspace/wow-sim/packages/game-data/data/icon-map.json",
     "existingMappings":  [
 
                          ],

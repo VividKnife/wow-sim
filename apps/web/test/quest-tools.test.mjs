@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,questProgress,view} from '../lib/game/engine.js';
-import {countItem,addItem} from '../lib/game/character.js';
+import {createGame,act,advance,questProgress,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {countItem,addItem} from '../../../packages/game-domain/src/rules/character.js';
 
 function travel(s,to){s=act(s,{type:'travel',to},s.wallAt);return advance(s,s.wallAt+s.activity.endsAt-s.clock).state;}
 function apprentice(){let s=createGame('取水学徒',44,0);s.level=10;s=travel(s,'goldshire');s=act(s,{type:'accept',id:1860},s.wallAt);s=travel(s,'magetower');s=act(s,{type:'turnin',id:1860},s.wallAt);return s;}

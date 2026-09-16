@@ -26,7 +26,7 @@ for(const [variant,folder]of [['before',before],['after',after]]){
  const {advance}=await import(pathToFileURL(resolve(folder,'lib/game/engine.js')));
  for(const seed of seeds){
   let s=structuredClone(initial);s.rngState=seed;const began=s.clock;let ticks=0;
-  while(s.combat&&ticks++<360){const now=s.wallAt+1000;let result;do{result=advance(s,now,{dungeonOnline:true});s=result.state;}while(!result.complete);}
+  while(s.combat&&ticks++<360){const now=s.wallAt+1000;let result;do{result=advance(s,now,{});s=result.state;}while(!result.complete);}
   const battle=s.combat||s.lastCombat;
   const row={variant,seed,won:!s.combat&&battle.enemies.every(e=>e.hp<=0||e.removed),timedOut:!!s.combat,seconds:(s.clock-began)/1000,alive:[s,...s.party].filter(c=>c.hp>0).length,remaining:battle.enemies.filter(e=>e.hp>0&&!e.removed).length,healing:battle.metrics.actors['companion-priest'].healing,mana:s.party.find(c=>c.classId===5).mana};
   report.runs.push(row);console.log(JSON.stringify(row));

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,view,advance} from '../lib/game/engine.js';
+import {createGame,act,view,advance} from '../../../packages/game-domain/src/rules/engine.js';
 function group(){let s=createGame('重置测试',283,0);s.level=20;for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);s.location='deadmines';return s;}
 test('leaving and returning preserves a run; explicit reset generates a new run while keeping earned progress',()=>{
  let s=act(group(),{type:'enterDungeon'},0);const id=s.dungeon.runId;s.dungeon.cursor=2;s.dungeon.defeated[123]=true;

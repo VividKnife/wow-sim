@@ -1,6 +1,6 @@
 import {readFile,writeFile,access} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-const dataRoot=new URL('../apps/web/data/',import.meta.url);
+const dataRoot=new URL('../packages/game-data/data',import.meta.url);
 const localization=JSON.parse(await readFile(new URL('localization.json',dataRoot),'utf8'));
 const icons=JSON.parse(await readFile(new URL('icon-map.json',dataRoot),'utf8'));
 for(const [id,nameEn] of [[845,'Cleave'],[1243,'Power Word: Fortitude'],[1244,'Power Word: Fortitude']]){

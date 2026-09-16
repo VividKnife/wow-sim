@@ -1,9 +1,9 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {createGame,act} from '../lib/game/engine.js';
-import * as character from '../lib/game/character.js';
-import {spells,talents,table,items} from '../lib/game/catalog.js';
-import {summonClassPet} from '../lib/game/class-spell-effects.js';
-import {startCombat,combatTick} from '../lib/game/combat.js';
+import {createGame,act} from '../../../packages/game-domain/src/rules/engine.js';
+import * as character from '../../../packages/game-domain/src/rules/character.js';
+import {spells,talents,table,items} from '../../../packages/game-domain/src/rules/catalog.js';
+import {summonClassPet} from '../../../packages/game-domain/src/rules/class-spell-effects.js';
+import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
 const make=()=>{const s=createGame('宠物属性',99,0,{classId:3,raceId:3});s.level=60;s.hp=character.stats(s).maxHp;s.hunterPet={entry:700,level:60,learned:[]};summonClassPet(s,s,character.spellInfo(s,883));return s;};
 test('learned pet passive ranks add source stamina, armor and magical resistance once',()=>{const s=make(),p=s.pet,base=character.stats(p);p.learned=[4187,4188,24545,24493];const st=character.stats(p);assert.equal(st.sta,table('pet_levelstats').find(r=>r.creature_entry===1&&r.level===60).sta+5);assert.equal(st.maxHp,base.maxHp+5);assert.equal(st.armor,base.armor+50);assert.equal(st.resistances[6],30);});
 test('refreshing pet caps preserves damage and death instead of healing on passive changes',()=>{const s=make(),p=s.pet;p.hp=100;const before=p.maxHp;p.learned=[4188];character.refreshPetStats(s,p);assert.equal(p.maxHp,before+5);assert.equal(p.hp,100);character.refreshPetStats(s,p);assert.equal(p.maxHp,before+5);p.hp=0;character.refreshPetStats(s,p);assert.equal(p.hp,0);});

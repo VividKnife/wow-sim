@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,view} from '../lib/game/engine.js';
-import {addItem} from '../lib/game/character.js';
+import {createGame,act,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {addItem} from '../../../packages/game-domain/src/rules/character.js';
 
 test('inventory exposes equipment restrictions before submitting an equip command',()=>{
  let s=createGame('装备检查',283,0);

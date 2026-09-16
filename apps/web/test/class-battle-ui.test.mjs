@@ -6,12 +6,12 @@ import {join} from 'node:path';
 import {build} from 'esbuild';
 import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
-import {createGame,view} from '../lib/game/engine.js';
-import {classDefinitions} from '../lib/game/catalog.js';
-import {stats,spellInfo} from '../lib/game/character.js';
-import {startCombat} from '../lib/game/combat.js';
-import {classEffect} from '../lib/game/class-mechanics.js';
-import {finishCombat} from '../lib/game/combat-metrics.js';
+import {createGame,view} from '../../../packages/game-domain/src/rules/engine.js';
+import {classDefinitions} from '../../../packages/game-domain/src/rules/catalog.js';
+import {stats,spellInfo} from '../../../packages/game-domain/src/rules/character.js';
+import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
+import {classEffect} from '../../../packages/game-domain/src/rules/class-mechanics.js';
+import {finishCombat} from '../../../packages/game-domain/src/rules/combat-metrics.js';
 
 let components,directory,bundle;
 before(async()=>{

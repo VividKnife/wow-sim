@@ -1,0 +1,243 @@
+{
+  "1": {
+    "models": [
+      10045
+    ],
+    "family": 8,
+    "creatureType": 8,
+    "name": "Waypoint (Only GM can see it)"
+  },
+  "30": {
+    "models": [
+      382
+    ],
+    "family": 3,
+    "creatureType": 1,
+    "name": "Forest Spider"
+  },
+  "69": {
+    "models": [
+      604
+    ],
+    "family": 1,
+    "creatureType": 1,
+    "name": "Timber Wolf"
+  },
+  "89": {
+    "models": [
+      169
+    ],
+    "family": 0,
+    "creatureType": 3,
+    "name": "Infernal"
+  },
+  "113": {
+    "models": [
+      503
+    ],
+    "family": 5,
+    "creatureType": 1,
+    "name": "Stonetusk Boar"
+  },
+  "154": {
+    "models": [
+      1105
+    ],
+    "family": 7,
+    "creatureType": 1,
+    "name": "Greater Fleshripper"
+  },
+  "416": {
+    "models": [
+      4449
+    ],
+    "family": 23,
+    "creatureType": 3,
+    "name": "Imp"
+  },
+  "417": {
+    "models": [
+      850
+    ],
+    "family": 15,
+    "creatureType": 3,
+    "name": "Felhunter"
+  },
+  "441": {
+    "models": [
+      387
+    ],
+    "family": 0,
+    "creatureType": 2,
+    "name": "Black Dragon Whelp"
+  },
+  "620": {
+    "models": [
+      304
+    ],
+    "family": 0,
+    "creatureType": 8,
+    "name": "Chicken"
+  },
+  "721": {
+    "models": [
+      328,
+      4626
+    ],
+    "family": 0,
+    "creatureType": 8,
+    "name": "Rabbit"
+  },
+  "822": {
+    "models": [
+      1006
+    ],
+    "family": 4,
+    "creatureType": 1,
+    "name": "Young Forest Bear"
+  },
+  "1015": {
+    "models": [
+      670
+    ],
+    "family": 11,
+    "creatureType": 1,
+    "name": "Highland Raptor"
+  },
+  "1030": {
+    "models": [
+      360
+    ],
+    "family": 0,
+    "creatureType": 10,
+    "name": "Black Slime"
+  },
+  "1039": {
+    "models": [
+      713
+    ],
+    "family": 0,
+    "creatureType": 4,
+    "name": "Fen Dweller"
+  },
+  "1199": {
+    "models": [
+      748
+    ],
+    "family": 2,
+    "creatureType": 1,
+    "name": "Juvenile Snow Leopard"
+  },
+  "1400": {
+    "models": [
+      1036
+    ],
+    "family": 6,
+    "creatureType": 1,
+    "name": "Wetlands Crocolisk"
+  },
+  "1512": {
+    "models": [
+      4732
+    ],
+    "family": 24,
+    "creatureType": 1,
+    "name": "Duskbat"
+  },
+  "1860": {
+    "models": [
+      1132
+    ],
+    "family": 16,
+    "creatureType": 3,
+    "name": "Voidwalker"
+  },
+  "1863": {
+    "models": [
+      4162
+    ],
+    "family": 17,
+    "creatureType": 3,
+    "name": "Succubus"
+  },
+  "1953": {
+    "models": [
+      863
+    ],
+    "family": 0,
+    "creatureType": 4,
+    "name": "Lake Skulker"
+  },
+  "1995": {
+    "models": [
+      10832
+    ],
+    "family": 26,
+    "creatureType": 1,
+    "name": "Strigid Owl"
+  },
+  "2172": {
+    "models": [
+      38
+    ],
+    "family": 12,
+    "creatureType": 1,
+    "name": "Strider Clutchmother"
+  },
+  "3102": {
+    "models": [
+      850
+    ],
+    "family": 15,
+    "creatureType": 3,
+    "name": "Felstalker"
+  },
+  "3124": {
+    "models": [
+      2485
+    ],
+    "family": 20,
+    "creatureType": 1,
+    "name": "Scorpid Worker"
+  },
+  "3247": {
+    "models": [
+      1742
+    ],
+    "family": 27,
+    "creatureType": 1,
+    "name": "Thunderhawk Hatchling"
+  },
+  "3461": {
+    "models": [
+      6368
+    ],
+    "family": 21,
+    "creatureType": 1,
+    "name": "Oasis Snapjaw"
+  },
+  "4127": {
+    "models": [
+      2710
+    ],
+    "family": 25,
+    "creatureType": 1,
+    "name": "Hecklefang Hyena"
+  },
+  "11859": {
+    "models": [
+      1912
+    ],
+    "family": 0,
+    "creatureType": 3,
+    "name": "Doomguard"
+  },
+  "14273": {
+    "models": [
+      5229
+    ],
+    "family": 0,
+    "creatureType": 5,
+    "name": "Boulderheart"
+  }
+}

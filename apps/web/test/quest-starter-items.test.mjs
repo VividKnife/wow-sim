@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,questProgress} from '../lib/game/engine.js';
-import {addItem,countItem,bagCapacity} from '../lib/game/character.js';
+import {createGame,act,questProgress} from '../../../packages/game-domain/src/rules/engine.js';
+import {addItem,countItem,bagCapacity} from '../../../packages/game-domain/src/rules/character.js';
 
 // Pinned core Player::AddQuest consumes an item questgiver unless it is also
 // a required objective or the quest's source item. These are real catalog rows.

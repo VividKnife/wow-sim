@@ -1,0 +1,554 @@
+{
+  "soundfileVersion": "0.14.0",
+  "libsndfileVersion": "1.2.2",
+  "manifestSha256": "a3ab89b4d2accf5eddbe6be6301df81030ad93099bd510bf6543deaa49437f83",
+  "decoded": 78,
+  "assets": [
+    {
+      "path": "sounds/classic/544951-mbearattackb.ogg",
+      "sha256": "46600c5884538b2d702255de5ae1f46bf969d0c212b2605e057ca86dd1485aee",
+      "frames": 17151,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/544953-mbearattacka.ogg",
+      "sha256": "341440aadca282017a22e9eb1c783b397890d95a6a97dcc9837769c0bad1d7cc",
+      "frames": 18431,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/544954-mbearattackd.ogg",
+      "sha256": "91831ccfb6d0be2fb525f969181c2a19dc85599a107b7bba93381173498f6e98",
+      "frames": 31300,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/544955-mbearattackcriticala.ogg",
+      "sha256": "8fa78f9f27b7a5bf36ff20887082cae7bd0f3f45e9f4154f1b3a48abc0b16c99",
+      "frames": 20991,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/548858-felhoundaggroa.ogg",
+      "sha256": "528f74b200233c3c4684dfbb397581288d80b6b4c155cc94b47e095fa1538acf",
+      "frames": 29760,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/551168-grellaggroa.ogg",
+      "sha256": "b9409afc88d2d9a5f260c6ea98b768de9a911ecb6f999e165e84e916c5801296",
+      "frames": 42471,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/561154-succubus_summon04.ogg",
+      "sha256": "a191b6f5c01b2b57dd1330798e8d030a9651a258e4f74266e02c12a1e740d9e2",
+      "frames": 55936,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/561157-succubus_summon03.ogg",
+      "sha256": "ced32774cd50ed0a7e62bac0452d230b0f607976f3cd5f4adada7c4400ccbcc1",
+      "frames": 58944,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/561163-succubus_summon01.ogg",
+      "sha256": "cc2efa6a3437cc3e57b6088b47485404b02398df174f759e791d2132ba25a6ca",
+      "frames": 33792,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/561168-succubus_summon02.ogg",
+      "sha256": "ddeae8a73484046e8b4e4116837f1138bfb7233cb5bd9befab973f0f0ecf05b1",
+      "frames": 58880,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/562385-mtigerattackb.ogg",
+      "sha256": "306bb535719772cc01f2498eb5033b69b614e2d53d69c2a45ea24bf86ba95a1b",
+      "frames": 16392,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/562386-mtigerattackd.ogg",
+      "sha256": "bd9f0ce246565df9874984f9e677a93742cc75f6c89477461769c4c0fd97c172",
+      "frames": 25812,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/562393-mtigerattackc.ogg",
+      "sha256": "399b27adce6248fb9f62d0b006fe3cf7cb7119d487e2f01742b3a9ff3b29b24f",
+      "frames": 46079,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/562394-mtigerattacka.ogg",
+      "sha256": "11065b4d4fcf6d1576969a8813df3cd32091358f96d4ecc69d1b1aeea9907cb0",
+      "frames": 34528,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/563800-voidwalkeraggroa.ogg",
+      "sha256": "a59c21a2476a3571fc92842f366330497835a2ea0a9198e9308b98cca0198f4d",
+      "frames": 55040,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/563812-void_summon02.ogg",
+      "sha256": "9b3201ac490cbcbcdc74bef4a50d2517e4d0dacfb3ba581b9b90881847c3254f",
+      "frames": 60288,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/563814-void_summon03.ogg",
+      "sha256": "2213eb4f268fed31b164f2f6f7619e1d48408142a824c4c7e16d041d068abde0",
+      "frames": 47936,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/563817-void_summon04.ogg",
+      "sha256": "82913c1c873a1e2770ee0d1fcae9dade47e7f9a065dddbe67c4110e79eaa8e54",
+      "frames": 105472,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/563819-void_summon01.ogg",
+      "sha256": "e5d3eeac74fa6c36d90d0321cfc57fccf7ca5b1bdb4e5e85c33c98ecbca55b93",
+      "frames": 61504,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/567944-mwooshmediumcrit.ogg",
+      "sha256": "fafcea6abbc0ba044b16f92c59a1d1dd15be8c6d3df5129dad715a7f812a156f",
+      "frames": 21682,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/567950-fear.ogg",
+      "sha256": "ce4b98e18e30a8cff1795b78a0d0f05843b691ee81c42f9805a6075c0abb2e8d",
+      "frames": 95126,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568003-rendtarget.ogg",
+      "sha256": "ae207cfdb548b9cff31181c4a2406944393f95c780bb3ea82f88d633a44cb41a",
+      "frames": 15821,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568028-battleshouttarget.ogg",
+      "sha256": "735f019226a56578024ed188fdd0f57576347001f2ee70ca358e7221c857531a",
+      "frames": 33075,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/frost-precast.ogg",
+      "sha256": "8694d9bd9351dfb3b22b8d5051ee78cfc178db2050b393673059fb92f7b493fc",
+      "frames": 96768,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568145-layonhands_low_chest.ogg",
+      "sha256": "62e6295b80cc74885951b72d049f8971e2263bdd3d868c391947575ce291cb23",
+      "frames": 68699,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568146-bullrush.ogg",
+      "sha256": "a5d9e40371f304264c3b98b42cb6de0f2533d78cdae2bcce0ceeedd21a968f33",
+      "frames": 46048,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568208-bestowdiseaseimpact.ogg",
+      "sha256": "2778068fda3b7e6829e3045533488e06bd08256ba007e63bb8bced53c5dde4c6",
+      "frames": 88200,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568224-astralrecall.ogg",
+      "sha256": "a1b7f87eeb03b287657407c90cacbee30c9549c9a0863c6522e6e17ceb3ddabe",
+      "frames": 66150,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568291-precastnaturemagichigh.ogg",
+      "sha256": "81d429ec4e49345919ea885ad5dd462aaf6ed852448313ba5eeea5db35155709",
+      "frames": 89601,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568429-fireballimpactb.ogg",
+      "sha256": "82dbced2a47e2cc33e8384673b1794d89e99027875ad5c0243b0c79b96c3a0b1",
+      "frames": 43713,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568440-precastholymagichigh.ogg",
+      "sha256": "7c5fc000c59ab1cd741a524dd92e4014722ea0925ec6c9ad8fc49dc6c0b41d7f",
+      "frames": 110251,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/fire-impact.ogg",
+      "sha256": "f2d9e89ecbc4243df0cd9b5e46d4d2232172039599625ac1bdbf6dd34da0a82c",
+      "frames": 43713,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568510-defensivestance.ogg",
+      "sha256": "64cf7edb1f0280d72baee283b6c1156508a884669485aca9270051129881a245",
+      "frames": 26486,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/nature-impact.ogg",
+      "sha256": "1ef21b037aa5cd2be25c055135dac713c9e6b39d6bb2a148821e21740d751775",
+      "frames": 77491,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568667-resurrection.ogg",
+      "sha256": "f78ecf1fb7d355e71934649e96837a6f2c46f26396e0d81bf1d55940e1659eda",
+      "frames": 85816,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/shadow-impact.ogg",
+      "sha256": "932dd2c2d2d36c2c36e7401ba11a1a043647d3a3abe0f0ab503922dc4b15f1bd",
+      "frames": 49177,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568712-heroricleap.ogg",
+      "sha256": "b773bcbf527356fcd3fc6a30e2bde4edc8db4fe562cd2b0a6b5d4cd635ad4b2d",
+      "frames": 44706,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568719-beastsoothe.ogg",
+      "sha256": "98087c369fba3098625913fed59aa1bdd55ea579ea393342bf2805ba14fad06b",
+      "frames": 55436,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568735-burningspirit.ogg",
+      "sha256": "86a902baebb3624168100e491595a7247695239f796468c09c389baaa3d67f5a",
+      "frames": 57448,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568741-chainsoficeimpact.ogg",
+      "sha256": "82170d72b05f8f5a696cbef902b0a5d6f337d2232877b43cdf75b2ef7601527f",
+      "frames": 73319,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568915-precastholymagiclow.ogg",
+      "sha256": "9e8b758a4fd76ba3ef09146ccf2544fcf0736c9e5a7b36cc2644f231e14fce01",
+      "frames": 110256,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/568917-restorationimpact.ogg",
+      "sha256": "da2d2e8b9db04ec3e519338ac99ef32e1c5515a7e3619243696e33ac605942cb",
+      "frames": 53240,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/arcane-cast.ogg",
+      "sha256": "00dd8da88cc353cb0730c1c2eaac4ec4a5c4a8d2006768be379959bcdf11d97f",
+      "frames": 65510,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569023-moonfireimpact.ogg",
+      "sha256": "b800c6d9b5572eaf2044e06b6416479fb879bc05f3709871fdd8d51d3463bb60",
+      "frames": 66150,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569031-lifedrainloop.ogg",
+      "sha256": "fe71f23b3d55e6e26fdde0e2623ca6df294e411143ff6e94af6b7fd1887dc663",
+      "frames": 109056,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/fire-precast.ogg",
+      "sha256": "84ed3ee838662430002ee2c925ff443ad4942c0981af4a286fadda19fcad370c",
+      "frames": 113204,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569059-strike.ogg",
+      "sha256": "276e975e785516a1d8443e53d9a22f593031a79eac236482e6bf40f68331ae33",
+      "frames": 23488,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569084-lightningshieldimpact.ogg",
+      "sha256": "b5b9b674d785f69833b4cd98b5ed9ed65122a9937d4b45fac6862a00a731ec7e",
+      "frames": 71183,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569110-kidneyshot.ogg",
+      "sha256": "adfa556e4d25c1caabbbf7fcd872a93010b258c70e4cad94d7e364c8ac6a2d1f",
+      "frames": 11389,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569148-shadowprecasthigh.ogg",
+      "sha256": "c3fb32fc129e631e9cb53da9307007e41d73ff67a587215623acbca31394814d",
+      "frames": 175360,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569153-immolate.ogg",
+      "sha256": "7f2176ac132f4b3db6e8e23e76bf83444baee7607ad844ca6afa505911d38034",
+      "frames": 53846,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569236-challengingshout.ogg",
+      "sha256": "df766bb620985a7c0a8e2872ad769f4f0f84080caf26a761df61163eda4ae8f5",
+      "frames": 33381,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569344-fistofjustice.ogg",
+      "sha256": "1a238ef5bded67fbb393fd93f266bc1c36fa3d545ead1801a38a887d733abd1a",
+      "frames": 68254,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569366-meltoretarget.ogg",
+      "sha256": "72bcc1f919affbba0e04ac94e8aa11db0a04fe14dd42423e8b881816f9276161",
+      "frames": 67456,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569378-frostnova.ogg",
+      "sha256": "faf4b512df08a59ba7507d3dcd957d7f1fb71b1307e346967c291c1b1b478421",
+      "frames": 39499,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569383-holylight_low_head.ogg",
+      "sha256": "c0c8344d6b67b5800c920a8ea5d4ae534005bba04051cf2e544a3fabb5a388d4",
+      "frames": 66150,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569423-stealth.ogg",
+      "sha256": "15f43cf9a83e616eb6ffc2bf30d94b235d9116bd88e3c16a44040961ce588fa5",
+      "frames": 83841,
+      "channels": 1,
+      "sampleRateHz": 44100
+    },
+    {
+      "path": "sounds/classic/569424-precastshadowmagiclow.ogg",
+      "sha256": "b057d7f0fc70d388a1a9553a23547e32969b1908ae0bf632307c4744b3189261",
+      "frames": 144896,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569449-fireballimpactc.ogg",
+      "sha256": "98f826b3f6a67139076253b3a6b62c9ab437bef5f9e6a1b319195afa72a4c7fa",
+      "frames": 43713,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569491-recklessnesstarget.ogg",
+      "sha256": "f882dce6e9c554e04904f50a9efa1af3278700389ba40099bcd8eb42f4640fa1",
+      "frames": 53082,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569526-polymorphtarget.ogg",
+      "sha256": "cb0250da181f684a56358db82b97aa55543daaa25b1592596893ac4bf632db1f",
+      "frames": 18301,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569554-arcanemissileimpact1c.ogg",
+      "sha256": "433d2c8c65276871c76bfea88fb434400f2064874ac22cc9c1bcd36fb65f512e",
+      "frames": 45772,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569559-moltenblastimpact.ogg",
+      "sha256": "24293a117b64509730a8e4397f9b0ed165aee9451cdd77ad4cba9c9031a8e1a4",
+      "frames": 51650,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569565-arcanemissileimpact1b.ogg",
+      "sha256": "250c2bcf9d41ae6b4bdfec23e33844ad5fd1f0cc6de04ce945c44e55b585ac4d",
+      "frames": 36378,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569579-beasttaming.ogg",
+      "sha256": "e281ed3078f1d32fac3abe388b6ae6fbe79d86e65f677c38c6ac1a63eb2bef61",
+      "frames": 50966,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569594-rejuvenation.ogg",
+      "sha256": "ca8b1c7186c388442b507e4ed52aba8926ff255b6c7e72f8014a92c387b51a0f",
+      "frames": 94834,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/arcane-impact.ogg",
+      "sha256": "52addec53dbb70afa655fff1c3fbc099ab19058454b8750eb7a94b56faa6b763",
+      "frames": 39421,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569735-teleport.ogg",
+      "sha256": "f1d2b356818c4c372c880c0901215acb18ddc437d4c9cf42fc03152e25c56770",
+      "frames": 54393,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569738-divineshield.ogg",
+      "sha256": "d254d55c36cd7c943a824395f8f6da788edcf351144653838509399b580d7e0f",
+      "frames": 66315,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/holy-cast.ogg",
+      "sha256": "af97f2196a8863685654584767b6b43acd0b885204db72c06c4ab107701ec158",
+      "frames": 19174,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/fire-cast.ogg",
+      "sha256": "193a6f29e62dac645ad1ed80cd55e3508609688c71a1b5054a1340a67a7010c2",
+      "frames": 17640,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/shadow-cast.ogg",
+      "sha256": "4bf9fb41c789d1867270df490fb93078c14884ca04b76d6c8b3493343eb09732",
+      "frames": 18280,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/nature-cast.ogg",
+      "sha256": "2246f940ef722aedc3b0fc50bc4f02b24044296b2ee8db3033f933ece429482d",
+      "frames": 14560,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569827-swingweaponspecialwarriorc.ogg",
+      "sha256": "5ab0f4d9f9bbdacc4875343cb0cbfc93e0a6bf9d524b905b9a127268fbd2c8e3",
+      "frames": 13386,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/melee-swing.ogg",
+      "sha256": "a8c4a8b02d51e091f4f426f7e9a6c5c7bf16bf35bb496d83dd9861b97ad5a56b",
+      "frames": 14008,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569829-swingweaponspecialwarriord.ogg",
+      "sha256": "aa2891af64577e744c2c555239ea713b52f38760943771fb7b7bab160898395f",
+      "frames": 14962,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569830-swingweaponspecialwarriorb.ogg",
+      "sha256": "316369a686976a2a48a488dc2573e4709db77bd0c3ccdc81b21369b8b08f3877",
+      "frames": 13661,
+      "channels": 1,
+      "sampleRateHz": 22050
+    },
+    {
+      "path": "sounds/classic/569831-swingweaponspecialwarriore.ogg",
+      "sha256": "cdf40473ce30375d5ebd3fd67f9a3a5058f2d13e3cbe95e74ff29641983bea29",
+      "frames": 19670,
+      "channels": 1,
+      "sampleRateHz": 22050
+    }
+  ]
+}

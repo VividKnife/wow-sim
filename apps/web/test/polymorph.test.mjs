@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,stats} from '../lib/game/engine.js';
-import {startCombat,combatTick} from '../lib/game/combat.js';
-import {polymorphTarget,canPolymorph} from '../lib/game/polymorph.js';
-import {spells} from '../lib/game/catalog.js';
+import {createGame,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
+import {polymorphTarget,canPolymorph} from '../../../packages/game-domain/src/rules/polymorph.js';
+import {spells} from '../../../packages/game-domain/src/rules/catalog.js';
 
 function encounter(ids=[299,622]){
  const s=createGame('控场测试',283,0);s.level=20;s.learned=[118,133];s.mana=stats(s).maxMana;s.rules=[{spell:118,condition:'always',value:0,enabled:true},{spell:133,condition:'always',value:0,enabled:true}];
