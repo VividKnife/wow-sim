@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "7bdf366f2d50315cfadd81a9c2c4fa7c39f4366ec11cfa0616afdd51bcf26691",
+  "contentVersion": "36784025533332d9c215be667831c48399ae294228c2d63364b868aba42fe9ee",
   "bundles": {
     "class-demons-reference.json": {
       "sha256": "cff264f075ba885d340bbd4df0fe06f0b2e1d96179994dea548f37cc417abb81",
@@ -43,8 +43,8 @@
       "bytes": 11471
     },
     "gameplay-reference.json": {
-      "sha256": "7614afa61829fd075cefc444730809e6aac8a5cccc22fd79139cae3d78e2b51b",
-      "bytes": 39274
+      "sha256": "4263799128cc6cf68a9c45ef7a85cb8af4131204aa381d47ca008a632ac88062",
+      "bytes": 36585
     },
     "icon-map.json": {
       "sha256": "512509a59935fc19bebcbc5fab69ccfbe18d9c7506f9f1e2779e681ecf7af3d6",
@@ -59,12 +59,12 @@
       "bytes": 444529
     },
     "mage-talents-2019.json": {
-      "sha256": "920306445c43599c216438b43bd0a4a575138ba0bd26211a52426432dafe57bd",
-      "bytes": 67447
+      "sha256": "1e770895999e74b2a32d0126dec8e4e1b24e54ed389a230416997e933162aa1c",
+      "bytes": 65482
     },
     "manifest.json": {
-      "sha256": "69e04b028d062baed1791a0838b74e215e01f2552607b35085d967158491e902",
-      "bytes": 154782
+      "sha256": "a2ed16cd655b813945a0824292fa53895053e43360b9554f5a9028951f9df988",
+      "bytes": 151128
     },
     "pet-family-reference.json": {
       "sha256": "b2ea6bcc38230b2f7d9ee1956de08c126ecc5892b49434358b45be95823137ac",
