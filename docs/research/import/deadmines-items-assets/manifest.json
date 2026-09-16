@@ -1,0 +1,21 @@
+{
+  "commit": "b852b560442b31579e77ef3967b3c2d594832da8",
+  "status": "2019 prelaunch Classic image snapshot; current Classic display strings only; no certification of 2019 numeric fidelity",
+  "items": [
+    {
+      "id": 5397,
+      "icon": "inv_misc_ammo_gunpowder_01",
+      "nameZhCN": "迪菲亚火药",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/5397?locale=4",
+      "sourceSha256": "54004bdcc0029f16525293c03d1f181ed39715bf88fce7c147c5d8df779e3578"
+    }
+  ],
+  "assets": [
+    {
+      "file": "assets/inv_misc_ammo_gunpowder_01.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Misc_Ammo_Gunpowder_01.PNG",
+      "gitBlobSha1": "21ce96aa168483121fceff73b8101bb0119152d9",
+      "sha256": "0756f1f8f75a29fa2f967dbe93deb03a497a1e84971960aa351ed1e5bdc5fc2a"
+    }
+  ]
+}

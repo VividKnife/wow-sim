@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createGame, act, advance, stats, view, killXp, questProgress } from '../lib/game/engine.js';
 import { route } from '../lib/game/catalog.js';
 test('new human mage uses base attributes, original xp, and cannot access mount early',()=>{
- const s=createGame('星落',1,0);assert.equal(s.level,1);assert.equal(s.hp,stats(s).maxHp);assert.equal(s.mana,stats(s).maxMana);assert.equal(view(s).nextXp,400);assert.throws(()=>act(s,{type:'mount'},0),/40/);
+ const s=createGame('星落',1,0);assert.equal(s.level,1);assert.equal(s.hp,stats(s).maxHp);assert.equal(s.mana,stats(s).maxMana);assert.equal(view(s).nextXp,400);assert.throws(()=>act(s,{type:'mount'},0),/20/);
 });
 test('quest chain enforces prerequisites, location, reward once',()=>{
  let s=createGame('测试',3,0);assert.throws(()=>act(s,{type:'accept',id:7},0));s=act(s,{type:'accept',id:783},0);s=act(s,{type:'turnin',id:783},0);assert.equal(s.xp,40);assert.throws(()=>act(s,{type:'turnin',id:783},0));s=act(s,{type:'accept',id:7},0);assert.equal(questProgress(s,7).complete,false);

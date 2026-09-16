@@ -53,7 +53,13 @@ export default defineConfig(async () => {
   return {
     server: {
       ...(managedLinux ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] } : {}),
-      ...(isCodexSeatbeltSandbox ? { watch: { useFsEvents: false, usePolling: true } } : {}),
+      // Large source-data imports are rewritten by the extraction scripts.
+      // Wait for a finished write; mobile acceptance sessions can opt out of
+      // reloads entirely so concurrent edits do not replace a live game engine.
+      watch: process.env.WOW_SIM_STABLE_PREVIEW === "1" ? null : {
+        awaitWriteFinish: { stabilityThreshold: 1500, pollInterval: 100 },
+        ...(isCodexSeatbeltSandbox ? { useFsEvents: false, usePolling: true } : {}),
+      },
     },
     plugins: [
       vinext(),

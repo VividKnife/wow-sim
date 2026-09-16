@@ -1,0 +1,1862 @@
+{
+  "method": "Normal game commands with simulated elapsed time, frozen code and data per segment; no granted levels, skills, currency, equipment or healing.",
+  "limits": [
+    "Route content only, not all race/class content.",
+    "After escort, natural level reached 21 under the current level-60 cap.",
+    "Regional first attempt stopped at a script service-location error; state preserved and continuation completed."
+  ],
+  "runs": [
+    {
+      "run": ".cache\\integrated-content-20-a",
+      "finalLevel": 20,
+      "completed": 86,
+      "kills": 1391,
+      "deaths": 8,
+      "activeQuests": [
+        "155"
+      ],
+      "summary": {
+        "input": "C:\\workspace\\wow-sim\\.cache\\playthrough-integrated-20-b\\final-state.json",
+        "initialSha256": "771b7b9a82608f72f8d52355f43c53f6381625b2fbfe204f9d3a58a8dd0c54f7",
+        "quests": [
+          1861,
+          1920,
+          1921,
+          1941,
+          2040,
+          33,
+          102,
+          167,
+          168,
+          176
+        ],
+        "encounters": [
+          {
+            "cursor": 0,
+            "route": "dm-entry-01",
+            "after": 1,
+            "seconds": 86.712,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 1,
+            "route": "dm-entry-02",
+            "after": 2,
+            "seconds": 70.039,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 2,
+            "route": "dm-entry-03",
+            "after": 3,
+            "seconds": 119.475,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 3,
+            "route": "dm-entry-04",
+            "after": 4,
+            "seconds": 71.521,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 4,
+            "route": "dm-entry-05",
+            "after": 5,
+            "seconds": 70.179,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 5,
+            "route": "dm-entry-06",
+            "after": 6,
+            "seconds": 73.6,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 6,
+            "route": "dm-entry-07",
+            "after": 7,
+            "seconds": 73.638,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 7,
+            "route": "dm-entry-08",
+            "after": 8,
+            "seconds": 72.713,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 8,
+            "route": "dm-rhahkzor",
+            "after": 9,
+            "seconds": 125.752,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 9,
+            "route": "dm-patrol-01",
+            "after": 10,
+            "seconds": 61.935,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 10,
+            "route": "dm-junction",
+            "after": 10,
+            "seconds": 96.057,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 10,
+            "route": "dm-junction",
+            "after": 11,
+            "seconds": 83.025,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 11,
+            "route": "dm-johnson-approach",
+            "after": 12,
+            "seconds": 73.556,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 12,
+            "route": "dm-miner-johnson",
+            "after": 14,
+            "seconds": 127.507,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 14,
+            "route": "dm-woodcarver-01",
+            "after": 15,
+            "seconds": 85.457,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 15,
+            "route": "dm-woodcarver-02",
+            "after": 16,
+            "seconds": 110.745,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 16,
+            "route": "dm-woodcarver-03",
+            "after": 17,
+            "seconds": 79.877,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 17,
+            "route": "dm-sneed",
+            "after": 18,
+            "seconds": 84.39,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 18,
+            "route": "dm-patrol-02",
+            "after": 19,
+            "seconds": 66.948,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 19,
+            "route": "dm-mast-exit-01",
+            "after": 20,
+            "seconds": 109.711,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 20,
+            "route": "dm-mast-exit-02",
+            "after": 21,
+            "seconds": 71.74,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 21,
+            "route": "dm-mast-exit-03",
+            "after": 22,
+            "seconds": 70.069,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 22,
+            "route": "dm-mast-exit-04",
+            "after": 23,
+            "seconds": 91.78,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 23,
+            "route": "dm-foundry-upper",
+            "after": 24,
+            "seconds": 63.853,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 24,
+            "route": "dm-foundry-ramp",
+            "after": 25,
+            "seconds": 83.576,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 25,
+            "route": "dm-foundry-01",
+            "after": 26,
+            "seconds": 107.997,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 26,
+            "route": "dm-foundry-02",
+            "after": 26,
+            "seconds": 97.886,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 26,
+            "route": "dm-foundry-02",
+            "after": 27,
+            "seconds": 79.022,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 27,
+            "route": "dm-foundry-03",
+            "after": 27,
+            "seconds": 91.03,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 27,
+            "route": "dm-foundry-03",
+            "after": 28,
+            "seconds": 97.07,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 28,
+            "route": "dm-gilnid",
+            "after": 29,
+            "seconds": 104.007,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 29,
+            "route": "dm-patrol-03",
+            "after": 30,
+            "seconds": 94.872,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 30,
+            "route": "dm-powder-01",
+            "after": 31,
+            "seconds": 80.017,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 31,
+            "route": "dm-powder-02",
+            "after": 32,
+            "seconds": 70.529,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 32,
+            "route": "dm-powder-03",
+            "after": 33,
+            "seconds": 71.827,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 33,
+            "route": "dm-gunpowder",
+            "after": 33,
+            "seconds": 39.635,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 34,
+            "route": "dm-cannon-approach",
+            "after": 35,
+            "seconds": 48.125,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 36,
+            "route": "dm-cannon-alarm",
+            "after": 37,
+            "seconds": 86.313,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 37,
+            "route": "dm-cove-01",
+            "after": 38,
+            "seconds": 66.928,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 38,
+            "route": "dm-cove-side",
+            "after": 39,
+            "seconds": 28.458,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 39,
+            "route": "dm-cove-02",
+            "after": 40,
+            "seconds": 57.255,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 40,
+            "route": "dm-cove-03",
+            "after": 41,
+            "seconds": 70.452,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 41,
+            "route": "dm-cove-04",
+            "after": 42,
+            "seconds": 124.405,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 42,
+            "route": "dm-cove-05",
+            "after": 43,
+            "seconds": 81.811,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 43,
+            "route": "dm-smite",
+            "after": 44,
+            "seconds": 132.704,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 44,
+            "route": "dm-foredeck",
+            "after": 44,
+            "seconds": 55.474,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 44,
+            "route": "dm-foredeck",
+            "after": 45,
+            "seconds": 94.002,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 45,
+            "route": "dm-lowerdeck-01",
+            "after": 46,
+            "seconds": 184.839,
+            "deaths": 0,
+            "alive": 3
+          },
+          {
+            "cursor": 46,
+            "route": "dm-dock-side",
+            "after": 47,
+            "seconds": 61.86,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 47,
+            "route": "dm-ship-ramp-01",
+            "after": 48,
+            "seconds": 109.392,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 48,
+            "route": "dm-ship-ramp-02",
+            "after": 49,
+            "seconds": 50.42,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 49,
+            "route": "dm-upperdeck-01",
+            "after": 50,
+            "seconds": 79.448,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 50,
+            "route": "dm-upperdeck-02",
+            "after": 51,
+            "seconds": 55.917,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 51,
+            "route": "dm-greenskin",
+            "after": 52,
+            "seconds": 101.171,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 52,
+            "route": "dm-vancleef",
+            "after": 53,
+            "seconds": 175.154,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 53,
+            "route": "dm-cookie-approach-east",
+            "after": 54,
+            "seconds": 131.673,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 54,
+            "route": "dm-cookie",
+            "after": 55,
+            "seconds": 41.998,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 55,
+            "route": "dm-cookie-approach-west",
+            "after": 55,
+            "seconds": 44.023,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 55,
+            "route": "dm-cookie-approach-west",
+            "after": 55,
+            "seconds": 99.019,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 55,
+            "route": "dm-cookie-approach-west",
+            "after": 56,
+            "seconds": 79.1,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 56,
+            "route": "dm-exit-tunnel-01",
+            "after": 57,
+            "seconds": 61.938,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 57,
+            "route": "dm-exit-tunnel-02",
+            "after": 58,
+            "seconds": 82.217,
+            "deaths": 0,
+            "alive": 5
+          }
+        ],
+        "failures": [],
+        "unavailableSkills": [],
+        "final": {
+          "level": 20,
+          "seconds": 16301.324,
+          "deaths": 6,
+          "money": 59898,
+          "cursor": 58,
+          "completedAt": 72468800
+        }
+      },
+      "replay": {
+        "equal": true,
+        "operations": 9879,
+        "level": 20,
+        "kills": 1391,
+        "deaths": 8,
+        "completed": 86,
+        "sha256": "68374e5c92ef72cf53ed7b0a199ef379bb905b0da6ee7009c8f47a90cf08cde8"
+      },
+      "hashes": {
+        "commands.jsonl": "68374e5c92ef72cf53ed7b0a199ef379bb905b0da6ee7009c8f47a90cf08cde8",
+        "initial-state.json": "771b7b9a82608f72f8d52355f43c53f6381625b2fbfe204f9d3a58a8dd0c54f7",
+        "final-state.json": "4e94b3034de6c29c338649e45eb81dc26a4506443f1dc21153f8491686f5696f",
+        "source-manifest.json": "f2bde41362ecc81e3dec2620f0a3d641671ce8f708edb26436f90186bcbe6507"
+      }
+    },
+    {
+      "run": ".cache\\integrated-content-20-escort",
+      "finalLevel": 21,
+      "completed": 87,
+      "kills": 1402,
+      "deaths": 8,
+      "activeQuests": [
+        "166"
+      ],
+      "summary": {
+        "input": "C:\\workspace\\wow-sim\\.cache\\integrated-content-20-a\\final-state.json",
+        "initialSha256": "4e94b3034de6c29c338649e45eb81dc26a4506443f1dc21153f8491686f5696f",
+        "quests": [
+          155
+        ],
+        "encounters": [],
+        "failures": [],
+        "unavailableSkills": [],
+        "escort": {
+          "seconds": 388,
+          "outcome": {
+            "outcome": "arrived",
+            "at": 77966300
+          },
+          "remaining": false
+        },
+        "final": {
+          "level": 21,
+          "seconds": 762.858,
+          "deaths": 0,
+          "money": 66625,
+          "cursor": 58,
+          "completedAt": 72468800
+        }
+      },
+      "replay": {
+        "equal": true,
+        "operations": 421,
+        "level": 21,
+        "kills": 1402,
+        "deaths": 8,
+        "completed": 87,
+        "sha256": "065312d4e5bdf72fc6bc0082fdb01b8e1ef58a18a292b904208c60c76931b1ea"
+      },
+      "hashes": {
+        "commands.jsonl": "065312d4e5bdf72fc6bc0082fdb01b8e1ef58a18a292b904208c60c76931b1ea",
+        "initial-state.json": "4e94b3034de6c29c338649e45eb81dc26a4506443f1dc21153f8491686f5696f",
+        "final-state.json": "1f8560f849adc2f1a02990753756999ecb1739a8bc20df338f4d776a27b2afee",
+        "source-manifest.json": "7b0625cd55e3d81d721152125f709134e872e98b4aea081e590afedaabf06515"
+      }
+    },
+    {
+      "run": ".cache\\integrated-content-20-regional",
+      "finalLevel": 21,
+      "completed": 88,
+      "kills": 1405,
+      "deaths": 8,
+      "activeQuests": [
+        "166"
+      ],
+      "summary": {
+        "input": "C:\\workspace\\wow-sim\\.cache\\integrated-content-20-escort\\final-state.json",
+        "initialSha256": "1f8560f849adc2f1a02990753756999ecb1739a8bc20df338f4d776a27b2afee",
+        "quests": [
+          184
+        ],
+        "encounters": [],
+        "failures": [
+          {
+            "id": 60626,
+            "encounterId": null,
+            "at": 78332289,
+            "text": "抵达 闪金镇",
+            "kind": "travel"
+          },
+          {
+            "id": 60627,
+            "encounterId": null,
+            "at": 78528718,
+            "text": "抵达 布莱克威尔南瓜田",
+            "kind": "travel"
+          },
+          {
+            "id": 60628,
+            "encounterId": null,
+            "at": 78528800,
+            "text": "米拉 为 米拉 施放 霜甲术",
+            "kind": "buff",
+            "actorId": "companion-mage",
+            "targetId": "companion-mage",
+            "spellId": 7301
+          },
+          {
+            "id": 60629,
+            "encounterId": null,
+            "at": 78530300,
+            "text": "连续试玩 为 连续试玩 施放 霜甲术",
+            "kind": "buff",
+            "actorId": "player",
+            "targetId": "player",
+            "spellId": 7301
+          },
+          {
+            "id": 60630,
+            "encounterId": null,
+            "at": 78531800,
+            "text": "米拉 为 连续试玩 施放 奥术智慧",
+            "kind": "buff",
+            "actorId": "companion-mage",
+            "targetId": "player",
+            "spellId": 1460
+          },
+          {
+            "id": 60631,
+            "encounterId": null,
+            "at": 78533300,
+            "text": "米拉 为 艾琳 施放 奥术智慧",
+            "kind": "buff",
+            "actorId": "companion-mage",
+            "targetId": "companion-priest",
+            "spellId": 1460
+          },
+          {
+            "id": 60632,
+            "encounterId": null,
+            "at": 78534800,
+            "text": "米拉 为 米拉 施放 奥术智慧",
+            "kind": "buff",
+            "actorId": "companion-mage",
+            "targetId": "companion-mage",
+            "spellId": 1460
+          },
+          {
+            "id": 60633,
+            "encounterId": null,
+            "at": 78536300,
+            "text": "艾琳 为 连续试玩 施放 真言术：韧",
+            "kind": "buff",
+            "actorId": "companion-priest",
+            "targetId": "player",
+            "spellId": 1244
+          },
+          {
+            "id": 60634,
+            "encounterId": null,
+            "at": 78537800,
+            "text": "艾琳 为 加瑞克 施放 真言术：韧",
+            "kind": "buff",
+            "actorId": "companion-priest",
+            "targetId": "companion-warrior",
+            "spellId": 1244
+          },
+          {
+            "id": 60635,
+            "encounterId": null,
+            "at": 78539300,
+            "text": "艾琳 为 艾琳 施放 真言术：韧",
+            "kind": "buff",
+            "actorId": "companion-priest",
+            "targetId": "companion-priest",
+            "spellId": 1244
+          },
+          {
+            "id": 60636,
+            "encounterId": null,
+            "at": 78540800,
+            "text": "艾琳 为 洛恩 施放 真言术：韧",
+            "kind": "buff",
+            "actorId": "companion-priest",
+            "targetId": "companion-rogue",
+            "spellId": 1244
+          },
+          {
+            "id": 60637,
+            "encounterId": null,
+            "at": 78542300,
+            "text": "艾琳 为 米拉 施放 真言术：韧",
+            "kind": "buff",
+            "actorId": "companion-priest",
+            "targetId": "companion-mage",
+            "spellId": 1244
+          },
+          {
+            "id": 60638,
+            "encounterId": null,
+            "at": 78543800,
+            "text": "艾琳 坐下恢复生命与法力。",
+            "kind": "rest"
+          },
+          {
+            "id": 60639,
+            "encounterId": null,
+            "at": 78543800,
+            "text": "米拉 坐下恢复生命与法力。",
+            "kind": "rest"
+          },
+          {
+            "id": 60640,
+            "encounterId": "encounter-1255",
+            "at": 78560000,
+            "text": "遭遇：埃尔兰·杜德摩尔",
+            "kind": "combat"
+          },
+          {
+            "id": 60641,
+            "encounterId": "encounter-1255",
+            "at": 78560200,
+            "text": "艾琳 施放 惩击",
+            "kind": "cast",
+            "actorId": "companion-priest",
+            "targetId": "enemy-0",
+            "spellId": 598,
+            "duration": 2500
+          },
+          {
+            "id": 60642,
+            "encounterId": "encounter-1255",
+            "at": 78560500,
+            "text": "加瑞克 施放 嘲讽",
+            "kind": "cast",
+            "actorId": "companion-warrior",
+            "targetId": "enemy-0",
+            "spellId": 355,
+            "duration": 0
+          },
+          {
+            "id": 60643,
+            "encounterId": "encounter-1255",
+            "at": 78560500,
+            "text": "加瑞克 的近战攻击对 埃尔兰·杜德摩尔 造成 46 点伤害",
+            "kind": "damage",
+            "actorId": "companion-warrior",
+            "targetId": "enemy-0",
+            "amount": 46,
+            "action": "近战攻击",
+            "critical": false
+          },
+          {
+            "id": 60644,
+            "encounterId": "encounter-1255",
+            "at": 78560500,
+            "text": "米拉 施放 寒冰箭",
+            "kind": "cast",
+            "actorId": "companion-mage",
+            "targetId": "enemy-0",
+            "spellId": 7322,
+            "school": 4,
+            "duration": 2600,
+            "center": {
+              "x": 27.599999600000004,
+              "y": 0
+            },
+            "radius": 0
+          },
+          {
+            "id": 60645,
+            "encounterId": "encounter-1255",
+            "at": 78560500,
+            "text": "埃尔兰·杜德摩尔 的攻击对 加瑞克 造成 8 点伤害",
+            "kind": "incoming",
+            "actorId": "enemy-0",
+            "targetId": "companion-warrior",
+            "amount": 8,
+            "action": "攻击",
+            "hand": "main",
+            "extraAttack": false,
+            "critical": false
+          },
+          {
+            "id": 60646,
+            "encounterId": "encounter-1255",
+            "at": 78560600,
+            "text": "连续试玩 施放 火球术",
+            "kind": "cast",
+            "actorId": "player",
+            "targetId": "enemy-0",
+            "spellId": 3140,
+            "school": 2,
+            "duration": 2500,
+            "center": {
+              "x": 27.599999600000004,
+              "y": 0
+            },
+            "radius": 0
+          },
+          {
+            "id": 60647,
+            "encounterId": "encounter-1255",
+            "at": 78560800,
+            "text": "洛恩 的近战攻击对 埃尔兰·杜德摩尔 造成 35 点伤害",
+            "kind": "damage",
+            "actorId": "companion-rogue",
+            "targetId": "enemy-0",
+            "amount": 35,
+            "action": "近战攻击",
+            "critical": false
+          },
+          {
+            "id": 60648,
+            "encounterId": "encounter-1255",
+            "at": 78562500,
+            "text": "洛恩 的近战攻击对 埃尔兰·杜德摩尔 造成 35 点伤害",
+            "kind": "damage",
+            "actorId": "companion-rogue",
+            "targetId": "enemy-0",
+            "amount": 35,
+            "action": "近战攻击",
+            "critical": false
+          },
+          {
+            "id": 60649,
+            "encounterId": "encounter-1255",
+            "at": 78562700,
+            "text": "艾琳 的惩击对 埃尔兰·杜德摩尔 造成 40 点伤害",
+            "kind": "damage",
+            "actorId": "companion-priest",
+            "targetId": "enemy-0",
+            "amount": 40,
+            "action": "惩击",
+            "spellId": 598,
+            "school": 1,
+            "critical": false,
+            "periodic": false
+          },
+          {
+            "id": 60650,
+            "encounterId": "encounter-1255",
+            "at": 78562700,
+            "text": "埃尔兰·杜德摩尔 被击败",
+            "kind": "kill"
+          },
+          {
+            "id": 60651,
+            "encounterId": "encounter-1255",
+            "at": 78562700,
+            "text": "获得 亚麻布 ×1",
+            "kind": "loot"
+          },
+          {
+            "id": 60652,
+            "encounterId": "encounter-1255",
+            "at": 78562700,
+            "text": "战斗结束",
+            "kind": "combat-end"
+          },
+          {
+            "id": 60653,
+            "encounterId": null,
+            "at": 78566018,
+            "text": "制造了 魔法纯净水 ×4",
+            "kind": "loot"
+          },
+          {
+            "id": 60654,
+            "encounterId": null,
+            "at": 78566018,
+            "text": "连续试玩 坐下恢复生命与法力。",
+            "kind": "rest"
+          },
+          {
+            "id": 60655,
+            "encounterId": "encounter-1256",
+            "at": 78574100,
+            "text": "遭遇：埃尔兰·杜德摩尔",
+            "kind": "combat"
+          },
+          {
+            "id": 60656,
+            "encounterId": "encounter-1256",
+            "at": 78574300,
+            "text": "艾琳 施放 惩击",
+            "kind": "cast",
+            "actorId": "companion-priest",
+            "targetId": "enemy-0",
+            "spellId": 598,
+            "duration": 2500
+          },
+          {
+            "id": 60657,
+            "encounterId": "encounter-1256",
+            "at": 78574600,
+            "text": "加瑞克 施放 嘲讽",
+            "kind": "cast",
+            "actorId": "companion-warrior",
+            "targetId": "enemy-0",
+            "spellId": 355,
+            "duration": 0
+          },
+          {
+            "id": 60658,
+            "encounterId": "encounter-1256",
+            "at": 78574600,
+            "text": "加瑞克 的近战攻击对 埃尔兰·杜德摩尔 造成 42 点伤害",
+            "kind": "damage",
+            "actorId": "companion-warrior",
+            "targetId": "enemy-0",
+            "amount": 42,
+            "action": "近战攻击",
+            "critical": false
+          },
+          {
+            "id": 60659,
+            "encounterId": "encounter-1256",
+            "at": 78574600,
+            "text": "米拉 施放 寒冰箭",
+            "kind": "cast",
+            "actorId": "companion-mage",
+            "targetId": "enemy-0",
+            "spellId": 7322,
+            "school": 4,
+            "duration": 2600,
+            "center": {
+              "x": 27.599999600000004,
+              "y": 0
+            },
+            "radius": 0
+          },
+          {
+            "id": 60660,
+            "encounterId": "encounter-1256",
+            "at": 78574600,
+            "text": "埃尔兰·杜德摩尔 的攻击对 加瑞克 造成 7 点伤害",
+            "kind": "incoming",
+            "actorId": "enemy-0",
+            "targetId": "companion-warrior",
+            "amount": 7,
+            "action": "攻击",
+            "hand": "main",
+            "extraAttack": false,
+            "critical": false
+          },
+          {
+            "id": 60661,
+            "encounterId": "encounter-1256",
+            "at": 78574700,
+            "text": "连续试玩 施放 火球术",
+            "kind": "cast",
+            "actorId": "player",
+            "targetId": "enemy-0",
+            "spellId": 3140,
+            "school": 2,
+            "duration": 2500,
+            "center": {
+              "x": 27.599999600000004,
+              "y": 0
+            },
+            "radius": 0
+          },
+          {
+            "id": 60662,
+            "encounterId": "encounter-1256",
+            "at": 78574900,
+            "text": "洛恩 的近战攻击对 埃尔兰·杜德摩尔 造成 30 点伤害",
+            "kind": "damage",
+            "actorId": "companion-rogue",
+            "targetId": "enemy-0",
+            "amount": 30,
+            "action": "近战攻击",
+            "critical": false
+          },
+          {
+            "id": 60663,
+            "encounterId": "encounter-1256",
+            "at": 78576100,
+            "text": "加瑞克 施放 破甲攻击",
+            "kind": "cast",
+            "actorId": "companion-warrior",
+            "targetId": "enemy-0",
+            "spellId": 7386,
+            "duration": 0
+          },
+          {
+            "id": 60664,
+            "encounterId": "encounter-1256",
+            "at": 78576100,
+            "text": "洛恩 施放 邪恶攻击",
+            "kind": "cast",
+            "actorId": "companion-rogue",
+            "targetId": "enemy-0",
+            "spellId": 1758,
+            "duration": 0
+          },
+          {
+            "id": 60665,
+            "encounterId": "encounter-1256",
+            "at": 78576100,
+            "text": "洛恩 的邪恶攻击对 埃尔兰·杜德摩尔 造成 47 点伤害",
+            "kind": "damage",
+            "actorId": "companion-rogue",
+            "targetId": "enemy-0",
+            "amount": 47,
+            "action": "邪恶攻击",
+            "spellId": 1758,
+            "critical": false
+          },
+          {
+            "id": 60666,
+            "encounterId": "encounter-1256",
+            "at": 78576600,
+            "text": "洛恩 的近战攻击对 埃尔兰·杜德摩尔 造成 30 点伤害",
+            "kind": "damage",
+            "actorId": "companion-rogue",
+            "targetId": "enemy-0",
+            "amount": 30,
+            "action": "近战攻击",
+            "critical": false
+          },
+          {
+            "id": 60667,
+            "encounterId": "encounter-1256",
+            "at": 78576800,
+            "text": "艾琳 的惩击（暴击）对 埃尔兰·杜德摩尔 造成 7 点伤害",
+            "kind": "damage",
+            "actorId": "companion-priest",
+            "targetId": "enemy-0",
+            "amount": 7,
+            "action": "惩击（暴击）",
+            "spellId": 598,
+            "school": 1,
+            "critical": true,
+            "periodic": false
+          },
+          {
+            "id": 60668,
+            "encounterId": "encounter-1256",
+            "at": 78576800,
+            "text": "埃尔兰·杜德摩尔 被击败",
+            "kind": "kill"
+          },
+          {
+            "id": 60669,
+            "encounterId": "encounter-1256",
+            "at": 78576800,
+            "text": "战斗结束",
+            "kind": "combat-end"
+          },
+          {
+            "id": 60670,
+            "encounterId": "encounter-1257",
+            "at": 78587200,
+            "text": "遭遇：埃尔兰·杜德摩尔",
+            "kind": "combat"
+          },
+          {
+            "id": 60671,
+            "encounterId": "encounter-1257",
+            "at": 78587400,
+            "text": "艾琳 施放 惩击",
+            "kind": "cast",
+            "actorId": "companion-priest",
+            "targetId": "enemy-0",
+            "spellId": 598,
+            "duration": 2500
+          },
+          {
+            "id": 60672,
+            "encounterId": "encounter-1257",
+            "at": 78587700,
+            "text": "加瑞克 施放 嘲讽",
+            "kind": "cast",
+            "actorId": "companion-warrior",
+            "targetId": "enemy-0",
+            "spellId": 355,
+            "duration": 0
+          },
+          {
+            "id": 60673,
+            "encounterId": "encounter-1257",
+            "at": 78587700,
+            "text": "加瑞克 的近战攻击对 埃尔兰·杜德摩尔 造成 51 点伤害",
+            "kind": "damage",
+            "actorId": "companion-warrior",
+            "targetId": "enemy-0",
+            "amount": 51,
+            "action": "近战攻击",
+            "critical": false
+          },
+          {
+            "id": 60674,
+            "encounterId": "encounter-1257",
+            "at": 78587700,
+            "text": "米拉 施放 寒冰箭",
+            "kind": "cast",
+            "actorId": "companion-mage",
+            "targetId": "enemy-0",
+            "spellId": 7322,
+            "school": 4,
+            "duration": 2600,
+            "center": {
+              "x": 27.599999600000004,
+              "y": 0
+            },
+            "radius": 0
+          },
+          {
+            "id": 60675,
+            "encounterId": "encounter-1257",
+            "at": 78587700,
+            "text": "埃尔兰·杜德摩尔 的攻击对 加瑞克 造成 9 点伤害",
+            "kind": "incoming",
+            "actorId": "enemy-0",
+            "targetId": "companion-warrior",
+            "amount": 9,
+            "action": "攻击",
+            "hand": "main",
+            "extraAttack": false,
+            "critical": false
+          },
+          {
+            "id": 60676,
+            "encounterId": "encounter-1257",
+            "at": 78587800,
+            "text": "连续试玩 施放 火球术",
+            "kind": "cast",
+            "actorId": "player",
+            "targetId": "enemy-0",
+            "spellId": 3140,
+            "school": 2,
+            "duration": 2500,
+            "center": {
+              "x": 27.599999600000004,
+              "y": 0
+            },
+            "radius": 0
+          },
+          {
+            "id": 60677,
+            "encounterId": "encounter-1257",
+            "at": 78588000,
+            "text": "洛恩 的近战攻击对 埃尔兰·杜德摩尔 造成 30 点伤害",
+            "kind": "damage",
+            "actorId": "companion-rogue",
+            "targetId": "enemy-0",
+            "amount": 30,
+            "action": "近战攻击",
+            "critical": false
+          },
+          {
+            "id": 60678,
+            "encounterId": "encounter-1257",
+            "at": 78589700,
+            "text": "洛恩 的近战攻击对 埃尔兰·杜德摩尔 造成 27 点伤害",
+            "kind": "damage",
+            "actorId": "companion-rogue",
+            "targetId": "enemy-0",
+            "amount": 27,
+            "action": "近战攻击",
+            "critical": false
+          },
+          {
+            "id": 60679,
+            "encounterId": "encounter-1257",
+            "at": 78589900,
+            "text": "艾琳 的惩击对 埃尔兰·杜德摩尔 造成 48 点伤害",
+            "kind": "damage",
+            "actorId": "companion-priest",
+            "targetId": "enemy-0",
+            "amount": 48,
+            "action": "惩击",
+            "spellId": 598,
+            "school": 1,
+            "critical": false,
+            "periodic": false
+          },
+          {
+            "id": 60680,
+            "encounterId": "encounter-1257",
+            "at": 78589900,
+            "text": "埃尔兰·杜德摩尔 被击败",
+            "kind": "kill"
+          },
+          {
+            "id": 60681,
+            "encounterId": "encounter-1257",
+            "at": 78589900,
+            "text": "获得 西部荒野地契 ×1",
+            "kind": "loot"
+          },
+          {
+            "id": 60682,
+            "encounterId": "encounter-1257",
+            "at": 78589900,
+            "text": "战斗结束",
+            "kind": "combat-end"
+          },
+          {
+            "id": 60683,
+            "encounterId": null,
+            "at": 78590218,
+            "text": "接受任务：法布隆的地契",
+            "kind": "quest"
+          },
+          {
+            "id": 60684,
+            "encounterId": null,
+            "at": 78865933,
+            "text": "抵达 西泉要塞",
+            "kind": "travel"
+          },
+          {
+            "id": 60685,
+            "encounterId": null,
+            "at": 78865933,
+            "text": "完成任务：法布隆的地契 · 0 经验",
+            "kind": "quest"
+          }
+        ],
+        "error": "Error: 商品不可购买或金币不足\n    at act (file:///C:/workspace/wow-sim/.cache/integrated-content-20-regional/runtime/lib/game/engine.js:151:212)\n    at command (file:///C:/workspace/wow-sim/apps/web/scripts/continue-playthrough.mjs:32:28)\n    at file:///C:/workspace/wow-sim/apps/web/scripts/continue-playthrough.mjs:77:45",
+        "final": {
+          "level": 21,
+          "seconds": 802.359,
+          "deaths": 0,
+          "money": 67782,
+          "cursor": 58,
+          "completedAt": 72468800
+        }
+      },
+      "replay": {
+        "equal": true,
+        "operations": 358,
+        "level": 21,
+        "kills": 1405,
+        "deaths": 8,
+        "completed": 88,
+        "sha256": "3ecb89dbdb93a443003d012fc048dcda52ce81f1d315fbccd32d7bd9c37031ee"
+      },
+      "hashes": {
+        "commands.jsonl": "3ecb89dbdb93a443003d012fc048dcda52ce81f1d315fbccd32d7bd9c37031ee",
+        "initial-state.json": "1f8560f849adc2f1a02990753756999ecb1739a8bc20df338f4d776a27b2afee",
+        "final-state.json": "15a1fdb2b245ccdb95fc2756135aa264d8a6a941b86c094f58bba70b3989a279",
+        "source-manifest.json": "54224cde51e812fec3a31f2001146605217d73159d8c3aeb9108b419b06a3b89"
+      }
+    },
+    {
+      "run": ".cache\\integrated-content-20-regional-b",
+      "finalLevel": 21,
+      "completed": 93,
+      "kills": 1415,
+      "deaths": 8,
+      "activeQuests": [
+        "166"
+      ],
+      "summary": {
+        "input": "C:\\workspace\\wow-sim\\.cache\\integrated-content-20-regional\\final-state.json",
+        "initialSha256": "15a1fdb2b245ccdb95fc2756135aa264d8a6a941b86c094f58bba70b3989a279",
+        "quests": [
+          16,
+          3903,
+          3904,
+          3905,
+          117
+        ],
+        "encounters": [],
+        "failures": [],
+        "final": {
+          "level": 21,
+          "seconds": 1555.718,
+          "deaths": 0,
+          "money": 67907,
+          "cursor": 58,
+          "completedAt": 72468800
+        }
+      },
+      "replay": {
+        "equal": true,
+        "operations": 185,
+        "level": 21,
+        "kills": 1415,
+        "deaths": 8,
+        "completed": 93,
+        "sha256": "a7bc747adbc366af5d7dc9a67abb42e799b54d0c9ac992806f7cc63c3ee83c34"
+      },
+      "hashes": {
+        "commands.jsonl": "a7bc747adbc366af5d7dc9a67abb42e799b54d0c9ac992806f7cc63c3ee83c34",
+        "initial-state.json": "15a1fdb2b245ccdb95fc2756135aa264d8a6a941b86c094f58bba70b3989a279",
+        "final-state.json": "176ee5018eda84343c2b1098ca7d4cf806b1de1858f856c30db77f5857ab3693",
+        "source-manifest.json": "4c38e013c6a881993039c0a04c6705399ccdb831649bc222dba11285aab3c0de"
+      }
+    },
+    {
+      "run": ".cache\\integrated-content-20-aftermath",
+      "finalLevel": 21,
+      "completed": 96,
+      "kills": 1628,
+      "deaths": 12,
+      "activeQuests": [],
+      "summary": {
+        "input": "C:\\workspace\\wow-sim\\.cache\\integrated-content-20-regional-b\\final-state.json",
+        "initialSha256": "176ee5018eda84343c2b1098ca7d4cf806b1de1858f856c30db77f5857ab3693",
+        "quests": [
+          373,
+          166,
+          214
+        ],
+        "encounters": [
+          {
+            "cursor": 0,
+            "route": "dm-entry-01",
+            "after": 1,
+            "seconds": 76.156,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 1,
+            "route": "dm-entry-02",
+            "after": 2,
+            "seconds": 70.039,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 2,
+            "route": "dm-entry-03",
+            "after": 3,
+            "seconds": 71.475,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 3,
+            "route": "dm-entry-04",
+            "after": 4,
+            "seconds": 70.521,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 4,
+            "route": "dm-entry-05",
+            "after": 5,
+            "seconds": 102.179,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 5,
+            "route": "dm-entry-06",
+            "after": 6,
+            "seconds": 73.6,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 6,
+            "route": "dm-entry-07",
+            "after": 7,
+            "seconds": 73.638,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 7,
+            "route": "dm-entry-08",
+            "after": 8,
+            "seconds": 71.713,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 8,
+            "route": "dm-rhahkzor",
+            "after": 9,
+            "seconds": 98.752,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 9,
+            "route": "dm-patrol-01",
+            "after": 10,
+            "seconds": 57.935,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 10,
+            "route": "dm-junction",
+            "after": 10,
+            "seconds": 76.057,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 10,
+            "route": "dm-junction",
+            "after": 11,
+            "seconds": 88.025,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 11,
+            "route": "dm-johnson-approach",
+            "after": 12,
+            "seconds": 72.556,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 12,
+            "route": "dm-miner-johnson",
+            "after": 14,
+            "seconds": 110.507,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 14,
+            "route": "dm-woodcarver-01",
+            "after": 15,
+            "seconds": 84.457,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 15,
+            "route": "dm-woodcarver-02",
+            "after": 16,
+            "seconds": 76.945,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 16,
+            "route": "dm-woodcarver-03",
+            "after": 17,
+            "seconds": 111.491,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 17,
+            "route": "dm-sneed",
+            "after": 18,
+            "seconds": 74.39,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 18,
+            "route": "dm-patrol-02",
+            "after": 19,
+            "seconds": 62.948,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 19,
+            "route": "dm-mast-exit-01",
+            "after": 20,
+            "seconds": 96.711,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 20,
+            "route": "dm-mast-exit-02",
+            "after": 21,
+            "seconds": 69.74,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 21,
+            "route": "dm-mast-exit-03",
+            "after": 22,
+            "seconds": 43.069,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 22,
+            "route": "dm-mast-exit-04",
+            "after": 23,
+            "seconds": 71.866,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 23,
+            "route": "dm-foundry-upper",
+            "after": 24,
+            "seconds": 60.853,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 24,
+            "route": "dm-foundry-ramp",
+            "after": 25,
+            "seconds": 80.576,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 25,
+            "route": "dm-foundry-01",
+            "after": 26,
+            "seconds": 93.997,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 26,
+            "route": "dm-foundry-02",
+            "after": 26,
+            "seconds": 128.886,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 26,
+            "route": "dm-foundry-02",
+            "after": 27,
+            "seconds": 22.022,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 27,
+            "route": "dm-foundry-03",
+            "after": 27,
+            "seconds": 72.03,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 27,
+            "route": "dm-foundry-03",
+            "after": 28,
+            "seconds": 94.07,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 28,
+            "route": "dm-gilnid",
+            "after": 29,
+            "seconds": 112.007,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 29,
+            "route": "dm-patrol-03",
+            "after": 30,
+            "seconds": 128.772,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 30,
+            "route": "dm-powder-01",
+            "after": 31,
+            "seconds": 57.017,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 31,
+            "route": "dm-powder-02",
+            "after": 32,
+            "seconds": 70.529,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 32,
+            "route": "dm-powder-03",
+            "after": 33,
+            "seconds": 69.827,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 33,
+            "route": "dm-gunpowder",
+            "after": 33,
+            "seconds": 39.635,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 34,
+            "route": "dm-cannon-approach",
+            "after": 35,
+            "seconds": 71.139,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 36,
+            "route": "dm-cannon-alarm",
+            "after": 37,
+            "seconds": 89.313,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 37,
+            "route": "dm-cove-01",
+            "after": 38,
+            "seconds": 50.914,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 38,
+            "route": "dm-cove-side",
+            "after": 39,
+            "seconds": 31.458,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 39,
+            "route": "dm-cove-02",
+            "after": 40,
+            "seconds": 93.255,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 40,
+            "route": "dm-cove-03",
+            "after": 41,
+            "seconds": 55.452,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 41,
+            "route": "dm-cove-04",
+            "after": 42,
+            "seconds": 82.805,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 42,
+            "route": "dm-cove-05",
+            "after": 43,
+            "seconds": 84.811,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 43,
+            "route": "dm-smite",
+            "after": 44,
+            "seconds": 151.704,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 44,
+            "route": "dm-foredeck",
+            "after": 45,
+            "seconds": 131.474,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 45,
+            "route": "dm-lowerdeck-01",
+            "after": 46,
+            "seconds": 151.841,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 46,
+            "route": "dm-dock-side",
+            "after": 47,
+            "seconds": 50.86,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 47,
+            "route": "dm-ship-ramp-01",
+            "after": 48,
+            "seconds": 104.392,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 48,
+            "route": "dm-ship-ramp-02",
+            "after": 49,
+            "seconds": 46.42,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 49,
+            "route": "dm-upperdeck-01",
+            "after": 50,
+            "seconds": 94.448,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 50,
+            "route": "dm-upperdeck-02",
+            "after": 51,
+            "seconds": 73.931,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 51,
+            "route": "dm-greenskin",
+            "after": 52,
+            "seconds": 90.171,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 52,
+            "route": "dm-vancleef",
+            "after": 53,
+            "seconds": 158.154,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 53,
+            "route": "dm-cookie-approach-east",
+            "after": 54,
+            "seconds": 93.673,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 54,
+            "route": "dm-cookie",
+            "after": 55,
+            "seconds": 40.998,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 55,
+            "route": "dm-cookie-approach-west",
+            "after": 55,
+            "seconds": 54.009,
+            "deaths": 1,
+            "alive": 0
+          },
+          {
+            "cursor": 55,
+            "route": "dm-cookie-approach-west",
+            "after": 56,
+            "seconds": 167.019,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 56,
+            "route": "dm-exit-tunnel-01",
+            "after": 57,
+            "seconds": 107.738,
+            "deaths": 0,
+            "alive": 5
+          },
+          {
+            "cursor": 57,
+            "route": "dm-exit-tunnel-02",
+            "after": 58,
+            "seconds": 83.217,
+            "deaths": 0,
+            "alive": 5
+          }
+        ],
+        "failures": [],
+        "unavailableSkills": [],
+        "final": {
+          "level": 21,
+          "seconds": 9184.547,
+          "deaths": 4,
+          "money": 106315,
+          "cursor": 58,
+          "completedAt": 89470000
+        }
+      },
+      "replay": {
+        "equal": true,
+        "operations": 7385,
+        "level": 21,
+        "kills": 1628,
+        "deaths": 12,
+        "completed": 96,
+        "sha256": "d4af192142d434f55349e533ac5c01ee38bb63425c700927740ff86261f3cdf8"
+      },
+      "hashes": {
+        "commands.jsonl": "d4af192142d434f55349e533ac5c01ee38bb63425c700927740ff86261f3cdf8",
+        "initial-state.json": "176ee5018eda84343c2b1098ca7d4cf806b1de1858f856c30db77f5857ab3693",
+        "final-state.json": "f551a0261151b6b237abf63575050c892decc85237e3c9fe1ffda058970c58cc",
+        "source-manifest.json": "4c38e013c6a881993039c0a04c6705399ccdb831649bc222dba11285aab3c0de"
+      }
+    }
+  ]
+}

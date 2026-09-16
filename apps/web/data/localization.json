@@ -6,9 +6,9 @@
   "concurrency": 4,
   "selectedCounts": {
     "quest": 97,
-    "spell": 38,
+    "spell": 101,
     "npc": 340,
-    "item": 225
+    "item": 229
   },
   "quests": {
     "6": {
@@ -2251,6 +2251,18 @@
       "icon": "spell_frost_icestorm",
       "nameLanguageStatus": "contains-chinese"
     },
+    "71": {
+      "nameZhCN": "防御姿态",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/71?locale=4"
+    },
+    "78": {
+      "nameZhCN": "英勇打击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/78?locale=4"
+    },
+    "113": {
+      "nameZhCN": "冰链术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/113?locale=4"
+    },
     "116": {
       "type": "spell",
       "id": 116,
@@ -2294,7 +2306,8 @@
       "responseSha256": "89b0429f60927d3348ed9b94645c45780359ec2b5f0da351e6d7b55d5c671f5a",
       "fetchedAt": "2026-09-15T13:54:43.498930+00:00",
       "icon": "spell_frost_frostnova",
-      "nameLanguageStatus": "contains-chinese"
+      "nameLanguageStatus": "contains-chinese",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/122?locale=4"
     },
     "130": {
       "type": "spell",
@@ -2325,6 +2338,10 @@
       "fetchedAt": "2026-09-15T13:54:40.917133+00:00",
       "icon": "spell_fire_flamebolt",
       "nameLanguageStatus": "contains-chinese"
+    },
+    "139": {
+      "nameZhCN": "恢复",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/139?locale=4"
     },
     "143": {
       "type": "spell",
@@ -2386,6 +2403,18 @@
       "icon": "spell_frost_frostbolt02",
       "nameLanguageStatus": "contains-chinese"
     },
+    "284": {
+      "nameZhCN": "英勇打击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/284?locale=4"
+    },
+    "285": {
+      "nameZhCN": "英勇打击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/285?locale=4"
+    },
+    "355": {
+      "nameZhCN": "嘲讽",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/355?locale=4"
+    },
     "475": {
       "type": "spell",
       "id": 475,
@@ -2416,6 +2445,10 @@
       "icon": "spell_fire_firearmor",
       "nameLanguageStatus": "contains-chinese"
     },
+    "585": {
+      "nameZhCN": "惩击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/585?locale=4"
+    },
     "587": {
       "type": "spell",
       "id": 587,
@@ -2430,6 +2463,10 @@
       "fetchedAt": "2026-09-15T13:54:42.351142+00:00",
       "icon": "inv_misc_food_10",
       "nameLanguageStatus": "contains-chinese"
+    },
+    "591": {
+      "nameZhCN": "惩击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/591?locale=4"
     },
     "597": {
       "type": "spell",
@@ -2446,6 +2483,10 @@
       "icon": "inv_misc_food_09",
       "nameLanguageStatus": "contains-chinese"
     },
+    "598": {
+      "nameZhCN": "惩击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/598?locale=4"
+    },
     "604": {
       "type": "spell",
       "id": 604,
@@ -2460,6 +2501,10 @@
       "fetchedAt": "2026-09-15T13:54:44.789517+00:00",
       "icon": "spell_nature_abolishmagic",
       "nameLanguageStatus": "contains-chinese"
+    },
+    "674": {
+      "nameZhCN": "双武器",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/674?locale=4"
     },
     "837": {
       "type": "spell",
@@ -2476,6 +2521,21 @@
       "icon": "spell_frost_frostbolt02",
       "nameLanguageStatus": "contains-chinese"
     },
+    "845": {
+      "type": "spell",
+      "id": 845,
+      "scopes": [
+        "companion-strategies-through-20"
+      ],
+      "nameEn": "Cleave",
+      "status": "ok",
+      "nameZhCN": "顺劈斩",
+      "sourceURL": "https://nether.wowhead.com/classic/tooltip/spell/845?locale=4",
+      "responseSha256": "fc7431b4b624acd4c98b629f0faa16947f3c46d5d96a59a34626e824637f017a",
+      "fetchedAt": "2026-09-16T02:51:29.083Z",
+      "icon": "ability_warrior_cleave",
+      "nameLanguageStatus": "contains-chinese"
+    },
     "1008": {
       "type": "spell",
       "id": 1008,
@@ -2489,6 +2549,36 @@
       "responseSha256": "ba44ce61ced83d39534f965bea52d3e17ed63032946d3a2b62fe3109d218404f",
       "fetchedAt": "2026-09-15T13:54:46.692287+00:00",
       "icon": "spell_holy_flashheal",
+      "nameLanguageStatus": "contains-chinese"
+    },
+    "1243": {
+      "type": "spell",
+      "id": 1243,
+      "scopes": [
+        "companion-strategies-through-20"
+      ],
+      "nameEn": "Power Word: Fortitude",
+      "status": "ok",
+      "nameZhCN": "真言术：韧",
+      "sourceURL": "https://nether.wowhead.com/classic/tooltip/spell/1243?locale=4",
+      "responseSha256": "fa84ca4dc5b2ed73726b30f1a1ddcd5e6f7ca1b3475e6d94a47ca60243187184",
+      "fetchedAt": "2026-09-16T02:51:29.542Z",
+      "icon": "spell_holy_wordfortitude",
+      "nameLanguageStatus": "contains-chinese"
+    },
+    "1244": {
+      "type": "spell",
+      "id": 1244,
+      "scopes": [
+        "companion-strategies-through-20"
+      ],
+      "nameEn": "Power Word: Fortitude",
+      "status": "ok",
+      "nameZhCN": "真言术：韧",
+      "sourceURL": "https://nether.wowhead.com/classic/tooltip/spell/1244?locale=4",
+      "responseSha256": "7aabd46d239573fac5b6c4756d4c63e533432ca44b8d80041e0a868beb5d843a",
+      "fetchedAt": "2026-09-16T02:51:30.405Z",
+      "icon": "spell_holy_wordfortitude",
       "nameLanguageStatus": "contains-chinese"
     },
     "1449": {
@@ -2551,6 +2641,18 @@
       "icon": "spell_shadow_detectlesserinvisibility",
       "nameLanguageStatus": "contains-chinese"
     },
+    "1752": {
+      "nameZhCN": "邪恶攻击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/1752?locale=4"
+    },
+    "1757": {
+      "nameZhCN": "邪恶攻击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/1757?locale=4"
+    },
+    "1758": {
+      "nameZhCN": "邪恶攻击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/1758?locale=4"
+    },
     "1953": {
       "type": "spell",
       "id": 1953,
@@ -2565,6 +2667,34 @@
       "fetchedAt": "2026-09-15T13:54:47.851450+00:00",
       "icon": "spell_arcane_blink",
       "nameLanguageStatus": "contains-chinese"
+    },
+    "2006": {
+      "nameZhCN": "复活术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2006?locale=4"
+    },
+    "2050": {
+      "nameZhCN": "次级治疗术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2050?locale=4"
+    },
+    "2052": {
+      "nameZhCN": "次级治疗术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2052?locale=4"
+    },
+    "2053": {
+      "nameZhCN": "次级治疗术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2053?locale=4"
+    },
+    "2054": {
+      "nameZhCN": "治疗术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2054?locale=4"
+    },
+    "2061": {
+      "nameZhCN": "快速治疗",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2061?locale=4"
+    },
+    "2098": {
+      "nameZhCN": "刺骨",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2098?locale=4"
     },
     "2120": {
       "type": "spell",
@@ -2611,6 +2741,10 @@
       "icon": "spell_fire_fireball",
       "nameLanguageStatus": "contains-chinese"
     },
+    "2138": {
+      "nameZhCN": "火焰冲击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2138?locale=4"
+    },
     "2855": {
       "type": "spell",
       "id": 2855,
@@ -2641,6 +2775,10 @@
       "icon": "spell_fire_flamebolt",
       "nameLanguageStatus": "contains-chinese"
     },
+    "3391": {
+      "nameZhCN": "痛击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3391?locale=4"
+    },
     "3561": {
       "type": "spell",
       "id": 3561,
@@ -2655,6 +2793,26 @@
       "fetchedAt": "2026-09-15T13:54:48.116573+00:00",
       "icon": "spell_arcane_teleportstormwind",
       "nameLanguageStatus": "contains-chinese"
+    },
+    "3603": {
+      "nameZhCN": "扰乱之痛",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3603?locale=4"
+    },
+    "3605": {
+      "nameZhCN": "召唤遥控傀儡",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3605?locale=4"
+    },
+    "4979": {
+      "nameZhCN": "快速烈焰防护结界",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/4979?locale=4"
+    },
+    "5115": {
+      "nameZhCN": "战斗命令",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5115?locale=4"
+    },
+    "5141": {
+      "nameZhCN": "弹出斯尼德",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5141?locale=4"
     },
     "5143": {
       "type": "spell",
@@ -2685,6 +2843,30 @@
       "fetchedAt": "2026-09-15T13:54:46.366739+00:00",
       "icon": "spell_nature_starfall",
       "nameLanguageStatus": "contains-chinese"
+    },
+    "5159": {
+      "nameZhCN": "熔化矿石",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5159?locale=4"
+    },
+    "5172": {
+      "nameZhCN": "血帆鹦鹉",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5172?locale=4"
+    },
+    "5174": {
+      "nameZhCN": "烹制甜点",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5174?locale=4"
+    },
+    "5200": {
+      "nameZhCN": "范克里夫的盟友",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5200?locale=4"
+    },
+    "5208": {
+      "nameZhCN": "毒性鱼叉",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5208?locale=4"
+    },
+    "5213": {
+      "nameZhCN": "熔铁之水",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5213?locale=4"
     },
     "5504": {
       "type": "spell",
@@ -2731,6 +2913,90 @@
       "icon": "inv_drink_milk_02",
       "nameLanguageStatus": "contains-chinese"
     },
+    "5532": {
+      "nameZhCN": "顺劈斩",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5532?locale=4"
+    },
+    "6016": {
+      "nameZhCN": "刺穿护甲",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6016?locale=4"
+    },
+    "6074": {
+      "nameZhCN": "恢复",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6074?locale=4"
+    },
+    "6075": {
+      "nameZhCN": "恢复",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6075?locale=4"
+    },
+    "6136": {
+      "nameZhCN": "冰冻",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6136?locale=4"
+    },
+    "6250": {
+      "nameZhCN": "火炮",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6250?locale=4"
+    },
+    "6264": {
+      "nameZhCN": "迅捷反射",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6264?locale=4"
+    },
+    "6304": {
+      "nameZhCN": "拉克佐猛击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6304?locale=4"
+    },
+    "6306": {
+      "nameZhCN": "酸液溅射",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6306?locale=4"
+    },
+    "6408": {
+      "nameZhCN": "消隐",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6408?locale=4"
+    },
+    "6432": {
+      "nameZhCN": "重拳先生践踏",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6432?locale=4"
+    },
+    "6433": {
+      "nameZhCN": "迅捷反射 III",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6433?locale=4"
+    },
+    "6435": {
+      "nameZhCN": "重拳猛击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6435?locale=4"
+    },
+    "6436": {
+      "nameZhCN": "重拳先生之锤",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6436?locale=4"
+    },
+    "6466": {
+      "nameZhCN": "斧类武器投掷",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6466?locale=4"
+    },
+    "6467": {
+      "nameZhCN": "徒手伐木工",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6467?locale=4"
+    },
+    "6660": {
+      "nameZhCN": "射击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6660?locale=4"
+    },
+    "6685": {
+      "nameZhCN": "穿刺射击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6685?locale=4"
+    },
+    "6713": {
+      "nameZhCN": "缴械",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6713?locale=4"
+    },
+    "6760": {
+      "nameZhCN": "刺骨",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6760?locale=4"
+    },
+    "6761": {
+      "nameZhCN": "刺骨",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6761?locale=4"
+    },
     "7300": {
       "type": "spell",
       "id": 7300,
@@ -2776,6 +3042,26 @@
       "icon": "spell_frost_frostbolt02",
       "nameLanguageStatus": "contains-chinese"
     },
+    "7386": {
+      "nameZhCN": "破甲攻击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7386?locale=4"
+    },
+    "7389": {
+      "nameZhCN": "攻击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7389?locale=4"
+    },
+    "7399": {
+      "nameZhCN": "恐吓",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7399?locale=4"
+    },
+    "9053": {
+      "nameZhCN": "火球术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9053?locale=4"
+    },
+    "11829": {
+      "nameZhCN": "烈焰风暴",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11829?locale=4"
+    },
     "12051": {
       "type": "spell",
       "id": 12051,
@@ -2790,6 +3076,18 @@
       "fetchedAt": "2026-09-15T13:54:49.272989+00:00",
       "icon": "spell_nature_purge",
       "nameLanguageStatus": "contains-chinese"
+    },
+    "12097": {
+      "nameZhCN": "刺穿护甲",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12097?locale=4"
+    },
+    "12544": {
+      "nameZhCN": "霜甲术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12544?locale=4"
+    },
+    "12787": {
+      "nameZhCN": "痛击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12787?locale=4"
     },
     "12824": {
       "type": "spell",
@@ -7823,7 +8121,8 @@
       "responseSha256": "5b56891836bb075364b8536eec05dc66927fd0f7dd85271f02e7bcb549e27018",
       "fetchedAt": "2026-09-15T13:57:21.446073+00:00",
       "icon": "inv_boots_09",
-      "nameLanguageStatus": "contains-chinese"
+      "nameLanguageStatus": "contains-chinese",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/55?locale=4"
     },
     "56": {
       "type": "item",
@@ -7838,7 +8137,8 @@
       "responseSha256": "79f5789b19c10350b603b9587408b792f2438e6f9117efb6f182f0a0ac8dc7de",
       "fetchedAt": "2026-09-15T13:57:22.041950+00:00",
       "icon": "inv_chest_cloth_23",
-      "nameLanguageStatus": "contains-chinese"
+      "nameLanguageStatus": "contains-chinese",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/56?locale=4"
     },
     "57": {
       "type": "item",
@@ -9327,6 +9627,10 @@
       "icon": "inv_staff_10",
       "nameLanguageStatus": "contains-chinese"
     },
+    "2070": {
+      "nameZhCN": "达纳苏斯奶酪",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/2070?locale=4"
+    },
     "2074": {
       "type": "item",
       "id": 2074,
@@ -10265,6 +10569,10 @@
       "icon": "inv_staff_02",
       "nameLanguageStatus": "contains-chinese"
     },
+    "5397": {
+      "nameZhCN": "迪菲亚火药",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/5397?locale=4"
+    },
     "5443": {
       "type": "item",
       "id": 5443,
@@ -10294,6 +10602,10 @@
       "fetchedAt": "2026-09-15T13:57:29.353181+00:00",
       "icon": "inv_misc_cape_11",
       "nameLanguageStatus": "contains-chinese"
+    },
+    "5571": {
+      "nameZhCN": "黑色小包",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/5571?locale=4"
     },
     "5579": {
       "type": "item",
@@ -10519,6 +10831,10 @@
       "fetchedAt": "2026-09-15T13:53:44.263522+00:00",
       "icon": "inv_staff_08",
       "nameLanguageStatus": "contains-chinese"
+    },
+    "6477": {
+      "nameZhCN": "草地腰带",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/6477?locale=4"
     },
     "6948": {
       "type": "item",

@@ -1,0 +1,464 @@
+{
+  "commit": "b852b560442b31579e77ef3967b3c2d594832da8",
+  "status": "2019 prelaunch Classic image snapshot; current Classic display strings only; no certification of 2019 numeric fidelity",
+  "spells": [
+    {
+      "id": 113,
+      "icon": "spell_frost_chainsofice",
+      "nameZhCN": "冰链术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/113?locale=4",
+      "sourceSha256": "a6a49aa82c2705ad063ee6c8580d8b85f59e94c4b102d85c961c964a72b49230"
+    },
+    {
+      "id": 122,
+      "icon": "spell_frost_frostnova",
+      "nameZhCN": "冰霜新星",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/122?locale=4",
+      "sourceSha256": "89b0429f60927d3348ed9b94645c45780359ec2b5f0da351e6d7b55d5c671f5a"
+    },
+    {
+      "id": 674,
+      "icon": "ability_dualwield",
+      "nameZhCN": "双武器",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/674?locale=4",
+      "sourceSha256": "c403db4bd65146eade2879e855cca4948ab35b40e1d19729fdb21041670fc23e"
+    },
+    {
+      "id": 2138,
+      "icon": "spell_fire_fireball",
+      "nameZhCN": "火焰冲击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2138?locale=4",
+      "sourceSha256": "b8d8a7736d807f9753ab465ab3f6cc023e43894bebc84c31308145793a3a1623"
+    },
+    {
+      "id": 3391,
+      "icon": "ability_ghoulfrenzy",
+      "nameZhCN": "痛击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3391?locale=4",
+      "sourceSha256": "56771b86a63e8b2c901dea0afc3cff9a518466d9c561b5a6b2309c2d96ad04ee"
+    },
+    {
+      "id": 3603,
+      "icon": "ability_racial_cannibalize",
+      "nameZhCN": "扰乱之痛",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3603?locale=4",
+      "sourceSha256": "02b1d8b2e1e294c0a21db493dff42567e686227d6f853066bd2abb6c6e925666"
+    },
+    {
+      "id": 3605,
+      "icon": "ability_repair",
+      "nameZhCN": "召唤遥控傀儡",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3605?locale=4",
+      "sourceSha256": "c6353062283518e910f36ba841f4409e85e3a7bbf2cc30a95841fdac5522fd5b"
+    },
+    {
+      "id": 4979,
+      "icon": "spell_fire_sealoffire",
+      "nameZhCN": "快速烈焰防护结界",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/4979?locale=4",
+      "sourceSha256": "282cf2f8c8c98ce5144fe55bdbd6d326d36c0ec6dbef7bef2492d4f79eb2e4dd"
+    },
+    {
+      "id": 5115,
+      "icon": "ability_racial_bloodrage",
+      "nameZhCN": "战斗命令",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5115?locale=4",
+      "sourceSha256": "f6fe730fb2741598f9d5b650c8db672ec30d2cb24362e77acafd3942752c8491"
+    },
+    {
+      "id": 5141,
+      "icon": "spell_fire_fire",
+      "nameZhCN": "弹出斯尼德",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5141?locale=4",
+      "sourceSha256": "0712cf1cb28b14e9af78ce2cb224ad555ec28660ddddb9596bfc2dc07109df9b"
+    },
+    {
+      "id": 5159,
+      "icon": "spell_fire_selfdestruct",
+      "nameZhCN": "熔化矿石",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5159?locale=4",
+      "sourceSha256": "c73b1ea10b14b94067e15e2e86437d0a7b4f418786fa046a1ef75da1d566487a"
+    },
+    {
+      "id": 5172,
+      "icon": "ability_eyeoftheowl",
+      "nameZhCN": "血帆鹦鹉",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5172?locale=4",
+      "sourceSha256": "be0c2759f1171576d472b9cfd0982196245ee01062fe5e02e2d2680b73fbc7cc"
+    },
+    {
+      "id": 5174,
+      "icon": "spell_holy_heal",
+      "nameZhCN": "烹制甜点",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5174?locale=4",
+      "sourceSha256": "8a3066526a7b427f3073fb700ecd937ec9a04cc9d501ee857e9d2bc1f3cdd412"
+    },
+    {
+      "id": 5200,
+      "icon": null,
+      "nameZhCN": "范克里夫的盟友",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5200?locale=4",
+      "sourceSha256": "e6de7fe1903d53572fa14051c237f375e20700d21b3d68ea17c854bc514edda5",
+      "unavailable": "Current tooltip returns classic_temp; no matching image in pinned archive."
+    },
+    {
+      "id": 5208,
+      "icon": "ability_poisons",
+      "nameZhCN": "毒性鱼叉",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5208?locale=4",
+      "sourceSha256": "1b1b12de8095c403d520d1f168a6c12d94801074e6d063c3078ddbf390b084ac"
+    },
+    {
+      "id": 5213,
+      "icon": "spell_fire_fireball",
+      "nameZhCN": "熔铁之水",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5213?locale=4",
+      "sourceSha256": "0f4e7db73c78d5f9d6c9b7391139598c8777e784deb21cb560d7547d83bd2ff0"
+    },
+    {
+      "id": 5532,
+      "icon": "ability_warrior_cleave",
+      "nameZhCN": "顺劈斩",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5532?locale=4",
+      "sourceSha256": "66bf940d282c3197fb8263d4fafb7628f332f76bd4a283cb21db56025b829aba"
+    },
+    {
+      "id": 6016,
+      "icon": "spell_shadow_vampiricaura",
+      "nameZhCN": "刺穿护甲",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6016?locale=4",
+      "sourceSha256": "bb75475b85e66caa5d795fd67d1708e69262afed1f4a115d9239a0f7766f3a87"
+    },
+    {
+      "id": 6136,
+      "icon": "spell_frost_frostarmor02",
+      "nameZhCN": "冰冻",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6136?locale=4",
+      "sourceSha256": "bc3ba8795b8d38e98cfd6e087f8d03775b6f30d77aad259e19675741712afc9c"
+    },
+    {
+      "id": 6250,
+      "icon": null,
+      "nameZhCN": "火炮",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6250?locale=4",
+      "sourceSha256": "2f79c67dd9876cca155973bd91f92530beb62b00dd96c074a76c7978a75a9bc1",
+      "unavailable": "Current tooltip returns classic_temp; no matching image in pinned archive."
+    },
+    {
+      "id": 6264,
+      "icon": "ability_meleedamage",
+      "nameZhCN": "迅捷反射",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6264?locale=4",
+      "sourceSha256": "b6b5c62d53618707afac881790eb8a0ad4d0e66eb4046b4b186169285251aff2"
+    },
+    {
+      "id": 6304,
+      "icon": "inv_gauntlets_05",
+      "nameZhCN": "拉克佐猛击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6304?locale=4",
+      "sourceSha256": "7b3b0278563ad09779953abab7bcc086ac03c6bccae617fc5532e1c7c06c3deb"
+    },
+    {
+      "id": 6306,
+      "icon": "inv_drink_06",
+      "nameZhCN": "酸液溅射",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6306?locale=4",
+      "sourceSha256": "547d8aa0f1b79952d4d6b0be6e1d142f1277db913386304fed456e6d63f1aea0"
+    },
+    {
+      "id": 6408,
+      "icon": "spell_nature_invisibilty",
+      "nameZhCN": "消隐",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6408?locale=4",
+      "sourceSha256": "9280e83de2f65af0f188464557e3a5b8d4eeb1313c7112224cf4a34b483d4d2f"
+    },
+    {
+      "id": 6432,
+      "icon": "ability_warstomp",
+      "nameZhCN": "重拳先生践踏",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6432?locale=4",
+      "sourceSha256": "e4401099b30af312a17325c306b787851f43296f5053470263d8e908d235ea53"
+    },
+    {
+      "id": 6433,
+      "icon": "ability_meleedamage",
+      "nameZhCN": "迅捷反射 III",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6433?locale=4",
+      "sourceSha256": "198f8f5fd8b51be70f59ffa7a9064928c7031d4daef972a53910c015d495ed3a"
+    },
+    {
+      "id": 6435,
+      "icon": "inv_gauntlets_05",
+      "nameZhCN": "重拳猛击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6435?locale=4",
+      "sourceSha256": "357bf8bb3254ba60d0826eb9159899e0899a73166672777d32c6ca02a8777b85"
+    },
+    {
+      "id": 6436,
+      "icon": "inv_mace_12",
+      "nameZhCN": "重拳先生之锤",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6436?locale=4",
+      "sourceSha256": "4f846a427243beabdc5c8c2c9c553f5e377c16b6de21dff1bf199a473496b257"
+    },
+    {
+      "id": 6466,
+      "icon": "inv_axe_04",
+      "nameZhCN": "斧类武器投掷",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6466?locale=4",
+      "sourceSha256": "1b09b64a7043fe84aaa0f3d7fc1c7af6a7b331f52388281b259fa7d303da51e8"
+    },
+    {
+      "id": 6467,
+      "icon": "inv_gauntlets_05",
+      "nameZhCN": "徒手伐木工",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6467?locale=4",
+      "sourceSha256": "267bc21f1da670369e4b104cd7e24d96ac6c25771db719534fe8b6a4d61cf6f3"
+    },
+    {
+      "id": 6660,
+      "icon": "ability_marksmanship",
+      "nameZhCN": "射击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6660?locale=4",
+      "sourceSha256": "66aaed2123169121e261dff6e64ddfed019d83638d55c3f73b6832420fe1b296"
+    },
+    {
+      "id": 6685,
+      "icon": "ability_searingarrow",
+      "nameZhCN": "穿刺射击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6685?locale=4",
+      "sourceSha256": "df248c3302993e68b2f0ba7a079d0f577041cdd4d8e90591853e43eb0b0ed236"
+    },
+    {
+      "id": 6713,
+      "icon": "ability_warrior_disarm",
+      "nameZhCN": "缴械",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6713?locale=4",
+      "sourceSha256": "e9be720985b71d28f6d4efe0de9af76390e695efa62d02ef683f56c6f9a31087"
+    },
+    {
+      "id": 7389,
+      "icon": "ability_eyeoftheowl",
+      "nameZhCN": "攻击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7389?locale=4",
+      "sourceSha256": "afee6e5c61094240d622bcce153b1adb0308959bfc386b3658cdab69d44c4448"
+    },
+    {
+      "id": 7399,
+      "icon": "ability_physical_taunt",
+      "nameZhCN": "恐吓",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7399?locale=4",
+      "sourceSha256": "41ce5adbfe63cf7cc33e3832bcb8206bdcb7c44a6bf8942be1d89bd63ea69773"
+    },
+    {
+      "id": 9053,
+      "icon": "spell_fire_flamebolt",
+      "nameZhCN": "火球术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9053?locale=4",
+      "sourceSha256": "77b5e87560d6aa1300fe3dddea04cc510ef17551421d8a1b3ecae576ff84188d"
+    },
+    {
+      "id": 11829,
+      "icon": "spell_fire_selfdestruct",
+      "nameZhCN": "烈焰风暴",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11829?locale=4",
+      "sourceSha256": "3af63581ea89e28ee104a1cd24ef85e169c7e88f19d0851e7563a3e36512f5fe"
+    },
+    {
+      "id": 12097,
+      "icon": "spell_shadow_vampiricaura",
+      "nameZhCN": "刺穿护甲",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12097?locale=4",
+      "sourceSha256": "8eb165d8d94c14f39def7e579461354d24f8ce9731c69466f9bff73121430a1a"
+    },
+    {
+      "id": 12544,
+      "icon": "spell_frost_frostarmor02",
+      "nameZhCN": "霜甲术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12544?locale=4",
+      "sourceSha256": "6f017c0f831983a72ab455efe4248133353a859286a21f3d84780bc479403788"
+    },
+    {
+      "id": 12787,
+      "icon": "ability_ghoulfrenzy",
+      "nameZhCN": "痛击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12787?locale=4",
+      "sourceSha256": "03a34a9775d546fb6d1bf55633a23c64c90407fc40aa03f0cd58ebd37fbae9b6"
+    }
+  ],
+  "assets": [
+    {
+      "file": "assets/spell_frost_chainsofice.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Frost_ChainsOfIce.PNG",
+      "gitBlobSha1": "5fba2b108370c061ca572d28b43fe6c3d91b648c",
+      "sha256": "933e1d2905d116158ce6cfafa73f2e2093efada8ee94e4ccd58b5fcce5892b97"
+    },
+    {
+      "file": "assets/spell_frost_frostnova.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Frost_FrostNova.PNG",
+      "gitBlobSha1": "081213caa3eea796362cf85c42bc3e104b1cb838",
+      "sha256": "18ba1f7928328703aa59d9c14afc108082e9d2602a642426806b19396ecab62b"
+    },
+    {
+      "file": "assets/ability_dualwield.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_DualWield.PNG",
+      "gitBlobSha1": "ef3c13c320958a4d84d308dde7942b2a14591a0d",
+      "sha256": "2af79363ad391968679b5b92a001cff742a4d6b1cb823b60fc02d87c5b4b0149"
+    },
+    {
+      "file": "assets/spell_fire_fireball.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Fire_Fireball.PNG",
+      "gitBlobSha1": "c34aca335e19dda47a259ba213349e354d66ff27",
+      "sha256": "409e8363ca01c2cea36c54bfca91b8e2545439429aea98a0f34396d9239a0e0a"
+    },
+    {
+      "file": "assets/ability_ghoulfrenzy.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_GhoulFrenzy.PNG",
+      "gitBlobSha1": "b17dc8e216b751b653be7fc3b6748acce09aca1d",
+      "sha256": "389572b7e085b2c31ef09089b9966b425b0e60c1ff540b138c508597cfcae3b9"
+    },
+    {
+      "file": "assets/ability_racial_cannibalize.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_Racial_Cannibalize.PNG",
+      "gitBlobSha1": "4b9831d3f6895f785c361a54d942ce6e7da263de",
+      "sha256": "fef6814fa906c90969887ab250e28aa21273a0f0779d28ffc78a6461fc8f0729"
+    },
+    {
+      "file": "assets/ability_repair.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_Repair.PNG",
+      "gitBlobSha1": "93efeb52dcee0bf282c6b679108d5933c1ccad72",
+      "sha256": "47174591c31e50bbdc9f9138296fc172b84941a15265d0ccecab86bbcbb25b78"
+    },
+    {
+      "file": "assets/spell_fire_sealoffire.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Fire_SealOfFire.PNG",
+      "gitBlobSha1": "694e119e1807b39da4d734e5d103e2640976d434",
+      "sha256": "d8f5a0b09f1da29aba01b991df56cc0f81ec91ac7323ff1b6340e7a6a9221bcc"
+    },
+    {
+      "file": "assets/ability_racial_bloodrage.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_Racial_BloodRage.PNG",
+      "gitBlobSha1": "b0a6a4cc77ef80d76e3cc6a06c6771d28b6060e7",
+      "sha256": "7f8fec7d300d187d4dc66905340d95cb137954455f44da2c5ac4a4ae3f188c3a"
+    },
+    {
+      "file": "assets/spell_fire_fire.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Fire_Fire.PNG",
+      "gitBlobSha1": "f169a070811e54988da31f44567dfff740b82338",
+      "sha256": "b2301b56c988f3824d7c8db14a96681a682e6a6baacbf08eae702b6c110a69f7"
+    },
+    {
+      "file": "assets/spell_fire_selfdestruct.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Fire_SelfDestruct.PNG",
+      "gitBlobSha1": "191dcd4ff35d6efcf932b5781c12b5b298875363",
+      "sha256": "e44f887ec4ed505eaf1bad62eea824f07332026066671dfb05113573b5261125"
+    },
+    {
+      "file": "assets/ability_eyeoftheowl.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_EyeOfTheOwl.PNG",
+      "gitBlobSha1": "5016927b98f48620beb9953b88c93316a59e531c",
+      "sha256": "c367ff404590907c27d8170a3a972534eb2c9f9d094111048f90d4809b50db7d"
+    },
+    {
+      "file": "assets/spell_holy_heal.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Holy_Heal.PNG",
+      "gitBlobSha1": "75782e5069496a9c72b72a47485b181a520baa27",
+      "sha256": "c407d43687f817752afec447e17618407a60dd640d28e46022530050dfc27785"
+    },
+    {
+      "file": "assets/ability_poisons.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/ABILITY_POISONS.PNG",
+      "gitBlobSha1": "c5e512f86ec1865cb070e9b8bebd9156a24e5391",
+      "sha256": "00049201de6a446474a1aee52346b6ca0a76fd33676cfdfd31f3f7251a89fa71"
+    },
+    {
+      "file": "assets/ability_warrior_cleave.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_Warrior_Cleave.PNG",
+      "gitBlobSha1": "49d1bdd7ad5b3ec719f0d26e7e6116f45e7ea0c8",
+      "sha256": "fd241a399e01dfb9bdec9a3566afd2ba5e633d7ec7b9ea5cfb8a0e6403f7b4b5"
+    },
+    {
+      "file": "assets/spell_shadow_vampiricaura.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Shadow_VampiricAura.PNG",
+      "gitBlobSha1": "fa2ad736b6792c608d4e7431773c586b7b8a85cb",
+      "sha256": "565df745caaf737d999dc8476740e66a678c211364de6ca10e1c71bec9641f53"
+    },
+    {
+      "file": "assets/spell_frost_frostarmor02.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Frost_FrostArmor02.PNG",
+      "gitBlobSha1": "f752492a93c891858562af23bfce69bcc4e32ad2",
+      "sha256": "713479c78d7cc5e800002c3e8d62f35c659e23c7425f48c3e280deaf1af617de"
+    },
+    {
+      "file": "assets/ability_meleedamage.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_MeleeDamage.PNG",
+      "gitBlobSha1": "8eedd855718c6398f2028782e2b5e56bfb925824",
+      "sha256": "a5e337dd572ee0eeec006b182ff5745b6cd40e2861d1ab358c007c92250d3df7"
+    },
+    {
+      "file": "assets/inv_gauntlets_05.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Gauntlets_05.PNG",
+      "gitBlobSha1": "3369bbbbbb6a36e931441fef977b9a1cd11e9c7a",
+      "sha256": "d40c01644cbbec08f5a4e7d4f8ba36044fe40aa63da6611deef175d5b5f0e4a1"
+    },
+    {
+      "file": "assets/inv_drink_06.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Drink_06.PNG",
+      "gitBlobSha1": "984a44e5cfd23a27834a07cc3ab504f55f214f4e",
+      "sha256": "c876ca52ca022d44f049c8ffe74f548b21b23b48a8895841b8292403254f732c"
+    },
+    {
+      "file": "assets/spell_nature_invisibilty.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Nature_Invisibilty.PNG",
+      "gitBlobSha1": "d8d12191bf34e8cd652c04e847d21d8aa7cedc83",
+      "sha256": "99c2917dd525f49f910433d105179b50061e18d5f12bb4ed1dd6cde61c56fc66"
+    },
+    {
+      "file": "assets/ability_warstomp.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_WarStomp.PNG",
+      "gitBlobSha1": "2601eaebe7de1a3e8b6c16f38222e49045df9c3e",
+      "sha256": "8590d2b51d97bea43873df83fc62f71b3af5224eaa57c55e86d0ebb537f1a3de"
+    },
+    {
+      "file": "assets/inv_mace_12.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Mace_12.PNG",
+      "gitBlobSha1": "f0f973a76b891cd0ab52651df0dbdbfc885bf7a2",
+      "sha256": "af6dbcd729ac48b5f937a8a387cbaafe7dcaefe087c88a36fcb1c22e44975c6b"
+    },
+    {
+      "file": "assets/inv_axe_04.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Axe_04.PNG",
+      "gitBlobSha1": "a19f656336a247145abe97a9c6648bda6c777702",
+      "sha256": "14d6fdd6f0b8fd09cf33202f2484331301f4eee9b79f88cabbf6ed229c4022a9"
+    },
+    {
+      "file": "assets/ability_marksmanship.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_Marksmanship.PNG",
+      "gitBlobSha1": "67688977ec413304a0c5a81fb25ea399f8ce6792",
+      "sha256": "6a7be13b051b093a368d3f0591d07252dfa0d95a663ca581c3b6ea86ed5d61dc"
+    },
+    {
+      "file": "assets/ability_searingarrow.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/ABILITY_SEARINGARROW.PNG",
+      "gitBlobSha1": "2960d88fc65c1f6b991583ea29fc2d3ff94506fe",
+      "sha256": "dbe32a96790acdf8547b29318b4431464f68aab24bc63ce3ea500ae2ad37ee12"
+    },
+    {
+      "file": "assets/ability_warrior_disarm.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_Warrior_Disarm.PNG",
+      "gitBlobSha1": "a049d162c59a468103dde769c1b8888d29b6a06f",
+      "sha256": "dc5cec268e77b2fe570cebae677d8a201728dcfe9e3fbe5feea04c0839de1fda"
+    },
+    {
+      "file": "assets/ability_physical_taunt.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_Physical_Taunt.PNG",
+      "gitBlobSha1": "57c40d477ff5f01bc652ffd91e0c7fca0e22904c",
+      "sha256": "b3e1e665f85e0392cd455f99b69217d87d7d48bfc8c8ab731d235be76712c7d5"
+    },
+    {
+      "file": "assets/spell_fire_flamebolt.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Fire_FlameBolt.PNG",
+      "gitBlobSha1": "2bf2e9a5f17cd7b7a7e34e2428353d8451877539",
+      "sha256": "1eca728264533c6769acad5cd01115813e662e5d725db0a1842827b2f2d065af"
+    }
+  ]
+}

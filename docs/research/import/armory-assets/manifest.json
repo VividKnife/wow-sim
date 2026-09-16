@@ -1,0 +1,51 @@
+{
+  "commit": "b852b560442b31579e77ef3967b3c2d594832da8",
+  "status": "Original PNG bytes from pinned 2019 prelaunch Classic snapshot; current Classic display names only, no gameplay values imported.",
+  "items": [
+    {
+      "id": 55,
+      "name": "学徒之靴",
+      "icon": "assets/inv_boots_09.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/55?locale=4",
+      "assetUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_BOOTS_09.PNG",
+      "gitBlobSha1": "26ab4facf7e828bd9fbc730ad5e505a6ddb9aa7c",
+      "sourceSha256": "5b56891836bb075364b8536eec05dc66927fd0f7dd85271f02e7bcb549e27018"
+    },
+    {
+      "id": 56,
+      "name": "学徒长袍",
+      "icon": "assets/inv_chest_cloth_23.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/56?locale=4",
+      "assetUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Chest_Cloth_23.PNG",
+      "gitBlobSha1": "9be6da19874efa57e15a2a80167bd58c4a23ce3e",
+      "sourceSha256": "79f5789b19c10350b603b9587408b792f2438e6f9117efb6f182f0a0ac8dc7de"
+    },
+    {
+      "id": 2070,
+      "name": "达纳苏斯奶酪",
+      "icon": "assets/inv_misc_food_06.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/2070?locale=4",
+      "assetUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_MISC_FOOD_06.PNG",
+      "gitBlobSha1": "84066d446de519ab1f1f43c6ac00597eb92a34e1",
+      "sourceSha256": "819006e37b6c60e52e76b6e3a0c390aad272c0caf785febbc0965b94819e5b08"
+    },
+    {
+      "id": 5571,
+      "name": "黑色小包",
+      "icon": "assets/inv_misc_bag_09_black.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/5571?locale=4",
+      "assetUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Misc_Bag_09_Black.PNG",
+      "gitBlobSha1": "d1cbcc0a39db345e1f2f632fedd97868d9a2188f",
+      "sourceSha256": "46bb607afbf534b2bc7ea5dbf8061df6ab8b3e1d2e57eca8fcce53e9aa01ec85"
+    },
+    {
+      "id": 6477,
+      "name": "草地腰带",
+      "icon": "assets/inv_belt_02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/6477?locale=4",
+      "assetUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Belt_02.PNG",
+      "gitBlobSha1": "c7ececb8d4c8ceef3427e8dfd509f6e93413847b",
+      "sourceSha256": "213791cb5e43a7ecca4f41b0896f69231ecf618a7a31d5082e686c156519c51c"
+    }
+  ]
+}

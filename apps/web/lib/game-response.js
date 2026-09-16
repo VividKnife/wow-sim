@@ -1,0 +1,8 @@
+const responseError=(message,status)=>Object.assign(new Error(message),{status});
+export async function readGameResponse(response){
+ let data;
+ try{data=await response.json();}catch{throw responseError('服务暂时无法响应，请稍后重试。',response.status);}
+ if(!response.ok)throw responseError(response.status<500&&typeof data?.error==='string'?data.error:'服务暂时无法响应，请稍后重试。',response.status);
+ if(!data||Array.isArray(data)||!Number.isInteger(data.revision)||data.revision<0||!('state' in data))throw responseError('存档响应不完整，请稍后重试。',response.status);
+ return data;
+}

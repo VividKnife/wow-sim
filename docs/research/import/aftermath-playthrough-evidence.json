@@ -1,0 +1,171 @@
+{
+  "scope": "Continuation of an earned human mage save. Not all classes/regions and not a fresh current-engine level 1 start.",
+  "segments": [
+    {
+      "directory": ".cache/aftermath-playthrough-20-a",
+      "input": "C:\\workspace\\wow-sim\\.cache\\escort-playthrough-20-c\\final-state.json",
+      "initialSha256": "7c5897b3e8b2bf4fb96fe13978a4df18fdcdc9302a158de204c6b52ae63bccb2",
+      "finalSha256": "e8a68dac12d6026b05b349d34f7805dcad7fb21dc8ce75e019d5a29bd66f0182",
+      "commandsSha256": "19098da129765ec4b0fd830a4bd0a466628f3b9fe156751639e19a6c6b595e7c",
+      "sourceManifestSha256": "b51c27309303a825ff48954a043d0152634ff1d72c2acb745d25fc8721f6bc96",
+      "quests": [
+        373
+      ],
+      "error": "Error: 这件物品无法出售或已锁定",
+      "level": 20,
+      "seconds": 617.858,
+      "deaths": 0,
+      "money": 78759,
+      "completedAt": null,
+      "totalCompleted": 89,
+      "verification": {
+        "equal": true,
+        "operations": 8,
+        "level": 20,
+        "kills": 1403,
+        "deaths": 20,
+        "completed": 89,
+        "sha256": "19098da129765ec4b0fd830a4bd0a466628f3b9fe156751639e19a6c6b595e7c"
+      }
+    },
+    {
+      "directory": ".cache/aftermath-playthrough-20-b",
+      "input": "C:\\workspace\\wow-sim\\.cache\\aftermath-playthrough-20-a\\final-state.json",
+      "initialSha256": "e8a68dac12d6026b05b349d34f7805dcad7fb21dc8ce75e019d5a29bd66f0182",
+      "finalSha256": "6a8493b9f85f849e0145b59fd09fb52d6f04daee3d59687972c4706bb09179f1",
+      "commandsSha256": "267d34f7e7aab0efec1e68512aef08edf35b7d1abe20029b04fdcb47e6692e0b",
+      "sourceManifestSha256": "18b6f43e737a3d674f0fa2bbafe43385160abc275d95b0e03c5d41e5774c9364",
+      "quests": [],
+      "error": "Error: Three failed attempts on dm-foundry-02",
+      "level": 20,
+      "seconds": 4188.241,
+      "deaths": 7,
+      "money": 88011,
+      "cursor": 26,
+      "completedAt": null,
+      "totalCompleted": 89,
+      "verification": {
+        "equal": true,
+        "operations": 2284,
+        "level": 20,
+        "kills": 1504,
+        "deaths": 27,
+        "completed": 89,
+        "sha256": "267d34f7e7aab0efec1e68512aef08edf35b7d1abe20029b04fdcb47e6692e0b"
+      }
+    },
+    {
+      "directory": ".cache/regional-tail-playthrough-20-a",
+      "input": "C:\\workspace\\wow-sim\\.cache\\aftermath-playthrough-20-b\\final-state.json",
+      "initialSha256": "6a8493b9f85f849e0145b59fd09fb52d6f04daee3d59687972c4706bb09179f1",
+      "finalSha256": "5c7d42dfdc755c4721f148a0870ec0a84a6b271bfd7172a6358c04af4ef333ad",
+      "commandsSha256": "4552ac921c6122c11152bf924d972abe15de93be692ceb15813084992ef59ffe",
+      "sourceManifestSha256": "6faafabf8351637ed18d35155f415247636469a093c573cef31bcce35e89ac30",
+      "quests": [
+        214,
+        16,
+        3903,
+        3904,
+        3905,
+        117
+      ],
+      "error": null,
+      "level": 20,
+      "seconds": 1992.89,
+      "deaths": 0,
+      "money": 91125,
+      "cursor": 26,
+      "completedAt": null,
+      "totalCompleted": 95,
+      "verification": {
+        "equal": true,
+        "operations": 292,
+        "level": 20,
+        "kills": 1520,
+        "deaths": 27,
+        "completed": 95,
+        "sha256": "4552ac921c6122c11152bf924d972abe15de93be692ceb15813084992ef59ffe"
+      }
+    },
+    {
+      "directory": ".cache/aftermath-playthrough-20-c",
+      "input": "C:\\workspace\\wow-sim\\.cache\\regional-tail-playthrough-20-a\\final-state.json",
+      "initialSha256": "5c7d42dfdc755c4721f148a0870ec0a84a6b271bfd7172a6358c04af4ef333ad",
+      "finalSha256": "c7f5952799dab0bfb3da5b68aa4fae57e03fb4d391ef335cba9b380cba71a496",
+      "commandsSha256": "56d8b2b8108d3001a0fdb06d0d8ae9522dffe7e3d9469462eef4d75f3e5aa717",
+      "sourceManifestSha256": "5f42975649fef0915dbce5da56eebf110b40f76e05de07d8e389e2f08a59b34b",
+      "quests": [],
+      "error": "Error: Three failed attempts on dm-foundry-03",
+      "level": 20,
+      "seconds": 1100.646,
+      "deaths": 4,
+      "money": 91623,
+      "cursor": 27,
+      "completedAt": null,
+      "totalCompleted": 95,
+      "verification": {
+        "equal": true,
+        "operations": 236,
+        "level": 20,
+        "kills": 1523,
+        "deaths": 31,
+        "completed": 95,
+        "sha256": "56d8b2b8108d3001a0fdb06d0d8ae9522dffe7e3d9469462eef4d75f3e5aa717"
+      }
+    },
+    {
+      "directory": ".cache/aftermath-playthrough-20-d",
+      "input": "C:\\workspace\\wow-sim\\.cache\\aftermath-playthrough-20-c\\final-state.json",
+      "initialSha256": "c7f5952799dab0bfb3da5b68aa4fae57e03fb4d391ef335cba9b380cba71a496",
+      "finalSha256": "313a0e2095b0257e0808e43d78fda972a19fa677e3271656e77d7ab787d17bf7",
+      "commandsSha256": "8f2b7db03f65a83927ef6b19c3aec76ea0d1cba3d27cd3a9bbc079e5920c3708",
+      "sourceManifestSha256": "3af4044945b82266d6166627b5b788b24e069f751e08e3655979d8d565f56883",
+      "quests": [],
+      "error": "Error: Three failed attempts on dm-foundry-03",
+      "level": 20,
+      "seconds": 1107.716,
+      "deaths": 3,
+      "money": 92442,
+      "cursor": 27,
+      "completedAt": null,
+      "totalCompleted": 95,
+      "verification": {
+        "equal": true,
+        "operations": 256,
+        "level": 20,
+        "kills": 1527,
+        "deaths": 34,
+        "completed": 95,
+        "sha256": "8f2b7db03f65a83927ef6b19c3aec76ea0d1cba3d27cd3a9bbc079e5920c3708"
+      }
+    },
+    {
+      "directory": ".cache/aftermath-playthrough-20-e",
+      "input": "C:\\workspace\\wow-sim\\.cache\\aftermath-playthrough-20-d\\final-state.json",
+      "initialSha256": "313a0e2095b0257e0808e43d78fda972a19fa677e3271656e77d7ab787d17bf7",
+      "finalSha256": "b61033411d617757779f01b12fd8a5b3ef337fca09e5320e483d338134163244",
+      "commandsSha256": "d25d02f8f2c19ef3e453a912ddcce5655b20826b16642313ca810eccb80dd595",
+      "sourceManifestSha256": "dcee3c6c2ed0c27731cad6b1a12c786988f2989aa0732a26d0b06eff596c3450",
+      "quests": [
+        166
+      ],
+      "error": null,
+      "level": 20,
+      "seconds": 5922.867,
+      "deaths": 2,
+      "money": 115966,
+      "cursor": 58,
+      "completedAt": 97372200,
+      "totalCompleted": 96,
+      "verification": {
+        "equal": true,
+        "operations": 4926,
+        "level": 20,
+        "kills": 1630,
+        "deaths": 36,
+        "completed": 96,
+        "sha256": "d25d02f8f2c19ef3e453a912ddcce5655b20826b16642313ca810eccb80dd595"
+      }
+    }
+  ]
+}

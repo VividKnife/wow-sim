@@ -1,0 +1,126 @@
+﻿{
+    "repository":  "https://github.com/Gethe/wow-ui-textures",
+    "commit":  "b852b560442b31579e77ef3967b3c2d594832da8",
+    "commitLabel":  "1.13.2 (30550)",
+    "commitDate":  "2019-05-27T17:53:14Z",
+    "sourceVersionStatus":  "Pinned 2019 prelaunch Classic repository snapshot; not independently verified against August 2019 launch client.",
+    "downloadedAtUtc":  "2026-09-16T00:59:55.8509561Z",
+    "preservation":  "Original PNG bytes untouched, verified against Git blob SHA-1 from previously saved repository tree. No image generation or modification.",
+    "checkedMappingFile":  "C:/workspace/wow-sim/apps/web/data/icon-map.json",
+    "existingMappings":  [
+
+                         ],
+    "items":  [
+                  {
+                      "id":  7207,
+                      "name":  "Jennea\u0027s Flask",
+                      "icon":  "inv_drink_01",
+                      "file":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\inv_drink_01.png",
+                      "mappingSource":  "https://www.wowhead.com/classic/item=7207\u0026xml",
+                      "savedSource":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\item-7207.xml",
+                      "sourceSha256":  "2485710e00623491392d5fd113c1cab587e0cd2c9e20e8807f6d78913ad11643"
+                  },
+                  {
+                      "id":  7206,
+                      "name":  "Mirror Lake Water Sample",
+                      "icon":  "inv_drink_01",
+                      "file":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\inv_drink_01.png",
+                      "mappingSource":  "https://www.wowhead.com/classic/item=7206\u0026xml",
+                      "savedSource":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\item-7206.xml",
+                      "sourceSha256":  "83741bbec99455f122e631f51b2c5c8a1711af7bf7f9185c0d9327e1c233bb89"
+                  },
+                  {
+                      "id":  7247,
+                      "name":  "Chest of Containment Coffers",
+                      "icon":  "inv_crate_01",
+                      "file":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\inv_crate_01.png",
+                      "mappingSource":  "https://www.wowhead.com/classic/item=7247\u0026xml",
+                      "savedSource":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\item-7247.xml",
+                      "sourceSha256":  "c6efc318bc3b272673e69b2a6bee6c2eaca6917128314162ff7d832ee8bc8d22"
+                  },
+                  {
+                      "id":  7308,
+                      "name":  "Cantation of Manifestation",
+                      "icon":  "inv_scroll_01",
+                      "file":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\inv_scroll_01.png",
+                      "mappingSource":  "https://www.wowhead.com/classic/item=7308\u0026xml",
+                      "savedSource":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\item-7308.xml",
+                      "sourceSha256":  "ddf54edc472be5e6c9c64d7982a2bb1c5b743bacc646a1b248da425e00aeb0b9"
+                  },
+                  {
+                      "id":  7292,
+                      "name":  "Filled Containment Coffer",
+                      "icon":  "inv_box_02",
+                      "file":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\inv_box_02.png",
+                      "mappingSource":  "https://www.wowhead.com/classic/item=7292\u0026xml",
+                      "savedSource":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\item-7292.xml",
+                      "sourceSha256":  "08d488ab24e174a2389b5f3900f660f179072f2ad63fdfae3d4670277748b02e"
+                  },
+                  {
+                      "id":  7249,
+                      "name":  "Charged Rift Gem",
+                      "icon":  "inv_misc_gem_variety_01",
+                      "file":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\inv_misc_gem_variety_01.png",
+                      "mappingSource":  "https://www.wowhead.com/classic/item=7249\u0026xml",
+                      "savedSource":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\item-7249.xml",
+                      "sourceSha256":  "cd89a26c1e5550c676290d72f594707a76a5383257756607067efa3152ca88d3"
+                  }
+              ],
+    "assets":  [
+                   {
+                       "file":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\inv_box_02.png",
+                       "icon":  "inv_box_02",
+                       "sourcePath":  "ICONS/INV_Box_02.PNG",
+                       "sourceUrl":  "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Box_02.PNG",
+                       "sha256":  "c53d47128347ed13e3b7e5a104d6463b259a61f56d6c9514aba6625f9cf45fc6",
+                       "gitBlobSha1":  "530e335819c441dee771b98167f5cf5a85b86cf8",
+                       "bytes":  4351,
+                       "width":  64,
+                       "height":  64
+                   },
+                   {
+                       "file":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\inv_crate_01.png",
+                       "icon":  "inv_crate_01",
+                       "sourcePath":  "ICONS/INV_Crate_01.PNG",
+                       "sourceUrl":  "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Crate_01.PNG",
+                       "sha256":  "77193e1a29f377ae859672933821fb1b3072742af978c5c5a85955e9204f6540",
+                       "gitBlobSha1":  "9bb789592afca0d8c863a2624ddedbffe4478dca",
+                       "bytes":  3788,
+                       "width":  64,
+                       "height":  64
+                   },
+                   {
+                       "file":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\inv_drink_01.png",
+                       "icon":  "inv_drink_01",
+                       "sourcePath":  "ICONS/INV_Drink_01.PNG",
+                       "sourceUrl":  "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Drink_01.PNG",
+                       "sha256":  "30c70345f21bef7338e6d039e3535b213ca4bd3536855df99a47d2de2521a059",
+                       "gitBlobSha1":  "8cf87898d5ca1dacd57ec97bdce72fabd7318f51",
+                       "bytes":  3153,
+                       "width":  64,
+                       "height":  64
+                   },
+                   {
+                       "file":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\inv_misc_gem_variety_01.png",
+                       "icon":  "inv_misc_gem_variety_01",
+                       "sourcePath":  "ICONS/INV_Misc_Gem_Variety_01.PNG",
+                       "sourceUrl":  "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Misc_Gem_Variety_01.PNG",
+                       "sha256":  "73f5831eaf1aa9b4043f967ddbe016f9ebc14dd6972bde4cf8abbd0a9f245aae",
+                       "gitBlobSha1":  "d88757081f6fa300746372f1cfafa77538d08834",
+                       "bytes":  4622,
+                       "width":  64,
+                       "height":  64
+                   },
+                   {
+                       "file":  "C:\\workspace\\wow-sim-research\\quest-tool-icons\\inv_scroll_01.png",
+                       "icon":  "inv_scroll_01",
+                       "sourcePath":  "ICONS/INV_Scroll_01.PNG",
+                       "sourceUrl":  "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Scroll_01.PNG",
+                       "sha256":  "f8cdb012dcab94430d9512b2460bf15e9f0d777caa8dd488ad2b0ecf91e40efc",
+                       "gitBlobSha1":  "a7e9bca60a56bd76e8bdb7148afaba52b80154f5",
+                       "bytes":  4345,
+                       "width":  64,
+                       "height":  64
+                   }
+               ]
+}

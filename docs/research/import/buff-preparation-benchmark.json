@@ -1,0 +1,19 @@
+{
+  "method": "Synthetic comparison only: two current-runtime snapshots with only the preparation gate order changed; same earned level-20 party, buffs removed, health/mana restored, food/water supplied. Not a normal playthrough.",
+  "before": {
+    "started": true,
+    "seconds": 60.8,
+    "food": 5,
+    "water": 12,
+    "buffs": 10,
+    "reason": null
+  },
+  "after": {
+    "started": true,
+    "seconds": 32.8,
+    "food": 5,
+    "water": 3,
+    "buffs": 10,
+    "reason": null
+  }
+}

@@ -1,0 +1,1155 @@
+{
+  "scope": "Continuation of fresh playthrough-current-20-c through normal commands, each segment freezes its own runtime during concurrent development; not all classes or regions.",
+  "initialState": ".cache/playthrough-current-20-c/final-state.json",
+  "initialSha256": "d5257c6b758ae4e02052090840da49872fba3b13abbaf43bf55006eb9a6c9e7c",
+  "segments": [
+    {
+      "directory": ".cache/current-content-20-a",
+      "inputSha256": "d5257c6b758ae4e02052090840da49872fba3b13abbaf43bf55006eb9a6c9e7c",
+      "finalSha256": "8a2b004e122f2f926391e5aaa9e2f2f4ad2bf2a42a8dbdcc0e100c7168ba8ca5",
+      "commandsSha256": "cb813b6cdb8a17d7803ba70238f81465f1156d145045cacb062a7e158117cfbf",
+      "manifestSha256": "cec6c21c348d451da5014388f9f69e3f87bce0b3b2da5e8551120288b282591f",
+      "replay": {
+        "equal": true,
+        "operations": 25,
+        "level": 20,
+        "kills": 1150,
+        "deaths": 1,
+        "completed": 77,
+        "sha256": "cb813b6cdb8a17d7803ba70238f81465f1156d145045cacb062a7e158117cfbf"
+      },
+      "quests": [],
+      "error": "Error: 该技能效果尚未实现\n    at act (file:///C:/workspace/wow-sim/.cache/current-content-20-a/runtime/lib/game/engine.js:134:200)\n    at command (file:///C:/workspace/wow-sim/apps/web/scripts/continue-playthrough.mjs:32:28)\n    at train (file:///C:/workspace/wow-sim/apps/web/scripts/continue-playthrough.mjs:55:136)\n    at file:///C:/workspace/wow-sim/apps/web/scripts/continue-playthrough.mjs:96:37",
+      "elapsedSeconds": 365.858,
+      "newDeaths": 0,
+      "totalCompleted": 77,
+      "cursor": null,
+      "encounters": []
+    },
+    {
+      "directory": ".cache/current-content-20-b",
+      "inputSha256": "8a2b004e122f2f926391e5aaa9e2f2f4ad2bf2a42a8dbdcc0e100c7168ba8ca5",
+      "finalSha256": "5abc1815b054f04b098ba8fcce533c519d36e77229f28366b01ae3f9bc2235e1",
+      "commandsSha256": "ea01c96f77dd849757e978285808efc7dc5259acf0a714d60052f80112bc5056",
+      "manifestSha256": "cb274b495bf2d6662d1fbbd1dbc5be3cfd645f814c60247a187b742348ed926f",
+      "replay": {
+        "equal": true,
+        "operations": 10845,
+        "level": 20,
+        "kills": 1363,
+        "deaths": 6,
+        "completed": 82,
+        "sha256": "ea01c96f77dd849757e978285808efc7dc5259acf0a714d60052f80112bc5056"
+      },
+      "quests": [
+        1861,
+        1920,
+        1921,
+        1941,
+        2040
+      ],
+      "error": "Error: Failed to pull\n    at fight (file:///C:/workspace/wow-sim/apps/web/scripts/continue-playthrough.mjs:57:144)\n    at file:///C:/workspace/wow-sim/apps/web/scripts/continue-playthrough.mjs:144:26",
+      "elapsedSeconds": 12252.964,
+      "newDeaths": 5,
+      "totalCompleted": 82,
+      "cursor": 58,
+      "encounters": [
+        {
+          "cursor": 0,
+          "route": "dm-entry-01",
+          "after": 1,
+          "seconds": 132.084,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 1,
+          "route": "dm-entry-02",
+          "after": 2,
+          "seconds": 72.039,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 2,
+          "route": "dm-entry-03",
+          "after": 3,
+          "seconds": 72.475,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 3,
+          "route": "dm-entry-04",
+          "after": 4,
+          "seconds": 71.521,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 4,
+          "route": "dm-entry-05",
+          "after": 5,
+          "seconds": 70.179,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 5,
+          "route": "dm-entry-06",
+          "after": 6,
+          "seconds": 73.6,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 6,
+          "route": "dm-entry-07",
+          "after": 7,
+          "seconds": 73.638,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 7,
+          "route": "dm-entry-08",
+          "after": 8,
+          "seconds": 71.713,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 8,
+          "route": "dm-rhahkzor",
+          "after": 9,
+          "seconds": 102.752,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 9,
+          "route": "dm-patrol-01",
+          "after": 10,
+          "seconds": 62.935,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 10,
+          "route": "dm-junction",
+          "after": 10,
+          "seconds": 65.057,
+          "deaths": 1,
+          "alive": 0
+        },
+        {
+          "cursor": 10,
+          "route": "dm-junction",
+          "after": 11,
+          "seconds": 95.025,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 11,
+          "route": "dm-johnson-approach",
+          "after": 12,
+          "seconds": 72.556,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 12,
+          "route": "dm-miner-johnson",
+          "after": 13,
+          "seconds": 55.507,
+          "deaths": 1,
+          "alive": 0
+        },
+        {
+          "cursor": 13,
+          "route": "dm-mast-approach",
+          "after": 14,
+          "seconds": 72.037,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 14,
+          "route": "dm-woodcarver-01",
+          "after": 15,
+          "seconds": 86.52,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 15,
+          "route": "dm-woodcarver-02",
+          "after": 16,
+          "seconds": 134.645,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 16,
+          "route": "dm-woodcarver-03",
+          "after": 17,
+          "seconds": 83.877,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 17,
+          "route": "dm-sneed",
+          "after": 18,
+          "seconds": 79.39,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 18,
+          "route": "dm-patrol-02",
+          "after": 19,
+          "seconds": 63.962,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 19,
+          "route": "dm-mast-exit-01",
+          "after": 20,
+          "seconds": 101.711,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 20,
+          "route": "dm-mast-exit-02",
+          "after": 21,
+          "seconds": 70.74,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 21,
+          "route": "dm-mast-exit-03",
+          "after": 22,
+          "seconds": 70.069,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 22,
+          "route": "dm-mast-exit-04",
+          "after": 23,
+          "seconds": 72.866,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 23,
+          "route": "dm-foundry-upper",
+          "after": 24,
+          "seconds": 60.853,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 24,
+          "route": "dm-foundry-ramp",
+          "after": 25,
+          "seconds": 81.576,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 25,
+          "route": "dm-foundry-01",
+          "after": 26,
+          "seconds": 94.997,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 26,
+          "route": "dm-foundry-02",
+          "after": 27,
+          "seconds": 132.886,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 27,
+          "route": "dm-foundry-03",
+          "after": 27,
+          "seconds": 134.852,
+          "deaths": 1,
+          "alive": 0
+        },
+        {
+          "cursor": 27,
+          "route": "dm-foundry-03",
+          "after": 28,
+          "seconds": 99.07,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 28,
+          "route": "dm-gilnid",
+          "after": 29,
+          "seconds": 97.007,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 29,
+          "route": "dm-patrol-03",
+          "after": 30,
+          "seconds": 96.872,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 30,
+          "route": "dm-powder-01",
+          "after": 31,
+          "seconds": 111.017,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 31,
+          "route": "dm-powder-02",
+          "after": 32,
+          "seconds": 70.529,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 32,
+          "route": "dm-powder-03",
+          "after": 33,
+          "seconds": 71.827,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 33,
+          "route": "dm-gunpowder",
+          "after": 33,
+          "seconds": 42.649,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 34,
+          "route": "dm-cannon-approach",
+          "after": 35,
+          "seconds": 73.125,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 36,
+          "route": "dm-cannon-alarm",
+          "after": 37,
+          "seconds": 100.313,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 37,
+          "route": "dm-cove-01",
+          "after": 38,
+          "seconds": 53.914,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 38,
+          "route": "dm-cove-side",
+          "after": 39,
+          "seconds": 21.458,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 39,
+          "route": "dm-cove-02",
+          "after": 40,
+          "seconds": 64.255,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 40,
+          "route": "dm-cove-03",
+          "after": 41,
+          "seconds": 111.652,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 41,
+          "route": "dm-cove-04",
+          "after": 42,
+          "seconds": 87.805,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 42,
+          "route": "dm-cove-05",
+          "after": 43,
+          "seconds": 94.811,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 43,
+          "route": "dm-smite",
+          "after": 44,
+          "seconds": 143.704,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 44,
+          "route": "dm-foredeck",
+          "after": 44,
+          "seconds": 103.474,
+          "deaths": 1,
+          "alive": 0
+        },
+        {
+          "cursor": 44,
+          "route": "dm-foredeck",
+          "after": 45,
+          "seconds": 80.002,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 45,
+          "route": "dm-lowerdeck-01",
+          "after": 46,
+          "seconds": 149.839,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 46,
+          "route": "dm-dock-side",
+          "after": 47,
+          "seconds": 52.86,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 47,
+          "route": "dm-ship-ramp-01",
+          "after": 48,
+          "seconds": 96.392,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 48,
+          "route": "dm-ship-ramp-02",
+          "after": 49,
+          "seconds": 49.42,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 49,
+          "route": "dm-upperdeck-01",
+          "after": 50,
+          "seconds": 88.448,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 50,
+          "route": "dm-upperdeck-02",
+          "after": 51,
+          "seconds": 53.917,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 51,
+          "route": "dm-greenskin",
+          "after": 52,
+          "seconds": 107.171,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 52,
+          "route": "dm-vancleef",
+          "after": 53,
+          "seconds": 233.568,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 53,
+          "route": "dm-cookie-approach-east",
+          "after": 54,
+          "seconds": 93.673,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 54,
+          "route": "dm-cookie",
+          "after": 55,
+          "seconds": 47.998,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 55,
+          "route": "dm-cookie-approach-west",
+          "after": 55,
+          "seconds": 40.009,
+          "deaths": 1,
+          "alive": 0
+        },
+        {
+          "cursor": 55,
+          "route": "dm-cookie-approach-west",
+          "after": 56,
+          "seconds": 145.019,
+          "deaths": 0,
+          "alive": 3
+        },
+        {
+          "cursor": 56,
+          "route": "dm-exit-tunnel-01",
+          "after": 57,
+          "seconds": 57.938,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 57,
+          "route": "dm-exit-tunnel-02",
+          "after": 58,
+          "seconds": 83.217,
+          "deaths": 0,
+          "alive": 5
+        }
+      ]
+    },
+    {
+      "directory": ".cache/current-content-20-c",
+      "inputSha256": "5abc1815b054f04b098ba8fcce533c519d36e77229f28366b01ae3f9bc2235e1",
+      "finalSha256": "bf9bd643f781c3d55138b040ec174b39ec336548a0b05e659579d52d8fb3f188",
+      "commandsSha256": "b66cdd838e041450bbee2a8f486cc98e21865e2572bdc4f68db0cad5f6c9c60b",
+      "manifestSha256": "5089e6c83deb7a43a0b9ff2a10ac1ae33fa09c5caa45def9b1f3c56a6a2da9aa",
+      "replay": {
+        "equal": true,
+        "operations": 1401,
+        "level": 20,
+        "kills": 1383,
+        "deaths": 6,
+        "completed": 85,
+        "sha256": "b66cdd838e041450bbee2a8f486cc98e21865e2572bdc4f68db0cad5f6c9c60b"
+      },
+      "quests": [
+        33,
+        102,
+        167
+      ],
+      "error": "Error: Failed to pull: 补给不足：艾琳。购买或制造食物和水后继续。\n    at fight (file:///C:/workspace/wow-sim/apps/web/scripts/continue-playthrough.mjs:57:145)\n    at file:///C:/workspace/wow-sim/apps/web/scripts/continue-playthrough.mjs:144:26",
+      "elapsedSeconds": 3837.874,
+      "newDeaths": 0,
+      "totalCompleted": 85,
+      "cursor": 58,
+      "encounters": []
+    },
+    {
+      "directory": ".cache/current-content-20-d",
+      "inputSha256": "bf9bd643f781c3d55138b040ec174b39ec336548a0b05e659579d52d8fb3f188",
+      "finalSha256": "392803ec8d65eec1599b99e317165e0a40e6770581faa18694a16bac24575f7c",
+      "commandsSha256": "08a8ed020b2ad6293d28edbd11bcc9e3d930dbc5ae30e2e01ae846fa97ec1b55",
+      "manifestSha256": "88c7023207688c8fae30c13eeea072ef2cd276e65b8409598ca80c575087643c",
+      "replay": {
+        "equal": true,
+        "operations": 794,
+        "level": 20,
+        "kills": 1388,
+        "deaths": 6,
+        "completed": 87,
+        "sha256": "08a8ed020b2ad6293d28edbd11bcc9e3d930dbc5ae30e2e01ae846fa97ec1b55"
+      },
+      "quests": [
+        168,
+        176
+      ],
+      "error": null,
+      "elapsedSeconds": 2683.103,
+      "newDeaths": 0,
+      "totalCompleted": 87,
+      "cursor": 58,
+      "encounters": []
+    },
+    {
+      "directory": ".cache/current-content-20-escort",
+      "inputSha256": "392803ec8d65eec1599b99e317165e0a40e6770581faa18694a16bac24575f7c",
+      "finalSha256": "d23cdc81d36bc3b8c2172be860cd1f44806d5aaeab41d434b54c40300825eb52",
+      "commandsSha256": "28f017f84ea615ae161e099acee57e83de49fca930df36962d74f047d282e83e",
+      "manifestSha256": "88c7023207688c8fae30c13eeea072ef2cd276e65b8409598ca80c575087643c",
+      "replay": {
+        "equal": true,
+        "operations": 419,
+        "level": 20,
+        "kills": 1399,
+        "deaths": 6,
+        "completed": 88,
+        "sha256": "28f017f84ea615ae161e099acee57e83de49fca930df36962d74f047d282e83e"
+      },
+      "quests": [
+        155
+      ],
+      "error": null,
+      "elapsedSeconds": 782.858,
+      "newDeaths": 0,
+      "totalCompleted": 88,
+      "cursor": 58,
+      "encounters": []
+    },
+    {
+      "directory": ".cache/current-content-20-regional",
+      "inputSha256": "d23cdc81d36bc3b8c2172be860cd1f44806d5aaeab41d434b54c40300825eb52",
+      "finalSha256": "f41404d59b8e30f6b48d129ceea783b2a1f4ac2b0bfb6a09473ac9bf85fcc59b",
+      "commandsSha256": "1b2094503cd3dcf05c6b1301c0fee848b9f7de9cc7b78f62b883f5fe09985f69",
+      "manifestSha256": "f32c3fd4549e78fd468bbbe0cc4753e3ebfac26baa567095551f1d8b0a7840ba",
+      "replay": {
+        "equal": true,
+        "operations": 657,
+        "level": 20,
+        "kills": 1419,
+        "deaths": 6,
+        "completed": 93,
+        "sha256": "1b2094503cd3dcf05c6b1301c0fee848b9f7de9cc7b78f62b883f5fe09985f69"
+      },
+      "quests": [
+        16,
+        3903,
+        3904,
+        3905,
+        117
+      ],
+      "error": null,
+      "elapsedSeconds": 1947.547,
+      "newDeaths": 0,
+      "totalCompleted": 93,
+      "cursor": 58,
+      "encounters": []
+    },
+    {
+      "directory": ".cache/current-content-20-aftermath",
+      "inputSha256": "f41404d59b8e30f6b48d129ceea783b2a1f4ac2b0bfb6a09473ac9bf85fcc59b",
+      "finalSha256": "54768355cc04d239cb3c5c4de8d8081deb6351728d94d376edbd5f05a3719f5d",
+      "commandsSha256": "2489cee1103839725ca5547bd3530a3417639d9bde6e601536c78d621d1da4cc",
+      "manifestSha256": "0fe0a563a3b7b4efc17d2309881ef387b7278a8c68964068db929220209d0ce8",
+      "replay": {
+        "equal": true,
+        "operations": 7780,
+        "level": 20,
+        "kills": 1635,
+        "deaths": 9,
+        "completed": 96,
+        "sha256": "2489cee1103839725ca5547bd3530a3417639d9bde6e601536c78d621d1da4cc"
+      },
+      "quests": [
+        373,
+        166,
+        214
+      ],
+      "error": null,
+      "elapsedSeconds": 9985.474,
+      "newDeaths": 3,
+      "totalCompleted": 96,
+      "cursor": 58,
+      "encounters": [
+        {
+          "cursor": 0,
+          "route": "dm-entry-01",
+          "after": 1,
+          "seconds": 76.183,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 1,
+          "route": "dm-entry-02",
+          "after": 2,
+          "seconds": 70.039,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 2,
+          "route": "dm-entry-03",
+          "after": 3,
+          "seconds": 71.475,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 3,
+          "route": "dm-entry-04",
+          "after": 4,
+          "seconds": 69.521,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 4,
+          "route": "dm-entry-05",
+          "after": 5,
+          "seconds": 69.179,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 5,
+          "route": "dm-entry-06",
+          "after": 6,
+          "seconds": 74.6,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 6,
+          "route": "dm-entry-07",
+          "after": 7,
+          "seconds": 75.638,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 7,
+          "route": "dm-entry-08",
+          "after": 8,
+          "seconds": 71.713,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 8,
+          "route": "dm-rhahkzor",
+          "after": 9,
+          "seconds": 126.752,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 9,
+          "route": "dm-patrol-01",
+          "after": 10,
+          "seconds": 63.935,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 10,
+          "route": "dm-junction",
+          "after": 11,
+          "seconds": 134.057,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 11,
+          "route": "dm-johnson-approach",
+          "after": 12,
+          "seconds": 72.481,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 12,
+          "route": "dm-miner-johnson",
+          "after": 14,
+          "seconds": 119.507,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 14,
+          "route": "dm-woodcarver-01",
+          "after": 15,
+          "seconds": 83.457,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 15,
+          "route": "dm-woodcarver-02",
+          "after": 16,
+          "seconds": 110.559,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 16,
+          "route": "dm-woodcarver-03",
+          "after": 17,
+          "seconds": 81.877,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 17,
+          "route": "dm-sneed",
+          "after": 18,
+          "seconds": 75.39,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 18,
+          "route": "dm-patrol-02",
+          "after": 19,
+          "seconds": 63.948,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 19,
+          "route": "dm-mast-exit-01",
+          "after": 20,
+          "seconds": 112.711,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 20,
+          "route": "dm-mast-exit-02",
+          "after": 21,
+          "seconds": 69.74,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 21,
+          "route": "dm-mast-exit-03",
+          "after": 22,
+          "seconds": 70.069,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 22,
+          "route": "dm-mast-exit-04",
+          "after": 23,
+          "seconds": 71.78,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 23,
+          "route": "dm-foundry-upper",
+          "after": 24,
+          "seconds": 59.853,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 24,
+          "route": "dm-foundry-ramp",
+          "after": 25,
+          "seconds": 81.576,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 25,
+          "route": "dm-foundry-01",
+          "after": 26,
+          "seconds": 87.997,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 26,
+          "route": "dm-foundry-02",
+          "after": 26,
+          "seconds": 72.886,
+          "deaths": 1,
+          "alive": 0
+        },
+        {
+          "cursor": 26,
+          "route": "dm-foundry-02",
+          "after": 27,
+          "seconds": 76.022,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 27,
+          "route": "dm-foundry-03",
+          "after": 27,
+          "seconds": 140.93,
+          "deaths": 1,
+          "alive": 0
+        },
+        {
+          "cursor": 27,
+          "route": "dm-foundry-03",
+          "after": 28,
+          "seconds": 87.07,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 28,
+          "route": "dm-gilnid",
+          "after": 29,
+          "seconds": 96.007,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 29,
+          "route": "dm-patrol-03",
+          "after": 30,
+          "seconds": 93.872,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 30,
+          "route": "dm-powder-01",
+          "after": 31,
+          "seconds": 80.017,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 31,
+          "route": "dm-powder-02",
+          "after": 32,
+          "seconds": 70.543,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 32,
+          "route": "dm-powder-03",
+          "after": 33,
+          "seconds": 70.827,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 33,
+          "route": "dm-gunpowder",
+          "after": 33,
+          "seconds": 39.635,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 34,
+          "route": "dm-cannon-approach",
+          "after": 35,
+          "seconds": 71.125,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 36,
+          "route": "dm-cannon-alarm",
+          "after": 37,
+          "seconds": 99.313,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 37,
+          "route": "dm-cove-01",
+          "after": 38,
+          "seconds": 51.914,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 38,
+          "route": "dm-cove-side",
+          "after": 39,
+          "seconds": 21.458,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 39,
+          "route": "dm-cove-02",
+          "after": 40,
+          "seconds": 54.255,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 40,
+          "route": "dm-cove-03",
+          "after": 41,
+          "seconds": 65.452,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 41,
+          "route": "dm-cove-04",
+          "after": 42,
+          "seconds": 118.505,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 42,
+          "route": "dm-cove-05",
+          "after": 43,
+          "seconds": 84.811,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 43,
+          "route": "dm-smite",
+          "after": 44,
+          "seconds": 138.704,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 44,
+          "route": "dm-foredeck",
+          "after": 45,
+          "seconds": 130.474,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 45,
+          "route": "dm-lowerdeck-01",
+          "after": 46,
+          "seconds": 139.741,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 46,
+          "route": "dm-dock-side",
+          "after": 47,
+          "seconds": 49.874,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 47,
+          "route": "dm-ship-ramp-01",
+          "after": 48,
+          "seconds": 153.392,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 48,
+          "route": "dm-ship-ramp-02",
+          "after": 49,
+          "seconds": 69.42,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 49,
+          "route": "dm-upperdeck-01",
+          "after": 50,
+          "seconds": 82.448,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 50,
+          "route": "dm-upperdeck-02",
+          "after": 51,
+          "seconds": 48.917,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 51,
+          "route": "dm-greenskin",
+          "after": 52,
+          "seconds": 92.171,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 52,
+          "route": "dm-vancleef",
+          "after": 53,
+          "seconds": 207.154,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 53,
+          "route": "dm-cookie-approach-east",
+          "after": 54,
+          "seconds": 111.673,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 54,
+          "route": "dm-cookie",
+          "after": 55,
+          "seconds": 37.998,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 55,
+          "route": "dm-cookie-approach-west",
+          "after": 55,
+          "seconds": 78.009,
+          "deaths": 1,
+          "alive": 0
+        },
+        {
+          "cursor": 55,
+          "route": "dm-cookie-approach-west",
+          "after": 56,
+          "seconds": 87.019,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 56,
+          "route": "dm-exit-tunnel-01",
+          "after": 57,
+          "seconds": 75.938,
+          "deaths": 0,
+          "alive": 5
+        },
+        {
+          "cursor": 57,
+          "route": "dm-exit-tunnel-02",
+          "after": 58,
+          "seconds": 80.217,
+          "deaths": 0,
+          "alive": 5
+        }
+      ]
+    }
+  ]
+}

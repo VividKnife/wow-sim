@@ -1,0 +1,248 @@
+{
+  "commit": "b852b560442b31579e77ef3967b3c2d594832da8",
+  "status": "2019 prelaunch Classic image snapshot; current Classic display strings only; no certification of 2019 numeric fidelity",
+  "spells": [
+    {
+      "id": 78,
+      "icon": "ability_rogue_ambush",
+      "nameZhCN": "英勇打击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/78?locale=4",
+      "sourceSha256": "1fc4cfa419db600f88dd1472e1ac699c4db073711dd94e14af4b130eb0999aa2"
+    },
+    {
+      "id": 284,
+      "icon": "ability_rogue_ambush",
+      "nameZhCN": "英勇打击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/284?locale=4",
+      "sourceSha256": "a51218b5497a91e72b8f74715dfc65fba8b0a8368bcbd80974268c99e88bcfe8"
+    },
+    {
+      "id": 285,
+      "icon": "ability_rogue_ambush",
+      "nameZhCN": "英勇打击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/285?locale=4",
+      "sourceSha256": "651eb9e24be426e07521c941cf9db04f7e33b0982d06979fae8f242b695c5fe4"
+    },
+    {
+      "id": 71,
+      "icon": "ability_warrior_defensivestance",
+      "nameZhCN": "防御姿态",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/71?locale=4",
+      "sourceSha256": "0703c39ab5bf6db4cd4ed9d7ba60fcf6f1e520c694e8835262d4f4a934a52ebf"
+    },
+    {
+      "id": 355,
+      "icon": "spell_nature_reincarnation",
+      "nameZhCN": "嘲讽",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/355?locale=4",
+      "sourceSha256": "d0eda843edd8e6d8264ef2c87ed1b8d196c883cb29568eae46c45b3197c14094"
+    },
+    {
+      "id": 7386,
+      "icon": "ability_warrior_sunder",
+      "nameZhCN": "破甲攻击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7386?locale=4",
+      "sourceSha256": "86b3bc1d90c74cd87f846479cd3cc292ea002323dc58267c8344ecb32e92ae61"
+    },
+    {
+      "id": 2050,
+      "icon": "spell_holy_lesserheal",
+      "nameZhCN": "次级治疗术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2050?locale=4",
+      "sourceSha256": "73baf0c5a8c9e1412eb18e7c7a00413642c9183af04b31024c219c377a51f9cf"
+    },
+    {
+      "id": 2052,
+      "icon": "spell_holy_lesserheal",
+      "nameZhCN": "次级治疗术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2052?locale=4",
+      "sourceSha256": "cffeb957f237584dec8e9a23bc1adefd377fa67996347e4e664adf32ad2350ee"
+    },
+    {
+      "id": 2053,
+      "icon": "spell_holy_lesserheal",
+      "nameZhCN": "次级治疗术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2053?locale=4",
+      "sourceSha256": "fa898c13b2bef1943fb3a7e115cc73a4347b859c104b411d0e5afc939b4622f7"
+    },
+    {
+      "id": 2054,
+      "icon": "spell_holy_heal",
+      "nameZhCN": "治疗术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2054?locale=4",
+      "sourceSha256": "243b20162f3980089b3dc30c47784dc7879e4a2eb888b035d22181aa7e249ca2"
+    },
+    {
+      "id": 2061,
+      "icon": "spell_holy_flashheal",
+      "nameZhCN": "快速治疗",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2061?locale=4",
+      "sourceSha256": "38b29d2126526c0db6f411eddca33d4b6f842dd54cc214d444571bd1b36bedbc"
+    },
+    {
+      "id": 139,
+      "icon": "spell_holy_renew",
+      "nameZhCN": "恢复",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/139?locale=4",
+      "sourceSha256": "d79d530b3e2f3946bd5e5ae4d9aba3c5695b4bdbcb1dd9be3463c39d270d70ae"
+    },
+    {
+      "id": 6074,
+      "icon": "spell_holy_renew",
+      "nameZhCN": "恢复",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6074?locale=4",
+      "sourceSha256": "3158f354f898310323a22e37fbaa0af441009408ebf5954731af8880957d6a5b"
+    },
+    {
+      "id": 6075,
+      "icon": "spell_holy_renew",
+      "nameZhCN": "恢复",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6075?locale=4",
+      "sourceSha256": "3da09bf94d2648115bc8e696d20a01d0f74669ef5c5b0e38ad11943e1034fbda"
+    },
+    {
+      "id": 585,
+      "icon": "spell_holy_holysmite",
+      "nameZhCN": "惩击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/585?locale=4",
+      "sourceSha256": "ad191d863fc16d7e285a7c3761faee700407becc47b371f654551916e50e5b97"
+    },
+    {
+      "id": 591,
+      "icon": "spell_holy_holysmite",
+      "nameZhCN": "惩击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/591?locale=4",
+      "sourceSha256": "6f6e653e22fd96cf27dd40a2791e2c028b53ac5ef644ee6b13530d3dd108c7d4"
+    },
+    {
+      "id": 598,
+      "icon": "spell_holy_holysmite",
+      "nameZhCN": "惩击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/598?locale=4",
+      "sourceSha256": "07241503d34f9d7b4f09dc81301bbf169ab03a1ed0fc71190084a15094cc76a1"
+    },
+    {
+      "id": 1752,
+      "icon": "spell_shadow_ritualofsacrifice",
+      "nameZhCN": "邪恶攻击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/1752?locale=4",
+      "sourceSha256": "5e72214281e615d88dee53943a4197c3f10ff0da14c58e537b57be7d2bb27208"
+    },
+    {
+      "id": 1757,
+      "icon": "spell_shadow_ritualofsacrifice",
+      "nameZhCN": "邪恶攻击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/1757?locale=4",
+      "sourceSha256": "4dc734b8b8157ad28521dbf1930943b6f9f4639ea3db15ae58b8320ec207e15f"
+    },
+    {
+      "id": 1758,
+      "icon": "spell_shadow_ritualofsacrifice",
+      "nameZhCN": "邪恶攻击",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/1758?locale=4",
+      "sourceSha256": "c0c45b2d115dae957088d276ed867d440cfe9d51f0a9828050db7a426fa92b41"
+    },
+    {
+      "id": 2098,
+      "icon": "ability_rogue_eviscerate",
+      "nameZhCN": "刺骨",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2098?locale=4",
+      "sourceSha256": "afd3c01570a9d5c7fdfe29a301c0e57648227464d0c6c7841feebf7ee9ffd112"
+    },
+    {
+      "id": 6760,
+      "icon": "ability_rogue_eviscerate",
+      "nameZhCN": "刺骨",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6760?locale=4",
+      "sourceSha256": "65f8f13467f1a650a028b6afd6cbe321d9d2d6d1ecf7c29af5e8b693c01e9a3d"
+    },
+    {
+      "id": 6761,
+      "icon": "ability_rogue_eviscerate",
+      "nameZhCN": "刺骨",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6761?locale=4",
+      "sourceSha256": "e471617847dfb169482e5a7cfb463a3aa5e7e1bdb6dcf543a7fa510ee428ccea"
+    },
+    {
+      "id": 2006,
+      "icon": "spell_holy_resurrection",
+      "nameZhCN": "复活术",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2006?locale=4",
+      "sourceSha256": "3726e65bc0f2e75e005f6a58e6796b2562198afda8d55bb43518460d903f9ba0"
+    }
+  ],
+  "assets": [
+    {
+      "file": "assets/ability_rogue_ambush.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_Rogue_Ambush.PNG",
+      "gitBlobSha1": "07d2a1fd83f493b06fa7aea278014adfcf243851",
+      "sha256": "322b2e69f1d3c4d8bd8cf8ed76ef736f8bfcddb5e9e8a40ef588f119c52cf8e3"
+    },
+    {
+      "file": "assets/ability_warrior_defensivestance.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_Warrior_DefensiveStance.PNG",
+      "gitBlobSha1": "c4c9556a181cea15926cb77d6b603e82c3a29f4d",
+      "sha256": "ce06fb00c03888d3ec6d264891462a794aaea099c5a29723e093559ada270c60"
+    },
+    {
+      "file": "assets/spell_nature_reincarnation.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Nature_Reincarnation.PNG",
+      "gitBlobSha1": "8ccf46e63aa8f233d3859bad901a468811badf8e",
+      "sha256": "699c33b5e3c3ba59cc09dd5c2b41cf0f5089a1f5784ae0f37e563058de6c3fa6"
+    },
+    {
+      "file": "assets/ability_warrior_sunder.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_Warrior_Sunder.PNG",
+      "gitBlobSha1": "87f0c46559f908e5c74c0482e4699374739b6cd4",
+      "sha256": "d86bda3e00fec459245b07249c5ec4b690a2159d3ff88d486c8a5b1f64151ea0"
+    },
+    {
+      "file": "assets/spell_holy_lesserheal.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Holy_LesserHeal.PNG",
+      "gitBlobSha1": "3b446f7ae8e8ab0417004ae90f2e681cbbb75150",
+      "sha256": "b5dd1672155567fda472f1c1f914005923dfb405287449823a1540cd120b0b03"
+    },
+    {
+      "file": "assets/spell_holy_heal.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Holy_Heal.PNG",
+      "gitBlobSha1": "75782e5069496a9c72b72a47485b181a520baa27",
+      "sha256": "c407d43687f817752afec447e17618407a60dd640d28e46022530050dfc27785"
+    },
+    {
+      "file": "assets/spell_holy_flashheal.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Holy_FlashHeal.PNG",
+      "gitBlobSha1": "4bf5e8a23924bb0c80f505d290e564029e140fdc",
+      "sha256": "7eee4873da4c96fe5969e7e16afc006299e5b8d8ad773f84d2549314c9f26f63"
+    },
+    {
+      "file": "assets/spell_holy_renew.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Holy_Renew.PNG",
+      "gitBlobSha1": "873df21a489ab1a769e0ac3ac546bd0e5e5a2203",
+      "sha256": "30edd5c7c798325356505dae1547408dbe059304fe860cf2f9e61d96667d74c7"
+    },
+    {
+      "file": "assets/spell_holy_holysmite.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Holy_HolySmite.PNG",
+      "gitBlobSha1": "3d1bfc91887d633e849ec1ca84b73195a176e062",
+      "sha256": "df78e7e416388dbe1fa0e6fab8aa3443e5dd9ae26c324c385c823b06bb3de385"
+    },
+    {
+      "file": "assets/spell_shadow_ritualofsacrifice.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Shadow_RitualOfSacrifice.PNG",
+      "gitBlobSha1": "625e31c5d8539bc5a187d56fddb736f28bf37732",
+      "sha256": "5c005cceaca5162bb9ad3bc5cbbfeae9a0efe8573b438ebea25fc2e3b86231ad"
+    },
+    {
+      "file": "assets/ability_rogue_eviscerate.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Ability_Rogue_Eviscerate.PNG",
+      "gitBlobSha1": "fb443ef73cf91c052361e681a04ce9f7b75d616b",
+      "sha256": "d7ab66344dc13063ba8ca62181e118ba2c1f8e470f515e64de077524a6a71423"
+    },
+    {
+      "file": "assets/spell_holy_resurrection.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/Spell_Holy_Resurrection.PNG",
+      "gitBlobSha1": "c6d49eb07277df495b45b84fc2659942b61e9c8a",
+      "sha256": "692e08ca8fcf8b3242164a9ca53af29c2e32c261224e13b8cad50c4200259a94"
+    }
+  ]
+}

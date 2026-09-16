@@ -1,0 +1,566 @@
+{
+  "scope": "Observed normal human mage 1-20 checkpoint inventory; imported route quest objectives/rewards/source items, excluding stage-out quest578; Northshire bread and wolf loot. Not complete global item coverage.",
+  "itemIds": [
+    35,
+    55,
+    56,
+    60,
+    80,
+    117,
+    118,
+    159,
+    182,
+    414,
+    710,
+    723,
+    724,
+    725,
+    728,
+    729,
+    730,
+    731,
+    732,
+    733,
+    735,
+    745,
+    748,
+    750,
+    752,
+    755,
+    769,
+    772,
+    773,
+    774,
+    779,
+    780,
+    782,
+    805,
+    814,
+    829,
+    841,
+    858,
+    915,
+    925,
+    955,
+    957,
+    962,
+    981,
+    983,
+    1006,
+    1008,
+    1019,
+    1113,
+    1154,
+    1158,
+    1159,
+    1161,
+    1171,
+    1172,
+    1173,
+    1177,
+    1178,
+    1179,
+    1180,
+    1182,
+    1183,
+    1191,
+    1208,
+    1210,
+    1252,
+    1256,
+    1257,
+    1262,
+    1272,
+    1274,
+    1307,
+    1327,
+    1353,
+    1357,
+    1358,
+    1359,
+    1360,
+    1361,
+    1362,
+    1367,
+    1368,
+    1372,
+    1374,
+    1376,
+    1380,
+    1381,
+    1389,
+    1395,
+    1411,
+    1430,
+    1433,
+    1434,
+    1446,
+    1473,
+    1479,
+    1480,
+    1495,
+    1497,
+    1498,
+    1499,
+    1505,
+    1509,
+    1513,
+    1515,
+    1528,
+    1537,
+    1557,
+    1561,
+    1566,
+    1738,
+    1740,
+    1743,
+    1745,
+    1764,
+    1767,
+    1769,
+    1788,
+    1789,
+    1790,
+    1791,
+    1815,
+    1875,
+    1893,
+    1894,
+    1929,
+    1930,
+    1931,
+    1934,
+    1943,
+    1944,
+    1945,
+    1951,
+    1971,
+    1972,
+    2036,
+    2037,
+    2041,
+    2042,
+    2070,
+    2074,
+    2089,
+    2136,
+    2154,
+    2165,
+    2186,
+    2223,
+    2224,
+    2225,
+    2237,
+    2238,
+    2239,
+    2249,
+    2287,
+    2288,
+    2327,
+    2454,
+    2455,
+    2575,
+    2583,
+    2589,
+    2592,
+    2598,
+    2643,
+    2644,
+    2650,
+    2672,
+    2677,
+    2690,
+    2691,
+    2697,
+    2722,
+    2723,
+    2724,
+    2760,
+    2770,
+    2771,
+    2781,
+    2806,
+    2832,
+    2836,
+    2842,
+    2854,
+    2874,
+    2998,
+    3070,
+    3171,
+    3172,
+    3291,
+    3312,
+    3342,
+    3343,
+    3344,
+    3363,
+    3374,
+    3375,
+    3377,
+    3511,
+    3578,
+    3636,
+    3637,
+    3641,
+    3643,
+    3898,
+    3899,
+    4496,
+    4536,
+    4540,
+    4541,
+    4567,
+    4605,
+    4656,
+    4677,
+    4687,
+    4698,
+    4840,
+    4865,
+    5057,
+    5191,
+    5192,
+    5195,
+    5197,
+    5198,
+    5200,
+    5201,
+    5202,
+    5240,
+    5349,
+    5350,
+    5465,
+    5572,
+    5573,
+    5579,
+    5580,
+    5781,
+    5944,
+    6070,
+    6076,
+    6078,
+    6084,
+    6085,
+    6087,
+    6094,
+    6096,
+    6215,
+    6271,
+    6303,
+    6508,
+    6511,
+    6527,
+    6528,
+    6536,
+    6585,
+    6889,
+    6948,
+    7073,
+    7074,
+    7206,
+    7207,
+    7247,
+    7249,
+    7282,
+    7292,
+    7308,
+    7365,
+    7508,
+    7509,
+    7606,
+    7607,
+    7997,
+    8492,
+    9513,
+    9571,
+    9743,
+    9746,
+    9775,
+    10402,
+    11119,
+    11125,
+    11191,
+    11192,
+    11475,
+    12295,
+    12296,
+    13872,
+    14086,
+    14093,
+    14114,
+    14131,
+    14366,
+    14367,
+    14370,
+    15114,
+    15331,
+    15333,
+    15496,
+    15998,
+    16115,
+    17192
+  ],
+  "sources": [
+    {
+      "file": ".cache/playthrough-current-20-c/final-state.json",
+      "sha256": "d5257c6b758ae4e02052090840da49872fba3b13abbaf43bf55006eb9a6c9e7c"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-10.json",
+      "sha256": "58095e8d4208bbdffe6eba4150c27f0f5be188a9374280fbe57757756e128a02"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-11.json",
+      "sha256": "abb14c704d6656ebdcda99e5594146318e0269704b8df7f7ccc5b9268107c6ef"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-12.json",
+      "sha256": "599f1b5d59fa989e59b72d7e285244fb539605b61b53415c40444834f007763f"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-13.json",
+      "sha256": "318cb43714d02e00250ff1c2f3c49ad999945da9361ed50205d59817c642fd38"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-14.json",
+      "sha256": "e34a203f4d5ee4e450533057bc0647e460f0528eac7fdea33be0231e73003e34"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-15.json",
+      "sha256": "b5825c0f0dc3c2dc0035557e2f19fb9a19a468c3d9d5f50627f6a894923f6b23"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-16.json",
+      "sha256": "df36a2caa41f4e9c4f8abdfc6d9f28454093f79e556acbd5f0a51cf18e0a5de1"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-17.json",
+      "sha256": "92febdd16bb23f730a3c70325aa6150fe71ae3937b0e276d65cbd549767599ff"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-18.json",
+      "sha256": "c57efcd79b4f8afd588e92fd6355f3996f3bcaedb6cb0cf4307aa5750ab571f7"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-19.json",
+      "sha256": "4a730f68a173622194126c8779fe22a91f750f090c43718d7ea18f5e97f7e700"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-2.json",
+      "sha256": "eb25b1406ffa856020d2d2883399c904efe87a5cd183103006aea43118480c27"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-20.json",
+      "sha256": "d5257c6b758ae4e02052090840da49872fba3b13abbaf43bf55006eb9a6c9e7c"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-3.json",
+      "sha256": "731bb02e1d77617626e576116707022e0a0808983a72f2b81c00ff3f368c9222"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-4.json",
+      "sha256": "c775683796c7fa2e989c463cd792aa21059d9354cf04ee400b048d904abd0f87"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-5.json",
+      "sha256": "9240b55e64be9bea3c9a414de550ac3a27399f1f700fb58aa6b6120881c7bcc8"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-6.json",
+      "sha256": "77ab56d63647fbdbf730057eca31803f62c7007d6c2421d5be63cdab004c60ba"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-7.json",
+      "sha256": "cb62e5f756c6cc9bef65d0d6080d87591c69af4f6d4dade5401359e59b904325"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-8.json",
+      "sha256": "a8df4f721191e743ddc171bd32ee254354ef844fdd0d8f1846e1a66a47b67d72"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/level-9.json",
+      "sha256": "1766ae9f17724ad92ffcc16e9de5448606179ebeee90788024f02e9b2934ad2f"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/replay-verification.json",
+      "sha256": "ff7234543b6228459d8439623d1657c10b07ebaf9db3c4d137a65cfc07b4da07"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/source-manifest.json",
+      "sha256": "565534ad39a3e83e482a78938ad0d696bc854d77dc569f0485cc0428f3a1d79f"
+    },
+    {
+      "file": ".cache/playthrough-current-20-c/summary.json",
+      "sha256": "de639b8fdadfa2bd04ea7384eb18a96992e3b153c557505df0d3a52473adb864"
+    },
+    {
+      "file": ".cache/current-content-20-b/final-state.json",
+      "sha256": "5abc1815b054f04b098ba8fcce533c519d36e77229f28366b01ae3f9bc2235e1"
+    },
+    {
+      "file": ".cache/current-content-20-b/initial-state.json",
+      "sha256": "8a2b004e122f2f926391e5aaa9e2f2f4ad2bf2a42a8dbdcc0e100c7168ba8ca5"
+    },
+    {
+      "file": ".cache/current-content-20-b/replay-verification.json",
+      "sha256": "46430832855996cb62ab23251b6f90f5bd50c547030270251cf5aefee3fbf005"
+    },
+    {
+      "file": ".cache/current-content-20-b/source-manifest.json",
+      "sha256": "cb274b495bf2d6662d1fbbd1dbc5be3cfd645f814c60247a187b742348ed926f"
+    },
+    {
+      "file": ".cache/current-content-20-b/summary.json",
+      "sha256": "6c6b084855939ab1406e0444e43f22de5b55314a11eb303c359fda6ab64f56a9"
+    },
+    {
+      "file": ".cache/current-content-20-d/final-state.json",
+      "sha256": "392803ec8d65eec1599b99e317165e0a40e6770581faa18694a16bac24575f7c"
+    },
+    {
+      "file": ".cache/current-content-20-d/initial-state.json",
+      "sha256": "bf9bd643f781c3d55138b040ec174b39ec336548a0b05e659579d52d8fb3f188"
+    },
+    {
+      "file": ".cache/current-content-20-d/replay-verification.json",
+      "sha256": "cbaf5a8e1c31e941c1037a59728b9e1d00965a4fe5e42152a898d3a7f3ef4d1c"
+    },
+    {
+      "file": ".cache/current-content-20-d/source-manifest.json",
+      "sha256": "88c7023207688c8fae30c13eeea072ef2cd276e65b8409598ca80c575087643c"
+    },
+    {
+      "file": ".cache/current-content-20-d/summary.json",
+      "sha256": "f3caa186e8d733fab864bffd31c0b6f1ca0c4e5b004796c2ede544c2c3d71d4a"
+    },
+    {
+      "file": ".cache/current-content-20-escort/final-state.json",
+      "sha256": "d23cdc81d36bc3b8c2172be860cd1f44806d5aaeab41d434b54c40300825eb52"
+    },
+    {
+      "file": ".cache/current-content-20-escort/initial-state.json",
+      "sha256": "392803ec8d65eec1599b99e317165e0a40e6770581faa18694a16bac24575f7c"
+    },
+    {
+      "file": ".cache/current-content-20-escort/replay-verification.json",
+      "sha256": "ae0bed6165dc8df1166fb895f1d1feeb135ea9d851b6ffbc40fe0309dcd2271e"
+    },
+    {
+      "file": ".cache/current-content-20-escort/source-manifest.json",
+      "sha256": "88c7023207688c8fae30c13eeea072ef2cd276e65b8409598ca80c575087643c"
+    },
+    {
+      "file": ".cache/current-content-20-escort/summary.json",
+      "sha256": "3fe47427b0889a0855c9cfdc43cb78352f6d37d9409def9a0371ae13bfc6d3ab"
+    },
+    {
+      "file": ".cache/current-content-20-regional/final-state.json",
+      "sha256": "f41404d59b8e30f6b48d129ceea783b2a1f4ac2b0bfb6a09473ac9bf85fcc59b"
+    },
+    {
+      "file": ".cache/current-content-20-regional/initial-state.json",
+      "sha256": "d23cdc81d36bc3b8c2172be860cd1f44806d5aaeab41d434b54c40300825eb52"
+    },
+    {
+      "file": ".cache/current-content-20-regional/replay-verification.json",
+      "sha256": "a84d6be0407494d9df371ca24b9c6a50dfcd586da3c3a0e21d75029052e11f93"
+    },
+    {
+      "file": ".cache/current-content-20-regional/source-manifest.json",
+      "sha256": "f32c3fd4549e78fd468bbbe0cc4753e3ebfac26baa567095551f1d8b0a7840ba"
+    },
+    {
+      "file": ".cache/current-content-20-regional/summary.json",
+      "sha256": "e32fe9a40bc162a0137f23b957a83d031f5ec871c5afc0b1703631952c03d120"
+    },
+    {
+      "file": ".cache/current-content-20-aftermath/final-state.json",
+      "sha256": "54768355cc04d239cb3c5c4de8d8081deb6351728d94d376edbd5f05a3719f5d"
+    },
+    {
+      "file": ".cache/current-content-20-aftermath/initial-state.json",
+      "sha256": "f41404d59b8e30f6b48d129ceea783b2a1f4ac2b0bfb6a09473ac9bf85fcc59b"
+    },
+    {
+      "file": ".cache/current-content-20-aftermath/replay-verification.json",
+      "sha256": "fa207fdaf87463fffcc14008a0d2c97f5b5d8030044f227f224f9e8feb195d7d"
+    },
+    {
+      "file": ".cache/current-content-20-aftermath/source-manifest.json",
+      "sha256": "0fe0a563a3b7b4efc17d2309881ef387b7278a8c68964068db929220209d0ce8"
+    },
+    {
+      "file": ".cache/current-content-20-aftermath/summary.json",
+      "sha256": "e59d31f406a0d0a413468111929cd0002960008f60e87d39131b196fbdc371d4"
+    },
+    {
+      "file": "apps/web/data/classic-reference.json",
+      "sha256": "aa09210ea8b7834a4c53944e6deb4be590c940efc32041c4abfe318e0c772650"
+    },
+    {
+      "file": "apps/web/data/quest-supplement-reference.json",
+      "sha256": "ee66a5542e3ad8fc019faa08f8aa70ea6379a99dc9a458200c3f7668b6ad1994"
+    },
+    {
+      "file": "apps/web/data/deadmines-reference.json",
+      "sha256": "8db6613015c378d2ce4c1c10e1f4c3557c7b882541407300d6cea2040e561edb"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/final-state.json",
+      "sha256": "68d4f243167a9e4a82732f6c2ef049d0e8fb96d58f4a81c8e40abf0b05d68071"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/level-10.json",
+      "sha256": "0ee7dbda6e5d3e688c2edc297e10892fc4af73a1e730b5b7e112ae8e9b2230c5"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/level-11.json",
+      "sha256": "31581164f9c1f741c6cad619e8d9ae65ae2bc38575d16cdd53c2366a5dae7da2"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/level-12.json",
+      "sha256": "cabc48caa5e09e447ad0ed5ed4729aa6a35a002237a5b881d97b1af53a19b4cd"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/level-2.json",
+      "sha256": "2c61713f89cd2fe74291fa3331cdf0ad4f9081d43609b4e82d0f462a76215eac"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/level-3.json",
+      "sha256": "0ae0b17488fc7a35583e1e4874322924410da6d24b75c68e6e6976715ea336e9"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/level-4.json",
+      "sha256": "eaa828ad43e21fb5bf9a50366d4c1c6b2cd4cf4044c3d938f1955f03f5f01465"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/level-5.json",
+      "sha256": "b5e9b763fb45a75dc8478d6e905479f607c872fa4a786a51741662960ed47dbd"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/level-6.json",
+      "sha256": "7e6309bd7b3b625d07a7ab00e902041fff5df7f0d34c0d8c2de075616131c3af"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/level-7.json",
+      "sha256": "d7513b6945bd7e8c8170d53d511329fcb06497e209ef75dcf0339d09f617bf55"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/level-8.json",
+      "sha256": "dc7780992b2347fb36ea23776851c8047d01be1ea3af8d1bfcebf3936b88809d"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/level-9.json",
+      "sha256": "bb743a5e74807b3473a708ff63f5bb8dbe21da10d63c3b9a5777b74adce234f7"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/source-manifest.json",
+      "sha256": "5e8710c79cfcc45331bb1024de7fd161a9d583725f6cc4e53a6c607005b9e905"
+    },
+    {
+      "file": ".cache/playthrough-integrated-20-a/summary.json",
+      "sha256": "5d892465443274facf931c271df1053e7a10e8c9e9b98fa86a1e4150e6825ad6"
+    }
+  ]
+}

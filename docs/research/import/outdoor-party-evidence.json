@@ -1,0 +1,102 @@
+{
+  "input": "C:\\workspace\\wow-sim\\.cache\\content-playthrough-20-f\\final-state.json",
+  "initialSha256": "df48ce83831dbd2c8b232cf8bf6a586097a25e099f097a88c861aaec02fa30d3",
+  "quests": [
+    104,
+    167,
+    168
+  ],
+  "encounters": [],
+  "failures": [],
+  "final": {
+    "level": 20,
+    "seconds": 2911.461,
+    "deaths": 0,
+    "money": 73067,
+    "cursor": 58,
+    "completedAt": 74231600
+  },
+  "replay": {
+    "equal": true,
+    "operations": 152,
+    "level": 20,
+    "kills": 1392,
+    "deaths": 20,
+    "completed": 87,
+    "sha256": "660edef0859a5588c6dec021771da9a234b5a5036202c61fc0f206fc9c68b7a5"
+  },
+  "source": {
+    "data/classic-reference.json": "aa09210ea8b7834a4c53944e6deb4be590c940efc32041c4abfe318e0c772650",
+    "data/client-rules-reference.json": "5e10ea32e6365d25b155263fe4e781b47c44b66df9ae7e05b94aa37aaf4c4241",
+    "data/companion-passive-reference.json": "8d5c82bb71d2209261bdd63cee78075cf76dfafde4af84201e94fe918f537857",
+    "data/creature-assets-manifest.json": "59132bb7397b959379a9a0bb795bbbf0a99f985544b2db8fdd9dc3e21da92973",
+    "data/deadmines-reference.json": "8db6613015c378d2ce4c1c10e1f4c3557c7b882541407300d6cea2040e561edb",
+    "data/gameplay-reference.json": "7614afa61829fd075cefc444730809e6aac8a5cccc22fd79139cae3d78e2b51b",
+    "data/icon-map.json": "6a233abac0d37394f4ecfb0db4cf9a9e695090653105610af1ab56617f0de808",
+    "data/localization.json": "fdf389b6ab22f92ecf25bd961d1c4e8dbf70df7083171262178f7beccf260328",
+    "data/mage-talents-2019.json": "920306445c43599c216438b43bd0a4a575138ba0bd26211a52426432dafe57bd",
+    "data/manifest.json": "69e04b028d062baed1791a0838b74e215e01f2552607b35085d967158491e902",
+    "data/quest-supplement-reference.json": "ee66a5542e3ad8fc019faa08f8aa70ea6379a99dc9a458200c3f7668b6ad1994",
+    "data/world-assets-manifest.json": "663f027434247048bf21721abf093e19eed198d3dd6911438df618570208db40",
+    "lib/game/auto-buffs.js": "d1c1241706df5c77b421515114b00acdea969eddcc36305065a6f4b219a9e22a",
+    "lib/game/catalog.js": "5a596527c0c73802d8186aa0bd5421926631286545284ebffb9edd88ea1fd60e",
+    "lib/game/character.js": "d410f0c1b1a016ac998d61127ad70448bc4024777869ce6ea515ffc8eef2c5d8",
+    "lib/game/combat-auras.js": "e72cd215db58659091596e3710d55334a5316fa9da7b951ba3e0b2cf7a6d20db",
+    "lib/game/combat-members.js": "4bc280046873250761bf86f2e4cad63e3a2b1091c3c69b881e98414ab0d92432",
+    "lib/game/combat-metrics.js": "07c70f33e5ffe820962bbbb85e2a0483b3231e3b951df9b28490acd795a26c0e",
+    "lib/game/combat-projectiles.js": "9cfefcb4ab37e1e0108ab1794656c92bb5e106a2fffdc8ec59c441fc626a8e63",
+    "lib/game/combat-space.js": "34a2855c46ed26ccba4c0be292f349a1fc751f8bbf26f8f96af7fb3cec02acd8",
+    "lib/game/combat-strategy.js": "60139618fbce9db092018ecb5347992a57a9714f08fec651c4d95f834a51c8e1",
+    "lib/game/combat.js": "55146ccaa3509634b8134b567b80969bbe59b4a2da6586601cb98b3e086ec75f",
+    "lib/game/companion-combat.js": "7c47aaa60d0fa2281c49295b5e651410112cb3baced5431f3d4c4d02cbec399b",
+    "lib/game/dungeon-view.js": "c0fb4f233bd304e7f1f0df7504c6cc49ed7ac55b48388632819e2efab0cdf7b9",
+    "lib/game/dungeon.js": "9292017ea47fde58b03582304d177f4ccf592816f89535d486c6f82e9dc5bc85",
+    "lib/game/enemy-ai.js": "1b485237c602fce63f77230c8a683360c8f680531b84871294cd206f6d935184",
+    "lib/game/enemy-melee.js": "a7fe60ffa86ef5706cf93518ba7917b0c0b3fb5ddd35a689386189d68f05fc16",
+    "lib/game/enemy-procs.js": "c5480e4ad56c3a2af23440e801769ea6908d2cc9011dfc76730fd3409575a39e",
+    "lib/game/enemy-spells.js": "fb48733c4b2a15e1de83db3c050f4e1322c294fe40637f2dbae9ce18cf114ddd",
+    "lib/game/engine.js": "b681aff18736ffc82237af728c2b6b80800e5027f5924d62a7cb7274f2a0c663",
+    "lib/game/hearthstone.js": "04679b017e81b56779612a65c2c960db55ae19672e8f244ab1bf460b508b696c",
+    "lib/game/navigation.js": "77611382503919f66e6a1084d274fada0ed8a2a50045dcc957cc99c842f4df94",
+    "lib/game/party.js": "25ceccef94d0ffff7f2fa92c2605a30051249522647fc21ffe19ac32992f56ea",
+    "lib/game/quest-tools.js": "ee8aeefd92f182245e36a201071abff4a6214d7ea2a11771b703ad98a691f11e",
+    "lib/game/quests.js": "11e0bfdc32a2ec8156f30eb01deff1d1488e681a1dd5edc69b2dd88372a3b342",
+    "lib/game/recovery.js": "85fcc5f9b6d7d3aa6f8a3a9c2c7a4c143f1f1a07885da4dfe669e2e25a1d87b5",
+    "lib/game/session.js": "1bc6768e7102e2e7acd04d5d885358f23c73479464ca101bb1be533f31fad1c2",
+    "lib/game/smite.js": "7846303736ac8de32f72c77b06559ed82d3cdd4f91f26c6aee693181c4df3432",
+    "package.json": "d218e29ec01186542b0d85bdc6691d12514e4cdd0ba3b9cd81f253250c8d1e34",
+    "scripts/continue-playthrough.mjs": "359173d8e092c57e807a612bbad3edb54441c6dcacdc3370e6a86699188a89a7",
+    "scripts/replay-playthrough.mjs": "27e4421bab1cac80cd8aed9a6fa7261662f596b18350d308413d203ee94e775a"
+  },
+  "finalSha256": "6d94fae2270fea76a622ae76dfc268b4ce9446e7a978e63f39c269e456c9e574",
+  "remainingQuests": [
+    "155"
+  ],
+  "party": [
+    {
+      "id": "companion-warrior",
+      "level": 20,
+      "hp": 539,
+      "mana": 0
+    },
+    {
+      "id": "companion-priest",
+      "level": 20,
+      "hp": 327,
+      "mana": 877
+    },
+    {
+      "id": "companion-rogue",
+      "level": 20,
+      "hp": 413,
+      "mana": 0
+    },
+    {
+      "id": "companion-mage",
+      "level": 20,
+      "hp": 327,
+      "mana": 901
+    }
+  ],
+  "totalCompleted": 87
+}

@@ -1,0 +1,505 @@
+{
+  "directory": ".cache/integrated-content-20-caster-priority/",
+  "initialSha256": "771b7b9a82608f72f8d52355f43c53f6381625b2fbfe204f9d3a58a8dd0c54f7",
+  "finalSha256": "4ee80c90210063b826bb153885175678b391098143ceee011fc6a5d4060908e1",
+  "commandsSha256": "d4e3880878cc65bfd1d17329fa0c0bd30f877c9cd83b9de59bfc6e27d9133d01",
+  "sourceManifestSha256": "b8e88bde3eb408d5ec0fec1d7d240a924989bdb51d0bfc9833ec34d5ab4f8151",
+  "final": {
+    "level": 20,
+    "seconds": 10850.708,
+    "deaths": 6,
+    "money": 49421,
+    "cursor": 55,
+    "completedAt": null
+  },
+  "error": "Error: Three failed attempts on dm-cookie-approach-west\n    at file:///C:/workspace/wow-sim/apps/web/scripts/continue-playthrough.mjs:142:99",
+  "encounters": [
+    {
+      "cursor": 0,
+      "route": "dm-entry-01",
+      "after": 1,
+      "seconds": 86.712,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 1,
+      "route": "dm-entry-02",
+      "after": 2,
+      "seconds": 70.039,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 2,
+      "route": "dm-entry-03",
+      "after": 3,
+      "seconds": 71.475,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 3,
+      "route": "dm-entry-04",
+      "after": 4,
+      "seconds": 90.521,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 4,
+      "route": "dm-entry-05",
+      "after": 5,
+      "seconds": 70.179,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 5,
+      "route": "dm-entry-06",
+      "after": 6,
+      "seconds": 94.6,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 6,
+      "route": "dm-entry-07",
+      "after": 7,
+      "seconds": 73.638,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 7,
+      "route": "dm-entry-08",
+      "after": 8,
+      "seconds": 71.713,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 8,
+      "route": "dm-rhahkzor",
+      "after": 9,
+      "seconds": 142.752,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 9,
+      "route": "dm-patrol-01",
+      "after": 10,
+      "seconds": 62.935,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 10,
+      "route": "dm-junction",
+      "after": 11,
+      "seconds": 103.057,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 11,
+      "route": "dm-johnson-approach",
+      "after": 12,
+      "seconds": 72.481,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 12,
+      "route": "dm-miner-johnson",
+      "after": 14,
+      "seconds": 112.507,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 14,
+      "route": "dm-woodcarver-01",
+      "after": 15,
+      "seconds": 103.457,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 15,
+      "route": "dm-woodcarver-02",
+      "after": 16,
+      "seconds": 109.845,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 16,
+      "route": "dm-woodcarver-03",
+      "after": 17,
+      "seconds": 79.877,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 17,
+      "route": "dm-sneed",
+      "after": 18,
+      "seconds": 78.39,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 18,
+      "route": "dm-patrol-02",
+      "after": 19,
+      "seconds": 64.948,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 19,
+      "route": "dm-mast-exit-01",
+      "after": 20,
+      "seconds": 105.711,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 20,
+      "route": "dm-mast-exit-02",
+      "after": 21,
+      "seconds": 70.74,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 21,
+      "route": "dm-mast-exit-03",
+      "after": 22,
+      "seconds": 79.069,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 22,
+      "route": "dm-mast-exit-04",
+      "after": 23,
+      "seconds": 71.866,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 23,
+      "route": "dm-foundry-upper",
+      "after": 24,
+      "seconds": 62.853,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 24,
+      "route": "dm-foundry-ramp",
+      "after": 25,
+      "seconds": 95.59,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 25,
+      "route": "dm-foundry-01",
+      "after": 26,
+      "seconds": 99.997,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 26,
+      "route": "dm-foundry-02",
+      "after": 26,
+      "seconds": 100.886,
+      "deaths": 1,
+      "alive": 0
+    },
+    {
+      "cursor": 26,
+      "route": "dm-foundry-02",
+      "after": 27,
+      "seconds": 60.022,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 27,
+      "route": "dm-foundry-03",
+      "after": 27,
+      "seconds": 105.83,
+      "deaths": 1,
+      "alive": 0
+    },
+    {
+      "cursor": 27,
+      "route": "dm-foundry-03",
+      "after": 28,
+      "seconds": 89.07,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 28,
+      "route": "dm-gilnid",
+      "after": 29,
+      "seconds": 98.007,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 29,
+      "route": "dm-patrol-03",
+      "after": 30,
+      "seconds": 97.872,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 30,
+      "route": "dm-powder-01",
+      "after": 31,
+      "seconds": 97.017,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 31,
+      "route": "dm-powder-02",
+      "after": 32,
+      "seconds": 70.529,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 32,
+      "route": "dm-powder-03",
+      "after": 33,
+      "seconds": 71.827,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 33,
+      "route": "dm-gunpowder",
+      "after": 33,
+      "seconds": 40.635,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 34,
+      "route": "dm-cannon-approach",
+      "after": 35,
+      "seconds": 49.125,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 36,
+      "route": "dm-cannon-alarm",
+      "after": 37,
+      "seconds": 85.313,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 37,
+      "route": "dm-cove-01",
+      "after": 38,
+      "seconds": 51.914,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 38,
+      "route": "dm-cove-side",
+      "after": 39,
+      "seconds": 30.458,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 39,
+      "route": "dm-cove-02",
+      "after": 40,
+      "seconds": 61.255,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 40,
+      "route": "dm-cove-03",
+      "after": 41,
+      "seconds": 64.452,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 41,
+      "route": "dm-cove-04",
+      "after": 42,
+      "seconds": 111.805,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 42,
+      "route": "dm-cove-05",
+      "after": 43,
+      "seconds": 120.725,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 43,
+      "route": "dm-smite",
+      "after": 44,
+      "seconds": 144.704,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 44,
+      "route": "dm-foredeck",
+      "after": 45,
+      "seconds": 159.474,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 45,
+      "route": "dm-lowerdeck-01",
+      "after": 45,
+      "seconds": 151.741,
+      "deaths": 1,
+      "alive": 0
+    },
+    {
+      "cursor": 45,
+      "route": "dm-lowerdeck-01",
+      "after": 46,
+      "seconds": 47.061,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 46,
+      "route": "dm-dock-side",
+      "after": 47,
+      "seconds": 54.899,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 47,
+      "route": "dm-ship-ramp-01",
+      "after": 48,
+      "seconds": 108.392,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 48,
+      "route": "dm-ship-ramp-02",
+      "after": 49,
+      "seconds": 56.42,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 49,
+      "route": "dm-upperdeck-01",
+      "after": 50,
+      "seconds": 83.448,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 50,
+      "route": "dm-upperdeck-02",
+      "after": 51,
+      "seconds": 49.917,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 51,
+      "route": "dm-greenskin",
+      "after": 52,
+      "seconds": 89.171,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 52,
+      "route": "dm-vancleef",
+      "after": 53,
+      "seconds": 169.154,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 53,
+      "route": "dm-cookie-approach-east",
+      "after": 54,
+      "seconds": 112.673,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 54,
+      "route": "dm-cookie",
+      "after": 55,
+      "seconds": 70.198,
+      "deaths": 0,
+      "alive": 5
+    },
+    {
+      "cursor": 55,
+      "route": "dm-cookie-approach-west",
+      "after": 55,
+      "seconds": 42.009,
+      "deaths": 1,
+      "alive": 0
+    },
+    {
+      "cursor": 55,
+      "route": "dm-cookie-approach-west",
+      "after": 55,
+      "seconds": 44.019,
+      "deaths": 1,
+      "alive": 0
+    },
+    {
+      "cursor": 55,
+      "route": "dm-cookie-approach-west",
+      "after": 55,
+      "seconds": 80.1,
+      "deaths": 1,
+      "alive": 0
+    }
+  ],
+  "quests": [
+    1861,
+    1920,
+    1921,
+    1941
+  ],
+  "replay": {
+    "equal": true,
+    "operations": 8552,
+    "level": 20,
+    "kills": 1360,
+    "deaths": 8,
+    "completed": 80,
+    "sha256": "d4e3880878cc65bfd1d17329fa0c0bd30f877c9cd83b9de59bfc6e27d9133d01"
+  }
+}
