@@ -9,6 +9,7 @@ import { requireThat } from './model.ts';
 import type { Character, Activity, Rules, Item } from './model.ts';
 import { owned, bump, context, persistCharacter, economicEvent, clone } from './context.ts';
 import type { GameService } from './service.ts';
+import { PAUSED_EVENT_AT } from './presence.ts';
 function returnTool(state: Rules, tool: Rules) { (state.bag.length < bagCapacity(state) ? state.bag : state.pending).push(clone(tool.data)); }
 export async function startActivity(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) {
     await this.ensureFree(tx, c.id);
@@ -107,6 +108,8 @@ export async function restoreReservation(this: GameService, tx: Transaction, a: 
         receive(s, material.id, material.count);
 } await persistCharacter(tx, payer, s, s.wallAt, key, this.id); reservation.status = 'released'; await tx.put('reservations', { ...reservation, id: a.reservationId! }); }
 export async function settleActivity(this: GameService, tx: Transaction, a: Activity, now: number) {
+    const deadline = await this.activityDeadline(tx, a), wallNow = now;
+    now = Math.min(now, deadline);
     // Bounded event catch-up: an automatic gather chain may contain several due
     // events, but completion never causes the remaining offline idle day to tick.
     for (let events = 0; events < 16 && ['running', 'returning'].includes(a.status) && a.nextEventAt <= now; events++) {
@@ -116,6 +119,12 @@ export async function settleActivity(this: GameService, tx: Transaction, a: Acti
             break;
         if (a.type === 'personal' && !Number.isFinite(a.engineActivity.endsAt))
             break;
+    }
+    if (wallNow >= deadline && ['running', 'returning'].includes(a.status) && a.nextEventAt > deadline && a.resumeEventAt === undefined) {
+        a.resumeEventAt = a.nextEventAt;
+        a.nextEventAt = PAUSED_EVENT_AT;
+        await tx.put('activities', a);
+        await bump(tx, a.accountId);
     }
 }
 async function settleActivityEvent(this: GameService, tx: Transaction, a: Activity, now: number) {
@@ -180,7 +189,9 @@ async function settleActivityEvent(this: GameService, tx: Transaction, a: Activi
         a.rngState = s.rngState;
         a.engineActivity = clone(s.activity);
         a.settledUntil = s.wallAt;
-        a.nextEventAt = Number.isFinite(s.activity.endsAt) ? s.wallAt + Math.max(1, s.activity.endsAt - s.clock) : s.wallAt + 1000;
+        a.nextEventAt = Math.min(s.wallAt + 1000, Number.isFinite(s.activity.endsAt) ? s.wallAt + Math.max(1, s.activity.endsAt - s.clock) : Infinity);
+        const deadline = await this.activityDeadline(tx, a);
+        if (s.wallAt < deadline) a.nextEventAt = Math.min(a.nextEventAt, deadline);
         if (a.type === 'gather')
             s.rngState = c.rules.rngState;
         await persistCharacter(tx, c, s, s.wallAt, key, this.id);

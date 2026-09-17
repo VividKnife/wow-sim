@@ -276,6 +276,23 @@ test('conditional HTTP polls publish idle regeneration and cache again after ful
  now=123000;const unchanged=await fetch(url+'/game',{headers:{...headers,'if-none-match':full.headers.get('etag')!}});assert.equal(unchanged.status,304);
 });
 
+test('authenticated conditional polls refresh offline allowance even when the response is 304', async t => {
+  let now = 1000;
+  const store = new MemoryStore(), service = new GameService(store, {contentVersion: CONTENT_VERSION, now: () => now, offlineLimitMs: 2000});
+  await service.createAccount('presence', {name: 'Presence', classId: 8, raceId: 1}, 'create');
+  const {game, url} = await start(service);
+  t.after(async () => {await game.close(); await store.close();});
+  const headers = await auth('presence');
+  const first = await fetch(url + '/game', {headers});
+  now = 2500;
+  const cached = await fetch(url + '/game', {headers: {...headers, 'if-none-match': first.headers.get('etag')!}});
+  assert.equal(cached.status, 304);
+  assert.equal((await store.transaction(tx => tx.get('accounts', 'presence')))!.lastSeenAt, 2500);
+  now = 4000;
+  await service.snapshot('presence');
+  assert.equal((await store.transaction(tx => tx.get('accounts', 'presence')))!.lastSeenAt, 2500);
+});
+
 test('conditional snapshots validate identity and stop unchanged response serialization',async t=>{
  const service=fakeService();let revision=3;
  service.snapshot=async(accountId:string,characterId?:string)=>{

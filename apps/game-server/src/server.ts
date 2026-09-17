@@ -18,7 +18,7 @@ export type GameSnapshot = {
 };
 
 export interface GameServiceLike {
-  snapshot(accountId: string, characterId?: string): Promise<GameSnapshot>;
+  snapshot(accountId: string, characterId?: string, online?: boolean): Promise<GameSnapshot>;
   createAccount(accountId: string, input: {name: string; classId: number; raceId: number}, requestId: string): Promise<GameSnapshot>;
   command(accountId: string, command: Record<string, any>): Promise<GameSnapshot>;
   work(now?: number, limit?: number): Promise<unknown>;
@@ -89,7 +89,7 @@ function characterId(url: URL): string | undefined {
 
 async function readGame(service: GameServiceLike, accountId: string, selectedCharacterId?: string): Promise<GameSnapshot> {
   try {
-    return await service.snapshot(accountId, selectedCharacterId);
+    return await service.snapshot(accountId, selectedCharacterId, true);
   } catch (error) {
     if (!selectedCharacterId && error && typeof error === 'object' && (error as any).code === 'NOT_FOUND') {
       return {state: null, revision: 0, account: null, roster: [], activities: [], instanceId: null, instance: null};
@@ -186,7 +186,7 @@ export function createGameServer(options: GameServerOptions) {
           json(response, 409, {error: '内容版本不匹配，请刷新后重试。', code: 'CONTENT_VERSION'});
           return;
         }
-        const snapshot = await options.service.snapshot(accountId, characterId(url));
+        const snapshot = await options.service.snapshot(accountId, characterId(url), true);
         const body = getWorkshop(snapshot.state, {
           profession: url.searchParams.get('profession') || '',
           search: url.searchParams.get('search') || '',
@@ -228,6 +228,8 @@ export function createGameServer(options: GameServerOptions) {
     let deliveryMode: 'snapshot' | 'delta' = 'snapshot';
     let baseline: GameSnapshotEvent | null = null;
     let subscriptionId = 0;
+    let lastPongAt = Date.now();
+    socket.on('pong', () => { lastPongAt = Date.now(); });
 
     const sendEvent = (event: object) => {
       if (socket.readyState !== socket.OPEN) return false;
@@ -241,11 +243,13 @@ export function createGameServer(options: GameServerOptions) {
 
     const sendSnapshot = async (force = false) => {
       if (running || socket.readyState !== socket.OPEN) return;
+      if (Date.now() - lastPongAt > 30_000) { socket.terminate(); return; }
+      socket.ping();
       running = true;
       const activeSubscription = subscriptionId;
       const activeCharacter = selectedCharacter;
       try {
-        const snapshot = await options.service.snapshot(accountId, activeCharacter);
+        const snapshot = await options.service.snapshot(accountId, activeCharacter, true);
         if (activeSubscription !== subscriptionId) return;
         const sequence = snapshot.instance?.sequence ?? 0;
         const key = `${snapshot.revision}:${sequence}:${activeCharacter || ''}`;

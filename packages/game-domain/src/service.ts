@@ -1,7 +1,8 @@
 import { createInstance, instanceFor, joinInstance, startInstance, bumpInstanceAccounts, instanceCommand, persistInstance, leaveInstance, hireMercenary, acquireInstanceLease, advanceInstance } from './instances.ts';
 import { startActivity, recall, restoreReservation, settleActivity } from './activities.ts';
 import { randomUUID, randomBytes } from 'node:crypto';
-import { act, advance, stats } from './rules/engine.js';
+import { act, advance, quietIdle } from './rules/engine.js';
+import { offlineLimit, recordPresence, activityDeadline, instanceDeadline } from './presence.ts';
 import { professions } from './rules/profession-data.js';
 import { receive } from './rules/inventory.js';
 import { canEquip, takeItem } from './rules/character.js';
@@ -16,6 +17,7 @@ type Options = {
     now?: () => number;
     id?: () => string;
     seed?: () => number;
+    offlineLimitMs?: number;
 };
 export class GameService {
     store: Store;
@@ -23,7 +25,11 @@ export class GameService {
     now: () => number;
     id: () => string;
     seed: () => number;
-    constructor(store: Store, options: Options) { this.store = store; this.contentVersion = options.contentVersion; this.now = options.now || Date.now; this.id = options.id || randomUUID; this.seed = options.seed || (() => randomBytes(4).readUInt32LE(0) || 1); }
+    offlineLimitMs: number;
+    recordPresence = recordPresence;
+    activityDeadline = activityDeadline;
+    instanceDeadline = instanceDeadline;
+    constructor(store: Store, options: Options) { this.offlineLimitMs = offlineLimit(options.offlineLimitMs); this.store = store; this.contentVersion = options.contentVersion; this.now = options.now || Date.now; this.id = options.id || randomUUID; this.seed = options.seed || (() => randomBytes(4).readUInt32LE(0) || 1); }
     async createAccount(accountId: string, input: {
         name: string;
         classId: number;
@@ -33,27 +39,33 @@ export class GameService {
         await this.store.transaction(async (tx) => { const previous = await tx.get<Rules>('receipts', `${accountId}:${requestId}`); if (previous) {
             requireThat(previous.fingerprint === JSON.stringify({ type: 'createAccount', ...input }), 'REQUEST_REUSED', 'requestId 已被其他命令使用');
             return;
-        } requireThat(!await tx.get('accounts', accountId), 'EXISTS', '账号已有主角'); const now = this.now(), id = this.id(), partyId = this.id(); const s = newState(input.name, input.classId, input.raceId, this.seed(), now, id); const c: Character = { id, accountId, kind: 'hero', rules: characterRules(s), professionReadyAt: {}, resourceReadyAt: {} }; await tx.insert('accounts', { id: accountId, primaryCharacterId: id, partyId, revision: 1, createdAt: now }); await tx.insert('characters', c); await tx.insert('parties', { id: partyId, accountId, characterIds: [id] }); await persistAssets(tx, c, s, `create:${accountId}`, this.id); await this.receipt(tx, accountId, requestId, { type: 'createAccount', ...input }); });
+        } requireThat(!await tx.get('accounts', accountId), 'EXISTS', '账号已有主角'); const now = this.now(), id = this.id(), partyId = this.id(); const s = newState(input.name, input.classId, input.raceId, this.seed(), now, id); const c: Character = { id, accountId, kind: 'hero', rules: characterRules(s), professionReadyAt: {}, resourceReadyAt: {} }; await tx.insert('accounts', { id: accountId, primaryCharacterId: id, partyId, revision: 1, createdAt: now, lastSeenAt: now }); await tx.insert('characters', c); await tx.insert('parties', { id: partyId, accountId, characterIds: [id] }); await persistAssets(tx, c, s, `create:${accountId}`, this.id); await this.receipt(tx, accountId, requestId, { type: 'createAccount', ...input }); });
         return this.snapshot(accountId);
     }
     request(id: unknown) { requireThat(typeof id === 'string' && id.length > 0 && id.length <= 160, 'INVALID_REQUEST', '需要有效的 requestId', 400); }
     async receipt(tx: Transaction, accountId: string, requestId: string, command: Rules) { await tx.insert('receipts', { id: `${accountId}:${requestId}`, accountId, requestId, fingerprint: JSON.stringify(command), createdAt: this.now() }); }
-    async snapshot(accountId: string, characterId?: string) {
+    async snapshot(accountId: string, characterId?: string, online = false) {
         return this.store.transaction(async (tx) => {
             let a = await account(tx, accountId);
-            const c = await owned(tx, accountId, characterId || a.primaryCharacterId), now = this.now();
+            let c = await owned(tx, accountId, characterId || a.primaryCharacterId);
+            const now = this.now();
+            if (online) {
+                await this.recordPresence(tx, accountId, now);
+                a = await account(tx, accountId);
+                c = await owned(tx, accountId, c.id);
+            }
             const lease = await tx.get<ActorLease>('actor_leases', c.id);
             const instance = lease?.kind === 'instance' ? await tx.get<Instance>('instances', lease.ownerId) : null;
             let state = await this.personalContext(tx, c, now);
-            // Unleased characters have no worker activity to advance passive recovery.
-            // Persist it before publishing so REST ETags and socket revisions change too.
+            // Free actors have no worker. Commit bounded catch-up on reads, including
+            // effects at full resources, so failed commands cannot roll it back forever.
             if (!lease) {
                 let recovered = false;
                 for (const member of [state, ...state.party]) {
                     if (await tx.get<ActorLease>('actor_leases', member.id)) continue;
                     const character = await owned(tx, accountId, member.id);
-                    const current = await context(tx, character, now, false), maximum = stats(current) as {maxHp: number; maxMana: number};
-                    if (current.hp <= 0 || current.combat || current.hp >= maximum.maxHp && current.mana >= maximum.maxMana) continue;
+                    const current = await context(tx, character, now, false);
+                    if (current.combat || quietIdle(current)) continue;
                     if (now - current.wallAt < current.nextRegen - current.clock) continue;
                     const result = advance(current, now);
                     await persistCharacter(tx, character, result.state, result.state.wallAt, `recovery:${character.id}:${result.state.wallAt}`, this.id);
@@ -123,6 +135,11 @@ export class GameService {
     async command(accountId: string, command: Rules) {
         this.request(command?.requestId);
         requireThat(typeof command.type === 'string', 'INVALID_COMMAND', '缺少操作类型', 400);
+        await this.store.transaction(async tx => {
+            const a = await account(tx, accountId);
+            await owned(tx, accountId, command.characterId || a.primaryCharacterId);
+            await this.recordPresence(tx, accountId, this.now());
+        });
         try {
             await this.store.transaction(async (tx) => {
                 const a = await account(tx, accountId);

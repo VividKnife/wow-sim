@@ -15,7 +15,7 @@ export default function AccountControls({game,busy,send}:Props){
  const toggle=(id:string)=>setSelected(current=>current.includes(id)?current.filter(value=>value!==id):[...current,id]);
  const members=[actorId,...selected.filter(id=>id!==actorId)];
  return <details className="panel account-controls"><summary>账号名册与共享副本</summary>
-  <p>每名角色有独立背包、金币和专业。切换角色后可派遣采集或制造；后台订单会在关闭网页后继续执行。</p>
+  <p>每名角色有独立背包、金币和专业。离线后战斗、移动等默认继续执行 2 小时，超时暂停，上线后继续；指派队友的生产、采集不受此时限限制。</p>
   <section><h3>创建长期伙伴</h3><div className="filterbar">
    <input aria-label="伙伴名称" value={name} maxLength={16} onChange={e=>setName(e.target.value)}/>
    <select aria-label="伙伴职业" value={classId} onChange={e=>{const id=Number(e.target.value);setClassId(id);setRaceId(racesForClass(id)[0].id);}}>{classOptions.map(row=><option value={row.id} key={row.id}>{row.name}</option>)}</select>

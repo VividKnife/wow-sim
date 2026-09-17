@@ -1,11 +1,13 @@
 import pg from 'pg';
 import {PostgresStore} from '../../../packages/persistence/src/postgres.ts';
+import {offlineLimit} from '../../../packages/game-domain/src/presence.ts';
 import {GameService} from '../../../packages/game-domain/src/service.ts';
 import {CONTENT_VERSION} from '../../../packages/game-domain/src/rules/client-content.js';
 import {createGameWorker} from './worker.ts';
 
 export type WorkerEnvironment = {
   DATABASE_URL?: string;
+  GAME_OFFLINE_LIMIT_MS?: string;
   GAME_WORKER_INTERVAL_MS?: string;
   GAME_WORKER_LIMIT?: string;
 };
@@ -22,7 +24,7 @@ export async function startGameWorker(environment: WorkerEnvironment = process.e
   const store = new PostgresStore(pool);
   try {
     await store.initialize();
-    const service = new GameService(store, {contentVersion: CONTENT_VERSION});
+    const service = new GameService(store, {contentVersion: CONTENT_VERSION, offlineLimitMs: offlineLimit(environment.GAME_OFFLINE_LIMIT_MS)});
     const worker = createGameWorker({
       service,
       intervalMs: positiveInteger(environment.GAME_WORKER_INTERVAL_MS, 1_000, 'GAME_WORKER_INTERVAL_MS'),

@@ -40,7 +40,12 @@ export function rebaseSimulation(state: Rules, targetClock: number): Rules {
 export function characterRules(state: Rules): Rules { const rules = clone(state); for (const key of separated)
     delete rules[key]; return rules; }
 export async function owned(tx: Transaction, accountId: string, id: string): Promise<Character> { const c = await tx.get<Character>('characters', id); requireThat(c && c.accountId === accountId, 'FORBIDDEN', '角色不属于此账号', 403); return c; }
-export async function account(tx: Transaction, id: string): Promise<Account> { const row = await tx.get<Account>('accounts', id); requireThat(row, 'NOT_FOUND', '请先创建角色', 404); return row; }
+export async function account(tx: Transaction, id: string): Promise<Account> {
+    const row = await tx.get<Account>('accounts', id);
+    requireThat(row, 'NOT_FOUND', '请先创建角色', 404);
+    requireThat(Number.isSafeInteger(row.lastSeenAt) && row.lastSeenAt >= 0, 'ACCOUNT_STATE', '账号在线状态无效，请重新创建开发存档');
+    return row;
+}
 export async function bump(tx: Transaction, id: string) { const row = await account(tx, id); row.revision++; await tx.put('accounts', row); }
 export function newState(name: string, classId: number, raceId: number, seed: number, now: number, id: string): Rules { try {
     const s = createGame(name, seed, now, { classId, raceId });

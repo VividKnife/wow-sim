@@ -5,6 +5,7 @@ export interface Account {
     partyId: string;
     revision: number;
     createdAt: number;
+    lastSeenAt: number;
 }
 export interface Character {
     id: string;
@@ -46,6 +47,7 @@ export interface Activity {
     startedAt: number;
     settledUntil: number;
     nextEventAt: number;
+    resumeEventAt?: number;
     contentVersion: string;
     rngState: number;
     engineActivity: Rules;
@@ -74,6 +76,7 @@ export interface Instance {
     sequence: number;
     epoch: number;
     nextEventAt: number;
+    resumeEventAt?: number;
     createdAt: number;
 }
 export interface ActorLease {

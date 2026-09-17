@@ -1,11 +1,13 @@
 import pg from 'pg';
 import {PostgresStore} from '../../../packages/persistence/src/postgres.ts';
+import {offlineLimit} from '../../../packages/game-domain/src/presence.ts';
 import {GameService} from '../../../packages/game-domain/src/service.ts';
 import {CONTENT_VERSION} from '../../../packages/game-domain/src/rules/client-content.js';
 import {createGameServer} from './server.ts';
 
 export type ServerEnvironment = {
   DATABASE_URL?: string;
+  GAME_OFFLINE_LIMIT_MS?: string;
   GAME_SERVER_SECRET?: string;
   HOST?: string;
   PORT?: string;
@@ -24,7 +26,7 @@ export async function startGameServer(environment: ServerEnvironment = process.e
   const store = new PostgresStore(pool);
   try {
     await store.initialize();
-    const service = new GameService(store, {contentVersion: CONTENT_VERSION});
+    const service = new GameService(store, {contentVersion: CONTENT_VERSION, offlineLimitMs: offlineLimit(environment.GAME_OFFLINE_LIMIT_MS)});
     const game = createGameServer({service, secret: environment.GAME_SERVER_SECRET});
     const host = environment.HOST || '127.0.0.1';
     const port = positivePort(environment.PORT);

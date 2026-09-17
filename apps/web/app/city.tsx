@@ -22,7 +22,7 @@ export default function City(props:GameProps){
  const active=opened&&opened.location===s.location&&here?selected.services.find(x=>x.id===opened.id):null;
  const choose=(id:string)=>{setSelection({id,origin:s.location});setOpened(null);};
  const open=(service:CityService)=>{
-  if(service.id==='quests'){document.getElementById('quest-list')?.scrollIntoView({behavior:'smooth',block:'start'});return;}
+  if(service.id==='quests'){document.getElementById('local-people')?.scrollIntoView({behavior:'smooth',block:'start'});return;}
   setOpened({id:service.id,location:s.location});
   requestAnimationFrame(()=>serviceRef.current?.scrollIntoView({behavior:'smooth',block:'nearest'}));
  };

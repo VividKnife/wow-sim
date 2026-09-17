@@ -74,3 +74,29 @@ test('a reserved manufacturing order survives a database restart and pays out on
   assert.equal((await restored.transaction(tx=>tx.list<any>('reservations')))[0].status,'consumed');
  }finally{await restored.close();}
 });
+
+test('offline pause survives SQL database reload and returns to the due index on reconnect', async () => {
+ const db = new PGlite(), store = new PostgresStore(embeddedPool(db));
+ await store.initialize();
+ let now = 1000;
+ const service = new GameService(store, {contentVersion: 'offline-test', now: () => now, offlineLimitMs: 2000});
+ await service.createAccount('offline', {name: 'Traveller', classId: 8, raceId: 1}, 'create');
+ await service.command('offline', {type: 'travel', to: 'goldshire', requestId: 'travel'});
+ now = 20_000;
+ assert.deepEqual((await service.work()).errors, []);
+ assert.equal((await service.snapshot('offline')).state.clock, 3000);
+ assert.equal((await service.work()).activities, 0);
+ const archive = await db.dumpDataDir();
+ await store.close();
+ const restored = new PostgresStore(embeddedPool(new PGlite({loadDataDir: archive})));
+ try {
+  const resumed = new GameService(restored, {contentVersion: 'offline-test', now: () => now, offlineLimitMs: 2000});
+  assert.equal((await resumed.work()).activities, 0);
+  await resumed.snapshot('offline', undefined, true);
+  now = 21_000;
+  assert.deepEqual((await resumed.work()).errors, []);
+  const snapshot = await resumed.snapshot('offline');
+  assert.equal(snapshot.state.clock, 4000);
+  assert.equal(snapshot.state.location, 'northshire');
+ } finally {await restored.close();}
+});

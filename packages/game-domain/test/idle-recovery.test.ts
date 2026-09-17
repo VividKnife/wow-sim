@@ -36,6 +36,18 @@ test('snapshot recovery does not advance an actor owned by a running activity',a
  assert.equal(after.revision,before.revision);
 });
 
+test('full-resource idle characters persist bounded catch-up across polls until commands can proceed',async()=>{
+ const f=await fixture();
+ const initial=await f.service.snapshot('a'),maximum=stats(initial.state) as {maxHp:number;maxMana:number};
+ await f.store.transaction(async tx=>{const c=(await tx.get<Character>('characters',f.id))!;c.rules.hp=maximum.maxHp;c.rules.mana=maximum.maxMana;c.rules.buffs={armor:{kind:'armor',spell:168,amount:30,until:3601000}};await tx.put('characters',c);});
+ f.time(7201000);
+ const first=await f.service.snapshot('a');assert.ok(first.state.wallAt>1000);assert.ok(first.state.wallAt<7201000);
+ const saved=(await f.store.transaction(tx=>tx.get<Character>('characters',f.id)))!;assert.equal(saved.rules.wallAt,first.state.wallAt);
+ const second=await f.service.snapshot('a');assert.equal(second.state.wallAt,7201000);
+ const command=await f.service.command('a',{type:'travel',to:'goldshire',requestId:'after-catchup'});
+ assert.equal(command.state.activity.type,'travel');
+});
+
 test('idle party members regenerate even when the selected hero is full',async()=>{
  const f=await fixture();const created=await f.service.command('a',{type:'createCompanion',name:'队友',classId:8,raceId:1,requestId:'companion'});
  const helper=created.roster.find(c=>c.name==='队友')!.id;

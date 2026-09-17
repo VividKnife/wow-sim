@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "36784025533332d9c215be667831c48399ae294228c2d63364b868aba42fe9ee",
+  "contentVersion": "df12043d457cb35b1d9f9d0152a9f9bbb4b035b9281a6b58cd35ee77e879a365",
   "bundles": {
     "class-demons-reference.json": {
       "sha256": "cff264f075ba885d340bbd4df0fe06f0b2e1d96179994dea548f37cc417abb81",
@@ -165,8 +165,8 @@
       "bytes": 1388
     },
     "../game-domain/src/rules/client-snapshot.ts": {
-      "sha256": "6335a6ba95e0be6199837bf57968b6aeedc67ed6b187daa2df0f54026623b406",
-      "bytes": 8036
+      "sha256": "8a2e7d4af0d415353c9e5eafa65efd23ab43e1dd63d5f18fd38e5533135f1c9b",
+      "bytes": 8051
     },
     "../game-domain/src/rules/combat-members.js": {
       "sha256": "81e8e458476b40bd0a101b12b01b0096ea04b17c317b1ff2757752c7e3db42b3",
@@ -225,8 +225,8 @@
       "bytes": 9018
     },
     "../game-domain/src/rules/engine.js": {
-      "sha256": "772afcb1df58bf49a6fc2017b54c99a09b96a1afd6dc811a12a8a5393f986275",
-      "bytes": 30659
+      "sha256": "e857881dce7f266072d461bbaf386f688ad372ec3e763581f6963598599d688c",
+      "bytes": 30863
     },
     "../game-domain/src/rules/escort.js": {
       "sha256": "fe83090625db214a05be1cf2120a87e4826904d093f899bb4b77c6e45a1e8e6a",
@@ -235,6 +235,10 @@
     "../game-domain/src/rules/hearthstone.js": {
       "sha256": "04679b017e81b56779612a65c2c960db55ae19672e8f244ab1bf460b508b696c",
       "bytes": 2344
+    },
+    "../game-domain/src/rules/interactions.js": {
+      "sha256": "3affd63b0dfb156350d8e1c4105254cfe6e94229d09026b6b0d4dae65f938df8",
+      "bytes": 2773
     },
     "../game-domain/src/rules/inventory.js": {
       "sha256": "7fd3deb9b328fc947ba07b776db0614b2fb6dfba822a98362cfccecdf5f419da",

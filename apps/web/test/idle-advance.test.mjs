@@ -7,6 +7,12 @@ test('fully recovered quiet actor advances 24 hours with a one-tick budget',()=>
  assert.equal(result.complete,true);assert.equal(result.state.clock,86400037);assert.equal(result.state.wallAt,86401037);
  assert.equal(result.state.nextTick,86400100);assert.equal(result.state.nextRegen,86402000);assert.equal(result.state.time,86400000);assert.equal(result.state.rngState,s.rngState);
 });
+
+test('expired long buffs do not permanently block offline idle fast-forward',()=>{
+ const s=createGame('过期护甲',123,0);s.buffs={armor:{kind:'armor',spell:168,amount:30,until:1000}};
+ const result=advance(s,86400000,{maxTicks:20});assert.equal(result.complete,true);
+ const short=advance(s,60000),reference=advance(s,60000,{idleFastForward:false});assert.deepEqual(short.state,reference.state);
+});
 test('idle shortcut matches normal tick and chunked advance including unaligned endpoints and party time',()=>{
  for(const duration of [99,100,1999,2000,2011,17033,600037]){
   const s=createGame('主角',123,1000);const companion=createGame('伙伴',456,1000);companion.id='helper';s.party=[companion];
@@ -30,4 +36,3 @@ test('periodic damage, underwater hazards, timed quests and pets cannot take idl
  for(const s of [dot,timed,wet])assert.deepEqual(advance(s,6000).state,advance(s,6000,{idleFastForward:false}).state);
  const pet=createGame('宠物',123,0);pet.pet={id:'pet',kind:'imp',hp:1,petUnit:true};assert.equal(advance(pet,86400000,{maxTicks:1}).complete,false);
 });
-
