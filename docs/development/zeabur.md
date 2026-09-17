@@ -26,7 +26,11 @@ Web、API、worker 都连接同一 repo 的 main，Root Directory 为仓库根 `
 
 Dockerfile 选择变量是后缀 `runtime`，不是 `Dockerfile.runtime`。移除 `ZBPACK_IGNORE_DOCKERFILE=true`、旧构建/启动覆盖和静态输出目录配置；镜像管理启动命令。
 
-API 的 Networking 只保留 HTTP 8788，删除平台初建服务时添加的 8080，否则平台自动生成的 PORT 可能覆盖应用设置。Web 保留 HTTP 8080，并绑定上述公网域名。
+API 的 Networking 只保留 HTTP 8788，删除平台初建服务时添加的 8080。随后将 Variable 中平台生成的 `PORT=${WEB_PORT}` 改为 `PORT=8788`，保存并 Restart；否则它引用已删除的默认端口，API 会启动失败。Web 保留 HTTP 8080，并绑定上述公网域名。修改环境变量后需要重启使其生效。
+
+2026-09-17 验收：提交 `810ffb1` 的 main push 自动触发 Web、API、worker 三个部署；GitHub CI（含两份 Docker 构建）通过。HTTPS 线上验证通过注册、登录、Secure/HttpOnly/SameSite cookie、跨站请求拒绝、伪造身份拒绝、角色创建与恢复、跨账号隔离、退出会话撤销。验证产生两个随机命名的 `verify_` 测试账号，验证后已退出。
+
+现有 Tencent Tokyo 2C 2GB 服务器首次部署出现过 MemoryPressure 与管理连接中断；重启服务器、顺序恢复服务后完成上述验收。此容量余量有限，后续发布应观察服务器内存及容器驱逐日志；需要扩容时保留数据库卷。
 
 DATABASE_URL 使用 PostgreSQL 的内网连接串/跨服务变量引用。GAME_SERVER_URL 使用控制台显示的 API 内网域名及 8788 端口。GAME_SERVER_SECRET 为至少 32 字节随机值，Web/API 必须相同。APP_ORIGIN 是最终完整 HTTPS origin，如 `https://your-game.zeabur.app`，不要附带路径。秘密只在服务变量中配置，勿提交 Git。
 
