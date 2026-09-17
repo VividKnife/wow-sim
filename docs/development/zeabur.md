@@ -2,6 +2,17 @@
 
 仓库 `VividKnife/wow-sim`；生产分支 `main`。项目 `6aaa9113905b4aaea95dae42`，环境 `6aaa91131d7bf7f6aa47cf7c`，现有服务 `6aaab302a91f86e0dd4fc7b1` 用作 Web。
 
+游戏地址：https://wow-sim.zeabur.app ，登录入口：https://wow-sim.zeabur.app/login 。
+
+| 已配置服务 | Zeabur Service ID |
+| --- | --- |
+| wow-sim（Web） | `6aaab302a91f86e0dd4fc7b1` |
+| game-api | `6aab3fbf0f0f0a129012d01b` |
+| game-worker | `6aab4071b6ad31c3b464b0b5` |
+| postgresql | `6aab3a8c0f0f0a129012cd52` |
+
+Web 的 `APP_ORIGIN=https://wow-sim.zeabur.app`，`GAME_SERVER_URL=http://game-api.zeabur.internal:8788`；三个代码服务均通过 `${POSTGRES_CONNECTION_STRING}` 引用数据库连接串。数据库使用 Zeabur PostgreSQL 18 模板。
+
 ## 服务配置
 
 Web、API、worker 都连接同一 repo 的 main，Root Directory 为仓库根 `/`，Watch Paths 为 `*`，启用自动部署。不要把 apps/web 设为构建根，共享包在仓库根目录。
@@ -14,6 +25,8 @@ Web、API、worker 都连接同一 repo 的 main，Root Directory 为仓库根 `
 | PostgreSQL | Zeabur PostgreSQL 模板 | 模板生成的认证配置 | 内网、持久化卷 |
 
 Dockerfile 选择变量是后缀 `runtime`，不是 `Dockerfile.runtime`。移除 `ZBPACK_IGNORE_DOCKERFILE=true`、旧构建/启动覆盖和静态输出目录配置；镜像管理启动命令。
+
+API 的 Networking 只保留 HTTP 8788，删除平台初建服务时添加的 8080，否则平台自动生成的 PORT 可能覆盖应用设置。Web 保留 HTTP 8080，并绑定上述公网域名。
 
 DATABASE_URL 使用 PostgreSQL 的内网连接串/跨服务变量引用。GAME_SERVER_URL 使用控制台显示的 API 内网域名及 8788 端口。GAME_SERVER_SECRET 为至少 32 字节随机值，Web/API 必须相同。APP_ORIGIN 是最终完整 HTTPS origin，如 `https://your-game.zeabur.app`，不要附带路径。秘密只在服务变量中配置，勿提交 Git。
 
