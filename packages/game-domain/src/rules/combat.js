@@ -209,6 +209,7 @@ export function hurtPlayer(s,e,c,amount,label='攻击',detail={}){
 
  }const damage=Math.min(c.hp,Math.max(1,Math.round(amount*(detail.environmental?1:stanceModifiers(c).incoming))));c.hp-=damage;gainRage(c,damage,false);log(s,`${e.name} 的${label}对 ${c.name} 造成 ${damage} 点伤害`,'incoming',{actorId:e.id,targetId:c.id,amount:damage,action:label,...detail});
  if(damage>0)environmentDamage(c);
+ if(damage>0&&!detail.periodic&&!detail.environmental&&c.cast?.channel&&spells[c.cast.spell]?.SpellName==='Blizzard')cancelInvalidCast(s,c,c.cast,'damage');
  const protection=c.cast?Math.min(1,(talentSpellValue(c,spells[c.cast.spell],9,0)+activeAuras(c,s.clock).filter(a=>[149,117].includes(a.type)).reduce((n,a)=>n+a.amount,0))/100):0;
  if(!detail.periodic&&c.cast&&rng(s)>=protection){if(c.cast.channel){c.cast.until-=Math.max(0,(spellInfo(c,c.cast.spell).durationMs||0)*.25);}else{c.cast.until+=Math.max(200,1000-(c.cast.pushbacks||0)*200);c.cast.pushbacks=(c.cast.pushbacks||0)+1;c.nextAction=Math.max(c.nextAction,c.cast.until);}}
  if(c.hp===0){c.cast=null;if(c===s){dismount(s);countLeaderDeath(s);}log(s,c.name+' 倒下了','death',{actorId:c.id});}
@@ -249,7 +250,7 @@ function decideConfigured(s,c,e,targets,actors,api,rules=c.rules){
 function cancelInvalidCast(s,c,cast,reason){
  c.cast=null;c.nextAction=s.clock;
  if(reason==='range')c.castRangeFailure={target:cast.target,until:s.clock+10000};
- const labels={target:'目标失效',range:'目标超出射程',strategy:'保护控场或等待坦克',resource:'资源不足'};
+ const labels={target:'目标失效',range:'目标超出射程',strategy:'保护控场或等待坦克',resource:'资源不足',emptyArea:'暴风雪范围内已无敌人',damage:'受到直接攻击伤害'};
  log(s,`${cast.channel?'引导中止':'施法取消'}：${labels[reason]}`,'cancel',{actorId:c.id,targetId:cast.target,spellId:cast.spell,reason});
 }
 export function combatTick(s){
@@ -280,7 +281,11 @@ export function combatTick(s){
   interruptPriestForRescue(s,c,actors);
   if(c.cast){const cast=c.cast,sp={...spellInfo(c,cast.spell),talentCast:cast.talentCast},target=battle.enemies.find(e=>e.id===cast.target)||actors.find(a=>a.id===cast.target);
    const channelAim=groundArea(sp)?cast.center||target:target;
-   if(cast.channel){const reason=!channelAim||!groundArea(sp)&&!aliveEnemy(target)?'target':!inSpellRange(c,channelAim,sp)?'range':!cast.friendly&&!strategyAllows(s,c,target,sp,undefined,groundArea(sp)?cast.center:undefined)?'strategy':null;if(reason){cancelInvalidCast(s,c,cast,reason);continue;}}
+   // Once Blizzard starts, keep its fixed area until empty or a direct hit interrupts it.
+   // Opening strategy conditions must not replace an active channel with another spell.
+   if(cast.channel){const reason=sp.SpellName==='Blizzard'
+    ?areaTargets(s,c,target,sp,cast.center).length?null:'emptyArea'
+    :!channelAim||!groundArea(sp)&&!aliveEnemy(target)?'target':!inSpellRange(c,channelAim,sp)?'range':!cast.friendly&&!strategyAllows(s,c,target,sp,undefined,groundArea(sp)?cast.center:undefined)?'strategy':null;if(reason){cancelInvalidCast(s,c,cast,reason);continue;}}
    if(cast.channel&&s.clock>=cast.next){if((target&&target.hp>0)||groundArea(sp)){
     if(cast.taming||cast.controlChannel){}else if(cast.extendedChannel)classChannelTick(s,c,target,sp,cast,actors,classApi);
     else if(sp.SpellName==='Blizzard'){for(const victim of areaTargets(s,c,target,sp,cast.center))magicHit(s,c,victim,sp,1,true);}

@@ -5,7 +5,7 @@ import {classDefinitions,classAbilities,spells} from '../../../packages/game-dom
 import {strategyPresets} from '../../../packages/game-domain/src/rules/strategy-presets.js';
 import {ruleMatches,validateRules,strategyAllows} from '../../../packages/game-domain/src/rules/combat-strategy.js';
 import {spellInfo} from '../../../packages/game-domain/src/rules/character.js';
-import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
+import {startCombat,combatTick,hurtPlayer} from '../../../packages/game-domain/src/rules/combat.js';
 import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
 
 function scenario(classId,template,count=1,extra=[]){
@@ -42,11 +42,28 @@ test('Blizzard finishes all eight ticks after pulling aggro without switching sp
  assert.ok(!s.logs.some(l=>l.actorId===s.id&&l.kind==='cancel'));
  for(const e of s.combat.enemies)assert.equal(s.logs.filter(l=>l.actorId===s.id&&l.targetId===e.id&&l.periodic&&l.spellId===cast.spell).length,8);
 });
-test('Blizzard still cancels when a crowd-controlled enemy enters its area',()=>{
- const s=scenario(8,61,3);combatTick(s);const spell=s.cast.spell;
+test('Blizzard does not re-evaluate crowd control while already channeling',()=>{
+ const s=scenario(8,61,3);combatTick(s);const cast=s.cast;
  s.combat.enemies[1].polyUntil=10000;s.clock=100;combatTick(s);
+ assert.equal(s.cast,cast);
+});
+test('Blizzard holds its original area until the last enemy leaves',()=>{
+ const s=scenario(8,61,3);combatTick(s);const cast=s.cast;
+ s.combat.enemies[0].hp=0;s.combat.enemies[1].positionY=20;
+ s.clock=100;combatTick(s);assert.equal(s.cast,cast);
+ s.combat.enemies[2].positionY=20;s.clock=200;combatTick(s);
  assert.equal(s.cast,null);
- assert.ok(s.logs.some(l=>l.actorId===s.id&&l.spellId===spell&&l.kind==='cancel'&&l.reason==='strategy'));
+ assert.ok(s.logs.some(l=>l.actorId===s.id&&l.spellId===cast.spell&&l.kind==='cancel'&&l.reason==='emptyArea'));
+});
+test('direct damage interrupts Blizzard immediately but periodic and absorbed damage do not',()=>{
+ for(const detail of [{},{spellId:133,school:2},{periodic:true}]){
+  const s=scenario(8,61,3);combatTick(s);const cast=s.cast;
+  s.clock=100;hurtPlayer(s,s.combat.enemies[0],s,10,'测试攻击',detail);
+  assert.equal(s.cast,detail.periodic?cast:null);
+  if(!detail.periodic){assert.equal(s.nextAction,s.clock);assert.ok(s.logs.some(l=>l.kind==='cancel'&&l.reason==='damage'));}
+ }
+ const s=scenario(8,61,3);combatTick(s);const cast=s.cast;s.absorb={until:10000,amount:100};
+ hurtPlayer(s,s.combat.enemies[0],s,10);assert.equal(s.cast,cast);
 });
 test('frost restores mana with Evocation and never treats failed generic abilities as mage damage',()=>{
  const s=scenario(8,61,3);s.mana=stats(s).maxMana*.15;combatTick(s);assert.equal(casts(s)[0],'Evocation');
