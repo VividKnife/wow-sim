@@ -7,10 +7,12 @@ test('priority rules are editable, validated, and used by the next fight',()=>{
  let s=createGame('优先级',12,0);s=act(s,{type:'strategy',rules:[{spell:133,condition:'manaAbove',value:0,enabled:true}]},0);s=act(s,{type:'hunt',id:299},0);s=advance(s,200).state;assert.equal(s.cast.spell,133);
  assert.throws(()=>act(s,{type:'strategy',rules:[{spell:133,condition:'bad',value:0,enabled:true}]},200));
 });
-test('default and legacy strategies retain the now-supported Counterspell rule',()=>{
+test('strategies expose learned skills and accept Counterspell only after learning it',()=>{
  let s=createGame('默认策略',12,0);
- s=act(s,{type:'strategy',rules:s.rules.map(r=>({...r,enabled:false}))},0);
+ s=act(s,{type:'strategy',rules:view(s).strategyMembers[0].rules.map(r=>({...r,enabled:false}))},0);
  assert.ok(s.rules.every(r=>!r.enabled));
+ assert.throws(()=>act(s,{type:'strategy',rules:[{spell:2139,condition:'targetCasting',value:0,enabled:true}]},0),/技能/);
+ s.learned.push(2139);
  s.rules.unshift({spell:2139,condition:'targetCasting',value:0,enabled:true});
  s=advance(s,100).state;
  assert.ok(s.rules.some(r=>r.spell===2139));

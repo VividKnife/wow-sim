@@ -15,9 +15,9 @@ test('entry view explains unmet requirements and reads saved progress without ro
 });
 
 test('dungeon view gates combat, movement, corpses, full bags and interaction requirements',()=>{
- const s=group();enterDungeon(s);
- s.activity={type:'dungeonTravel',routeId:dungeonRoute[0].id,endsAt:1000};assert.equal(view(s).dungeon.canNext,false);assert.equal(view(s).dungeon.canLeave,false);
- s.activity={type:'idle'};s.party[0].hp=0;assert.equal(view(s).dungeon.canNext,false);assert.equal(view(s).recovery.canRevive,true);
+ let s=group();enterDungeon(s);
+ s=act(s,{type:'dungeonNext'},s.wallAt);assert.equal(view(s).dungeon.canNext,false);assert.equal(view(s).dungeon.canLeave,false);
+ s.combat=null;s.activity={type:'idle'};s.party[0].hp=0;assert.equal(view(s).dungeon.canNext,false);assert.equal(view(s).recovery.canRevive,true);
  s.party[0].hp=stats(s.party[0]).maxHp;s.pending=[{id:25,count:1}];assert.equal(view(s).dungeon.canNext,false);s.pending=[];
  s.dungeon.cursor=dungeonRoute.findIndex(e=>e.id==='dm-cannon');let d=view(s).dungeon;assert.equal(d.canInteract,false);assert.match(d.interactionReason,/火药/);assert.equal(d.canNext,false);
  addItem(s,5397);d=view(s).dungeon;assert.equal(d.canInteract,true);assert.equal(d.interactionLabel,'装填火炮');

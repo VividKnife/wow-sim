@@ -7,7 +7,8 @@ import { bagCapacity } from './rules/character.js';
 import type { Transaction } from '../../persistence/src/store.ts';
 import { requireThat } from './model.ts';
 import type { Character, Activity, Rules, Item } from './model.ts';
-import { owned, bump, context, persistCharacter, economicEvent, clone } from './context.ts';
+import { account, owned, bump, context, persistCharacter, economicEvent, clone } from './context.ts';
+import {simulationInterval,simulationTickBudget} from './simulation-cadence.ts';
 import type { GameService } from './service.ts';
 import { PAUSED_EVENT_AT } from './presence.ts';
 function returnTool(state: Rules, tool: Rules) { (state.bag.length < bagCapacity(state) ? state.bag : state.pending).push(clone(tool.data)); }
@@ -117,7 +118,7 @@ export async function settleActivity(this: GameService, tx: Transaction, a: Acti
         await settleActivityEvent.call(this, tx, a, now);
         if (a.nextEventAt <= cursor && a.status === 'running')
             break;
-        if (a.type === 'personal' && !Number.isFinite(a.engineActivity.endsAt))
+        if (a.type === 'personal')
             break;
     }
     if (wallNow >= deadline && ['running', 'returning'].includes(a.status) && a.nextEventAt > deadline && a.resumeEventAt === undefined) {
@@ -184,12 +185,14 @@ async function settleActivityEvent(this: GameService, tx: Transaction, a: Activi
     else {
         const end = s.activity.endsAt;
         const due = Number.isFinite(end) ? s.wallAt + Math.max(0, end - s.clock) : now;
-        const settled = advance(s, Math.min(now, due), { maxTicks: 20000 });
+        const lastSeenAt = (await account(tx, a.accountId)).lastSeenAt;
+        const settled = advance(s, Math.min(now, due), { maxTicks: a.type === 'personal' ? simulationTickBudget(lastSeenAt, now) : 20000 });
         s = settled.state;
         a.rngState = s.rngState;
         a.engineActivity = clone(s.activity);
         a.settledUntil = s.wallAt;
-        a.nextEventAt = Math.min(s.wallAt + 1000, Number.isFinite(s.activity.endsAt) ? s.wallAt + Math.max(1, s.activity.endsAt - s.clock) : Infinity);
+        const interval = simulationInterval(s.combat, lastSeenAt, now);
+        a.nextEventAt = Math.min(s.wallAt + interval, Number.isFinite(s.activity.endsAt) ? s.wallAt + Math.max(1, s.activity.endsAt - s.clock) : Infinity);
         const deadline = await this.activityDeadline(tx, a);
         if (s.wallAt < deadline) a.nextEventAt = Math.min(a.nextEventAt, deadline);
         if (a.type === 'gather')

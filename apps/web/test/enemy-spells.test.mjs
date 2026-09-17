@@ -24,14 +24,14 @@ test('source Slam applies bounded damage and a three-second stun, with normal ac
 test('a source cast spends mana once, persists over serialization, and is cancelled by stun',()=>{
  const {s,e}=encounter(4418),before=e.mana,hp=s.hp;
  assert.equal(enemySpells.castEnemySpell(s,e,s,9053,[s],hurt),true);
- assert.equal(e.mana,before-90);assert.equal(e.cast.until,3000);assert.equal(s.hp,hp);
+ assert.equal(e.mana,before);assert.equal(e.cast.timing.cost,90);assert.equal(e.cast.until,3000);assert.equal(s.hp,hp);
  const restored=JSON.parse(JSON.stringify(s)),caster=restored.combat.enemies[0];restored.clock=3000;
  enemySpells.tickEnemySpell(restored,caster,[restored],hurt);assert.equal(restored.hp,hp);restored.clock=restored.combat.projectiles[0].landsAt;enemySpells.tickEnemyProjectiles(restored,[restored],hurt);
  assert.ok(hp-restored.hp>=64&&hp-restored.hp<=86);assert.equal(caster.cast,null);
  enemySpells.tickEnemySpell(restored,caster,[restored],hurt);assert.equal(caster.mana,before-90);
  const interrupted=encounter(4418);enemySpells.castEnemySpell(interrupted.s,interrupted.e,interrupted.s,9053,[interrupted.s],hurt);
  interrupted.e.stunUntil=5000;interrupted.s.clock=1000;enemySpells.tickEnemySpell(interrupted.s,interrupted.e,[interrupted.s],hurt);
- assert.equal(interrupted.e.cast,null);assert.equal(interrupted.s.hp,stats(interrupted.s).maxHp);
+ assert.equal(interrupted.e.cast,null);assert.equal(interrupted.e.mana,encounter(4418).e.mana);assert.equal(interrupted.s.hp,stats(interrupted.s).maxHp);
 });
 
 test('Pierce Armor expires at twenty seconds and does not stack with its own refresh',()=>{

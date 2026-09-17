@@ -1,3 +1,4 @@
+import {beginSpellTiming,finishSpellTiming,cooldownUntil,gcdUntil} from './spell-timing.js';
 import {beginHunterTaming} from './combat.js';
 import {classBookUse,useClassBook} from './class-acquisition.js';
 import {beginMount,mountView} from './mounts.js';
@@ -26,7 +27,7 @@ export function skillUseView(s,id){
  const sp=spellInfo(s,id);if(!sp)return null;
  const conjure=['Conjure Food','Conjure Water'].includes(sp.SpellName),to=teleports[id];
  if(!conjure&&!to&&!mageBuffs.has(sp.SpellName))return null;
- const remaining=Math.max(0,(s.cooldowns[id]||0)-s.clock,(s.globalCooldown||0)-s.clock);
+ const remaining=Math.max(0,cooldownUntil(s,sp)-s.clock,gcdUntil(s,sp)-s.clock);
  let reason=unavailable(s)||(!s.learned.includes(id)?'尚未学习这个法术':'')||(s.mana<sp.mana?'法力不足':'')||(remaining?'技能尚未冷却':'');
  if(!reason&&to&&s.location===to&&!s.dungeon)reason='你已经在目的地';
  if(!reason&&conjure&&bagRoom(s,sp.EffectItemType1)<conjuredCount(s,sp))reason='背包空间不足';
@@ -35,13 +36,13 @@ export function skillUseView(s,id){
 }
 
 export function beginUtilitySpell(s,id,targetId){
- if(id===1515){const use=classUtilityUse(s,id,targetId);if(!use?.canUse)throw new Error(use?.reason||'当前无法驯服');beginHunterTaming(s,targetId);s.globalCooldown=s.clock+1500;return;}
+ if(id===1515){const use=classUtilityUse(s,id,targetId);if(!use?.canUse)throw new Error(use?.reason||'当前无法驯服');beginHunterTaming(s,targetId);return;}
  if([13819,23214,5784,23161].includes(id)){beginMount(s,id);return;}
  if(beginClassUtility(s,id,targetId))return;
  const use=skillUseView(s,id);if(!use)throw new Error('这个法术需要在战斗策略中释放');if(!use.canUse)throw new Error(use.reason);
- const sp=spellInfo(s,id);if(mageBuffs.has(sp.SpellName)&&![s,...s.party].some(c=>c.id===(targetId||s.id)&&c.hp>0))throw new Error('请选择存活的队友');stopRecovery(s);s.cast=null;s.mana-=sp.mana;s.lastManaUse=s.clock;s.globalCooldown=s.clock+1500;s.cooldowns[id]=s.clock+sp.cooldownMs;
- if(['Conjure Food','Conjure Water'].includes(sp.SpellName))s.activity={type:'conjure',spell:id,item:sp.EffectItemType1,count:conjuredCount(s,sp),startedAt:s.clock,endsAt:s.clock+sp.castMs};
- else if(teleports[id])s.activity={type:'teleport',spell:id,to:teleports[id],startedAt:s.clock,endsAt:s.clock+sp.castMs};
+ const sp=spellInfo(s,id);if(mageBuffs.has(sp.SpellName)&&![s,...s.party].some(c=>c.id===(targetId||s.id)&&c.hp>0))throw new Error('请选择存活的队友');stopRecovery(s);s.cast=null;const timing=beginSpellTiming(s,sp,s.clock);
+ if(['Conjure Food','Conjure Water'].includes(sp.SpellName))s.activity={type:'conjure',timing,spell:id,item:sp.EffectItemType1,count:conjuredCount(s,sp),startedAt:s.clock,endsAt:s.clock+sp.castMs};
+ else if(teleports[id])s.activity={type:'teleport',timing,spell:id,to:teleports[id],startedAt:s.clock,endsAt:s.clock+sp.castMs};
  else{
   s.activity={type:'idle'};
   const kind=sp.SpellName==='Frost Armor'?'armor':sp.SpellName==='Arcane Intellect'?'int':sp.SpellName;
@@ -51,11 +52,11 @@ export function beginUtilitySpell(s,id,targetId){
 
 export function finishUtilitySpell(s){
  const a=s.activity;
- if(a.type==='conjure'){addItem(s,a.item,a.count);log(s,'制造了 '+nameOf('items',a.item)+' ×'+a.count,'loot');}
+ if(a.type==='conjure'){if(!finishSpellTiming(s,a.timing,s.clock))return;addItem(s,a.item,a.count);log(s,'制造了 '+nameOf('items',a.item)+' ×'+a.count,'loot');}
  else if(a.type==='teleport'){
   const required=reagents(spellInfo(s,a.spell));
   if(required.some(r=>usableCount(s,r.id)<r.count)){s.activity={type:'idle',reason:'传送材料不足，施法已取消'};return;}
-  for(const r of required)consume(s,r.id,r.count);
+  if(!finishSpellTiming(s,a.timing,s.clock))return;for(const r of required)consume(s,r.id,r.count);
   s.activity={type:'idle'};if(s.dungeon)leaveDungeon(s);
   s.location=a.to;if(!s.visited.includes(a.to))s.visited.push(a.to);s.groundEffects=[];
   log(s,'传送至 '+nodes[a.to].name,'travel');

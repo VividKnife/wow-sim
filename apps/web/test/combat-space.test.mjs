@@ -51,7 +51,7 @@ test('a mage uses a rooted enemy to leave melee instead of standing in its reach
 });
 test('movement clamps at reach and uses the strongest slow, then restores speed',()=>{
  const u={position:0,positionY:0,moveSpeed:10,slow:.5,slowUntil:1000,auras:[{type:33,amount:-30,until:1000}]};
- assert.equal(effectiveSpeed(u,0),5);moveToward(u,{position:3,positionY:4},4.8,0);assert.ok(Math.abs(distance(u,{position:3,positionY:4})-4.8)<1e-9);
+ assert.equal(effectiveSpeed(u,0),5);moveToward(null,u,{position:3,positionY:4},4.8,0);assert.ok(Math.abs(distance(u,{position:3,positionY:4})-4.8)<1e-9);
  assert.equal(effectiveSpeed(u,1000),10);u.rootUntil=2000;assert.equal(effectiveSpeed(u,1500),0);
 });
 test('a ground cast is cancelled if its fixed area would break newly applied crowd control',()=>{

@@ -4,7 +4,7 @@ import {createGame,stats,act,view,advance} from '../../../packages/game-domain/s
 import {startCombat,combatTick,hurtPlayer} from '../../../packages/game-domain/src/rules/combat.js';
 import {talents,classTalentTrees,classDefinitions} from '../../../packages/game-domain/src/rules/catalog.js';
 import {spellInfo} from '../../../packages/game-domain/src/rules/character.js';
-import {validateRules} from '../../../packages/game-domain/src/rules/combat-strategy.js';
+import {validateRules,currentStrategyRules} from '../../../packages/game-domain/src/rules/combat-strategy.js';
 import {defaultClassRules} from '../../../packages/game-domain/src/rules/class-support.js';
 
 function fixture(classId,learned,rules=learned){
@@ -45,7 +45,7 @@ test('hunter and warlock summons deal attributed damage and are not free repeate
 test('dead hunter pets require a paid Revive Pet cast and return at 15 percent health',()=>{
  const s=fixture(3,[883,982,1515],[883]);combatTick(s);const pet=s.pet;pet.hp=0;s.clock=1600;combatTick(s);assert.equal(s.pet.hp,0,'Call Pet cannot revive');
  s.rules=[{spell:1515,condition:'always',value:0,enabled:true}];s.nextAction=0;combatTick(s);assert.equal(s.cast,null,'taming cannot replace a dead owned pet');
- s.rules=[{spell:982,condition:'always',value:0,enabled:true}];const mana=s.mana;combatTick(s);assert.equal(s.cast?.spell,982);assert.ok(s.mana<mana);const end=s.cast.until;s.rules=[];tickTo(s,end);assert.equal(s.pet,pet);assert.equal(s.pet.hp,Math.round(s.pet.maxHp*.15));
+ s.rules=[{spell:982,condition:'always',value:0,enabled:true}];const mana=s.mana;combatTick(s);assert.equal(s.cast?.spell,982);assert.equal(s.mana,mana);assert.ok(s.cast.timing.cost>0);const end=s.cast.until;s.rules=[];tickTo(s,end);assert.equal(s.pet,pet);assert.equal(s.pet.hp,Math.round(s.pet.maxHp*.15));
 });
 
 test('hunters keep fighting when a faster melee enemy prevents reaching bow range',()=>{
@@ -62,8 +62,8 @@ test('druid cat form consumes energy on Claw and regenerates it separately from 
  const s=fixture(11,[768,1082]);tickTo(s,7000);assert.equal(s.form,'cat');assert.ok(s.logs.some(l=>l.kind==='damage'&&l.spellId===1082));assert.ok(s.energy<100&&s.energy>=0); // Without Furor, shifting starts at zero energy; the third tick funds Claw.
 });
 
-test('all nine default strategy lists can be saved without an unsupported hidden rule',()=>{
- for(const classId of [1,2,3,4,5,7,8,9,11]){const s=fixture(classId,[]);assert.doesNotThrow(()=>validateRules(s,defaultClassRules(classId)));}
+test('all nine default strategy lists project to learned active skills before saving',()=>{
+ for(const classId of [1,2,3,4,5,7,8,9,11]){const s=fixture(classId,[]);assert.doesNotThrow(()=>validateRules(s,currentStrategyRules(s,defaultClassRules(classId))));}
 });
 
 test('talent ranks change spell cast times, costs, and actual healing',()=>{

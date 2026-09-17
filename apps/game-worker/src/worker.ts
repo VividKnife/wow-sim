@@ -1,3 +1,5 @@
+import {WORKER_INTERVAL_MS} from '../../../packages/game-domain/src/simulation-cadence.ts';
+
 export interface WorkerService {
   work(now?: number, limit?: number): Promise<unknown>;
 }
@@ -11,7 +13,7 @@ type WorkerOptions = {
 };
 
 export function createGameWorker(options: WorkerOptions) {
-  const intervalMs = options.intervalMs ?? 1_000;
+  const intervalMs = options.intervalMs ?? WORKER_INTERVAL_MS;
   const limit = options.limit ?? 100;
   const now = options.now ?? Date.now;
   if (!Number.isFinite(intervalMs) || intervalMs < 1) throw new Error('intervalMs must be positive');

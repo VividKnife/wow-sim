@@ -17,9 +17,9 @@ const viewKeys = [
   'questTools','shop','gatherables','bagCapacity','skills','talents','canTrain','hasFlight','city','interactions'
 ] as const;
 
-const actorKeys=['id','name','classId','raceId','level','role','hp','mana','rage','energy','power','form','stance','position','positionY','maxHp','maxMana','spell','kind','petUnit','totemUnit','ownerId','controlledBy','controlUntil','removed','dead','fleeing','stealthed','happiness','loyalty','target','combo','comboTarget','nextSwing','swingStartedAt','nextAttack','nextRanged','rangedStartedAt','nextOffhand','offhandStartedAt','swing','moveSpeed','speed','rootUntil','stunUntil','fearUntil','polyUntil','slowUntil','slow','movementSlows','cast','cooldowns','globalCooldown','equipment','learned','rules','strategyPolicy','autoBuffs','potions','buffs','classBuffs','talentBuffs','auras','dots','hots','periodicClass','absorb','manaShield','seal','judgement','reactiveClass','weaponEnchants','weaponEnchant','talentProcs','racialEffects','racialBuff','cannibalize','bloodrage','totemWeaponEnchant','lightwell','totems','stats','soulShardCount','creatureType','entry','rank','visual','sourceGuid','attackPower','armor','resistances','equippable'];
+const actorKeys=['id','name','classId','raceId','level','role','hp','mana','rage','energy','power','form','stance','position','positionY','maxHp','maxMana','spell','kind','petUnit','totemUnit','ownerId','controlledBy','controlUntil','removed','dead','fleeing','stealthed','happiness','loyalty','target','combo','comboTarget','nextSwing','swingStartedAt','nextAttack','nextRanged','rangedStartedAt','nextOffhand','offhandStartedAt','swing','moveSpeed','speed','rootUntil','stunUntil','fearUntil','polyUntil','slowUntil','slow','movementSlows','cast','cooldowns','categoryCooldowns','globalCooldowns','equipment','learned','rules','strategyPolicy','autoBuffs','potions','buffs','classBuffs','talentBuffs','auras','dots','hots','periodicClass','absorb','manaShield','seal','judgement','reactiveClass','weaponEnchants','weaponEnchant','talentProcs','racialEffects','racialBuff','cannibalize','bloodrage','totemWeaponEnchant','lightwell','totems','stats','soulShardCount','creatureType','entry','rank','visual','sourceGuid','attackPower','armor','resistances','equippable'];
 const enemyKeys=[...actorKeys,'minDamage','maxDamage','attackTime','spells','threat','smite','capturePhase','captureUntil'];
-const combatKeys=['id','runId','routeId','encounterId','startedAt','endedAt','dungeon','participantIds','metrics','projectiles','actorsSnapshot'];
+const combatKeys=['area','id','runId','routeId','encounterId','startedAt','endedAt','dungeon','pull','participantIds','metrics','projectiles','actorsSnapshot'];
 const dungeonKeys=['id','runId','cursor','position','startedAt','completedAt','metrics'];
 const activityKeys=['type','reason','to','from','startedAt','endsAt','target','quest','spell','caster','targets','routeId','auto','flight','stopAtNext'];
 
@@ -35,8 +35,8 @@ function pick(source:Record<string,unknown>,keys:readonly string[]){
  for(const key of keys)if(Object.hasOwn(source,key)&&source[key]!==undefined)target[key]=copy(source[key]);
  return target;
 }
-const ruleView=(rule:any)=>pick(rule||{},['spell','condition','value','enabled','target','count','health','mana']);
-const policyKeys=['role','target','healing','threat','protectCC','waitForTank'];
+const ruleView=(rule:any)=>({...pick(rule||{},['spell','condition','value','enabled','target','count','health','mana']),...(Array.isArray(rule?.and)?{and:rule.and.map((clause:any)=>pick(clause,['condition','value']))}:{})});
+const policyKeys=['role','target','healing','threat','protectCC','waitForTank','pullDelaySeconds'];
 const autoBuffKeys=['enabled','armor','int','sta','targets','refreshSeconds'];
 const actorView=(actor:any)=>{const result=pick(actor||{},actorKeys);if(Array.isArray(actor?.rules))result.rules=actor.rules.map(ruleView);if(actor?.strategyPolicy)result.strategyPolicy=pick(actor.strategyPolicy,policyKeys);if(actor?.autoBuffs)result.autoBuffs=pick(actor.autoBuffs,autoBuffKeys);if(actor?.potions)result.potions=pick(actor.potions,['enabled','health','mana','healthItem','manaItem']);return result;};
 const enemyView=(enemy:any)=>pick(enemy||{},enemyKeys);
@@ -60,7 +60,7 @@ export function projectClientSnapshot(state:Record<string,unknown>,view:Record<s
  if((view as any).battleView)clientView.battleView=battlePresentationView((view as any).battleView);
  if(Array.isArray((view as any).party))clientView.party=(view as any).party.map(actorView);
  if((view as any).escortNpc)clientView.escortNpc=actorView((view as any).escortNpc);
- if(Array.isArray((view as any).strategyMembers))clientView.strategyMembers=(view as any).strategyMembers.map((member:any)=>({id:member.id,name:member.name,classId:member.classId,rules:Array.isArray(member.rules)?member.rules.map(ruleView):[],policy:pick(member.policy||{},policyKeys),autoBuffs:pick(member.autoBuffs||{},autoBuffKeys),potions:pick(member.potions||{},['enabled','health','mana','healthItem','manaItem']),skills:copy(member.skills||[])}));
+ if(Array.isArray((view as any).strategyMembers))clientView.strategyMembers=(view as any).strategyMembers.map((member:any)=>({id:member.id,name:member.name,classId:member.classId,role:member.role,presets:copy(member.presets||[]),rules:Array.isArray(member.rules)?member.rules.map(ruleView):[],policy:pick(member.policy||{},policyKeys),autoBuffs:pick(member.autoBuffs||{},autoBuffKeys),potions:pick(member.potions||{},['enabled','health','mana','healthItem','manaItem']),skills:copy(member.skills||[])}));
  if(clientView.battleView&&((state as any).combat||(state as any).lastCombat)){
   (clientView.battleView as Record<string,unknown>).actors=combatMembers(state as any,(state as any).combat||(state as any).lastCombat).map(actorView);
  }

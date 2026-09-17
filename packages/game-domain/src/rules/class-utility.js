@@ -1,3 +1,4 @@
+import {beginSpellTiming,finishSpellTiming,spellReady} from './spell-timing.js';
 import {petTrainingCost,petTrainingReason} from './pet-progression.js';
 import {ritualUse,finishRitual} from './class-ritual.js';
 import {doomRitualUse,beginDoomRitual,summonInfernal} from './combat.js';
@@ -31,14 +32,14 @@ const petChannels=new Set(['Mend Pet','Health Funnel']);
 const pool=sp=>[4294967294,-2].includes(sp.PowerType)?'hp':sp.PowerType===1?'rage':sp.PowerType===3?'energy':'mana';
 export function classUtilityUse(s,id,targetId){
  const sp=spellInfo(s,id);if(!sp)return null;targetId??=petChannels.has(sp.SpellName)?s.pet?.id:s.id;
- if(sp.SpellName==='Tame Beast'){const e=s.combat?.enemies.find(e=>e.id===targetId),entry=e?.entry||(String(targetId).startsWith('npc:')?Number(String(targetId).slice(4)):0),raw=creatures[entry];const reason=!s.learned.includes(id)?'尚未学习驯服野兽':s.hp<=0?'角色已死亡':s.escort?'请先结束当前活动':(s.globalCooldown||0)>s.clock?'技能尚未冷却':s.pet||s.hunterPet?'请先放弃当前宠物':!e&&!monsterIdsAt(s.location).includes(entry)?'请选择当前位置的野兽':raw?.CreatureType!==1?'目标不是野兽':(e?.level||raw?.MinLevel)>s.level?'目标等级过高':s.mana<sp.mana?'法力不足':!['idle','hunt'].includes(s.activity.type)?'请先结束当前活动':'';return{canUse:!reason,reason,label:'驯服',description:'选择野兽目标，引导驯服并保留其种类',targetId};}
+ if(sp.SpellName==='Tame Beast'){const e=s.combat?.enemies.find(e=>e.id===targetId),entry=e?.entry||(String(targetId).startsWith('npc:')?Number(String(targetId).slice(4)):0),raw=creatures[entry];const reason=!s.learned.includes(id)?'尚未学习驯服野兽':s.hp<=0?'角色已死亡':s.escort?'请先结束当前活动':!spellReady(s,sp,s.clock)?'技能尚未冷却':s.pet||s.hunterPet?'请先放弃当前宠物':!e&&!monsterIdsAt(s.location).includes(entry)?'请选择当前位置的野兽':raw?.CreatureType!==1?'目标不是野兽':(e?.level||raw?.MinLevel)>s.level?'目标等级过高':s.mana<sp.mana?'法力不足':!['idle','hunt'].includes(s.activity.type)?'请先结束当前活动':'';return{canUse:!reason,reason,label:'驯服',description:'选择野兽目标，引导驯服并保留其种类',targetId};}
 
  // Original food/water, first two teleports and long mage buffs retain their
  // established UI/API path; every other direct class action uses this path.
  if([3561,3562].includes(id)||['Conjure Food','Conjure Water','Frost Armor','Arcane Intellect'].includes(sp.SpellName))return null;
  const item=createdItem(s,sp),to=destination(s,sp),portal=sp.SpellName.startsWith('Portal:'),kind=classAbilityKind(sp),target=combatMembers(s,null).find(c=>c.id===targetId);
  const ritual=sp.SpellName==='Ritual of Summoning'?ritualUse(s,targetId):sp.SpellName==='Ritual of Doom'?doomRitualUse(s):null,environmental=environmentSpellUse(s,sp,targetId),observation=observationUse(s,sp,targetId),racial=racialActiveNames.has(sp.SpellName);if(environmental&&(sp.Attributes&64))return null;if(!item&&!to&&!racial&&!observation&&!environmental&&!ritual&&!friendlyKinds.has(kind)&&!friendlyChannels.has(sp.SpellName))return null;
- let reason=s.hp<=0?'角色已死亡':s.combat&&!observation?'战斗中请通过战斗策略释放':s.escort?'正在护送':!['idle','hunt'].includes(s.activity.type)?'请先结束当前活动':!s.learned.includes(id)?'尚未学习这个技能':!target&&!observation?'目标不在小队中':(s.cooldowns[id]||0)>s.clock||(s.globalCooldown||0)>s.clock?'技能尚未冷却':(s[pool(sp)]||0)<sp.mana?'资源不足':'';
+ let reason=s.hp<=0?'角色已死亡':s.combat&&!observation?'战斗中请通过战斗策略释放':s.escort?'正在护送':!['idle','hunt'].includes(s.activity.type)?'请先结束当前活动':!s.learned.includes(id)?'尚未学习这个技能':!target&&!observation?'目标不在小队中':!spellReady(s,sp,s.clock)?'技能尚未冷却':(s[pool(sp)]||0)<sp.mana?'资源不足':'';
  if(!reason&&target&&target!==s&&!petChannels.has(sp.SpellName)&&[1,2,3].filter(n=>sp['Effect'+n]).every(n=>sp['EffectImplicitTargetA'+n]===1&&!sp['EffectImplicitTargetB'+n]))reason='此技能只能对自己施放';
  if(!reason&&observation)reason=observation.reason;
  if(!reason&&environmental)reason=environmental.reason;
@@ -66,14 +67,14 @@ export function classUtilityUse(s,id,targetId){
 }
 export function beginClassUtility(s,id,targetId){
  const use=classUtilityUse(s,id,targetId);if(!use)return false;if(!use.canUse)throw new Error(use.reason);
- const sp=spellInfo(s,id);s.rest=null;s[pool(sp)]-=sp.mana;if(pool(sp)==='mana')s.lastManaUse=s.clock;s.globalCooldown=s.clock+1500;s.cooldowns[id]=s.clock+sp.cooldownMs;
+ const sp=spellInfo(s,id);s.rest=null;const timing=beginSpellTiming(s,sp,s.clock,{pool:pool(sp),channel:friendlyChannels.has(sp.SpellName)});
  if(friendlyChannels.has(sp.SpellName)){
   for(const r of materials(sp))consume(s,r.id,r.count);
   const interval=classChannelInterval(sp),until=s.clock+sp.durationMs;
   s.cast={spell:id,target:use.targetId,channel:true,nextTick:s.clock+interval,interval,until,endsAt:until};
   s.activity={type:'classChannel',spell:id,target:use.targetId,startedAt:s.clock,endsAt:until};return true;
  }
- s.activity={type:'classSpell',spell:id,target:use.targetId,item:use.item,to:use.to,portal:use.portal,startedAt:s.clock,endsAt:s.clock+sp.castMs};
+ s.activity={type:'classSpell',timing,spell:id,target:use.targetId,item:use.item,to:use.to,portal:use.portal,startedAt:s.clock,endsAt:s.clock+sp.castMs};
  if(!sp.castMs)finishClassUtility(s);return true;
 }
 export function cancelClassChannel(s){if(s.activity.type==='classChannel'){s.cast=null;s.activity={type:'idle'};}}
@@ -90,7 +91,7 @@ export function finishClassUtility(s){
  if(sp.SpellName==='Ritual of Summoning'&&!ritualUse(s,a.target).canUse){log(s,'召唤仪式条件不再满足','cancel');return;}
  if(sp.SpellName==='Ritual of Doom'&&!doomRitualUse(s).canUse){log(s,'末日仪式条件不再满足','cancel');return;}
  const required=materials(sp);if(required.some(r=>usableCount(s,r.id)<r.count)){log(s,'技能材料不足，施法取消','cancel');return;}
- for(const r of required)consume(s,r.id,r.count);
+ if(!finishSpellTiming(s,a.timing,s.clock)){log(s,'资源不足，施法取消','cancel');return;}for(const r of required)consume(s,r.id,r.count);
  if(a.item){addItem(s,a.item.id,a.item.count);log(s,'制造了 '+nameOf('items',a.item.id)+' ×'+a.item.count,'loot');return;}
  if(a.portal){s.portals=(s.portals||[]).filter(p=>p.until>s.clock);s.portals.push({spell:a.spell,from:s.location,to:a.to,until:s.clock+(sp.durationMs||60000)});log(s,'开启通往 '+nodes[a.to].name+' 的传送门','buff');return;}
  if(a.to){relocate(s,a.to);return;}

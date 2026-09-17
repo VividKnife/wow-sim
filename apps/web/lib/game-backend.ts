@@ -64,7 +64,7 @@ export async function proxyGameRequest(request: Request, options: ProxyOptions):
   const body = method === 'GET' || method === 'HEAD' ? undefined : await request.arrayBuffer();
   let upstream: Response;
   try {
-    upstream = await (options.fetchImpl ?? fetch)(new Request(destination, {method, headers, body, redirect: 'manual'}));
+    upstream = await (options.fetchImpl ?? fetch)(new Request(destination, {method, headers, body, redirect: 'manual', signal: request.signal}));
   } catch {
     return failure();
   }

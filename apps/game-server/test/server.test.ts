@@ -5,6 +5,8 @@ import WebSocket from 'ws';
 import {createGameServer, type GameServerOptions, type GameSnapshot} from '../src/server.ts';
 import {signGameToken} from '../src/auth.ts';
 import {createGame} from '../../../packages/game-domain/src/rules/engine.js';
+import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
+import {finishCombat} from '../../../packages/game-domain/src/rules/combat-metrics.js';
 import {GameService} from '../../../packages/game-domain/src/service.ts';
 import {MemoryStore} from '../../../packages/persistence/src/memory.ts';
 import {CONTENT_VERSION} from '../../../packages/game-domain/src/rules/client-content.js';
@@ -74,6 +76,22 @@ async function auth(accountId: string) {
 
 test('server startup rejects a shared secret shorter than 32 bytes', () => {
   assert.throws(() => createGameServer({service: fakeService(), secret: 'weak'}), /32/);
+});
+
+test('combat scope has its own ETag and refreshes the complete view when combat ends',async t=>{
+ const service=fakeService(),state:any=createGame('同步',31,0);startCombat(state,[299]);
+ let revision=1;
+ service.snapshot=async(accountId,characterId)=>({...snapshot(accountId,characterId,revision),state});
+ const {game,url}=await start(service);t.after(()=>game.close());const headers=await auth('account-a');
+ const compact=await fetch(`${url}/game?scope=combat`,{headers}),compactBody:any=await compact.json();
+ assert.equal(compactBody.scope,'combat');assert.equal(compactBody.snapshot.view.skills,undefined);
+ const unchanged=await fetch(`${url}/game?scope=combat`,{headers:{...headers,'If-None-Match':compact.headers.get('etag')!}});
+ assert.equal(unchanged.status,304);
+ const full=await fetch(`${url}/game`,{headers:{...headers,'If-None-Match':compact.headers.get('etag')!}});
+ assert.equal(full.status,200);assert.equal((await full.json() as any).scope,'full');
+ finishCombat(state);revision++;
+ const ended:any=await (await fetch(`${url}/game?scope=combat`,{headers})).json();
+ assert.equal(ended.scope,'full');assert.ok(ended.snapshot.view.skills);assert.ok(ended.snapshot.player.lastCombat);
 });
 
 test('two authenticated clients only receive their own projected game snapshot', async (t) => {
@@ -240,6 +258,7 @@ test('the HTTP boundary integrates with a real GameService and isolates its crea
   assert.equal(empty.status, 200);
   assert.deepEqual(await empty.json(), {
     protocolVersion: 1,
+    scope: 'full',
     contentVersion: CONTENT_VERSION,
     revision: 0,
     snapshot: null,

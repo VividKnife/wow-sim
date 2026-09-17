@@ -1,5 +1,6 @@
+import {setCombatPosition} from './combat-area.js';
 import {log} from './character.js';
 // Party members are AI companions on the shared route. Two living nearby
 // companions automatically perform the two helper interactions.
 export function ritualUse(s,targetId){const target=s.party.find(c=>c.id===targetId),helpers=s.party.filter(c=>c!==target&&c.hp>0&&(!c.location||c.location===s.location)&&Math.hypot((c.position||0)-(s.position||0),(c.positionY||0)-(s.positionY||0))<=10);const reason=s.combat?'战斗中无法召唤':s.dungeon?'当前副本内无法进行召唤仪式':!target||target.hp<=0?'请选择存活的队友':helpers.length<2?'需要另外两名存活且在身边的队友协助':target.location&&target.location!==s.location?'':Math.hypot((target.position||0)-(s.position||0),(target.positionY||0)-(s.positionY||0))<=10?'目标已经在身边':'';return{canUse:!reason,reason,targetId,helperIds:helpers.slice(0,2).map(c=>c.id),description:'两名队友协助，将指定队友召唤至身边'};}
-export function finishRitual(s,targetId){const use=ritualUse(s,targetId);if(!use.canUse)return false;const target=s.party.find(c=>c.id===targetId);target.location=s.location;target.position=s.position||0;target.positionY=(s.positionY||0)+2;target.cast=null;log(s,`两名队友协助召唤了 ${target.name}`,'cast',{spellId:698,targetId});return true;}
+export function finishRitual(s,targetId){const use=ritualUse(s,targetId);if(!use.canUse)return false;const target=s.party.find(c=>c.id===targetId);target.location=s.location;setCombatPosition(s,target,{x:s.position||0,y:(s.positionY||0)+2});target.cast=null;log(s,`两名队友协助召唤了 ${target.name}`,'cast',{spellId:698,targetId});return true;}

@@ -22,7 +22,7 @@ test('disabled player healing and shielding stay disabled while injured',()=>{
  combatTick(s);assert.equal(s.cast,null);assert.equal(s.absorb,undefined);assert.equal(s.mana,mana);
 });
 test('player priest spends the last affordable Smite cost and still heals below its configured threshold',()=>{
- const s=priest();s.mana=spellInfo(s,585).mana;combatTick(s);assert.equal(s.cast?.spell,585);assert.equal(s.mana,0);
+ const s=priest();s.mana=spellInfo(s,585).mana;combatTick(s);assert.equal(s.cast?.spell,585);assert.equal(s.mana,s.cast.timing.cost);s.rules=[];s.clock=s.cast.until;combatTick(s);assert.equal(s.mana,0);
  const hurt=priest();hurt.hp=Math.floor(stats(hurt).maxHp*.4);combatTick(hurt);assert.equal(hurt.cast?.spell,2050);
 });
 test('player priest without mana can finish a real low-level enemy with equipped weapon attacks',()=>{

@@ -1,6 +1,7 @@
 import { assertTable, validateRow } from './store.ts';
 import type { Row, Store, Transaction, TableName, Where } from './store.ts';
 import { schemaSql } from './schema.ts';
+import { setTimeout as delay } from 'node:timers/promises';
 type QueryResult = {
     rows: any[];
 };
@@ -62,13 +63,17 @@ export class PostgresStore implements Store {
                 }).code;
                 // Concurrent create/upsert can surface as a uniqueness violation instead of 40001.
                 // Retrying the entire business transaction lets its receipt/lease checks decide.
-                if (attempt >= 5 || !['40001', '40P01', '23505'].includes(code || ''))
+                if (attempt >= 8 || !['40001', '40P01', '23505'].includes(code || ''))
                     throw error;
             }
             finally {
                 active = false;
                 client.release();
             }
+            // Let competing transactions finish before taking a fresh snapshot.
+            // Release the connection first so backoff never exhausts the pool.
+            const backoff = Math.min(250, 20 * 2 ** attempt);
+            await delay(backoff + Math.floor(Math.random() * backoff));
         }
     }
     async close() { await this.pool.end(); }

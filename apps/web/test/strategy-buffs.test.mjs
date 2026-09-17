@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame,act,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
+import {createGame,act,advance,stats,view} from '../../../packages/game-domain/src/rules/engine.js';
 import {companionSkills} from '../../../packages/game-domain/src/rules/party.js';
 import {spellInfo,newCharacter,addItem} from '../../../packages/game-domain/src/rules/character.js';
 import {ruleMatches,strategyAllows} from '../../../packages/game-domain/src/rules/combat-strategy.js';
@@ -13,7 +13,7 @@ test('strategies persist on the selected member and validate class and count thr
  s=act(s,{type:'strategy',target:'companion-warrior',rules,policy:{protectCC:true,waitForTank:false}},0);
  assert.deepEqual(s.party[0].rules,rules);assert.notDeepEqual(s.rules,rules);
  assert.throws(()=>act(s,{type:'strategy',target:'companion-warrior',rules:[{...rules[0],spell:8078}]},0),/技能/);
- assert.throws(()=>act(s,{type:'strategy',rules:[{...rules[0],spell:1449,value:0}]},0),/阈值/);
+ assert.throws(()=>act(s,{type:'strategy',rules:[{...rules[0],spell:133,value:0}]},0),/阈值/);
 });
 
 test('warriors learn legitimate Cleave only at level 20 and priests learn Fortitude',()=>{
@@ -25,7 +25,7 @@ test('warriors learn legitimate Cleave only at level 20 and priests learn Fortit
 
 test('pre-pull armor spends real mana and waits through its GCD without duplicate buffs',()=>{
  let s=createGame('增益',43,0);s.settings.health=1;s.settings.mana=1;
- s=act(s,{type:'strategy',rules:s.rules,autoBuffs:{enabled:true,armor:true,int:false,sta:false,targets:'self',refreshSeconds:30}},0);
+ s=act(s,{type:'strategy',rules:view(s).strategyMembers[0].rules,autoBuffs:{enabled:true,armor:true,int:false,sta:false,targets:'self',refreshSeconds:30}},0);
  const mana=s.mana,cost=spellInfo(s,168).mana;
  s=act(s,{type:'hunt',id:299},0);s=advance(s,100).state;
  assert.equal(s.combat,null);assert.equal(s.buffs.armor?.spell,168);assert.equal(s.mana,mana-cost);
@@ -58,6 +58,9 @@ test('AOE tank waiting checks every splash target and CC checks the fixed ground
  assert.equal(strategyAllows(s,s,a,sp),false);
  b.target=tank.id;b.threat[tank.id]=1;assert.equal(strategyAllows(s,s,a,sp),true);
  a.hp=0;b.polyUntil=1000;
+ // A final sheep is intentionally attackable; keep another living enemy
+ // outside the ground area to test protection of a genuine secondary target.
+ s.combat.enemies.push({...a,id:'c',hp:100,position:50});
  assert.equal(strategyAllows(s,s,null,sp,undefined,{x:10,y:0}),false);
  b.position=30;assert.equal(strategyAllows(s,s,null,sp,undefined,{x:10,y:0}),true);
 });
@@ -79,13 +82,12 @@ test('priest rescues an injured ally before damage count and tank-wait condition
  assert.equal(stanceAllows({...tank,stance:'defensive'},spellInfo(tank,355)),true);
 });
 
-test('authorized dungeon preparation resumes travel and can be stopped before pulling',()=>{
+test('explicit dungeon advance enters the room immediately even with automatic buffs enabled',()=>{
  let s=createGame('副本准备',67,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
  for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);
  s.location='deadmines';s=act(s,{type:'enterDungeon'},0);s.autoBuffs={enabled:true,armor:true,int:false,sta:false,targets:'self',refreshSeconds:30};
- s=act(s,{type:'dungeonNext'},0);assert.equal(s.activity.type,'prepareDungeon');
- const stopped=act(s,{type:'stop'},0);assert.equal(advance(stopped,2000,{}).state.combat,null);assert.equal(stopped.preparationTravel,undefined);
- s=advance(s,1600,{}).state;assert.equal(s.activity.type,'dungeonTravel');assert.ok(s.buffs.armor);assert.equal(s.preparationTravel,undefined);
+ s=act(s,{type:'dungeonNext'},0);assert.ok(s.combat);assert.equal(s.combat.pull.startsAt,3000);assert.equal(s.activity.type,'idle');
+ s=advance(s,1600,{}).state;assert.equal(s.combat.pull.engagedAt,null);assert.equal(s.buffs.armor,undefined);
 });
 
 test('party preparation assigns shared buffs to the strongest caster without duplicate casts',()=>{
@@ -103,13 +105,12 @@ test('insufficient buff mana waits for natural recovery without stopping the hun
  const after=advance(s,30000).state;assert.ok(after.buffs.armor);assert.equal(after.activity.type,'hunt');
 });
 
-for(const dungeon of [false,true])test(`${dungeon?'dungeon':'outdoor'} preparation finishes affordable buffs before drinking`,()=>{
+test('outdoor preparation finishes affordable buffs before drinking',()=>{
  let s=createGame('集中补增益',53,0);s.level=20;s.learned.push(1459);s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
  s.settings={health:1,mana:100,autoFood:true,autoWater:true};addItem(s,1205,20);
  s.autoBuffs={enabled:true,armor:true,int:true,sta:false,targets:'self',refreshSeconds:30};
- if(dungeon){for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);s.location='deadmines';s=act(s,{type:'enterDungeon'},0);}
  const initialMana=s.mana,cost=spellInfo(s,168).mana+spellInfo(s,1459).mana;
- s=act(s,{type:dungeon?'dungeonNext':'hunt',id:299},0);s=advance(s,1600,{}).state;
+ s=act(s,{type:'hunt',id:299},0);s=advance(s,1600,{}).state;
  assert.equal(s.logs.filter(l=>l.kind==='buff').length,2);
  assert.equal(s.totals.water,0,'enough mana for both buffs without an intervening drink');
  assert.equal(s.mana,initialMana-cost);assert.equal(s.combat,null);

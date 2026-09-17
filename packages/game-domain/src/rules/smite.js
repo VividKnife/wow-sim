@@ -1,3 +1,4 @@
+import {boundedCombatPoint} from './combat-area.js';
 import reference from '../../../game-data/data/deadmines-reference.json' with {type:'json'};
 import {creatures} from './catalog.js';
 import {log} from './character.js';
@@ -23,8 +24,8 @@ export function smiteTick(s,e,actors,hurt){
   return true;
  }
  if(p.stage==='running'){
-  const destination={position:p.chestPosition,positionY:0};
-  e.moveSpeed??=runSpeed;moveToward(e,destination,0,s.clock,elapsed);
+  const destination=boundedCombatPoint(s.combat?.area,{x:p.chestPosition,y:0});
+  e.moveSpeed??=runSpeed;moveToward(s,e,destination,0,s.clock,elapsed);
   if(distance(e,destination)<.001){p.stage='kneeling';p.until=s.clock+3000;e.weapons=[];e.dualWield=false;log(s,'重拳先生正在更换武器。','combat',{actorId:e.id});}
   return true;
  }

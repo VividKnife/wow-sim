@@ -8,5 +8,5 @@ export function creatureVisual(unit){
   ||manifest.families[unit?.family??unit?.Family]
   ||manifest.types[unit?.creatureType??unit?.CreatureType]
   ||'unknown';
- return assets[id]||assets.unknown;
+ return {...(assets[id]||assets.unknown),species:id,creatureType:manifest.entries[unit?.entry]?.creatureType??unit?.creatureType};
 }

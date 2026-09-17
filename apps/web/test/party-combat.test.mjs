@@ -1,3 +1,5 @@
+import {cooldownUntil,beginSpellTiming} from '../../../packages/game-domain/src/rules/spell-timing.js';
+import {spellInfo} from '../../../packages/game-domain/src/rules/character.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,stats,advance} from '../../../packages/game-domain/src/rules/engine.js';
@@ -18,19 +20,19 @@ test('Disarm suppresses weapon abilities and cancels a queued Heroic Strike with
 
 test('priest casts a real heal, spends mana, and adds threat for effective healing only',()=>{
  const s=group(),tank=member(s,'warrior'),priest=member(s,'priest');tank.hp=20;const mana=priest.mana;combatTick(s);
- assert.equal(priest.cast?.friendly,true);assert.equal(priest.cast.target,tank.id);assert.ok(priest.mana<mana);
+ assert.equal(priest.cast?.friendly,true);assert.equal(priest.cast.target,tank.id);assert.equal(priest.mana,mana);
  const finish=priest.cast.until;tank.hp=stats(tank).maxHp-7;priest.nextAction=finish+1500;s.clock=finish;combatTick(s);
- const heal=s.logs.find(l=>l.kind==='heal');assert.equal(heal.amount,7);assert.equal(heal.targetId,tank.id);assert.equal(s.combat.enemies[0].threat[priest.id],3.5);
+ assert.ok(priest.mana<mana);const heal=s.logs.find(l=>l.kind==='heal');assert.equal(heal.amount,7);assert.equal(heal.targetId,tank.id);assert.equal(s.combat.enemies[0].threat[priest.id],3.5);
 });
 
 test('warrior taunts a lost target and spends earned rage on stacking armor reduction',()=>{
  const s=group(),tank=member(s,'warrior'),e=s.combat.enemies[0];e.position=23;e.threat[s.id]=500;e.target=s.id;tank.rage=500;combatTick(s);
- assert.equal(e.target,tank.id);assert.equal(e.tauntedBy,tank.id);assert.equal(e.tauntUntil,3000);assert.ok(tank.cooldowns[355]>=10000);
+ assert.equal(e.target,tank.id);assert.equal(e.tauntedBy,tank.id);assert.equal(e.tauntUntil,3000);assert.ok(cooldownUntil(tank,spellInfo(tank,355))>=10000);
  s.clock=1500;combatTick(s);assert.equal(e.sunder?.stacks,1);assert.ok(tank.rage<500);assert.equal(e.sunder.amount,90);
 });
 
 test('rogue consumes energy, builds target-specific combo points, and spends them on Eviscerate',()=>{
- const s=group(),rogue=member(s,'rogue'),e=s.combat.enemies[0];rogue.position=27;combatTick(s);
+ const s=group(),rogue=member(s,'rogue'),e=s.combat.enemies[0];rogue.position=27;rogue.strategyPolicy={waitForTank:false};combatTick(s);
  assert.equal(rogue.energy,55);assert.equal(rogue.combo,1);assert.equal(rogue.comboTarget,e.id);
  rogue.energy=35;rogue.combo=4;rogue.nextAction=0;s.clock=1500;combatTick(s);
  assert.equal(rogue.energy,0);assert.equal(rogue.combo,0);assert.ok(s.logs.some(l=>l.kind==='cast'&&l.actorId===rogue.id&&l.spellId===6761));
@@ -66,7 +68,7 @@ test('a melee challenger can pull aggro even when a higher ranged challenger is 
 });
 
 test('companion attacks preserve polymorph when an uncontrolled enemy is available',()=>{
- const s=group();startCombat(s,[636,636],true);const [sheep,active]=s.combat.enemies;sheep.polyUntil=100000;sheep.position=30;active.position=30;member(s,'rogue').position=27;s.rules=[];
+ const s=group();startCombat(s,[636,636],true);const [sheep,active]=s.combat.enemies;sheep.polyUntil=100000;sheep.position=30;active.position=30;member(s,'rogue').position=27;s.rules=[];for(const role of ['rogue','priest'])member(s,role).strategyPolicy={waitForTank:false};
  combatTick(s);s.clock=100;combatTick(s); // Priest first walks into legal 2D Smite range.
  for(const role of ['rogue','priest']){const c=member(s,role),cast=s.logs.find(l=>l.actorId===c.id&&l.kind==='cast');assert.equal(cast?.targetId,active.id);}
  assert.equal(sheep.polyUntil,100000);
@@ -89,7 +91,7 @@ test('warrior follows a rescue taunt with an auto attack on that same enemy',()=
  for(const e of [held,loose]){e.position=23;e.rootUntil=100000;e.nextAttack=100000;e.hp=e.maxHp=100000;}
  held.target=tank.id;held.threat={[tank.id]:100};loose.target=s.id;loose.threat={[s.id]:100};
  combatTick(s);
- const hit=s.logs.find(l=>l.actorId===tank.id&&l.kind==='damage');
+ const hit=s.logs.find(l=>l.actorId===tank.id&&(l.kind==='damage'||l.kind==='miss'&&l.hand==='main'));
  assert.equal(loose.target,tank.id);assert.equal(hit?.targetId,loose.id);
  for(const c of [s,...s.party].filter(c=>c!==tank)){c.nextAction=100000;c.nextSwing=100000;}
  tank.rage=500;s.clock=1500;combatTick(s);
@@ -97,13 +99,13 @@ test('warrior follows a rescue taunt with an auto attack on that same enemy',()=
  assert.equal(sunder?.targetId,loose.id,'build threat on the taunted enemy before returning to the first enemy');
 });
 
-test('priest abandons a delayed Smite to heal without refunding mana or resetting the global cooldown',()=>{
+test('priest cancels delayed Smite without spending mana and retains its original global cooldown',()=>{
  const s=group(),priest=member(s,'priest'),tank=member(s,'warrior');
- priest.cast={spell:598,target:s.combat.enemies[0].id,startedAt:0,until:6500,pushbacks:4};priest.nextAction=6500;
+ const timing=beginSpellTiming(priest,spellInfo(priest,598),0);priest.cast={timing,spell:598,target:s.combat.enemies[0].id,startedAt:0,until:6500,pushbacks:4};priest.nextAction=6500;
  tank.hp=100;const mana=priest.mana;s.clock=700;combatTick(s);
- assert.equal(priest.cast,null);assert.equal(priest.mana,mana);assert.equal(priest.nextAction,1500);
+ assert.equal(priest.cast,null);assert.equal(priest.mana,mana);assert.equal(priest.globalCooldowns[133],1500);
  assert.ok(s.logs.some(l=>l.kind==='cancel'&&l.actorId===priest.id&&l.spellId===598));
- s.clock=1500;combatTick(s);assert.equal(priest.cast?.friendly,true);assert.equal(priest.cast.target,tank.id);assert.ok(priest.mana<mana);
+ s.clock=1500;combatTick(s);assert.equal(priest.cast?.friendly,true);assert.equal(priest.cast.target,tank.id);assert.equal(priest.mana,mana);
 });
 
 test('priest keeps casting damage when no affordable heal is available',()=>{

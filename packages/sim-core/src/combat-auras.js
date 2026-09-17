@@ -28,9 +28,9 @@ export const physicalDamageBonus=(unit,clock)=>activeAuras(unit,clock).filter(a=
 
 export function addCombatAura(unit,aura,clock){
  if(aura.mechanic){const immunity=activeAuras(unit,clock).find(a=>a.type===77&&a.misc===aura.mechanic);if(immunity){if(immunity.consumeOnImmune)immunity.until=clock;return;}}
- if(aura.type===27){unit.silenceUntil=Math.max(unit.silenceUntil||0,aura.until);unit.cast=null;}
+ if(aura.type===27){unit.cast=null;unit.nextAction=clock;}
  // Refresh an existing effect rather than duplicating ticks or modifiers.
- unit.auras=(unit.auras||[]).filter(a=>a.until>clock&&!(a.spell===aura.spell&&a.effect===aura.effect));
+ unit.auras=(unit.auras||[]).filter(a=>a.until>clock&&!(a.spell===aura.spell&&a.effect===aura.effect&&(!aura.perCaster||a.caster===aura.caster)));
  unit.auras.push(aura);
- if([7,12].includes(aura.type))unit.cast=null;
+ if([5,7,12].includes(aura.type)){unit.cast=null;unit.nextAction=clock;}
 }

@@ -3,7 +3,7 @@ import test from 'node:test';
 import {applyGameEvent,applyProjectedState,diffProjectedState,type GameSnapshotEvent} from '../src/events.ts';
 
 const initial:GameSnapshotEvent={
- type:'snapshot',sequence:4,protocolVersion:1,contentVersion:'content',revision:2,
+ type:'snapshot',sequence:4,protocolVersion:1,contentVersion:'content',revision:2,scope:'full',
  snapshot:{player:{id:'hero',money:10,bag:[{id:1,count:1}]},view:{location:{id:'town'}}},
 };
 

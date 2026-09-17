@@ -57,7 +57,7 @@ test('dual-wield attacks have independent hand timers and half-damage offhand',(
  const {s,e}=setup(639);e.dualWield=true;e.low=e.high=40;e.nextAttack=e.nextOffhand=s.clock;s.rngState=123456789; // Both hands hit; misses are covered separately.
  enemyMeleeTick(s,e,s,[s],hurtPlayer);
  const hits=s.logs.filter(l=>l.kind==='incoming');assert.equal(hits.length,2);
- assert.equal(hits[0].hand,'main');assert.equal(hits[1].hand,'off');assert.ok(Math.abs(hits[0].amount-hits[1].amount*2)<=1);
+ assert.equal(hits[0].hand,'main');assert.equal(hits[1].hand,'off');const normal=hit=>hit.amount/(hit.critical?2:hit.crushing?1.5:1);assert.ok(Math.abs(normal(hits[0])-normal(hits[1])*2)<=1);
  assert.equal(e.nextAttack,e.swing);assert.equal(e.nextOffhand,e.swing);
 });
 

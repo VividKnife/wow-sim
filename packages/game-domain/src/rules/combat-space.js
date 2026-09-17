@@ -3,6 +3,28 @@ import {rooted,controlled,movementMultiplier} from '../../../sim-core/src/combat
 import {ranks,talentModifiers,talentCombatDefense} from './talent-effects.js';
 
 import {point,distance} from '../../../sim-core/src/geometry.js';
+import {setCombatPosition} from './combat-area.js';
+import {combatMembers} from './combat-members.js';
+
+// A small steering preference during an already requested walk. Never schedules
+// movement, interrupts a cast, or pushes another actor out of its position.
+function walkingEndpoint(s,unit,p,desired){
+ if(unit.cast||unit.petUnit||unit.totemUnit||!s?.combat)return desired;
+ const members=combatMembers(s);
+ if(!members.some(a=>a.id===unit.id))return desired;
+ const neighbors=members.filter(a=>a.id!==unit.id&&a.hp>0&&!a.removed&&!a.totemUnit&&distance(a,unit)<3);
+ if(!neighbors.length)return desired;
+ const dx=desired.x-p.x,dy=desired.y-p.y;
+ const crowd=q=>neighbors.reduce((sum,a)=>sum+Math.max(0,1.4-distance(q,a))**2,0);
+ let best=desired,score=crowd(desired);
+ for(const angle of [-.4,.4]){
+  const q={x:p.x+dx*Math.cos(angle)-dy*Math.sin(angle),y:p.y+dx*Math.sin(angle)+dy*Math.cos(angle)};
+  const area=s.combat.area;if(area&&(q.x<area.minX||q.x>area.maxX||q.y<area.minY||q.y>area.maxY))continue;
+  const cost=crowd(q)+Math.hypot(dx,dy)*.04;
+  if(cost<score-1e-9){best=q;score=cost;}
+ }
+ return best;
+}
 
 export function effectiveSpeed(unit,clock){
  if(unit.cast?.controlChannel||unit.talentProcs?.spiritOfRedemption?.until>clock)return 0;
@@ -11,18 +33,17 @@ export function effectiveSpeed(unit,clock){
  const slow=unit.slowUntil>clock?Math.max(0,1-(unit.slow||0)):1;
  return Math.max(0,(['swim','underwater'].includes(unit.environment?.mode)?environmentModifiers(unit,clock).swimSpeed:(unit.moveSpeed??7))*(1+Math.max(speedBuff,talentModifiers(unit).movementPct||0))*(unit.sprintUntil>clock?1.5:1)*(unit.stealthed?.5+.03*(ranks(unit).Camouflage||0):1)*Math.min(slow,movementMultiplier(unit,clock)));
 }
-export function moveToward(unit,target,range,clock,dtMs=100){
+export function moveToward(s,unit,target,range,clock,dtMs=100){
  // Stop infinitesimally inside the boundary: rounding a diagonal endpoint can
  // otherwise leave both actors at 5.000000000000001 yards forever.
  const stopRange=Math.max(0,range-1e-10);
  const p=point(unit),q=point(target),length=distance(unit,target),step=Math.min(Math.max(0,length-stopRange),effectiveSpeed(unit,clock)*Math.max(0,dtMs)/1000);
  if(!length||!step)return false;
- unit.position=p.x+(q.x-p.x)/length*step;unit.positionY=p.y+(q.y-p.y)/length*step;return true;
+ return setCombatPosition(s,unit,walkingEndpoint(s,unit,p,{x:p.x+(q.x-p.x)/length*step,y:p.y+(q.y-p.y)/length*step}));
 }
-export function moveAway(unit,target,clock,dtMs=100){
+export function moveAway(s,unit,target,clock,dtMs=100){
  const p=point(unit),q=point(target),length=distance(unit,target)||1,step=effectiveSpeed(unit,clock)*Math.max(0,dtMs)/1000;
- unit.position=p.x+((p.x-q.x)||(!distance(unit,target)?1:0))/length*step;unit.positionY=p.y+(p.y-q.y)/length*step;
- return step>0;
+ return setCombatPosition(s,unit,walkingEndpoint(s,unit,p,{x:p.x+((p.x-q.x)||(!distance(unit,target)?1:0))/length*step,y:p.y+(p.y-q.y)/length*step}));
 }
 export const aliveEnemy=e=>e.hp>0&&!e.removed&&!['weakened','captured'].includes(e.capturePhase);
 export const selfArea=sp=>['Frost Nova','Arcane Explosion','Thunder Clap','Whirlwind','Demoralizing Shout','Demoralizing Roar','Intimidating Shout','Psychic Scream','Howl of Terror','Holy Wrath','Consecration','Holy Nova','Hellfire','Blast Wave','Cone of Cold','Swipe'].includes(sp.SpellName);
@@ -31,7 +52,11 @@ export function spellRadius(sp){return sp.radius||({'Frost Nova':10,'Arcane Expl
 export function castRange(sp){return selfArea(sp)?spellRadius(sp):sp.range||0;}
 export function inSpellRange(c,target,sp){const d=distance(c,target);return d<=castRange(sp)+1e-9&&d>=(sp.minRange||0);}
 export function areaTargets(s,c,e,sp,center,options={}){
- const enemies=(s.combat?.enemies||[]).filter(aliveEnemy),radius=spellRadius(sp);
+ const enemies=(s.combat?.enemies||[]).filter(u=>aliveEnemy(u)&&!u.controlledBy),radius=spellRadius(sp);
+ if(['Multi-Shot','Chain Lightning'].includes(sp.SpellName)){
+  const candidates=enemies.filter(u=>e&&distance(e,u)<=10&&inSpellRange(c,u,sp)).sort((a,b)=>a.id===e?.id?-1:b.id===e?.id?1:distance(e,a)-distance(e,b));
+  return options.uncapped?candidates:candidates.slice(0,sp.MaxAffectedTargets||sp.EffectChainTarget1||3);
+ }
  if(sp.SpellName==='Cleave'){const candidates=enemies.filter(u=>distance(c,u)<=5).sort((a,b)=>(a.id===e?.id?-1:b.id===e?.id?1:distance(c,a)-distance(c,b)));return options.uncapped?candidates:candidates.slice(0,2);}
  if(!selfArea(sp)&&!groundArea(sp))return e&&aliveEnemy(e)?[e]:[];
  const origin=selfArea(sp)?c:center||e||c;

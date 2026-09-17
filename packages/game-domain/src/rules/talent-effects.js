@@ -1,5 +1,7 @@
 import {talents,spells,items,table,preciseSpellFamilyFlags} from './catalog.js';
 import {racialModifiers} from './racial-effects.js';
+import {castTimeMultiplier} from '../../../sim-core/src/combat-auras.js';
+import {spellAttributesEx3} from '../../../sim-core/src/spell-program.js';
 
 export function ranks(c){const result={};for(const[id,value]of Object.entries(c.talents||{})){const t=talents[id],rank=Math.min(t?.maxRank||0,Math.max(0,Math.floor(value)));if(t&&t.classId===c.classId&&rank)result[t.name]=rank;}return result;}
 export function selectedTalentSpells(c){return Object.entries(c.talents||{}).flatMap(([id,value])=>{const t=talents[id],rank=Math.min(t?.maxRank||0,Math.max(0,Math.floor(value))),sp=t&&t.classId===c.classId&&spells[t.ranks[rank-1]];return sp?[{talent:t,rank,spell:sp}]:[];});}
@@ -21,6 +23,7 @@ function equippedFor(c,sp){
 export function passiveTalentSpells(c){return [...selectedTalentSpells(c).filter(({spell})=>(spell.Attributes&64)&&equippedFor(c,spell)).map(x=>x.spell),...(c.talentBuffs||[]).filter(b=>b.until>(c.time||0)).map(b=>spells[b.spell]).filter(Boolean)];}
 /** DBC SPELLMOD operations. Flat modifiers add before percentages, once per learned rank. */
 export function talentSpellValue(c,sp,operation,value){
+ if(sp?.AttributesEx3&spellAttributesEx3.IGNORE_CASTER_MODIFIERS)return value;
  let flat=0,percent=0;
  for(const aura of passiveTalentSpells(c))for(let i=1;i<=3;i++){const type=aura['EffectApplyAuraName'+i];if(![107,108].includes(type)||aura['EffectMiscValue'+i]!==operation||!talentAffectsSpell(aura,i,sp))continue;const amount=aura['EffectBasePoints'+i]+1;if(type===107)flat+=amount;else percent+=amount;}
  let result=(value+flat)*(1+percent/100);
@@ -56,6 +59,9 @@ export function talentModifiers(c){
 }
 export function modifySpell(c,sp,info){
  const changed={...info};for(const[key,operation]of Object.entries({mana:14,castMs:10,cooldownMs:11,range:5,radius:6,durationMs:1}))changed[key]=Math.max(0,talentSpellValue(c,sp,operation,info[key]||0));
+ // A cooldown modifier applies to each populated recovery clock, not to an
+ // artificial maximum that loses the shared category's identity.
+ for(const key of ['spellCooldownMs','categoryCooldownMs'])changed[key]=info[key]>0?Math.max(0,talentSpellValue(c,sp,11,info[key])):0;
  const p=c.talentProcs||{},now=c.time||0;
  if(p.clearcasting?.until>now)changed.mana=0;
  if(p.nightfall?.until>now&&sp.SpellName==='Shadow Bolt')changed.castMs=0;
@@ -66,7 +72,7 @@ export function modifySpell(c,sp,info){
  if(p.innerFocus?.until>now)changed.mana=0;
  if(p.spiritOfRedemption?.until>now)changed.mana=0;
  if(p.felDomination?.until>now&&sp.SpellName.startsWith('Summon ')){changed.mana*=.5;changed.castMs=Math.max(0,changed.castMs-5500);}
- changed.castMs/=1+racialModifiers(c).castHastePct;changed.mana=Math.floor(changed.mana);return changed;
+ changed.castMs*=castTimeMultiplier(c,c.time||0);changed.castMs/=1+racialModifiers(c).castHastePct;changed.mana=Math.floor(changed.mana);return changed;
 }
 export function abilityDamageMultiplier(c,sp,target,periodic=false){
  const r=ranks(c),school=sp?.School||0;let mult=1;
@@ -84,7 +90,7 @@ export function abilityDamageMultiplier(c,sp,target,periodic=false){
  for(const aura of target?.auras||[])if(aura.until>(c.time||0)&&aura.type===87&&(aura.misc&(1<<school)))mult*=1+aura.amount/100;
  return mult;
 }
-export function spellCritBonus(c,sp,target){let value=talentSpellValue(c,sp,7,0)/100;for(const aura of passiveTalentSpells(c))for(let i=1;i<=3;i++)if(aura['EffectApplyAuraName'+i]===71&&(aura['EffectMiscValue'+i]&(1<<sp.School)))value+=(aura['EffectBasePoints'+i]+1)/100;const p={...(c.talentProcs||{}),...(sp.talentCast?.procs||{})},now=c.time||0;if(p.elementalMastery?.until>now&&[2,3,4].includes(sp.School)||p.coldBlood?.until>now||p.divineFavor?.until>now&&sp.School===1)value+=1;if(p.innerFocus?.until>now)value+=.25;if(p.combustion?.until>now&&sp.School===2)value+=p.combustion.stacks*.1;if(p.remorseless?.until>now&&['Sinister Strike','Backstab','Ambush','Ghostly Strike'].includes(sp.SpellName))value+=p.remorseless.crit;if(target?.frozenUntil>now||target?.auras?.some(a=>a.type===26&&a.until>now&&spells[a.spell]?.School===4))value+=.1*(ranks(c).Shatter||0);for(const a of target?.auras||[])if(a.until>now&&a.type===179&&(a.misc&(1<<sp.School)))value+=a.amount/100;return value;}
+export function spellCritBonus(c,sp,target){let value=talentSpellValue(c,sp,7,0)/100;for(const aura of passiveTalentSpells(c))for(let i=1;i<=3;i++)if(aura['EffectApplyAuraName'+i]===71&&(aura['EffectMiscValue'+i]&(1<<sp.School)))value+=(aura['EffectBasePoints'+i]+1)/100;const p=c.talentProcs||{},now=c.time||0,active=key=>!!sp.talentCast?.procs?.[key]||p[key]?.until>now;if(active('elementalMastery')&&[2,3,4].includes(sp.School)||active('coldBlood')||active('divineFavor')&&sp.School===1)value+=1;if(active('innerFocus'))value+=.25;if(p.combustion?.until>now&&sp.School===2)value+=p.combustion.stacks*.1;if(active('remorseless')&&['Sinister Strike','Backstab','Ambush','Ghostly Strike'].includes(sp.SpellName))value+=(sp.talentCast?.procs?.remorseless||p.remorseless).crit;if(target?.frozenUntil>now||target?.auras?.some(a=>a.type===26&&a.until>now&&spells[a.spell]?.School===4))value+=.1*(ranks(c).Shatter||0);for(const a of target?.auras||[])if(a.until>now&&a.type===179&&(a.misc&(1<<sp.School)))value+=a.amount/100;return value;}
 export function healingMultiplier(c,sp,target){let mult=talentSpellValue(c,sp,8,1);for(const aura of passiveTalentSpells(c))for(let i=1;i<=3;i++)if(aura['EffectApplyAuraName'+i]===136)mult*=1+(aura['EffectBasePoints'+i]+1)/100;if(sp.SpellName==='Healing Wave'&&target?.talentProcs?.healingWay?.until>(c.time||0))mult*=1+.06*target.talentProcs.healingWay.stacks;return mult;}
 export function supportedTalentEffectDescription(t){return t.rankEffects?.[0]?.descriptionEn||spells[t.ranks?.[0]]?.SpellName||t.name;}
 
@@ -100,7 +106,4 @@ export function talentPetModifiers(c,pet){const r=ranks(c),base=talentModifiers(
 
 export function talentCombatDefense(c){const result={stealthLevel:0,stealthDetection:0,meleeCritReduction:0,rangedCritReduction:0,rangedAvoidance:0,spellAvoidance:0,resistances:{}};for(const sp of passiveTalentSpells(c))for(let i=1;i<=3;i++){const aura=sp['EffectApplyAuraName'+i],amount=sp['EffectBasePoints'+i]+1,misc=sp['EffectMiscValue'+i];if(aura===154)result.stealthLevel+=amount;if(aura===17)result.stealthDetection+=amount;if(aura===187)result.meleeCritReduction-=amount/100;if(aura===188)result.rangedCritReduction-=amount/100;if(aura===185)result.rangedAvoidance-=amount/100;if(aura===186)result.spellAvoidance-=amount/100;if(aura===22)for(let school=1;school<=6;school++)if(misc&(1<<school))result.resistances[school]=(result.resistances[school]||0)+amount;}
  const racial=racialModifiers(c);result.stealthLevel+=racial.stealthLevel;result.stealthDetection+=racial.stealthDetection;for(const [school,value]of Object.entries(racial.resistances))result.resistances[school]=(result.resistances[school]||0)+value;const rank=ranks(c)['Master Demonologist']||0;if(c.petUnit&&c.kind==='felhunter')for(let school=1;school<=6;school++)result.resistances[school]=(result.resistances[school]||0)+(c.level||1)*(c.ownerMasterDemonologist||0)/5;if(c.pet?.hp>0&&c.pet.kind==='felhunter')for(let school=1;school<=6;school++)result.resistances[school]=(result.resistances[school]||0)+(c.level||1)*rank/5;return result;}
-
-
-
 

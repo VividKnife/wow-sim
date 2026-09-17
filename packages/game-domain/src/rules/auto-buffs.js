@@ -1,3 +1,4 @@
+import {beginSpellTiming,spellReady,gcdUntil} from './spell-timing.js';
 import {knownRank,spellInfo,stats,log} from './character.js';
 import {startRecovery,recoveryMembers} from './recovery.js';
 
@@ -32,13 +33,13 @@ export function prepareAutoBuffs(s){
   const key=target.id+':'+kind;if(assigned.has(key))continue;assigned.add(key);
   const buff=target.buffs?.[kind],amount=sp.EffectBasePoints1+1;
   if(buff&&buff.until>s.clock&&buff.amount>amount||buff&&buff.amount>=amount&&buff.until>s.clock+refresh)continue;
-  if(c.rest||(c.globalCooldown||0)>s.clock||(c.cooldowns[sp.Id]||0)>s.clock)return true;
+  if(c.rest||!spellReady(c,sp,s.clock))return true;
   if(c.mana<sp.mana){
    if(sp.mana>stats(c).maxMana){s.activity={type:'idle',reason:c.name+' 的法力上限不足以补充增益。'};return true;}
    const previous=s.settings;s.settings={...previous,mana:100};try{startRecovery(s);}finally{s.settings=previous;}
    return true;
   }
-  c.mana-=sp.mana;c.lastManaUse=s.clock;c.globalCooldown=s.clock+Math.max(1500,sp.castMs);c.autoBuffReadyAt=c.globalCooldown;c.cooldowns[sp.Id]=s.clock+sp.cooldownMs;
+  beginSpellTiming(c,sp,s.clock);c.autoBuffReadyAt=gcdUntil(c,sp);
   applyLongBuff(s,c,target,sp,kind);return true;
  }
  return false;

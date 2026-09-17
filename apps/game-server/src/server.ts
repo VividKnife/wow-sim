@@ -70,13 +70,14 @@ async function readJson(request: IncomingMessage): Promise<Record<string, any>> 
   }
 }
 
-function gameResponse(snapshot: GameSnapshot) {
+function gameResponse(snapshot: GameSnapshot, scope: 'full' | 'combat' = 'full') {
   return buildGameResponse(snapshot.state, snapshot.revision, {
     account: snapshot.account,
     roster: snapshot.roster,
     activities: snapshot.activities,
     instanceId: snapshot.instanceId,
     instance: snapshot.instance ?? null,
+    scope,
   });
 }
 
@@ -159,13 +160,14 @@ export function createGameServer(options: GameServerOptions) {
         const accountId = await accountFrom(request, options.secret);
         const selectedCharacterId = characterId(url);
         const snapshot = await readGame(options.service, accountId, selectedCharacterId);
-        const etag = '"' + createHash('sha256').update(JSON.stringify([accountId, selectedCharacterId || snapshot.state?.id, snapshot.revision, snapshot.instanceId, snapshot.instance?.sequence, getContent().contentVersion])).digest('hex') + '"';
+        const scope = url.searchParams.get('scope') === 'combat' ? 'combat' : 'full';
+        const etag = '"' + createHash('sha256').update(JSON.stringify([accountId, selectedCharacterId || snapshot.state?.id, snapshot.revision, snapshot.instanceId, snapshot.instance?.sequence, getContent().contentVersion, scope])).digest('hex') + '"';
         if (request.headers['if-none-match'] === etag) {
           response.writeHead(304, {etag, 'cache-control': 'private, no-cache'});
           response.end();
           return;
         }
-        json(response, 200, gameResponse(snapshot), {etag, 'cache-control': 'private, no-cache'});
+        json(response, 200, gameResponse(snapshot, scope), {etag, 'cache-control': 'private, no-cache'});
         return;
       }
       if (url.pathname === '/game' && request.method === 'POST') {

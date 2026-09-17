@@ -38,7 +38,7 @@ test('new mage characters begin with source starting proficiencies and retain th
 test('public taming rejects busy and global-cooldown states before starting an encounter',()=>{
  const s=game(3,2);s.learned.push(1515);s.activity={type:'travel',endsAt:50000};
  assert.throws(()=>act(s,{type:'cast',id:1515,target:'npc:299'},0),/当前活动/);
- s.activity={type:'idle'};s.globalCooldown=1500;
+ s.activity={type:'idle'};s.globalCooldowns={133:1500};
  assert.throws(()=>act(s,{type:'cast',id:1515,target:'npc:299'},0),/冷却/);
  assert.equal(s.combat,null);
 });

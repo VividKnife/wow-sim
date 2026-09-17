@@ -1,10 +1,12 @@
+import {setCombatPosition} from './combat-area.js';
 import {onTalentEvent} from './talent-runtime.js';
 import {talentControlResistance,talentCombatDefense} from './talent-effects.js';
 import {launchProjectile,takeImpacts} from './combat-projectiles.js';
 import {distance,point} from '../../../sim-core/src/geometry.js';
 import {spells,lookup,nameOf} from './catalog.js';
 import {effectRange,roll,rng,log,stats,armorReduction,enemy} from './character.js';
-import {addCombatAura,controlled,castTimeMultiplier,schoolImmune,physicalDamageBonus} from '../../../sim-core/src/combat-auras.js';
+import {addCombatAura,hasAura,controlled,castTimeMultiplier,schoolImmune,physicalDamageBonus} from '../../../sim-core/src/combat-auras.js';
+import {beginSpellTiming,finishSpellTiming,spellReady} from './spell-timing.js';
 import {ranks} from './talent-effects.js';
 
 export function enemySpellInfo(e,id){
@@ -36,7 +38,7 @@ function summon(s,e,sp,n){
  const entry=sp['EffectMiscValue'+n],count=effectRange(e,sp,n)[0];
  for(let i=0;i<count;i++){
   const sequence=s.combat.summonSequence=(s.combat.summonSequence||0)+1;
-  const child=enemy(s,entry,`summon-${sequence}`);child.position=e.position;child.positionY=e.positionY||0;child.target=e.target;child.summonedBy=e.id;child.pet=sp['Effect'+n]===56;
+  const child=enemy(s,entry,`summon-${sequence}`);setCombatPosition(s,child,e);child.target=e.target;child.summonedBy=e.id;child.pet=sp['Effect'+n]===56;
   child.nextAttack=s.clock+child.swing;child.despawnAt=sp.durationMs<Number.MAX_SAFE_INTEGER?s.clock+sp.durationMs:null;
   // Summoned units are additional enemies, never a replacement for a static GUID.
   s.combat.enemies.push(child);log(s,`${e.name} 召唤了 ${child.name}`,'combat',{actorId:e.id,targetId:child.id,spellId:sp.Id});
@@ -77,22 +79,22 @@ function applySpell(s,e,target,sp,actors,hurt){
 }
 export function castEnemySpell(s,e,target,id,actors,hurt,flags=0){
  e.time=s.clock;const sp=enemySpellInfo(e,id),triggered=!!(flags&2);if(!sp||!target||e.hp<=0)return false;
- if(!triggered&&(e.cast||controlled(e,s.clock)||e.silenceUntil>s.clock||(e.nextAction||0)>s.clock||(e.schoolLockouts?.[sp.School]||0)>s.clock))return false;
+ if(!triggered&&(e.cast||controlled(e,s.clock)||e.silenceUntil>s.clock||hasAura(e,27,s.clock)||(e.nextAction||0)>s.clock||(e.schoolLockouts?.[sp.School]||0)>s.clock||!spellReady(e,sp,s.clock)))return false;
  const separation=distance(target,e);
  if(!triggered&&!(flags&4)&&(e.mana<sp.mana||target!==e&&(separation>sp.range||separation<sp.minRange)))return false;
  if(flags&32&&(target.auras||[]).some(a=>a.spell===id&&a.until>s.clock))return false;
- if(!triggered){e.mana=Math.max(0,e.mana-sp.mana);e.nextAction=s.clock+Math.max(sp.StartRecoveryTime||0,sp.castMs);}
+ const timing=!triggered?beginSpellTiming(e,sp,s.clock,{pool:'mana',cost:flags&4?Math.min(e.mana,sp.mana):sp.mana}):null;
  log(s,`${e.name} 施放 ${nameOf('spells',id)}`,'cast',{actorId:e.id,targetId:target.id,spellId:id,school:sp.School,duration:triggered?0:sp.castMs});
- if(!triggered&&sp.castMs)e.cast={spell:id,target:target.id,startedAt:s.clock,until:s.clock+sp.castMs,center:[1,2,3].some(n=>sp['Effect'+n]===27)?point(target):null};
+ if(!triggered&&sp.castMs)e.cast={timing,spell:id,target:target.id,startedAt:s.clock,until:s.clock+sp.castMs,center:[1,2,3].some(n=>sp['Effect'+n]===27)?point(target):null};
  else if(triggered||!launchProjectile(s,e,target,sp,'enemy'))applySpell(s,e,target,sp,actors,hurt);
  return true;
 }
 export function tickEnemySpell(s,e,actors,hurt){
  if(!e.cast)return;
- if(e.hp<=0||controlled(e,s.clock)){e.cast=null;return;}
+ if(e.hp<=0||controlled(e,s.clock)){e.cast=null;e.nextAction=s.clock;return;}
  if(s.clock<e.cast.until)return;
  const cast=e.cast;e.cast=null;const target=[...actors,...s.combat.enemies].find(u=>u.id===cast.target&&u.hp>0);
- const sp=enemySpellInfo(e,cast.spell),aim=cast.center?{id:cast.target,hp:target?.hp||1,position:cast.center.x,positionY:cast.center.y}:target;if(aim&&(target===e||distance(e,aim)<=sp.range&&distance(e,aim)>=sp.minRange)){if(!launchProjectile(s,e,aim,sp,'enemy'))applySpell(s,e,aim,sp,actors,hurt);}else log(s,'施法取消：目标失效或超出距离','cancel',{actorId:e.id,spellId:cast.spell});
+ const sp=enemySpellInfo(e,cast.spell),aim=cast.center?{id:cast.target,hp:target?.hp||1,position:cast.center.x,positionY:cast.center.y}:target;if(aim&&(target===e||distance(e,aim)<=sp.range&&distance(e,aim)>=sp.minRange)&&finishSpellTiming(e,cast.timing,s.clock)){if(!launchProjectile(s,e,aim,sp,'enemy'))applySpell(s,e,aim,sp,actors,hurt);}else log(s,'施法取消：目标失效、资源不足或超出距离','cancel',{actorId:e.id,spellId:cast.spell});
 }
 export function tickEnemyAuras(s,actors,hurt){
  for(const area of s.groundEffects||[])if(area.interval&&area.side!=='friendly'){

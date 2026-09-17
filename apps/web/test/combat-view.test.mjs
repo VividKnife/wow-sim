@@ -122,3 +122,44 @@ test('melee status distinguishes closing distance from a ready swing and never t
  assert.equal(combatView.meleeStatus({...actor,hp:0},battle,1200).kind,'dead');
  assert.equal(combatView.meleeStatus(actor,null,1200).kind,'ended');
 });
+
+
+test('automatic camera fits distant units and follows the group instead of world origin',()=>{
+ const units=[{id:'a',position:1000,positionY:-300,hp:100},{id:'b',position:1300,positionY:400,hp:100},{id:'c',position:1100,positionY:50,hp:0}];
+ const layout=combatView.battleLayout(units,[]);
+ for(const u of units){const p=layout.units[u.id];assert.ok(p.left>=8&&p.left<=92&&p.top>=80&&p.top<=360);}
+ const shifted=combatView.battleLayout(units.map(u=>({...u,position:u.position+4000,positionY:u.positionY-7000})),[]);
+ for(const u of units){assert.ok(Math.abs(layout.units[u.id].left-shifted.units[u.id].left)<1e-9);assert.ok(Math.abs(layout.units[u.id].top-shifted.units[u.id].top)<1e-9);}
+ const zoomed=combatView.battleLayout(units,[],2);
+ assert.equal(zoomed.scale,layout.scale*2);
+ assert.deepEqual(combatView.battleLayout(units,[],1),layout);
+ assert.ok(Number.isFinite(combatView.battleLayout([],[]).scale));
+});
+
+
+test('target arrows follow healing casts and threat changes, then return to the attack target',()=>{
+ const units=[{id:'healer',hp:100,target:'mob',cast:{target:'tank',until:2000}}, {id:'tank',hp:100,target:'mob'}, {id:'dps',hp:100,target:'mob'}, {id:'mob',hp:100,foe:true,target:'tank'}];
+ const layout=combatView.battleLayout(units.map((u,i)=>({...u,position:i*8})),[]);
+ let links=combatView.battleTargetLinks(units,layout,1000);
+ assert.equal(links.length,4);
+ assert.equal(links.find(l=>l.actorId==='healer').targetId,'tank');
+ assert.equal(links.find(l=>l.actorId==='healer').friendly,true);
+ assert.equal(links.find(l=>l.actorId==='mob').targetId,'tank');
+ units[3].target='dps';
+ links=combatView.battleTargetLinks(units,layout,2000);
+ assert.equal(links.find(l=>l.actorId==='mob').targetId,'dps');
+ assert.equal(links.find(l=>l.actorId==='healer').targetId,'mob');
+ assert.equal(links.find(l=>l.actorId==='healer').friendly,false);
+ for(const link of links){assert.ok([link.x1,link.y1,link.x2,link.y2].every(Number.isFinite));}
+});
+
+test('target arrows omit dead, removed, missing and self targets without guessing another target',()=>{
+ const units=[{id:'a',hp:100,target:'b'},{id:'b',hp:100,target:'a'}];
+ const layout=combatView.battleLayout(units.map((u,i)=>({...u,position:i*8})),[]);
+ for(const change of [{hp:0},{removed:true},{target:'a'},{target:'missing'},{cast:{target:'missing',until:2000}},{cast:{target:'a',until:2000}}]){
+  const changed=[{...units[0],...change},units[1]];
+  assert.equal(combatView.battleTargetLinks(changed,layout,1000).some(l=>l.actorId==='a'),false);
+ }
+ units[1].hp=0;
+ assert.deepEqual(combatView.battleTargetLinks(units,layout,1000),[]);
+});

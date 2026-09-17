@@ -1,6 +1,7 @@
 import reference from '../../../game-data/data/deadmines-reference.json' with {type:'json'};
 import {clone,enemy,rng,log,countItem,takeItem,addItem,bagCapacity} from './character.js';
 import {startCombat} from './combat.js';
+import {sceneCombatArea} from './combat-area.js';
 import {stopRecovery} from './recovery.js';
 
 export const dungeonRoute=reference.encounters;
@@ -57,18 +58,16 @@ export function prepareEncounter(s){idle(s);const d=s.dungeon;if(!d?.spawns)thro
  if([s,...s.party].some(c=>c.hp<=0))throw new Error('先让倒下的成员复活，再继续推进。');
  if(s.pending.length||s.bag.length>=bagCapacity(s))throw new Error('请先整理背包与待拾取战利品。');
  if(!remaining(s,e).length&&e.interaction)throw new Error('这里有待完成的交互。');
- // Straight-line centroid travel is explicitly a 2D route estimate, not navmesh timing.
- const to=e.sourceCentroid||d.position,from=d.position;
- const distance=Math.hypot(to.position_x-from.position_x,to.position_y-from.position_y,to.position_z-from.position_z);
- s.rest=null;s.groundEffects=[];s.activity={type:'dungeonTravel',routeId:e.id,startedAt:s.clock,endsAt:s.clock+Math.max(1000,Math.ceil(distance/7*1000))};
-}
-export function finishDungeonTravel(s){const e=current(s),a=s.activity,d=s.dungeon;if(!e||a.routeId!==e.id)throw new Error('副本路线状态不一致。');
- s.activity={type:'idle'};
- if(a.type==='dungeonCannon'){d.interactions[e.id]=true;d.secondAlarmAt=s.clock+e.interaction.secondAlarmDelayAfterDoorMs;log(s,'火炮轰开了铁门，里面传来了警报！','dungeon');advanceRoute(s,e);return;}
+ stopRecovery(s);s.groundEffects=[];
  if(e.sourceCentroid)d.position=clone(e.sourceCentroid);
  const enemies=remaining(s,e).map(clone);if(!enemies.length){if(!e.interaction)advanceRoute(s,e);return;}
- startCombat(s,[],true,enemies);s.combat.routeId=e.id;s.combat.runId=d.runId;
+ startCombat(s,[],true,enemies,sceneCombatArea({dungeon:true,routeId:e.id}));s.combat.routeId=e.id;s.combat.runId=d.runId;
+ s.combat.pull={startsAt:s.clock+3000,engagedAt:null};
+ for(const mob of s.combat.enemies)mob.nextSpell=s.combat.pull.startsAt+6000;
  if(e.id==='dm-sneed')for(const mob of s.combat.enemies)if(mob.entry===642)mob.deathSummon={profile:clone(d.phases['3600073:643']),delay:3500};
+}
+export function finishDungeonCannon(s){const e=current(s),a=s.activity,d=s.dungeon;if(!e||a.type!=='dungeonCannon'||a.routeId!==e.id)throw new Error('副本路线状态不一致。');
+ s.activity={type:'idle'};d.interactions[e.id]=true;d.secondAlarmAt=s.clock+e.interaction.secondAlarmDelayAfterDoorMs;log(s,'火炮轰开了铁门，里面传来了警报！','dungeon');advanceRoute(s,e);
 }
 export function recordDungeonProgress(s){const d=s.dungeon;if(!d?.spawns)return;
  if(d.secondAlarmAt&&s.clock>=d.secondAlarmAt){delete d.secondAlarmAt;log(s,'铁门后再次响起了迪菲亚守卫的警报。','dungeon');}

@@ -6,7 +6,6 @@ import Dungeon from './dungeon';
 import LocalNpcs from './local-npcs';
 import City from './city';
 import WorldMap from './world-map';
-import Hearthstone from './hearthstone';
 import Mounts from './mounts';
 import Escort from './escort';
 import {Gathering} from './professions';
@@ -16,9 +15,9 @@ export default function World({state:s,data:d,busy,revision,send}:GameProps){
  const navigationLocked=busy||!!s.combat||s.hp<=0||!['idle','hunt'].includes(s.activity.type);
  const navigate=async(id:number)=>{if(await send({type:'navigateQuest',id}))setMapOpen(true);};
  const navigationButton=(q:any)=>q.navigation?<Button variant="outline" disabled={navigationLocked||q.navigation.here} onClick={()=>navigate(q.id)}>{q.navigation.here?(q.navigation.kind==='turnin'?'已到交付地点':'已在任务区域'):(q.navigation.kind==='turnin'?'前往交付':'前往任务区域')} ↗</Button>:<span className="quest-navigation-note">暂无可导航地点，请查看任务说明</span>;
- if(s.dungeon)return <div className="world-main"><Hearthstone state={s} data={d} busy={busy} send={send}/><Dungeon state={s} data={d} busy={busy} send={send}/></div>;
+ if(s.dungeon)return <div className="world-main"><Dungeon state={s} data={d} busy={busy} send={send}/></div>;
  return <div className={'world-layout '+(d.city?'has-city':' ')}><section className="world-main">{d.city&&<City key={s.id+':'+s.location} state={s} data={d} busy={busy} revision={revision} send={send}/>}<div className="section-heading"><div><div className="eyebrow">{d.location.region} / 等级 {d.location.min}—{d.location.max}</div><h1>{d.location.name}</h1></div><Button variant="outline" onClick={()=>setMapOpen(!mapOpen)}>{mapOpen?'收起地图':'打开区域地图'} ↗</Button></div>
- <details className="panel travel-toolbox"><summary>旅行与野外技能 <small>炉石 · 坐骑 · 护送 · 采集</small></summary><div className="travel-toolbox-content"><Hearthstone state={s} data={d} busy={busy} send={send}/><Mounts state={s} data={d} busy={busy} send={send}/><Escort state={s} data={d} busy={busy} send={send}/><Gathering state={s} data={d} busy={busy} send={send}/></div></details>
+ <details className="panel travel-toolbox"><summary>旅行与野外技能 <small>坐骑 · 护送 · 采集</small></summary><div className="travel-toolbox-content"><Mounts state={s} data={d} busy={busy} send={send}/><Escort state={s} data={d} busy={busy} send={send}/><Gathering state={s} data={d} busy={busy} send={send}/></div></details>
  {mapOpen&&<WorldMap state={s} data={d} busy={busy} send={send}/>}
  {(s.location==='deadmines'||d.location.region==='西部荒野')&&<Dungeon state={s} data={d} busy={busy} send={send}/>}
  {!d.city&&<div className="filterbar local-filters">{['全部','人物与服务','怪物','任务物件'].map(f=><button key={f} className={filter===f?'active':''} onClick={()=>setFilter(f)}>{f}</button>)}</div>}

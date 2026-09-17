@@ -66,16 +66,41 @@ export function presentationProjectiles(projectiles,effects,clock,now,units=[]){
  // Homing is presentation only: preserve the serialized launch and hit timing.
  return flights.map(flight=>{const target=units.find(unit=>unit.id===flight.targetId);return target?{...flight,to:point(target)}:flight;});
 }
-export function battleLayout(allies,enemies){
- const positions=[...allies,...enemies].map(point),minX=Math.min(0,...positions.map(p=>p.x))-6,maxX=Math.max(35,...positions.map(p=>p.x))+6;
- const minY=Math.min(-8,...positions.map(p=>p.y))-5,maxY=Math.max(8,...positions.map(p=>p.y))+5;
- const width=1000,height=440,scale=Math.min(880/(maxX-minX),320/(maxY-minY));
+export function battleLayout(allies,enemies,zoom=1,area=null){
+ const positions=area?[{x:area.minX,y:area.minY},{x:area.maxX,y:area.maxY}]:[...allies,...enemies].map(point);
+ if(!positions.length)positions.push({x:0,y:0});
+ const xs=positions.map(p=>p.x),ys=positions.map(p=>p.y);
+ const centerX=(Math.min(...xs)+Math.max(...xs))/2,centerY=(Math.min(...ys)+Math.max(...ys))/2;
+ const spanX=area?area.maxX-area.minX:Math.max(36,Math.max(...xs)-Math.min(...xs)+12),spanY=area?area.maxY-area.minY:Math.max(20,Math.max(...ys)-Math.min(...ys)+12);
+ const minX=centerX-spanX/2,maxX=centerX+spanX/2,minY=centerY-spanY/2,maxY=centerY+spanY/2;
+ const width=1000,height=440,scale=Math.min((area?880:840)/(maxX-minX),(area?340:280)/(maxY-minY))*Math.max(.5,Math.min(2,Number.isFinite(zoom)?zoom:1));
  const originX=(width-(maxX-minX)*scale)/2-minX*scale,originY=(height-(maxY-minY)*scale)/2-minY*scale;
  /** @type {Record<string,{left:number,top:number}>} */
  const units={};
  for(const u of [...allies,...enemies]){const p=point(u);units[u.id]={left:(originX+p.x*scale)/10,top:originY+p.y*scale};}
- return {units,width,height,scale,originX,originY};
+ return {units,width,height,scale,originX,originY,zoom,area};
 }
-export function fieldPoint(layout,p){return{x:layout.originX+p.x*layout.scale,y:layout.originY+p.y*layout.scale};}
+export function fieldPoint(layout,p){return{x:layout.originX+p.x*layout.scale,y:layout.originY+p.y*(layout.scaleY??layout.scale)};}
+// A cast temporarily overrides the auto-attack target, including friendly casts.
+export function battleTarget(unit,units,clock){
+ if(unit.hp<=0||unit.removed)return null;
+ const id=unit.cast?.until>clock?unit.cast.target:unit.target;
+ return units.find(target=>target.id===id&&target.hp>0&&!target.removed)||null;
+}
+/** @returns {Array<{actorId:string,targetId:string,friendly:boolean,x1:number,y1:number,x2:number,y2:number,arrow:string}>} */
+export function battleTargetLinks(units,layout,clock){
+ return units.flatMap(unit=>{
+  const target=battleTarget(unit,units,clock),a=layout.units[unit.id],b=target&&layout.units[target.id];
+  if(!target||target.id===unit.id||!a||!b)return [];
+  const dx=(b.left-a.left)*10,dy=b.top-a.top,length=Math.hypot(dx,dy);
+  if(length<2)return [];
+  const ux=dx/length,uy=dy/length,inset=Math.min(9,length*.2);
+  // Offset reciprocal links to keep both arrow directions visible.
+  const x1=a.left*10+ux*inset-uy*4,y1=a.top+uy*inset+ux*4;
+  const x2=b.left*10-ux*inset-uy*4,y2=b.top-uy*inset+ux*4;
+  return [{actorId:unit.id,targetId:target.id,friendly:!!unit.foe===!!target.foe,x1,y1,x2,y2,
+   arrow:`${x2},${y2} ${x2-ux*7-uy*3.5},${y2-uy*7+ux*3.5} ${x2-ux*7+uy*3.5},${y2-uy*7-ux*3.5}`}];
+ });
+}
 export function projectilePoint(projectile,clock){const t=actionProgress(projectile.startedAt,projectile.landsAt,clock);return{x:projectile.from.x+(projectile.to.x-projectile.from.x)*t,y:projectile.from.y+(projectile.to.y-projectile.from.y)*t};}
 export function schoolColor(school,heal=false){return heal?'#74e7a0':({0:'#dfc8a0',1:'#ffe99b',2:'#ff9855',3:'#9cda6d',4:'#80d8ff',5:'#bb8ee9',6:'#d599ef'})[school]||'#dad3b1';}

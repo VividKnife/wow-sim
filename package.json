@@ -11,6 +11,8 @@
     "typecheck": "tsc --noEmit",
     "data:compile": "node scripts/compile-game-data.mjs",
     "data:check": "node scripts/compile-game-data.mjs --check",
+    "combat:audit": "node scripts/audit-spell-contracts.mjs",
+    "combat:audit:check": "node scripts/audit-spell-contracts.mjs --check",
     "game:server": "node --env-file-if-exists=.env apps/game-server/src/main.ts",
     "game:worker": "node --env-file-if-exists=.env apps/game-worker/src/main.ts"
   },

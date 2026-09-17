@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
-import {enterDungeon,leaveDungeon,prepareEncounter,finishDungeonTravel,recordDungeonProgress,interactDungeon,dungeonRoute} from '../../../packages/game-domain/src/rules/dungeon.js';
+import {enterDungeon,leaveDungeon,prepareEncounter,finishDungeonCannon,recordDungeonProgress,interactDungeon,dungeonRoute} from '../../../packages/game-domain/src/rules/dungeon.js';
 import {combatTick} from '../../../packages/game-domain/src/rules/combat.js';
 import {addItem,countItem} from '../../../packages/game-domain/src/rules/character.js';
 import {creatureLoot} from '../../../packages/game-domain/src/rules/catalog.js';
@@ -11,7 +11,7 @@ function group(seed=283){let s=createGame('矿井测试',seed,0);s.level=18;s.hp
  for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);
  s.location='deadmines';return s;
 }
-function pull(s){prepareEncounter(s);s.clock=s.activity.endsAt;finishDungeonTravel(s);return s;}
+function pull(s){prepareEncounter(s);s.clock=s.combat.pull.startsAt;return s;}
 
 test('instance entry validates original level and party; all source GUID alternatives are fixed in the saved run',()=>{
  const s=group();s.location='northshire';assert.throws(()=>enterDungeon(s),/入口/);s.location='deadmines';s.level=9;assert.throws(()=>enterDungeon(s),/10/);s.level=18;
@@ -30,6 +30,8 @@ test('a real first encounter advances the route once and cannot reward the same 
  assert.ok(firstGuids.every(g=>s.dungeon.defeated[g]));
  const xp=s.totals.xp,kills=s.totals.kills;recordDungeonProgress(s);recordDungeonProgress(s);
  assert.equal(s.dungeon.cursor,1);assert.equal(s.totals.xp,xp);assert.equal(s.totals.kills,kills);
+ // Casualties do not invalidate encounter rewards; recover before testing re-entry.
+ if([s,...s.party].some(c=>c.hp<=0)){s=act(s,{type:'revive'},s.wallAt);s=advance(s,s.wallAt+11000,{}).state;}
  const run=structuredClone(s.dungeon);leaveDungeon(s);enterDungeon(s);assert.deepEqual(s.dungeon,run);
 });
 
@@ -48,7 +50,7 @@ test('cannon requires cleared powder guards, a real powder item and the original
  s.dungeon.cursor=dungeonRoute.findIndex(e=>e.id==='dm-cannon');interactDungeon(s);
  assert.equal(s.bag.some(i=>i.id===5397),false);assert.equal(s.activity.endsAt-s.clock,500);
  assert.equal(s.dungeon.interactions['dm-cannon'],undefined);
- s.clock=s.activity.endsAt;finishDungeonTravel(s);
+ s.clock=s.activity.endsAt;finishDungeonCannon(s);
  assert.equal(s.dungeon.interactions['dm-cannon'],true);assert.equal(dungeonRoute[s.dungeon.cursor].id,'dm-cannon-alarm');
  assert.throws(()=>interactDungeon(s),/交互/);
 });
@@ -104,9 +106,9 @@ test('priest resurrection has its source cost and cast time, and restores flat h
  let s=group();enterDungeon(s);const priest=s.party.find(c=>c.classId===5),mage=s.party.find(c=>c.classId===8);mage.hp=0;mage.mana=0;
  const mana=priest.mana,cost=Math.floor(stats(priest).baseMana*.75);
  s=act(s,{type:'resurrect',target:mage.id},0);
- assert.equal(s.party.find(c=>c.classId===5).mana,mana-cost);assert.equal(s.activity.endsAt-s.clock,10000);
+ assert.equal(s.party.find(c=>c.classId===5).mana,mana);assert.equal(s.activity.timing.cost,cost);assert.equal(s.activity.endsAt-s.clock,10000);
  s=advance(s,9900,{}).state;assert.equal(s.party.find(c=>c.classId===8).hp,0);
- s=advance(s,10000,{}).state;const restored=s.party.find(c=>c.classId===8);
+ s=advance(s,10000,{}).state;const restored=s.party.find(c=>c.classId===8);assert.ok(s.party.find(c=>c.classId===5).mana<mana);
  // The shared regeneration tick at 10s also occurs after resurrection.
  assert.ok(restored.hp>=70);assert.ok(restored.hp<stats(restored).maxHp/2);assert.ok(restored.mana>=135);
  const oldHp=s.hp;s.party.find(c=>c.classId===1).hp=0;s=act(s,{type:'revive'},10000);

@@ -8,6 +8,15 @@ const environment = {
   GAME_SERVER_SECRET: 'test-secret-that-is-at-least-32-characters-long',
 };
 
+test('aborting a browser poll cancels its upstream request too',async()=>{
+ const controller=new AbortController();let upstreamSignal;
+ const response=await proxyGameRequest(new Request('https://app.example/api/game?scope=combat',{signal:controller.signal}),{
+  accountId:'account-a',path:'/game',environment,fetchImpl:async request=>{upstreamSignal=request.signal;assert.equal(new URL(request.url).searchParams.get('scope'),'combat');return Response.json({ok:true});},
+ });
+ assert.equal(response.status,200);assert.equal(upstreamSignal.aborted,false);
+ controller.abort();assert.equal(upstreamSignal.aborted,true);
+});
+
 test('conditional game reads preserve validators and empty 304 responses through the proxy',async()=>{
  const response=await proxyGameRequest(new Request('https://app.example/api/game',{headers:{'if-none-match':'"revision-3"'}}),{
   accountId:'account-a',path:'/game',environment,fetchImpl:async request=>{

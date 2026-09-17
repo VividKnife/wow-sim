@@ -18,9 +18,10 @@ test('response metadata is projected through explicit public fields',()=>{
   account:{id:'account',primaryCharacterId:'hero',partyId:'party',revision:4,createdAt:1,secret:'hidden'},
   roster:[{id:'hero',characterId:'hero',name:'元数据',classId:8,raceId:1,level:1,kind:'hero',professions:{},rules:{secret:true}}],
   activities:[{id:'activity',actorId:'hero',type:'craft',status:'running',location:'northshire',startedAt:1,settledUntil:2,nextEventAt:3,contentVersion:'v',error:'none',rngState:123,engineActivity:{type:'craft'},command:{id:'secret'}}],
-  instance:{id:'instance',contentId:'deadmines',status:'running',capacity:5,roster:[{characterId:'hero',accountId:'account',controller:'player',secret:true}],sequence:2,epoch:99,rngState:88},
+  instance:{id:'instance',leaderId:'hero',contentId:'deadmines',status:'running',capacity:5,roster:[{characterId:'hero',accountId:'account',controller:'player',secret:true}],sequence:2,epoch:99,rngState:88},
  });
  assert.deepEqual(payload.account,{id:'account',primaryCharacterId:'hero',partyId:'party',revision:4});
+ assert.equal(payload.instance.leaderId,'hero');
  assert.deepEqual(payload.activities,[{id:'activity',actorId:'hero',type:'craft',status:'running',location:'northshire',startedAt:1,settledUntil:2,nextEventAt:3,contentVersion:'v',error:'none'}]);
  assert.equal(JSON.stringify(payload).includes('rngState'),false);
  assert.equal(JSON.stringify(payload).includes('engineActivity'),false);

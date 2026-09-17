@@ -54,10 +54,10 @@ test('one-click disenchant protects locked and equipped items',()=>{
 });
 test('potion strategy consumes real inventory and obeys shared cooldown',()=>{
  let s=fresh();addItem(s,118,3);addItem(s,2455,3);
- s=action(s,{type:'strategy',rules:s.rules,potions:{enabled:true,health:50,mana:30,healthItem:118,manaItem:2455}});
+ s=action(s,{type:'strategy',rules:view(s).strategyMembers[0].rules,potions:{enabled:true,health:50,mana:30,healthItem:118,manaItem:2455}});
  s.hp=10;s.mana=0;startCombat(s,[299]);combatTick(s);assert.equal(countItem(s,118),2);assert.equal(countItem(s,2455),3);assert.ok(s.hp>10);
  s.hp=10;combatTick(s);assert.equal(countItem(s,118),2);
- assert.throws(()=>action(s,{type:'strategy',rules:s.rules,potions:{enabled:true,health:101,mana:30,healthItem:118,manaItem:2455}}));
+ assert.throws(()=>action(s,{type:'strategy',rules:view(s).strategyMembers[0].rules,potions:{enabled:true,health:101,mana:30,healthItem:118,manaItem:2455}}));
 });
 test('every profession recipe and market item is fully defined',()=>{
  for(const id of marketIds)assert.ok(items[id],`missing item ${id}`);

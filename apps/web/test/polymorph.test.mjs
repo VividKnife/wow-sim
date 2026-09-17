@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {createGame,stats} from '../../../packages/game-domain/src/rules/engine.js';
 import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
 import {polymorphTarget,canPolymorph} from '../../../packages/game-domain/src/rules/polymorph.js';
+import {protectCombatTarget,strategyAllows} from '../../../packages/game-domain/src/rules/combat-strategy.js';
 import {spells} from '../../../packages/game-domain/src/rules/catalog.js';
 
 function encounter(ids=[299,622]){
@@ -48,7 +49,7 @@ test('automatic crowd control prioritizes a side caster over a miner without cha
 });
 
 test('two mages reserve different caster targets before either cast completes',()=>{
- const s=encounter([299,598,1729,1729]);
+ const s=encounter([299,598,1729,1729]);s.position=-6; // Begin in the party backline so this test isolates simultaneous reservations.
  const mage={...structuredClone(s),id:'companion-mage',name:'第二法师',party:undefined};s.party=[mage];s.combat.participantIds.push(mage.id);
  combatTick(s);
  assert.equal(s.cast?.target,s.combat.enemies[2].id);
@@ -89,4 +90,26 @@ test('one caster can maintain only one polymorph and it heals ten percent per se
  s.clock=1100;combatTick(s);assert.equal(first.hp,500+Math.floor(first.maxHp/10));
  s.cast={spell:118,target:s.combat.enemies[1].id,startedAt:1100,until:1200};s.rngState=123456789;s.clock=1200;combatTick(s);
  assert.ok(!(first.polyUntil>s.clock));assert.ok(s.combat.enemies[1].polyUntil>s.clock);
+});
+
+
+test('last surviving sheep is attacked and awakened by real damage',()=>{
+ const s=encounter(),[dead,sheep]=s.combat.enemies;dead.hp=0;
+ sheep.polyUntil=60000;sheep.polyCaster=s.id;sheep.hp=sheep.maxHp;
+ let damaged=false;
+ for(s.clock=100;s.clock<10000;s.clock+=100){
+  combatTick(s);
+  if(s.logs.some(l=>l.actorId===s.id&&l.targetId===sheep.id&&l.amount>0&&['damage','impact'].includes(l.kind))){damaged=true;break;}
+ }
+ assert.ok(damaged);assert.equal(sheep.polyUntil,0);
+});
+
+test('multiple surviving sheep remain protected, but dead and removed enemies do not block finishing',()=>{
+ const s=encounter(),[other,sheep]=s.combat.enemies;sheep.polyUntil=60000;other.polyUntil=60000;
+ assert.equal(protectCombatTarget(s,sheep),true);
+ assert.equal(strategyAllows(s,s,sheep,spells[133]),false);
+ other.removed=true;
+ assert.equal(protectCombatTarget(s,sheep),false);
+ assert.equal(strategyAllows(s,s,sheep,spells[133]),true);
+ assert.equal(sheep.polyUntil,60000);
 });

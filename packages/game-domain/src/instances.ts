@@ -9,7 +9,8 @@ import { account, owned, bump, context, newState, persistCharacter, persistAsset
 import { instanceContents, mercenaryTemplates } from './content.ts';
 import type { GameService } from './service.ts';
 import { PAUSED_EVENT_AT } from './presence.ts';
-const instanceCommands = new Set(['strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
+import {simulationInterval,simulationTickBudget} from './simulation-cadence.ts';
+const instanceCommands = new Set(['strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'abandonCombat', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
 export const visitorCommands = Object.freeze(['strategy', 'settings', 'cast', 'petCommand']);
 function rosterIds(value: unknown): asserts value is string[] { requireThat(Array.isArray(value) && value.length > 0 && value.every(id => typeof id === 'string' && id.length > 0) && new Set(value).size === value.length, 'ROSTER', '副本名册必须是非空且不重复的角色 ID 数组', 400); }
 export async function createInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) {
@@ -70,7 +71,7 @@ export async function startInstance(this: GameService, tx: Transaction, c: Chara
     instance.rngState = s.rngState;
     instance.status = 'running';
     instance.sequence++;
-    instance.nextEventAt = now + 1000;
+    instance.nextEventAt = now + simulationInterval(s.combat, (await account(tx, c.accountId)).lastSeenAt, now);
     await tx.put('instances', instance);
     await this.bumpInstanceAccounts(tx, instance, c.accountId);
 }
@@ -141,7 +142,10 @@ export async function persistInstance(this: GameService, tx: Transaction, instan
         instance.status = 'completed';
     else
         instance.status = 'running';
-    instance.nextEventAt = s.wallAt + 1000;
+    let lastSeenAt = 0;
+    if (s.combat) for (const accountId of new Set(instance.roster.filter(r => r.controller !== 'mercenary').map(r => r.accountId)))
+        lastSeenAt = Math.max(lastSeenAt, (await account(tx, accountId)).lastSeenAt);
+    instance.nextEventAt = s.wallAt + simulationInterval(s.combat, lastSeenAt, now);
     const deadline = await this.instanceDeadline(tx, instance);
     if (s.wallAt < deadline) instance.nextEventAt = Math.min(instance.nextEventAt, deadline);
     else if (instance.status === 'running') {
@@ -184,5 +188,24 @@ export async function leaveInstance(this: GameService, tx: Transaction, c: Chara
 export async function hireMercenary(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) { const instance = await this.instanceFor(tx, c, cmd.instanceId); const template = mercenaryTemplates[cmd.templateId as keyof typeof mercenaryTemplates]; requireThat(template, 'TEMPLATE', '佣兵模板不存在', 400); const businessKey = `contract:${instance.id}:${c.id}:${template.id}`; if (await tx.get('contracts', businessKey))
     return; requireThat(instance.status === 'forming' && instance.roster.length < instance.capacity, 'CAPACITY', '当前不能雇佣佣兵'); let s = await context(tx, c, now, false); requireThat(s.money >= template.cost, 'BALANCE', '佣金不足'); s.money -= template.cost; await persistAssets(tx, c, s, businessKey, this.id); const unit = newState(template.name, template.classId, template.raceId, this.seed(), now, businessKey); unit.level = c.rules.level; const st: Rules = stats(unit); unit.hp = st.maxHp; unit.mana = st.maxMana; await tx.insert('contracts', { id: businessKey, businessKey, instanceId: instance.id, accountId: c.accountId, payerId: c.id, templateId: template.id, contentVersion: this.contentVersion, cost: template.cost, status: 'paid', unit: this.member(unit) }); instance.roster.push({ characterId: businessKey, accountId: c.accountId, controller: 'mercenary' }); instance.sequence++; await tx.put('instances', instance); await economicEvent(tx, businessKey, c.accountId, 'mercenaryHired', { instanceId: instance.id }); await this.bumpInstanceAccounts(tx, instance, c.accountId); }
 export async function acquireInstanceLease(this: GameService, instanceId: string, workerId: string, now = this.now(), ttl = 10000) { requireThat(ttl > 0 && Number.isSafeInteger(ttl), 'LEASE', '租约时长无效', 400); return this.store.transaction(async (tx) => { const instance = await tx.get<Instance>('instances', instanceId); requireThat(instance, 'NOT_FOUND', '副本不存在', 404); const old = await tx.get<InstanceLease>('instance_leases', instanceId); requireThat(!old || old.expiresAt <= now || old.workerId === workerId, 'LEASE_HELD', '其他执行者持有副本租约'); const epoch = old && old.workerId === workerId && old.expiresAt > now ? old.epoch : instance.epoch + 1; instance.epoch = epoch; await tx.put('instances', instance); const lease = { id: instanceId, instanceId, workerId, epoch, expiresAt: now + ttl }; await tx.put('instance_leases', lease); return lease; }); }
-export async function advanceInstance(this: GameService, instanceId: string, workerId: string, epoch: number, now = this.now()) { return this.store.transaction(async (tx) => { const lease = await tx.get<InstanceLease>('instance_leases', instanceId), instance = await tx.get<Instance>('instances', instanceId); requireThat(lease && instance && lease.workerId === workerId && lease.epoch === epoch && instance.epoch === epoch && lease.expiresAt > now, 'STALE_EPOCH', '副本执行租约已失效'); if (instance.status !== 'running' || instance.nextEventAt > now)
-    return false; requireThat(instance.contentVersion === this.contentVersion, 'CONTENT_VERSION', '副本内容版本暂不可用'); const key = `instance:${instance.id}:sequence:${instance.sequence + 1}`; const deadline = await this.instanceDeadline(tx, instance); const result = advance(instance.simulation!, Math.min(now, deadline), { maxTicks: 20000 }); instance.simulation = result.state; instance.rngState = result.state.rngState; instance.sequence++; await this.persistInstance(tx, instance, now, key); await this.bumpInstanceAccounts(tx, instance); return true; }); }
+export async function advanceInstance(this: GameService, instanceId: string, workerId: string, epoch: number, now = this.now()) {
+    return this.store.transaction(async tx => {
+        const lease = await tx.get<InstanceLease>('instance_leases', instanceId);
+        const instance = await tx.get<Instance>('instances', instanceId);
+        requireThat(lease && instance && lease.workerId === workerId && lease.epoch === epoch && instance.epoch === epoch && lease.expiresAt > now, 'STALE_EPOCH', '副本执行租约已失效');
+        if (instance.status !== 'running' || instance.nextEventAt > now) return false;
+        requireThat(instance.contentVersion === this.contentVersion, 'CONTENT_VERSION', '副本内容版本暂不可用');
+        let lastSeenAt = 0;
+        for (const id of new Set(instance.roster.filter(r => r.controller !== 'mercenary').map(r => r.accountId)))
+            lastSeenAt = Math.max(lastSeenAt, (await account(tx, id)).lastSeenAt);
+        const key = `instance:${instance.id}:sequence:${instance.sequence + 1}`;
+        const deadline = await this.instanceDeadline(tx, instance);
+        const result = advance(instance.simulation!, Math.min(now, deadline), {maxTicks: simulationTickBudget(lastSeenAt, now)});
+        instance.simulation = result.state;
+        instance.rngState = result.state.rngState;
+        instance.sequence++;
+        await this.persistInstance(tx, instance, now, key);
+        await this.bumpInstanceAccounts(tx, instance);
+        return true;
+    });
+}

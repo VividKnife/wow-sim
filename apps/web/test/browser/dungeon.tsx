@@ -6,6 +6,7 @@ import {createGame,act,advance,stats,view} from '../../../../packages/game-domai
 import {dungeonRoute,enterDungeon} from '../../../../packages/game-domain/src/rules/dungeon.js';
 import {abilities} from '../../../../packages/game-domain/src/rules/catalog.js';
 import {addItem} from '../../../../packages/game-domain/src/rules/character.js';
+import {projectClientSnapshot} from '../../../../packages/game-domain/src/rules/client-snapshot';
 import Dungeon from '../../app/dungeon';
 import Battle from '../../app/battle';
 import Party from '../../app/party';
@@ -34,7 +35,7 @@ function Harness(){
  useEffect(()=>{const timer=setInterval(()=>setState((s:any)=>advance(s,s.wallAt+500,{}).state),500);return()=>clearInterval(timer);},[]);
  useEffect(()=>{const next=s.combat?`${s.combat.runId}:${s.combat.startedAt}`:null;if(next&&next!==key.current)setOpen(true);key.current=next;},[s.combat?.startedAt,!!s.combat]);
  const send=async(action:any)=>{try{const next=act(current.current,action,current.current.wallAt);current.current=next;setState(next);setError('');return true;}catch(e:any){setError(e.message);return false;}};
- const props={state:s,data:view(s),busy:false,send};
+ const snapshot=projectClientSnapshot(s,view(s)),props={state:snapshot.player,data:snapshot.view,busy:false,send};
  return <main className="game-shell"><header className="panel" style={{margin:'20px 0'}}><h2>独立测试角色 · 不连接用户存档</h2><p>18 级与补给为测试夹具；每场战斗使用真实引擎。此页面不代表自然升级通关。</p><div className="action-row">{[['entry','入口'],['powder','火药箱'],['cannon','火炮'],['recovery','队长倒下'],['outdoor','野外小队'],['escort-fight','Escort battle'],['escort','护送']].map(([id,name])=><button key={id} onClick={()=>{setState(fixture(id));setOpen(false);setError('');key.current=null;}}>{name}夹具</button>)}</div></header><Escort {...props}/>{['lighthouse','sentinel','moonbrook'].includes(s.location)?<Party {...props}/>:<Dungeon {...props}/>} {(s.combat||s.lastCombat)&&<><button onClick={()=>setOpen(true)}>查看测试战斗</button><Battle {...props} open={open} onOpenChange={setOpen}/></>}{error&&<p role="alert">{error}</p>}</main>;
 }
 const root=import.meta.hot?.data.root||createRoot(document.getElementById('root')!);

@@ -1,3 +1,4 @@
+import {beginSpellTiming,finishSpellTiming,spellReady} from './spell-timing.js';
 import {items,spells} from './catalog.js';
 import {stats,spellInfo,takeItem,log,effectRange,knownRank} from './character.js';
 import {combatMembers} from './combat-members.js';
@@ -16,15 +17,15 @@ export function beginResurrection(s,targetId){
  const target=[s,...s.party].find(c=>c.id===targetId),option=resurrectionFor(s,targetId);
  if(!target||target.hp>0)throw new Error('请选择已经倒下的成员。');if(!option)throw new Error('需要一名存活并学会复活法术的牧师、圣骑士或萨满祭司。');
  const {caster,spell,info:sp}=option;if(caster.mana<sp.mana)throw new Error('复活施法者法力不足，需要先休息恢复。');
- caster.rest=null;caster.mana-=sp.mana;caster.lastManaUse=s.clock;
- s.activity={type:'resurrect',caster:caster.id,target:target.id,spell,startedAt:s.clock,endsAt:s.clock+sp.castMs};
+ if(!spellReady(caster,sp,s.clock))throw new Error('复活法术尚未冷却。');caster.rest=null;const timing=beginSpellTiming(caster,sp,s.clock);
+ s.activity={type:'resurrect',timing,caster:caster.id,target:target.id,spell,startedAt:s.clock,endsAt:s.clock+sp.castMs};
  caster.cast={spell,target:target.id,startedAt:s.clock,until:s.activity.endsAt,friendly:true};
  log(s,caster.name+' 正在复活 '+target.name,'cast',{actorId:caster.id,targetId:target.id,spellId:spell,duration:sp.castMs});
 }
 export function finishResurrection(s){
  const a=s.activity,caster=[s,...s.party].find(c=>c.id===a.caster),target=[s,...s.party].find(c=>c.id===a.target);
  if(caster)caster.cast=null;if(!caster||caster.hp<=0||!target||target.hp>0)return;
- const sp=spellInfo(caster,a.spell),st=stats(target);target.hp=Math.min(st.maxHp,effectRange(caster,sp)[0]);target.mana=Math.min(st.maxMana,sp.EffectMiscValue1);target.cast=null;target.spiritRedemptionUsed=false;
+ if(!finishSpellTiming(caster,a.timing,s.clock))return;const sp=spellInfo(caster,a.spell),st=stats(target);target.hp=Math.min(st.maxHp,effectRange(caster,sp)[0]);target.mana=Math.min(st.maxMana,sp.EffectMiscValue1);target.cast=null;target.spiritRedemptionUsed=false;
  log(s,target.name+' 接受复活，重新站了起来。','info');
 }
 export function startRecovery(s){let needed=false;

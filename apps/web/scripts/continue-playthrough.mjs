@@ -32,7 +32,7 @@ const record=row=>appendFileSync(journal,JSON.stringify(row)+'\n');
 const report={input,initialSha256:hash(initial),quests:[],encounters:[],failures:[]};
 function command(action){s=act(s,action,s.wallAt);record({type:'command',at:s.wallAt,action});}
 function wait(ms){const now=s.wallAt+ms,options={};let r;do{r=advance(s,now,options);s=r.state;}while(!r.complete);record({type:'advance',now,options});}
-function finish(){let n=0;while((s.activity.endsAt||s.activity.type==='prepareDungeon')&&n++<2000)wait(s.activity.endsAt?Math.max(1,s.activity.endsAt-s.clock):100);if(n>=2000)throw new Error('Activity did not finish');}
+function finish(){let n=0;while(s.activity.endsAt&&n++<2000)wait(s.activity.endsAt?Math.max(1,s.activity.endsAt-s.clock):100);if(n>=2000)throw new Error('Activity did not finish');}
 function travel(to){if(s.location!==to){command({type:'travel',to});finish();}}
 function members(){return [s,...s.party];}
 function recover(){

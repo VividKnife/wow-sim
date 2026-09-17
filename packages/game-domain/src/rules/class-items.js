@@ -1,3 +1,4 @@
+import {beginSpellTiming,cooldownUntil} from './spell-timing.js';
 import {usableCount,consume} from './inventory.js';
 import {talentSpellValue} from './talent-effects.js';
 import {items,spells,classEnchantments,nameOf} from './catalog.js';
@@ -43,5 +44,5 @@ export function soulstoneRevive(s){
  const st=stats(s);s.hp=Math.min(st.maxHp,Math.max(1,Math.abs(raw.EffectBasePoints1+1)));s.mana=Math.min(st.maxMana,Math.max(0,raw.EffectMiscValue1));s.soulstone=null;s.spiritRedemptionUsed=false;s.activity={type:'idle'};s.cast=null;log(s,'灵魂石复活','info');
 }
 
-export function reincarnationUse(s){const sp=spellInfo(s,21169);const reason=s.hp>0?'角色尚未死亡':s.combat?'请等待当前战斗结束':s.classId!==7||!s.learned.includes(20608)?'尚未学习复生':(s.cooldowns[21169]||0)>s.clock?'复生尚未冷却':usableCount(s,17030)<1?'需要未锁定的十字章':'';return{canUse:!reason,reason,remaining:Math.max(0,(s.cooldowns[21169]||0)-s.clock),cooldown:sp.cooldownMs};}
-export function reincarnate(s){const use=reincarnationUse(s);if(!use.canUse)throw new Error(use.reason);const sp=spellInfo(s,21169),fraction=talentSpellValue(s,sp,3,sp.EffectBasePoints1+1)/100,st=stats(s);consume(s,17030,1);s.hp=Math.max(1,Math.floor(st.maxHp*fraction));s.mana=Math.floor(st.maxMana*fraction);s.cooldowns[21169]=s.clock+sp.cooldownMs;s.activity={type:'idle'};s.cast=null;s.spiritRedemptionUsed=false;log(s,'使用复生重新站起','info');}
+export function reincarnationUse(s){const sp=spellInfo(s,21169);const reason=s.hp>0?'角色尚未死亡':s.combat?'请等待当前战斗结束':s.classId!==7||!s.learned.includes(20608)?'尚未学习复生':cooldownUntil(s,sp)>s.clock?'复生尚未冷却':usableCount(s,17030)<1?'需要未锁定的十字章':'';return{canUse:!reason,reason,remaining:Math.max(0,cooldownUntil(s,sp)-s.clock),cooldown:sp.cooldownMs};}
+export function reincarnate(s){const use=reincarnationUse(s);if(!use.canUse)throw new Error(use.reason);const sp=spellInfo(s,21169),fraction=talentSpellValue(s,sp,3,sp.EffectBasePoints1+1)/100,st=stats(s);consume(s,17030,1);s.hp=Math.max(1,Math.floor(st.maxHp*fraction));s.mana=Math.floor(st.maxMana*fraction);beginSpellTiming(s,{...sp,castMs:0},s.clock,{cost:0});s.activity={type:'idle'};s.cast=null;s.spiritRedemptionUsed=false;log(s,'使用复生重新站起','info');}

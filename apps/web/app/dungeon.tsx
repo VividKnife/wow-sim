@@ -33,7 +33,7 @@ export default function Dungeon(props:GameProps){
  </section>;
 
  const current=dm.current,progress=Math.min(100,dm.progress/dm.total*100);
- const activityLabels:Record<string,string>={dungeonTravel:'小队正在接近目标',dungeonCannon:'火炮已经点燃',resurrect:'牧师正在复活队友',revive:'倒下成员正在返回尸体',conjure:'正在制造补给'};
+ const activityLabels:Record<string,string>={dungeonCannon:'火炮已经点燃',resurrect:'牧师正在复活队友',revive:'倒下成员正在返回尸体',conjure:'正在制造补给'};
  return <section className="dungeon-expedition" aria-label="死亡矿井副本">
   <header className="panel dungeon-header"><div className="section-heading"><div><div className="eyebrow">五人地下城 · 当前冒险</div><h1>死亡矿井</h1></div><Button variant="outline" disabled={busy||!dm.canLeave} onClick={()=>send({type:'leaveDungeon'})}>离开副本</Button></div>
    <div className="section-heading"><span>{dm.completed?'路线已完成':`路线进度 ${dm.progress} / ${dm.total}`}</span><small>退出保留进度</small></div>

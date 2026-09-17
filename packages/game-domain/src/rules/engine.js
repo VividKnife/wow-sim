@@ -1,3 +1,5 @@
+import {strategyPresets} from './strategy-presets.js';
+import {combatRoles,combatRole} from './combat-roles.js';
 import {cityView,canTrainAt} from './city.js';
 import {localInteractions} from './interactions.js';
 import {battlePresentation} from './battle-presentation.js';
@@ -5,19 +7,19 @@ import {petTrainerAbilities,grantHunterTrainingLinks} from './pet-knowledge.js';
 import {environmentTick,environmentAction} from './class-environment.js';
 import {tickRacialEffects,racialModifiers} from './racial-effects.js';
 import {classSupplyShop,trainingBookReason,consumeTrainingBook} from './class-acquisition.js';
-import {nodes,monsterIdsAt,creatures,items,spells,talents,classDefinitions,raceDefinitions,classAbilities,classTalentTrees,xpTable,quests,questLinks,trainerNodes,flightNodes,flights,icon,nameOf,table,creatureLocations} from './catalog.js';
+import {nodes,monsterIdsAt,creatures,items,spells,spellChain,talents,classDefinitions,raceDefinitions,classAbilities,classTalentTrees,xpTable,quests,questLinks,trainerNodes,flightNodes,flights,icon,nameOf,table,creatureLocations} from './catalog.js';
 import {LEVEL_CAP,refreshPetStats,clone,newCharacter,equipStarter,stats,killXp,log,countItem,takeItem,addItem,bagCapacity,canEquip,equipmentBlockedReason,equipFromBag,spellInfo,knownRank} from './character.js';
 import {acceptQuest,abandonQuest,turnIn,questProgress,gather,gatherables,eventNodes,creditExploration} from './quests.js';
 import {questTools,beginQuestTool,finishQuestTool} from './quest-tools.js';
-import {startCombat,combatTick,expireCapture,hurtPlayer} from './combat.js';
+import {startCombat,combatTick,expireCapture,hurtPlayer,abandonCombat} from './combat.js';
 import {tickEnemyAuras} from './enemy-spells.js';
 import {candidates,recruit} from './party.js';
-import {enterDungeon,leaveDungeon,resetDungeon,prepareEncounter,finishDungeonTravel,recordDungeonProgress,interactDungeon,skipDungeonEncounter} from './dungeon.js';
+import {enterDungeon,leaveDungeon,resetDungeon,prepareEncounter,finishDungeonCannon,recordDungeonProgress,interactDungeon,skipDungeonEncounter} from './dungeon.js';
 import {startRecovery,stopRecovery,recoveryTick,beginResurrection,finishResurrection} from './recovery.js';
 import {dungeonView,recoveryView} from './dungeon-view.js';
 import {questNavigation,journeyPosition,redirectedTravel} from './navigation.js';
-import {validateRules,strategySpellIds,companionRules,defaultPolicy} from './combat-strategy.js';
-import {prepareAutoBuffs,autoBuffsEnabled,validateAutoBuffs,defaultAutoBuffs,applyLongBuff} from './auto-buffs.js';
+import {validateRules,strategySpellIds,currentStrategyRules,companionRules,defaultPolicy} from './combat-strategy.js';
+import {prepareAutoBuffs,validateAutoBuffs,defaultAutoBuffs,applyLongBuff} from './auto-buffs.js';
 import {hearthstoneView,bindHearth,beginHearth,finishHearth} from './hearthstone.js';
 import {beginEscort,cancelEscort,escortTick,finishEscortMove,escortView} from './escort.js';
 import {storageActions,storageAction,settleAuctions,marketView,marketPrice,bankHere,bankCapacity,protectedItem,tradable,bankable} from './inventory.js';
@@ -43,7 +45,7 @@ export function createGame(name,seed,now,{classId=8,raceId=1}={}){
  Object.assign(s,{mounts:[],riding:{},mounted:null,professions:{},professionCooldowns:{},bank:[],bankUpgrades:0,auctions:[],marketHistory:[],resourceCooldowns:{},potions:{...defaultPotions}});
  equipStarter(s);log(s,'欢迎来到北郡。与维里副队长交谈，开始你的旅程。');return s;
 }
-function idle(s,reason=''){cancelClassChannel(s);if(s.activity.type==='resurrect'){const c=[s,...s.party].find(c=>c.id===s.activity.caster);if(c)c.cast=null;}s.activity={type:'idle',reason};delete s.preparationTravel;stopRecovery(s);}
+function idle(s,reason=''){cancelClassChannel(s);if(s.activity.type==='resurrect'){const c=[s,...s.party].find(c=>c.id===s.activity.caster);if(c)c.cast=null;}s.activity={type:'idle',reason};stopRecovery(s);}
 function tick(s){s.time=s.clock;const st=stats(s),wasAlive=s.hp>0;environmentTick(s,{stats,hurtPlayer});
  if(!s.combat){tickEnemyAuras(s,[s,...s.party],hurtPlayer);if(wasAlive&&s.hp<=0){s.totals.deaths++;idle(s);s.activity={type:'dead',reason:'角色已死亡，请选择复活。'};}tickClassChannel(s);tickClassEffects(s,combatMembers(s));for(const c of [s,...s.party])tickRacialEffects(s,c,{stats,healAmount});}
  const regenTick=s.clock>=s.nextRegen;if(regenTick)s.nextRegen+=2000;recoveryTick(s,regenTick);
@@ -51,14 +53,13 @@ function tick(s){s.time=s.clock;const st=stats(s),wasAlive=s.hp>0;environmentTic
  if(s.combat){combatTick(s);recordDungeonProgress(s);escortTick(s);return;}
  if(s.escort){escortTick(s);return;}
  if(s.dungeon)recordDungeonProgress(s);
- if(s.activity.type==='prepareDungeon'){if(prepareAutoBuffs(s)||startRecovery(s))return;const travel=s.preparationTravel;delete s.preparationTravel;if(travel&&s.dungeon){const duration=travel.endsAt-travel.startedAt;s.activity={...travel,startedAt:s.clock,endsAt:s.clock+duration};}else idle(s);return;}
  if(s.activity.type==='hunt'&&!s.rest&&s.clock>=s.nextPull){if([s,...s.party].some(c=>c.hp<=0)){idle(s,'有成员倒下，请先复活再继续狩猎。');if(s.hp<=0)s.activity={type:'dead',reason:'队长已倒下，请先复活。'};return;}if(s.pending.length||s.bag.length>=bagCapacity(s)){idle(s,'背包已满，先处理物品和待拾取战利品。');return;}if(s.activity.quest&&questProgress(s,s.activity.quest)?.complete){idle(s,'任务目标已完成。');return;}if(prepareAutoBuffs(s)||startRecovery(s))return;startCombat(s,[s.activity.target]);}
 }
 function finishActivity(s){const a=s.activity;if(a.type==='travel'){s.location=a.to;if(!s.visited.includes(a.to))s.visited.push(a.to);log(s,'抵达 '+nodes[a.to].name,'travel');creditExploration(s);idle(s);if(a.hunt){s.activity={type:'hunt',target:a.hunt,quest:a.quest||null};s.nextPull=s.clock;}}
  else if(a.type==='mount')finishMount(s);
  else if(a.type==='escortMove')finishEscortMove(s);
  else if(a.type==='hearth'){finishHearth(s);idle(s);}
- else if(['dungeonTravel','dungeonCannon'].includes(a.type))finishDungeonTravel(s);
+ else if(a.type==='dungeonCannon')finishDungeonCannon(s);
  else if(a.type==='gather'){gather(s,a.target);idle(s);}
  else if(a.type==='professionGather')finishGather(s);
  else if(a.type==='questItem'){const encounter=finishQuestTool(s);idle(s);if(encounter){startCombat(s,encounter);s.combat.quest=a.quest;for(const e of s.combat.enemies)e.capturePhase='fighting';}}
@@ -128,9 +129,9 @@ function talentResetBlocked(s){if(!canTrainAt(s))return'需要前往训练师地
 export function act(input,action,now){
  const settled=advance(input,now);if(!settled.complete)throw new Error('离线结算尚未结束。');const s=settled.state;
  if(!action||typeof action.type!=='string')throw new Error('无效操作');
- if(s.escort&&!['escortCancel','stop','strategy','settings','sync'].includes(action.type))throw new Error('正在护送，请先完成或停止护送。');
- if(s.hp<=0&&!['revive','resurrect','rest','escortCancel','soulstoneRevive','reincarnate'].includes(action.type))throw new Error('角色已死亡，请先复活。');
- if(s.dungeon&&!['petCommand','reincarnate','soulstoneRevive','usePortal','useItem','useHearth','accept','abandon','dungeonNext','dungeonInteract','dungeonSkip','leaveDungeon','stop','strategy','settings','equip','equipBag','sortBag','lockItem','applyEnchant','useBandage','disenchant','disenchantAll','loot','conjure','cast','revive','resurrect','rest','sync','talent'].includes(action.type))throw new Error('请先离开副本再进行这项操作。');
+ if(s.escort&&!['abandonCombat','escortCancel','stop','strategy','settings','sync'].includes(action.type))throw new Error('正在护送，请先完成或停止护送。');
+ if(s.hp<=0&&!['abandonCombat','revive','resurrect','rest','escortCancel','soulstoneRevive','reincarnate','strategy','settings'].includes(action.type))throw new Error('角色已死亡，请先复活。');
+ if(s.dungeon&&!['abandonCombat','petCommand','reincarnate','soulstoneRevive','usePortal','useItem','useHearth','accept','abandon','dungeonNext','dungeonInteract','dungeonSkip','leaveDungeon','stop','strategy','settings','equip','equipBag','sortBag','lockItem','applyEnchant','useBandage','disenchant','disenchantAll','loot','conjure','cast','revive','resurrect','rest','sync','talent'].includes(action.type))throw new Error('请先离开副本再进行这项操作。');
  if(storageActions.has(action.type)){ensureIdle(s);storageAction(s,action);return s;}
  if(professionActions.has(action.type)){ensureIdle(s);professionAction(s,action);if(['gatherResource','gatherAll','craft','useBandage','disenchant','disenchantAll'].includes(action.type))dismount(s);return s;}
  switch(action.type){
@@ -148,9 +149,10 @@ export function act(input,action,now){
  case 'reincarnate':reincarnate(s);break;
  case 'soulstoneRevive':soulstoneRevive(s);break;
  case 'petCommand':petCommand(s,action);break;
+ case 'abandonCombat':abandonCombat(s,action.encounterId);recordDungeonProgress(s);break;
  case 'enterDungeon':enterDungeon(s);break;
  case 'leaveDungeon':leaveDungeon(s);break;
- case 'dungeonNext':ensureIdle(s);if(s.dungeon&&autoBuffsEnabled(s)){prepareEncounter(s);s.preparationTravel=s.activity;s.activity={type:'prepareDungeon'};}else{if(s.dungeon&&startRecovery(s))break;prepareEncounter(s);}break;
+ case 'dungeonNext':ensureIdle(s);prepareEncounter(s);break;
  case 'dungeonInteract':interactDungeon(s);break;
  case 'dungeonSkip':skipDungeonEncounter(s);break;
  case 'accept':ensureIdle(s);if(s.dungeon&&!questLinks[action.id]?.starts.some(e=>e.type==='item'))throw new Error('请离开副本后再与外面的人物交谈。');acceptQuest(s,action.id);break;
@@ -177,7 +179,7 @@ export function act(input,action,now){
  case 'resurrect':beginResurrection(s,action.target);break;
  case 'rest':if(s.combat||!['idle','dead','hunt'].includes(s.activity.type))throw new Error('请先结束当前活动。');s.activity={type:'idle'};startRecovery(s);break;
  case 'sync':break;
- case 'strategy':{const c=!action.target||action.target===s.id?s:s.party.find(c=>c.id===action.target);if(!c)throw new Error('找不到这个小队成员');validateRules(c,action.rules);c.rules=clone(action.rules);if(action.policy!==undefined){if(!action.policy||typeof action.policy.protectCC!=='boolean'||typeof action.policy.waitForTank!=='boolean')throw new Error('战斗策略设置无效');c.strategyPolicy={...action.policy};}if(action.autoBuffs!==undefined)c.autoBuffs=validateAutoBuffs(action.autoBuffs);if(action.potions!==undefined)c.potions=validatePotions(action.potions);break;}
+ case 'strategy':{const c=!action.target||action.target===s.id?s:s.party.find(c=>c.id===action.target);if(!c)throw new Error('找不到这个小队成员');validateRules(c,action.rules);c.rules=clone(action.rules);if(action.policy!==undefined){if(!action.policy||typeof action.policy.protectCC!=='boolean'||typeof action.policy.waitForTank!=='boolean'||action.policy.role!==undefined&&!combatRoles.includes(action.policy.role)||action.policy.pullDelaySeconds!==undefined&&(!Number.isInteger(action.policy.pullDelaySeconds)||action.policy.pullDelaySeconds<0||action.policy.pullDelaySeconds>10))throw new Error('战斗策略设置无效');c.strategyPolicy={...action.policy};}if(action.autoBuffs!==undefined)c.autoBuffs=validateAutoBuffs(action.autoBuffs);if(action.potions!==undefined)c.potions=validatePotions(action.potions);break;}
  case 'settings':{if(!Number.isInteger(action.health)||!Number.isInteger(action.mana)||action.health<1||action.health>100||action.mana<1||action.mana>100)throw new Error('恢复阈值必须为 1—100 的整数');s.settings.health=action.health;s.settings.mana=action.mana;break;}
  case 'loot':{ensureIdle(s);const pending=s.pending;s.pending=[];for(const i of pending)addItem(s,i.id,i.count);break;}
  case 'equipBag':{ensureIdle(s);const item=s.bag.find(i=>i.uid===action.uid),data=items[item?.id];if(!data||data.class!==1||!data.ContainerSlots||data.BagFamily)throw new Error('需要普通背包');if(item.locked)throw new Error('请先解锁这个背包');const slot=s.bags.length<4?s.bags.length:s.bags.reduce((best,i,n)=>items[i.id].ContainerSlots<items[s.bags[best].id].ContainerSlots?n:best,0),old=s.bags[slot];if(old&&data.ContainerSlots<=items[old.id].ContainerSlots)throw new Error('背包栏已满，只能换上容量更大的背包');s.bag=s.bag.filter(i=>i.uid!==item.uid);if(old)s.bag.push(old);s.bags[slot]={...item,count:1};break;}
@@ -189,6 +191,13 @@ export function act(input,action,now){
  updateTravelMount(s);
  return s;
 }
+// Combat polling must not rebuild trainers, talents, the world map or the economy.
+export function combatView(s){
+ const battleView=battlePresentation(s);
+ const ids=[...new Set([...(battleView?.spellIds||[]),...s.learned,...s.party.flatMap(c=>c.learned),...s.logs.map(l=>l.spellId).filter(Boolean)])];
+ const combatSkills=ids.filter(id=>spells[id]).map(id=>{const info=spellInfo(s,id);return{spellId:id,name:nameOf('spells',id),icon:icon('spells',id),range:info?.range||0,radius:info?.radius||0,school:spells[id]?.School,nameEn:spells[id]?.SpellName};});
+ return{battleView,combatSkills,stats:stats(s),resource:battleView?.units[s.id]?.resource,nextXp:s.level>=LEVEL_CAP?0:xpTable[s.level]?.xp_for_next_level||0,location:nodes[s.location],reincarnation:s.classId===7?reincarnationUse(s):null,canSoulstoneRevive:s.hp<=0&&!s.combat&&s.soulstone?.until>s.clock,questTools:questTools(s)};
+}
 export function view(s){
  const questViews=Object.values(quests).map(q=>{const p=questProgress(s,q.entry);return{...p,navigation:questNavigation(s,p)}});
  const classId=s.classId||8,raceId=s.raceId||1,classDef=classDefinitions.find(c=>c.id===classId),raceDef=raceDefinitions.find(r=>r.id===raceId),st=stats(s);
@@ -198,5 +207,5 @@ export function view(s){
  const power=s.form==='bear'||s.form==='direBear'?'rage':s.form==='cat'?'energy':s.power;const resource=power==='rage'?{name:'怒气',value:Math.floor((s.rage||0)/10),max:100}:power==='energy'?{name:'能量',value:s.energy||0,max:st.maxEnergy||100}:{name:'法力',value:s.mana||0,max:st.maxMana};
  const resetCost=talentResetCost(s);
  const battleView=battlePresentation(s);
- return{interactions:localInteractions(s,questViews),city:cityView(s),battleView,reincarnation:s.classId===7?reincarnationUse(s):null,canSoulstoneRevive:s.hp<=0&&!s.combat&&s.soulstone?.until>s.clock,...utilityView(s),...professionView(s),className:classDef?.name||'',raceName:raceDef?.name||'',faction:raceDef?.faction||'',resource,raceTraits:racialTraits(s),talentTrees:treeViews,talentResetCost:resetCost,canResetTalents:!talentResetBlocked(s),talentResetBlockedReason:talentResetBlocked(s),bankCapacity:bankCapacity(s),bankHere:bankHere(s),bankUpgradeCost:s.bankUpgrades<3?1000*(s.bankUpgrades+1):null,inventoryActions:Object.fromEntries(s.bag.map(i=>[i.uid,{protected:protectedItem(i),bankable:bankable(i),tradable:tradable(i)&&items[i.id]?.Quality>0,quote:marketPrice(i.id),equippable:!equipmentBlockedReason(s,i),equipBlockedReason:equipmentBlockedReason(s,i)}])),escort:escortView(s),escortNpc:s.escort?{...s.escort.npc,stats:stats(s.escort.npc)}:null,hearthstone:hearthstoneView(s),mounts:mountView(s),strategyMembers:[s,...s.party].map(c=>({id:c.id,name:c.name,classId:c.classId,rules:c.rules||companionRules(c)||clone(defaultClassRules(c.classId)),policy:{...defaultPolicy,...c.strategyPolicy},autoBuffs:{...defaultAutoBuffs,...c.autoBuffs},potions:{...defaultPotions,...c.potions},skills:strategySpellIds(c).map(id=>({spellId:id,name:nameOf('spells',id),nameEn:spells[id]?.SpellName,icon:icon('spells',id),known:c.learned.includes(id),rank:spells[id]?.Rank||''}))})),journey:journeyPosition(s),dungeon:dungeonView(s),recovery:recoveryView(s),combatSkills:[...new Set([...(classAbilities[classId]||[]).map(a=>a.spellId),...(battleView?.spellIds||[]),...s.learned,...s.party.flatMap(c=>c.learned),...s.logs.map(l=>l.spellId).filter(Boolean)])].filter(id=>spells[id]).map(id=>({spellId:id,name:nameOf('spells',id),icon:icon('spells',id),range:spellInfo(s,id)?.range||0,radius:spellInfo(s,id)?.radius||0,school:spells[id]?.School,nameEn:spells[id]?.SpellName})),candidates:candidates(s),party:s.party.map(c=>({...c,stats:stats(c),equippable:s.bag.filter(i=>canEquip(c,items[i.id])&&(!i.ownerId||i.ownerId===c.id)).map(i=>i.uid)})),nextXp:s.level>=LEVEL_CAP?0:xpTable[s.level]?.xp_for_next_level||0,stats:st,location:nodes[s.location],map:Object.values(nodes).map(n=>({...n,hasFlight:flightNodes.includes(n.id),flightUnlocked:s.flightPoints.includes(n.id),travel:n.id===s.location&&s.activity.type!=='travel'?0:reachableTravelTime(s,n.id)})),monsters:monsterIdsAt(s.location).map(id=>({id,name:nameOf('npcs',id),min:creatures[id].MinLevel,max:creatures[id].MaxLevel,elite:!!creatures[id].Rank})),quests:questViews,questTools:questTools(s),shop:shop(s),gatherables:gatherables(s),bagCapacity:bagCapacity(s),skills:skillViews,talents:talentViews,canTrain:canTrainAt(s),hasFlight:flightNodes.includes(s.location)};
+ return{interactions:localInteractions(s,questViews),city:cityView(s),battleView,reincarnation:s.classId===7?reincarnationUse(s):null,canSoulstoneRevive:s.hp<=0&&!s.combat&&s.soulstone?.until>s.clock,...utilityView(s),...professionView(s),className:classDef?.name||'',raceName:raceDef?.name||'',faction:raceDef?.faction||'',resource,raceTraits:racialTraits(s),talentTrees:treeViews,talentResetCost:resetCost,canResetTalents:!talentResetBlocked(s),talentResetBlockedReason:talentResetBlocked(s),bankCapacity:bankCapacity(s),bankHere:bankHere(s),bankUpgradeCost:s.bankUpgrades<3?1000*(s.bankUpgrades+1):null,inventoryActions:Object.fromEntries(s.bag.map(i=>[i.uid,{protected:protectedItem(i),bankable:bankable(i),tradable:tradable(i)&&items[i.id]?.Quality>0,quote:marketPrice(i.id),equippable:!equipmentBlockedReason(s,i),equipBlockedReason:equipmentBlockedReason(s,i)}])),escort:escortView(s),escortNpc:s.escort?{...s.escort.npc,stats:stats(s.escort.npc)}:null,hearthstone:hearthstoneView(s),mounts:mountView(s),strategyMembers:[s,...s.party].map(c=>({id:c.id,name:c.name,classId:c.classId,rules:currentStrategyRules(c,c.rules||companionRules(c)||defaultClassRules(c.classId)),presets:strategyPresets(c),role:combatRole(c),policy:{...defaultPolicy,...c.strategyPolicy},autoBuffs:{...defaultAutoBuffs,...c.autoBuffs},potions:{...defaultPotions,...c.potions},skills:strategySpellIds(c).map(id=>({spellId:id,name:nameOf('spells',id),nameEn:spells[id]?.SpellName,icon:icon('spells',id),known:c.learned.includes(id),rank:spellChain[id]?.rank?`等级 ${spellChain[id].rank}`:''}))})),journey:journeyPosition(s),dungeon:dungeonView(s),recovery:recoveryView(s),combatSkills:[...new Set([...(classAbilities[classId]||[]).map(a=>a.spellId),...(battleView?.spellIds||[]),...s.learned,...s.party.flatMap(c=>c.learned),...s.logs.map(l=>l.spellId).filter(Boolean)])].filter(id=>spells[id]).map(id=>({spellId:id,name:nameOf('spells',id),icon:icon('spells',id),range:spellInfo(s,id)?.range||0,radius:spellInfo(s,id)?.radius||0,school:spells[id]?.School,nameEn:spells[id]?.SpellName})),candidates:candidates(s),party:s.party.map(c=>({...c,stats:stats(c),equippable:s.bag.filter(i=>canEquip(c,items[i.id])&&(!i.ownerId||i.ownerId===c.id)).map(i=>i.uid)})),nextXp:s.level>=LEVEL_CAP?0:xpTable[s.level]?.xp_for_next_level||0,stats:st,location:nodes[s.location],map:Object.values(nodes).map(n=>({...n,hasFlight:flightNodes.includes(n.id),flightUnlocked:s.flightPoints.includes(n.id),travel:n.id===s.location&&s.activity.type!=='travel'?0:reachableTravelTime(s,n.id)})),monsters:monsterIdsAt(s.location).map(id=>({id,name:nameOf('npcs',id),min:creatures[id].MinLevel,max:creatures[id].MaxLevel,elite:!!creatures[id].Rank})),quests:questViews,questTools:questTools(s),shop:shop(s),gatherables:gatherables(s),bagCapacity:bagCapacity(s),skills:skillViews,talents:talentViews,canTrain:canTrainAt(s),hasFlight:flightNodes.includes(s.location)};
 }

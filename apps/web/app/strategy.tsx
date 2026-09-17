@@ -1,42 +1,52 @@
 "use client";
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';
-import {GameProps,Icon} from './game-ui';
+import {GameProps} from './game-ui';
+import {StrategySkillPicker} from './strategy-skill-picker';
 import {classCombatMeta} from '../../../packages/sim-core/src/class-combat.js';
 import type {PotionOption} from './economy-types';
 
-const conditions=[['always','始终可用'],['targetCasting','敌人正在施法'],['enemyNear','敌人距离不超过（码）'],['healthBelow','自身生命低于（%）'],['manaAbove','自身主要资源不低于（%）'],['manaBelow','自身主要资源低于（%）'],['targetHealthBelow','目标生命低于（%）'],['enemyCountAtLeast','技能范围内可攻击敌人数至少']];
-const nonCombat=['Conjure Food','Conjure Water','Frost Armor','Arcane Intellect','Power Word: Fortitude','Resurrection'];
+const conditions=[['always','始终可用'],['targetCasting','敌人正在施法'],['enemyNear','敌人距离不超过（码）'],['enemyFar','敌人距离大于（码）'],['allyHealthBelow','任一队友生命低于（%）'],['healthBelow','自身生命低于（%）'],['manaAbove','自身主要资源不低于（%）'],['manaBelow','自身主要资源低于（%）'],['targetHealthBelow','目标生命低于（%）'],['enemyCountAtLeast','技能范围内可攻击敌人数至少'],['combatEnemyCountAtMost','本场存活敌人数至多'],['targetHealthAbove','目标生命不低于（%）'],['healthAbove','自身生命不低于（%）'],['comboAtLeast','当前目标连击点至少'],['petHealthBelow','宠物生命低于（%）'],['underAttack','自身正在被敌人攻击'],['combatTimeBelow','开战时间小于（秒）']];
+const roleNames:Record<string,string>={auto:'自动判断',tank:'坦克',melee:'近战输出',ranged:'远程输出',healer:'治疗'};
 export default function Strategy(props:GameProps){
  const {state:s,data:d}=props;
- const members=d.strategyMembers||[{id:s.id,name:s.name,classId:s.classId,rules:s.rules,policy:{protectCC:true,waitForTank:false},autoBuffs:{enabled:false,armor:true,int:true,sta:true,targets:'party',refreshSeconds:30},skills:d.skills}];
+ const members=d.strategyMembers||[{id:s.id,name:s.name,classId:s.classId,rules:s.rules,policy:{protectCC:true,waitForTank:true,pullDelaySeconds:3},autoBuffs:{enabled:false,armor:true,int:true,sta:true,targets:'party',refreshSeconds:30},skills:d.skills}];
  const [memberId,setMemberId]=useState(s.id),member=members.find((c:any)=>c.id===memberId)||members[0];
- return <><label className="threshold">配置成员 <select aria-label="策略成员" value={member.id} onChange={e=>setMemberId(e.target.value)}>{members.map((c:any)=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label><MemberStrategy key={member.id} {...props} member={member}/></>;
+ return <><label className="threshold">配置成员 <select aria-label="策略成员" value={member.id} onChange={e=>setMemberId(e.target.value)}>{members.map((c:any)=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label><MemberStrategy key={`${member.id}:${member.skills.map((a:any)=>a.spellId).join(',')}`} {...props} member={member}/></>;
 }
 function MemberStrategy({state:s,data:d,busy,send,member}:GameProps&{member:any}){
  const [rules,setRules]=useState<any[]>(member.rules),[policy,setPolicy]=useState(member.policy),[buffs,setBuffs]=useState(member.autoBuffs),[health,setHealth]=useState(s.settings.health),[mana,setMana]=useState(s.settings.mana),[saved,setSaved]=useState(false),[potions,setPotions]=useState(member.potions||{enabled:false,health:35,mana:20,healthItem:0,manaItem:0});
- const skills=member.skills.filter((a:any)=>!nonCombat.includes(a.nameEn));
+ const skills=member.skills.filter((a:any)=>a.known);
+ const presets=member.presets||[];
+ const [presetId,setPresetId]=useState(presets.find((p:any)=>p.recommended)?.id||presets[0]?.id||'');
+ const preset=presets.find((p:any)=>p.id===presetId);
+ const applyPreset=async()=>{if(!preset)return;const ok=await send({type:'strategy',target:member.id,rules:preset.rules,policy:preset.policy,autoBuffs:preset.autoBuffs,potions:preset.potions});if(ok){setRules(preset.rules);setPolicy(preset.policy);setBuffs(preset.autoBuffs);setPotions(preset.potions);setSaved(true);}};
  const usesMana=![1,4].includes(member.classId),potionKinds=usesMana?(['health','mana'] as const):(['health'] as const);
  const edit=(i:number,key:string,value:any)=>{setSaved(false);setRules(rules.map((r,n)=>n===i?{...r,[key]:value}:r));};
  const move=(i:number,delta:number)=>{const next=[...rules];[next[i],next[i+delta]]=[next[i+delta],next[i]];setRules(next);setSaved(false);};
  const editBuff=(key:string,value:any)=>{setBuffs({...buffs,[key]:value});setSaved(false);};
  return <div className="strategy-layout"><section className="panel">
-  <div className="section-heading"><div><div className="eyebrow">{member.name} · 技能决策</div><h2>自动施法优先级</h2></div><Button disabled={busy||!rules.length} onClick={async()=>{setSaved(await send({type:'strategy',target:member.id,rules,policy,autoBuffs:buffs,potions}));}}>{saved?'已提交':'保存成员策略'}</Button></div>
-  <p>按顺序检查条件、已学最高等级、距离、资源、姿态和冷却。人数按技能实际范围计算；默认群攻阈值为 3。</p>
+  <div className="section-heading"><div><div className="eyebrow">{member.name} · 技能决策</div><h2>自动施法优先级</h2></div><Button disabled={busy} onClick={async()=>{setSaved(await send({type:'strategy',target:member.id,rules,policy,autoBuffs:buffs,potions}));}}>{saved?'已提交':'保存成员策略'}</Button></div>
+  <div className="strategy-presets"><div><h3>20 级推荐策略</h3><p>按天赋分支配置已学技能、战斗职责、增益和药水；不会改变天赋加点。应用后立即保存。</p></div><div className="strategy-preset-actions"><select aria-label="推荐策略模板" value={presetId} onChange={e=>setPresetId(e.target.value)}>{presets.map((p:any)=><option key={p.id} value={p.id}>{p.name}{p.recommended?' · 推荐':''}</option>)}</select><Button disabled={busy||!preset?.rules.length} onClick={applyPreset}>一键应用推荐</Button></div>{preset&&<><small>{roleNames[preset.role]} · 当前可配置 {preset.rules.length} 条技能规则</small><p>{preset.description}</p><small>仅加入已学技能；同一条规则的所有条件需同时满足。技能的冷却、装备和材料要求仍然生效。</small></>}</div>
+  <label className="threshold">战斗职责 <select aria-label="战斗职责" value={policy.role||'auto'} onChange={e=>{setPolicy({...policy,role:e.target.value});setSaved(false);}}>{Object.entries(roleNames).map(([id,name])=><option key={id} value={id}>{name}</option>)}</select></label><p>队伍战斗中，远程和治疗按技能射程站位；被追击时靠近坦克，无坦克时在队友附近撤退。当前已保存职责：{roleNames[member.role]||'远程输出'}。</p>
+  <p>按顺序检查条件、已学最高等级、距离、资源、姿态和冷却。人数按技能实际范围计算；群攻默认保护控场目标。每条规则可追加最多 3 个「并且」条件。</p>
   {member.classId===5&&<p>牧师优先救急和治疗，队友受伤时会停止惩击。遭到围攻时会使用已学会的真言术：盾自救；渐隐术能让敌人转向队友时才使用。法力充足时按以下规则输出，真言术：韧由战前增益设置维护。</p>}
   {member.classId===8&&<p>把变形术放在输出技能前，可先控制没有持续伤害的副目标。优先使用法力的敌人，同类目标中优先正在施法者。每位法师保持一个变形目标，再继续输出；控场不受等待坦克选项限制，目标会在变形期间快速回血。</p>}
   <p>{classCombatMeta[member.classId]?.hint}</p>
   {member.classId===1&&<p>坦克优先嘲讽正在攻击队友的敌人。20 级学会顺劈斩后，可按人数排队在下一次武器挥击时攻击最多两名近敌。</p>}
-  <div className="rule-list">{rules.map((r:any,i:number)=>{const skill=member.skills.find((a:any)=>a.spellId===r.spell);return <div className="rule-editor" key={i}>
-   <div className="rule-number">{i+1}</div><Icon src={skill?.icon} name={skill?.name||'法术'} size={36}/>
-   <div className="rule-fields"><label>技能<select aria-label={`第 ${i+1} 条技能`} value={r.spell} onChange={e=>edit(i,'spell',Number(e.target.value))}>{skills.map((a:any)=><option key={a.spellId} value={a.spellId}>{a.name} {a.rank} {a.known?'':'（未学）'}</option>)}</select></label>
-    <div className="rule-condition"><select aria-label={`第 ${i+1} 条条件`} value={r.condition} onChange={e=>{const condition=e.target.value;setRules(rules.map((v,n)=>n===i?{...v,condition,value:condition==='enemyCountAtLeast'?3:v.value}:v));setSaved(false);}}>{conditions.map(([value,label])=><option key={value} value={value}>{label}</option>)}</select>
-    {!['always','targetCasting'].includes(r.condition)&&<input type="number" aria-label={`第 ${i+1} 条阈值`} min={r.condition==='enemyCountAtLeast'?1:0} max={100} step={1} value={r.value} onChange={e=>edit(i,'value',Number(e.target.value))}/>}</div>
-   </div><div className="rule-controls"><label><input type="checkbox" checked={r.enabled} onChange={e=>edit(i,'enabled',e.target.checked)}/>启用</label><div><Button variant="ghost" size="sm" aria-label={`上移第 ${i+1} 条`} disabled={i===0} onClick={()=>move(i,-1)}>↑</Button><Button variant="ghost" size="sm" aria-label={`下移第 ${i+1} 条`} disabled={i===rules.length-1} onClick={()=>move(i,1)}>↓</Button><Button variant="ghost" size="sm" aria-label={`删除第 ${i+1} 条`} disabled={rules.length===1} onClick={()=>{setRules(rules.filter((_,n)=>n!==i));setSaved(false);}}>×</Button></div></div>
+  <div className="rule-list">{rules.map((r:any,i:number)=>{return <div className="rule-editor" key={i}>
+   <div className="rule-number">{i+1}</div>
+   <div className="rule-fields"><div className="strategy-skill-field"><span>技能 · 已学最高等级</span><StrategySkillPicker skills={skills} value={r.spell} label={`第 ${i+1} 条技能`} onChange={id=>edit(i,'spell',id)}/></div>
+    <div className="rule-condition"><select aria-label={`第 ${i+1} 条条件`} value={r.condition} onChange={e=>{const condition=e.target.value;setRules(rules.map((v,n)=>n===i?{...v,condition,value:['enemyCountAtLeast','combatEnemyCountAtMost','comboAtLeast'].includes(condition)?2:v.value}:v));setSaved(false);}}>{conditions.map(([value,label])=><option key={value} value={value}>{label}</option>)}</select>
+    {!['always','targetCasting','underAttack'].includes(r.condition)&&<input type="number" aria-label={`第 ${i+1} 条阈值`} min={['enemyCountAtLeast','combatEnemyCountAtMost','comboAtLeast'].includes(r.condition)?1:0} max={r.condition==='comboAtLeast'?5:100} step={1} value={r.value} onChange={e=>edit(i,'value',Number(e.target.value))}/>}</div>
+    {(r.and||[]).map((clause:any,j:number)=><div className="rule-condition" key={j}><span>并且</span><select aria-label={`第 ${i+1} 条附加条件 ${j+1}`} value={clause.condition} onChange={e=>edit(i,'and',r.and.map((v:any,n:number)=>n===j?{...v,condition:e.target.value,value:['enemyCountAtLeast','combatEnemyCountAtMost','comboAtLeast'].includes(e.target.value)?2:v.value}:v))}>{conditions.filter(([id])=>id!=='always').map(([value,label])=><option key={value} value={value}>{label}</option>)}</select>{!['targetCasting','underAttack'].includes(clause.condition)&&<input type="number" aria-label={`第 ${i+1} 条附加阈值 ${j+1}`} min={['enemyCountAtLeast','combatEnemyCountAtMost','comboAtLeast'].includes(clause.condition)?1:0} max={clause.condition==='comboAtLeast'?5:100} value={clause.value} onChange={e=>edit(i,'and',r.and.map((v:any,n:number)=>n===j?{...v,value:Number(e.target.value)}:v))}/>}<Button variant="ghost" size="sm" aria-label={`删除第 ${i+1} 条附加条件 ${j+1}`} onClick={()=>edit(i,'and',r.and.filter((_:any,n:number)=>n!==j))}>×</Button></div>)}
+    {(r.and||[]).length<3&&<Button variant="ghost" size="sm" onClick={()=>edit(i,'and',[...(r.and||[]),{condition:'manaAbove',value:30}])}>＋ 并且满足</Button>}
+   </div><div className="rule-controls"><label><input type="checkbox" checked={r.enabled} onChange={e=>edit(i,'enabled',e.target.checked)}/>启用</label><div><Button variant="ghost" size="sm" aria-label={`上移第 ${i+1} 条`} disabled={i===0} onClick={()=>move(i,-1)}>↑</Button><Button variant="ghost" size="sm" aria-label={`下移第 ${i+1} 条`} disabled={i===rules.length-1} onClick={()=>move(i,1)}>↓</Button><Button variant="ghost" size="sm" aria-label={`删除第 ${i+1} 条`} disabled={busy} onClick={()=>{setRules(rules.filter((_,n)=>n!==i));setSaved(false);}}>×</Button></div></div>
   </div>;})}</div>
-  <Button variant="outline" disabled={rules.length>=12||!skills.length} onClick={()=>{setRules([...rules,{spell:skills[0].spellId,condition:'always',value:0,enabled:true}]);setSaved(false);}}>＋ 添加规则</Button>
+  {!rules.length&&<p className="strategy-empty">尚未配置主动技能规则。可应用推荐模板，或手动添加已学技能。</p>}
+  <Button variant="outline" disabled={busy||rules.length>=12||!skills.length} onClick={()=>{setRules([...rules,{spell:skills[0].spellId,condition:'always',value:0,enabled:true}]);setSaved(false);}}>＋ 添加规则</Button>
   <hr/><label className="threshold"><input type="checkbox" checked={policy.protectCC} onChange={e=>{setPolicy({...policy,protectCC:e.target.checked});setSaved(false);}}/> 避免打破变形等控场</label>
-  <label className="threshold"><input type="checkbox" checked={policy.waitForTank} onChange={e=>{setPolicy({...policy,waitForTank:e.target.checked});setSaved(false);}}/> 等待坦克建立仇恨后输出</label><p>等待条件检查目标正在攻击坦克且已有坦克仇恨；不会保证后续永不转火。</p>
+  <label className="threshold"><input type="checkbox" checked={policy.waitForTank} onChange={e=>{setPolicy({...policy,waitForTank:e.target.checked});setSaved(false);}}/> 等待坦克建立仇恨后输出</label>{policy.waitForTank&&<label className="threshold">开场等待 <input aria-label="开场等待秒数" type="number" min={0} max={10} step={1} value={policy.pullDelaySeconds??3} onChange={e=>{setPolicy({...policy,pullDelaySeconds:Number(e.target.value)});setSaved(false);}}/> 秒</label>}<p>默认等待 3 秒，再确认目标已有坦克仇恨；群攻检查每个受影响目标，宠物同步等待。治疗与增益不受限制，无存活坦克时正常作战。远程被追击时会靠近坦克等待接怪。</p>
  </section><section className="panel"><h2>自动长期增益</h2><p>在已下令的野外拉怪或副本推进前补充增益，消耗真实法力与公共冷却。法力不足时按补给规则恢复。</p>
   <label className="threshold"><input type="checkbox" checked={buffs.enabled} onChange={e=>editBuff('enabled',e.target.checked)}/> 启用 {member.name} 的战前补增益</label>
   {member.classId===8&&<><label className="threshold"><input type="checkbox" checked={buffs.armor} onChange={e=>editBuff('armor',e.target.checked)}/> 霜甲术（自身）</label><label className="threshold"><input type="checkbox" checked={buffs.int} onChange={e=>editBuff('int',e.target.checked)}/> 奥术智慧（法力使用者）</label></>}

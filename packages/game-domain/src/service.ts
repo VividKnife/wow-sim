@@ -3,6 +3,7 @@ import { startActivity, recall, restoreReservation, settleActivity } from './act
 import { randomUUID, randomBytes } from 'node:crypto';
 import { removeInvalidSave } from './account-reset.ts';
 import { validAccountPresence } from './context.ts';
+import {simulationInterval} from './simulation-cadence.ts';
 import type { Account } from './model.ts';
 import { act, advance, quietIdle } from './rules/engine.js';
 import { offlineLimit, recordPresence, activityDeadline, instanceDeadline } from './presence.ts';
@@ -51,15 +52,17 @@ export class GameService {
     request(id: unknown) { requireThat(typeof id === 'string' && id.length > 0 && id.length <= 160, 'INVALID_REQUEST', '需要有效的 requestId', 400); }
     async receipt(tx: Transaction, accountId: string, requestId: string, command: Rules) { await tx.insert('receipts', { id: `${accountId}:${requestId}`, accountId, requestId, fingerprint: JSON.stringify(command), createdAt: this.now() }); }
     async snapshot(accountId: string, characterId?: string, online = false) {
+        // A polling read must not hold a presence write while assembling the
+        // entire snapshot: that makes it compete with every combat settlement.
+        if (online) await this.store.transaction(async tx => {
+            const a = await account(tx, accountId), now = this.now();
+            if (now - a.lastSeenAt >= Math.min(1000, this.offlineLimitMs / 4))
+                await this.recordPresence(tx, accountId, now);
+        });
         return this.store.transaction(async (tx) => {
             let a = await account(tx, accountId);
             let c = await owned(tx, accountId, characterId || a.primaryCharacterId);
             const now = this.now();
-            if (online) {
-                await this.recordPresence(tx, accountId, now);
-                a = await account(tx, accountId);
-                c = await owned(tx, accountId, c.id);
-            }
             const lease = await tx.get<ActorLease>('actor_leases', c.id);
             const instance = lease?.kind === 'instance' ? await tx.get<Instance>('instances', lease.ownerId) : null;
             let state = await this.personalContext(tx, c, now);
@@ -94,7 +97,7 @@ export class GameService {
             }
             const roster = (await tx.list<Character>('characters', { accountId })).map(row => ({ id: row.id, characterId: row.id, name: row.rules.name, classId: row.rules.classId, raceId: row.rules.raceId, level: row.rules.level, kind: row.kind, professions: row.rules.professions }));
             const activities = await tx.list<Activity>('activities', { accountId });
-            return { state, revision: a.revision, account: a, roster, activities, instanceId: instance?.id || null, instance: instance ? { id: instance.id, contentId: instance.contentId, status: instance.status, capacity: instance.capacity, roster: instance.roster, sequence: instance.sequence, epoch: instance.epoch } : null };
+            return { state, revision: a.revision, account: a, roster, activities, instanceId: instance?.id || null, instance: instance ? { id: instance.id, leaderId: instance.leaderId, contentId: instance.contentId, status: instance.status, capacity: instance.capacity, roster: instance.roster, sequence: instance.sequence, epoch: instance.epoch } : null };
         });
     }
     member(s: Rules) { const { party, bag, bags, bank, pending, auctions, money, activity, combat, lastCombat, dungeon, receipts, ...member } = s; return member; }
@@ -365,7 +368,7 @@ export class GameService {
         }
         a.rngState = s.rngState;
         a.engineActivity = clone(s.activity);
-        a.nextEventAt = now + 1000;
+        a.nextEventAt = now + simulationInterval(s.combat, (await account(tx, c.accountId)).lastSeenAt, now);
         await tx.put('activities', a);
     }
     startActivity = startActivity;

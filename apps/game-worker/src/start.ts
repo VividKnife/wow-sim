@@ -4,6 +4,7 @@ import {offlineLimit} from '../../../packages/game-domain/src/presence.ts';
 import {GameService} from '../../../packages/game-domain/src/service.ts';
 import {CONTENT_VERSION} from '../../../packages/game-domain/src/rules/client-content.js';
 import {createGameWorker} from './worker.ts';
+import {WORKER_INTERVAL_MS} from '../../../packages/game-domain/src/simulation-cadence.ts';
 
 export type WorkerEnvironment = {
   DATABASE_URL?: string;
@@ -27,7 +28,7 @@ export async function startGameWorker(environment: WorkerEnvironment = process.e
     const service = new GameService(store, {contentVersion: CONTENT_VERSION, offlineLimitMs: offlineLimit(environment.GAME_OFFLINE_LIMIT_MS)});
     const worker = createGameWorker({
       service,
-      intervalMs: positiveInteger(environment.GAME_WORKER_INTERVAL_MS, 1_000, 'GAME_WORKER_INTERVAL_MS'),
+      intervalMs: positiveInteger(environment.GAME_WORKER_INTERVAL_MS, WORKER_INTERVAL_MS, 'GAME_WORKER_INTERVAL_MS'),
       limit: positiveInteger(environment.GAME_WORKER_LIMIT, 100, 'GAME_WORKER_LIMIT'),
       onError: (error) => console.error('Game worker iteration failed', error),
     });
