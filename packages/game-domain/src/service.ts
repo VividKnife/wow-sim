@@ -1,6 +1,9 @@
 import { createInstance, instanceFor, joinInstance, startInstance, bumpInstanceAccounts, instanceCommand, persistInstance, leaveInstance, hireMercenary, acquireInstanceLease, advanceInstance } from './instances.ts';
 import { startActivity, recall, restoreReservation, settleActivity } from './activities.ts';
 import { randomUUID, randomBytes } from 'node:crypto';
+import { removeInvalidSave } from './account-reset.ts';
+import { validAccountPresence } from './context.ts';
+import type { Account } from './model.ts';
 import { act, advance, quietIdle } from './rules/engine.js';
 import { offlineLimit, recordPresence, activityDeadline, instanceDeadline } from './presence.ts';
 import { professions } from './rules/profession-data.js';
@@ -36,7 +39,10 @@ export class GameService {
         raceId: number;
     }, requestId: string) {
         this.request(requestId);
-        await this.store.transaction(async (tx) => { const previous = await tx.get<Rules>('receipts', `${accountId}:${requestId}`); if (previous) {
+        await this.store.transaction(async (tx) => {
+            const existing = await tx.get<Account>('accounts', accountId);
+            if (existing && !validAccountPresence(existing)) await removeInvalidSave(tx, accountId);
+            const previous = await tx.get<Rules>('receipts', `${accountId}:${requestId}`); if (previous) {
             requireThat(previous.fingerprint === JSON.stringify({ type: 'createAccount', ...input }), 'REQUEST_REUSED', 'requestId 已被其他命令使用');
             return;
         } requireThat(!await tx.get('accounts', accountId), 'EXISTS', '账号已有主角'); const now = this.now(), id = this.id(), partyId = this.id(); const s = newState(input.name, input.classId, input.raceId, this.seed(), now, id); const c: Character = { id, accountId, kind: 'hero', rules: characterRules(s), professionReadyAt: {}, resourceReadyAt: {} }; await tx.insert('accounts', { id: accountId, primaryCharacterId: id, partyId, revision: 1, createdAt: now, lastSeenAt: now }); await tx.insert('characters', c); await tx.insert('parties', { id: partyId, accountId, characterIds: [id] }); await persistAssets(tx, c, s, `create:${accountId}`, this.id); await this.receipt(tx, accountId, requestId, { type: 'createAccount', ...input }); });

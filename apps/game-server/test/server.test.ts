@@ -276,6 +276,33 @@ test('conditional HTTP polls publish idle regeneration and cache again after ful
  now=123000;const unchanged=await fetch(url+'/game',{headers:{...headers,'if-none-match':full.headers.get('etag')!}});assert.equal(unchanged.status,304);
 });
 
+test('authenticated user can recreate an invalid save then read it normally', async t => {
+  const store = new MemoryStore(), service = new GameService(store, {contentVersion: CONTENT_VERSION, now: () => 1000});
+  const input = {name: 'Reborn', classId: 8, raceId: 1};
+  const old = await service.createAccount('recreate', input, 'old-create');
+  await store.transaction(async tx => {
+    const row = (await tx.get('accounts', 'recreate'))!;
+    delete row.lastSeenAt;
+    await tx.put('accounts', row);
+  });
+  const {game, url} = await start(service);
+  t.after(async () => {await game.close(); await store.close();});
+  const headers = {...await auth('recreate'), 'content-type': 'application/json'};
+  const invalid = await fetch(url + '/game', {headers});
+  assert.equal(invalid.status, 409);
+  assert.equal((await invalid.json() as any).code, 'ACCOUNT_STATE');
+  const response = await fetch(url + '/game', {method: 'POST', headers, body: JSON.stringify({type: 'create', ...input, requestId: 'recreate-request'})});
+  assert.equal(response.status, 200);
+  const created = await response.json() as any;
+  assert.notEqual(created.snapshot.player.id, old.state.id);
+  const loaded = await fetch(url + '/game', {headers});
+  assert.equal(loaded.status, 200);
+  assert.equal((await loaded.json() as any).snapshot.player.id, created.snapshot.player.id);
+  const duplicate = await fetch(url + '/game', {method: 'POST', headers, body: JSON.stringify({type: 'create', ...input, requestId: 'duplicate-request'})});
+  assert.equal(duplicate.status, 409);
+  assert.equal((await duplicate.json() as any).code, 'EXISTS');
+});
+
 test('authenticated conditional polls refresh offline allowance even when the response is 304', async t => {
   let now = 1000;
   const store = new MemoryStore(), service = new GameService(store, {contentVersion: CONTENT_VERSION, now: () => now, offlineLimitMs: 2000});

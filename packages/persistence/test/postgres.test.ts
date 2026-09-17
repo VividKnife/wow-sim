@@ -41,6 +41,36 @@ test('PostgreSQL schema enforces uniqueness and rollback with real SQL',async()=
  }finally{await store.close();}
 });
 
+test('invalid save recreation rolls back failed creation and persists a clean replacement in SQL', async () => {
+ const store = new PostgresStore(embeddedPool(new PGlite()));
+ try {
+  await store.initialize();
+  const service = new GameService(store, {contentVersion: 'test', now: () => 1000});
+  const input = {name: 'Reborn', classId: 8, raceId: 1};
+  const old = await service.createAccount('recreate', input, 'create');
+  await service.command('recreate', {type: 'travel', to: 'goldshire', requestId: 'travel'});
+  await store.transaction(async tx => {
+   const row = (await tx.get('accounts', 'recreate'))!;
+   delete row.lastSeenAt;
+   await tx.put('accounts', row);
+  });
+  await assert.rejects(service.createAccount('recreate', {...input, classId: 999}, 'bad'), {code: 'INVALID_CHARACTER'});
+  assert.ok(await store.transaction(tx => tx.get('characters', old.state.id)));
+  assert.equal((await store.transaction(tx => tx.list('activities'))).length, 1);
+  const created = await service.createAccount('recreate', input, 'create');
+  assert.notEqual(created.state.id, old.state.id);
+  await store.transaction(async tx => {
+   assert.equal(await tx.get('characters', old.state.id), null);
+   assert.deepEqual(await tx.list('items', {ownerCharacterId: old.state.id}), []);
+   assert.deepEqual(await tx.list('activities'), []);
+   assert.deepEqual(await tx.list('actor_leases'), []);
+  });
+  const restarted = new GameService(store, {contentVersion: 'test', now: () => 1000});
+  assert.equal((await restarted.snapshot('recreate')).state.id, created.state.id);
+  assert.equal((await restarted.createAccount('recreate', input, 'create')).state.id, created.state.id);
+ } finally { await store.close(); }
+});
+
 test('store rejects unknown SQL identifiers and expired transaction handles',async()=>{
  const store=new PostgresStore(embeddedPool(new PGlite()));
  try{

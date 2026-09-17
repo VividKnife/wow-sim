@@ -42,6 +42,8 @@ DATABASE_URL 使用 PostgreSQL 的内网连接串/跨服务变量引用。GAME_S
 
 Web 只访问 `web_users`、`web_sessions`、`web_auth_limits`；游戏存档仍由 API/worker 管理。schema 使用 advisory lock 初始化，不迁移旧 ChatGPT 账号。
 
+若登录后提示“账号在线状态无效”，说明游戏存档缺少有效的在线时间。点击创建会在一个事务中清除该账号旧角色、物品、活动和命令记录，再创建新存档，不迁移旧进度。相关多人副本会结束，其他参与者解除副本占用并保留已持久化的角色与资产。登录账号和密码不受影响；有效存档仍拒绝重复创建，创建失败会回滚清理。此修复需要部署更新后的 API 服务。
+
 ## 发布和验收
 
 1. 配置 PostgreSQL、API、worker，再配置 Web 的内网地址、域名、APP_ORIGIN。

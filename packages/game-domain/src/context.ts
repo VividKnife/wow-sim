@@ -40,10 +40,13 @@ export function rebaseSimulation(state: Rules, targetClock: number): Rules {
 export function characterRules(state: Rules): Rules { const rules = clone(state); for (const key of separated)
     delete rules[key]; return rules; }
 export async function owned(tx: Transaction, accountId: string, id: string): Promise<Character> { const c = await tx.get<Character>('characters', id); requireThat(c && c.accountId === accountId, 'FORBIDDEN', '角色不属于此账号', 403); return c; }
+export function validAccountPresence(row: Account): boolean {
+    return Number.isSafeInteger(row.lastSeenAt) && row.lastSeenAt >= 0;
+}
 export async function account(tx: Transaction, id: string): Promise<Account> {
     const row = await tx.get<Account>('accounts', id);
     requireThat(row, 'NOT_FOUND', '请先创建角色', 404);
-    requireThat(Number.isSafeInteger(row.lastSeenAt) && row.lastSeenAt >= 0, 'ACCOUNT_STATE', '账号在线状态无效，请重新创建开发存档');
+    requireThat(validAccountPresence(row), 'ACCOUNT_STATE', '账号在线状态无效，请重新创建开发存档；点击创建将清除旧角色及进度，并结束关联副本');
     return row;
 }
 export async function bump(tx: Transaction, id: string) { const row = await account(tx, id); row.revision++; await tx.put('accounts', row); }
