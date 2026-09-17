@@ -11,7 +11,7 @@ RUN npm --prefix apps/web run build
 
 FROM node:24.11.1-bookworm-slim AS runtime
 WORKDIR /app
-ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000
+ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=8080
 COPY package.json package-lock.json ./
 COPY packages ./packages
 RUN npm ci --omit=dev && npm cache clean --force
@@ -21,6 +21,6 @@ COPY --from=build --chown=node:node /app/apps/web/.next ./apps/web/.next
 COPY apps/web/public ./apps/web/public
 COPY apps/web/next.config.mjs ./apps/web/next.config.mjs
 USER node
-EXPOSE 3000
+EXPOSE 8080
 WORKDIR /app/apps/web
 CMD ["node", "node_modules/next/dist/bin/next", "start", "--hostname", "0.0.0.0"]

@@ -8,7 +8,7 @@ Web、API、worker 都连接同一 repo 的 main，Root Directory 为仓库根 `
 
 | 服务 | 构建选择 | 运行变量 | 网络 |
 | --- | --- | --- | --- |
-| Web | 根 Dockerfile | DATABASE_URL、GAME_SERVER_URL、GAME_SERVER_SECRET、APP_ORIGIN、PORT=3000 | HTTPS 域名 → 3000 |
+| Web | 根 Dockerfile | DATABASE_URL、GAME_SERVER_URL、GAME_SERVER_SECRET、APP_ORIGIN、PORT=8080 | HTTPS 域名 → 8080 |
 | game-api | ZBPACK_DOCKERFILE_NAME=runtime | DATABASE_URL、GAME_SERVER_SECRET、SERVICE_ROLE=api、PORT=8788、HOST=0.0.0.0 | 项目内网 8788 |
 | game-worker | ZBPACK_DOCKERFILE_NAME=runtime | DATABASE_URL、SERVICE_ROLE=worker | 无公网，无 HTTP 健康检查 |
 | PostgreSQL | Zeabur PostgreSQL 模板 | 模板生成的认证配置 | 内网、持久化卷 |
