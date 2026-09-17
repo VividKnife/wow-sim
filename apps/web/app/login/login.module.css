@@ -1,0 +1,23 @@
+.shell {
+  width: min(100%, 508px);
+  margin: 8vh auto;
+  padding: 24px;
+}
+.shell h1 { font-size: 30px; margin-bottom: 12px; }
+.form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+  padding: 24px;
+  background: #192226;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.form label { color: var(--muted); font-size: 13px; }
+.form input { display: block; width: 100%; margin-top: 8px; }
+.form small { line-height: 1.7; margin-top: -8px; }
+.form button { min-height: 46px; padding: 12px; border-radius: 4px; background: var(--gold); color: #171917; }
+.form button[type='button'] { background: transparent; border: 1px solid var(--line); color: var(--gold); }
+.form a { text-align: center; color: var(--muted); }
+.form [role='alert'] { color: #efa49d; overflow-wrap: anywhere; }

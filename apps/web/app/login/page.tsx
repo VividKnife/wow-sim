@@ -1,15 +1,16 @@
 'use client';
 import {useState} from 'react';
+import styles from './login.module.css';
 
 export default function Login() {
   const [register, setRegister] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  return <main style={{maxWidth: 460, margin: '8vh auto', padding: 24}}>
+  return <main className={styles.shell}>
     <div className="eyebrow">WOW-SIM · 艾泽拉斯旅程</div>
     <h1>{register ? '创建冒险账号' : '欢迎归来'}</h1>
     <p>登录后可在不同设备继续你的冒险。</p>
-    <form className="creation panel" style={{display: 'grid', gap: 18, padding: 24}} onSubmit={async event => {
+    <form className={styles.form} onSubmit={async event => {
       event.preventDefault(); setBusy(true); setError('');
       const data = new FormData(event.currentTarget);
       try {
