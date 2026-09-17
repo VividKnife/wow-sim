@@ -19,7 +19,7 @@
 
 基础设施：
 
-- `apps/web` 只负责界面、ChatGPT 身份接入和签名代理；不直接读写游戏数据库。
+- `apps/web` 负责界面、独立账号登录和签名代理；只访问认证表，不直接读写游戏存档。
 - `apps/game-server` 提供 HTTP/WebSocket 边界，`apps/game-worker` 主动结算活动与实例。
 - `packages/game-domain` 集中领域服务与确定性规则，`packages/game-data/data` 保存静态内容，`packages/persistence` 提供 PostgreSQL 事务存储。
 - 数值证据记录的结构校验：区分未知、估计、参考与已验证，检查来源及版本。
@@ -42,7 +42,7 @@ npm run data:check
 docker compose up -d postgres
 ```
 
-复制 `.env.example` 为 `.env`，把 `GAME_SERVER_SECRET` 设置为至少 32 字节的随机值。将同一 `GAME_SERVER_URL` 和 `GAME_SERVER_SECRET` 写入忽略提交的 `apps/web/.dev.vars`，再分别启动三个进程：
+复制 `.env.example` 为 `.env`，把 `GAME_SERVER_SECRET` 设置为至少 32 字节的随机值。复制 `apps/web/.env.example` 为 `apps/web/.env.local`，填写数据库 URL、相同的游戏服务 URL/密钥与 Web 的 `APP_ORIGIN`，再分别启动三个进程：
 
 ```sh
 npm run game:server
@@ -60,6 +60,8 @@ npm --prefix apps/web run build
 ```
 
 完整环境变量、进程边界和恢复说明见 [游戏运行环境](docs/development/game-runtime.md)。
+
+独立网站注册入口为 `/login`。Zeabur 的 GitHub push 自动部署、Dockerfile 选择及各服务变量见 [Zeabur 持续部署](docs/development/zeabur.md)。
 
 ## 基础库示例
 

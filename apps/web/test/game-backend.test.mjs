@@ -64,3 +64,9 @@ test('mutation CSRF validation requires an exact same-origin Origin header', () 
   assert.equal(isSameOriginMutation(new Request('https://app.example/api/game', {method: 'POST'})), false);
   assert.equal(isSameOriginMutation(new Request('https://app.example/api/game', {method: 'POST', headers: {origin: 'https://evil.example'}})), false);
 });
+
+test('production reverse proxy origin uses configured public origin, not spoofed forwarded headers', () => {
+  const origin = 'https://game.example';
+  assert.equal(isSameOriginMutation(new Request('http://0.0.0.0:3000/api/game', {method: 'POST', headers: {origin}}), origin), true);
+  assert.equal(isSameOriginMutation(new Request('http://0.0.0.0:3000/api/game', {method: 'POST', headers: {origin: 'https://evil.example', 'x-forwarded-host': 'evil.example'}}), origin), false);
+});

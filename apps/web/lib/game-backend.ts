@@ -41,11 +41,11 @@ function backendConfig(environment: BackendEnvironment): {url: URL; secret: stri
   return {url, secret: environment.GAME_SERVER_SECRET};
 }
 
-export function isSameOriginMutation(request: Request): boolean {
+export function isSameOriginMutation(request: Request, expectedOrigin = process.env.APP_ORIGIN): boolean {
   if (request.method === 'GET' || request.method === 'HEAD' || request.method === 'OPTIONS') return true;
   const origin = request.headers.get('origin');
   if (!origin) return false;
-  try { return new URL(origin).origin === new URL(request.url).origin; } catch { return false; }
+  try { return new URL(origin).origin === new URL(expectedOrigin || request.url).origin; } catch { return false; }
 }
 
 export async function proxyGameRequest(request: Request, options: ProxyOptions): Promise<Response> {

@@ -1,4 +1,3 @@
-import {env} from 'cloudflare:workers';
 import {proxyGameRequest} from '../../../../lib/game-backend';
 
 export async function GET(request: Request) {
@@ -6,6 +5,6 @@ export async function GET(request: Request) {
     accountId: null,
     public: true,
     path: '/content',
-    environment: env as unknown as Record<string, unknown>,
+    environment: process.env,
   });
 }

@@ -1,0 +1,12 @@
+FROM node:24.11.1-bookworm-slim
+WORKDIR /app
+ENV NODE_ENV=production HOST=0.0.0.0 PORT=8788 SERVICE_ROLE=api
+COPY package.json package-lock.json ./
+COPY packages ./packages
+RUN npm ci --omit=dev && npm cache clean --force
+COPY apps/game-server ./apps/game-server
+COPY apps/game-worker ./apps/game-worker
+COPY scripts/start-runtime.mjs ./scripts/start-runtime.mjs
+USER node
+EXPOSE 8788
+CMD ["node", "scripts/start-runtime.mjs"]

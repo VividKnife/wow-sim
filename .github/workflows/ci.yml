@@ -1,0 +1,32 @@
+name: Validate deployment
+on:
+  push:
+    branches: [main, 'codex/**']
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.1'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            apps/web/package-lock.json
+      - run: npm ci
+      - run: npm --prefix apps/web ci
+      - run: npm run data:check
+      - run: npm run typecheck
+      - run: node --test apps/web/test/account-store.test.ts apps/web/test/game-backend.test.mjs apps/game-server/test/*.test.ts apps/game-worker/test/*.test.ts
+      - run: npm --prefix apps/web run build
+      - run: node scripts/verify-production.mjs
+      - run: docker build -f Dockerfile.runtime -t wow-sim-runtime:ci .
+      - run: docker build -t wow-sim-web:ci .

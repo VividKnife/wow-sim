@@ -1,10 +1,10 @@
 # 游戏运行环境
 
-需要 Node 24.11.1+ 和 PostgreSQL。网页仍使用现有 React/Vinext 构建；权威游戏服务和活动 worker 是独立进程。
+需要 Node 24.11.1+ 和 PostgreSQL。网页使用 React/Next.js Node 构建；权威游戏服务和活动 worker 是独立进程。
 
 | 进程/包 | 职责 | 数据访问 |
 | --- | --- | --- |
-| `apps/web` | UI、ChatGPT 身份、同源校验、短期令牌签发与 API 代理 | 不连接游戏数据库 |
+| `apps/web` | UI、独立账号/会话、同源校验、短期令牌签发与 API 代理 | 只访问认证表 |
 | `apps/game-server` | `/game`、`/content`、`/workshop`、`/events`，DTO 投影与权限边界 | 通过 `PostgresStore` |
 | `apps/game-worker` | 主动结算到期活动与实例 | 通过 `PostgresStore` |
 | `packages/game-domain` | 账号、角色、资产、活动、实例与确定性规则 | 只依赖 `Store` 接口 |
@@ -25,14 +25,16 @@ npm run game:worker
 npm --prefix apps/web run dev
 ```
 
-API 与 worker 使用根 `.env`。Web 的 Cloudflare Vite 开发运行时从忽略提交的 `apps/web/.dev.vars` 读取相同的 `GAME_SERVER_SECRET` 和 `GAME_SERVER_URL`：
+API 与 worker 使用根 `.env`。Web 从忽略提交的 `apps/web/.env.local` 读取数据库连接及相同的 `GAME_SERVER_SECRET` 和 `GAME_SERVER_URL`：
 
 ```dotenv
 GAME_SERVER_URL=http://127.0.0.1:8788
 GAME_SERVER_SECRET=与根 .env 完全相同的随机值
+DATABASE_URL=postgresql://wow_sim:wow_sim_local@127.0.0.1:5432/wow_sim
+APP_ORIGIN=http://localhost:5173
 ```
 
-Web 的已认证入口签发短期账号凭据，Node 服务不会信任客户端自行填写的身份头。跨机器部署时，`GAME_SERVER_URL` 必须是 Web 服务能够访问的 HTTPS 地址，并在 Sites 运行环境中配置这两个变量。
+Web 验证数据库会话后签发短期账号凭据，Node 服务不会信任客户端自行填写的身份头。Zeabur 同项目部署使用 API 内网 HTTP 地址；跨公网通信需 HTTPS。生产 Web 的 `APP_ORIGIN` 必须与 HTTPS 域名一致，详见 [Zeabur 持续部署](zeabur.md)。
 
 数据库 schema 在进程启动时由事务与 PostgreSQL advisory lock 初始化；资产、执行租约、活动到期索引和业务唯一键独立于模拟快照。Web 没有 D1 绑定、Drizzle 依赖或本地迁移步骤，也没有读取旧 `game_saves` 的回退路径。历史开发账号需要重新创建角色。
 
