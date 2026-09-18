@@ -10,7 +10,7 @@ import { instanceContents, mercenaryTemplates } from './content.ts';
 import type { GameService } from './service.ts';
 import { PAUSED_EVENT_AT } from './presence.ts';
 import {simulationInterval,simulationTickBudget} from './simulation-cadence.ts';
-const instanceCommands = new Set(['strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'abandonCombat', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'discardJunk', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
+const instanceCommands = new Set(['strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'abandonCombat', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext','dungeonPause', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'discardJunk', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
 export const visitorCommands = Object.freeze(['strategy', 'settings', 'cast', 'petCommand']);
 function rosterIds(value: unknown): asserts value is string[] { requireThat(Array.isArray(value) && value.length > 0 && value.every(id => typeof id === 'string' && id.length > 0) && new Set(value).size === value.length, 'ROSTER', '副本名册必须是非空且不重复的角色 ID 数组', 400); }
 export async function createInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) {

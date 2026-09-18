@@ -62,7 +62,8 @@ try{
   }
   const d=dungeonView(s),cursor=s.dungeon.cursor;
   if(d.canInteract)await command({type:'dungeonInteract'});
-  else {assert.ok(d.canNext,d.nextReason);await command({type:'dungeonNext'});}
+  // Keep per-encounter checkpoints in this diagnostic; normal play stays automatic.
+  else {assert.ok(d.canNext,d.nextReason);await command({type:'dungeonNext'});await command({type:'dungeonPause'});}
   for(let wait=0;wait<120;wait++){s=await tick(2000);if(!s.combat&&s.activity.type==='idle')break;}
   assert.equal(s.combat,null,'encounter must finish within 240 simulated seconds');
   report.routes.push({cursor,route:dungeonRoute[cursor].id,after:s.dungeon.cursor,kills:s.totals.kills-killsBefore,fallen:[s,...s.party].filter(c=>c.hp<=0).map(c=>c.id)});

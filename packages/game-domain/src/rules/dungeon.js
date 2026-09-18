@@ -2,7 +2,7 @@ import reference from '../../../game-data/data/deadmines-reference.json' with {t
 import {clone,enemy,rng,log,countItem,takeItem,addItem,bagCapacity} from './character.js';
 import {startCombat} from './combat.js';
 import {sceneCombatArea} from './combat-area.js';
-import {stopRecovery} from './recovery.js';
+import {startRecovery,stopRecovery} from './recovery.js';
 
 export const dungeonRoute=reference.encounters;
 const current=s=>dungeonRoute[s.dungeon?.cursor];
@@ -32,7 +32,7 @@ export function enterDungeon(s){
  const reason=dungeonEntryReason(s);if(reason)throw new Error(reason);
  if(s.dungeonSave){s.dungeon=s.dungeonSave;delete s.dungeonSave;return;}
  s.dungeonEntries=[...recentEntries(s),s.wallAt];
- const d={id:'deadmines',runId:'dm-'+(s.dungeonSequence=(s.dungeonSequence||0)+1),cursor:0,spawns:{},phases:{},defeated:{},defeatedBosses:{},cleared:{},skipped:{},interactions:{},position:clone(reference.entrance),startedAt:s.clock};
+ const d={id:'deadmines',runId:'dm-'+(s.dungeonSequence=(s.dungeonSequence||0)+1),cursor:0,autoAdvance:false,advanceReason:'',spawns:{},phases:{},defeated:{},defeatedBosses:{},cleared:{},skipped:{},interactions:{},position:clone(reference.entrance),startedAt:s.clock};
  const rare=rng(s)<.2;
  for(const encounter of dungeonRoute)for(const row of encounter.sourceSpawns){
   if(row.guid===3600096&&!rare){d.spawns[row.guid]=null;continue;}
@@ -43,15 +43,54 @@ export function enterDungeon(s){
  d.phases['3600073:643']=profile(s,643,'3600073:643');s.dungeon=d;s.rest=null;
  log(s,'进入死亡矿井。小队等待你的下一步指令。','dungeon');
 }
-export function leaveDungeon(s){idle(s);if(!s.dungeon)throw new Error('当前不在副本中。');s.dungeonSave=s.dungeon;delete s.dungeon;s.groundEffects=[];stopRecovery(s);log(s,'离开死亡矿井，保留本次副本进度。','dungeon');}
+export function leaveDungeon(s){idle(s);if(!s.dungeon)throw new Error('当前不在副本中。');pauseDungeonAdvance(s);s.dungeonSave=s.dungeon;delete s.dungeon;s.groundEffects=[];stopRecovery(s);log(s,'离开死亡矿井，保留本次副本进度。','dungeon');}
 export function remainingDungeonEnemies(s,e){const d=s.dungeon,result=e.sourceGuids.map(g=>d.spawns[g]).filter(p=>p&&!d.defeated[p.sourceGuid]);
  if(e.id==='dm-sneed'&&d.defeated['3600073']&&!d.defeated['3600073:643'])result.push(d.phases['3600073:643']);return result;
 }
 const remaining=remainingDungeonEnemies;
 function advanceRoute(s,e,skipped=false){const d=s.dungeon;if(current(s)?.id!==e.id)return;if(skipped)d.skipped[e.id]=true;else d.cleared[e.id]=true;d.cursor++;s.activity={type:'idle'};
- if(d.cursor===dungeonRoute.length){d.completedAt=s.clock;log(s,'死亡矿井路线已完成。','dungeon');}
+ if(d.cursor===dungeonRoute.length){d.autoAdvance=false;d.advanceReason='';d.completedAt=s.clock;log(s,'死亡矿井路线已完成。','dungeon');}
 }
-function gate(s,e){const a=e.activation,d=s.dungeon;if(a?.afterDeathEntry&&!d.defeatedBosses[a.afterDeathEntry])throw new Error('通道尚未打开，请先击败前方首领。');if(a?.afterInteraction&&!d.interactions[a.afterInteraction])throw new Error('需要先使用火炮打开铁门。');}
+function gateReason(s,e){const a=e.activation,d=s.dungeon;if(a?.afterDeathEntry&&!d.defeatedBosses[a.afterDeathEntry])return '通道尚未打开，请先击败前方首领。';if(a?.afterInteraction&&!d.interactions[a.afterInteraction])return '需要先使用火炮打开铁门。';return '';}
+function gate(s,e){const reason=gateReason(s,e);if(reason)throw new Error(reason);}
+export function dungeonAdvanceReason(s){
+ const e=current(s);
+ if(!s.dungeon)return '请先进入副本。';
+ if(!e)return '这条路线已经完成。';
+ if([s,...s.party].some(c=>c.hp<=0))return '先让倒下的成员复活，再继续推进。';
+ if(s.party.length!==4)return '需要五名小队成员才能继续推进。';
+ if(s.pending.length||s.bag.length>=bagCapacity(s))return '请先整理背包与待拾取战利品。';
+ const reason=gateReason(s,e);if(reason)return reason;
+ if(e.id==='dm-cannon'&&!countItem(s,e.interaction.item))return '需要迪菲亚火药。';
+ return '';
+}
+export function pauseDungeonAdvance(s,reason=''){
+ const d=s.dungeon;if(!d)return;
+ if(d.autoAdvance&&reason)log(s,'自动推进已暂停：'+reason,'dungeon');
+ d.autoAdvance=false;d.advanceReason=reason;
+}
+export function beginDungeonAdvance(s){
+ idle(s);const reason=dungeonAdvanceReason(s);if(reason)throw new Error(reason);
+ s.dungeon.autoAdvance=true;s.dungeon.advanceReason='';delete s.activity.reason;
+ // The explicit command keeps the existing immediate room entry. Subsequent
+ // encounters wait for ordinary recovery, using the same food/water rules.
+ advanceDungeon(s,true);
+}
+export function advanceDungeon(s,immediate=false){
+ const d=s.dungeon;if(!d?.autoAdvance)return;
+ if(d.cursor>=dungeonRoute.length){pauseDungeonAdvance(s);return;}
+ // A fallen member disarms future pulls immediately, without ending this fight.
+ if([s,...s.party].some(c=>c.hp<=0)){pauseDungeonAdvance(s,'先让倒下的成员复活，再继续推进。');return;}
+ if(s.combat||s.activity.type!=='idle')return;
+ // Auto-loot deliberately previews drops in the client before sending loot.
+ // Keep the run armed while that happens; never bypass the preview or discard loot.
+ if(s.pending.length&&s.settings.autoLoot&&s.bag.length<bagCapacity(s))return;
+ const reason=dungeonAdvanceReason(s);if(reason){pauseDungeonAdvance(s,reason);return;}
+ if(!immediate&&startRecovery(s))return;
+ const e=current(s);
+ if(e.interaction&&!remaining(s,e).length)interactDungeon(s);
+ else prepareEncounter(s);
+}
 export function prepareEncounter(s){idle(s);const d=s.dungeon;if(!d?.spawns)throw new Error('请先进入副本。');let e=current(s);
  while(e&&e.id==='dm-miner-johnson'&&!d.spawns[3600096]){log(s,'这次矿井中没有发现矿工约翰森。','dungeon');advanceRoute(s,e,true);e=current(s);}
  if(!e)throw new Error('这条路线已经完成。');gate(s,e);

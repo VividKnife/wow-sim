@@ -8,7 +8,8 @@ import type {Character, Instance, Rules} from '../src/model.ts';
 
 async function setup() {
  const store = new MemoryStore();
- const options = {contentVersion:'test', now:()=>1000, seed:()=>1234};
+ let now=1000;
+ const options = {contentVersion:'test', now:()=>now, seed:()=>1234};
  let service = new GameService(store, options), request = 0;
  await service.createAccount('a', {name:'队长', classId:1, raceId:1}, 'create');
  const send = (command:Record<string, unknown>) => service.command('a', {...command, requestId:`command-${++request}`});
@@ -26,8 +27,25 @@ async function setup() {
   return characters.map(c => c.id);
  });
  await send({type:'setParty', characterIds:ids});
- return {store, send, restart:()=>{service = new GameService(store, options);}, snapshot:()=>service.snapshot('a')};
+ return {store, send, restart:()=>{service = new GameService(store, options);}, snapshot:()=>service.snapshot('a'), work:async(ms:number)=>{now+=ms;return service.work();}};
 }
+
+test('the instance worker preserves automatic advancement across restart and accepts pause during combat', async () => {
+ const game=await setup();const entered=await game.send({type:'enterDungeon'});
+ const started=await game.send({type:'dungeonNext'});
+ assert.equal(dungeonView(started.state).autoAdvance,true);const first=started.state.combat.id;
+ // Controlled victory: isolate service persistence and worker orchestration.
+ await game.store.transaction(async tx=>{
+  const instance=(await tx.get<Instance>('instances',entered.instanceId!))!;
+  const s=instance.simulation!;for(const e of s.combat.enemies){e.hp=0;e.rewarded=true;}
+  s.combat.pull.startsAt=s.clock;s.combat.pull.engagedAt=s.clock;
+  await tx.put('instances',instance);
+ });
+ game.restart();assert.deepEqual((await game.work(1000)).errors,[]);
+ const next=await game.snapshot();assert.equal(next.state.dungeon.cursor,1);assert.notEqual(next.state.combat.id,first);assert.equal(dungeonView(next.state).autoAdvance,true);
+ const paused=await game.send({type:'dungeonPause'});assert.equal(dungeonView(paused.state).autoAdvance,false);assert.equal(paused.state.combat.id,next.state.combat.id);
+ game.restart();assert.equal(dungeonView((await game.snapshot()).state).autoAdvance,false);
+});
 
 test('server preserves the full dungeon route through leaving, inventory work and service restart', async () => {
  const game = await setup();

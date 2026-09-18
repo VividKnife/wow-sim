@@ -16,7 +16,7 @@ import {questTools,beginQuestTool,finishQuestTool} from './quest-tools.js';
 import {startCombat,combatTick,expireCapture,hurtPlayer,abandonCombat} from './combat.js';
 import {tickEnemyAuras} from './enemy-spells.js';
 import {candidates,recruit} from './party.js';
-import {enterDungeon,leaveDungeon,resetDungeon,prepareEncounter,finishDungeonCannon,recordDungeonProgress,interactDungeon,skipDungeonEncounter} from './dungeon.js';
+import {enterDungeon,leaveDungeon,resetDungeon,beginDungeonAdvance,pauseDungeonAdvance,advanceDungeon,finishDungeonCannon,recordDungeonProgress,interactDungeon,skipDungeonEncounter} from './dungeon.js';
 import {startRecovery,stopRecovery,recoveryTick,beginResurrection,finishResurrection} from './recovery.js';
 import {dungeonView,recoveryView} from './dungeon-view.js';
 import {questNavigation,journeyPosition,redirectedTravel} from './navigation.js';
@@ -52,9 +52,9 @@ function tick(s){s.time=s.clock;const st=stats(s),wasAlive=s.hp>0;environmentTic
  if(!s.combat){tickEnemyAuras(s,[s,...s.party],hurtPlayer);if(wasAlive&&s.hp<=0){s.totals.deaths++;idle(s);s.activity={type:'dead',reason:'角色已死亡，请选择复活。'};}tickClassChannel(s);tickClassEffects(s,combatMembers(s));for(const c of [s,...s.party])tickRacialEffects(s,c,{stats,healAmount});}
  const regenTick=s.clock>=s.nextRegen;if(regenTick)s.nextRegen+=2000;recoveryTick(s,regenTick);
  for(const[id,q]of Object.entries(s.quests))if(q.expiresAt&&q.expiresAt<=s.clock){delete s.quests[id];log(s,'任务超时：'+nameOf('quests',id),'quest');}
- if(s.combat){combatTick(s);recordDungeonProgress(s);escortTick(s);return;}
+ if(s.combat){combatTick(s);recordDungeonProgress(s);advanceDungeon(s);escortTick(s);return;}
  if(s.escort){escortTick(s);return;}
- if(s.dungeon)recordDungeonProgress(s);
+ if(s.dungeon){recordDungeonProgress(s);advanceDungeon(s);}
  if(s.activity.type==='hunt'&&!s.rest&&s.clock>=s.nextPull){if([s,...s.party].some(c=>c.hp<=0)){idle(s,'有成员倒下，请先复活再继续狩猎。');if(s.hp<=0)s.activity={type:'dead',reason:'队长已倒下，请先复活。'};return;}if(s.pending.length)return;if(s.bag.length>=bagCapacity(s)){idle(s,'背包已满，先处理物品和待拾取战利品。');return;}if(s.activity.quest&&questProgress(s,s.activity.quest)?.complete){idle(s,'任务目标已完成。');return;}if(prepareAutoBuffs(s)||startRecovery(s))return;startCombat(s,[s.activity.target]);}
 }
 function finishActivity(s){const a=s.activity;if(a.type==='travel'){s.location=a.to;if(!s.visited.includes(a.to))s.visited.push(a.to);log(s,'抵达 '+nodes[a.to].name,'travel');creditExploration(s);idle(s);if(a.hunt){s.activity={type:'hunt',target:a.hunt,quest:a.quest||null};s.nextPull=s.clock;}}
@@ -132,8 +132,8 @@ export function act(input,action,now){
  const settled=advance(input,now);if(!settled.complete)throw new Error('离线结算尚未结束。');const s=settled.state;
  if(!action||typeof action.type!=='string')throw new Error('无效操作');
  if(s.escort&&!['abandonCombat','escortCancel','stop','strategy','settings','sync','loot'].includes(action.type))throw new Error('正在护送，请先完成或停止护送。');
- if(s.hp<=0&&!['abandonCombat','revive','resurrect','rest','escortCancel','soulstoneRevive','reincarnate','strategy','settings'].includes(action.type))throw new Error('角色已死亡，请先复活。');
- if(s.dungeon&&!['abandonCombat','petCommand','reincarnate','soulstoneRevive','usePortal','useItem','useHearth','accept','abandon','dungeonNext','dungeonInteract','dungeonSkip','leaveDungeon','stop','strategy','settings','equip','equipBag','sortBag','discardJunk','lockItem','applyEnchant','useBandage','disenchant','disenchantAll','loot','conjure','cast','revive','resurrect','rest','sync','talent'].includes(action.type))throw new Error('请先离开副本再进行这项操作。');
+ if(s.hp<=0&&!['abandonCombat','dungeonPause','revive','resurrect','rest','escortCancel','soulstoneRevive','reincarnate','strategy','settings'].includes(action.type))throw new Error('角色已死亡，请先复活。');
+ if(s.dungeon&&!['abandonCombat','petCommand','reincarnate','soulstoneRevive','usePortal','useItem','useHearth','accept','abandon','dungeonNext','dungeonPause','dungeonInteract','dungeonSkip','leaveDungeon','stop','strategy','settings','equip','equipBag','sortBag','discardJunk','lockItem','applyEnchant','useBandage','disenchant','disenchantAll','loot','conjure','cast','revive','resurrect','rest','sync','talent'].includes(action.type))throw new Error('请先离开副本再进行这项操作。');
  if(storageActions.has(action.type)){ensureIdle(s);storageAction(s,action);return s;}
  if(professionActions.has(action.type)){ensureIdle(s);professionAction(s,action);if(['gatherResource','gatherAll','craft','useBandage','disenchant','disenchantAll'].includes(action.type))dismount(s);return s;}
  switch(action.type){
@@ -151,10 +151,11 @@ export function act(input,action,now){
  case 'reincarnate':reincarnate(s);break;
  case 'soulstoneRevive':soulstoneRevive(s);break;
  case 'petCommand':petCommand(s,action);break;
- case 'abandonCombat':abandonCombat(s,action.encounterId);recordDungeonProgress(s);break;
+ case 'abandonCombat':abandonCombat(s,action.encounterId);recordDungeonProgress(s);pauseDungeonAdvance(s,'已放弃战斗，请恢复小队后继续。');break;
  case 'enterDungeon':enterDungeon(s);break;
  case 'leaveDungeon':leaveDungeon(s);break;
- case 'dungeonNext':ensureIdle(s);prepareEncounter(s);break;
+ case 'dungeonNext':ensureIdle(s);beginDungeonAdvance(s);break;
+ case 'dungeonPause':if(!s.dungeon)throw new Error('请先进入副本。');pauseDungeonAdvance(s,s.combat?'本场战斗结束后停止推进。':'已手动暂停推进。');break;
  case 'dungeonInteract':interactDungeon(s);break;
  case 'dungeonSkip':skipDungeonEncounter(s);break;
  case 'accept':ensureIdle(s);if(s.dungeon&&!questLinks[action.id]?.starts.some(e=>e.type==='item'))throw new Error('请离开副本后再与外面的人物交谈。');acceptQuest(s,action.id);break;
@@ -165,7 +166,7 @@ export function act(input,action,now){
  case 'navigateQuest':{ensureIdle(s);const q=questProgress(s,action.id);if(!q?.active)throw new Error('请先接受这个任务。');const target=questNavigation(s,q);if(!target)throw new Error('这个任务暂时没有可导航的地点。');if(target.here)throw new Error('你已在任务区域，请完成目标或交付任务。');const r=travelRoute(s,target.to);s.activity={type:'travel',from:s.location,to:target.to,startedAt:s.clock,endsAt:s.clock+r.duration,path:r.path,quest:q.id};s.rest=null;s.groundEffects=[];break;}
  case 'travel':{const moving=s.activity.type==='travel';if(!moving)ensureIdle(s);else if(s.combat)throw new Error('战斗中不能更改目的地。');if(!moving&&action.to===s.location)throw new Error('你已经在这里');const r=moving?redirectedTravel(s,action.to):travelRoute(s,action.to);if(action.hunt&&!monsterIdsAt(action.to).includes(action.hunt))throw new Error('目的地没有这个狩猎目标');s.activity={type:'travel',from:moving?r.from:s.location,to:action.to,startedAt:moving?r.startedAt:s.clock,endsAt:moving?r.endsAt:s.clock+r.duration,hunt:action.hunt||null,quest:action.quest||null,path:r.path};s.rest=null;s.groundEffects=[];if(moving)log(s,'更改目的地：'+nodes[action.to].name+'，从当前位置重新规划路线。','travel');break;}
  case 'hunt':ensureIdle(s);if(!monsterIdsAt(s.location).includes(action.id))throw new Error('当前地点没有这个怪物');s.activity={type:'hunt',target:action.id,quest:action.quest||null};s.nextPull=s.clock;break;
- case 'stop':{const row=s.journey?.find(row=>row.id===s.activity.journeySession);if(row)row.endedAt=s.clock;}if(s.escort){cancelEscort(s);break;}if(s.combat){s.activity={type:'idle',reason:'本场战斗结束后停止。'};}else if(s.activity.type==='travel'&&s.activity.flight){if(!s.activity.stopAtNext){s.activity.stopAtNext=true;log(s,'将在下一飞行点 '+nodes[s.activity.to].name+' 停靠。','travel');}}else if(s.activity.type==='travel')throw new Error('旅行中请在地图上更改目的地。');else if(s.activity.type==='dungeonCannon')throw new Error('火炮已经点燃，请等待铁门打开。');else idle(s,'已停止。');break;
+ case 'stop':pauseDungeonAdvance(s,'已停止推进。');{const row=s.journey?.find(row=>row.id===s.activity.journeySession);if(row)row.endedAt=s.clock;}if(s.escort){cancelEscort(s);break;}if(s.combat){s.activity={type:'idle',reason:'本场战斗结束后停止。'};}else if(s.activity.type==='travel'&&s.activity.flight){if(!s.activity.stopAtNext){s.activity.stopAtNext=true;log(s,'将在下一飞行点 '+nodes[s.activity.to].name+' 停靠。','travel');}}else if(s.activity.type==='travel')throw new Error('旅行中请在地图上更改目的地。');else if(s.activity.type==='dungeonCannon')throw new Error('火炮已经点燃，请等待铁门打开。');else idle(s,'已停止。');break;
  case 'train':{ensureIdle(s);const a=allAbilities().find(a=>a.spellId===action.id&&a.classId===s.classId)||allAbilities().find(a=>a.spellId===action.id),blocked=trainingBlocked(s,a);if(blocked)throw new Error(blocked);consumeTrainingBook(s,a);s.money-=a.costCopper;s.learned.push(a.spellId);grantHunterTrainingLinks(s,a.spellId);log(s,(a.acquisition==='classQuest'?'职业解锁（共用路线）：':'学会了 ')+nameOf('spells',a.spellId),'learn');break;}
  case 'talent':{ensureIdle(s);const t=talents[action.id],blocked=talentBlocked(s,t);if(blocked)throw new Error(blocked);grantTalentRank(s,t,(s.talents[t.id]||0)+1);if(s.pet)refreshPetStats(s,s.pet);log(s,'天赋提升：'+(t.nameZhCN||t.name),'learn');break;}
  case 'resetTalents':{ensureIdle(s);if(!canTrainAt(s))throw new Error('需要前往训练师地点重置天赋');if(!talentPointsUsed(s))throw new Error('当前没有已分配的天赋点');const cost=talentResetCost(s);if(s.money<cost)throw new Error('重置天赋费用不足');resetTalentGrants(s);if(s.pet)refreshPetStats(s,s.pet);s.money-=cost;s.talentResetCount=(s.talentResetCount||0)+1;log(s,`重置天赋，花费 ${cost} 铜`,'learn');break;}

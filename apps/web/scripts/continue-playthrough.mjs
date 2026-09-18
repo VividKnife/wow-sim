@@ -136,7 +136,8 @@ try{
   if(s.pending.length||s.bag.length>bagCapacity(s)-6){command({type:'leaveDungeon'});travel('sentinel');sell();travel('deadmines');command({type:'enterDungeon'});}
   supplies();const beganFight=s.clock,deaths=s.totals.deaths;
   if(e.interaction&&!remainingDungeonEnemies(s,e).length){command({type:'dungeonInteract'});finish();continue;}
-  command({type:'dungeonNext'});finish();let seconds=0;
+  // This diagnostic chooses recovery and gear between individual encounters.
+  command({type:'dungeonNext'});command({type:'dungeonPause'});finish();let seconds=0;
   while(s.combat&&seconds++<900)wait(1000);
   if(s.combat)throw new Error('Dungeon fight exceeded fifteen minutes');
   const row={cursor,route:e.id,after:s.dungeon.cursor,seconds:(s.clock-beganFight)/1000,deaths:s.totals.deaths-deaths,alive:[s,...s.party].filter(c=>c.hp>0).length};report.encounters.push(row);console.log(JSON.stringify(row));

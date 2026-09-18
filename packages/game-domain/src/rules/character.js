@@ -53,7 +53,7 @@ function petPassiveAuras(c){
 }
 function petStats(c){
  const source=table('pet_levelstats').find(r=>r.creature_entry===(c.kind==='beast'?1:c.entry)&&r.level===c.level)||c.petStatBase||{hp:c.maxHp||0,mana:c.maxMana||0,armor:c.armor||0};
- const result={str:source.str||0,agi:source.agi||0,sta:source.sta||0,int:source.inte||0,spi:source.spi||0,armor:source.armor||0,baseMana:0,attackPower:0,rangedAttackPower:0,crit:.05,spellCrit:0,dodge:0,parry:0,hit:0,spellHit:0,spellPower:0,healing:0,regenCasting:0};
+ const result={str:source.str||0,agi:source.agi||0,sta:source.sta||0,int:source.inte||0,spi:source.spi||0,armor:source.armor||0,maxHp:0,maxMana:0,baseMana:0,attackPower:0,rangedAttackPower:0,crit:.05,spellCrit:0,dodge:0,parry:0,hit:0,spellHit:0,spellPower:0,healing:0,regenCasting:0};
  const auras=[...petPassiveAuras(c),...(c.auras||[]).filter(a=>a.until>(c.time||0))],mod=c.ownerPetModifiers||{};let health=0,mana=0,healthPct=1,manaPct=1;
  for(const a of auras){if(a.type===29)for(const [i,key]of ['str','agi','sta','int','spi'].entries())if(a.misc===-1||a.misc===i)result[key]+=a.amount;if(a.type===34)health+=a.amount;if(a.type===35&&a.misc===0)mana+=a.amount;if(a.type===133)healthPct*=1+a.amount/100;if(a.type===132)manaPct*=1+a.amount/100;}
  for(const a of auras)if(a.type===137)for(const [i,key]of ['str','agi','sta','int','spi'].entries())if(a.misc===-1||a.misc===i)result[key]*=1+a.amount/100;
@@ -77,7 +77,7 @@ export function stats(c){
  const base=table('player_levelstats').find(r=>r.race===(c.raceId||1)&&r.class===c.classId&&r.level===Math.min(LEVEL_CAP,c.level));
  const classBase=table('player_classlevelstats').find(r=>r.class===c.classId&&r.level===Math.min(LEVEL_CAP,c.level));
  if(!base||!classBase)throw new Error('缺少角色等级属性数据');
- const result={str:base.str,agi:base.agi,sta:base.sta,int:base.inte,spi:base.spi,armor:base.agi*2,spellPower:0,healing:0,weaponDamage:0,manaRegen:0,threat:0,schoolPower4:0,schoolPower16:0,schoolPower32:0};
+ const result={str:base.str,agi:base.agi,sta:base.sta,int:base.inte,spi:base.spi,armor:base.agi*2,maxHp:0,maxMana:0,spellPower:0,healing:0,weaponDamage:0,manaRegen:0,threat:0,schoolPower4:0,schoolPower16:0,schoolPower32:0};
  let gearArmor=0;const equipmentAuras=[];
  for(const e of Object.values(c.equipment||{})){const i=items[e.id];if(!i||e.durability===0&&i.MaxDurability)continue;result.armor+=i.armor;gearArmor+=i.armor||0;for(let n=1;n<=10;n++){const key={3:'agi',4:'str',5:'int',6:'spi',7:'sta'}[i['stat_type'+n]];if(key)result[key]+=i['stat_value'+n];}for(let n=1;n<=5;n++){const aura=spells[i['spellid_'+n]];if(i['spelltrigger_'+n]!==1||!aura)continue;for(let j=1;j<=3;j++){equipmentAuras.push({type:aura['EffectApplyAuraName'+j],misc:aura['EffectMiscValue'+j],amount:aura['EffectBasePoints'+j]+1});}}}
  let enchantHealth=0,enchantMana=0,enchantDodge=0;

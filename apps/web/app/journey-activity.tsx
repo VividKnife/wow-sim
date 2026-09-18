@@ -17,7 +17,7 @@ export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,
  const enemy=s.combat?.enemies?.find((unit:any)=>!unit.dead);
  const destination=s.activity.to&&d.map.find((node:any)=>node.id===s.activity.to)?.name;
  const target=d.monsters.find((monster:any)=>monster.id===s.activity.target);
- const stopped=s.activity.type==='idle'&&!s.rest;
+ const stopped=s.activity.type==='idle'&&!s.rest&&!d.dungeon?.autoAdvance;
  return <>
   <section className="activity-strip journey-activity" aria-live="polite">
    <div className="journey-activity-heading">
@@ -27,7 +27,7 @@ export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,
    <div className="journey-activity-body">
     <div className="grow">
      <strong>{enemy?.name||target?.name||d.location.name}{destination?' → '+destination:''} {enemy&&<small>Lv. {enemy.level}</small>}</strong>
-     <p>{s.activity.reason||(s.dungeon?'副本战斗在后台继续，每场结束后等待队长继续推进。':s.combat?'小队依照已保存的策略自动战斗。':'野外活动离线继续；脱离战斗后自动恢复生命与法力。')}</p>
+     <p>{s.activity.reason||(s.dungeon?(d.dungeon?.autoAdvance?'自动推进中，战后按恢复设置休整；遇到阻挡会暂停。':d.dungeon?.advanceReason||'自动推进已暂停，本场结束后可整理小队。'):s.combat?'小队依照已保存的策略自动战斗。':'野外活动离线继续；脱离战斗后自动恢复生命与法力。')}</p>
     </div>
     <div className="journey-activity-actions">
      {(s.combat||s.lastCombat)&&<Button onClick={onObserve}>观察战斗 <Eye size={16}/></Button>}
