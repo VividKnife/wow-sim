@@ -31,6 +31,7 @@ export function auctionSell(s,uid){const i=s.bag.find(i=>i.uid===uid);if(!i||!tr
 export function settleAuctions(s){for(const a of s.auctions.filter(a=>a.endsAt<=s.clock)){s.money+=a.net;s.marketHistory.unshift({id:a.id,item:a.item.id,count:a.item.count,net:a.net,at:a.endsAt});log(s,'拍卖行已收购 '+nameOf('items',a.item.id)+' ×'+a.item.count+'，到账 '+a.net+' 铜','trade');}s.auctions=s.auctions.filter(a=>a.endsAt>s.clock);s.marketHistory=s.marketHistory.slice(0,30);}
 export function storageAction(s,a){
  if(a.type==='sortBag'){s.bag=organize(s.bag);return;}
+ if(a.type==='discardJunk'){const selected=s.bag.filter(i=>items[i.id]?.Quality===0&&!protectedItem(i));if(!selected.length)throw new Error('没有可丢弃的灰色物品');const uids=new Set(selected.map(i=>i.uid)),count=selected.reduce((n,i)=>n+i.count,0);s.bag=s.bag.filter(i=>!uids.has(i.uid));log(s,'一键丢弃灰色物品，共 '+count+' 件','trade');return;}
  if(a.type==='lockItem'){const i=s.bag.find(i=>i.uid===a.uid)||s.bank.find(i=>i.uid===a.uid);if(!i)throw new Error('找不到这件物品');i.locked=!i.locked;return;}
  if(a.type==='auctionBuy'){buyMarket(s,a.id,a.count);return;}
  if(a.type==='auctionSell'){auctionSell(s,a.uid);return;}
@@ -44,4 +45,4 @@ export function storageAction(s,a){
  const i=source.find(i=>i.uid===a.uid);if(!i)throw new Error('找不到这件物品');const count=quantity(a.count,Math.max(1,i.count));if(!bankable(i))throw new Error('任务物品、炉石或配发装备不能存入银行');
  const moved={...i,count,uid:count===i.count?i.uid:'i'+(++s.itemSequence)};put(target,moved,capacity);i.count-=count;if(!i.count)source.splice(source.indexOf(i),1);
 }
-export const storageActions=new Set(['sortBag','lockItem','auctionBuy','auctionSell','auctionSellAll','auctionCancel','sortBank','expandBank','bankDepositMaterials','bankDeposit','bankWithdraw']);
+export const storageActions=new Set(['sortBag','discardJunk','lockItem','auctionBuy','auctionSell','auctionSellAll','auctionCancel','sortBank','expandBank','bankDepositMaterials','bankDeposit','bankWithdraw']);

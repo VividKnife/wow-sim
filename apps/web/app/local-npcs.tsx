@@ -5,11 +5,14 @@ import {Button} from '@/components/ui/button';
 import {Dialog,DialogContent,DialogHeader,DialogTitle,DialogDescription} from '@/components/ui/dialog';
 import {GameProps,Item,money} from './game-ui';
 import CityServicePanel from './city-services';
+import CreaturePortrait from './creature-portrait';
+import {serviceModels} from '../../../packages/game-data/creature-visuals.js';
 
 const names:Record<string,string>={quests:'任务',trainer:'职业训练',shop:'交易',inn:'旅店'};
 export function NpcPortrait({npc}: {npc:any}){
+ if(npc.entry||npc.key==='class-trainer')return <CreaturePortrait unit={{entry:npc.entry||serviceModels.trainer}} className="npc-portrait"/>;
  const Glyph=npc.roles.includes('quests')?ScrollText:npc.roles.includes('trainer')?BookOpen:npc.roles.includes('inn')?BedDouble:npc.roles.includes('shop')?Store:UserRound;
- return <span className="npc-portrait" aria-hidden="true">{npc.portrait?<img src={npc.portrait} alt="" onError={e=>{e.currentTarget.style.display='none';}}/>:null}<Glyph size={30}/></span>;
+ return <span className="npc-portrait" aria-hidden="true"><Glyph size={30}/></span>;
 }
 export function QuestConversation({quest:q,...props}:GameProps&{quest:any}){
  const {data:d,busy,send}=props,[choice,setChoice]=useState(0);

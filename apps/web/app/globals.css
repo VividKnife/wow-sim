@@ -38,3 +38,14 @@
 @media(prefers-reduced-motion:reduce){.npc-card{transition:none}.npc-card:hover{transform:none}}
 
 .quest-mark.incomplete{color:#9ca3af}
+
+/* Full-body Classic models: preserve alpha and silhouette at every size. */
+.creature-portrait{display:inline-flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;width:76px;height:84px;vertical-align:middle}
+.creature-portrait img,.npc-portrait.creature-portrait img{position:static;width:100%;height:100%;object-fit:contain;background:transparent;filter:drop-shadow(0 2px 2px #0007)}
+.npc-portrait.creature-portrait{border:0;border-radius:0;background:transparent;overflow:visible}
+.missing-creature-model{font-size:10px;color:var(--muted);text-align:center}
+.interaction.monster{display:grid;grid-template-columns:76px minmax(0,1fr);column-gap:12px;text-align:left;align-items:center}
+.interaction.monster .monster-portrait{grid-column:1;grid-row:1/4}
+.interaction.monster>.mob-level,.interaction.monster>strong,.interaction.monster>small{grid-column:2}
+.city-service-portrait{width:52px;height:64px}.city-npc>.city-service-portrait{width:80px;height:90px}
+.escort-identity{display:flex;align-items:center;gap:10px}

@@ -1,3 +1,6 @@
+import {finishJourneyBattle} from './journey.js';
+import {battlePresentation} from './battle-presentation.js';
+import {nodes} from './catalog.js';
 import {stats} from './character.js';
 // Authoritative counters, independent of the bounded presentation event log.
 import {combatMembers} from './combat-members.js';
@@ -72,6 +75,10 @@ export function finishCombat(s){
   dungeon.metrics.segments++;battle.metricsAggregated=true;
  }
  s.lastCombat=battle;s.combat=null;
+ finishJourneyBattle(s,battle);
+ s.battleHistory??=[];
+ if(battle.journeyId)s.battleHistory.push(JSON.parse(JSON.stringify({battle,location:nodes[s.location],view:battlePresentation(s),logs:s.logs.filter(event=>event.encounterId===battle.id)})));
+ if(s.battleHistory.length>20)s.battleHistory.splice(0,s.battleHistory.length-20);
  return battle;
 }
 

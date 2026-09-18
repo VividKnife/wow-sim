@@ -1,3 +1,4 @@
+import {queueCombatLoot} from './loot.js';
 import {racialModifiers} from './racial-effects.js';
 import {quests,questLinks,questXp,classDefinitions,raceDefinitions,isSharedRouteQuest,endpointNodes,creatureLocations,creatures,items,objectLocations,objectSpawnsByNode,objectTemplates,objectLoot,creatureLoot,referenceLoot,table,localize,nameOf} from './catalog.js';
 import {countItem,takeItem,addItem,gainXp,rng,roll,log} from './character.js';
@@ -46,7 +47,7 @@ function canLootStarter(s,id){
  const item=items[id],quest=item?.startquest;if(!quest||item.ExtraFlags&2)return true;
  return !s.quests[quest]&&(!s.completed[quest]||!!(quests[quest]?.SpecialFlags&1));
 }
-export function lootRows(s,rows,depth=0){if(depth>8)return;const eligible=(rows||[]).filter(r=>meetsCondition(s,r.condition_id)&&canLootStarter(s,r.item)&&(r.ChanceOrQuestChance>=0||needsQuestItem(s,r.item)));const groups=Object.groupBy(eligible,r=>r.groupid);const award=r=>{if(r.mincountOrRef<0){for(let n=0;n<r.maxcount;n++)lootRows(s,referenceLoot[-r.mincountOrRef],depth+1);}else if(items[r.item]){const count=roll(s,Math.max(1,r.mincountOrRef),Math.max(1,r.maxcount));addItem(s,r.item,count);s.totals.items+=count;log(s,`获得 ${nameOf('items',r.item)} ×${count}`,'loot');}};
+export function lootRows(s,rows,depth=0,combatLoot=false){if(depth>8)return;const eligible=(rows||[]).filter(r=>meetsCondition(s,r.condition_id)&&canLootStarter(s,r.item)&&(r.ChanceOrQuestChance>=0||needsQuestItem(s,r.item)));const groups=Object.groupBy(eligible,r=>r.groupid);const award=r=>{if(r.mincountOrRef<0){for(let n=0;n<r.maxcount;n++)lootRows(s,referenceLoot[-r.mincountOrRef],depth+1,combatLoot);}else if(items[r.item]){const count=roll(s,Math.max(1,r.mincountOrRef),Math.max(1,r.maxcount));(combatLoot?queueCombatLoot:addItem)(s,r.item,count);s.totals.items+=count;log(s,`${combatLoot?'掉落':'获得'} ${nameOf('items',r.item)} ×${count}`,'loot');}};
  for(const[groupId,group]of Object.entries(groups)){if(+groupId===0){for(const r of group)if(rng(s)*100<Math.abs(r.ChanceOrQuestChance))award(r);}else{let pick=rng(s)*100;let selected;const explicit=group.filter(r=>r.ChanceOrQuestChance!==0);for(const r of explicit){pick-=Math.abs(r.ChanceOrQuestChance);if(pick<0){selected=r;break;}}const equal=group.filter(r=>r.ChanceOrQuestChance===0);if(!selected&&equal.length)selected=equal[roll(s,0,equal.length-1)];if(selected)award(selected);}}
 }
 function availableObjects(s,id){return (objectSpawnsByNode[s.location+':'+id]||[]).filter(o=>(s.objectRespawns?.[o.guid]||0)<=s.clock);}

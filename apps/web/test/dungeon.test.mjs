@@ -119,6 +119,8 @@ test('VanCleef drops the Alliance letter before its quest is accepted, enabling 
  let s=group();enterDungeon(s);s.dungeon.cursor=dungeonRoute.findIndex(e=>e.id==='dm-vancleef');pull(s);
  // Reward-path fixture: defeat the source encounter to exercise its real loot table.
  for(const e of s.combat.enemies)e.hp=0;combatTick(s);recordDungeonProgress(s);
+ assert.ok(s.pending.some(i=>i.id===2874));assert.equal(countItem(s,2874),0);
+ s=act(s,{type:'loot'},s.wallAt);
  assert.equal(countItem(s,2874),1);assert.equal(questProgress(s,373).canAccept,true);
  s=act(s,{type:'accept',id:373},0);assert.equal(questProgress(s,373).complete,true);
  leaveDungeon(s);s=act(s,{type:'travel',to:'cathedral'},0);s=advance(s,s.activity.endsAt-s.clock).state;

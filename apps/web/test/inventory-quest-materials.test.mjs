@@ -20,3 +20,12 @@ test('actual quest items and player locks remain protected',()=>{
  for(const action of [{type:'sell',uid:flask.uid},{type:'auctionSell',uid:flask.uid},{type:'bankDeposit',uid:flask.uid,count:1},{type:'sell',uid:linen.uid},{type:'auctionSell',uid:linen.uid}])assert.throws(()=>act(s,action,0));
  assert.equal(countItem(s,7207),1);assert.equal(countItem(s,2589),10);
 });
+
+test('one-click discard removes every unprotected gray stack without requiring a merchant',()=>{
+ let s=createGame('灰色清理',283,0);s.location='northshire';addItem(s,39,2);addItem(s,56);addItem(s,2589,10);
+ const locked=s.bag.find(i=>i.id===56);s=act(s,{type:'lockItem',uid:locked.uid},0);const money=s.money;
+ s=act(s,{type:'discardJunk'},0);
+ assert.equal(countItem(s,39),0);assert.equal(countItem(s,56),1);assert.equal(countItem(s,2589),10);assert.equal(s.money,money);
+ assert.match(s.logs.at(-1).text,/2 件/);
+ assert.throws(()=>act(s,{type:'discardJunk'},0),/没有可丢弃/);
+});

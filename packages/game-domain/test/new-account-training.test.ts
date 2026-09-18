@@ -19,6 +19,7 @@ test('a fresh account earns training money through quests and kills and retains 
  for(let step=0;step<60;step++){
   now+=10000;assert.deepEqual((await service.work()).errors,[]);
   snapshot=await service.snapshot('training-account');
+  if(!snapshot.state.combat&&snapshot.state.pending.length)await command({type:'loot'});
   if(view(snapshot.state).quests.find((q:any)=>q.id===7)?.complete)break;
  }
  await command({type:'stop'});

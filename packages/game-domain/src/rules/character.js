@@ -1,3 +1,4 @@
+import {recordJourneyLog} from './journey.js';
 import {agilityChances,intellectCrit,baseAttackPower} from '../../../sim-core/src/class-stats.js';
 import {racialModifiers} from './racial-effects.js';
 import {table,items,spells,spellChain,xpTable,talents,classAbilities,classDefinitions,classStartingItems,lookup,creatures,nameOf} from './catalog.js';
@@ -8,7 +9,7 @@ export const clone=x=>JSON.parse(JSON.stringify(x));
 export const LEVEL_CAP=60;
 export function rng(s){let x=s.rngState>>>0;x^=x<<13;x^=x>>>17;x^=x<<5;s.rngState=x>>>0;return s.rngState/4294967296;}
 export const roll=(s,min,max)=>Math.floor(min+rng(s)*(max-min+1));
-export function log(s,text,kind='info',detail={}){s.logs.push({id:++s.logSequence,encounterId:s.combat?.id??null,at:s.clock,text,kind,...detail});if(s.logs.length>140)s.logs.shift();}
+export function log(s,text,kind='info',detail={}){s.logs.push({id:++s.logSequence,encounterId:s.combat?.id??null,at:s.clock,text,kind,...detail});if(s.logs.length>140)s.logs.shift();recordJourneyLog(s,s.logs.at(-1));}
 export const slotOf=i=>({20:5,17:16,13:16,21:16,22:17,23:17,14:17,15:18,25:18,26:18,16:15,12:13,28:18})[i.InventoryType]||i.InventoryType;
 const weaponProficiency={0:196,1:197,2:264,3:266,4:198,5:199,6:200,7:201,8:202,10:227,13:15590,15:1180,16:2567,18:5011,19:5009};
 export function canEquip(c,i){
@@ -121,15 +122,15 @@ export function stats(c){
  result.armor=armorWithAuras(c,(result.armor+gearArmor*(1+(mods.itemArmorPct||0))*(formArmor-1))*(1+(mods.armorPct||0)),c.time||0);
  return result;
 }
-export function newCharacter(name,classId=8,level=1,raceId=1){const def=classDefinitions.find(c=>c.id===classId),learned=(classAbilities[classId]||[]).filter(a=>a.startingSpell&&(!a.startingRaces||a.startingRaces.includes(raceId))).map(a=>a.spellId);return{id:'player',name,classId,raceId,power:def?.power||'mana',level,xp:0,equipment:{},talents:{},talentResetCount:0,learned:[...new Set(learned)],cooldowns:{},buffs:{},hp:0,mana:0,rage:0,energy:100,time:0,lastManaUse:-5000};}
+export function newCharacter(name,classId=8,level=1,raceId=1){const def=classDefinitions.find(c=>c.id===classId),learned=(classAbilities[classId]||[]).filter(a=>a.startingSpell&&(!a.startingRaces||a.startingRaces.includes(raceId))).map(a=>a.spellId);return{id:'player',name,classId,raceId,strategyProfiles:[],power:def?.power||'mana',level,xp:0,equipment:{},talents:{},talentResetCount:0,learned:[...new Set(learned)],cooldowns:{},buffs:{},hp:0,mana:0,rage:0,energy:100,time:0,lastManaUse:-5000};}
 export function makeItem(s,id,count=1){const i=items[id];if(!i)throw new Error('物品数据缺失：'+id);return{uid:'i'+(++s.itemSequence),id,count,durability:i.MaxDurability,bound:!!(i.bonding===1||i.bonding===4)};}
 export function equipStarter(s){for(const row of classStartingItems[`${s.raceId||1}:${s.classId}`]||[]){const i=items[row.itemId];const item=makeItem(s,row.itemId,row.count||1);if(i.InventoryType&&i.class!==1)s.equipment[slotOf(i)]=item;else s.bag.push(item);}const st=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;s.rage=0;s.energy=100;}
 export const countItem=(s,id)=>s.bag.filter(i=>i.id===id).reduce((n,i)=>n+i.count,0);
 export const bagCapacity=s=>16+s.bags.reduce((n,i)=>n+(items[i.id]?.ContainerSlots||0),0);
-export function equipmentBlockedReason(c,item,requestedSlot){
+export function equipmentBlockedReason(c,item,requestedSlot,partyState=c){
  const data=items[item?.id];
  if(!c||!item||!canEquip(c,data)||!data.InventoryType)return '当前角色无法装备：职业、等级或熟练度不符。';
- if(item.ownerId&&item.ownerId!==c.id)return '已绑定其他队员，无法装备这件物品。';
+ if(item.ownerId&&item.ownerId!==c.id&&(item.issued||![partyState,...(partyState?.party||[])].some(member=>member?.id===item.ownerId)))return '装备不属于可共享的队员，无法装备这件物品。';
  const naturalSlot=slotOf(data);
  if(requestedSlot!==undefined&&requestedSlot!==naturalSlot&&!(requestedSlot===17&&data.class===2&&[13,22].includes(data.InventoryType)))return '装备栏位不匹配';
  const slot=requestedSlot??naturalSlot;
@@ -139,7 +140,7 @@ export function equipmentBlockedReason(c,item,requestedSlot){
 }
 export function equipFromBag(s,uid,target,requestedSlot){
  const c=!target||target===s.id?s:s.party.find(c=>c.id===target),item=s.bag.find(i=>i.uid===uid),data=items[item?.id];
- const blocked=equipmentBlockedReason(c,item,requestedSlot);if(blocked)throw new Error(blocked);
+ const blocked=equipmentBlockedReason(c,item,requestedSlot,s);if(blocked)throw new Error(blocked);
  const slot=requestedSlot??slotOf(data);
  const displaced=[c.equipment[slot],...(data.InventoryType===17?[c.equipment[17]]:[])].filter(Boolean),bag=s.bag.filter(i=>i.uid!==uid);
  bag.push(...displaced.filter(i=>!i.issued));if(bag.length>bagCapacity(s))throw new Error('背包需要空间存放换下的装备。');

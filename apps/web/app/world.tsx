@@ -1,5 +1,5 @@
 "use client";
-import {useState} from 'react';
+import {useState,type ReactNode} from 'react';
 import {Button} from '@/components/ui/button';
 import {GameProps,Icon} from './game-ui';
 import Dungeon from './dungeon';
@@ -9,23 +9,24 @@ import WorldMap from './world-map';
 import Mounts from './mounts';
 import Escort from './escort';
 import {Gathering} from './professions';
-export default function World({state:s,data:d,busy,revision,send}:GameProps){
+import PlayerHud from './player-hud';
+import CreaturePortrait from './creature-portrait';
+type WorldProps=GameProps&{overview?:ReactNode};
+export default function World({state:s,data:d,busy,revision,send,overview}:WorldProps){
  const [filter,setFilter]=useState('全部'),[mapOpen,setMapOpen]=useState(false);
  const questList=d.quests.filter((q:any)=>q.active);
  const navigationLocked=busy||!!s.combat||s.hp<=0||!['idle','hunt'].includes(s.activity.type);
  const navigate=async(id:number)=>{if(await send({type:'navigateQuest',id}))setMapOpen(true);};
  const navigationButton=(q:any)=>q.navigation?<Button variant="outline" disabled={navigationLocked||q.navigation.here} onClick={()=>navigate(q.id)}>{q.navigation.here?(q.navigation.kind==='turnin'?'已到交付地点':'已在任务区域'):(q.navigation.kind==='turnin'?'前往交付':'前往任务区域')} ↗</Button>:<span className="quest-navigation-note">暂无可导航地点，请查看任务说明</span>;
- if(s.dungeon)return <div className="world-main"><Dungeon state={s} data={d} busy={busy} send={send}/></div>;
- return <div className={'world-layout '+(d.city?'has-city':' ')}><section className="world-main">{d.city&&<City key={s.id+':'+s.location} state={s} data={d} busy={busy} revision={revision} send={send}/>}<div className="section-heading"><div><div className="eyebrow">{d.location.region} / 等级 {d.location.min}—{d.location.max}</div><h1>{d.location.name}</h1></div><Button variant="outline" onClick={()=>setMapOpen(!mapOpen)}>{mapOpen?'收起地图':'打开区域地图'} ↗</Button></div>
+ if(s.dungeon)return <div className="world-main"><PlayerHud state={s} data={d}/>{overview}<Dungeon state={s} data={d} busy={busy} send={send}/></div>;
+ return <div className={'world-layout '+(d.city?'has-city':' ')}><section className="world-main"><h1 className="journey-title">继续你的旅程</h1><PlayerHud state={s} data={d}/><section className="journey-hero" aria-labelledby="journey-location-title"><div className="journey-hero-art" aria-hidden="true"><span className="journey-sun"/><span className="journey-mountains far"/><span className="journey-mountains near"/><span className="journey-tower"><i/></span><span className="journey-road"/></div><div className="journey-hero-top"><span>{d.location.region} · {d.location.name}</span><span>{d.city?'城镇区域':'野外活动'}</span></div><div className="journey-hero-copy"><div className="eyebrow">THE ROAD AHEAD</div><h2 id="journey-location-title">风吹过{d.location.name}</h2><p>{d.location.region}之外，是通往下一段旅程的路。</p><Button variant="outline" onClick={()=>setMapOpen(!mapOpen)}>{mapOpen?'收起区域地图':'打开区域地图'}　→</Button></div></section>{mapOpen&&<WorldMap state={s} data={d} busy={busy} send={send}/>} {overview}{(d.city||['全部','人物与服务'].includes(filter))&&<LocalNpcs key={s.id+':'+s.location} state={s} data={d} busy={busy} send={send}/>} {d.city&&<City key={s.id+':'+s.location} state={s} data={d} busy={busy} revision={revision} send={send}/>}
  <details className="panel travel-toolbox"><summary>旅行与野外技能 <small>坐骑 · 护送 · 采集</small></summary><div className="travel-toolbox-content"><Mounts state={s} data={d} busy={busy} send={send}/><Escort state={s} data={d} busy={busy} send={send}/><Gathering state={s} data={d} busy={busy} send={send}/></div></details>
- {mapOpen&&<WorldMap state={s} data={d} busy={busy} send={send}/>}
  {(s.location==='deadmines'||d.location.region==='西部荒野')&&<Dungeon state={s} data={d} busy={busy} send={send}/>}
  {!d.city&&<div className="filterbar local-filters">{['全部','人物与服务','怪物','任务物件'].map(f=><button key={f} className={filter===f?'active':''} onClick={()=>setFilter(f)}>{f}</button>)}</div>}
  {(d.city||['全部','任务物件'].includes(filter))&&d.questTools?.length>0&&<section className="panel"><h2>任务物品</h2>{d.questTools.map((t:any)=><div className="item-row" key={t.id}><Icon src={t.icon} name={t.name}/><div className="grow"><strong>{t.name}</strong><small>{t.place}</small></div><Button variant="outline" disabled={busy||s.location===t.location&&!t.available} onClick={()=>send(s.location===t.location?{type:'useQuestItem',id:t.id}:{type:'travel',to:t.location})}>{s.location===t.location?t.label:'前往使用地点'}</Button></div>)}</section>}
- {(d.city||['全部','人物与服务'].includes(filter))&&<LocalNpcs key={s.id+':'+s.location} state={s} data={d} busy={busy} send={send}/>}
  {!d.city&&d.hasFlight&&<Button variant="outline" disabled={busy||s.flightPoints.includes(s.location)} onClick={()=>send({type:'unlockFlight'})}>{s.flightPoints.includes(s.location)?'飞行点已发现':'与飞行管理员交谈 · 发现飞行点'}</Button>}
  <div className="interaction-grid">
- {(d.city||['全部','怪物'].includes(filter))&&d.monsters.map((m:any)=><button className={'interaction monster '+(m.min>s.level+2?'danger':'')} key={m.id} disabled={busy} onClick={()=>send({type:'hunt',id:m.id})}><span className="mob-level">{m.min===m.max?m.min:`${m.min}—${m.max}`}{m.elite?' 精英':''}</span><strong>{m.name}</strong><small>开始自动狩猎 →</small></button>)}
+ {(d.city||['全部','怪物'].includes(filter))&&d.monsters.map((m:any)=><button className={'interaction monster '+(m.min>s.level+2?'danger':'')} key={m.id} disabled={busy} onClick={()=>send({type:'hunt',id:m.id})}><CreaturePortrait unit={{entry:m.id}} className="monster-portrait"/><span className="mob-level">{m.min===m.max?m.min:`${m.min}—${m.max}`}{m.elite?' 精英':''}</span><strong>{m.name}</strong><small>开始自动狩猎 →</small></button>)}
  {(d.city||['全部','任务物件'].includes(filter))&&d.gatherables.map((o:any)=><button className="interaction" key={o.id} disabled={busy} onClick={()=>send({type:'gather',id:o.id})}><span className="quest-mark">◇</span><strong>{o.items[0]?.name||o.name}</strong><small>调查 / 采集 · 5 秒</small></button>)}
  </div>
  {!d.city&&d.hasFlight&&s.flightPoints.includes(s.location)&&s.flightPoints.filter((n:string)=>n!==s.location).map((n:string)=><Button key={n} variant="outline" onClick={()=>send({type:'fly',to:n})}>飞往 {d.map.find((x:any)=>x.id===n)?.name}</Button>)}

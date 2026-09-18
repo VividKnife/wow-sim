@@ -8,6 +8,7 @@ import {distance} from '../../../sim-core/src/geometry.js';
 import {areaTargets,selfArea,groundArea,aliveEnemy} from './combat-space.js';
 import {combatMembers} from './combat-members.js';
 import {supportedSpellNames} from './class-support.js';
+import {MAX_STRATEGY_RULES,MAX_STRATEGY_EXTRA_CONDITIONS} from '../../../sim-core/src/strategy-config.js';
 
 export const defaultPolicy={protectCC:true,waitForTank:true,pullDelaySeconds:3};
 export function waitingTank(s,c){
@@ -48,11 +49,11 @@ export function currentStrategyRules(c,rules){
  return (rules||[]).filter(r=>highest.has(spells[r.spell]?.SpellName)).map(r=>({...r,spell:highest.get(spells[r.spell].SpellName)}));
 }
 export function validateRules(c,rules){
- if(!Array.isArray(rules)||rules.length>12)throw new Error('最多允许 12 条施法规则');
+ if(!Array.isArray(rules)||rules.length>MAX_STRATEGY_RULES)throw new Error(`最多允许 ${MAX_STRATEGY_RULES} 条施法规则`);
  const allowed=strategySpellIds(c);
  for(const r of rules){
   if(!r||!Number.isInteger(r.spell)||!spells[r.spell]||!allowed.includes(r.spell))throw new Error('该成员不能使用这个技能');
-  if(typeof r.enabled!=='boolean'||r.and!==undefined&&(!Array.isArray(r.and)||r.and.length>3))throw new Error('施法条件或阈值无效');
+  if(typeof r.enabled!=='boolean'||r.and!==undefined&&(!Array.isArray(r.and)||r.and.length>MAX_STRATEGY_EXTRA_CONDITIONS))throw new Error('施法条件或阈值无效');
   for(const clause of [r,...(r.and||[])])if(!clause||!strategyConditions.includes(clause.condition)||!Number.isFinite(clause.value)||clause.value<0||clause.value>100||['enemyCountAtLeast','combatEnemyCountAtMost','comboAtLeast'].includes(clause.condition)&&(!Number.isInteger(clause.value)||clause.value<1||clause.condition==='comboAtLeast'&&clause.value>5))throw new Error('施法条件或阈值无效');
  }
 }

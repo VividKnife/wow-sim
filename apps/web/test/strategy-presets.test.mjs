@@ -8,6 +8,7 @@ import {combatRole} from '../../../packages/game-domain/src/rules/combat-roles.j
 import {positionPartyMember,mayApproachForSpell,rescueTarget} from '../../../packages/game-domain/src/rules/combat-positioning.js';
 import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
 import {distance} from '../../../packages/sim-core/src/geometry.js';
+import {MAX_STRATEGY_RULES} from '../../../packages/sim-core/src/strategy-config.js';
 
 function trained(classId=8){
  const definition=classDefinitions.find(c=>c.id===classId);
@@ -22,7 +23,7 @@ test('every class and talent branch has an applicable level-20 template using on
   assert.ok(options.length>=3,definition.name);
   assert.equal(options.filter(p=>p.recommended).length,1);
   for(const preset of options){
-   count++;assert.ok(preset.rules.length>0,preset.name);assert.ok(preset.rules.length<=12);validateRules(s,preset.rules);
+   count++;assert.ok(preset.rules.length>0,preset.name);assert.ok(preset.rules.length<=MAX_STRATEGY_RULES);validateRules(s,preset.rules);
    assert.ok(preset.rules.every(r=>allowed.includes(r.spell)));assert.ok(preset.rules.every(r=>spells[r.spell].SpellLevel<=20));
    const changed=act(s,{type:'strategy',rules:preset.rules,policy:preset.policy,autoBuffs:preset.autoBuffs,potions:preset.potions},0);
    assert.deepEqual(changed.talents,s.talents);assert.equal(combatRole(changed),preset.role);
@@ -130,13 +131,24 @@ test('templates and role settings round-trip through service persistence and ins
  }
  snap=await service.command('preset-account',{type:'enterDungeon',requestId:randomUUID()});
  const priest=snap.state.party.find(c=>c.classId===5),preset=strategyPresets(priest).find(p=>p.recommended);
- snap=await service.command('preset-account',{type:'strategy',target:priest.id,rules:preset.rules,policy:preset.policy,requestId:randomUUID()});
+ const expandedRules=Array.from({length:MAX_STRATEGY_RULES},(_,i)=>({...structuredClone(preset.rules[i%preset.rules.length]),enabled:i%2===0}));
+ await service.command('preset-account',{type:'strategy',operation:'saveProfile',name:'副本治疗',target:priest.id,rules:expandedRules,policy:preset.policy,autoBuffs:preset.autoBuffs,potions:preset.potions,requestId:randomUUID()});
+ await service.command('preset-account',{type:'strategy',target:priest.id,rules:[],requestId:randomUUID()});
+ snap=await service.command('preset-account',{type:'strategy',operation:'loadProfile',name:'副本治疗',target:priest.id,requestId:randomUUID()});
+ assert.deepEqual(snap.state.party.find(c=>c.id===priest.id).rules,expandedRules);
  assert.equal(snap.state.party.find(c=>c.id===priest.id).strategyPolicy.role,'healer');
  const response=buildGameResponse(snap.state,snap.account.revision);
  const projected=response.snapshot.view.strategyMembers.find(c=>c.id===priest.id);
  assert.equal(projected.presets.length,3);assert.equal(projected.policy.role,'healer');
+ assert.deepEqual(projected.rules,expandedRules);
+ assert.deepEqual(projected.strategyProfiles[0].rules,expandedRules);
  assert.ok(projected.skills.every(s=>s.known&&s.icon));
  await service.command('preset-account',{type:'leaveInstance',instanceId:snap.instanceId,requestId:randomUUID()});
  const reloaded=await new GameService(store,{contentVersion:'test',now:()=>0}).snapshot('preset-account',priest.id);
- assert.deepEqual(reloaded.state.rules,preset.rules);assert.equal(reloaded.state.strategyPolicy.role,'healer');
+ assert.deepEqual(reloaded.state.rules,expandedRules);assert.equal(reloaded.state.strategyPolicy.role,'healer');
+ assert.equal(reloaded.state.strategyProfiles[0].name,'副本治疗');
+ const restarted=new GameService(store,{contentVersion:'test',now:()=>0});
+ await restarted.command('preset-account',{type:'strategy',characterId:priest.id,rules:[],requestId:randomUUID()});
+ const restored=await restarted.command('preset-account',{type:'strategy',characterId:priest.id,operation:'loadProfile',name:'副本治疗',requestId:randomUUID()});
+ assert.deepEqual(restored.state.rules,expandedRules);
 });

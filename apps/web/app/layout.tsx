@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./journey.css";
 
 export const metadata: Metadata = {
   title: "wow-sim · 艾泽拉斯旅程",

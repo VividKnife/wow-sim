@@ -1,9 +1,14 @@
 import type {CSSProperties} from 'react';
 import {unitBody} from '@/lib/battle-scene.js';
 const colors:Record<number,string>={1:'#ae9677',2:'#df9cbd',3:'#a2bd75',4:'#ddcb75',5:'#dbdad1',7:'#6899c6',8:'#85cbe2',9:'#a193c9',11:'#cb9266'};
-/** Original vector miniatures, anchored at their feet; no portrait collision offsets. */
+/** Creature model renders and party miniatures share the same foot anchor. */
 export default function BattleFigure({unit,scale,facing=1}:{unit:any;scale:number;facing?:number}){
  const {kind}=unitBody(unit,scale),caster=[5,7,8,9].includes(unit.classId)||/法师|招魂|巫师|术士/.test(unit.name||''),color=colors[unit.classId]||(unit.foe?'#aa7660':'#8aa88a');
+ if(unit.visual?.kind==='npc-model-render')return <svg className="battle-miniature creature-miniature" viewBox="0 0 64 72" aria-hidden="true">
+  <ellipse cx="32" cy="66" rx="19" ry="5" fill="#050a0c" opacity=".6"/>
+  <ellipse className="miniature-ring" cx="32" cy="66" rx="22" ry="5" fill="none" stroke={unit.foe?'#df927b':'#90c7ae'} strokeWidth="1.5"/>
+  <g transform={facing<0?'translate(64 0) scale(-1 1)':undefined}><image className="miniature-body" href={unit.visual.src} x="0" y="0" width="64" height="66" preserveAspectRatio="xMidYMax meet"/></g>
+ </svg>;
  return <svg className="battle-miniature" viewBox="0 0 64 72" preserveAspectRatio="none" aria-hidden="true" style={{'--body-color':color} as CSSProperties}>
  <ellipse cx="32" cy="66" rx="19" ry="5" fill="#050a0c" opacity=".6"/>
  <ellipse className="miniature-ring" cx="32" cy="66" rx="22" ry="7" fill="none" stroke={unit.foe?'#df927b':'#90c7ae'} strokeWidth="1.5"/>

@@ -1,3 +1,5 @@
+import {beginJourneyBattle} from './journey.js';
+import {encounterGround} from '../../../game-data/battle-ground.js';
 import {resolveSpellDamage} from './spell-resolution.js';
 import {weaponAttack} from './weapon-attacks.js';
 import {spellMissChance} from '../../../sim-core/src/attack-table.js';
@@ -18,7 +20,7 @@ import {detectsTarget,moveToward,moveAway,areaTargets,castRange,inSpellRange,gro
 import {initializeMetrics,recordMetric,finishCombat} from './combat-metrics.js';
 import {ruleMatches,strategyAllows} from './combat-strategy.js';
 import {launchProjectile,takeImpacts} from './combat-projectiles.js';
-import { creatures, spells, monsterIdsAt, objectTemplates, creatureLoot, nameOf, table } from './catalog.js';
+import { creatures, spells, monsterIdsAt, objectTemplates, creatureLoot, nameOf, table, nodes } from './catalog.js';
 import { stats, enemy, knownRank, spellInfo, effectRange, armorReduction, talentRank, rng, roll, log, gainXp, killXp } from './character.js';
 import { creditKill, lootRows } from './quests.js';
 import {skinBeast} from './professions.js';
@@ -45,15 +47,17 @@ export const defaultRules = [
 ];
 export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombatArea({dungeon,location:s.location})) {
  area=validateCombatArea(area);
+ const ground=encounterGround({dungeon,area,location:nodes[s.location],environment:s.environment});
  dismount(s);if(s.activity.type==='mount')s.activity={type:'idle'};
  s.groundEffects=[]; // A new encounter establishes a new local coordinate frame.
- s.combat={id:'encounter-'+(s.encounterSequence=(s.encounterSequence||0)+1),startedAt:s.clock,dungeon,area,participantIds:combatMembers(s,null).map(c=>c.id),projectiles:[],enemies:prepared||ids.map((id,i)=>enemy(s,id,'enemy-'+i)),damage:{},healing:{},casts:0,pendingSpawns:[]};
+ s.combat={id:'encounter-'+(s.encounterSequence=(s.encounterSequence||0)+1),startedAt:s.clock,dungeon,area,ground,participantIds:combatMembers(s,null).map(c=>c.id),projectiles:[],enemies:prepared||ids.map((id,i)=>enemy(s,id,'enemy-'+i)),damage:{},healing:{},casts:0,pendingSpawns:[]};
  for(const c of combatMembers(s)){c.rest=null;c.cast=null;c.nextAction=s.clock;c.nextSwing=s.clock;c.position=combatRole(c)==='tank'?20:combatRole(c)==='melee'?18:0;c.positionY=c.id===s.id||c.classId===1?0:c.classId===4?2:c.classId===5?-4:4;c.time=s.clock;c.nextPowerRegen=s.clock+2000;c.combo=0;c.comboTarget=null;c.queuedStrike=null;}
  const pullTank=combatMembers(s).find(c=>!c.petUnit&&!c.totemUnit&&!c.escortNpc&&c.hp>0&&combatRole(c)==='tank');
  for(const [i,e] of s.combat.enemies.entries()){if(pullTank&&!e.target&&!e.controlledBy)e.target=pullTank.id;e.position=30+Math.floor(i/3)*2;e.positionY=i===0?0:(i%2?1:-1)*Math.ceil(i/2)*2;e.nextAttack=s.clock;e.nextSpell=s.clock+6000;}
  for(const unit of [...combatMembers(s),...s.combat.enemies])setCombatPosition(s,unit,unit);
  initializeMetrics(s);
  for(const e of s.combat.enemies)initializeSmite(s,e,combatMembers(s),hurtPlayer);
+ beginJourneyBattle(s);
  log(s,'遭遇：'+s.combat.enemies.map(e=>e.name).join('、'),'combat');
 }
 function recordDamage(s,c,target,amount,label,threatMultiplier=1,detail={}){
@@ -346,10 +350,10 @@ export function combatTick(s){
  recordCombatMotion(s,enemyPositions);
  for(const e of battle.enemies.filter(e=>e.hp<=0&&!e.rewarded)){
   if(e.deathSummon)battle.pendingSpawns.push({at:s.clock+e.deathSummon.delay,profile:e.deathSummon.profile});
-  e.rewarded=true;const raw=creatures[e.entry];s.totals.kills++;creditKill(s,e.entry);const gold=roll(s,raw.MinLootGold,raw.MaxLootGold);s.money+=gold;s.totals.money+=gold;
+  e.rewarded=true;const raw=creatures[e.entry];s.totals.kills++;creditKill(s,e.entry);const gold=roll(s,raw.MinLootGold,raw.MaxLootGold);s.money+=gold;s.totals.money+=gold;battle.lootGold=(battle.lootGold||0)+gold;
   const members=actors.filter(c=>c.hp>0&&!c.escortNpc&&!c.petUnit),totalLevel=members.reduce((n,c)=>n+c.level,0),rate=[0,1,1,1.166,1.3,1.4][members.length]||1;
   for(const c of members){gainHunterPetXp(s,c,killXp(c.pet?.level||c.level,e.level,!!e.rank,battle.dungeon));const level=c.level;gainXp(s,c,Math.floor(killXp(c.level,e.level,!!e.rank,battle.dungeon)*rate*c.level/totalLevel));if(c.level!==level){const st=stats(c);c.currentMaxHp=st.maxHp;c.currentMaxMana=st.maxMana;}if(c.growthPolicy==='companion')c.learned=companionSkills(c);}
-  lootRows(s,creatureLoot[raw.LootId]);
+  lootRows(s,creatureLoot[raw.LootId],0,true);
   skinBeast(s,e);
  }
  countLeaderDeath(s);

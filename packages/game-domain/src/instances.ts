@@ -10,7 +10,7 @@ import { instanceContents, mercenaryTemplates } from './content.ts';
 import type { GameService } from './service.ts';
 import { PAUSED_EVENT_AT } from './presence.ts';
 import {simulationInterval,simulationTickBudget} from './simulation-cadence.ts';
-const instanceCommands = new Set(['strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'abandonCombat', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
+const instanceCommands = new Set(['strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'abandonCombat', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'discardJunk', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
 export const visitorCommands = Object.freeze(['strategy', 'settings', 'cast', 'petCommand']);
 function rosterIds(value: unknown): asserts value is string[] { requireThat(Array.isArray(value) && value.length > 0 && value.every(id => typeof id === 'string' && id.length > 0) && new Set(value).size === value.length, 'ROSTER', '副本名册必须是非空且不重复的角色 ID 数组', 400); }
 export async function createInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) {
@@ -64,9 +64,12 @@ export async function startInstance(this: GameService, tx: Transaction, c: Chara
     }
     const content = instanceContents[instance.contentId as keyof typeof instanceContents];
     requireThat([s, ...s.party].every((p: Rules) => p.level >= content.minimumLevel && p.hp > 0), 'ENTRY', '角色等级或生命值不满足副本要求');
+    const savedRunId = s.dungeonSave?.runId;
     content.start(s);
-    if (s.dungeon)
+    if (s.dungeon && !savedRunId)
         s.dungeon.runId = instance.id;
+    if (s.dungeon)
+        await persistCharacter(tx, c, s, s.wallAt, `instance:${instance.id}:start`, this.id);
     instance.simulation = s;
     instance.rngState = s.rngState;
     instance.status = 'running';
@@ -160,6 +163,11 @@ export async function leaveInstance(this: GameService, tx: Transaction, c: Chara
     requireThat(!instance.simulation?.combat, 'IN_COMBAT', '战斗结束后才能离开');
     const departing = instance.roster.filter(r => r.accountId === c.accountId), ownedRows = departing.filter(r => r.controller !== 'mercenary');
     requireThat(!departing.some(r => r.characterId === instance.leaderId) || instance.roster.every(r => r.accountId === c.accountId), 'LEADER', '其他账号离开后队长才能离开');
+    if (instance.simulation?.dungeon && departing.some(r => r.characterId === instance.leaderId)) {
+        // Save the authoritative route before releasing actors to personal play.
+        instance.simulation = act(instance.simulation, { type: 'leaveDungeon' }, instance.simulation.wallAt);
+        await this.persistInstance(tx, instance, now, `instance:${id}:leave:${instance.sequence}`);
+    }
     for (const row of ownedRows) {
         await this.release(tx, row.characterId, id);
         const character = await owned(tx, c.accountId, row.characterId), s = await context(tx, character, now, false);

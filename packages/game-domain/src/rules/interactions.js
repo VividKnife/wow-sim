@@ -1,7 +1,7 @@
 import {creatures,creatureLocations,questLinks,endpointNodes,objectTemplates,nameOf,table,classDefinitions} from './catalog.js';
 import {canTrainAt} from './city.js';
 import {classSupplyShop} from './class-acquisition.js';
-import portraits from '../../../game-data/data/creature-portraits-manifest.json' with {type:'json'};
+import portraits from '../../../game-data/data/npc-models-manifest.json' with {type:'json'};
 
 const assets=new Map(portraits.assets.map(asset=>[asset.id,'/'+asset.path]));
 const vendors=new Map();

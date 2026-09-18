@@ -17,10 +17,10 @@ for(const disabled of [false,true])test(`hunting waits for natural recovery and 
  assert.equal(resumed.totals.food,0);assert.equal(resumed.totals.water,0);
 });
 
-test('hunting continues after a kill without food or water',()=>{
+test('hunting continues after looting a kill without food or water',()=>{
  let s=createGame('连续狩猎',42,0);s.bag=[];
  s=act(s,{type:'hunt',id:299},0);
- for(let t=100;t<=180000&&s.totals.kills<2;t+=100)s=advance(s,t).state;
+ for(let t=100;t<=180000&&s.totals.kills<2;t+=100){s=advance(s,t).state;if(!s.combat&&s.pending.length)s=act(s,{type:'loot'},s.wallAt);}
  assert.ok(s.totals.kills>=2);assert.equal(s.totals.food,0);assert.equal(s.totals.water,0);
 });
 

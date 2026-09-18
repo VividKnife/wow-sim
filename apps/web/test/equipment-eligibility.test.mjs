@@ -18,11 +18,11 @@ test('inventory exposes equipment restrictions before submitting an equip comman
  assert.equal(s.equipment[15].uid,cloak.uid);
 });
 
-test('equipment owned by a companion is unavailable to the player',()=>{
+test('equipment owned by someone outside the party is unavailable to the player',()=>{
  const s=createGame('归属检查',283,0);addItem(s,1376);
  const cloak=s.bag.find(i=>i.id===1376);cloak.bound=true;cloak.ownerId='companion-mage';
  const action=view(s).inventoryActions[cloak.uid];
- assert.equal(action.equippable,false);assert.match(action.equipBlockedReason,/其他队员/);
+ assert.equal(action.equippable,false);assert.match(action.equipBlockedReason,/不属于可共享的队员/);
  assert.throws(()=>act(s,{type:'equip',uid:cloak.uid},0),/无法装备/);
 });
 
@@ -32,3 +32,13 @@ test('an offhand item cannot replace a two-handed weapon through the default equ
  assert.equal(action.equippable,false);assert.match(action.equipBlockedReason,/双手武器/);
  assert.throws(()=>act(s,{type:'equip',uid:orb.uid},0),/双手武器/);
 });
+
+ test('bound equipment from a present companion is available to the player',()=>{
+ const s=createGame('共享检查',283,0);addItem(s,1376);
+ const member=createGame('队友',284,0);member.id='companion-mage';member.party=[];s.party=[member];
+ const cloak=s.bag.find(i=>i.id===1376);cloak.bound=true;cloak.ownerId=member.id;
+ assert.equal(view(s).inventoryActions[cloak.uid].equippable,true);
+ const result=act(s,{type:'equip',uid:cloak.uid},0);
+ assert.equal(result.equipment[15].uid,cloak.uid);
+ assert.equal(result.equipment[15].ownerId,s.id);
+ });

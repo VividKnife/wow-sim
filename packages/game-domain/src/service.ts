@@ -303,7 +303,8 @@ export class GameService {
                 const row = await tx.get<Item>('items', item.uid);
                 if (row && row.ownerCharacterId !== member.id) {
                     requireThat(row.accountId === actor.accountId, 'ASSET_OWNER', '装备归属无效');
-                    requireThat(!row.data.bound && (!row.data.ownerId || row.data.ownerId === member.id), 'BOUND_ITEM', '绑定装备不能转移');
+                    await owned(tx, actor.accountId, member.id);
+                    requireThat(!row.data.issued, 'BOUND_ITEM', '配发装备不能转移');
                     row.ownerCharacterId = member.id;
                     row.container = 'equipment';
                     await tx.put('items', row);

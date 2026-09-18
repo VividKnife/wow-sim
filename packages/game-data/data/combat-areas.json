@@ -10,6 +10,7 @@
     },
     "corridor": {
       "name": "矿道",
+      "ground": "cave",
       "shape": "rectangle",
       "minX": -12,
       "maxX": 60,
@@ -18,6 +19,7 @@
     },
     "room": {
       "name": "房间",
+      "ground": "cave",
       "shape": "rectangle",
       "minX": -20,
       "maxX": 70,
@@ -26,6 +28,7 @@
     },
     "deck": {
       "name": "甲板",
+      "ground": "deck",
       "shape": "rectangle",
       "minX": -15,
       "maxX": 70,
@@ -34,6 +37,7 @@
     },
     "dock": {
       "name": "船坞",
+      "ground": "deck",
       "shape": "rectangle",
       "minX": -20,
       "maxX": 80,
