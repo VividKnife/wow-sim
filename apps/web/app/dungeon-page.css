@@ -1,0 +1,10 @@
+.dungeon-page{display:grid;gap:18px;min-width:0}
+.dungeon-page-intro{display:flex;align-items:center;justify-content:space-between;gap:20px;background:linear-gradient(120deg,#253336,#171e22);border-top:2px solid #b79b60}
+.dungeon-page-intro h1{margin:6px 0;font-size:30px}
+.dungeon-page-intro p{margin-bottom:0;color:#adb9b9}
+.dungeon-page-status{padding:8px 12px;border:1px solid #766b4d;border-radius:6px;color:#ddc891;white-space:nowrap;font-size:13px}
+.dungeon-preparation{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:16px}
+.dungeon-preparation>div{display:flex;align-items:flex-start;flex-direction:column;gap:12px;padding:16px;background:#111c20;border:1px solid #344347;border-radius:6px}
+.dungeon-preparation small,.dungeon-preparation span{color:#a9b6b8}
+.dungeon-preparation strong{font-size:14px}
+@media(max-width:760px){.dungeon-preparation{grid-template-columns:1fr}.dungeon-page-intro{align-items:flex-start;flex-direction:column}}

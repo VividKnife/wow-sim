@@ -1,3 +1,5 @@
+import {companionKitItems} from './companion-kit.js';
+import {PARTY_QUEST} from './party-unlock.js';
 import classDemons from '../../../game-data/data/class-demons-reference.json' with {type:'json'};
 import source from '../../../game-data/data/classic-reference.json' with { type: 'json' };
 import helpers from '../../../game-data/data/gameplay-reference.json' with { type: 'json' };
@@ -10,6 +12,7 @@ import journeyAssets from '../../../game-data/data/journey-item-assets.json' wit
 import supplement from '../../../game-data/data/quest-supplement-reference.json' with { type: 'json' };
 import deadmines from '../../../game-data/data/deadmines-reference.json' with { type: 'json' };
 import classReference from '../../../game-data/data/classes-reference.json' with { type: 'json' };
+import talentDescriptionsZhCN from '../../../game-data/data/talent-descriptions-zhCN.json' with {type:'json'};
 import {supplementalItems,professionNames} from './profession-data.js';
 import professionTemplates from '../../../game-data/data/professions-templates.json' with {type:'json'};
 import {utilityItemNames} from './utility-data.js';
@@ -46,6 +49,7 @@ export function table(name) {
 const index=(name,key)=>Object.fromEntries(table(name).map(row=>[row[key],row]));
 export const creatures=index('creature_template','Entry');
 export const items=index('item_template','entry');
+for(const item of companionKitItems()){const appearance=Object.values(items).find(i=>!i.companionKit&&i.InventoryType===item.InventoryType&&i.subclass===item.subclass&&i.Quality===2&&icons.items?.[i.entry]);items[item.entry]={...item,appearanceItemId:appearance?.entry};}
 for(const item of supplementalItems)items[item.entry]??=item;
 export const spells=index('spell_template','Id');
 for (const spell of clientRules.mageTalentSpells) spells[spell.Id]??=spell;
@@ -63,20 +67,24 @@ export const classStartingItems=classReference.classStartingItems;
 export const startingItems=classStartingItems['1:8'];
 export const lookup=Object.fromEntries(Object.entries(clientRules.lookupTables).map(([k,rows])=>[k,Object.fromEntries(rows.map(r=>[r.id,r]))]));
 export const localize=(kind,id)=>localization[kind]?.[id]||(kind==='items'?journeyAssets.items[id]:undefined);
-export function nameOf(kind,id){return localize(kind,id)?.nameZhCN||(kind==='items'?professionNames[id]||utilityItemNames[id]||items[id]?.name:kind==='spells'?classReference.translations?.spellNamesByEnglish?.[spells[id]?.SpellName]||spells[id]?.SpellName:kind==='quests'?quests[id]?.Title:creatures[id]?.Name)||String(id);}
+export function nameOf(kind,id){return localize(kind,id)?.nameZhCN||(kind==='items'?professionNames[id]||utilityItemNames[id]||items[id]?.name:kind==='spells'?classReference.translations?.spellNamesByEnglish?.[spells[id]?.SpellName]||talentsBySpell[id]?.nameZhCN||spells[id]?.SpellName:kind==='quests'?quests[id]?.Title:creatures[id]?.Name)||String(id);}
 export const quests=index('quest_template','entry');
+quests[PARTY_QUEST]={entry:PARTY_QUEST,Title:'同路人',MinLevel:18,QuestLevel:18,MaxLevel:0,RequiredClasses:0,RequiredRaces:0,PrevQuestId:0,NextQuestId:0,ExclusiveGroup:0,RequiredCondition:0,SpecialFlags:0,RewOrReqMoney:0,Details:'前往暴风城贸易区，与旅店老板奥里森交谈。他会为你介绍值得信赖的伙伴。',Objectives:'与暴风城旅店老板交谈，解锁队伍系统。'};
 // This release puts every playable race on one shared Northshire adventure.
 // Only unrestricted quests whose source mask is the full Alliance (77) or
 // Horde (178) group are adapted; single-race and class quest masks stay exact.
 export const isSharedRouteQuest=q=>!!q&&!q.RequiredClasses&&[77,178].includes(q.RequiredRaces);
 export const sharedRouteQuestIds=new Set(Object.values(quests).filter(isSharedRouteQuest).map(q=>q.entry));
 export const questLinks=source.links.quests;
+questLinks[PARTY_QUEST]={starts:[],ends:[{type:'creature',id:6740}]};
 export const xpTable=index('player_xp_for_level','lvl');
 export const questXp=helpers.questXpByPlayerLevel;
-export const classTalentTrees=classReference.classTalentTrees;
+const talentNameCorrections={'4:Camouflage':'伪装','9:Devastation':'破坏'};
+export const classTalentTrees=classReference.classTalentTrees.map(tree=>({...tree,talents:tree.talents.map(talent=>({...talent,nameZhCN:talentNameCorrections[`${tree.classId}:${talent.name}`]||talent.nameZhCN}))}));
 export const talentTrees=classTalentTrees.filter(tree=>tree.classId===8);
-export const talents=Object.fromEntries(classTalentTrees.flatMap(tree=>tree.talents.map(t=>[t.id,{...t,tree:tree.id,classId:tree.classId}])));
-export const icon=(kind,id)=>icons[kind]?.[id]?'/icons/'+icons[kind][id]:classIcons[kind]?.[id]?'/icons/'+classIcons[kind][id]:kind==='items'&&journeyAssets.items[id]?.icon?'/icons/'+journeyAssets.items[id].icon:null;
+export const talents=Object.fromEntries(classTalentTrees.flatMap(tree=>tree.talents.map(t=>[t.id,{...t,tree:tree.id,classId:tree.classId,rankEffects:t.rankEffects.map(effect=>({...effect,descriptionZhCN:talentDescriptionsZhCN.descriptions[effect.spellId]}))}])));
+const talentsBySpell=Object.fromEntries(Object.values(talents).flatMap(t=>t.ranks.map(id=>[id,t])));
+export const icon=(kind,id)=>kind==='items'&&items[id]?.appearanceItemId?icon('items',items[id].appearanceItemId):icons[kind]?.[id]?'/icons/'+icons[kind][id]:classIcons[kind]?.[id]?'/icons/'+classIcons[kind][id]:kind==='items'&&journeyAssets.items[id]?.icon?'/icons/'+journeyAssets.items[id].icon:kind==='spells'&&talentsBySpell[id]?icon('talents',talentsBySpell[id].id):null;
 export const provenance={database:source.meta,core:helpers.core,talents:talentSource.source,classes:classReference.meta};
 export const spellChain=index('spell_chain','spell_id');
 export const abilities=classAbilities[8];

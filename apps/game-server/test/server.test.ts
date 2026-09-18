@@ -262,6 +262,8 @@ test('the HTTP boundary integrates with a real GameService and isolates its crea
     contentVersion: CONTENT_VERSION,
     revision: 0,
     snapshot: null,
+    combatMode: null,
+    playback: null,
     account: null,
     roster: [],
     activities: [],

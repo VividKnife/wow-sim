@@ -28,6 +28,7 @@ export function dungeonView(s){
  return {active,saved:!!s.dungeonSave,canReset:!dungeonResetReason(s),resetReason:dungeonResetReason(s),atEntrance:s.location==='deadmines',name:'死亡矿井',minimumLevel:10,recommendedLevel:18,
   canEnter:!entryReason,entryReason,completed:!!run&&run.cursor>=dungeonRoute.length,progress:run?.cursor||0,total:dungeonRoute.length,
   autoAdvance:active&&!!run.autoAdvance,advanceReason:active?run.advanceReason:'',
+  rescuing:active&&!!run.autoAdvance&&!s.combat&&[s,...s.party].some(c=>c.hp<=0),
   waitingForLoot:active&&!!run.autoAdvance&&!s.combat&&s.pending.length>0,
   recovering:active&&!!run.autoAdvance&&!s.combat&&!s.pending.length&&s.activity.type==='idle',
   canNext:!nextReason,nextReason,canSkip:!!(free&&encounter?.optional),canLeave:free,canInteract:!interactionReason,interactionReason,

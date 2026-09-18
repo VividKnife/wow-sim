@@ -73,7 +73,7 @@ export function battleLayout(allies,enemies,zoom=1,area=null){
  const centerX=(Math.min(...xs)+Math.max(...xs))/2,centerY=(Math.min(...ys)+Math.max(...ys))/2;
  const spanX=area?area.maxX-area.minX:Math.max(36,Math.max(...xs)-Math.min(...xs)+12),spanY=area?area.maxY-area.minY:Math.max(20,Math.max(...ys)-Math.min(...ys)+12);
  const minX=centerX-spanX/2,maxX=centerX+spanX/2,minY=centerY-spanY/2,maxY=centerY+spanY/2;
- const width=1000,height=440,scale=Math.min((area?880:840)/(maxX-minX),(area?340:280)/(maxY-minY))*Math.max(.5,Math.min(2,Number.isFinite(zoom)?zoom:1));
+ const width=1000,height=440,scale=Math.min((area?880:840)/(maxX-minX),(area?340:280)/(maxY-minY))*Math.max(.5,Math.min(3,Number.isFinite(zoom)?zoom:1));
  const originX=(width-(maxX-minX)*scale)/2-minX*scale,originY=(height-(maxY-minY)*scale)/2-minY*scale;
  /** @type {Record<string,{left:number,top:number}>} */
  const units={};

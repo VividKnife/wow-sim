@@ -1,10 +1,11 @@
+import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
 import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
 import {enterDungeon,prepareEncounter,recordDungeonProgress} from '../../../packages/game-domain/src/rules/dungeon.js';
 
-function group(){let s=createGame('放弃战斗',283,0);s.level=20;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);s.location='deadmines';enterDungeon(s);prepareEncounter(s);s.nextTick=s.clock+100;s.nextRegen=s.clock+2000;return s;}
+function group(){let s=createGame('放弃战斗',283,0);s.level=20;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;for(const id of ['warrior','priest','rogue','mage'])s=recruitForTest(s,{type:'recruit',id},0);s.location='deadmines';enterDungeon(s);prepareEncounter(s);s.nextTick=s.clock+100;s.nextRegen=s.clock+2000;return s;}
 
 test('abandon kills the entire encounter roster and summons, stops effects and preserves earned rewards',()=>{
  let s=group();const id=s.combat.id;s.party[0].hp=0;

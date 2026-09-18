@@ -1,4 +1,4 @@
-import {creatures,creatureLocations,questLinks,endpointNodes,objectTemplates,nameOf,table,classDefinitions} from './catalog.js';
+import {creatures,creatureLocations,questLinks,endpointNodes,objectTemplates,nameOf,table,classDefinitions,flightNodes} from './catalog.js';
 import {canTrainAt} from './city.js';
 import {classSupplyShop} from './class-acquisition.js';
 import portraits from '../../../game-data/data/npc-models-manifest.json' with {type:'json'};
@@ -21,6 +21,7 @@ export function localInteractions(s,quests){
   }
  }
  if(!s.dungeon)for(const id of locals.get(s.location)||[]){
+  if(flightNodes.includes(s.location)&&/Gryphon Master/.test(creatures[id]?.SubName||''))role(get('creature',id),'flight');
   if(vendors.has(id)){const npc=get('creature',id);role(npc,'shop');npc.stockIds=vendors.get(id);}
   if([295,6740,8931].includes(id))role(get('creature',id),'inn');
   if(canTrainAt(s)&&creatures[id]?.TrainerClass===s.classId&&/Trainer/.test(creatures[id]?.SubName||''))role(get('creature',id),'trainer');

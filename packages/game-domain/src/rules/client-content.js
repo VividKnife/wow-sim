@@ -5,7 +5,7 @@ import manifest from '../../../game-data/manifest.json' with {type:'json'};
 
 export function itemView(id){
  const i=items[id];
- return i?{id,name:nameOf('items',id),icon:icon('items',id),quality:i.Quality,level:i.RequiredLevel,maxDurability:i.MaxDurability,armor:i.armor,class:i.class,subclass:i.subclass,description:enchants[i.enchant]?.description||null,enchant:i.enchant||null,slot:i.InventoryType,bagSlots:i.class===1?i.ContainerSlots:0,sell:i.SellPrice,damage:i.dmg_min1?[i.dmg_min1,i.dmg_max1]:null,speed:i.delay,stats:[1,2,3,4,5,6,7,8,9,10].filter(n=>i['stat_value'+n]).map(n=>({type:i['stat_type'+n],value:i['stat_value'+n]}))}:null;
+ return i?{id,appearanceItemId:i.appearanceItemId||id,name:nameOf('items',id),icon:icon('items',id),quality:i.Quality,level:i.RequiredLevel,maxDurability:i.MaxDurability,armor:i.armor,class:i.class,subclass:i.subclass,description:enchants[i.enchant]?.description||null,enchant:i.enchant||null,slot:i.InventoryType,bagSlots:i.class===1?i.ContainerSlots:0,sell:i.SellPrice,damage:i.dmg_min1?[i.dmg_min1,i.dmg_max1]:null,speed:i.delay,stats:[1,2,3,4,5,6,7,8,9,10].filter(n=>i['stat_value'+n]).map(n=>({type:i['stat_type'+n],value:i['stat_value'+n]}))}:null;
 }
 
 const catalog={

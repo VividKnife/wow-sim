@@ -22,7 +22,7 @@ export function waitingForPull(s,c){
  const policy={...defaultPolicy,...c.strategyPolicy};
  return s.clock-(s.combat.pull?.startsAt??s.combat.startedAt)<policy.pullDelaySeconds*1000;
 }
-export const strategyConditions=['always','targetCasting','enemyNear','enemyFar','healthBelow','healthAbove','allyHealthBelow','manaAbove','manaBelow','targetHealthBelow','targetHealthAbove','enemyCountAtLeast','combatEnemyCountAtMost','comboAtLeast','petHealthBelow','underAttack','combatTimeBelow'];
+export const strategyConditions=['always','targetCasting','enemyNear','enemyFar','healthBelow','healthAbove','allyHealthBelow','manaAbove','manaBelow','targetHealthBelow','targetHealthAbove','enemyCountAtLeast','combatEnemyCountAtMost','comboAtLeast','petHealthBelow','underAttack','combatTimeBelow','combatTimeAbove'];
 export const areaSpell=sp=>selfArea(sp)||groundArea(sp)||['Cleave','Multi-Shot','Chain Lightning'].includes(sp.SpellName);
 export const protectedTarget=(e,clock)=>!!e&&(e.polyUntil>clock||(e.auras||[]).some(a=>a.until>clock&&([5,7].includes(a.type)||a.type===12&&((spells[a.spell]?.AuraInterruptFlags||0)&2))));
 // The final hostile sheep is the kill target; keep CC intact until damage lands.
@@ -67,6 +67,7 @@ function conditionMatches(s,c,e,rule,sp){const st=stats(c);switch(rule.condition
  case 'petHealthBelow':return !!c.pet&&c.pet.hp>0&&c.pet.hp/c.pet.maxHp*100<rule.value;
  case 'underAttack':return (s.combat?.enemies||[]).some(x=>aliveEnemy(x)&&!x.controlledBy&&!protectedTarget(x,s.clock)&&x.target===c.id);
  case 'combatTimeBelow':return !!s.combat&&s.clock-(s.combat.pull?.startsAt??s.combat.startedAt)<rule.value*1000;
+ case 'combatTimeAbove':return !!s.combat&&s.clock-(s.combat.pull?.startsAt??s.combat.startedAt)>rule.value*1000;
  // Include crowd-controlled enemies so keeping one sheep does not turn a large pack into a small pull.
  case 'combatEnemyCountAtMost':return (s.combat?.enemies||[]).filter(x=>aliveEnemy(x)&&!x.controlledBy).length<=rule.value;
  case 'healthBelow':return c.hp/st.maxHp*100<rule.value;case 'manaAbove':{const r=classResource(c,st);return r?.max>0&&r.value/r.max*100>=rule.value;}case 'manaBelow':{const r=classResource(c,st);return r?.max>0&&r.value/r.max*100<rule.value;}case 'targetHealthBelow':return e.hp/e.maxHp*100<rule.value;

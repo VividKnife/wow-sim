@@ -1,10 +1,11 @@
+import {seedCompanion} from './support/characters.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
 import type {Character,Party} from '../src/model.ts';
 
-async function fixture(){let now=1000;const store=new MemoryStore(),service=new GameService(store,{contentVersion:'test',now:()=>now,seed:()=>123});const created=await service.createAccount('a',{name:'Hero',classId:8,raceId:1},'create');return{store,service,hero:created.account.primaryCharacterId,party:created.account.partyId,time:(value:number)=>{now=value;},helper:async()=>{const result=await service.command('a',{type:'createCompanion',name:'Helper',classId:8,raceId:1,requestId:'helper'});return result.roster.find(c=>c.name==='Helper')!.id;}};}
+async function fixture(){let now=1000;const store=new MemoryStore(),service=new GameService(store,{contentVersion:'test',now:()=>now,seed:()=>123});const created=await service.createAccount('a',{name:'Hero',classId:8,raceId:1},'create');return{store,service,hero:created.account.primaryCharacterId,party:created.account.partyId,time:(value:number)=>{now=value;},helper:async()=>{const result=await seedCompanion(service,'a',{type:'createCompanion',name:'Helper',classId:8,raceId:1,requestId:'helper'});return result.roster.find(c=>c.name==='Helper')!.id;}};}
 
 test('redirecting group travel retains its activity lease and brings every participant to the new destination',async()=>{
  const f=await fixture(),helper=await f.helper();

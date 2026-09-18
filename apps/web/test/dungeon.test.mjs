@@ -1,3 +1,4 @@
+import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
@@ -8,7 +9,7 @@ import {creatureLoot} from '../../../packages/game-domain/src/rules/catalog.js';
 import {lootRows,questProgress} from '../../../packages/game-domain/src/rules/quests.js';
 
 function group(seed=283){let s=createGame('矿井测试',seed,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
- for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);
+ for(const id of ['warrior','priest','rogue','mage'])s=recruitForTest(s,{type:'recruit',id},0);
  s.location='deadmines';return s;
 }
 function pull(s){prepareEncounter(s);s.clock=s.combat.pull.startsAt;return s;}

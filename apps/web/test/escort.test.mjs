@@ -1,3 +1,4 @@
+import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance} from '../../../packages/game-domain/src/rules/engine.js';
@@ -5,7 +6,7 @@ import {stats,killXp} from '../../../packages/game-domain/src/rules/character.js
 import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
 import {creatureVisual} from '../lib/creature-visuals.js';
 
-function ready(){let s=createGame('护送测试',283,0);s.level=20;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.location='sentinel';s.quests[155]={kills:{},event:false,acceptedAt:0,expiresAt:0};for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);return s;}
+function ready(){let s=createGame('护送测试',283,0);s.level=20;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.location='sentinel';s.quests[155]={kills:{},event:false,acceptedAt:0,expiresAt:0};for(const id of ['warrior','priest','rogue','mage'])s=recruitForTest(s,{type:'recruit',id},0);return s;}
 
 test('escort requires the active quest at Sentinel Hill and cannot be replaced by ordinary travel',()=>{
  let s=ready();s.location='moonbrook';assert.throws(()=>act(s,{type:'escortStart'},0));s.location='sentinel';

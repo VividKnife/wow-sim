@@ -1,3 +1,4 @@
+import {seedCompanion} from './support/characters.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
@@ -49,7 +50,7 @@ test('full-resource idle characters persist bounded catch-up across polls until 
 });
 
 test('idle party members regenerate even when the selected hero is full',async()=>{
- const f=await fixture();const created=await f.service.command('a',{type:'createCompanion',name:'队友',classId:8,raceId:1,requestId:'companion'});
+ const f=await fixture();const created=await seedCompanion(f.service,'a',{type:'createCompanion',name:'队友',classId:8,raceId:1,requestId:'companion'});
  const helper=created.roster.find(c=>c.name==='队友')!.id;
  await f.service.command('a',{type:'setParty',characterIds:[f.id,helper],requestId:'party'});
  const maximum=stats(created.state) as {maxHp:number;maxMana:number};

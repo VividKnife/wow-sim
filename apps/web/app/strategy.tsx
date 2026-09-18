@@ -9,13 +9,13 @@ import {MAX_STRATEGY_RULES,MAX_STRATEGY_EXTRA_CONDITIONS} from '../../../package
 import type {PotionOption} from './economy-types';
 import './strategy.css';
 
-const conditions=[['always','始终可用'],['targetCasting','敌人正在施法'],['enemyNear','敌人距离不超过（码）'],['enemyFar','敌人距离大于（码）'],['allyHealthBelow','任一队友生命低于（%）'],['healthBelow','自身生命低于（%）'],['manaAbove','自身主要资源不低于（%）'],['manaBelow','自身主要资源低于（%）'],['targetHealthBelow','目标生命低于（%）'],['enemyCountAtLeast','技能范围内可攻击敌人数至少'],['combatEnemyCountAtMost','本场存活敌人数至多'],['targetHealthAbove','目标生命不低于（%）'],['healthAbove','自身生命不低于（%）'],['comboAtLeast','当前目标连击点至少'],['petHealthBelow','宠物生命低于（%）'],['underAttack','自身正在被敌人攻击'],['combatTimeBelow','开战时间小于（秒）']];
+const conditions=[['always','始终可用'],['targetCasting','敌人正在施法'],['enemyNear','敌人距离不超过（码）'],['enemyFar','敌人距离大于（码）'],['allyHealthBelow','任一队友生命低于（%）'],['healthBelow','自身生命低于（%）'],['manaAbove','自身主要资源不低于（%）'],['manaBelow','自身主要资源低于（%）'],['targetHealthBelow','目标生命低于（%）'],['enemyCountAtLeast','技能范围内可攻击敌人数至少'],['combatEnemyCountAtMost','本场存活敌人数至多'],['targetHealthAbove','目标生命不低于（%）'],['healthAbove','自身生命不低于（%）'],['comboAtLeast','当前目标连击点至少'],['petHealthBelow','宠物生命低于（%）'],['underAttack','自身正在被敌人攻击'],['combatTimeBelow','开战时间小于（秒）'],['combatTimeAbove','开战时间大于（秒）']];
 const roleNames:Record<string,string>={auto:'自动判断',tank:'坦克',melee:'近战输出',ranged:'远程输出',healer:'治疗'};
-export default function Strategy(props:GameProps){
+export default function Strategy(props:GameProps&{currentCharacterOnly?:boolean}){
  const {state:s,data:d}=props;
  const members=d.strategyMembers||[{id:s.id,name:s.name,classId:s.classId,rules:s.rules,policy:{protectCC:true,waitForTank:true,pullDelaySeconds:3},autoBuffs:{enabled:false,armor:true,int:true,sta:true,targets:'party',refreshSeconds:30},skills:d.skills}];
- const [memberId,setMemberId]=useState(s.id),member=members.find((c:any)=>c.id===memberId)||members[0];
- return <><label className="threshold">配置成员 <select aria-label="策略成员" value={member.id} onChange={e=>setMemberId(e.target.value)}>{members.map((c:any)=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label><MemberStrategy key={`${member.id}:${member.skills.map((a:any)=>a.spellId).join(',')}`} {...props} member={member}/></>;
+ const [memberId,setMemberId]=useState(s.id),member=members.find((c:any)=>c.id===(props.currentCharacterOnly?s.id:memberId))||members[0];
+ return <>{!props.currentCharacterOnly&&<label className="threshold">配置成员 <select aria-label="策略成员" value={member.id} onChange={e=>setMemberId(e.target.value)}>{members.map((c:any)=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label>}<MemberStrategy key={`${member.id}:${member.skills.map((a:any)=>a.spellId).join(',')}`} {...props} member={member}/></>;
 }
 function MemberStrategy({state:s,data:d,busy,send,member}:GameProps&{member:any}){
  const [rules,setRules]=useState<any[]>(member.rules),[policy,setPolicy]=useState(member.policy),[buffs,setBuffs]=useState(member.autoBuffs),[health,setHealth]=useState(s.settings.health),[mana,setMana]=useState(s.settings.mana),[saved,setSaved]=useState(false),[potions,setPotions]=useState(member.potions||{enabled:false,health:35,mana:20,healthItem:0,manaItem:0});

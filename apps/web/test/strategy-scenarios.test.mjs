@@ -1,3 +1,4 @@
+import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,stats,view} from '../../../packages/game-domain/src/rules/engine.js';
@@ -11,7 +12,7 @@ import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/cli
 function scenario(classId,template,count=1,extra=[]){
  let s=createGame('模板实战',743,0,{classId,raceId:classDefinitions.find(c=>c.id===classId).races[0]});s.level=20;
  s.learned=[...new Set([...s.learned,...classAbilities[classId].filter(a=>a.requiredLevel<=20&&['trainer','weapon'].includes(a.acquisition)).map(a=>a.spellId),...extra])];
- s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s=act(s,{type:'recruit',id:'warrior'},0);
+ s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s=recruitForTest(s,{type:'recruit',id:'warrior'},0);
  const p=strategyPresets(s).find(p=>p.id===String(template));s.rules=p.rules;s.strategyPolicy={...p.policy,pullDelaySeconds:0}; // Rotation tests start after the configurable pull hold.
  startCombat(s,Array(count).fill(636),true);s.position=5;s.positionY=0;
  const tank=s.party[0];tank.position=28;tank.positionY=0;tank.rules=[];tank.nextAction=tank.nextSwing=1e6;

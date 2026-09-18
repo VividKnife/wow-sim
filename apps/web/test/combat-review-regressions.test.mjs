@@ -4,7 +4,7 @@ import {createGame,stats} from '../../../packages/game-domain/src/rules/engine.j
 import {newCharacter} from '../../../packages/game-domain/src/rules/character.js';
 import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
 import {effectiveSpeed} from '../../../packages/game-domain/src/rules/combat-space.js';
-import {talents,xpTable,creatures} from '../../../packages/game-domain/src/rules/catalog.js';
+import {talents,xpTable,creatures,spells} from '../../../packages/game-domain/src/rules/catalog.js';
 
 test('a weaker later Frostbolt does not replace a stronger slow and survives its expiry',()=>{
  const s=createGame('冰霜专精',283,0);s.level=20;s.hp=stats(s).maxHp;s.mana=10000;s.learned=[116];s.rules=[];
@@ -42,7 +42,7 @@ test('targeted channels cancel when their live target leaves range',()=>{
 });
 test('each Arcane Missiles pulse launches a serialized projectile before causing damage',()=>{
  const s=missiles(),e=s.combat.enemies[0];s.clock=1000;combatTick(s);
- assert.equal(e.hp,10000);assert.equal(s.combat.projectiles.length,1);const p=s.combat.projectiles[0];assert.equal(p.spellId,7268);assert.equal(p.landsAt,2500);
+ assert.equal(e.hp,10000);assert.equal(s.combat.projectiles.length,1);const p=s.combat.projectiles[0];assert.equal(p.spellId,7268);assert.equal(p.landsAt,1000+Math.ceil(Math.hypot(p.to.x-p.from.x,p.to.y-p.from.y)/spells[7268].Speed*1000));
  s.rules=[];s.cast=null;s.nextAction=s.nextSwing=1e9;const restored=JSON.parse(JSON.stringify(s));s.clock=restored.clock=p.landsAt;
  combatTick(s);combatTick(restored);assert.ok(e.hp<10000);assert.deepEqual(restored,s);
 });

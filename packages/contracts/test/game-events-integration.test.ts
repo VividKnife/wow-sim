@@ -10,6 +10,8 @@ test('real shared battle projections round-trip through consecutive delta events
  const service=new GameService(new MemoryStore(),{contentVersion:CONTENT_VERSION,now:()=>1000,seed:()=>12345});
  await service.createAccount('a',{name:'Hero',classId:8,raceId:1},'create');
  const formed=await service.command('a',{type:'createInstance',requestId:'form'});
+ await service.createAccount('b',{name:'Guest',classId:1,raceId:1},'create');
+ await service.command('b',{type:'joinInstance',instanceId:formed.instanceId,requestId:'join'});
  await service.command('a',{type:'startInstance',instanceId:formed.instanceId,requestId:'start'});
  const project=async():Promise<GameSnapshotEvent>=>{
   const result=await service.snapshot('a');

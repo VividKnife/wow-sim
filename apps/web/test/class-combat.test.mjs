@@ -59,7 +59,7 @@ test('stealth suppresses automatic swings until the rogue can use Ambush',()=>{
 });
 
 test('druid cat form consumes energy on Claw and regenerates it separately from mana',()=>{
- const s=fixture(11,[768,1082]);tickTo(s,7000);assert.equal(s.form,'cat');assert.ok(s.logs.some(l=>l.kind==='damage'&&l.spellId===1082));assert.ok(s.energy<100&&s.energy>=0); // Without Furor, shifting starts at zero energy; the third tick funds Claw.
+ const s=fixture(11,[768,1082]);tickTo(s,10000);assert.equal(s.form,'cat');assert.ok(s.logs.some(l=>l.kind==='damage'&&l.spellId===1082));assert.ok(s.energy<100&&s.energy>=0); // Without Furor, shifting starts at zero energy; the third tick funds Claw.
 });
 
 test('all nine default strategy lists project to learned active skills before saving',()=>{

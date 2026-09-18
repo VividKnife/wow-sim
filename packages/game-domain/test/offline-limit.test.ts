@@ -1,3 +1,4 @@
+import {seedCompanion} from './support/characters.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
@@ -141,7 +142,7 @@ test('offline personal combat produces exactly the same state and rewards as sto
 
 test('companion gathering and production finish beyond the offline window', async () => {
   const f = await fixture(1000);
-  for (const name of ['Gatherer', 'Crafter']) await f.service.command('a', {type: 'createCompanion', name, classId: 8, raceId: 1, requestId: name});
+  for (const name of ['Gatherer', 'Crafter']) await seedCompanion(f.service,'a',{type: 'createCompanion', name, classId: 8, raceId: 1, requestId: name});
   const roster = (await f.service.snapshot('a')).roster;
   const gatherer = roster.find(c => c.name === 'Gatherer')!.id;
   const crafter = roster.find(c => c.name === 'Crafter')!.id;

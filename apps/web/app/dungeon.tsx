@@ -28,7 +28,7 @@ export default function Dungeon(props:GameProps){
   {dm.saved&&<details className="dungeon-notice"><summary>重新挑战副本</summary><p>重置会清除本次路线、怪物和机关进度。已获得的装备及任务进度保留；下次进入从头开始。每小时最多进入五个新副本。</p><Button variant="outline" disabled={busy||!dm.canReset} onClick={()=>send({type:'resetDungeon'})}>清除旧路线并重置</Button>{dm.resetReason&&<p>{dm.resetReason}</p>}</details>}
   <div className="action-row">{dm.atEntrance?<Button disabled={busy||!dm.canEnter} onClick={()=>send({type:'enterDungeon'})}>{dm.saved?'重返死亡矿井':'进入死亡矿井'}</Button>:<Button variant="outline" disabled={busy||!!s.combat||!['idle','hunt'].includes(s.activity.type)||s.hp<=0} onClick={()=>send({type:'travel',to:'deadmines'})}>前往死亡矿井入口</Button>}</div>
   {dm.entryReason&&<p className="footnote">{dm.entryReason}</p>}
-  <p className="footnote">开始推进后，小队会连续迎战、休整并完成机关；遇到成员倒下、背包已满或拾取受阻时暂停。</p>
+  <p className="footnote">开始推进后，小队会连续迎战、休整并完成机关；牧师存活时战后自动复活队友，牧师倒下、背包已满或拾取受阻时暂停。</p>
   {dm.atEntrance&&d.recovery.fallen.length>0&&<RecoveryControls {...props}/>}
  </section>;
 
@@ -39,8 +39,8 @@ export default function Dungeon(props:GameProps){
    <div className="section-heading"><span>{dm.completed?'路线已完成':`路线进度 ${dm.progress} / ${dm.total}`}</span><small>退出保留进度</small></div>
    <div className="dungeon-progress" role="progressbar" aria-label="副本路线进度" aria-valuemin={0} aria-valuemax={dm.total} aria-valuenow={dm.progress}><i style={{width:progress+'%'}}/></div>
    <p className="footnote">自动推进保留全部战斗与补给消耗。可随时暂停，战斗中的暂停会在本场结束后停止迎战。</p>
-   {!dm.completed&&<div className="action-row">{dm.autoAdvance?<Button variant="outline" disabled={busy} onClick={()=>send({type:'dungeonPause'})}>暂停推进</Button>:<Button disabled={busy||!dm.canNext} onClick={()=>send({type:'dungeonNext'})}>{dm.advanceReason?'继续自动推进':'开始自动推进'}</Button>}</div>}
-   {dm.autoAdvance?<p className="dungeon-notice" role="status">{s.combat?'自动推进中 · 小队正在战斗':dm.waitingForLoot?'自动推进中 · 等待战利品拾取':dm.recovering?'自动推进中 · 按恢复设置休整后继续':'自动推进中 · 小队正在完成机关'}</p>:!dm.completed&&<p className="dungeon-notice" role="status">{dm.nextReason||dm.advanceReason||'准备好后开始自动推进。'}</p>}
+   {(!dm.completed||dm.autoAdvance)&&<div className="action-row">{dm.autoAdvance?<Button variant="outline" disabled={busy} onClick={()=>send({type:'dungeonPause'})}>暂停推进</Button>:<Button disabled={busy||!dm.canNext} onClick={()=>send({type:'dungeonNext'})}>{dm.advanceReason?'继续自动推进':'开始自动推进'}</Button>}</div>}
+   {dm.autoAdvance?<p className="dungeon-notice" role="status">{s.combat?'自动推进中 · 小队正在战斗':dm.rescuing?(s.activity.type==='resurrect'?'自动推进中 · 牧师正在复活队友':'自动推进中 · 牧师恢复法力并准备复活队友'):dm.waitingForLoot?'自动推进中 · 等待战利品拾取':dm.recovering?'自动推进中 · 按恢复设置休整后继续':'自动推进中 · 小队正在完成机关'}</p>:!dm.completed&&<p className="dungeon-notice" role="status">{dm.nextReason||dm.advanceReason||'准备好后开始自动推进。'}</p>}
    {!s.settings.autoLoot&&<p className="footnote">自动拾取尚未开启；出现待拾取战利品时会暂停，拾取后可继续。可在战利品面板开启自动拾取。</p>}
   </header>
   <div className="dungeon-columns"><section className="panel dungeon-encounter">

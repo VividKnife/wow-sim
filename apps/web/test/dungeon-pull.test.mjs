@@ -1,3 +1,4 @@
+import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats,view} from '../../../packages/game-domain/src/rules/engine.js';
@@ -7,7 +8,7 @@ import {distance} from '../../../packages/sim-core/src/geometry.js';
 
 function room(){
  let s=createGame('开怪倒计时',283,0);s.level=20;s.learned.push(116);s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
- for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);
+ for(const id of ['warrior','priest','rogue','mage'])s=recruitForTest(s,{type:'recruit',id},0);
  s.location='deadmines';s=act(s,{type:'enterDungeon'},0);
  return act(s,{type:'dungeonNext'},0);
 }

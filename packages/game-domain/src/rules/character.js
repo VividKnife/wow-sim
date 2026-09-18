@@ -1,3 +1,4 @@
+import {syncPartyQuest} from './party-unlock.js';
 import {recordJourneyLog} from './journey.js';
 import {agilityChances,intellectCrit,baseAttackPower} from '../../../sim-core/src/class-stats.js';
 import {racialModifiers} from './racial-effects.js';
@@ -132,7 +133,7 @@ export function equipmentBlockedReason(c,item,requestedSlot,partyState=c){
  if(!c||!item||!canEquip(c,data)||!data.InventoryType)return '当前角色无法装备：职业、等级或熟练度不符。';
  if(item.ownerId&&item.ownerId!==c.id&&(item.issued||![partyState,...(partyState?.party||[])].some(member=>member?.id===item.ownerId)))return '装备不属于可共享的队员，无法装备这件物品。';
  const naturalSlot=slotOf(data);
- if(requestedSlot!==undefined&&requestedSlot!==naturalSlot&&!(requestedSlot===17&&data.class===2&&[13,22].includes(data.InventoryType)))return '装备栏位不匹配';
+ if(requestedSlot!==undefined&&requestedSlot!==naturalSlot&&!([12,14].includes(requestedSlot)&&naturalSlot===requestedSlot-1)&&!(requestedSlot===17&&data.class===2&&[13,22].includes(data.InventoryType)))return '装备栏位不匹配';
  const slot=requestedSlot??naturalSlot;
  if(slot===17&&data.class===2&&!c.learned.includes(674))return '需要先学习双武器';
  if(slot===17&&items[c.equipment[16]?.id]?.InventoryType===17)return '双手武器不能与副手同时装备，请先换下双手武器。';
@@ -154,7 +155,7 @@ export function addItem(s,id,count=1,pending=true){const data=items[id];if(!data
  while(count>0&&s.bag.length<bagCapacity(s)){const n=Math.min(max,count);s.bag.push(makeItem(s,id,n));count-=n;}
  if(count&&pending)s.pending.push(makeItem(s,id,count));return count===0;
 }
-export function gainXp(s,c,amount){if(c.level>=LEVEL_CAP)return;if(!Number.isFinite(amount)||amount<0)throw new Error('经验值无效');c.xp+=amount;if(c===s)s.totals.xp+=amount;while(c.level<LEVEL_CAP&&c.xp>=xpTable[c.level].xp_for_next_level){c.xp-=xpTable[c.level].xp_for_next_level;c.level++;const st=stats(c);c.hp=st.maxHp;c.mana=st.maxMana;log(s,`${c.name} 升到了 ${c.level} 级！`,'level');}if(c.level===LEVEL_CAP)c.xp=0;}
+export function gainXp(s,c,amount){if(c.level>=LEVEL_CAP)return;if(!Number.isFinite(amount)||amount<0)throw new Error('经验值无效');c.xp+=amount;if(c===s)s.totals.xp+=amount;while(c.level<LEVEL_CAP&&c.xp>=xpTable[c.level].xp_for_next_level){c.xp-=xpTable[c.level].xp_for_next_level;c.level++;const st=stats(c);c.hp=st.maxHp;c.mana=st.maxMana;log(s,`${c.name} 升到了 ${c.level} 级！`,'level');}if(c.level===LEVEL_CAP)c.xp=0;syncPartyQuest(s);}
 export function killXp(playerLevel,mobLevel,elite=false,dungeon=false){const diff=mobLevel-playerLevel;const base=playerLevel*5+45;const trivial=playerLevel<10?4:playerLevel<20?5:playerLevel<30?6:playerLevel<40?7:playerLevel<45?8:playerLevel<50?9:playerLevel<55?10:playerLevel<60?11:12;const zd=playerLevel<8?5:playerLevel<10?6:playerLevel<12?7:playerLevel<16?8:playerLevel<20?9:playerLevel<30?11:playerLevel<40?12:playerLevel<45?13:playerLevel<50?14:playerLevel<55?15:playerLevel<60?16:17;let amount=diff>=0?base*(1+.05*Math.min(4,diff)):-diff<=trivial?base*(1+diff/zd):0;if(elite)amount*=dungeon?2.5:2;const integer=Math.floor(amount),fraction=amount-integer;return fraction===.5?integer+(integer%2):Math.round(amount);}
 export function knownRank(c,first){const original=spells[first];return c.learned.filter(id=>spells[id]&&((spellChain[id]?.first_spell||id)===first||spells[id].SpellName===original?.SpellName)).sort((a,b)=>spells[b].SpellLevel-spells[a].SpellLevel)[0]||null;}
 export function spellInfo(c,id){const sp=spells[id];if(!sp)return null;const cast=lookup.SpellCastTimes[sp.CastingTimeIndex];const duration=lookup.SpellDuration[sp.DurationIndex];const range=lookup.SpellRange[sp.RangeIndex];let castMs=Math.max(cast?.minimumMs||0,(cast?.baseMs||0)+(cast?.perLevelMs||0)*c.level);

@@ -3,6 +3,7 @@ import React,{useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {createGame,act,stats,view} from '../../../../packages/game-domain/src/rules/engine.js';
 import {addItem} from '../../../../packages/game-domain/src/rules/character.js';
+import {clientContent} from '../../../../packages/game-domain/src/rules/client-content.js';
 import Character from '../../app/character';
 import '../../app/globals.css';
 
@@ -17,6 +18,6 @@ function fixture(full=false){
 function Harness(){
  const [state,setState]=useState(()=>fixture()),[error,setError]=useState('');
  const send=async(action:Parameters<typeof act>[1])=>{try{setState(act(state,action,state.wallAt));setError('');return true;}catch(error){setError((error as Error).message);return false;}};
- return <main className="game-shell" style={{paddingTop:24,paddingBottom:32}}><div className="action-row" style={{margin:'0 0 22px'}}><button onClick={()=>{setState(fixture());setError('');}}>普通背包夹具</button><button onClick={()=>{setState(fixture(true));setError('');}}>满包与待拾取夹具</button><small>独立测试 · 不连接存档</small></div><Character state={state} data={view(state)} busy={false} send={send}/>{error&&<p role="alert">{error}</p>}</main>;
+ return <main className="game-shell" style={{paddingTop:24,paddingBottom:32}}><div className="action-row" style={{margin:'0 0 22px'}}><button onClick={()=>{setState(fixture());setError('');}}>普通背包夹具</button><button onClick={()=>{setState(fixture(true));setError('');}}>满包与待拾取夹具</button><small>独立测试 · 不连接存档</small></div><Character state={state} data={{...clientContent(),...view(state)}} busy={false} send={send}/>{error&&<p role="alert">{error}</p>}</main>;
 }
 createRoot(document.getElementById('root')!).render(<Harness/>);

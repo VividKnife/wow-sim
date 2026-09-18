@@ -27,7 +27,25 @@ const scrollRecipes=Object.fromEntries(recipes.filter(r=>r.item>=900000).map(r=>
 export function marketPrice(id){const i=items[id];if(!i)return null;const scrollCost=scrollRecipes[id]?.materials.reduce((n,m)=>n+m.count*marketPrice(m.id).buy,0)||0;const buy=Math.max(4,(i.SellPrice||0)*4,priceOverrides[id]||0,Math.ceil(scrollCost*1.1));return{buy,sell:Math.max(1,Math.floor(buy*.65))};}
 export const marketView=()=>marketIds.filter(id=>items[id]).map(id=>({id,...marketPrice(id),enchant:items[id].enchant||null}));
 export function buyMarket(s,id,count){quantity(count);if(!marketIds.includes(id)||!items[id])throw new Error('拍卖行没有这件商品');const cost=marketPrice(id).buy*count;if(s.money<cost)throw new Error('金币不足');receive(s,id,count);s.money-=cost;}
-export function auctionSell(s,uid){const i=s.bag.find(i=>i.uid===uid);if(!i||!tradable(i)||!items[i.id]||items[i.id].Quality===0)throw new Error('仅可上架未绑定、未锁定的非任务物品；灰色垃圾请售予商人');if(s.auctions.length>=100)throw new Error('最多同时上架 100 组物品');const gross=marketPrice(i.id).sell*i.count,net=Math.floor(gross*.95);if(net<1)throw new Error('这组物品价值过低');s.auctions.push({id:i.uid,item:clone(i),gross,net,createdAt:s.clock,endsAt:s.clock+30000});s.bag=s.bag.filter(x=>x.uid!==uid);log(s,'自动上架 '+nameOf('items',i.id)+' ×'+i.count+'，预计到账 '+net+' 铜','trade');}
+export function selectedBagItems(s,uids){
+ if(!Array.isArray(uids)||!uids.length||uids.some(uid=>typeof uid!=='string')||new Set(uids).size!==uids.length)throw new Error('请选择物品，且不能重复选择');
+ return uids.map(uid=>{const i=s.bag.find(i=>i.uid===uid);if(!i)throw new Error('所选物品已不在背包中，请重新选择');return i;});
+}
+export function sellBatch(s,uids){
+ const selected=selectedBagItems(s,uids);
+ if(selected.some(i=>protectedItem(i)||!(items[i.id]?.SellPrice>0)))throw new Error('所选物品无法出售或已锁定');
+ const amount=selected.reduce((n,i)=>n+items[i.id].SellPrice*i.count,0),selectedIds=new Set(uids);
+ s.money+=amount;s.bag=s.bag.filter(i=>!selectedIds.has(i.uid));log(s,'出售 '+selected.length+' 组物品，获得 '+amount+' 铜','trade');
+}
+export function auctionSellBatch(s,uids){
+ const selected=selectedBagItems(s,uids);
+ if(selected.some(i=>!tradable(i)||!(items[i.id]?.Quality>0)))throw new Error('仅可上架未绑定、未锁定的非任务物品；灰色垃圾请售予商人');
+ if(s.auctions.length+selected.length>100)throw new Error('最多同时上架 100 组物品');
+ const listings=selected.map(i=>{const gross=marketPrice(i.id).sell*i.count,net=Math.floor(gross*.95);if(net<1)throw new Error('这组物品价值过低');return{id:i.uid,item:clone(i),gross,net,createdAt:s.clock,endsAt:s.clock+30000};});
+ s.auctions.push(...listings);const selectedIds=new Set(uids);s.bag=s.bag.filter(i=>!selectedIds.has(i.uid));
+ for(const a of listings)log(s,'自动上架 '+nameOf('items',a.item.id)+' ×'+a.item.count+'，预计到账 '+a.net+' 铜','trade');
+}
+export function auctionSell(s,uid){auctionSellBatch(s,[uid]);}
 export function settleAuctions(s){for(const a of s.auctions.filter(a=>a.endsAt<=s.clock)){s.money+=a.net;s.marketHistory.unshift({id:a.id,item:a.item.id,count:a.item.count,net:a.net,at:a.endsAt});log(s,'拍卖行已收购 '+nameOf('items',a.item.id)+' ×'+a.item.count+'，到账 '+a.net+' 铜','trade');}s.auctions=s.auctions.filter(a=>a.endsAt>s.clock);s.marketHistory=s.marketHistory.slice(0,30);}
 export function storageAction(s,a){
  if(a.type==='sortBag'){s.bag=organize(s.bag);return;}
@@ -35,7 +53,8 @@ export function storageAction(s,a){
  if(a.type==='lockItem'){const i=s.bag.find(i=>i.uid===a.uid)||s.bank.find(i=>i.uid===a.uid);if(!i)throw new Error('找不到这件物品');i.locked=!i.locked;return;}
  if(a.type==='auctionBuy'){buyMarket(s,a.id,a.count);return;}
  if(a.type==='auctionSell'){auctionSell(s,a.uid);return;}
- if(a.type==='auctionSellAll'){const selected=s.bag.filter(i=>tradable(i)&&items[i.id]?.Quality>0&&items[i.id]?.Quality<=3);if(!selected.length)throw new Error('没有可快捷上架的物品');for(const i of selected)auctionSell(s,i.uid);return;}
+ if(a.type==='auctionSellBatch'){auctionSellBatch(s,a.uids);return;}
+ if(a.type==='auctionSellAll'){const selected=s.bag.filter(i=>tradable(i)&&items[i.id]?.Quality>0&&items[i.id]?.Quality<=3);if(!selected.length)throw new Error('没有可快捷上架的物品');auctionSellBatch(s,selected.map(i=>i.uid));return;}
  if(a.type==='auctionCancel'){const listing=s.auctions.find(i=>i.id===a.id);if(!listing)throw new Error('拍卖已成交或不存在');put(s.bag,listing.item,bagCapacity(s));s.auctions=s.auctions.filter(i=>i.id!==a.id);return;}
  if(!bankHere(s))throw new Error('请到暴风城贸易区或铁炉堡银行办理。');
  if(a.type==='sortBank'){s.bank=organize(s.bank);return;}
@@ -45,4 +64,4 @@ export function storageAction(s,a){
  const i=source.find(i=>i.uid===a.uid);if(!i)throw new Error('找不到这件物品');const count=quantity(a.count,Math.max(1,i.count));if(!bankable(i))throw new Error('任务物品、炉石或配发装备不能存入银行');
  const moved={...i,count,uid:count===i.count?i.uid:'i'+(++s.itemSequence)};put(target,moved,capacity);i.count-=count;if(!i.count)source.splice(source.indexOf(i),1);
 }
-export const storageActions=new Set(['sortBag','discardJunk','lockItem','auctionBuy','auctionSell','auctionSellAll','auctionCancel','sortBank','expandBank','bankDepositMaterials','bankDeposit','bankWithdraw']);
+export const storageActions=new Set(['sortBag','discardJunk','lockItem','auctionBuy','auctionSell','auctionSellBatch','auctionSellAll','auctionCancel','sortBank','expandBank','bankDepositMaterials','bankDeposit','bankWithdraw']);

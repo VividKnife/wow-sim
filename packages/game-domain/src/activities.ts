@@ -11,6 +11,8 @@ import { account, owned, bump, context, persistCharacter, economicEvent, clone }
 import {simulationInterval,simulationTickBudget} from './simulation-cadence.ts';
 import type { GameService } from './service.ts';
 import { PAUSED_EVENT_AT } from './presence.ts';
+import {consumeCombatPlan, invalidateCombatPlan, combatExecutionMode} from './combat-execution.ts';
+import {OFFLINE_BATCH_TICKS, OFFLINE_BATCH_INTERVAL_MS} from './combat-playback.ts';
 function returnTool(state: Rules, tool: Rules) { (state.bag.length < bagCapacity(state) ? state.bag : state.pending).push(clone(tool.data)); }
 export async function startActivity(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) {
     await this.ensureFree(tx, c.id);
@@ -186,12 +188,16 @@ async function settleActivityEvent(this: GameService, tx: Transaction, a: Activi
         const end = s.activity.endsAt;
         const due = Number.isFinite(end) ? s.wallAt + Math.max(0, end - s.clock) : now;
         const lastSeenAt = (await account(tx, a.accountId)).lastSeenAt;
-        const settled = advance(s, Math.min(now, due), { maxTicks: a.type === 'personal' ? simulationTickBudget(lastSeenAt, now) : 20000 });
+        const recorded = a.type === 'personal' && (s.combat || s.activity.type === 'hunt') && combatExecutionMode(a, s) === 'recorded';
+        const offline = recorded && now - lastSeenAt >= 5_000;
+        const batch = recorded && (offline || now - s.wallAt > 2_000);
+        const predicted = await consumeCombatPlan(tx, a, now, this.contentVersion);
+        const settled = advance(predicted || s, Math.min(now, due), { maxTicks: batch ? OFFLINE_BATCH_TICKS : a.type === 'personal' ? simulationTickBudget(lastSeenAt, now) : 20000 });
         s = settled.state;
         a.rngState = s.rngState;
         a.engineActivity = clone(s.activity);
         a.settledUntil = s.wallAt;
-        const interval = simulationInterval(s.combat, lastSeenAt, now);
+        const interval = offline ? OFFLINE_BATCH_INTERVAL_MS : simulationInterval(s.combat, lastSeenAt, now);
         a.nextEventAt = Math.min(s.wallAt + interval, Number.isFinite(s.activity.endsAt) ? s.wallAt + Math.max(1, s.activity.endsAt - s.clock) : Infinity);
         const deadline = await this.activityDeadline(tx, a);
         if (s.wallAt < deadline) a.nextEventAt = Math.min(a.nextEventAt, deadline);
@@ -209,6 +215,7 @@ async function settleActivityEvent(this: GameService, tx: Transaction, a: Activi
         for (const id of a.participantIds || [c.id])
             await this.release(tx, id, a.id);
     }
+    await invalidateCombatPlan(tx, a);
     await tx.put('activities', a);
     await economicEvent(tx, key, a.accountId, 'activitySettled', { activityId: a.id, status: a.status });
     await bump(tx, a.accountId);

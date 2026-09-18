@@ -1,9 +1,13 @@
+import {talentSummary} from './rules/talent-summary.js';
+import {roles} from './rules/party.js';
 import { createInstance, instanceFor, joinInstance, startInstance, bumpInstanceAccounts, instanceCommand, persistInstance, leaveInstance, hireMercenary, acquireInstanceLease, advanceInstance } from './instances.ts';
 import { startActivity, recall, restoreReservation, settleActivity } from './activities.ts';
 import { randomUUID, randomBytes } from 'node:crypto';
 import { removeInvalidSave } from './account-reset.ts';
+import { unstuck } from './unstuck.ts';
 import { validAccountPresence } from './context.ts';
 import {simulationInterval} from './simulation-cadence.ts';
+import {prepareCombatPlan, combatRecording, invalidateCombatPlan, combatExecutionMode} from './combat-execution.ts';
 import type { Account } from './model.ts';
 import { act, advance, quietIdle } from './rules/engine.js';
 import { offlineLimit, recordPresence, activityDeadline, instanceDeadline } from './presence.ts';
@@ -24,6 +28,8 @@ type Options = {
     offlineLimitMs?: number;
 };
 export class GameService {
+    prepareCombatPlan = prepareCombatPlan;
+    combatRecording = combatRecording;
     store: Store;
     contentVersion: string;
     now: () => number;
@@ -65,6 +71,7 @@ export class GameService {
             const now = this.now();
             const lease = await tx.get<ActorLease>('actor_leases', c.id);
             const instance = lease?.kind === 'instance' ? await tx.get<Instance>('instances', lease.ownerId) : null;
+            const activity = lease?.kind === 'activity' ? await tx.get<Activity>('activities', lease.ownerId) : null;
             let state = await this.personalContext(tx, c, now);
             // Free actors have no worker. Commit bounded catch-up on reads, including
             // effects at full resources, so failed commands cannot roll it back forever.
@@ -95,9 +102,10 @@ export class GameService {
                     state = { ...state, ...participant, party: [simulation, ...simulation.party].filter((p: Rules) => p.id !== c.id).map((p: Rules) => this.member(p)), combat: simulation.combat, lastCombat: simulation.lastCombat, activity: simulation.activity, dungeon: simulation.dungeon, clock: simulation.clock, wallAt: simulation.wallAt };
                 }
             }
-            const roster = (await tx.list<Character>('characters', { accountId })).map(row => ({ id: row.id, characterId: row.id, name: row.rules.name, classId: row.rules.classId, raceId: row.rules.raceId, level: row.rules.level, kind: row.kind, professions: row.rules.professions }));
+            const roster = (await tx.list<Character>('characters', { accountId })).map(row => ({ id: row.id, characterId: row.id, name: row.rules.name, classId: row.rules.classId, raceId: row.rules.raceId, level: row.rules.level, kind: row.kind, talentSummary: talentSummary(row.rules), professions: row.rules.professions }));
             const activities = await tx.list<Activity>('activities', { accountId });
-            return { state, revision: a.revision, account: a, roster, activities, instanceId: instance?.id || null, instance: instance ? { id: instance.id, leaderId: instance.leaderId, contentId: instance.contentId, status: instance.status, capacity: instance.capacity, roster: instance.roster, sequence: instance.sequence, epoch: instance.epoch } : null };
+            const owner = instance || activity;
+            return { state, revision: a.revision, account: a, roster, activities, combatMode: owner && state.combat ? combatExecutionMode(owner, state) : null, playback: owner?.playback ?? null, instanceId: instance?.id || null, instance: instance ? { id: instance.id, leaderId: instance.leaderId, contentId: instance.contentId, status: instance.status, capacity: instance.capacity, roster: instance.roster, sequence: instance.sequence, epoch: instance.epoch } : null };
         });
     }
     member(s: Rules) { const { party, bag, bags, bank, pending, auctions, money, activity, combat, lastCombat, dungeon, receipts, ...member } = s; return member; }
@@ -159,7 +167,9 @@ export class GameService {
                 }
                 const c = await owned(tx, accountId, command.characterId || a.primaryCharacterId), now = this.now();
                 const lease = await tx.get<ActorLease>('actor_leases', c.id);
-                if (command.type === 'createCompanion')
+                if (command.type === 'unstuck')
+                    await unstuck.call(this, tx, c, now, command.requestId);
+                else if (command.type === 'createCompanion')
                     await this.createCompanion(tx, c, command, now);
                 else if (command.type === 'setParty') {
                     requireThat(Array.isArray(command.characterIds) && command.characterIds.length >= 1 && command.characterIds.length <= 40 && new Set(command.characterIds).size === command.characterIds.length, 'PARTY', '队伍名册无效', 400);
@@ -206,17 +216,52 @@ export class GameService {
         }
         return this.snapshot(accountId, command.characterId);
     }
-    async createCompanion(tx: Transaction, owner: Character, cmd: Rules, now: number) { const id = this.id(); const s = newState(cmd.name, cmd.classId, cmd.raceId || 1, this.seed(), now, id); const c: Character = { id, accountId: owner.accountId, kind: 'companion', rules: characterRules(s), professionReadyAt: {}, resourceReadyAt: {} }; await tx.insert('characters', c); await tx.insert('companions', { id, characterId: id, accountId: owner.accountId, ownerCharacterId: owner.id, growthPolicy: 'independent' }); await persistAssets(tx, c, s, `companion:${id}`, this.id); }
+    async createCompanion(tx: Transaction, owner: Character, cmd: Rules, now: number) {
+        const candidate = roles.find(r => r.classId === cmd.classId);
+        requireThat(candidate, 'CLASS', '未知职业');
+        await this.personalCommand(tx, owner, {...cmd, type:'recruit', id:candidate!.id}, now);
+    }
     async personalCommand(tx: Transaction, c: Character, cmd: Rules, now: number) {
         const lease = await tx.get<ActorLease>('actor_leases', c.id);
         const existing = lease?.kind === 'activity' ? await tx.get<Activity>('activities', lease.ownerId) : null;
         requireThat(!lease || existing?.type === 'personal', 'ACTOR_BUSY', '角色正在执行后台订单');
+        if (existing && existing.actorId !== c.id && ['talent', 'resetTalents'].includes(cmd.type)) {
+            await this.settleActivity(tx, existing, now);
+            const leader = await owned(tx, c.accountId, existing.actorId);
+            const shared = await this.personalContext(tx, leader, now);
+            requireThat(!shared.combat && ['idle', 'hunt'].includes(shared.activity.type) && !shared.escort,
+                'ACTOR_BUSY', '请先结束队伍当前战斗或活动，再调整天赋');
+            c = await owned(tx, c.accountId, c.id);
+            const selected = await context(tx, c, now, false);
+            rebaseSimulation(selected, shared.clock);
+            selected.wallAt = shared.wallAt;
+            // Apply at the settled party time. A follower must not advance a second
+            // simulation or replace/release the leader's activity and leases.
+            const result = act(selected, cmd, selected.wallAt);
+            const key = `command:${c.accountId}:${cmd.requestId}`;
+            await persistCharacter(tx, c, result, result.wallAt, key, this.id);
+            await invalidateCombatPlan(tx, existing);
+            await tx.put('activities', existing);
+            await economicEvent(tx, key, c.accountId, 'command', {characterId:c.id});
+            return;
+        }
         requireThat(!existing || existing.actorId === c.id, 'ACTOR_BUSY', '角色正在随队执行活动，请通过活动发起者操作');
         if (existing) {
             await this.settleActivity(tx, existing, now);
             c = await owned(tx, c.accountId, c.id);
         }
         let s = await this.personalContext(tx, c, now, true);
+        if (cmd.type === 'recruit') {
+            requireThat(c.kind === 'hero', 'PARTY_OWNER', '请切换到主角管理队友');
+            const companions = await tx.list<Character>('characters', {accountId:c.accountId, kind:'companion'});
+            if (cmd.replaceId) {
+                const target = companions.find(member => member.id === cmd.replaceId);
+                requireThat(target && s.party.some((member: Rules) => member.id === target.id), 'PARTY_TARGET', '请先让要更换的队友归队');
+                await this.ensureFree(tx, target!.id);
+                const reservations = await tx.list<Rules>('reservations', {accountId:c.accountId});
+                requireThat(!reservations.some(row => [row.payerId,row.recipientId,row.actorId].includes(target!.id) && row.status === 'reserved'), 'ASSETS_RESERVED', '请先结算队友的制造订单');
+            } else requireThat(companions.length < 4, 'PARTY_FULL', '最多拥有四名队友，请更换已有队友');
+        }
         const beforeParty = new Set(s.party.map((p: Rules) => p.id));
         const action = { ...cmd };
         if (action.target && ['strategy', 'equip', 'equipBag'].includes(action.type)) {
@@ -227,6 +272,7 @@ export class GameService {
                 requireThat(action.target === c.id, 'FORBIDDEN', '不能控制其他账号的角色', 403);
         }
         if (action.type === 'learnProfession') {
+            requireThat(c.kind !== 'companion' || Object.keys(s.professions).length < 2, 'PROFESSION_LIMIT', '每名队友最多学习两项生活职业');
             const main = professions.filter((p: Rules) => p.kind !== '副职业').map((p: Rules) => p.id);
             requireThat(!main.includes(action.id) || Object.keys(s.professions).filter(id => main.includes(id)).length < 2, 'PROFESSION_LIMIT', '每个角色最多学习两个主要专业');
         }
@@ -244,7 +290,7 @@ export class GameService {
         const key = rewardKey || `command:${c.accountId}:${cmd.requestId}`;
         if (rewardPlan)
             await this.claimEquipmentRewards(tx, c, s, action, rewardPlan, now, key);
-        if (action.type === 'equip')
+        if (action.type === 'equip' || action.type === 'recruit')
             await this.transferEquipment(tx, c, s);
         for (const member of s.party) {
             if (!beforeParty.has(member.id)) {
@@ -255,7 +301,7 @@ export class GameService {
                 const state = { ...newState(member.name, member.classId, member.raceId || 1, this.seed(), now, id), ...member, party: [] };
                 const recruit: Character = { id, accountId: c.accountId, kind: 'companion', rules: characterRules(state), professionReadyAt: {}, resourceReadyAt: {} };
                 await tx.insert('characters', recruit);
-                await tx.insert('companions', { id, characterId: id, accountId: c.accountId, ownerCharacterId: c.id, growthPolicy: 'independent' });
+                await tx.insert('companions', { id, characterId: id, accountId: c.accountId, ownerCharacterId: c.id, growthPolicy: 'companion' });
                 await persistAssets(tx, recruit, state, key, this.id);
                 const a = await account(tx, c.accountId), party = await tx.get<Party>('parties', a.partyId);
                 party!.characterIds.push(id);
@@ -334,7 +380,12 @@ export class GameService {
         const c = await tx.get<Character>('characters', member.id);
         if (!c)
             return;
-        const s = { ...await context(tx, c, now, false), ...member };
+        const old = await context(tx, c, now, false);
+        const replacing = member.recruitmentGeneration !== old.recruitmentGeneration;
+        const base = replacing ? {...newState(member.name, member.classId, member.raceId, this.seed(), now, member.id),
+            bag:old.bag, bags:old.bags, bank:old.bank, pending:old.pending, auctions:old.auctions, money:old.money,
+            bankUpgrades:old.bankUpgrades, visited:old.visited} : old;
+        const s = { ...base, ...member };
         if (shared) {
             s.clock = shared.clock;
             s.wallAt = shared.wallAt;
@@ -351,6 +402,7 @@ export class GameService {
     async trackPersonal(tx: Transaction, c: Character, s: Rules, now: number, existingId?: string) {
         const active = !!s.combat || !['idle', 'dead'].includes(s.activity.type) || !!s.rest;
         let a = existingId ? await tx.get<Activity>('activities', existingId) : null;
+        if (a) await invalidateCombatPlan(tx, a);
         if (!active) {
             if (a) {
                 a.status = 'completed';
@@ -402,6 +454,7 @@ export class GameService {
             try {
                 await this.store.transaction(async (tx) => { const activity = await tx.get<Activity>('activities', selected.id); if (activity)
                     await this.settleActivity(tx, activity, now); });
+                await this.prepareCombatPlan('activities', selected.id, now);
                 result.activities++;
             }
             catch (error) {
@@ -417,6 +470,7 @@ export class GameService {
                     current.expiresAt = now;
                     await tx.put('instance_leases', current);
                 } });
+                await this.prepareCombatPlan('instances', instance.id, now);
             }
             catch (error) {
                 if ((error as DomainError).code !== 'LEASE_HELD')

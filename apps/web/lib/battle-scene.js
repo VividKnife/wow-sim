@@ -12,16 +12,29 @@ export function unitBody(unit,scale){
  const height=Math.max(28,Math.min(48,scale*2.5))*size;
  return {kind,height,width:height*(['beast','spider','dragon'].includes(kind)?1.25:.78)};
 }
-// Retarget from the current visual position, never from the previous snapshot.
-export function createSceneMotion(){
- const tracks=new Map();let key;
- const sample=(track,now)=>{const t=Math.max(0,Math.min(1,(now-track.at)/180));return {left:track.from.left+(track.to.left-track.from.left)*t,top:track.from.top+(track.to.top-track.from.top)*t};};
+// Display a short history instead of finishing each movement before the next
+// network snapshot arrives. Never extrapolate beyond an authoritative position.
+export function createSceneMotion(delayMs=300){
+ let frames=[],key,camera;
+ const cameraKey=layout=>[layout.scale,layout.scaleY,layout.originX,layout.originY].join(':');
  return {update(layout,encounter,now,snap=false){
-  if(key!==encounter||snap){tracks.clear();key=encounter;}
-  for(const [id,to] of Object.entries(layout.units)){
-   const track=tracks.get(id);
-   if(!track||track.to.left!==to.left||track.to.top!==to.top)tracks.set(id,{from:track?sample(track,now):to,to,at:now});
-  }
-  for(const id of tracks.keys())if(!layout.units[id])tracks.delete(id);
- },read(layout,now){return {...layout,units:Object.fromEntries([...tracks].map(([id,track])=>[id,sample(track,now)]))};}};
+  const nextCamera=cameraKey(layout);
+  if(key!==encounter||snap||camera!==nextCamera){frames=[];key=encounter;camera=nextCamera;}
+  const frame={at:now,units:layout.units};
+  if(frames.at(-1)?.at===now)frames[frames.length-1]=frame;
+  else frames.push(frame);
+  // Bounded history also covers inactive tabs without retaining whole scenes.
+  if(frames.length>32)frames.splice(0,frames.length-32);
+ },read(layout,now){
+  if(!frames.length)return layout;
+  const at=now-delayMs;
+  while(frames.length>2&&frames[1].at<=at)frames.shift();
+  const from=frames[0],to=frames[1]||from;
+  const t=Math.max(0,Math.min(1,(at-from.at)/Math.max(1,to.at-from.at)));
+  const units=Object.fromEntries(Object.entries(layout.units).map(([id,current])=>{
+   const a=from.units[id],b=to.units[id];
+   return [id,a&&b?{left:a.left+(b.left-a.left)*t,top:a.top+(b.top-a.top)*t}:current];
+  }));
+  return {...layout,units};
+ }};
 }

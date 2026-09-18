@@ -1,3 +1,4 @@
+import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,stats,view} from '../../../packages/game-domain/src/rules/engine.js';
@@ -12,7 +13,7 @@ import {distance} from '../../../packages/sim-core/src/geometry.js';
 
 function group(classId=8){
  let s=createGame('等待开怪',747,0,{classId,raceId:classDefinitions.find(c=>c.id===classId).races[0]});s.level=20;if(classId===8)s.learned.push(116);s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
- s=act(s,{type:'recruit',id:'warrior'},0);startCombat(s,[636,636],true);
+ s=recruitForTest(s,{type:'recruit',id:'warrior'},0);startCombat(s,[636,636],true);
  const tank=s.party[0];tank.rules=[];tank.nextAction=tank.nextSwing=100000;tank.position=28;tank.positionY=0;
  for(const [i,e] of s.combat.enemies.entries()){e.position=30;e.positionY=i;e.hp=e.maxHp=100000;e.target=tank.id;e.threat={[tank.id]:1000};e.rootUntil=e.nextAttack=e.nextSpell=100000;}
  return s;

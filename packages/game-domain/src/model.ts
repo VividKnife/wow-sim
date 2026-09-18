@@ -38,6 +38,8 @@ export interface Wallet {
     balance: number;
 }
 export interface Activity {
+    playback?: PlaybackManifest;
+    simulationVersion?: number;
     id: string;
     accountId: string;
     actorId: string;
@@ -59,6 +61,8 @@ export interface Activity {
     error?: string;
 }
 export interface Instance {
+    playback?: PlaybackManifest;
+    simulationVersion?: number;
     id: string;
     creatorAccountId: string;
     leaderId: string;
@@ -78,6 +82,14 @@ export interface Instance {
     nextEventAt: number;
     resumeEventAt?: number;
     createdAt: number;
+}
+export interface PlaybackManifest {
+    id: string;
+    encounterId: string;
+    startsAt: number;
+    endsAt: number;
+    startClock: number;
+    endClock: number;
 }
 export interface ActorLease {
     id: string;

@@ -7,7 +7,8 @@ import {buildGameResponse} from '../packages/game-domain/src/rules/server-respon
 let state=createGame('性能采样',283,0);
 state.level=20;state.learned=abilities.filter(a=>a.requiredLevel<=20).map(a=>a.spellId);
 state.hp=stats(state).maxHp;state.mana=stats(state).maxMana;
-for(const id of ['warrior','priest','rogue','mage'])state=act(state,{type:'recruit',id},0);
+state.completed[900001]=1;state.location='stormwind';
+ for(const id of ['warrior','priest','rogue','mage'])state=act(state,{type:'recruit',id},0);
 startCombat(state,[636,636,1729],true);state=advance(state,500,{}).state;
 const results={};
 for(const scope of ['full','combat']){

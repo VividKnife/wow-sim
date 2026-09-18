@@ -21,6 +21,7 @@ export async function removeInvalidSave(tx: Transaction, accountId: string) {
             await tx.put('contracts', contract);
         }
         await tx.delete('instance_leases', instance.id);
+        await tx.delete('combat_plans', instance.id);
         await tx.delete('instances', instance.id);
     }
     for (const id of otherAccounts) {

@@ -116,7 +116,9 @@ export async function persistAssets(tx: Transaction, character: Character, s: Ru
         const item = entry.container === 'auctions' ? data.item : data, oldItem = existing?.container === 'auctions' ? existing.data.item : existing?.data;
         const count = item.count;
         requireThat(Number.isSafeInteger(count) && count > 0, 'ITEM_COUNT', '物品数量无效');
-        await tx.put('items', { id, accountId: character.accountId, ownerCharacterId: character.id, ...entry, data, itemId: item.id, count, source: existing?.source || key });
+        const row = { id, accountId: character.accountId, ownerCharacterId: character.id, ...entry, data, itemId: item.id, count, source: existing?.source || key };
+        if (!existing || existing.container !== entry.container || existing.slot !== entry.slot || existing.position !== entry.position || JSON.stringify(existing.data) !== JSON.stringify(data))
+            await tx.put('items', row);
         if (!existing || oldItem.count !== count || existing.container !== entry.container || existing.slot !== entry.slot)
             await tx.insert('ledger', { id: `${key}:item:${id}`, businessKey: key, accountId: character.accountId, characterId: character.id, kind: 'item', itemId: item.id, itemInstanceId: id, amount: count - (oldItem?.count || 0), container: entry.container });
         if (entry.container === 'auctions')
@@ -133,7 +135,7 @@ export async function persistAssets(tx: Transaction, character: Character, s: Ru
     requireThat(Number.isSafeInteger(s.money) && s.money >= 0, 'BALANCE', '资金余额无效');
     const wallet = await tx.get<Wallet>('wallets', character.id);
     const delta = s.money - (wallet?.balance || 0);
-    await tx.put('wallets', { id: character.id, characterId: character.id, accountId: character.accountId, balance: s.money });
+    if (!wallet || delta) await tx.put('wallets', { id: character.id, characterId: character.id, accountId: character.accountId, balance: s.money });
     if (delta)
         await tx.insert('ledger', { id: `${key}:money:${character.id}`, businessKey: key, accountId: character.accountId, characterId: character.id, amount: delta, balance: s.money });
 }

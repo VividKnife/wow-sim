@@ -1,9 +1,10 @@
+import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats,killXp} from '../../../packages/game-domain/src/rules/engine.js';
 import {startCombat,combatTick,hurtPlayer} from '../../../packages/game-domain/src/rules/combat.js';
 
-function group(){let s=createGame('野外小队',29,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);return s;}
+function group(){let s=createGame('野外小队',29,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;for(const id of ['warrior','priest','rogue','mage'])s=recruitForTest(s,{type:'recruit',id},0);return s;}
 
 test('outdoor companions fight, earn outdoor group XP, and appear in the final meter',()=>{
  const s=group();startCombat(s,[636]);const e=s.combat.enemies[0];

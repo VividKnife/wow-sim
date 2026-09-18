@@ -8,13 +8,13 @@ export const recoveryMembers=s=>combatMembers(s).filter(c=>!c.escortNpc&&!c.petU
 export function stopRecovery(s){for(const c of [s,...s.party])c.rest=null;}
 const resurrectionRoots={2:7328,5:2006,7:2008};
 const resurrectionSpell=c=>{const first=resurrectionRoots[c.classId];return first&&knownRank(c,first)};
-export function resurrectionFor(s,targetId){
- const members=[s,...s.party],target=members.find(c=>c.id===targetId),caster=members.find(c=>c!==target&&c.hp>0&&resurrectionSpell(c));if(!target||!caster)return null;
+export function resurrectionFor(s,targetId,casterId){
+ const members=[s,...s.party],target=members.find(c=>c.id===targetId),caster=members.find(c=>c!==target&&c.hp>0&&(!casterId||c.id===casterId)&&resurrectionSpell(c));if(!target||!caster)return null;
  const spell=resurrectionSpell(caster);return{caster,spell,info:spellInfo(caster,spell)};
 }
-export function beginResurrection(s,targetId){
+export function beginResurrection(s,targetId,casterId){
  if(s.combat||!['idle','dead'].includes(s.activity.type))throw new Error('请先结束当前活动或战斗。');
- const target=[s,...s.party].find(c=>c.id===targetId),option=resurrectionFor(s,targetId);
+ const target=[s,...s.party].find(c=>c.id===targetId),option=resurrectionFor(s,targetId,casterId);
  if(!target||target.hp>0)throw new Error('请选择已经倒下的成员。');if(!option)throw new Error('需要一名存活并学会复活法术的牧师、圣骑士或萨满祭司。');
  const {caster,spell,info:sp}=option;if(caster.mana<sp.mana)throw new Error('复活施法者法力不足，需要先休息恢复。');
  if(!spellReady(caster,sp,s.clock))throw new Error('复活法术尚未冷却。');caster.rest=null;const timing=beginSpellTiming(caster,sp,s.clock);
@@ -28,10 +28,10 @@ export function finishResurrection(s){
  if(!finishSpellTiming(caster,a.timing,s.clock))return;const sp=spellInfo(caster,a.spell),st=stats(target);target.hp=Math.min(st.maxHp,effectRange(caster,sp)[0]);target.mana=Math.min(st.maxMana,sp.EffectMiscValue1);target.cast=null;target.spiritRedemptionUsed=false;
  log(s,target.name+' 接受复活，重新站了起来。','info');
 }
-export function startRecovery(s){let needed=false;
+export function startRecovery(s,minimumMana={}){let needed=false;
  for(const c of recoveryMembers(s)){
   if(c.hp<=0)continue;if(c.rest){needed=true;continue;}
-  const st=stats(c),foodNeeded=c.hp<st.maxHp*s.settings.health/100,waterNeeded=c.mana<st.maxMana*s.settings.mana/100;
+  const st=stats(c),foodNeeded=c.hp<st.maxHp*s.settings.health/100,waterNeeded=c.mana<Math.max(st.maxMana*s.settings.mana/100,minimumMana[c.id]||0);
   if(!foodNeeded&&!waterNeeded)continue;needed=true;
   const find=aura=>s.bag.find(i=>items[i.id]?.RequiredLevel<=c.level&&spells[items[i.id]?.spellid_1]?.EffectApplyAuraName1===aura);
   const food=foodNeeded&&s.settings.autoFood?find(84):null,water=waterNeeded&&s.settings.autoWater?find(85):null;

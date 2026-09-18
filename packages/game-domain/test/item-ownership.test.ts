@@ -1,3 +1,4 @@
+import {seedCompanion} from './support/characters.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
@@ -10,7 +11,7 @@ import type {Item} from '../src/model.ts';
 async function fixture(){
  const store=new MemoryStore(),service=new GameService(store,{contentVersion:'test',now:()=>1000});
  const hero=(await service.createAccount('a',{name:'Hero',classId:8,raceId:1},'create')).account.primaryCharacterId;
- const helper=(await service.command('a',{type:'createCompanion',name:'Helper',classId:8,raceId:1,requestId:'helper'})).roster.find(row=>row.id!==hero)!.id;
+ const helper=(await seedCompanion(service,'a',{type:'createCompanion',name:'Helper',classId:8,raceId:1,requestId:'helper'})).roster.find(row=>row.id!==hero)!.id;
  await service.command('a',{type:'setParty',characterIds:[hero,helper],requestId:'party'});
  async function reward(uid:string,extra={}){
   const item={...makeItem({itemSequence:0},80),...extra};assert.equal(item.bound,true);

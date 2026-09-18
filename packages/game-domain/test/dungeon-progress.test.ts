@@ -4,6 +4,7 @@ import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
 import {makeItem, stats} from '../src/rules/character.js';
 import {dungeonView} from '../src/rules/dungeon-view.js';
+import {dungeonRoute} from '../src/rules/dungeon.js';
 import type {Character, Instance, Rules} from '../src/model.ts';
 
 async function setup() {
@@ -12,6 +13,11 @@ async function setup() {
  const options = {contentVersion:'test', now:()=>now, seed:()=>1234};
  let service = new GameService(store, options), request = 0;
  await service.createAccount('a', {name:'队长', classId:1, raceId:1}, 'create');
+ await store.transaction(async tx=>{
+  const [leader]=await tx.list<Character>('characters',{accountId:'a'});
+  leader.rules.level=20;leader.rules.location='stormwind';leader.rules.completed[900001]=true;
+  await tx.put('characters',leader);
+ });
  const send = (command:Record<string, unknown>) => service.command('a', {...command, requestId:`command-${++request}`});
  for (const classId of [5, 4, 8, 2]) await send({type:'createCompanion', name:`队员${classId}`, classId, raceId:1});
  const ids = await store.transaction(async tx => {
@@ -42,9 +48,59 @@ test('the instance worker preserves automatic advancement across restart and acc
   await tx.put('instances',instance);
  });
  game.restart();assert.deepEqual((await game.work(1000)).errors,[]);
- const next=await game.snapshot();assert.equal(next.state.dungeon.cursor,1);assert.notEqual(next.state.combat.id,first);assert.equal(dungeonView(next.state).autoAdvance,true);
+ let next=await game.snapshot();
+ for(let i=0;i<180&&!next.state.combat;i++){assert.deepEqual((await game.work(1000)).errors,[]);next=await game.snapshot();}
+ assert.equal(next.state.dungeon.cursor,1);assert.notEqual(next.state.combat.id,first);assert.equal(dungeonView(next.state).autoAdvance,true);
  const paused=await game.send({type:'dungeonPause'});assert.equal(dungeonView(paused.state).autoAdvance,false);assert.equal(paused.state.combat.id,next.state.combat.id);
  game.restart();assert.equal(dungeonView((await game.snapshot()).state).autoAdvance,false);
+});
+
+test('the worker automatically loots and starts the next pull without polling or loot commands',async()=>{
+ const game=await setup(),entered=await game.send({type:'enterDungeon'});
+ await game.send({type:'settings',autoLoot:true});
+ const started=await game.send({type:'dungeonNext'}),first=started.state.combat.id;
+ const before=await game.store.transaction(async tx=>{
+  const instance=(await tx.get<Instance>('instances',entered.instanceId!))!,s=instance.simulation!;
+  const drop={...makeItem(s,25,1),lootBattleId:first};s.pending.push(drop);
+  for(const e of s.combat.enemies){e.hp=0;e.rewarded=true;}
+  s.combat.pull.startsAt=s.clock;s.combat.pull.engagedAt=s.clock;
+  await tx.put('instances',instance);return s.bag.filter((i:Rules)=>i.id===25).length;
+ });
+ game.restart();assert.deepEqual((await game.work(1000)).errors,[]);
+ let instance=await game.store.transaction(tx=>tx.get<Instance>('instances',entered.instanceId!));
+ for(let i=0;i<180&&!instance!.simulation!.combat;i++){
+  assert.deepEqual((await game.work(1000)).errors,[]);
+  instance=await game.store.transaction(tx=>tx.get<Instance>('instances',entered.instanceId!));
+ }
+ const s=instance!.simulation!;
+ assert.equal(s.pending.length,0);assert.equal(s.bag.filter((i:Rules)=>i.id===25).length,before+1);
+ assert.ok(s.combat);assert.notEqual(s.combat.id,first);assert.equal(s.dungeon.autoAdvance,true);
+});
+
+test('the worker recovers priest mana and resurrects the leader after the final encounter across restart',async()=>{
+ const game=await setup(),entered=await game.send({type:'enterDungeon'});
+ await game.store.transaction(async tx=>{
+  const instance=(await tx.get<Instance>('instances',entered.instanceId!))!,s=instance.simulation!;
+  s.dungeon.cursor=dungeonRoute.length-1;
+  // The service fixture levels characters explicitly; give its priest the actual resurrection spell.
+  s.party.find((c:Rules)=>c.classId===5).learned.push(2006);
+  await tx.put('instances',instance);
+ });
+ await game.send({type:'dungeonNext'});
+ await game.store.transaction(async tx=>{
+  const instance=(await tx.get<Instance>('instances',entered.instanceId!))!,s=instance.simulation!;
+  s.hp=0;s.party.find((c:Rules)=>c.classId===5).mana=0;
+  for(const e of s.combat.enemies){e.hp=0;e.rewarded=true;}
+  s.combat.pull.startsAt=s.clock;s.combat.pull.engagedAt=s.clock;
+  await tx.put('instances',instance);
+ });
+ assert.deepEqual((await game.work(1000)).errors,[]);
+ let snapshot=await game.snapshot();assert.ok(snapshot.state.dungeon.completedAt);assert.equal(snapshot.instance!.status,'running');assert.equal(snapshot.state.dungeon.autoAdvance,true);
+ game.restart();
+ for(let i=0;i<180&&snapshot.state.activity.type!=='resurrect';i++){assert.deepEqual((await game.work(1000)).errors,[]);snapshot=await game.snapshot();}
+ assert.equal(snapshot.state.activity.type,'resurrect');game.restart();
+ for(let i=0;i<20&&snapshot.state.hp<=0;i++){assert.deepEqual((await game.work(1000)).errors,[]);snapshot=await game.snapshot();}
+ assert.ok(snapshot.state.hp>0);assert.equal(snapshot.state.dungeon.autoAdvance,false);assert.equal(snapshot.instance!.status,'completed');
 });
 
 test('server preserves the full dungeon route through leaving, inventory work and service restart', async () => {

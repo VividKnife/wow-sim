@@ -16,6 +16,7 @@ const report={fixture:{sourcePath,kind:'explicit normalized initialization; not 
 const command=value=>service.command('dm-account',{...value,requestId:`command-${++sequence}`});
 const initial=await service.createAccount('dm-account',{name:source.name,classId:source.classId,raceId:source.raceId},'create');
 const ids=[initial.account.primaryCharacterId];
+await store.transaction(async tx=>{const c=await tx.get('characters',ids[0]);c.rules.level=Math.max(18,source.level);c.rules.location='stormwind';c.rules.completed[900001]=1;await tx.put('characters',c);});
 for(const member of source.party){const added=await command({type:'createCompanion',name:member.name,classId:member.classId,raceId:member.raceId||1});ids.push(added.roster.find(r=>!ids.includes(r.id)).id);}
 const mapping=new Map([source,...source.party].map((m,i)=>[m.id,ids[i]]));
 await store.transaction(async tx=>{

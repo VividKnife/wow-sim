@@ -1,3 +1,6 @@
+import {companionRules} from '../../../packages/game-domain/src/rules/combat-strategy.js';
+import {resetTalentGrants} from '../../../packages/game-domain/src/rules/talent-acquisition.js';
+import {recruitForTest} from './support/party-fixture.mjs';
 import {cooldownUntil,beginSpellTiming} from '../../../packages/game-domain/src/rules/spell-timing.js';
 import {spellInfo} from '../../../packages/game-domain/src/rules/character.js';
 import test from 'node:test';
@@ -5,7 +8,7 @@ import assert from 'node:assert/strict';
 import {createGame,act,stats,advance} from '../../../packages/game-domain/src/rules/engine.js';
 import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
 
-function group(){let s=createGame('队长',29,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rules=[];for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);startCombat(s,[636],true);const e=s.combat.enemies[0];e.hp=e.maxHp=100000;e.nextAttack=100000;e.rootUntil=100000;return s;}
+function group(){let s=createGame('队长',29,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rules=[];for(const id of ['warrior','priest','rogue','mage'])s=recruitForTest(s,{type:'recruit',id},0);for(const c of s.party){c.bag=[];c.bags=[];resetTalentGrants(c);delete c.rules;if(c.classId===1||c.classId===4)c.rules=companionRules(c);delete c.strategyPolicy;c.autoBuffs={enabled:false};c.hp=stats(c).maxHp;c.mana=stats(c).maxMana;}startCombat(s,[636],true);const e=s.combat.enemies[0];e.hp=e.maxHp=100000;e.nextAttack=100000;e.rootUntil=100000;return s;}
 const member=(s,id)=>s.party.find(c=>c.roleId===id);
 
 test('Disarm suppresses weapon abilities and cancels a queued Heroic Strike without spending resources',()=>{
@@ -95,7 +98,7 @@ test('warrior follows a rescue taunt with an auto attack on that same enemy',()=
  assert.equal(loose.target,tank.id);assert.equal(hit?.targetId,loose.id);
  for(const c of [s,...s.party].filter(c=>c!==tank)){c.nextAction=100000;c.nextSwing=100000;}
  tank.rage=500;s.clock=1500;combatTick(s);
- const sunder=s.logs.findLast(l=>l.actorId===tank.id&&l.spellId===7386&&l.kind==='cast');
+ const sunder=s.logs.findLast(l=>l.actorId===tank.id&&[7386,7405].includes(l.spellId)&&l.kind==='cast');
  assert.equal(sunder?.targetId,loose.id,'build threat on the taunted enemy before returning to the first enemy');
 });
 

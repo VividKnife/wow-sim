@@ -2,6 +2,7 @@ import type {Transaction} from '../../persistence/src/store.ts';
 import type {Activity, Character, Instance} from './model.ts';
 import {account, bump} from './context.ts';
 import type {GameService} from './service.ts';
+import {invalidateCombatPlan} from './combat-execution.ts';
 
 export const DEFAULT_OFFLINE_LIMIT_MS = 2 * 60 * 60 * 1000;
 // Keep paused jobs out of the due index without releasing their actor leases.
@@ -40,9 +41,25 @@ export async function recordPresence(this: GameService, tx: Transaction, account
                 instances.push({instance, deadline: await this.instanceDeadline(tx, instance)});
         }
     }
+    const returning = now - a.lastSeenAt >= 5_000;
     a.lastSeenAt = now;
     await tx.put('accounts', a);
-    if (now < oldDeadline) return;
+    if (now < oldDeadline) {
+        if (returning) {
+            for (const activity of await tx.list<Activity>('activities', {accountId})) {
+                if (activity.type !== 'personal' || activity.status !== 'running' || activity.playback) continue;
+                activity.nextEventAt = Math.min(activity.nextEventAt, now);
+                await tx.put('activities', activity);
+            }
+            for (const lease of await tx.list<{ownerId: string}>('actor_leases', {accountId, kind: 'instance'})) {
+                const instance = await tx.get<Instance>('instances', lease.ownerId);
+                if (!instance || instance.status !== 'running' || instance.playback) continue;
+                instance.nextEventAt = Math.min(instance.nextEventAt, now);
+                await tx.put('instances', instance);
+            }
+        }
+        return;
+    }
 
     // Move wall anchors only. Simulation timers and remaining travel/combat stay
     // unchanged, including allowed progress the worker has not processed yet.
@@ -57,6 +74,7 @@ export async function recordPresence(this: GameService, tx: Transaction, account
             await tx.put('characters', c);
         }
         activity.settledUntil += skipped;
+        await invalidateCombatPlan(tx, activity);
         activity.nextEventAt = (activity.resumeEventAt ?? activity.nextEventAt) + skipped;
         delete activity.resumeEventAt;
         await tx.put('activities', activity);
@@ -67,6 +85,7 @@ export async function recordPresence(this: GameService, tx: Transaction, account
         const shift = Math.max(0, resumedUntil - deadline);
         if (!shift && newDeadline <= now) continue;
         instance.simulation!.wallAt += shift;
+        await invalidateCombatPlan(tx, instance);
         instance.nextEventAt = (instance.resumeEventAt ?? instance.nextEventAt) + shift;
         delete instance.resumeEventAt;
         instance.sequence++;

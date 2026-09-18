@@ -1,7 +1,8 @@
 import {combatMembers} from './combat-members.js';
+import {characterAttributes} from './character-attributes.js';
 
 const playerKeys = [
-  'id','name','classId','raceId','level','xp','hp','mana','rage','energy','power','form','stance','money','clock','wallAt',
+  'id','name','classId','raceId','growthPolicy','level','xp','hp','mana','rage','energy','power','form','stance','money','clock','wallAt',
   'activity','rest','location','visited','flightPoints','hearth','hearthReady','equipment','bag','bags','pending','bank','bankUpgrades',
   'auctions','marketHistory','party','pet','escort','combat','lastCombat','dungeon','cast','groundEffects','learned','talents','quests',
   'completed','reputation','rules','settings','potions','mounts','riding','mounted','professions','professionCooldowns','resourceCooldowns',
@@ -9,12 +10,12 @@ const playerKeys = [
 ] as const;
 
 const viewKeys = [
-  'battleView','reincarnation','canSoulstoneRevive','skillUsesByTarget','environment','trackingKind','trackedTreasures','lockpicking',
+  'partyUnlocked','battleView','reincarnation','canSoulstoneRevive','skillUsesByTarget','environment','trackingKind','trackedTreasures','lockpicking',
   'trackedTargets','scouting','lockTargets','petControls','classPortals','skillUses','itemUses','itemBuffs','professions','professionRecipeCount','canTrainProfession',
   'resources','disenchantable','className','raceName','faction','resource','raceTraits','talentTrees','talentResetCost','canResetTalents',
   'talentResetBlockedReason','bankCapacity','bankHere','bankUpgradeCost','inventoryActions','escort','escortNpc','hearthstone','mounts',
-  'strategyMembers','journey','dungeon','recovery','combatSkills','candidates','party','nextXp','stats','location','map','monsters','quests',
-  'questTools','shop','gatherables','bagCapacity','skills','talents','canTrain','hasFlight','city','interactions'
+  'strategyMembers','journey','dungeon','recovery','combatSkills','candidates','party','nextXp','stats','characterAttributes','location','map','monsters','quests',
+  'questTools','shop','gatherables','bagCapacity','skills','talents','canTrain','hasFlight','city','flight','interactions'
 ] as const;
 
 const actorKeys=['id','name','classId','raceId','level','role','hp','mana','rage','energy','power','form','stance','position','positionY','maxHp','maxMana','spell','kind','petUnit','totemUnit','ownerId','controlledBy','controlUntil','removed','dead','fleeing','stealthed','happiness','loyalty','target','combo','comboTarget','nextSwing','swingStartedAt','nextAttack','nextRanged','rangedStartedAt','nextOffhand','offhandStartedAt','swing','moveSpeed','speed','rootUntil','stunUntil','fearUntil','polyUntil','slowUntil','slow','movementSlows','cast','cooldowns','categoryCooldowns','globalCooldowns','equipment','learned','rules','strategyPolicy','autoBuffs','potions','buffs','classBuffs','talentBuffs','auras','dots','hots','periodicClass','absorb','manaShield','seal','judgement','reactiveClass','weaponEnchants','weaponEnchant','talentProcs','racialEffects','racialBuff','cannibalize','bloodrage','totemWeaponEnchant','lightwell','totems','stats','soulShardCount','creatureType','entry','rank','visual','sourceGuid','attackPower','armor','resistances','equippable'];
@@ -77,4 +78,18 @@ export function projectClientSnapshot(state:Record<string,unknown>,view:Record<s
  if((state as any).lastCombat)player.lastCombat=combatView((state as any).lastCombat);
  if((state as any).dungeon)player.dungeon=dungeonView((state as any).dungeon);
  return{player,view:clientView};
+}
+
+// The recorder must not clone inventories, trainers or old encounter histories
+// on every simulation tick. Keep the same allowlists as live projection.
+export function projectCombatPlayback(state:any,battle:any,wallAt:number){
+ const player=pick(state,['id','clock','hp','mana','rage','energy','power','form','stance','cast','logs','logSequence']);
+ player.wallAt=wallAt;
+ player.combat=combatView(state.combat);
+ player.lastCombat=combatView(state.lastCombat);
+ player.party=(state.party||[]).map(actorView);
+ if(state.pet)player.pet=actorView(state.pet);
+ const projected=battlePresentationView(battle);
+ if(projected)projected.actors=combatMembers(state,state.combat||state.lastCombat).map((actor:any)=>({...actorView(actor),...(!actor.petUnit&&!actor.escortNpc&&actor.classId?{characterAttributes:characterAttributes(actor)}:{})}));
+ return {player,view:{battleView:projected}};
 }

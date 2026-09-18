@@ -17,30 +17,31 @@ async function fixture(){
  const initial=await service.createAccount('a',{name:'实时',classId:8,raceId:1},'create');
  return {store,service,id:initial.state.id,time:(value:number)=>{now=value;}};
 }
-test('personal combat settles consecutive 200 ms updates and slows down after presence expires',async()=>{
+test('personal automatic combat publishes a recording and waits for its real deadline',async()=>{
  const f=await fixture();
  await f.service.command('a',{type:'hunt',id:299,requestId:'hunt'});
  // First pull starts at the ordinary activity deadline, then combat is fast.
  f.time(2000);assert.deepEqual((await f.service.work()).errors,[]);
  let s=await f.service.snapshot('a',f.id,true);assert.ok(s.state.combat);
- let activity=s.activities.find(a=>a.type==='personal')!;assert.equal(activity.nextEventAt,2200);
- f.time(2200);await f.service.work();s=await f.service.snapshot('a',f.id,true);assert.equal(s.state.wallAt,2200);
- activity=s.activities.find(a=>a.type==='personal')!;assert.equal(activity.nextEventAt,2400);
- // Keep the fight alive so the offline cadence assertion is independent of DPS.
- await f.store.transaction(async tx=>{const c=(await tx.get<Character>('characters',f.id))!;c.rules.hp=100000;await tx.put('characters',c);const a=(await tx.get<Activity>('activities',activity.id))!;a.engineActivity={type:'hunt',target:299};await tx.put('activities',a);});
- f.time(7200);await f.service.work();
- const offline=await f.store.transaction(tx=>tx.get<Activity>('activities',activity.id));
- assert.equal(offline?.status,'running');assert.equal(offline!.nextEventAt,8200);
+ const activity=s.activities.find(a=>a.type==='personal')!;
+ assert.equal(s.combatMode,'recorded');assert.ok(s.playback);assert.equal(activity.nextEventAt,s.playback.endsAt);
+ f.time(2200);assert.equal((await f.service.work()).activities,0);
+ s=await f.service.snapshot('a',f.id,true);assert.equal(s.state.wallAt,2000);
+ f.time(activity.nextEventAt);assert.deepEqual((await f.service.work()).errors,[]);
+ assert.equal((await f.service.snapshot('a')).state.wallAt,activity.nextEventAt);
 });
 test('shared instances publish subsecond snapshots without waiting for a command',async()=>{
  const f=await fixture();
  const formed=await f.service.command('a',{type:'createInstance',requestId:'form'});
+ await f.service.createAccount('b',{name:'访客',classId:1,raceId:1},'create');
+ await f.service.command('b',{type:'joinInstance',instanceId:formed.instanceId,requestId:'join'});
  await f.service.command('a',{type:'startInstance',instanceId:formed.instanceId,requestId:'start'});
  let instance=(await f.store.transaction(tx=>tx.get<Instance>('instances',formed.instanceId!)))!;
  assert.ok(instance.simulation?.combat);assert.equal(instance.nextEventAt,1200);
  f.time(1200);assert.deepEqual((await f.service.work()).errors,[]);
  const snapshot=await f.service.snapshot('a',f.id,true);
  assert.equal(snapshot.state.wallAt,1200);assert.ok(snapshot.instance!.sequence>1);
+ assert.equal(snapshot.combatMode,'realtime');assert.equal(snapshot.playback,null);
  instance=(await f.store.transaction(tx=>tx.get<Instance>('instances',formed.instanceId!)))!;
  assert.equal(instance.nextEventAt,1400);
 });
@@ -70,6 +71,8 @@ test('polling presence writes are throttled and commit before snapshot assembly'
 test('observed instance catch-up commits bounded progress and eventually catches up',async()=>{
  const f=await fixture();
  const formed=await f.service.command('a',{type:'createInstance',requestId:'form'});
+ await f.service.createAccount('b',{name:'访客',classId:1,raceId:1},'create');
+ await f.service.command('b',{type:'joinInstance',instanceId:formed.instanceId,requestId:'join'});
  await f.service.command('a',{type:'startInstance',instanceId:formed.instanceId,requestId:'start'});
  f.time(5000);await f.service.snapshot('a',f.id,true);
  assert.equal(simulationTickBudget(11000,11000),20);

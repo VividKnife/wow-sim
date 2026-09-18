@@ -45,6 +45,13 @@ export const defaultRules = [
  {spell:116,condition:'always',value:0,enabled:true},
  {spell:133,condition:'always',value:0,enabled:true},
 ];
+function personalEnemyPosition(s,index){
+ const [minimum,maximum]=['tank','melee'].includes(combatRole(s))?[5,15]:[15,25];
+ const radius=roll(s,minimum,maximum);
+ const lane=index===0?0:(index%2?1:-1)*Math.ceil(index/2);
+ const angle=Math.max(-60,Math.min(60,lane*12))*Math.PI/180;
+ return{position:(s.position||0)+radius*Math.cos(angle),positionY:(s.positionY||0)+radius*Math.sin(angle)};
+}
 export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombatArea({dungeon,location:s.location})) {
  area=validateCombatArea(area);
  const ground=encounterGround({dungeon,area,location:nodes[s.location],environment:s.environment});
@@ -53,7 +60,7 @@ export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombat
  s.combat={id:'encounter-'+(s.encounterSequence=(s.encounterSequence||0)+1),startedAt:s.clock,dungeon,area,ground,participantIds:combatMembers(s,null).map(c=>c.id),projectiles:[],enemies:prepared||ids.map((id,i)=>enemy(s,id,'enemy-'+i)),damage:{},healing:{},casts:0,pendingSpawns:[]};
  for(const c of combatMembers(s)){c.rest=null;c.cast=null;c.nextAction=s.clock;c.nextSwing=s.clock;c.position=combatRole(c)==='tank'?20:combatRole(c)==='melee'?18:0;c.positionY=c.id===s.id||c.classId===1?0:c.classId===4?2:c.classId===5?-4:4;c.time=s.clock;c.nextPowerRegen=s.clock+2000;c.combo=0;c.comboTarget=null;c.queuedStrike=null;}
  const pullTank=combatMembers(s).find(c=>!c.petUnit&&!c.totemUnit&&!c.escortNpc&&c.hp>0&&combatRole(c)==='tank');
- for(const [i,e] of s.combat.enemies.entries()){if(pullTank&&!e.target&&!e.controlledBy)e.target=pullTank.id;e.position=30+Math.floor(i/3)*2;e.positionY=i===0?0:(i%2?1:-1)*Math.ceil(i/2)*2;e.nextAttack=s.clock;e.nextSpell=s.clock+6000;}
+ for(const [i,e] of s.combat.enemies.entries()){if(pullTank&&!e.target&&!e.controlledBy)e.target=pullTank.id;const spawn=dungeon?{position:30+Math.floor(i/3)*2,positionY:i===0?0:(i%2?1:-1)*Math.ceil(i/2)*2}:personalEnemyPosition(s,i);e.position=spawn.position;e.positionY=spawn.positionY;e.nextAttack=s.clock;e.nextSpell=s.clock+6000;}
  for(const unit of [...combatMembers(s),...s.combat.enemies])setCombatPosition(s,unit,unit);
  initializeMetrics(s);
  for(const e of s.combat.enemies)initializeSmite(s,e,combatMembers(s),hurtPlayer);

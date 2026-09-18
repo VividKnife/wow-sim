@@ -14,6 +14,8 @@ export type GameSnapshot = {
   roster: object[];
   activities: object[];
   instanceId: string | null;
+  combatMode?: 'recorded' | 'realtime' | null;
+  playback?: import('../../../packages/game-domain/src/model.ts').PlaybackManifest | null;
   instance?: null | {sequence?: number; [key: string]: any};
 };
 
@@ -22,6 +24,7 @@ export interface GameServiceLike {
   createAccount(accountId: string, input: {name: string; classId: number; raceId: number}, requestId: string): Promise<GameSnapshot>;
   command(accountId: string, command: Record<string, any>): Promise<GameSnapshot>;
   work(now?: number, limit?: number): Promise<unknown>;
+  combatRecording?(accountId: string, characterId: string | undefined, recordingId: string): Promise<unknown>;
 }
 
 type Content = ReturnType<typeof clientContent>;
@@ -78,6 +81,8 @@ function gameResponse(snapshot: GameSnapshot, scope: 'full' | 'combat' = 'full')
     instanceId: snapshot.instanceId,
     instance: snapshot.instance ?? null,
     scope,
+    combatMode: snapshot.combatMode ?? null,
+    playback: snapshot.playback ?? null,
   });
 }
 
@@ -154,6 +159,16 @@ export function createGameServer(options: GameServerOptions) {
         json(response, 200, content, immutable
           ? {etag, 'cache-control': 'public, max-age=31536000, immutable'}
           : {'cache-control': 'no-store'});
+        return;
+      }
+      if (url.pathname === '/game/replay' && request.method === 'GET') {
+        const accountId = await accountFrom(request, options.secret);
+        const id = url.searchParams.get('id');
+        if (!id || id.length > 200 || !options.service.combatRecording) {
+          json(response, 400, {error: '战斗回放标识无效', code: 'INVALID_REPLAY'}); return;
+        }
+        const recording = await options.service.combatRecording(accountId, characterId(url), id);
+        json(response, 200, recording, {'cache-control': 'private, no-store'});
         return;
       }
       if (url.pathname === '/game' && request.method === 'GET') {

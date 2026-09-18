@@ -47,7 +47,39 @@ test('auto-loot preference is validated and does not overwrite recovery settings
 test('hunt waits for pickup then continues, and combat pickup is rejected',()=>{
  let s=fixture();queueCombatLoot(s,2589,1);assert.throws(()=>collectLoot(s),/结束战斗/);
  s.combat=null;s.activity={type:'hunt',target:299};s.nextPull=0;
- s=advance(s,1000).state;assert.equal(s.activity.type,'hunt');assert.equal(s.combat,null);
+ s=advance(s,1000).state;assert.equal(s.activity.type,'hunt');assert.match(s.activity.reason,/待拾取战利品/);assert.equal(s.combat,null);
  s=act(s,{type:'loot'},s.wallAt);s=advance(s,s.wallAt+100).state;assert.ok(s.combat);
  assert.throws(()=>collectLoot({...s,combat:null},'bad'),/列表无效/);
+});
+
+test('full bag rejects a new hunt with a visible reason before combat opens',()=>{
+ const s=createGame('满包狩猎',283,0);while(s.bag.length<bagCapacity(s))s.bag.push(makeItem(s,25));
+ assert.throws(()=>act(s,{type:'hunt',id:299},0),/背包已满，请先整理背包后再开始战斗/);
+ assert.equal(s.activity.type,'idle');assert.equal(s.combat,null);
+});
+
+test('automatic loot finishes combat and resumes hunting without any client commands',()=>{
+ let s=fixture();s.settings.autoLoot=true;s.activity={type:'hunt',target:299};
+ queueCombatLoot(s,2589,2);const uid=s.pending[0].uid;
+ s.combat.enemies.forEach(e=>{e.hp=0;e.rewarded=true;});
+ s=advance(s,100).state;
+ assert.equal(s.combat,null);assert.equal(s.pending.length,0);assert.ok(s.bag.some(i=>i.uid===uid));
+ s=advance(s,3200).state;assert.ok(s.combat);
+});
+
+test('automatic loot retains full-bag drops and collects them once space is available',()=>{
+ let s=fixture();s.settings.autoLoot=true;queueCombatLoot(s,25,1);queueCombatLoot(s,2589,2);
+ s.combat=null;s.bag=[makeItem(s,2589,1)];while(s.bag.length<bagCapacity(s))s.bag.push(makeItem(s,25));
+ s=advance(s,1000).state;assert.equal(s.pending.length,1);assert.equal(s.bag[0].count,3);
+ const uid=s.pending[0].uid;s.bag.pop();
+ s=advance(s,2000).state;assert.equal(s.pending.length,0);assert.ok(s.bag.some(i=>i.uid===uid));
+});
+
+test('automatic loot waits for resurrection and is deterministic across persisted catch-up',()=>{
+ const s=fixture();s.settings.autoLoot=true;queueCombatLoot(s,2589,2);s.combat=null;s.hp=0;s.activity={type:'dead'};
+ let dead=advance(s,1000).state;assert.equal(dead.pending.length,1);
+ dead.hp=100;dead.activity={type:'idle'};
+ const whole=advance(dead,4000).state;
+ const chunk=advance(JSON.parse(JSON.stringify(advance(dead,1500).state)),4000).state;
+ assert.deepEqual(chunk,whole);assert.equal(whole.pending.length,0);
 });

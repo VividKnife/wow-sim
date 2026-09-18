@@ -52,6 +52,16 @@ test('trainer and merchant conversation render their scoped services',()=>{
  const html=render(components.NpcConversation,{...p,npc:merchant});assert.match(html,/购买/);
  const stock=p.data.shop.filter(i=>merchant.stockIds.includes(i.id));assert.ok(stock.length);assert.ok(html.includes(stock[0].name));
 });
+test('flight masters appear among nearby people and own flight point interactions',()=>{
+ for(const [location,entry] of [['stormwind',352],['sentinel',523]]){
+  const s=createGame('旅人',42,0);s.location=location;const p=props(s);
+  const npc=p.data.interactions.find(n=>n.entry===entry);
+  assert.ok(npc);assert.ok(npc.roles.includes('flight'));
+  assert.match(render(components.World,p),new RegExp(npc.name));
+  const html=render(components.NpcConversation,{...p,npc});
+  assert.match(html,/发现飞行点/);assert.match(html,/需要先发现两端飞行点/);
+ }
+});
 test('public snapshot keeps NPC interactions and HUD shows current resource values',()=>{
  const s=createGame('勇士',42,0),d=view(s),snapshot=projectClientSnapshot(s,d);
  assert.ok(snapshot.view.interactions.length);

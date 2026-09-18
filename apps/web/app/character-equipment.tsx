@@ -91,7 +91,7 @@ export default function CharacterEquipment({state:s,data:d,busy,send}:GameProps)
     <div className="weapon-slots">{weaponSlots.map(renderEquipment)}</div>
    </div>
    <div className="armory-vitals"><Bar value={s.hp} max={d.stats.maxHp} label="生命"/>{resource.max>0&&<Bar value={resource.value} max={resource.max} label={resource.name} tone={resourceTone}/>}</div>
-   <div className="armory-stat-columns"><section><h3>基本属性</h3><dl>{[['力量',d.stats.str],['敏捷',d.stats.agi],['耐力',d.stats.sta],['智力',d.stats.int],['精神',d.stats.spi]].map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl></section><section><h3>战斗属性</h3><dl>{[['护甲',d.stats.armor],['攻击强度',d.stats.attackPower],['法术强度',d.stats.spellPower],['法术暴击',(d.stats.spellCrit*100).toFixed(2)+'%'],['治疗加成',d.stats.healing]].map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl></section></div>
+   <div className="armory-stat-columns" aria-label="角色属性">{d.characterAttributes.map((group:{title:string;rows:{label:string;value:string}[];note:string})=><section key={group.title} aria-label={group.title}><h3>{group.title}</h3><dl>{group.rows.map(row=><div key={row.label}><dt>{row.label}</dt><dd>{row.value}</dd></div>)}</dl>{group.note&&<p className="armory-stat-note">{group.note}</p>}</section>)}</div>
   </section>
   <div className="armory-inventory">
    <section className="classic-frame backpack-panel" aria-label="背包">

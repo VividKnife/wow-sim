@@ -1,3 +1,4 @@
+import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,advance,act,view} from '../../../packages/game-domain/src/rules/engine.js';
@@ -18,7 +19,7 @@ test('current save round trips preserve storage, professions and potion preferen
 });
 
 test('new mage companions retain their learned skills on a save round trip',()=>{
- let s=createGame('小队检查',283,0);s.level=18;s=act(s,{type:'recruit',id:'mage'},0);
+ let s=createGame('小队检查',283,0);s.level=18;s=recruitForTest(s,{type:'recruit',id:'mage'},0);
  assert.equal(s.party[0].learned.length,new Set(s.party[0].learned).size);
  const learned=[...s.party[0].learned];s=advance(s,0).state;
  assert.deepEqual(s.party[0].learned,learned);

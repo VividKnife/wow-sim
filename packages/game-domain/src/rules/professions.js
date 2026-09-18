@@ -44,6 +44,7 @@ export function skinBeast(s,enemy){if(!s.professions?.skinning||enemy.skinned||c
 export function canDisenchant(s,i){const data=items[i.id];return skill(s,'enchanting')>0&&!protectedItem(i)&&[2,4].includes(data?.class)&&[2,3,4].includes(data?.Quality)&&!!disenchantLoot[data.DisenchantID];}
 export function professionAction(s,a){
  if(['learnProfession','upgradeProfession'].includes(a.type)){
+  if(a.type==='learnProfession'&&s.growthPolicy==='companion'&&Object.keys(s.professions).length>=2)throw new Error('每名队友最多学习两项生活职业');
   const def=professions.find(p=>p.id===a.id);if(!def||!canTrainProfession(s))throw new Error('请在城镇学习生活职业');
   const p=s.professions[a.id];if(a.type==='learnProfession'&&p)throw new Error('已经学会这个职业');if(a.type==='upgradeProfession'&&!p)throw new Error('请先学习职业');
   const rank=professionRanks[a.id].find(r=>r.cap>(p?.cap||0));if(!rank)throw new Error('已达到大师级 300 上限');

@@ -55,7 +55,8 @@ test('movement clamps at reach and uses the strongest slow, then restores speed'
  assert.equal(effectiveSpeed(u,1000),10);u.rootUntil=2000;assert.equal(effectiveSpeed(u,1500),0);
 });
 test('a ground cast is cancelled if its fixed area would break newly applied crowd control',()=>{
- const s=fight(2120);combatTick(s);const finish=s.cast.until;s.combat.enemies[1].polyUntil=100000;s.clock=finish;combatTick(s);
+ const s=fight(2120),[target,controlled]=s.combat.enemies;controlled.position=target.position;controlled.positionY=target.positionY;
+ combatTick(s);const finish=s.cast.until;controlled.polyUntil=100000;s.clock=finish;combatTick(s);
  assert.equal(s.combat.enemies[1].hp,10000);assert.equal(s.groundEffects.length,0);assert.ok(s.logs.some(l=>l.kind==='cancel'));
 });
 test('ground damage stays at the cast point and hits units entering it',()=>{

@@ -1,8 +1,9 @@
 import reference from '../../../game-data/data/deadmines-reference.json' with {type:'json'};
-import {clone,enemy,rng,log,countItem,takeItem,addItem,bagCapacity} from './character.js';
+import {clone,enemy,rng,log,countItem,takeItem,addItem,bagCapacity,stats,knownRank} from './character.js';
 import {startCombat} from './combat.js';
 import {sceneCombatArea} from './combat-area.js';
-import {startRecovery,stopRecovery} from './recovery.js';
+import {startRecovery,stopRecovery,resurrectionFor,beginResurrection} from './recovery.js';
+import {spellReady} from './spell-timing.js';
 
 export const dungeonRoute=reference.encounters;
 const current=s=>dungeonRoute[s.dungeon?.cursor];
@@ -49,7 +50,7 @@ export function remainingDungeonEnemies(s,e){const d=s.dungeon,result=e.sourceGu
 }
 const remaining=remainingDungeonEnemies;
 function advanceRoute(s,e,skipped=false){const d=s.dungeon;if(current(s)?.id!==e.id)return;if(skipped)d.skipped[e.id]=true;else d.cleared[e.id]=true;d.cursor++;s.activity={type:'idle'};
- if(d.cursor===dungeonRoute.length){d.autoAdvance=false;d.advanceReason='';d.completedAt=s.clock;log(s,'死亡矿井路线已完成。','dungeon');}
+ if(d.cursor===dungeonRoute.length){d.advanceReason='';d.completedAt=s.clock;log(s,'死亡矿井路线已完成。','dungeon');}
 }
 function gateReason(s,e){const a=e.activation,d=s.dungeon;if(a?.afterDeathEntry&&!d.defeatedBosses[a.afterDeathEntry])return '通道尚未打开，请先击败前方首领。';if(a?.afterInteraction&&!d.interactions[a.afterInteraction])return '需要先使用火炮打开铁门。';return '';}
 function gate(s,e){const reason=gateReason(s,e);if(reason)throw new Error(reason);}
@@ -78,13 +79,23 @@ export function beginDungeonAdvance(s){
 }
 export function advanceDungeon(s,immediate=false){
  const d=s.dungeon;if(!d?.autoAdvance)return;
- if(d.cursor>=dungeonRoute.length){pauseDungeonAdvance(s);return;}
- // A fallen member disarms future pulls immediately, without ending this fight.
- if([s,...s.party].some(c=>c.hp<=0)){pauseDungeonAdvance(s,'先让倒下的成员复活，再继续推进。');return;}
+ const members=[s,...s.party],fallen=members.filter(c=>c.hp<=0);
+ if(fallen.length){
+  const priests=members.filter(c=>c.classId===5&&c.hp>0);
+  if(!priests.length){pauseDungeonAdvance(s,fallen.length===members.length?'全队阵亡，请先复活小队。':'没有存活的牧师，请先复活倒下的成员。');return;}
+  // Resurrection is out of combat only, and uses the priest's learned rank,
+  // real cast time, mana cost and cooldown. The dead leader is also eligible.
+  if(s.combat||!['idle','dead'].includes(s.activity.type))return;
+  const priest=priests.find(c=>knownRank(c,2006));
+  if(!priest){pauseDungeonAdvance(s,'存活的牧师尚未学会复活术。');return;}
+  const {info}=resurrectionFor(s,fallen[0].id,priest.id);
+  if(info.mana>stats(priest).maxMana){pauseDungeonAdvance(s,'牧师的法力上限不足以施放复活术。');return;}
+  if(priest.mana<info.mana){startRecovery(s,{[priest.id]:info.mana});return;}
+  if(!spellReady(priest,info,s.clock))return;
+  beginResurrection(s,fallen[0].id,priest.id);return;
+ }
  if(s.combat||s.activity.type!=='idle')return;
- // Auto-loot deliberately previews drops in the client before sending loot.
- // Keep the run armed while that happens; never bypass the preview or discard loot.
- if(s.pending.length&&s.settings.autoLoot&&s.bag.length<bagCapacity(s))return;
+ if(d.cursor>=dungeonRoute.length){pauseDungeonAdvance(s);return;}
  const reason=dungeonAdvanceReason(s);if(reason){pauseDungeonAdvance(s,reason);return;}
  if(!immediate&&startRecovery(s))return;
  const e=current(s);

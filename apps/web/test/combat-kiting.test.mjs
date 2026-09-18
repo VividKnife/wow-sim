@@ -1,3 +1,4 @@
+import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
@@ -8,7 +9,7 @@ import {distance} from '../../../packages/sim-core/src/geometry.js';
 
 function group(){
  let s=createGame('追击测试',283,0);s.level=20;s.learned.push(116,7322,2136);s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
- for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);
+ for(const id of ['warrior','priest','rogue','mage'])s=recruitForTest(s,{type:'recruit',id},0);
  startCombat(s,[299],true);
  const [tank,healer,rogue,mage]=s.party,e=s.combat.enemies[0];tank.hp=rogue.hp=0;
  for(const c of [s,...s.party]){c.positionY=0;c.rules=[];}

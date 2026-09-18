@@ -1,3 +1,4 @@
+import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,view,stats} from '../../../packages/game-domain/src/rules/engine.js';
@@ -58,7 +59,7 @@ test('enemyFar uses strict greater-than and two-dimensional distance with valida
 });
 function group(classId=8){
  let s=trained(classId);s.rules=[];s.strategyPolicy={waitForTank:false}; // Positioning is tested independently of the opening hold.
- s=act(s,{type:'recruit',id:'warrior'},0);s=act(s,{type:'recruit',id:'priest'},0);
+ s=recruitForTest(s,{type:'recruit',id:'warrior'},0);s=recruitForTest(s,{type:'recruit',id:'priest'},0);
  startCombat(s,[636],true);const e=s.combat.enemies[0];e.hp=e.maxHp=100000;e.target=s.party[0].id;e.threat={[s.party[0].id]:1000};e.rootUntil=e.nextAttack=e.nextSpell=100000;
  s.party[0].position=27;return s;
 }
@@ -117,6 +118,7 @@ test('templates and role settings round-trip through service persistence and ins
  const store=new MemoryStore(),service=new GameService(store,{contentVersion:'test',now:()=>0});
  let snap=await service.createAccount('preset-account',{name:'模板队长',classId:8,raceId:1},randomUUID());
  const ids=[snap.account.primaryCharacterId];
+ await store.transaction(async tx=>{const c=await tx.get('characters',ids[0]);c.rules.level=20;c.rules.location='stormwind';c.rules.completed[900001]=1;await tx.put('characters',c);});
  for(const classId of [1,5,4,8]){
   snap=await service.command('preset-account',{type:'createCompanion',name:`队友${classId}`,classId,raceId:1,requestId:randomUUID()});
   ids.push(snap.roster.find(c=>!ids.includes(c.id)).id);

@@ -10,6 +10,8 @@ import { instanceContents, mercenaryTemplates } from './content.ts';
 import type { GameService } from './service.ts';
 import { PAUSED_EVENT_AT } from './presence.ts';
 import {simulationInterval,simulationTickBudget} from './simulation-cadence.ts';
+import {consumeCombatPlan, invalidateCombatPlan, combatExecutionMode} from './combat-execution.ts';
+import {OFFLINE_BATCH_TICKS, OFFLINE_BATCH_INTERVAL_MS} from './combat-playback.ts';
 const instanceCommands = new Set(['strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'abandonCombat', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext','dungeonPause', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'discardJunk', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
 export const visitorCommands = Object.freeze(['strategy', 'settings', 'cast', 'petCommand']);
 function rosterIds(value: unknown): asserts value is string[] { requireThat(Array.isArray(value) && value.length > 0 && value.every(id => typeof id === 'string' && id.length > 0) && new Set(value).size === value.length, 'ROSTER', '副本名册必须是非空且不重复的角色 ID 数组', 400); }
@@ -128,6 +130,7 @@ export async function instanceCommand(this: GameService, tx: Transaction, c: Cha
     await this.bumpInstanceAccounts(tx, instance, c.accountId);
 }
 export async function persistInstance(this: GameService, tx: Transaction, instance: Instance, now: number, key: string) {
+    await invalidateCombatPlan(tx, instance);
     const s = instance.simulation!;
     for (const row of instance.roster) {
         if (row.controller === 'mercenary')
@@ -141,14 +144,15 @@ export async function persistInstance(this: GameService, tx: Transaction, instan
                 await this.persistMember(tx, unit, s.wallAt, key, { clock: s.clock, wallAt: s.wallAt, location: s.location });
         }
     }
-    if (!s.combat && (!s.dungeon || s.dungeon.completedAt) && ['idle', 'dead'].includes(s.activity.type) && !s.rest)
+    if (!s.combat && (!s.dungeon || s.dungeon.completedAt) && !s.dungeon?.autoAdvance && ['idle', 'dead'].includes(s.activity.type) && !s.rest)
         instance.status = 'completed';
     else
         instance.status = 'running';
     let lastSeenAt = 0;
-    if (s.combat) for (const accountId of new Set(instance.roster.filter(r => r.controller !== 'mercenary').map(r => r.accountId)))
+    for (const accountId of new Set(instance.roster.filter(r => r.controller !== 'mercenary').map(r => r.accountId)))
         lastSeenAt = Math.max(lastSeenAt, (await account(tx, accountId)).lastSeenAt);
-    instance.nextEventAt = s.wallAt + simulationInterval(s.combat, lastSeenAt, now);
+    instance.nextEventAt = s.wallAt + (combatExecutionMode(instance, s) === 'recorded' && now - lastSeenAt >= 5_000 ? OFFLINE_BATCH_INTERVAL_MS : simulationInterval(s.combat, lastSeenAt, now));
+    if (Number.isFinite(s.activity.endsAt)) instance.nextEventAt = Math.min(instance.nextEventAt, s.wallAt + Math.max(1, s.activity.endsAt - s.clock));
     const deadline = await this.instanceDeadline(tx, instance);
     if (s.wallAt < deadline) instance.nextEventAt = Math.min(instance.nextEventAt, deadline);
     else if (instance.status === 'running') {
@@ -161,6 +165,7 @@ export async function persistInstance(this: GameService, tx: Transaction, instan
 export async function leaveInstance(this: GameService, tx: Transaction, c: Character, id: string, now: number) {
     const instance = await this.instanceFor(tx, c, id);
     requireThat(!instance.simulation?.combat, 'IN_COMBAT', '战斗结束后才能离开');
+    await invalidateCombatPlan(tx, instance);
     const departing = instance.roster.filter(r => r.accountId === c.accountId), ownedRows = departing.filter(r => r.controller !== 'mercenary');
     requireThat(!departing.some(r => r.characterId === instance.leaderId) || instance.roster.every(r => r.accountId === c.accountId), 'LEADER', '其他账号离开后队长才能离开');
     if (instance.simulation?.dungeon && departing.some(r => r.characterId === instance.leaderId)) {
@@ -208,7 +213,10 @@ export async function advanceInstance(this: GameService, instanceId: string, wor
             lastSeenAt = Math.max(lastSeenAt, (await account(tx, id)).lastSeenAt);
         const key = `instance:${instance.id}:sequence:${instance.sequence + 1}`;
         const deadline = await this.instanceDeadline(tx, instance);
-        const result = advance(instance.simulation!, Math.min(now, deadline), {maxTicks: simulationTickBudget(lastSeenAt, now)});
+        const predicted = await consumeCombatPlan(tx, instance, Math.min(now, deadline), this.contentVersion);
+        const offline = combatExecutionMode(instance, instance.simulation!) === 'recorded' && now - lastSeenAt >= 5_000;
+        const batch = combatExecutionMode(instance, instance.simulation!) === 'recorded' && (offline || now - instance.simulation!.wallAt > 2_000);
+        const result = advance(predicted || instance.simulation!, Math.min(now, deadline), {maxTicks: batch ? OFFLINE_BATCH_TICKS : simulationTickBudget(lastSeenAt, now)});
         instance.simulation = result.state;
         instance.rngState = result.state.rngState;
         instance.sequence++;

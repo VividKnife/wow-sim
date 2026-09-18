@@ -42,4 +42,15 @@ test('public map renders the Northshire route through Goldshire and Crystal Lake
  assert.match(waypoints,/北郡修道院.*闪金镇.*水晶湖.*玉石矿洞/);
  assert.match(waypoints,/aria-current="step"/);
  assert.match(html,/改道前往/);
+ assert.match(html,/data-travel-mode="walking"/);
+ assert.match(html,/玩家位置：步行中/);
+});
+
+test('public map traveler switches from walking to the riding sprite while mounted',()=>{
+ const base=createGame('骑手',12,0),activity={type:'travel',from:'northshire',to:'goldshire',startedAt:0,endsAt:20000};
+ const player={...base,activity},data={...view(base),mounts:{...view(base).mounts,active:5656,activeName:'棕马'}};
+ const html=renderToStaticMarkup(createElement(WorldMap,{state:player,data,busy:false,send:async()=>true}));
+ assert.match(html,/data-travel-mode="riding"/);
+ assert.match(html,/玩家位置：骑马中/);
+ assert.match(html,/class="horse-body"/);
 });

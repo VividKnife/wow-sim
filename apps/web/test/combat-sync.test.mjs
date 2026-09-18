@@ -1,3 +1,4 @@
+import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
@@ -8,7 +9,7 @@ import {mergeGameResponse,readGameResponse} from '../lib/game-response.js';
 
 function fixture(){
  let s=createGame('同步',283,0);s.level=20;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
- for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);
+ for(const id of ['warrior','priest','rogue','mage'])s=recruitForTest(s,{type:'recruit',id},0);
  startCombat(s,[636,636,1729],true);return s;
 }
 test('compact combat response retains authoritative units and is less than a quarter of the full snapshot',async()=>{

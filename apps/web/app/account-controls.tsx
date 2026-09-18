@@ -1,27 +1,19 @@
 "use client";
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';
-import {classOptions,racesForClass} from './class-options.js';
 import type {GameResponse} from '../../../packages/contracts/src/game';
 
 type Props={game:GameResponse;busy:boolean;send:(body:any)=>Promise<boolean>};
 export default function AccountControls({game,busy,send}:Props){
- const [name,setName]=useState('伙伴'),[classId,setClassId]=useState(1),[raceId,setRaceId]=useState(1);
  const [invitation,setInvitation]=useState(''),[capacity,setCapacity]=useState(5),[contentId,setContentId]=useState('northshire-skirmish');
  const [selected,setSelected]=useState<string[]>([]);
  const player=game.snapshot?.player,roster=(game.roster||[]) as any[],instance=game.instance as any;
  if(!player)return null;
- const races=racesForClass(classId),actorId=String(player.id);
+ const actorId=String(player.id);
  const toggle=(id:string)=>setSelected(current=>current.includes(id)?current.filter(value=>value!==id):[...current,id]);
  const members=[actorId,...selected.filter(id=>id!==actorId)];
  return <details className="panel account-controls"><summary>账号名册与共享副本</summary>
   <p>每名角色有独立背包、金币和专业。离线后战斗、移动等默认继续执行 2 小时，超时暂停，上线后继续；指派队友的生产、采集不受此时限限制。</p>
-  <section><h3>创建长期伙伴</h3><div className="filterbar">
-   <input aria-label="伙伴名称" value={name} maxLength={16} onChange={e=>setName(e.target.value)}/>
-   <select aria-label="伙伴职业" value={classId} onChange={e=>{const id=Number(e.target.value);setClassId(id);setRaceId(racesForClass(id)[0].id);}}>{classOptions.map(row=><option value={row.id} key={row.id}>{row.name}</option>)}</select>
-   <select aria-label="伙伴种族" value={raceId} onChange={e=>setRaceId(Number(e.target.value))}>{races.map(row=><option value={row.id} key={row.id}>{row.name}</option>)}</select>
-   <Button disabled={busy||!name.trim()} onClick={()=>void send({type:'createCompanion',name,classId,raceId})}>创建伙伴</Button>
-  </div></section>
   <section><h3>出战名册</h3><p>当前角色自动加入。正在外派或已经加入副本的角色不能同时执行其他活动。</p><div className="filterbar">
    {roster.filter(row=>row.id!==actorId).map(row=><label key={row.id}><input type="checkbox" disabled={busy} checked={selected.includes(row.id)} onChange={()=>toggle(row.id)}/>{row.name} · {row.level} 级</label>)}
    <Button variant="outline" disabled={busy||!!instance} onClick={()=>void send({type:'setParty',characterIds:members})}>更新出战队伍</Button>

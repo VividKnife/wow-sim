@@ -1,10 +1,11 @@
+import {PARTY_QUEST} from './party-unlock.js';
 import {queueCombatLoot} from './loot.js';
 import {racialModifiers} from './racial-effects.js';
 import {quests,questLinks,questXp,classDefinitions,raceDefinitions,isSharedRouteQuest,endpointNodes,creatureLocations,creatures,items,objectLocations,objectSpawnsByNode,objectTemplates,objectLoot,creatureLoot,referenceLoot,table,localize,nameOf} from './catalog.js';
 import {countItem,takeItem,addItem,gainXp,rng,roll,log} from './character.js';
 const conditions=Object.fromEntries(table('conditions').map(c=>[c.condition_entry,c]));
 export function meetsCondition(s,id,depth=0){if(!id)return true;if(depth>8)return false;const c=conditions[id];if(!c)return false;switch(c.type){case -1:return meetsCondition(s,c.value1,depth+1)&&meetsCondition(s,c.value2,depth+1);case -2:return meetsCondition(s,c.value1,depth+1)||meetsCondition(s,c.value2,depth+1);case -3:return !meetsCondition(s,c.value1,depth+1);case 2:return countItem(s,c.value1)>=c.value2;case 6:return (s.teamId??469)===c.value1;case 8:return !!s.completed[c.value1];case 9:return !!s.quests[c.value1];case 15:return c.value2===1?s.level>=c.value1:c.value2===2?s.level<=c.value1:s.level===c.value1;case 22:return !s.completed[c.value1];default:return false;}}
-export function questAvailable(s,q){if((s.questWaits?.[q.entry]||0)>s.clock)return false;if(s.quests[q.entry]||s.completed[q.entry]&&!(q.SpecialFlags&1)||s.level<q.MinLevel||q.MaxLevel&&s.level>q.MaxLevel)return false;if(q.RequiredClasses&&!(q.RequiredClasses&(1<<(s.classId-1))))return false;if(q.RequiredRaces&&!(q.RequiredRaces&(1<<((s.raceId||1)-1)))&&!isSharedRouteQuest(q))return false;if(q.PrevQuestId>0&&!s.completed[q.PrevQuestId]||q.PrevQuestId<0&&!s.quests[-q.PrevQuestId])return false;
+export function questAvailable(s,q){if(q.entry===PARTY_QUEST)return false;if((s.questWaits?.[q.entry]||0)>s.clock)return false;if(s.quests[q.entry]||s.completed[q.entry]&&!(q.SpecialFlags&1)||s.level<q.MinLevel||q.MaxLevel&&s.level>q.MaxLevel)return false;if(q.RequiredClasses&&!(q.RequiredClasses&(1<<(s.classId-1))))return false;if(q.RequiredRaces&&!(q.RequiredRaces&(1<<((s.raceId||1)-1)))&&!isSharedRouteQuest(q))return false;if(q.PrevQuestId>0&&!s.completed[q.PrevQuestId]||q.PrevQuestId<0&&!s.quests[-q.PrevQuestId])return false;
  const previous=Object.values(quests).filter(p=>p.NextQuestId===q.entry);if(previous.length&&!previous.some(p=>s.completed[p.entry]))return false;
  if(q.ExclusiveGroup>0&&Object.values(quests).some(p=>p.entry!==q.entry&&p.ExclusiveGroup===q.ExclusiveGroup&&(s.completed[p.entry]||s.quests[p.entry])))return false;
  return !q.RequiredCondition||meetsCondition(s,q.RequiredCondition);
@@ -35,7 +36,7 @@ export function acceptQuest(s,id){
  s.quests[id]={kills:{},event:false,acceptedAt:s.clock,expiresAt:q.LimitTime?s.clock+q.LimitTime*1000:0};log(s,'接受任务：'+nameOf('quests',id),'quest');
 }
 export function abandonQuest(s,id){
- const q=quests[id];if(!q||!s.quests[id])throw new Error('没有这个任务。');delete s.quests[id];
+ if(+id===PARTY_QUEST)throw new Error('队伍解锁任务无法放弃。');const q=quests[id];if(!q||!s.quests[id])throw new Error('没有这个任务。');delete s.quests[id];
  const removable=new Set([q.SrcItemId,...[1,2,3,4].map(n=>q['ReqItemId'+n])].filter(item=>item&&items[item]?.class===12));
  for(const other of Object.keys(s.quests)){removable.delete(quests[other].SrcItemId);for(let n=1;n<=4;n++)removable.delete(quests[other]['ReqItemId'+n]);}
  s.bag=s.bag.filter(i=>!removable.has(i.id));s.pending=s.pending.filter(i=>!removable.has(i.id));s.questObjects=(s.questObjects||[]).filter(o=>o.quest!==+id);
