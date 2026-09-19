@@ -1,4 +1,5 @@
 "use client";
+import {saveFetch} from './save-fetch';
 import {useEffect,useState} from 'react';
 import {createCombatPlayback,playbackPerspective} from './combat-playback.js';
 
@@ -24,7 +25,7 @@ export function useCombatPlayback(state:any,data:any,manifest:any,contentVersion
    try{
     setStatus('正在准备战斗画面…');
     const started=performance.now();
-    const response=await fetch(`/api/game/replay?${new URLSearchParams({id:manifest.id,characterId:state.id})}`,{signal:AbortSignal.any([controller.signal,AbortSignal.timeout(8000)])});
+    const response=await saveFetch(`/api/game/replay?${new URLSearchParams({id:manifest.id,characterId:state.id})}`,{signal:AbortSignal.any([controller.signal,AbortSignal.timeout(8000)])});
     if(!response.ok)throw new Error('Playback unavailable');
     const recording=await response.json(),receivedAt=performance.now();
     if(stopped)return;

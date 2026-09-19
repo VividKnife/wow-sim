@@ -1,4 +1,5 @@
 import {talentSummary} from './rules/talent-summary.js';
+import {listSaves,resolveSave,createSave,deleteSave} from './saves.ts';
 import {roles} from './rules/party.js';
 import { createInstance, instanceFor, joinInstance, startInstance, bumpInstanceAccounts, instanceCommand, persistInstance, leaveInstance, hireMercenary, acquireInstanceLease, advanceInstance } from './instances.ts';
 import { startActivity, recall, restoreReservation, settleActivity } from './activities.ts';
@@ -13,7 +14,8 @@ import { act, advance, quietIdle } from './rules/engine.js';
 import { offlineLimit, recordPresence, activityDeadline, instanceDeadline } from './presence.ts';
 import { professions } from './rules/profession-data.js';
 import { receive } from './rules/inventory.js';
-import { canEquip, takeItem } from './rules/character.js';
+import { canEquip, takeItem, bagCapacity } from './rules/character.js';
+import { transferItems } from './item-transfer.ts';
 import { items, quests } from './rules/catalog.js';
 import { questProgress } from './rules/quests.js';
 import type { Store, Transaction } from '../../persistence/src/store.ts';
@@ -28,6 +30,10 @@ type Options = {
     offlineLimitMs?: number;
 };
 export class GameService {
+    listSaves = listSaves;
+    resolveSave = resolveSave;
+    createSave = createSave;
+    deleteSave = deleteSave;
     prepareCombatPlan = prepareCombatPlan;
     combatRecording = combatRecording;
     store: Store;
@@ -102,7 +108,11 @@ export class GameService {
                     state = { ...state, ...participant, party: [simulation, ...simulation.party].filter((p: Rules) => p.id !== c.id).map((p: Rules) => this.member(p)), combat: simulation.combat, lastCombat: simulation.lastCombat, activity: simulation.activity, dungeon: simulation.dungeon, clock: simulation.clock, wallAt: simulation.wallAt };
                 }
             }
-            const roster = (await tx.list<Character>('characters', { accountId })).map(row => ({ id: row.id, characterId: row.id, name: row.rules.name, classId: row.rules.classId, raceId: row.rules.raceId, level: row.rules.level, kind: row.kind, talentSummary: talentSummary(row.rules), professions: row.rules.professions }));
+            const roster = await Promise.all((await tx.list<Character>('characters', { accountId })).map(async row => {
+                const inventory = await context(tx, row, now, false);
+                return { id: row.id, characterId: row.id, name: row.rules.name, classId: row.rules.classId, raceId: row.rules.raceId, level: row.rules.level, kind: row.kind, talentSummary: talentSummary(row.rules), professions: row.rules.professions,
+                    bagUsed:inventory.bag.length, bagCapacity:bagCapacity(inventory), location:inventory.location };
+            }));
             const activities = await tx.list<Activity>('activities', { accountId });
             const owner = instance || activity;
             return { state, revision: a.revision, account: a, roster, activities, combatMode: owner && state.combat ? combatExecutionMode(owner, state) : null, playback: owner?.playback ?? null, instanceId: instance?.id || null, instance: instance ? { id: instance.id, leaderId: instance.leaderId, contentId: instance.contentId, status: instance.status, capacity: instance.capacity, roster: instance.roster, sequence: instance.sequence, epoch: instance.epoch } : null };
@@ -169,6 +179,8 @@ export class GameService {
                 const lease = await tx.get<ActorLease>('actor_leases', c.id);
                 if (command.type === 'unstuck')
                     await unstuck.call(this, tx, c, now, command.requestId);
+                else if (command.type === 'transferItems')
+                    await transferItems.call(this, tx, c, command, now);
                 else if (command.type === 'createCompanion')
                     await this.createCompanion(tx, c, command, now);
                 else if (command.type === 'setParty') {
@@ -296,7 +308,7 @@ export class GameService {
             if (!beforeParty.has(member.id)) {
                 const id = this.id();
                 member.id = id;
-                for (const item of Object.values(member.equipment) as Rules[])
+                for (const item of [...Object.values(member.equipment), ...(member.bags || [])] as Rules[])
                     item.ownerId = id;
                 const state = { ...newState(member.name, member.classId, member.raceId || 1, this.seed(), now, id), ...member, party: [] };
                 const recruit: Character = { id, accountId: c.accountId, kind: 'companion', rules: characterRules(state), professionReadyAt: {}, resourceReadyAt: {} };
@@ -385,7 +397,7 @@ export class GameService {
         const base = replacing ? {...newState(member.name, member.classId, member.raceId, this.seed(), now, member.id),
             bag:old.bag, bags:old.bags, bank:old.bank, pending:old.pending, auctions:old.auctions, money:old.money,
             bankUpgrades:old.bankUpgrades, visited:old.visited} : old;
-        const s = { ...base, ...member };
+        const s: Rules = { ...base, ...member, bags:replacing ? [...old.bags, ...(member.bags || []).slice(old.bags.length)] : old.bags };
         if (shared) {
             s.clock = shared.clock;
             s.wallAt = shared.wallAt;

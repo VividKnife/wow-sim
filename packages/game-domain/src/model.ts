@@ -1,6 +1,7 @@
 export type Rules = Record<string, any>;
 export interface Account {
     id: string;
+    userId?: string;
     primaryCharacterId: string;
     partyId: string;
     revision: number;

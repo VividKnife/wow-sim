@@ -20,6 +20,10 @@ export type GameSnapshot = {
 };
 
 export interface GameServiceLike {
+  listSaves?: (userId:string)=>Promise<unknown>;
+  createSave?: (userId:string,input:{name:string;classId:number;raceId:number;boost?:boolean},requestId:string)=>Promise<unknown>;
+  deleteSave?: (userId:string,saveId:string)=>Promise<void>;
+  resolveSave?: (userId:string,saveId:string|null)=>Promise<string>;
   snapshot(accountId: string, characterId?: string, online?: boolean): Promise<GameSnapshot>;
   createAccount(accountId: string, input: {name: string; classId: number; raceId: number}, requestId: string): Promise<GameSnapshot>;
   command(accountId: string, command: Record<string, any>): Promise<GameSnapshot>;
@@ -137,11 +141,33 @@ export function createGameServer(options: GameServerOptions) {
   const getContent = options.content ?? clientContent;
   const getWorkshop = options.workshop ?? workshopView;
   const pollIntervalMs = options.pollIntervalMs ?? 1_000;
+  const selectedAccount = async (request:IncomingMessage,url:URL) => {
+    const userId=await accountFrom(request,options.secret);
+    const saveId=url.searchParams.get('saveId');
+    if(saveId!==null){
+      if(!options.service.resolveSave)throw Object.assign(new Error('存档服务不可用'),{status:503});
+      return options.service.resolveSave(userId,saveId);
+    }
+    return userId;
+  };
   if (!Number.isFinite(pollIntervalMs) || pollIntervalMs < 10) throw new Error('pollIntervalMs must be at least 10');
 
   const server = createServer((request, response) => {
     void (async () => {
       const url = new URL(request.url || '/', `http://${request.headers.host || 'localhost'}`);
+      if(url.pathname==='/saves'){
+        const userId=await accountFrom(request,options.secret);
+        if(request.method==='GET'&&options.service.listSaves){json(response,200,{saves:await options.service.listSaves(userId)});return;}
+        if(request.method==='POST'&&options.service.createSave){
+          const body=await readJson(request);validateCommand({...body,type:'create'});
+          json(response,201,await options.service.createSave(userId,{name:body.name.trim(),classId:body.classId,raceId:body.raceId,boost:body.boost},body.requestId));return;
+        }
+        if(request.method==='DELETE'&&options.service.deleteSave){
+          const id=url.searchParams.get('saveId');
+          if(!id||id.length>200){json(response,400,{error:'存档标识无效'});return;}
+          await options.service.deleteSave(userId,id);json(response,200,{deleted:true});return;
+        }
+      }
       if (url.pathname === '/content' && request.method === 'GET') {
         const content = getContent();
         const requestedVersion = url.searchParams.get('version');
@@ -162,7 +188,7 @@ export function createGameServer(options: GameServerOptions) {
         return;
       }
       if (url.pathname === '/game/replay' && request.method === 'GET') {
-        const accountId = await accountFrom(request, options.secret);
+        const accountId = await selectedAccount(request, url);
         const id = url.searchParams.get('id');
         if (!id || id.length > 200 || !options.service.combatRecording) {
           json(response, 400, {error: '战斗回放标识无效', code: 'INVALID_REPLAY'}); return;
@@ -172,7 +198,7 @@ export function createGameServer(options: GameServerOptions) {
         return;
       }
       if (url.pathname === '/game' && request.method === 'GET') {
-        const accountId = await accountFrom(request, options.secret);
+        const accountId = await selectedAccount(request, url);
         const selectedCharacterId = characterId(url);
         const snapshot = await readGame(options.service, accountId, selectedCharacterId);
         const scope = url.searchParams.get('scope') === 'combat' ? 'combat' : 'full';
@@ -186,7 +212,7 @@ export function createGameServer(options: GameServerOptions) {
         return;
       }
       if (url.pathname === '/game' && request.method === 'POST') {
-        const accountId = await accountFrom(request, options.secret);
+        const accountId = await selectedAccount(request, url);
         const body = await readJson(request);
         validateCommand(body);
         const result = body.type === 'create'
@@ -196,7 +222,7 @@ export function createGameServer(options: GameServerOptions) {
         return;
       }
       if (url.pathname === '/workshop' && request.method === 'GET') {
-        const accountId = await accountFrom(request, options.secret);
+        const accountId = await selectedAccount(request, url);
         const current = getContent();
         const requestedVersion = url.searchParams.get('version');
         if (requestedVersion && requestedVersion !== current.contentVersion) {
@@ -227,9 +253,9 @@ export function createGameServer(options: GameServerOptions) {
     void (async () => {
       const url = new URL(request.url || '/', `http://${request.headers.host || 'localhost'}`);
       if (url.pathname !== '/events') throw new Error('Unknown websocket endpoint');
-      const claims = await authenticateAuthorization(request.headers.authorization, options.secret);
+      const accountId = await selectedAccount(request, url);
       webSocketServer.handleUpgrade(request, socket, head, (webSocket) => {
-        webSocketServer.emit('connection', webSocket, request, claims.sub);
+        webSocketServer.emit('connection', webSocket, request, accountId);
       });
     })().catch(() => {
       socket.write('HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n');

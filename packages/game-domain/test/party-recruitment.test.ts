@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
 import {createGame,act,advance,view} from '../src/rules/engine.js';
-import {canEquip,gainXp,stats} from '../src/rules/character.js';
+import {canEquip,gainXp,stats,makeItem} from '../src/rules/character.js';
 import {items,xpTable} from '../src/rules/catalog.js';
 import {roles} from '../src/rules/party.js';
 import {recipes} from '../src/rules/profession-data.js';
@@ -29,6 +29,7 @@ test('all nine classes and supported roles receive legal green kits, talents, sk
  for(const candidate of roles)for(const role of candidate.roles){
   const s=act(unlocked(),{type:'recruit',id:candidate.id,role,professions:['tailoring','enchanting']},0),c=s.party[0];
   assert.equal(c.level,18);assert.equal(c.strategyPolicy.role,role);assert.ok(c.rules.length>0,`${candidate.id}/${role}`);
+  assert.equal(c.bags.length,4);assert.ok(c.bags.every((b:Rules)=>items[b.id].ContainerSlots===10));
   assert.equal(Object.values(c.talents).reduce((a:number,b:any)=>a+b,0),9);
   assert.ok(c.learned.length>10);assert.equal(c.hp,stats(c).maxHp);
   for(const slot of [1,2,3,5,6,7,8,9,10,11,12,13,14,15,16])assert.ok(c.equipment[slot],`${candidate.id}: ${slot}`);
@@ -67,11 +68,17 @@ test('service persists recruitment, replacement assets, profession pages and fre
  const recruited=await service.command('a',{type:'recruit',id:'warrior',role:'tank',requestId:'recruit'}),companion=recruited.roster.find(c=>c.kind==='companion')!.id;
  const before=await service.snapshot('a',companion);assert.equal(before.state.level,18);assert.ok(view(before.state).professions.some(p=>p.id==='alchemy'&&p.skill===75));
  const armor=before.state.equipment[5].uid;
+ assert.equal(before.state.bags.length,4);assert.equal(view(before.state).bagCapacity,56);
+ await store.transaction(tx=>tx.insert('items',{id:'larger-bag',accountId:'a',ownerCharacterId:companion,container:'bag',position:100,data:makeItem({itemSequence:0},1725),source:'test'}));
+ const upgraded=await service.command('a',{type:'equipBag',characterId:companion,uid:'larger-bag',requestId:'upgrade-bag'});
+ assert.equal(view(upgraded.state).bagCapacity,58);
+ assert.ok(!upgraded.state.bag.some((i:Rules)=>i.issued&&i.id===804));
  await store.transaction(async tx=>{await tx.put('wallets',{id:hero,characterId:hero,accountId:'a',balance:100000});});
  const command={type:'recruit',id:'mage',role:'ranged',replaceId:companion,requestId:'replace'};
  await service.command('a',command);await service.command('a',command);
  service=new GameService(store,{contentVersion:'test',now:()=>1000,seed:()=>123});
  const after=await service.snapshot('a',companion),owner=await service.snapshot('a');
+ assert.deepEqual(after.state.bags,upgraded.state.bags);
  assert.equal(owner.state.money,0);assert.equal(after.state.classId,8);assert.equal(after.state.location,'stormwind');assert.equal(after.roster.length,2);
  assert.ok(owner.state.bag.some((i:Rules)=>i.uid===armor));assert.equal(after.state.growthPolicy,'companion');assert.ok(!after.state.quests[900001]);
  await service.command('a',{type:'resetTalents',characterId:companion,requestId:'reset'});

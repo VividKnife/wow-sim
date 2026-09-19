@@ -35,7 +35,7 @@ export default function Mounts({state:s,data:d,busy,send}:GameProps){
      </div>
     </article>;})}
    </div>
-   <p className="footnote">普通马在 20 级解锁，迅捷马需要 60 级。马匹仅供联盟骑乘；非人类角色需暴风城声望崇拜。此处收录东谷出售的马匹。</p>
+   <p className="footnote">普通马在 20 级解锁，迅捷马需要 60 级。东谷出售的马匹仅供联盟骑乘，非人类角色需暴风城声望崇拜；测试礼包赠送的旅行棕马不限种族与声望。</p>
   </details>
  </section>;
 }

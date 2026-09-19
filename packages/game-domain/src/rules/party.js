@@ -54,6 +54,7 @@ export function recruit(s,id,options={}){
  const name=options.name===undefined?candidate.name:options.name;
  if(typeof name!=='string'||!name.trim()||name.length>16)throw new Error('角色名需要1—16字。');
  const c={...newCharacter(name.trim(),candidate.classId,s.level,raceId),id:previous?.id||'companion-'+id+'-'+s.itemSequence,growthPolicy:'companion',recruitmentGeneration:(previous?.recruitmentGeneration||0)+1,roleId:id,role:roleNames[role],joinedAt:s.clock,location:s.location,professions:Object.fromEntries(selected.map(id=>[id,{skill:75,cap:75}]))};
+ c.bags=previous?.bags||Array.from({length:4},()=>({...makeItem(s,804),issued:true,bound:true,ownerId:c.id}));
  if(c.classId===3)c.hunterPet={entry:299,name:'森林狼',level:c.level,loyalty:6,happiness:166500,learned:[2649]};
  c.learned=companionSkills(c);for(const spell of [...c.learned])grantHunterTrainingLinks(c,spell);
  const tree=candidate.trees[role];allocateTalents(c,tree);

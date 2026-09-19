@@ -1,4 +1,5 @@
 "use client";
+import {saveFetch} from '../lib/save-fetch';
 import {useEffect,useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {GameProps,Icon,money,duration} from './game-ui';
@@ -19,7 +20,7 @@ export default function Professions({state:s,data:d,busy,revision,send}:GameProp
  useEffect(()=>{
   const controller=new AbortController(),params=new URLSearchParams({characterId:s.id,version:d.contentVersion,profession:selected,search,filter,page:String(page),pageSize:String(pageSize)});
   setWorkshopLoading(true);setWorkshopError('');
-  fetch(`/api/game/workshop?${params}`,{signal:controller.signal}).then(async response=>{const result:any=await response.json().catch(()=>null);if(!response.ok)throw new Error(response.status<500&&typeof result?.error==='string'?result.error:'工坊报价暂时无法加载。');if(result?.contentVersion!==d.contentVersion||!Array.isArray(result?.recipes)||!Number.isInteger(result?.revision))throw new Error('工坊报价响应不完整。');return result;}).then(result=>{if(!controller.signal.aborted)setWorkshop(result);}).catch(error=>{if(error.name!=='AbortError'&&!controller.signal.aborted)setWorkshopError(error.message);}).finally(()=>{if(!controller.signal.aborted)setWorkshopLoading(false);});
+  saveFetch(`/api/game/workshop?${params}`,{signal:controller.signal}).then(async response=>{const result:any=await response.json().catch(()=>null);if(!response.ok)throw new Error(response.status<500&&typeof result?.error==='string'?result.error:'工坊报价暂时无法加载。');if(result?.contentVersion!==d.contentVersion||!Array.isArray(result?.recipes)||!Number.isInteger(result?.revision))throw new Error('工坊报价响应不完整。');return result;}).then(result=>{if(!controller.signal.aborted)setWorkshop(result);}).catch(error=>{if(error.name!=='AbortError'&&!controller.signal.aborted)setWorkshopError(error.message);}).finally(()=>{if(!controller.signal.aborted)setWorkshopLoading(false);});
   return()=>controller.abort();
  },[s.id,selected,search,filter,page,revision,d.contentVersion]);
  const p:Profession=d.professions.find((p:Profession)=>p.id===selected),rank=p.nextRank;

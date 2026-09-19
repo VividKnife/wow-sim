@@ -53,7 +53,7 @@ function Spellbook({state:s,data:d,busy,send}:GameProps){
  </section></>;
 }
 
-export default function Character({state:s,data:d,busy,send,section:controlledSection,onSectionChange}:GameProps&{section?:string;onSectionChange?:(section:string)=>void}){
+export default function Character({state:s,data:d,busy,send,roster,section:controlledSection,onSectionChange}:GameProps&{section?:string;onSectionChange?:(section:string)=>void}){
  const [localSection,setLocalSection]=useState('装备与背包'),[tree,setTree]=useState<number>(0);
  const section=controlledSection??localSection,setSection=onSectionChange??setLocalSection;
  const used=Object.values(s.talents||{}).reduce((n:any,v:any)=>n+Number(v||0),0) as number;
@@ -62,7 +62,7 @@ export default function Character({state:s,data:d,busy,send,section:controlledSe
  return <section className="armory-page"><div className="section-heading armory-page-heading"><div><h1>角色 · {s.name}</h1><small>为当前角色配置装备、天赋与战斗策略</small></div><div className="filterbar">{['装备与背包','法术书','天赋','策略','坐骑','生活职业','银行','拍卖行'].map(t=><button className={section===t?'active':''} onClick={()=>setSection(t)} key={t}>{t}</button>)}</div></div>
  {section==='策略'&&<Strategy state={s} data={d} busy={busy} send={send} currentCharacterOnly/>}
  {section==='坐骑'&&<Mounts state={s} data={d} busy={busy} send={send}/>}
- {section==='装备与背包'&&<CharacterEquipment state={s} data={d} busy={busy} send={send}/>}
+ {section==='装备与背包'&&<CharacterEquipment roster={roster} state={s} data={d} busy={busy} send={send}/>}
  {section==='生活职业'&&<Professions state={s} data={d} busy={busy} send={send}/>}
  {section==='银行'&&<Bank state={s} data={d} busy={busy} send={send}/>}
  {section==='拍卖行'&&<Auction state={s} data={d} busy={busy} send={send}/>}

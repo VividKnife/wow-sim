@@ -8,6 +8,8 @@ import {stopRecovery} from './recovery.js';
 export const ridingLevel=20;
 export const mountCastMs=3000;
 const trainingPrice=200000;
+// Test boost gift: available to every race without changing vendor horses.
+export const boostMount={id:900020,name:'旅行棕马',level:ridingLevel,bonus:60,price:0,tone:'brown',testGift:true};
 export const mountCatalog=[
  {id:2414,name:'杂色马',level:ridingLevel,bonus:60,price:800000,tone:'pinto'},
  {id:5655,name:'栗色马',level:ridingLevel,bonus:60,price:800000,tone:'chestnut'},
@@ -17,7 +19,7 @@ export const mountCatalog=[
  {id:18778,name:'迅捷白马',level:60,bonus:100,price:10000000,tone:'white'},
 ];
 const classMounts=[13819,23214,5784,23161].filter(id=>spells[id]).map(id=>({id,name:nameOf('spells',id),level:spells[id].SpellLevel,bonus:[23214,23161].includes(id)?100:60,price:0,classSpell:true}));
-const findMount=id=>[...mountCatalog,...classMounts].find(m=>m.id===id);
+const findMount=id=>[...mountCatalog,boostMount,...classMounts].find(m=>m.id===id);
 const trained=s=>!!s.riding?.horse;
 const owns=(s,id)=>findMount(id)?.classSpell?s.learned.includes(id):(s.mounts||[]).includes(id);
 const discount=s=>(s.reputation?.[72]||0)>=9000?.9:1;
@@ -47,15 +49,17 @@ function trainReason(s){
  return eligibility(s)||busyReason(s)||(trained(s)?'已经学会马匹骑术。':'')||(!serviceHere(s,4732)?'请前往东谷伐木场的骑术训练师。':'')||(s.money<price(s,trainingPrice)?'骑术训练费用不足。':'');
 }
 function buyReason(s,m){
+ if(m.testGift)return '仅由20级测试直升礼包赠送。';
  return eligibility(s,m.level)||busyReason(s)||(owns(s,m.id)?'已经拥有这匹坐骑。':'')||(!trained(s)?'请先学习马匹骑术。':'')||(!serviceHere(s,384)?'请前往东谷伐木场的马匹商人。':'')||(s.money<price(s,m.price)?'购买坐骑的金币不足。':'');
 }
 function summonReason(s,m){
  if(m.classSpell)return busyReason(s)||outdoorReason(s)||(s.level<m.level?`需要达到 ${m.level} 级。`:'')||(!owns(s,m.id)?'尚未学习职业坐骑。':'')||(s.mana<spellInfo(s,m.id).mana?'法力不足':'')||(s.mounted===m.id?'正在骑乘这匹坐骑。':'');
- return eligibility(s,m.level)||busyReason(s)||outdoorReason(s)||(!trained(s)?'尚未学习马匹骑术。':'')||(!owns(s,m.id)?'尚未拥有这匹坐骑。':'')||(s.mounted===m.id?'正在骑乘这匹坐骑。':'');
+ return mountEligibility(s,m)||busyReason(s)||outdoorReason(s)||(!trained(s)?'尚未学习马匹骑术。':'')||(!owns(s,m.id)?'尚未拥有这匹坐骑。':'')||(s.mounted===m.id?'正在骑乘这匹坐骑。':'');
 }
+function mountEligibility(s,m){return m.testGift?(s.level<m.level?`需要达到 ${m.level} 级。`:''):eligibility(s,m.level);}
 export function mountView(s){
  const active=findMount(s.mounted),trainingReason=trainReason(s);
- return {level:ridingLevel,castMs:mountCastMs,trained:trained(s),trainingPrice:price(s,trainingPrice),trainingReason,canTrain:!trainingReason,hasTrainer:serviceHere(s,4732),hasVendor:serviceHere(s,384),serviceLocation:'logging',serviceName:nodes.logging.name,active:active?.id||null,activeName:active?.name||'',speedBonus:active?.bonus||0,canDismount:!!active&&!busyReason(s),dismountReason:busyReason(s),collection:[...mountCatalog,...classMounts.filter(m=>owns(s,m.id))].map(m=>{const purchaseReason=m.classSpell?'通过职业技能学习':buyReason(s,m),reason=summonReason(s,m);return {...m,price:price(s,m.price),owned:owns(s,m.id),canBuy:!purchaseReason,purchaseReason,canMount:!reason,reason};})};
+ return {level:ridingLevel,castMs:mountCastMs,trained:trained(s),trainingPrice:price(s,trainingPrice),trainingReason,canTrain:!trainingReason,hasTrainer:serviceHere(s,4732),hasVendor:serviceHere(s,384),serviceLocation:'logging',serviceName:nodes.logging.name,active:active?.id||null,activeName:active?.name||'',speedBonus:active?.bonus||0,canDismount:!!active&&!busyReason(s),dismountReason:busyReason(s),collection:[...mountCatalog,...(owns(s,boostMount.id)?[boostMount]:[]),...classMounts.filter(m=>owns(s,m.id))].map(m=>{const purchaseReason=m.classSpell?'通过职业技能学习':buyReason(s,m),reason=summonReason(s,m);return {...m,price:price(s,m.price),owned:owns(s,m.id),canBuy:!purchaseReason,purchaseReason,canMount:!reason,reason};})};
 }
 export function trainRiding(s){
  const reason=trainReason(s);if(reason)throw new Error(reason);
@@ -86,7 +90,7 @@ export function endMount(s){
  if(!s.mounted)throw new Error('当前没有骑乘坐骑。');dismount(s);
 }
 export function travelRoute(s,to){
- const m=findMount(s.mounted),canRide=m&&owns(s,m.id)&&(m.classSpell||trained(s)&&!eligibility(s,m.level))&&!outdoorReason(s)&&!s.dungeon&&s.hp>0;
+ const m=findMount(s.mounted),canRide=m&&owns(s,m.id)&&(m.classSpell||trained(s)&&!mountEligibility(s,m))&&!outdoorReason(s)&&!s.dungeon&&s.hp>0;
  const pursuit=(ranks(s)['Pursuit of Justice']||0)*.04;const form={wolf:.4,travel:.4,cat:(ranks(s)['Feline Swiftness']||0)*.15}[s.form]||0;
  return route(s.location,to,canRide?7*(1+m.bonus/100)*(1+pursuit):7*(1+Math.max(pursuit,form))); 
 }

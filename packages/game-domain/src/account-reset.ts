@@ -1,8 +1,7 @@
 import {tables, type Transaction} from '../../persistence/src/store.ts';
 import type {Account, Instance} from './model.ts';
 
-// Called only inside creation's transaction after the existing save fails validation.
-// Rebuild from scratch: never infer missing timestamps or migrate old progress.
+// Transactional removal for explicit deletion and invalid development saves.
 export async function removeInvalidSave(tx: Transaction, accountId: string) {
     const affected = (await tx.list<Instance>('instances')).filter(instance =>
         instance.creatorAccountId === accountId || instance.roster.some(row => row.accountId === accountId));

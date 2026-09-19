@@ -2,7 +2,7 @@ export const PROTOCOL_VERSION = 1 as const;
 
 export type JsonRecord = Record<string, unknown>;
 export type ClientAccount = Readonly<{id:string;primaryCharacterId:string;partyId:string;revision:number}>;
-export type ClientRosterMember = Readonly<{id:string;characterId:string;name:string;classId:number;raceId:number;level:number;kind:string;talentSummary:string;professions:JsonRecord}>;
+export type ClientRosterMember = Readonly<{id:string;characterId:string;name:string;classId:number;raceId:number;level:number;kind:string;talentSummary:string;professions:JsonRecord;bagUsed:number;bagCapacity:number;location:string}>;
 export type ClientActivity = Readonly<{id:string;actorId:string;type:string;status:string;location?:string;startedAt?:number;settledUntil?:number;nextEventAt?:number;contentVersion?:string;error?:string}>;
 export type ClientInstanceMember = Readonly<{characterId:string;accountId:string;controller:string}>;
 export type ClientInstance = Readonly<{id:string;leaderId:string;contentId:string;status:string;capacity:number;roster:readonly ClientInstanceMember[];sequence:number}>;

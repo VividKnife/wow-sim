@@ -22,3 +22,13 @@
 `packages/game-domain/test/party-recruitment.test.ts` 覆盖等级任务、九职业职责初始化、队伍组成、非法选项、装备继承/退回、背包满回滚、余额及重试幂等、持久化和免费洗点。
 
 独立浏览器夹具：运行 `node apps/web/scripts/serve-classes-preview.mjs` 后打开 `/party.html`，可测试解锁、招募、角色切换和洗点，不会连接或修改存档。该Vite夹具不提供Next的工坊API或模型代理；配方报价和3D模型的完整加载由生产应用提供。
+
+## 背包与物品转移
+
+新招募队友自动装备 4 个 10 格普通背包（804），连同基础背包共 56 格。配发背包不可转交；更换队友保留已有背包，并补齐空的背包槽，不会降级玩家购入的大包。
+
+角色页的「装备与背包」提供折叠的「队伍物品转移」面板。选择当前角色作为来源，选择同账号接收角色，支持搜索、批量勾选、整组与拆分数量。目标背包使用量实时随命令结果更新，相同属性物品自动堆叠。绑定装备允许在账号内转移并保留耐久、附魔和绑定；锁定、配发、任务物品及炉石不可转移。
+
+`transferItems` 命令使用 `recipientId` 和 `items: [{uid,count}]`。两端须存活、同地点、非战斗及非赶路，允许个人狩猎间隙转移；副本及后台订单期间禁用。服务器结算相关个人活动、检查唯一物品上限与容量后，以一个事务持久化两端并使预计算战斗失效。任何一项失败整批回滚，requestId 保证重试不重复发放。
+
+测试：`node --test packages/game-domain/test/item-transfer.test.ts packages/game-domain/test/party-recruitment.test.ts`。独立 UI 验证：`node apps/web/scripts/serve-transfer-preview.mjs`，访问 `http://127.0.0.1:5183/transfer.html`，仅使用内存数据。
