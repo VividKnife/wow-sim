@@ -26,6 +26,10 @@ export function racesForClass(classId){
  return raceOptions.filter(race=>playable.has(race.id));
 }
 
+export function classesForRace(raceId){
+ return classOptions.filter(option=>option.races.includes(Number(raceId)));
+}
+
 export function buildCreateCommand(name,classId,raceId){
  const selectedClass=classOptions.find(option=>option.id===Number(classId));
  if(!selectedClass||!selectedClass.races.includes(Number(raceId)))throw new Error('这个种族与职业组合不可用。');

@@ -5,7 +5,7 @@ import {GameService} from '../src/service.ts';
 import {classDefinitions,items,quests} from '../src/rules/catalog.js';
 import {canEquip,bagCapacity,stats} from '../src/rules/character.js';
 import {partyUnlocked,PARTY_QUEST} from '../src/rules/party-unlock.js';
-import {boostEquipmentCandidates} from '../src/rules/boost.js';
+import {boostEquipmentCandidates,LEVEL_20_BOOST_MONEY} from '../src/rules/boost.js';
 import {tables} from '../../persistence/src/store.ts';
 import {boostMount,mountView,beginMount,finishMount,travelRoute,buyMount} from '../src/rules/mounts.js';
 
@@ -31,12 +31,12 @@ test('multiple saves are isolated, owner checked and creation retries do not dup
   for(const table of tables)assert.equal((await tx.list(table,{accountId:a.id})).length,0,table);
  });
 });
-test('boost grants legal quest equipment, four runecloth bags, full resources and leaves recruitment locked for every race/class',async()=>{
+test('boost grants 50 gold, legal quest equipment, four runecloth bags, full resources and leaves recruitment locked for every race/class',async()=>{
  const service=setup();
  for(const c of classDefinitions)for(const raceId of c.races){
   const {id}=await service.createSave(`user-${c.id}-${raceId}`,{...input,classId:c.id,raceId,boost:true},'boost-save');
   const snapshot=await service.snapshot(id),s=snapshot.state;
-  assert.equal(s.level,20);assert.equal(s.xp,0);assert.equal(s.location,'goldshire');
+  assert.equal(s.level,20);assert.equal(s.xp,0);assert.equal(s.money,LEVEL_20_BOOST_MONEY);assert.equal(s.location,'goldshire');
   assert.equal(s.bags.length,4);assert.ok(s.bags.every((i:any)=>i.id===14046));assert.equal(bagCapacity(s),72);
   assert.deepEqual(s.mounts,[boostMount.id]);assert.equal(s.riding.horse,true);
   assert.equal(mountView(s).collection.find(m=>m.id===boostMount.id)!.canMount,true);

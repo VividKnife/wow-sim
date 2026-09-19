@@ -36,6 +36,20 @@ test('client snapshot retains the fields needed for active play and battle rende
  assert.ok(projected.view.stats.maxHp>0);
 });
 
+test('unlocked party candidates retain every selectable role',()=>{
+ const state=createGame('队长',23,1000);
+ state.level=18;
+ state.location='stormwind';
+ state.completed[900001]=true;
+ const projected=projectClientSnapshot(state,view(state));
+ assert.ok(projected.view.partyUnlocked);
+ assert.ok(projected.view.candidates.length>0);
+ for(const candidate of projected.view.candidates){
+  assert.ok(Array.isArray(candidate.roles),candidate.id);
+  assert.ok(candidate.roles.length>0,candidate.id);
+ }
+});
+
 test('entered dungeons and battle actors expose no pre-rolled or whole-state internals',()=>{
  const state=createGame('副本边界',53,0);state.level=10;state.location='deadmines';
  state.party=Array.from({length:4},(_,index)=>({...structuredClone(state),id:`ally-${index}`,name:`同伴${index}`,party:[],level:10}));

@@ -3,6 +3,8 @@ import {canEquip,makeItem,slotOf,stats,log} from './character.js';
 import {syncPartyQuest,PARTY_QUEST} from './party-unlock.js';
 import {boostMount} from './mounts.js';
 
+export const LEVEL_20_BOOST_MONEY=500000;
+
 // Only real quest rewards from the playable level 1–20 route; never dungeon
 // drops or the synthetic companion kit. Keep provenance for inspection/tests.
 export function boostEquipmentCandidates(s){
@@ -27,6 +29,7 @@ function score(s,i){
 }
 export function applyLevel20Boost(s){
  s.level=20;s.xp=0;
+ s.money+=LEVEL_20_BOOST_MONEY;
  const skills=(classAbilities[s.classId]||[]).filter(a=>a.requiredLevel<=20&&['trainer','weapon'].includes(a.acquisition)&&!a.requiredTalentSpellId&&(!(a.raceIds||a.startingRaces)?.length||(a.raceIds||a.startingRaces).includes(s.raceId)));
  s.learned=[...new Set([...s.learned,...skills.map(a=>a.spellId)])];
  const candidates=boostEquipmentCandidates(s).sort((a,b)=>score(s,b.item)-score(s,a.item)||a.item.entry-b.item.entry);
@@ -55,6 +58,6 @@ export function applyLevel20Boost(s){
  s.location='goldshire';s.hearth='goldshire';s.visited=['northshire','goldshire'];
  syncPartyQuest(s);
  const st=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;
- log(s,'测试直升：已到达20级，配发本职业可用的任务装备、四个符文布背包及旅行棕马，并学会骑术。前往暴风城旅店完成“同路人”，自行选择队友。');
+ log(s,'测试直升：已到达20级，获得50金币，并配发本职业可用的任务装备、四个符文布背包及旅行棕马，同时学会骑术。前往暴风城旅店完成“同路人”，自行选择队友。');
  return s;
 }

@@ -44,7 +44,7 @@ const actorView=(actor:any)=>{const result=pick(actor||{},actorKeys);if(Array.is
 const enemyView=(enemy:any)=>pick(enemy||{},enemyKeys);
 function combatView(combat:any){if(!combat)return combat;const result=pick(combat,combatKeys);result.enemies=Array.isArray(combat.enemies)?combat.enemies.map(enemyView):[];if(Array.isArray(combat.actorsSnapshot))result.actorsSnapshot=combat.actorsSnapshot.map(actorView);return result;}
 const dungeonView=(dungeon:any)=>dungeon?pick(dungeon,dungeonKeys):dungeon;
-const candidateView=(candidate:any)=>pick(candidate||{},['id','name','classId','role','level','gearCap','canRecruit']);
+const candidateView=(candidate:any)=>pick(candidate||{},['id','name','classId','role','roles','level','gearCap','canRecruit']);
 const battleUnitKeys=['id','spellId','className','color','portrait','mode','resource','secondaryResource','hp','maxHp','level','combo','effects','cooldowns','totems','cast','globalCooldown','canCommand','petMode','happiness','loyalty','controlled','ownerName','controlUntil','shards','attack','offhand','movement'];
 function battlePresentationView(battle:any){
  if(!battle)return battle;
