@@ -1,0 +1,216 @@
+{
+  "revision": "b852b560442b31579e77ef3967b3c2d594832da8",
+  "copyright": "Blizzard Entertainment",
+  "assets": [
+    {
+      "file": "thedeadmines-1.webp",
+      "floor": 1,
+      "width": 1002,
+      "height": 668,
+      "sha256": "d76d1864cab0a12c38e572f40a2b2dc9798d9c79264ac71b6744f62f5a6d6ce9",
+      "tiles": [
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines1_1.PNG",
+          "gitBlob": "94c3b7cdf6e19829b56538c991fdab02980dd3df",
+          "sha256": "4669c10a576ed697b33568dd42f2703d124be533fde1eed8c236cf0c8d38859d"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines1_2.PNG",
+          "gitBlob": "243cff507a508c601ba2abd4ca0332c07d6d0c70",
+          "sha256": "5a372af79ed0c98252877394d470202233e5f5b6a1402b435d0cf3e2c7a804f3"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines1_3.PNG",
+          "gitBlob": "1d087d4c54552330b75065d235bb2182169d6f69",
+          "sha256": "cd499f310ae99e58313f932bacef708997d6004ff44ed952487104f109eb3bde"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines1_4.PNG",
+          "gitBlob": "c0354fd5d1109c57c5e7016c14a63744096b2f0a",
+          "sha256": "bd10e80d37cd11e4af91eb94aa8ba3ac94f1d822b96251de28de556e3c8b24f5"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines1_5.PNG",
+          "gitBlob": "74ed42efdb291e99a04bb21762e6ecd2ab30c6b4",
+          "sha256": "c5e306d2a11a13aa788f30234992eee2526c0542c56f5b8114ee5753842cb503"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines1_6.PNG",
+          "gitBlob": "fe34a4867e3d6f643ec7d8e440be88e9a0e34cc8",
+          "sha256": "87cb6ada87f6e78e5c60154e05d385bbf9bdfa494fb1ee98a7b817d3105e2f2f"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines1_7.PNG",
+          "gitBlob": "afa3f55177fe6cafaf92d889a91c1174a54935b9",
+          "sha256": "1342d669fa350640cc8a070cf9e77eaca6ed9bc66845221cc3318c8ad863fe2d"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines1_8.PNG",
+          "gitBlob": "d7bc1621b3cf6f1d121a687df9df343a5bcf27eb",
+          "sha256": "bbf8bba4261f8657de01a330c5d7fbd839a1e721b1f1e8e8225b9f74aa2f460f"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines1_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162",
+          "sha256": "93438c300a056049566574f24b09cd977c1fe7ee9d4efa7e9fde3bf233a219b3"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines1_10.PNG",
+          "gitBlob": "c7c3555213282281a40f8aa322bf6052d7e95934",
+          "sha256": "8e9cecead5faecd7aafd44e63f2ec71731cbb2b4dfc71680bf87d61eed410c84"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines1_11.PNG",
+          "gitBlob": "dc4dd49141db8de20d5aea8cd0eccafae55f9fc2",
+          "sha256": "b0ce3e309b780284977f91e1f22709dcfaac8c0c33048924e4e5fbc8148f6a13"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines1_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676",
+          "sha256": "8789b19e1cc94afca6c5e06eb5d13c0c0a6e07854656d021b32adae8c2475502"
+        }
+      ],
+      "transformation": "4 columns x 3 rows of original 256px tiles; viewport crop to 1002x668; lossless WebP"
+    },
+    {
+      "file": "thedeadmines-2.webp",
+      "floor": 2,
+      "width": 1002,
+      "height": 668,
+      "sha256": "91dd450d14af3173217555eda0a7724ae7d75408da9b84fa6d78e6ba0fb7c88a",
+      "tiles": [
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines2_1.PNG",
+          "gitBlob": "94701e81e436ad90bf73ba970974dda46412ada8",
+          "sha256": "66cb1e7f84f3212a9c6b695723dd36646b02502ae4e179ab64d4254a7c618d95"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines2_2.PNG",
+          "gitBlob": "d565d547e6567a77f0c68a1f4131793660524d92",
+          "sha256": "4a3d4a40d3b8a3e61122522c18c1200fc092f8cc92a5216d8b32a9dc7b70d4a4"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines2_3.PNG",
+          "gitBlob": "d7f70d5037c620797515ed109915c9d84eda3e42",
+          "sha256": "d5df310b41a97d127bd374202e5336b07f5f647f1bc1089dc790989e2073cdff"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines2_4.PNG",
+          "gitBlob": "e02f42cf09039825d7e16424b755eccf3b5612cc",
+          "sha256": "12af00d13acd0c041a7747b27e14e5aac5d28d0ec959b571109b4b20072470a3"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines2_5.PNG",
+          "gitBlob": "6f60d5b182a8c0b5be5fa64ce779b13d7b9fbd75",
+          "sha256": "39fcd959b00989de9ac039649f3f764751f0ad4e9fdc89a29f6ff87b2c6ffcf8"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines2_6.PNG",
+          "gitBlob": "e6499c126ae35c1d1df9f81ce0b9bfabe1ba20e2",
+          "sha256": "d11e2318b0a263210a1cb90fd419d6647d15f82992cf9c6b660c6385305b9393"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines2_7.PNG",
+          "gitBlob": "4cd02922dabf89bdb40b3db3da3d0b6175b13022",
+          "sha256": "8036cdf91c74a2374d60b991bef442dc3ec23944dd7feee2e993e95f67810d77"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines2_8.PNG",
+          "gitBlob": "9dd9ec2a8c5d6dfd8b28f57410d19e86a4f9529e",
+          "sha256": "8f5e577454ca296527343c9a07f710f1afc9dcc1d0722aade1ebc6dc97b5ac09"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines2_9.PNG",
+          "gitBlob": "cf5f19ede59b9e7fee42d0eb3352573a04514b05",
+          "sha256": "e43693b8f78641059eb09e107623eeb540c4cf09d05a9be86f85c22317e9b878"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines2_10.PNG",
+          "gitBlob": "eadeb3801c0c07c3e262fc03a05af3edd0652f2a",
+          "sha256": "4c2357cb6851533428b31015911dbac38e7134a08ad158017cc8fb65685c9b50"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines2_11.PNG",
+          "gitBlob": "dd625eaa3aeb55d4fedb082d164567bf420115dd",
+          "sha256": "328c540410b7f0fa77a3d178ad007e057becde8a12afa71f7acce6a0ece016d4"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheDeadmines/TheDeadmines2_12.PNG",
+          "gitBlob": "009d93636487cc6c8f80ff76cea0229eade9c603",
+          "sha256": "0247199ab3a65e41e1a4ae1799e892c796522430a30e3ffd37045328cf86114f"
+        }
+      ],
+      "transformation": "4 columns x 3 rows of original 256px tiles; viewport crop to 1002x668; lossless WebP"
+    },
+    {
+      "file": "thestockade-1.webp",
+      "floor": 1,
+      "width": 1002,
+      "height": 668,
+      "sha256": "572bc83924c49bb91f176a8a6eef47b6e2969b74da1004d3cb287cf5be717cbd",
+      "tiles": [
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheStockade/TheStockade1_1.PNG",
+          "gitBlob": "d1670bab7fd737de9f413d1ec40c1811c0047196",
+          "sha256": "944aca5d3e38898b0621fa333faaf60329281e07bd8cee8840df19e693a932ef"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheStockade/TheStockade1_2.PNG",
+          "gitBlob": "d04c82b3a7a0bb6c7bedd99095138e84ba620bb3",
+          "sha256": "23d4c46c467dc375bcaab9c5a06a5c0bd1a0311a67d73ebe575b65483bb2386f"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheStockade/TheStockade1_3.PNG",
+          "gitBlob": "50b460d0cbfb25569d7febfcef123f2735429c5e",
+          "sha256": "b1527c733128f8a98a9cec08a0804c004571f7660504dd9992414efef6c4ab90"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheStockade/TheStockade1_4.PNG",
+          "gitBlob": "f6b897be928471b271f310efafff89d005e28e90",
+          "sha256": "097bba1473e3de21ea63c6544956f8782c4eb390de46cbef892302c4961b24ce"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheStockade/TheStockade1_5.PNG",
+          "gitBlob": "98b4d522cb4ccd4b138462cd1a630e2b0c860e60",
+          "sha256": "122475a084da44817f1bd2db5418c739237dd16e494b1286b580408c7b33006e"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheStockade/TheStockade1_6.PNG",
+          "gitBlob": "7414fe4bc9edb84ee1a8382114f0d12dceec7548",
+          "sha256": "11e3a23498628a81277eb82bd56d24d1ef03deed6ba8d1a50d5b8da6be883820"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheStockade/TheStockade1_7.PNG",
+          "gitBlob": "9d3133c4de1f859aae68dc11389398709029a9e7",
+          "sha256": "18a8ac1956f573764f1b3a3674b4b1b7f92f1cb7611728d13895751553644eb5"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheStockade/TheStockade1_8.PNG",
+          "gitBlob": "26abc53a861160a22033802de57f2e4e657db9d5",
+          "sha256": "33acbf9214346f177a63c4778297b1a0abfecefb948489b33d86be07d6c3621f"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheStockade/TheStockade1_9.PNG",
+          "gitBlob": "fc99e34e1be6513e52e71c7a9768d76ce6b5519a",
+          "sha256": "cc5f13859ed27a8e96653d0468a86a9414c856e2d67388c6b4a705a0167a1ff7"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheStockade/TheStockade1_10.PNG",
+          "gitBlob": "8f5bf3f913ad3196115ed67008045f26c82b33b5",
+          "sha256": "68b1e0f2dfce507a2279c24d7530ce99658965f830e256e7e4dcfd59176da696"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheStockade/TheStockade1_11.PNG",
+          "gitBlob": "31e611006c5c9e0f59128aacae81cd9faba30ade",
+          "sha256": "caf01399a6905290dd80e9e7e9a7268a16bf88eb4124ad4ebde7ed5b22e12208"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheStockade/TheStockade1_12.PNG",
+          "gitBlob": "5c1ae2227ade51fe3b7e082bfe0f568f51c00443",
+          "sha256": "f6d9fc82e615bac34d3bef00d85ca9316b6cd03478dd9f336006ef9e5de98cb8"
+        }
+      ],
+      "transformation": "4 columns x 3 rows of original 256px tiles; viewport crop to 1002x668; lossless WebP"
+    }
+  ]
+}

@@ -25,7 +25,7 @@ function fixture(scenario:string){
   if(scenario==='escort-fight'){s=act(s,{type:'escortStart'},0);for(let i=0;!s.combat&&s.escort&&i<400;i++)s=advance(s,s.wallAt+1000).state;}
   return s;
  }
- if(scenario==='stockades'){s.level=26;s.location='stockades';enterDungeon(s,'stockades');return s;}
+ if(scenario==='stockades'){s.level=26;s.location='stockades';s.quests[387]={kills:{},event:false};s.quests[391]={kills:{},event:false};enterDungeon(s,'stockades');return s;}
  if(scenario!=='entry')enterDungeon(s);
  if(scenario==='powder'){s.dungeon.cursor=dungeonRoute('deadmines').findIndex((e:any)=>e.id==='dm-gunpowder');for(const guid of dungeonRoute('deadmines')[s.dungeon.cursor].sourceGuids)s.dungeon.defeated[guid]=true;}
  if(scenario==='cannon'){s.dungeon.cursor=dungeonRoute('deadmines').findIndex((e:any)=>e.id==='dm-cannon');addItem(s,5397);}
@@ -39,7 +39,7 @@ function Harness(){
  useEffect(()=>{const next=s.combat?`${s.combat.runId}:${s.combat.startedAt}`:null;if(next&&next!==key.current)setOpen(true);key.current=next;},[s.combat?.startedAt,!!s.combat]);
  const send=async(action:any)=>{try{const next=act(current.current,action,current.current.wallAt);current.current=next;setState(next);setError('');return true;}catch(e:any){setError(e.message);return false;}};
  const snapshot=projectClientSnapshot(s,view(s)),props={state:snapshot.player,data:{...clientContent(),...snapshot.view},busy:false,send};
- return <main className="game-shell"><header className="panel" style={{margin:'20px 0'}}><h2>独立测试角色 · 不连接用户存档</h2><p>18 级与补给为测试夹具；每场战斗使用真实引擎。此页面不代表自然升级通关。</p><div className="action-row">{[['entry','手册'],['stockades','监狱冒险'],['powder','火药箱'],['cannon','火炮'],['recovery','队长倒下'],['outdoor','野外小队'],['escort-fight','Escort battle'],['escort','护送']].map(([id,name])=><button key={id} onClick={()=>{setState(fixture(id));setOpen(false);setError('');key.current=null;}}>{name}夹具</button>)}</div></header><Escort {...props}/>{['lighthouse','sentinel','moonbrook'].includes(s.location)?<Party {...props}/>:<DungeonPage {...props} onOpenParty={()=>setError('队伍管理入口已触发')} onConfigure={()=>setError('配置入口已触发')}/>} {(s.combat||s.lastCombat)&&<><button onClick={()=>setOpen(true)}>查看测试战斗</button><Battle {...props} open={open} onOpenChange={setOpen}/></>}{error&&<p role="alert">{error}</p>}</main>;
+ return <main className="game-shell"><header className="panel" style={{margin:'20px 0'}}><h2>独立测试角色 · 不连接用户存档</h2><p>18 级与补给为测试夹具；每场战斗使用真实引擎。此页面不代表自然升级通关。</p><div className="action-row">{[['entry','手册'],['stockades','监狱冒险'],['map','矿井地图'],['powder','火药箱'],['cannon','火炮'],['recovery','队长倒下'],['outdoor','野外小队'],['escort-fight','Escort battle'],['escort','护送']].map(([id,name])=><button key={id} onClick={()=>{setState(fixture(id));setOpen(false);setError('');key.current=null;}}>{name}夹具</button>)}</div></header><Escort {...props}/>{['lighthouse','sentinel','moonbrook'].includes(s.location)?<Party {...props}/>:<DungeonPage {...props} onOpenParty={()=>setError('队伍管理入口已触发')} onConfigure={()=>setError('配置入口已触发')}/>} {(s.combat||s.lastCombat)&&<><button onClick={()=>setOpen(true)}>查看测试战斗</button><Battle {...props} open={open} onOpenChange={setOpen}/></>}{error&&<p role="alert">{error}</p>}</main>;
 }
 const root=import.meta.hot?.data.root||createRoot(document.getElementById('root')!);
 if(import.meta.hot)import.meta.hot.data.root=root;

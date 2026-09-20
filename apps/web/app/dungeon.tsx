@@ -1,6 +1,7 @@
 "use client";
 import {Button} from '@/components/ui/button';
 import {Bar,Icon,GameProps,duration} from './game-ui';
+import DungeonMap from './dungeon-map';
 
 export function RecoveryControls({state:s,data:d,busy,send}:GameProps){
  const r=d.recovery;if(!r)return null;
@@ -39,10 +40,11 @@ export default function Dungeon(props:GameProps){
    <div className="section-heading"><span>{dm.completed?'路线已完成':`路线进度 ${dm.progress} / ${dm.total}`}</span><small>退出保留进度</small></div>
    <div className="dungeon-progress" role="progressbar" aria-label="副本路线进度" aria-valuemin={0} aria-valuemax={dm.total} aria-valuenow={dm.progress}><i style={{width:progress+'%'}}/></div>
    <p className="footnote">自动推进保留全部战斗与补给消耗。可随时暂停，战斗中的暂停会在本场结束后停止迎战。</p>
-   {(!dm.completed||dm.autoAdvance)&&<div className="action-row">{dm.autoAdvance?<Button variant="outline" disabled={busy} onClick={()=>send({type:'dungeonPause'})}>暂停推进</Button>:<Button disabled={busy||!dm.canNext} onClick={()=>send({type:'dungeonNext'})}>{dm.advanceReason?'继续自动推进':'开始自动推进'}</Button>}</div>}
+   {(!dm.completed||dm.autoAdvance)&&<div className="action-row">{dm.autoAdvance?<Button variant="outline" disabled={busy} onClick={()=>send({type:'dungeonPause'})}>暂停推进</Button>:<Button disabled={busy||!dm.canNext} onClick={()=>send({type:'dungeonNext'})}>{dm.destination==='full'?'全清副本 · 自动推进':'继续前往目的地'}</Button>}</div>}
    {dm.autoAdvance?<p className="dungeon-notice" role="status">{s.combat?'自动推进中 · 小队正在战斗':dm.rescuing?(s.activity.type==='resurrect'?'自动推进中 · 牧师正在复活队友':'自动推进中 · 牧师恢复法力并准备复活队友'):dm.waitingForLoot?'自动推进中 · 等待战利品拾取':dm.recovering?'自动推进中 · 按恢复设置休整后继续':'自动推进中 · 小队正在完成机关'}</p>:!dm.completed&&<p className="dungeon-notice" role="status">{dm.nextReason||dm.advanceReason||'准备好后开始自动推进。'}</p>}
    {!s.settings.autoLoot&&<p className="footnote">自动拾取尚未开启；出现待拾取战利品时会暂停，拾取后可继续。可在战利品面板开启自动拾取。</p>}
   </header>
+  <DungeonMap key={s.dungeon.runId} {...props}/>
   <div className="dungeon-columns"><section className="panel dungeon-encounter">
    {current?<><div className="eyebrow">{current.kind==='boss'?'首领遭遇':current.interaction&&!current.enemies.length?'机关交互':'前方路线'}{current.optional?' · 可选':''}</div><h2>{current.name}</h2>
     <ul className="encounter-enemies">{current.enemies.map((e:any)=><li key={e.entry+'-'+e.level}><strong>{e.name}</strong><span>Lv.{e.level}{e.elite?' 精英':''} × {e.count}</span></li>)}</ul>
@@ -56,6 +58,6 @@ export default function Dungeon(props:GameProps){
    <RecoveryControls {...props}/>
   </section>
   <section className="panel dungeon-party"><div className="section-heading"><h2>小队状态</h2><small>5 人</small></div>{d.recovery.members.map((c:any)=><article key={c.id} className={'dungeon-member '+(c.hp<=0?'is-fallen':'')}><div className="section-heading"><strong>{c.name} <small>Lv.{c.level}</small></strong><small>{c.hp<=0?'已倒下':c.restUntil>s.clock?'休整 '+duration(c.restUntil-s.clock):c.role}</small></div><Bar label="生命" value={c.hp} max={c.maxHp}/>{c.maxMana>0&&<Bar label="法力" value={c.mana} max={c.maxMana} tone="mana"/>}</article>)}</section></div>
-  <details className="panel dungeon-route"><summary>查看完整路线 · {dm.progress} / {dm.total}</summary><ol>{dm.route.map((r:any)=><li key={r.id} className={'route-'+r.status} aria-current={r.status==='current'?'step':undefined}><span>{r.name}{r.optional?' · 可选':''}</span><small>{{cleared:'已完成',skipped:'已绕过',current:'当前',ahead:'未探索'}[r.status as string]}</small></li>)}</ol></details>
+  <details className="panel dungeon-route"><summary>查看完整路线 · {dm.progress} / {dm.total}</summary><ol>{dm.route.map((r:any)=><li key={r.id} className={'route-'+r.status} aria-current={r.status==='current'?'step':undefined}><span>{r.name}{r.optional?' · 可选':''}{r.quests.length?' · 任务目标':''}</span><small>{{cleared:'已完成',skipped:'已绕过',absent:'本次未出现',current:'当前',ahead:'未探索'}[r.status as string]}</small></li>)}</ol></details>
  </section>;
 }

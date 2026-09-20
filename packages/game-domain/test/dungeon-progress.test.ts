@@ -100,6 +100,7 @@ test('the worker recovers priest mana and resurrects the leader after the final 
  await game.store.transaction(async tx=>{
   const instance=(await tx.get<Instance>('instances',entered.instanceId!))!,s=instance.simulation!;
   s.dungeon.cursor=dungeonRoute.length-1;
+  for(const e of dungeonRoute.slice(0,-1))s.dungeon.cleared[e.id]=true;
   // The service fixture levels characters explicitly; give its priest the actual resurrection spell.
   s.party.find((c:Rules)=>c.classId===5).learned.push(2006);
   await tx.put('instances',instance);
@@ -183,4 +184,27 @@ test('server counts new runs but allows saved-run reentry at the hourly limit', 
  await game.send({type:'resetDungeon'});
  await assert.rejects(game.send({type:'enterDungeon'}), /每小时/);
  assert.equal((await game.snapshot()).instanceId, null);
+});
+
+test('destination commands persist through service restart and stop at an encounter boundary',async()=>{
+ const game=await setup('stockades'),entered=await game.send({type:'enterDungeon',contentId:'stockades'});
+ let begun=await game.send({type:'dungeonNavigate',destination:'stockades-35'});
+ for(let i=0;i<180&&!begun.state.combat;i++){await game.work(1000);begun=await game.snapshot();}
+ const battle=begun.state.combat.id;
+ const changed=await game.send({type:'dungeonNavigate',destination:'stockades-01'});
+ assert.equal(changed.state.combat.id,battle);
+ game.restart();assert.equal((await game.snapshot()).state.dungeon.destination,'stockades-01');
+ await game.store.transaction(async tx=>{
+  const instance=(await tx.get<Instance>('instances',entered.instanceId!))!,s=instance.simulation!;
+  for(const e of s.combat.enemies){e.hp=0;e.rewarded=true;}
+  s.combat.pull.startsAt=s.clock;s.combat.pull.engagedAt=s.clock;
+  await tx.put('instances',instance);
+ });
+ assert.deepEqual((await game.work(1000)).errors,[]);
+ const stopped=await game.snapshot();assert.equal(stopped.state.combat,null);assert.equal(stopped.state.dungeon.autoAdvance,false);
+ assert.equal(stopped.state.dungeon.cleared['stockades-01'],true);assert.equal(stopped.state.dungeon.completedAt,undefined);
+ await game.send({type:'leaveDungeon'});game.restart();await game.send({type:'enterDungeon',contentId:'stockades'});
+ let next=await game.send({type:'dungeonNavigate',destination:'stockades-33'});
+ for(let i=0;i<180&&!next.state.combat;i++){await game.work(1000);next=await game.snapshot();}
+ assert.equal(next.state.dungeon.destination,'stockades-33');assert.equal(next.state.combat.routeId,'stockades-02');
 });

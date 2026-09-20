@@ -5,6 +5,7 @@ import {startCombat} from './combat.js';
 import {sceneCombatArea} from './combat-area.js';
 import {startRecovery,stopRecovery,resurrectionFor,beginResurrection} from './recovery.js';
 import {spellReady} from './spell-timing.js';
+import {dungeonDestinationPath} from './dungeon-map.js';
 
 const current=s=>s.dungeon&&dungeonRoute(s)[s.dungeon.cursor];
 const idle=s=>{if(s.combat)throw new Error('请先结束这场战斗。');if(s.activity.type!=='idle')throw new Error('请先结束当前活动。');};
@@ -36,7 +37,7 @@ export function enterDungeon(s,id=dungeonIdFor(s)){
  s.dungeonSaves??={};
  if(s.dungeonSaves[id]){s.dungeon=s.dungeonSaves[id];delete s.dungeonSaves[id];return;}
  s.dungeonEntries=[...recentEntries(s),s.wallAt];
- const d={id,runId:id+'-'+(s.dungeonSequence=(s.dungeonSequence||0)+1),cursor:0,autoAdvance:false,advanceReason:'',spawns:{},phases:{},defeated:{},defeatedBosses:{},cleared:{},skipped:{},interactions:{},position:clone(reference.entrance),startedAt:s.clock};
+ const d={id,runId:id+'-'+(s.dungeonSequence=(s.dungeonSequence||0)+1),cursor:0,locationId:'entrance',destination:'full',path:[],autoAdvance:false,advanceReason:'',spawns:{},phases:{},defeated:{},defeatedBosses:{},cleared:{},skipped:{},interactions:{},position:clone(reference.entrance),startedAt:s.clock};
  const rare=Object.fromEntries(Object.entries(definition.rareEntries).map(([entry,chance])=>[entry,rng(s)<chance]));
  for(const encounter of reference.encounters)for(const row of encounter.sourceSpawns){
   const choices=row.templateChoices.filter(c=>!Object.hasOwn(rare,c.entry)||rare[c.entry]);
@@ -53,14 +54,28 @@ export function remainingDungeonEnemies(s,e){const d=s.dungeon,result=e.sourceGu
  if(e.id==='dm-sneed'&&d.defeated['3600073']&&!d.defeated['3600073:643'])result.push(d.phases['3600073:643']);return result;
 }
 const remaining=remainingDungeonEnemies;
-function advanceRoute(s,e,skipped=false){const d=s.dungeon;if(current(s)?.id!==e.id)return;if(skipped)d.skipped[e.id]=true;else d.cleared[e.id]=true;d.cursor++;s.activity={type:'idle'};
- if(d.cursor===dungeonRoute(s).length){d.advanceReason='';d.completedAt=s.clock;log(s,dungeonDefinition(d.id).name+'路线已完成。','dungeon');}
+function advanceRoute(s,e,skipped=false){const d=s.dungeon;if(current(s)?.id!==e.id)return;if(skipped)d.skipped[e.id]=true;else d.cleared[e.id]=true;d.locationId=e.id;s.activity={type:'idle'};
+ const route=dungeonRoute(s);
+ if(d.destination!=='full'){
+  d.path=d.path.filter(id=>id!==e.id);
+  const next=d.path.find(id=>!d.cleared[id]&&!d.skipped[id]);
+  d.cursor=next?route.findIndex(r=>r.id===next):route.findIndex(r=>!d.cleared[r.id]&&!d.skipped[r.id]);
+  if(d.cursor<0)d.cursor=route.length;
+  if(e.id===d.destination||!next)pauseDungeonAdvance(s,skipped?'目标未出现，已停止推进。':'已完成目的地，停止推进。');
+ }else{
+  // Preserve the full-clear order, returning to unfinished branches after a detour.
+  const next=route.findIndex((r,i)=>i>d.cursor&&!d.cleared[r.id]&&!d.skipped[r.id]);
+  d.cursor=next>=0?next:route.findIndex(r=>!d.cleared[r.id]&&!d.skipped[r.id]);
+  if(d.cursor<0)d.cursor=route.length;
+ }
+ if(d.cursor===route.length){d.completedAt=s.clock;log(s,dungeonDefinition(d.id).name+'路线已完成。','dungeon');}
 }
 function gateReason(s,e){const a=e.activation,d=s.dungeon;if(a?.afterDeathEntry&&!d.defeatedBosses[a.afterDeathEntry])return '通道尚未打开，请先击败前方首领。';if(a?.afterInteraction&&!d.interactions[a.afterInteraction])return '需要先使用火炮打开铁门。';return '';}
 function gate(s,e){const reason=gateReason(s,e);if(reason)throw new Error(reason);}
 export function dungeonAdvanceReason(s){
  const e=current(s);
  if(!s.dungeon)return '请先进入副本。';
+ if(s.dungeon.destination!=='full'&&(s.dungeon.cleared[s.dungeon.destination]||s.dungeon.skipped[s.dungeon.destination]))return '目的地已完成，请选择新的目标或全清副本。';
  if(!e)return '这条路线已经完成。';
  if([s,...s.party].some(c=>c.hp<=0))return '先让倒下的成员复活，再继续推进。';
  if(s.party.length!==4)return '需要五名小队成员才能继续推进。';
@@ -73,6 +88,35 @@ export function pauseDungeonAdvance(s,reason=''){
  const d=s.dungeon;if(!d)return;
  if(d.autoAdvance&&reason)log(s,'自动推进已暂停：'+reason,'dungeon');
  d.autoAdvance=false;d.advanceReason=reason;
+}
+export function dungeonDestinationReason(s,destination){
+ if(!s.dungeon)return '请先进入副本。';
+ if(destination==='full')return dungeonRoute(s).every(e=>s.dungeon.cleared[e.id]||s.dungeon.skipped[e.id]&&!remaining(s,e).length)?'这条路线已经完成。':'';
+ const e=dungeonRoute(s).find(e=>e.id===destination);
+ if(!e)return '未知的副本目的地。';
+ if(s.dungeon.cleared[e.id])return '该区域已经清理完成。';
+ if(e.optional&&!e.interaction&&!remaining(s,e).length)return '本次冒险未出现该目标。';
+ if(!dungeonDestinationPath(s,destination).length)return '没有可通行的路线。';
+ return '';
+}
+export function navigateDungeon(s,destination){
+ const reason=dungeonDestinationReason(s,destination);if(reason)throw new Error(reason);
+ if(!s.combat&& !['idle','dungeonCannon'].includes(s.activity.type))throw new Error('请先结束当前活动。');
+ if([s,...s.party].some(c=>c.hp<=0))throw new Error('先让倒下的成员复活，再继续推进。');
+ const d=s.dungeon,route=dungeonRoute(s),locked=!!s.combat||s.activity.type==='dungeonCannon';
+ if(destination==='full')for(const e of route)if(d.skipped[e.id]&&remaining(s,e).length)delete d.skipped[e.id];
+ const path=destination==='full'?[]:dungeonDestinationPath(s,destination).filter(id=>id!=='entrance'&&!d.cleared[id]);
+ // Explicitly returning to a previously skipped branch is supported.
+ for(const id of path)delete d.skipped[id];
+ d.destination=destination;d.path=path;
+ delete d.completedAt;
+ if(!locked){
+  d.cursor=destination==='full'?route.findIndex(e=>!d.cleared[e.id]&&!d.skipped[e.id]):route.findIndex(e=>e.id===path[0]);
+  if(d.cursor<0)throw new Error('这条路线已经完成。');
+ }
+ d.autoAdvance=true;d.advanceReason='';
+ log(s,destination==='full'?'开始全清副本。':'目的地调整为'+route.find(e=>e.id===destination).nameZh+'，完成后停止。','dungeon');
+ if(!locked)advanceDungeon(s);
 }
 export function beginDungeonAdvance(s){
  idle(s);const reason=dungeonAdvanceReason(s);if(reason)throw new Error(reason);
@@ -113,6 +157,7 @@ export function prepareEncounter(s){idle(s);const d=s.dungeon;if(!d?.spawns)thro
  if(s.pending.length||s.bag.length>=bagCapacity(s))throw new Error('请先整理背包与待拾取战利品。');
  if(!remaining(s,e).length&&e.interaction)throw new Error('这里有待完成的交互。');
  stopRecovery(s);s.groundEffects=[];
+ d.locationId=e.id;
  if(e.sourceCentroid)d.position=clone(e.sourceCentroid);
  const enemies=remaining(s,e).map(clone);if(!enemies.length){if(!e.interaction)advanceRoute(s,e);return;}
  startCombat(s,[],true,enemies,sceneCombatArea({dungeon:true,routeId:e.id}));s.combat.routeId=e.id;s.combat.runId=d.runId;

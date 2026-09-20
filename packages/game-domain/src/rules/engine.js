@@ -20,7 +20,7 @@ import {questTools,beginQuestTool,finishQuestTool} from './quest-tools.js';
 import {startCombat,combatTick,expireCapture,hurtPlayer,abandonCombat} from './combat.js';
 import {tickEnemyAuras} from './enemy-spells.js';
 import {candidates,recruit} from './party.js';
-import {enterDungeon,leaveDungeon,resetDungeon,beginDungeonAdvance,pauseDungeonAdvance,advanceDungeon,finishDungeonCannon,recordDungeonProgress,interactDungeon,skipDungeonEncounter} from './dungeon.js';
+import {enterDungeon,leaveDungeon,resetDungeon,navigateDungeon,beginDungeonAdvance,pauseDungeonAdvance,advanceDungeon,finishDungeonCannon,recordDungeonProgress,interactDungeon,skipDungeonEncounter} from './dungeon.js';
 import {startRecovery,stopRecovery,recoveryTick,beginResurrection,finishResurrection} from './recovery.js';
 import {dungeonView,dungeonViews,recoveryView} from './dungeon-view.js';
 import {questNavigation,journeyPosition,redirectedTravel} from './navigation.js';
@@ -164,7 +164,7 @@ export function act(input,action,now){
  if(s.stockadesQuestEvent&&!['stockadesQuestCancel','abandonCombat','stop','strategy','settings','sync','loot','cast','petCommand','useItem'].includes(action.type))throw new Error('正在进行袭击事件，请先完成或停止事件。');
  if(s.escort&&!['abandonCombat','escortCancel','stop','strategy','settings','sync','loot'].includes(action.type))throw new Error('正在护送，请先完成或停止护送。');
  if(s.hp<=0&&!['stockadesQuestCancel','abandonCombat','dungeonPause','revive','resurrect','rest','escortCancel','soulstoneRevive','reincarnate','strategy','settings'].includes(action.type))throw new Error('角色已死亡，请先复活。');
- if(s.dungeon&&!['abandonCombat','petCommand','reincarnate','soulstoneRevive','usePortal','useItem','useHearth','accept','abandon','dungeonNext','dungeonPause','dungeonInteract','dungeonSkip','leaveDungeon','stop','strategy','settings','equip','equipBag','sortBag','discardJunk','lockItem','applyEnchant','useBandage','disenchant','disenchantAll','loot','conjure','cast','revive','resurrect','rest','sync','talent'].includes(action.type))throw new Error('请先离开副本再进行这项操作。');
+ if(s.dungeon&&!['abandonCombat','petCommand','reincarnate','soulstoneRevive','usePortal','useItem','useHearth','accept','abandon','dungeonNext','dungeonNavigate','dungeonPause','dungeonInteract','dungeonSkip','leaveDungeon','stop','strategy','settings','equip','equipBag','sortBag','discardJunk','lockItem','applyEnchant','useBandage','disenchant','disenchantAll','loot','conjure','cast','revive','resurrect','rest','sync','talent'].includes(action.type))throw new Error('请先离开副本再进行这项操作。');
  if(storageActions.has(action.type)){ensureIdle(s);storageAction(s,action);return s;}
  if(professionActions.has(action.type)){ensureIdle(s);professionAction(s,action);if(['gatherResource','gatherAll','craft','useBandage','disenchant','disenchantAll'].includes(action.type))dismount(s);return s;}
  switch(action.type){
@@ -188,6 +188,7 @@ export function act(input,action,now){
  case 'enterDungeon':enterDungeon(s,action.contentId);break;
  case 'leaveDungeon':leaveDungeon(s);break;
  case 'dungeonNext':ensureIdle(s);beginDungeonAdvance(s);break;
+ case 'dungeonNavigate':navigateDungeon(s,action.destination);break;
  case 'dungeonPause':if(!s.dungeon)throw new Error('请先进入副本。');pauseDungeonAdvance(s,s.combat?'本场战斗结束后停止推进。':'已手动暂停推进。');break;
  case 'dungeonInteract':interactDungeon(s);break;
  case 'dungeonSkip':skipDungeonEncounter(s);break;

@@ -17,7 +17,7 @@ function group(){
 const step=(s,ms=100)=>advance(s,s.wallAt+ms).state;
 // Controlled victory fixtures isolate orchestration from combat balance.
 function victory(s){for(const e of s.combat.enemies){e.hp=0;e.rewarded=true;}s.combat.pull.startsAt=s.clock;s.combat.pull.engagedAt=s.clock;return step(s);}
-function atRoute(s,id){s.dungeon.cursor=dungeonRoute.findIndex(e=>e.id===id);const e=dungeonRoute[s.dungeon.cursor];if(e.activation?.afterDeathEntry)s.dungeon.defeatedBosses[e.activation.afterDeathEntry]=true;if(e.activation?.afterInteraction)s.dungeon.interactions[e.activation.afterInteraction]=true;return e;}
+function atRoute(s,id){s.dungeon.cursor=dungeonRoute.findIndex(e=>e.id===id);for(const prior of dungeonRoute.slice(0,s.dungeon.cursor))s.dungeon.cleared[prior.id]=true;const e=dungeonRoute[s.dungeon.cursor];if(e.activation?.afterDeathEntry)s.dungeon.defeatedBosses[e.activation.afterDeathEntry]=true;if(e.activation?.afterInteraction)s.dungeon.interactions[e.activation.afterInteraction]=true;return e;}
 
 test('one command chains real encounters and automatically loots without client commands',()=>{
  let s=act(group(),{type:'dungeonNext'},0),pulls=1,last=s.combat.id;
