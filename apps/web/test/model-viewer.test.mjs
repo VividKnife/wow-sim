@@ -44,3 +44,10 @@ test('one unavailable appearance does not discard the other equipped items',asyn
  assert.deepEqual(await response.json(),{items:[{id:7509,displayId:12671},{id:9513,unavailable:true}]});
  assert.equal(response.headers.get('Cache-Control'),'no-store');
 });
+
+test('asset relay retries a transient network failure once',async t=>{
+ let calls=0;
+ t.mock.method(globalThis,'fetch',async()=>{if(++calls===1)throw new TypeError('fetch failed');return new Response('{}');});
+ const response=await handleModelRequest(new Request('https://game.test/api/model-viewer/meta/character/3.json'));
+ assert.equal(response.status,200);assert.equal(calls,2);
+});

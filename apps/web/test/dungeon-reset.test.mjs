@@ -8,7 +8,7 @@ test('leaving and returning preserves a run; explicit reset generates a new run 
  s=act(s,{type:'leaveDungeon'},0);s=act(s,{type:'enterDungeon'},0);assert.equal(s.dungeon.runId,id);assert.equal(s.dungeon.cursor,2);
  assert.throws(()=>act(s,{type:'resetDungeon'},0),/离开/);
  s=act(s,{type:'leaveDungeon'},0);const earned=JSON.stringify({bag:s.bag,money:s.money,quests:s.quests,party:s.party});
- assert.equal(view(s).dungeon.canReset,true);s=act(s,{type:'resetDungeon'},0);assert.equal(s.dungeonSave,undefined);
+ assert.equal(view(s).dungeon.canReset,true);s=act(s,{type:'resetDungeon'},0);assert.equal(s.dungeonSaves?.deadmines,undefined);
  assert.equal(JSON.stringify({bag:s.bag,money:s.money,quests:s.quests,party:s.party}),earned);
  s=act(s,{type:'enterDungeon'},0);assert.notEqual(s.dungeon.runId,id);assert.equal(s.dungeon.cursor,0);assert.deepEqual(s.dungeon.defeated,{});
 });

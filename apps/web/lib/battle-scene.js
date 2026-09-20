@@ -15,10 +15,14 @@ export function unitBody(unit,scale){
 // Display a short history instead of finishing each movement before the next
 // network snapshot arrives. Never extrapolate beyond an authoritative position.
 export function createSceneMotion(delayMs=300){
- let frames=[],key,camera;
+ let frames=[],key,camera,lastLayout;
  const cameraKey=layout=>[layout.scale,layout.scaleY,layout.originX,layout.originY].join(':');
  return {update(layout,encounter,now,snap=false){
   const nextCamera=cameraKey(layout);
+  // Clock/HUD renders reuse this immutable layout. Recording it again delays
+  // the previous position until just before the next packet and creates jumps.
+  if(lastLayout===layout&&key===encounter&&!snap)return;
+  lastLayout=layout;
   if(key!==encounter||snap||camera!==nextCamera){frames=[];key=encounter;camera=nextCamera;}
   const frame={at:now,units:layout.units};
   if(frames.at(-1)?.at===now)frames[frames.length-1]=frame;

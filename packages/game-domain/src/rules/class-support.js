@@ -46,27 +46,7 @@ export function defaultClassRules(classId){
  return rules[classId]||[];
 }
 
-const traits={
-  1:[['人类精魂','精神提高 5%。']],
-  2:[['血性狂怒','生命高于 50% 时自动激活：15 秒内近战攻击强度提高 25%，受到的治疗降低 50%；冷却 2 分钟。'],['命令','宠物伤害提高 5%。']],
-  3:[['石像形态','生命低于 50% 时自动激活：8 秒内护甲提高 10%，移除流血与毒；冷却 3 分钟。']],
-  4:[['迅捷','闪避几率提高 1%。']],
-  5:[['亡灵意志','受到恐惧时自动解除并免疫恐惧 5 秒；冷却 2 分钟。']],
-  6:[['耐久','生命上限提高 5%。'],['战争践踏','近身且生命低于 50% 时自动施放，击晕附近目标 2 秒；冷却 2 分钟。']],
-  7:[['开阔思维','智力提高 5%。'],['逃命专家','受到定身或减速时自动解除；冷却 1 分钟。']],
-  8:[['再生','生命恢复速度提高 10%，战斗中保留少量生命恢复。'],['野兽杀手','对野兽伤害提高 5%。']],
-};
-const additionalRacialTraits={
- 1:[['感知','主动提高潜行侦测能力，持续20秒。'],['剑类与锤类专精','单手和双手剑、锤的武器技能提高5点。'],['外交','获得的声望提高10%。']],
- 2:[['坚韧','抵抗昏迷的几率提高25%。'],['斧类专精','单手和双手斧的武器技能提高5点。']],
- 3:[['枪械专精','枪械技能提高5点。'],['冰霜抗性','冰霜抗性提高10点。'],['寻找财宝','追踪附近的宝箱。']],
- 4:[['影遁','非战斗时进入潜行，移动或攻击解除。'],['自然抗性','自然抗性提高10点。'],['精灵之魂','灵魂状态的移动速度提高50%。']],
- 5:[['食尸','在附近的人型或亡灵尸体旁引导，每2秒恢复7%生命，持续10秒；受到伤害或移动会中断。'],['水下呼吸','水下呼吸时间延长300%。'],['暗影抗性','暗影抗性提高10点。']],
- 6:[['栽培','草药学技能提高15点。'],['自然抗性','自然抗性提高10点。']],
- 7:[['工程学专精','工程学技能提高15点。'],['奥术抗性','奥术抗性提高10点。']],
- 8:[['狂暴','攻击和施法速度提高10%至30%，持续10秒；按激活时缺失生命决定幅度。'],['弓与投掷专精','弓和投掷武器技能提高5点。']],
-};
-export const racialTraits=c=>[...(traits[c.raceId||1]||[]),...(additionalRacialTraits[c.raceId||1]||[])].map(([name,description])=>({name,description}));
+export {racialTraits} from '../../../game-data/racial-traits.js';
 
 // Coverage is reconciled against executable aura operations, not a blanket list of
 // all data nodes. Script-only effects require a named event handler below.
@@ -84,7 +64,6 @@ export function talentExecutionCoverage(t){
  return{supported:false,path:'unimplemented-special',effects:effects.map(i=>({effect:source['Effect'+i],aura:source['EffectApplyAuraName'+i],operation:source['EffectMiscValue'+i]}))};
 }
 for(const t of Object.values(talents))if(talentExecutionCoverage(t).supported)supportedTalentNames.add(t.name);
-
 
 
 

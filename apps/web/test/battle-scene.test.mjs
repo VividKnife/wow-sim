@@ -23,6 +23,22 @@ test('movement stays continuous across uneven snapshot arrivals',()=>{
  // Packet starvation stops at the last known position instead of walking away.
  assert.equal(motion.read(layout(48),2000).units.a.left,48);
 });
+test('HUD refreshes cannot turn a smooth movement into a one-millisecond jump',()=>{
+ const motion=createSceneMotion(160),first={units:{a:{left:0,top:10}}},next={units:{a:{left:10,top:10}}};
+ motion.update(first,'one',0);
+ // The clock-only render reuses the previous authoritative layout.
+ motion.update(first,'one',99);
+ motion.update(next,'one',100);
+ assert.equal(motion.read(next,210).units.a.left,5);
+ assert.ok(Math.abs(motion.read(next,259).units.a.left-9.9)<1e-9);
+ assert.equal(motion.read(next,260).units.a.left,10);
+});
+test('a new stationary snapshot still records a real movement stop',()=>{
+ const motion=createSceneMotion(160),first={units:{a:{left:0,top:0}}},moved={units:{a:{left:10,top:0}}},stopped={units:{a:{left:10,top:0}}};
+ motion.update(first,'one',0);motion.update(moved,'one',100);motion.update(stopped,'one',200);
+ assert.equal(motion.read(stopped,310).units.a.left,10);
+ motion.update(stopped,'two',400);assert.equal(motion.read(stopped,400).units.a.left,10);
+});
 test('motion resets for encounters, camera changes and reduced motion; removed units stay removed',()=>{
  const motion=createSceneMotion(),layout=x=>({units:{a:{left:x,top:10}}});
  motion.update(layout(0),'one',0);motion.update(layout(18),'one',200);

@@ -476,6 +476,14 @@
       "height": 300
     },
     {
+      "id": "classic-display-517",
+      "displayId": 517,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-517.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/5/517.webp",
+      "sha256": "823a66fa4b8e9417da9318552c19df914c6d4ae97c54ef224b02841b5e7f6090"
+    },
+    {
       "id": "classic-display-519",
       "displayId": 519,
       "kind": "npc-model-render",
@@ -691,6 +699,14 @@
       "sha256": "f142f8a903842af4cc6b3eaf77ae86d0ce205bef53e889eed7cfa5bcd433d87d",
       "width": 300,
       "height": 300
+    },
+    {
+      "id": "classic-display-825",
+      "displayId": 825,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-825.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/57/825.webp",
+      "sha256": "bd3f9977b40d7f878c37953f2e067013d236e6b96531aacb0d6739a4f1187eae"
     },
     {
       "id": "classic-display-829",
@@ -1630,6 +1646,22 @@
       "sha256": "0f9589d809a67ccd5013635cbee2ba3d0477c6e5f2f55569f05c59dafce9c079"
     },
     {
+      "id": "classic-display-1621",
+      "displayId": 1621,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1621.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/85/1621.webp",
+      "sha256": "a08ecf50a989f15d7ea525e80442354f4b70ef7d6dcfd9fc41dbbc5225f753f8"
+    },
+    {
+      "id": "classic-display-1675",
+      "displayId": 1675,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1675.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/139/1675.webp",
+      "sha256": "d6533f0d959a9d945181bb9f27e44ac6717983b3a839b3c696ae590ebda98763"
+    },
+    {
       "id": "classic-display-1688",
       "displayId": 1688,
       "kind": "npc-model-render",
@@ -1700,6 +1732,14 @@
       "path": "creatures/portraits/classic-display-1697.webp",
       "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/161/1697.webp",
       "sha256": "3e4c02817898dff8493d92e601754e319b1db535cd26f2a0a0207750a54f6e48"
+    },
+    {
+      "id": "classic-display-1724",
+      "displayId": 1724,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1724.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/188/1724.webp",
+      "sha256": "6ecc3a45cb130706a5b7f09b6e33dacc5e400c3e66592377444ddbe8a3571487"
     },
     {
       "id": "classic-display-1736",
@@ -1902,6 +1942,46 @@
       "height": 300
     },
     {
+      "id": "classic-display-2142",
+      "displayId": 2142,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2142.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/94/2142.webp",
+      "sha256": "3879c1e054267e7868a2ee30fcfbeee5fde076ef7f54e0a45b35038e3fcf5bbe"
+    },
+    {
+      "id": "classic-display-2144",
+      "displayId": 2144,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2144.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/96/2144.webp",
+      "sha256": "cd0bb7f25927605712684e19860ec9bc86aff75dc0dd3cf064193ba5db12fbc3"
+    },
+    {
+      "id": "classic-display-2145",
+      "displayId": 2145,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2145.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/97/2145.webp",
+      "sha256": "0b7b3e50abcbef5f8016495c39975e02c2dfcb8b1ac59d654473c6b75b4c44c4"
+    },
+    {
+      "id": "classic-display-2146",
+      "displayId": 2146,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2146.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/98/2146.webp",
+      "sha256": "090888e81b412af7a225bb24a0928d62d6a9464003d47de2ed70c5014f80f746"
+    },
+    {
+      "id": "classic-display-2147",
+      "displayId": 2147,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2147.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/99/2147.webp",
+      "sha256": "644d3264ac7658c19aaff390ea0105fc5ab10089b7a069862bec8815597efbcd"
+    },
+    {
       "id": "classic-display-2148",
       "displayId": 2148,
       "kind": "npc-model-render",
@@ -1909,6 +1989,14 @@
       "sha256": "e3d833c1d5fbbaaf028419fc021f5de96f5125bd83a54e9dd8dfd916444852cd",
       "width": 300,
       "height": 300
+    },
+    {
+      "id": "classic-display-2149",
+      "displayId": 2149,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2149.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/101/2149.webp",
+      "sha256": "e6fd06a82767b8752ca5dd01d70cb3ccccacd8520196c987cf60f2c922bcb288"
     },
     {
       "id": "classic-display-2153",
@@ -2485,6 +2573,14 @@
       "path": "creatures/portraits/classic-display-3246.webp",
       "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/174/3246.webp",
       "sha256": "bae9a7128bb83d03740ef057ad0792a2823a62758c40261cd6e6c94eae4f6fe4"
+    },
+    {
+      "id": "classic-display-3250",
+      "displayId": 3250,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-3250.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/178/3250.webp",
+      "sha256": "e9aa73623b31ed8ffd1497b90d2410b6e843dff465bf7dfea7f3df8bd28215ee"
     },
     {
       "id": "classic-display-3251",
@@ -3210,6 +3306,38 @@
       "path": "creatures/portraits/classic-display-3449.webp",
       "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/121/3449.webp",
       "sha256": "78a78dfe288a1c7a038b2708d9f0f53cbccc8bf1d40546090b8853730e91698a"
+    },
+    {
+      "id": "classic-display-3453",
+      "displayId": 3453,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-3453.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/125/3453.webp",
+      "sha256": "e5030985476e1a948779a9e3b3b5e217250fb73f0b49960674fcbf2c6386a7a0"
+    },
+    {
+      "id": "classic-display-3487",
+      "displayId": 3487,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-3487.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/159/3487.webp",
+      "sha256": "dd28701443bc72a1a02a625fcc7dad879b0ebaf5b719061dc0d49c9651bd6170"
+    },
+    {
+      "id": "classic-display-3488",
+      "displayId": 3488,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-3488.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/160/3488.webp",
+      "sha256": "5ed221215ec08a5ed3d678d2c32e1fb24233615c3b4e1abaea24da98a61c1347"
+    },
+    {
+      "id": "classic-display-3490",
+      "displayId": 3490,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-3490.webp",
+      "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/162/3490.webp",
+      "sha256": "4ae4e04779aff4cb4e05e809f6fbdb7816ee4c6e3fb68d63830bbc70f3d16dc9"
     },
     {
       "id": "classic-display-4162",
@@ -5789,6 +5917,14 @@
       "family": 0,
       "evidenceLevel": "local-creature-template-model-id"
     },
+    "270": {
+      "entry": 270,
+      "assetId": "classic-display-1724",
+      "displayId": 1724,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
     "277": {
       "entry": 277,
       "assetId": "classic-display-1433",
@@ -6989,6 +7125,14 @@
       "family": 0,
       "evidenceLevel": "classic-npc-page-display-id"
     },
+    "859": {
+      "entry": 859,
+      "assetId": "classic-display-3453",
+      "displayId": 3453,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
     "869": {
       "entry": 869,
       "assetId": "classic-display-2366",
@@ -7301,6 +7445,38 @@
       "family": 0,
       "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
     },
+    "1051": {
+      "entry": 1051,
+      "assetId": "classic-display-825",
+      "displayId": 825,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
+    "1052": {
+      "entry": 1052,
+      "assetId": "classic-display-3490",
+      "displayId": 3490,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
+    "1053": {
+      "entry": 1053,
+      "assetId": "classic-display-3488",
+      "displayId": 3488,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
+    "1054": {
+      "entry": 1054,
+      "assetId": "classic-display-3487",
+      "displayId": 3487,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
     "1065": {
       "entry": 1065,
       "assetId": "classic-display-204",
@@ -7308,6 +7484,14 @@
       "creatureType": 7,
       "family": 0,
       "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1074": {
+      "entry": 1074,
+      "assetId": "classic-display-1675",
+      "displayId": 1675,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
     },
     "1103": {
       "entry": 1103,
@@ -8157,6 +8341,22 @@
       "family": 0,
       "evidenceLevel": "local-creature-template-model-id"
     },
+    "1663": {
+      "entry": 1663,
+      "assetId": "classic-display-2149",
+      "displayId": 2149,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
+    "1666": {
+      "entry": 1666,
+      "assetId": "classic-display-825",
+      "displayId": 825,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
     "1668": {
       "entry": 1668,
       "assetId": "classic-display-3259",
@@ -8181,10 +8381,82 @@
       "family": 0,
       "evidenceLevel": "local-creature-template-model-id"
     },
+    "1696": {
+      "entry": 1696,
+      "assetId": "classic-display-517",
+      "displayId": 517,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
+    "1706": {
+      "entry": 1706,
+      "assetId": "classic-display-2148",
+      "displayId": 2148,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
+    "1707": {
+      "entry": 1707,
+      "assetId": "classic-display-2144",
+      "displayId": 2144,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
+    "1708": {
+      "entry": 1708,
+      "assetId": "classic-display-2146",
+      "displayId": 2146,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
+    "1711": {
+      "entry": 1711,
+      "assetId": "classic-display-2145",
+      "displayId": 2145,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
+    "1715": {
+      "entry": 1715,
+      "assetId": "classic-display-2147",
+      "displayId": 2147,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
+    "1716": {
+      "entry": 1716,
+      "assetId": "classic-display-1621",
+      "displayId": 1621,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
+    "1717": {
+      "entry": 1717,
+      "assetId": "classic-display-3250",
+      "displayId": 3250,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
     "1719": {
       "entry": 1719,
       "assetId": "classic-display-1865",
       "displayId": 1865,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "local-creature-template-model-id"
+    },
+    "1720": {
+      "entry": 1720,
+      "assetId": "classic-display-2142",
+      "displayId": 2142,
       "creatureType": 7,
       "family": 0,
       "evidenceLevel": "local-creature-template-model-id"

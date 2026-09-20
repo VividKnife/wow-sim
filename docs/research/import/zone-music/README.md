@@ -7,3 +7,5 @@
 来源为 [Wowhead Classic 音乐目录](https://www.wowhead.com/classic/sounds/zone-music)，区域选取参考其 Classic 区域页面（12、40、44、38、493、1581）。`source.html` 保留目录原始响应，`manifest.json` 记录音频来源、文件 ID、源/成品 SHA-256、大小、时长和移除的空字节前缀数量。保留 MP3 音频帧，不重新编码；全部曲目通过 soundfile 完整解码。素材权属属于 Blizzard Entertainment。
 
 重跑导入：`python docs/research/import/import-zone-music.py`（需要 Python、soundfile）。验证映射、素材哈希与播放生命周期：`node --test apps/web/test/zone-music.test.mjs`。
+
+监狱任务路线新增夜色镇与湿地节点：暮色森林选用目录中的 Haunted01（53234），湿地选用 Swamp01（53253）。这是配合区域氛围的循环选曲，不代表原客户端完整区域播放规则；来源与音频校验信息一并记录在清单中。

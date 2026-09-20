@@ -1,0 +1,907 @@
+{
+  "image": "/battle/hd2d/characters.png",
+  "width": 768,
+  "height": 1024,
+  "columns": 6,
+  "rows": 8,
+  "cellWidth": 128,
+  "cellHeight": 128,
+  "anchor": [
+    64,
+    112
+  ],
+  "anchorNormalized": [
+    0.5,
+    0.875
+  ],
+  "facing": "right",
+  "roles": [
+    "knight",
+    "ranger",
+    "rogue",
+    "wizard",
+    "priest",
+    "shaman",
+    "wolf",
+    "goblin"
+  ],
+  "poses": [
+    "idle",
+    "walk1",
+    "walk2",
+    "attack",
+    "cast",
+    "hurt"
+  ],
+  "sourceSize": [
+    1086,
+    1448
+  ],
+  "normalizationScale": 0.5517241379310345,
+  "frames": [
+    {
+      "role": "knight",
+      "pose": "idle",
+      "row": 0,
+      "column": 0,
+      "sourceRect": [
+        34,
+        67,
+        152,
+        205
+      ],
+      "atlasRect": [
+        0,
+        0,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "knight",
+      "pose": "walk1",
+      "row": 0,
+      "column": 1,
+      "sourceRect": [
+        213,
+        67,
+        328,
+        205
+      ],
+      "atlasRect": [
+        128,
+        0,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "knight",
+      "pose": "walk2",
+      "row": 0,
+      "column": 2,
+      "sourceRect": [
+        387,
+        67,
+        507,
+        205
+      ],
+      "atlasRect": [
+        256,
+        0,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "knight",
+      "pose": "attack",
+      "row": 0,
+      "column": 3,
+      "sourceRect": [
+        557,
+        79,
+        733,
+        205
+      ],
+      "atlasRect": [
+        384,
+        0,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "knight",
+      "pose": "cast",
+      "row": 0,
+      "column": 4,
+      "sourceRect": [
+        756,
+        36,
+        879,
+        205
+      ],
+      "atlasRect": [
+        512,
+        0,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "knight",
+      "pose": "hurt",
+      "row": 0,
+      "column": 5,
+      "sourceRect": [
+        929,
+        87,
+        1044,
+        205
+      ],
+      "atlasRect": [
+        640,
+        0,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "ranger",
+      "pose": "idle",
+      "row": 1,
+      "column": 0,
+      "sourceRect": [
+        29,
+        247,
+        156,
+        394
+      ],
+      "atlasRect": [
+        0,
+        128,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "ranger",
+      "pose": "walk1",
+      "row": 1,
+      "column": 1,
+      "sourceRect": [
+        206,
+        248,
+        342,
+        394
+      ],
+      "atlasRect": [
+        128,
+        128,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "ranger",
+      "pose": "walk2",
+      "row": 1,
+      "column": 2,
+      "sourceRect": [
+        390,
+        248,
+        512,
+        394
+      ],
+      "atlasRect": [
+        256,
+        128,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "ranger",
+      "pose": "attack",
+      "row": 1,
+      "column": 3,
+      "sourceRect": [
+        557,
+        238,
+        719,
+        394
+      ],
+      "atlasRect": [
+        384,
+        128,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "ranger",
+      "pose": "cast",
+      "row": 1,
+      "column": 4,
+      "sourceRect": [
+        750,
+        233,
+        894,
+        394
+      ],
+      "atlasRect": [
+        512,
+        128,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "ranger",
+      "pose": "hurt",
+      "row": 1,
+      "column": 5,
+      "sourceRect": [
+        937,
+        272,
+        1055,
+        394
+      ],
+      "atlasRect": [
+        640,
+        128,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "rogue",
+      "pose": "idle",
+      "row": 2,
+      "column": 0,
+      "sourceRect": [
+        27,
+        431,
+        154,
+        581
+      ],
+      "atlasRect": [
+        0,
+        256,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "rogue",
+      "pose": "walk1",
+      "row": 2,
+      "column": 1,
+      "sourceRect": [
+        214,
+        433,
+        339,
+        581
+      ],
+      "atlasRect": [
+        128,
+        256,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "rogue",
+      "pose": "walk2",
+      "row": 2,
+      "column": 2,
+      "sourceRect": [
+        384,
+        431,
+        517,
+        581
+      ],
+      "atlasRect": [
+        256,
+        256,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "rogue",
+      "pose": "attack",
+      "row": 2,
+      "column": 3,
+      "sourceRect": [
+        554,
+        446,
+        742,
+        582
+      ],
+      "atlasRect": [
+        384,
+        256,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "rogue",
+      "pose": "cast",
+      "row": 2,
+      "column": 4,
+      "sourceRect": [
+        763,
+        412,
+        886,
+        582
+      ],
+      "atlasRect": [
+        512,
+        256,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "rogue",
+      "pose": "hurt",
+      "row": 2,
+      "column": 5,
+      "sourceRect": [
+        937,
+        452,
+        1045,
+        582
+      ],
+      "atlasRect": [
+        640,
+        256,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "wizard",
+      "pose": "idle",
+      "row": 3,
+      "column": 0,
+      "sourceRect": [
+        24,
+        616,
+        156,
+        771
+      ],
+      "atlasRect": [
+        0,
+        384,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "wizard",
+      "pose": "walk1",
+      "row": 3,
+      "column": 1,
+      "sourceRect": [
+        204,
+        612,
+        345,
+        771
+      ],
+      "atlasRect": [
+        128,
+        384,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "wizard",
+      "pose": "walk2",
+      "row": 3,
+      "column": 2,
+      "sourceRect": [
+        380,
+        614,
+        527,
+        771
+      ],
+      "atlasRect": [
+        256,
+        384,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "wizard",
+      "pose": "attack",
+      "row": 3,
+      "column": 3,
+      "sourceRect": [
+        552,
+        632,
+        750,
+        771
+      ],
+      "atlasRect": [
+        384,
+        384,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "wizard",
+      "pose": "cast",
+      "row": 3,
+      "column": 4,
+      "sourceRect": [
+        759,
+        585,
+        894,
+        771
+      ],
+      "atlasRect": [
+        512,
+        384,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "wizard",
+      "pose": "hurt",
+      "row": 3,
+      "column": 5,
+      "sourceRect": [
+        933,
+        641,
+        1048,
+        771
+      ],
+      "atlasRect": [
+        640,
+        384,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "priest",
+      "pose": "idle",
+      "row": 4,
+      "column": 0,
+      "sourceRect": [
+        31,
+        791,
+        162,
+        960
+      ],
+      "atlasRect": [
+        0,
+        512,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "priest",
+      "pose": "walk1",
+      "row": 4,
+      "column": 1,
+      "sourceRect": [
+        215,
+        792,
+        344,
+        962
+      ],
+      "atlasRect": [
+        128,
+        512,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "priest",
+      "pose": "walk2",
+      "row": 4,
+      "column": 2,
+      "sourceRect": [
+        399,
+        792,
+        528,
+        961
+      ],
+      "atlasRect": [
+        256,
+        512,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "priest",
+      "pose": "attack",
+      "row": 4,
+      "column": 3,
+      "sourceRect": [
+        560,
+        820,
+        745,
+        963
+      ],
+      "atlasRect": [
+        384,
+        512,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "priest",
+      "pose": "cast",
+      "row": 4,
+      "column": 4,
+      "sourceRect": [
+        760,
+        777,
+        892,
+        963
+      ],
+      "atlasRect": [
+        512,
+        512,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "priest",
+      "pose": "hurt",
+      "row": 4,
+      "column": 5,
+      "sourceRect": [
+        937,
+        825,
+        1047,
+        962
+      ],
+      "atlasRect": [
+        640,
+        512,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "shaman",
+      "pose": "idle",
+      "row": 5,
+      "column": 0,
+      "sourceRect": [
+        21,
+        963,
+        173,
+        1146
+      ],
+      "atlasRect": [
+        0,
+        640,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "shaman",
+      "pose": "walk1",
+      "row": 5,
+      "column": 1,
+      "sourceRect": [
+        204,
+        974,
+        350,
+        1148
+      ],
+      "atlasRect": [
+        128,
+        640,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "shaman",
+      "pose": "walk2",
+      "row": 5,
+      "column": 2,
+      "sourceRect": [
+        385,
+        973,
+        526,
+        1148
+      ],
+      "atlasRect": [
+        256,
+        640,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "shaman",
+      "pose": "attack",
+      "row": 5,
+      "column": 3,
+      "sourceRect": [
+        546,
+        1003,
+        749,
+        1148
+      ],
+      "atlasRect": [
+        384,
+        640,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "shaman",
+      "pose": "cast",
+      "row": 5,
+      "column": 4,
+      "sourceRect": [
+        758,
+        967,
+        896,
+        1148
+      ],
+      "atlasRect": [
+        512,
+        640,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "shaman",
+      "pose": "hurt",
+      "row": 5,
+      "column": 5,
+      "sourceRect": [
+        935,
+        1027,
+        1062,
+        1147
+      ],
+      "atlasRect": [
+        640,
+        640,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "wolf",
+      "pose": "idle",
+      "row": 6,
+      "column": 0,
+      "sourceRect": [
+        17,
+        1174,
+        158,
+        1272
+      ],
+      "atlasRect": [
+        0,
+        768,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "wolf",
+      "pose": "walk1",
+      "row": 6,
+      "column": 1,
+      "sourceRect": [
+        193,
+        1175,
+        345,
+        1272
+      ],
+      "atlasRect": [
+        128,
+        768,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "wolf",
+      "pose": "walk2",
+      "row": 6,
+      "column": 2,
+      "sourceRect": [
+        368,
+        1174,
+        517,
+        1272
+      ],
+      "atlasRect": [
+        256,
+        768,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "wolf",
+      "pose": "attack",
+      "row": 6,
+      "column": 3,
+      "sourceRect": [
+        550,
+        1175,
+        716,
+        1271
+      ],
+      "atlasRect": [
+        384,
+        768,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "wolf",
+      "pose": "cast",
+      "row": 6,
+      "column": 4,
+      "sourceRect": [
+        749,
+        1161,
+        883,
+        1275
+      ],
+      "atlasRect": [
+        512,
+        768,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "wolf",
+      "pose": "hurt",
+      "row": 6,
+      "column": 5,
+      "sourceRect": [
+        928,
+        1183,
+        1063,
+        1274
+      ],
+      "atlasRect": [
+        640,
+        768,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "goblin",
+      "pose": "idle",
+      "row": 7,
+      "column": 0,
+      "sourceRect": [
+        35,
+        1305,
+        157,
+        1425
+      ],
+      "atlasRect": [
+        0,
+        896,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "goblin",
+      "pose": "walk1",
+      "row": 7,
+      "column": 1,
+      "sourceRect": [
+        225,
+        1306,
+        328,
+        1425
+      ],
+      "atlasRect": [
+        128,
+        896,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "goblin",
+      "pose": "walk2",
+      "row": 7,
+      "column": 2,
+      "sourceRect": [
+        399,
+        1306,
+        517,
+        1425
+      ],
+      "atlasRect": [
+        256,
+        896,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "goblin",
+      "pose": "attack",
+      "row": 7,
+      "column": 3,
+      "sourceRect": [
+        559,
+        1311,
+        722,
+        1425
+      ],
+      "atlasRect": [
+        384,
+        896,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "goblin",
+      "pose": "cast",
+      "row": 7,
+      "column": 4,
+      "sourceRect": [
+        763,
+        1283,
+        865,
+        1425
+      ],
+      "atlasRect": [
+        512,
+        896,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "goblin",
+      "pose": "hurt",
+      "row": 7,
+      "column": 5,
+      "sourceRect": [
+        947,
+        1312,
+        1040,
+        1425
+      ],
+      "atlasRect": [
+        640,
+        896,
+        128,
+        128
+      ]
+    }
+  ]
+}

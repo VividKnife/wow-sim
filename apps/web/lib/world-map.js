@@ -6,6 +6,8 @@ export const mapRegions={
  '西部荒野':{name:'西部荒野',image:'/maps/westfall-classic.jpg'},
  '主城传送':{name:'主城传送 · 服务节点示意',image:null},
  '信使路线':{name:'信使路线',image:null},
+ '暮色森林':{name:'暮色森林 · 任务节点示意',image:null},
+ '湿地':{name:'湿地 · 任务节点示意',image:null},
 };
 export const mapRegion=region=>region==='北郡'?'艾尔文':region;
 // Sample the server's timed route; local interpolation never changes game location.
@@ -29,12 +31,13 @@ export const mapPoints={
  goldshire:[42,65],fargodeep:[39,80],stonefield:[33,86],maclure:[48,87],
  mirror:[29,59],crystal:[54,65],jasper:[61,53],tower:[75,73],logging:[85,65],
  brackwell:[70,80],westbrook:[24,72],forestedge:[24,83],
- stormwind:[57,56],magetower:[35,69],bluerecluse:[43,80],oldtown:[70,44],
+ stormwind:[57,56],magetower:[35,69],bluerecluse:[43,80],oldtown:[70,44],stockades:[41,58],
  dwarven:[60,23],cathedral:[43,37],park:[21,51],keep:[81,18],
  furlbrow:[51,21],saldean:[54,32],jansen:[43,28],sentinel:[55,52],
  alexton:[39,51],moonbrook:[44,68],daggerhills:[56,76],coastnorth:[29,25],
  coast:[24,63],lighthouse:[30,88],deadmines:[42,83],
  lakeshire:[22,79],ironforge:[22,22],thelsamar:[57,45],algaz:[78,20],silverstream:[81,65],
+ darkshire:[74,46],menethil:[12,64],dunmodr:[47,17],
 };
 
 export function playerMapPoint(journey,map){

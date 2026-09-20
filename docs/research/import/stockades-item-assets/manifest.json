@@ -1,0 +1,269 @@
+{
+  "commit": "b852b560442b31579e77ef3967b3c2d594832da8",
+  "scopeSourceSha256": "c7eb532f4b5b927bea1770ecc736dbf5cad8d64318dd58147c72dbc7d249cc84",
+  "treeSha256": "43b62b2f91a2bb366f2d3962554227837a64e83a96905a652a0e58c6ec4846cf",
+  "items": [
+    {
+      "itemId": 1264,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/1264?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-1264.json",
+      "sha256": "b22e21bcbd236c1e119605887890be87a0072fd335e760af31cded0ad72ba83b"
+    },
+    {
+      "itemId": 1317,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/1317?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-1317.json",
+      "sha256": "227b50524ae6ff65d0414fb7a0996a2a392b5f7e450574356685af7ef1e5065d"
+    },
+    {
+      "itemId": 2033,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/2033?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-2033.json",
+      "sha256": "c12910147609c4d87c9501029b03b2934b79b4cab41294175d200dbb5c07433d"
+    },
+    {
+      "itemId": 2874,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/2874?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-2874.json",
+      "sha256": "605eb47e43dae233709b253fb77a4ee6f07838c2092ec02bcec63606901bbf48"
+    },
+    {
+      "itemId": 2906,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/2906?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-2906.json",
+      "sha256": "8ef50108bcc3ce91f505fae1cfed61b663b35a206a90cbbb043dd760362f0b85"
+    },
+    {
+      "itemId": 2909,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/2909?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-2909.json",
+      "sha256": "fdb26e700b2714e810fd25bba73d8cbfaa34815cfc4111eed1b98da68d870007"
+    },
+    {
+      "itemId": 2926,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/2926?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-2926.json",
+      "sha256": "d05a67bc50e85b97741c04a3574858d20231c58d336a0dcef17c68c0b220d3d4"
+    },
+    {
+      "itemId": 2933,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/2933?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-2933.json",
+      "sha256": "83c69fc9daf984a9d64b1b77bb47f7fd95e04b187f2107e94768faaf53f3186d"
+    },
+    {
+      "itemId": 2941,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/2941?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-2941.json",
+      "sha256": "dd7c9ebe805ee8a6a67a3a62b9a3ae91cbd6d99f631efdda7559b0ec6487d4ee"
+    },
+    {
+      "itemId": 2942,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/2942?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-2942.json",
+      "sha256": "51927cec396b1b5618d7da4008972a282e68e1ccf1d163f69d861f4409c65337"
+    },
+    {
+      "itemId": 2956,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/2956?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-2956.json",
+      "sha256": "fd0578b35c1159983923d3e79d7cccf2db3d157dc7f90559e7f2baaa6a50990d"
+    },
+    {
+      "itemId": 3228,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/3228?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-3228.json",
+      "sha256": "9fca370543a14acfed399d5e15ce15f6805abe2777caa1507415832602544fb2"
+    },
+    {
+      "itemId": 3400,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/3400?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-3400.json",
+      "sha256": "53abd4e422bc0cf4f93c0be716fbd67b4c74f2e96acc821aa2e5aa2deee732ac"
+    },
+    {
+      "itemId": 3562,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/3562?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-3562.json",
+      "sha256": "2741c6c82da17182c79f93f707965cfdaf4fd20c1db872f957fdcaf5386397b0"
+    },
+    {
+      "itemId": 3628,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/3628?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-3628.json",
+      "sha256": "91d8616bf1a030199b55d8099ef47f22c6355a3dfdd78aeb39813ef730805140"
+    },
+    {
+      "itemId": 3630,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/3630?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-3630.json",
+      "sha256": "53548ec65f465479d18c3b0a3b1e574a7f55064260e75e75d39e6e04b46cd133"
+    },
+    {
+      "itemId": 3640,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/3640?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-3640.json",
+      "sha256": "fefccef5e4f49d7c772f73f457f8f3a287057bcc97f4baf5df064bb13a8cdc15"
+    },
+    {
+      "itemId": 4306,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/4306?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-4306.json",
+      "sha256": "09ace074d5b357aca3c88a2550568c8c54da811aae6fcf3ff6df32ef9131fded"
+    },
+    {
+      "itemId": 8683,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/8683?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-8683.json",
+      "sha256": "e3d0971626e70b3871983d472463ede116b0bd77a80df4a2d07e6b098b1bfbb7"
+    },
+    {
+      "itemId": 8687,
+      "url": "https://nether.wowhead.com/classic/tooltip/item/8687?locale=4",
+      "file": "docs/research/import/stockades-item-assets/tooltips/item-8687.json",
+      "sha256": "32c71072ec7a772dcd69a83954bed6c30f6b0e83a786d4f6d68f39ce86143154"
+    }
+  ],
+  "assets": [
+    {
+      "icon": "inv_belt_05",
+      "file": "apps/web/public/icons/assets/inv_belt_05.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Belt_05.PNG",
+      "gitBlobSha1": "2e2e0b568942c8c3bdfef4169423c9f075cca8fd",
+      "sha256": "f810e32962088c6acbbbb38635321f705b8e8af6226bab2d61091e5c9afcef00"
+    },
+    {
+      "icon": "inv_boots_08",
+      "file": "apps/web/public/icons/assets/inv_boots_08.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Boots_08.PNG",
+      "gitBlobSha1": "f306f126e15aad141c7c1c92830dcb1c9c697765",
+      "sha256": "35157afbf805eb4f73b842db46796b2cb039bd22bdd21a04031db7cd8bd2e0ea"
+    },
+    {
+      "icon": "inv_bracer_02",
+      "file": "apps/web/public/icons/assets/inv_bracer_02.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Bracer_02.PNG",
+      "gitBlobSha1": "a93296f5461b3a381f31cfe0e504feb4baf32f5c",
+      "sha256": "afdd98e34a6ec6c479632e1c6ecc14bcedfc7c34df2e46b2753ab194cbec0cb4"
+    },
+    {
+      "icon": "inv_fabric_silk_01",
+      "file": "apps/web/public/icons/assets/inv_fabric_silk_01.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Fabric_Silk_01.PNG",
+      "gitBlobSha1": "daf4bd89c47d0579e6f7f05ce747d750ac5c2b2e",
+      "sha256": "48c10bbe0d4b972482a9bf5599d399039733da953f1f382fa9523e340515bcf6"
+    },
+    {
+      "icon": "inv_gauntlets_04",
+      "file": "apps/web/public/icons/assets/inv_gauntlets_04.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Gauntlets_04.PNG",
+      "gitBlobSha1": "026d5d1352355e159c7f355724b5c416313e5791",
+      "sha256": "958079446d4fe62df30462f38c3fab77081be03c8494abeb41240fe44fc12c21"
+    },
+    {
+      "icon": "inv_gauntlets_09",
+      "file": "apps/web/public/icons/assets/inv_gauntlets_09.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Gauntlets_09.PNG",
+      "gitBlobSha1": "a4b3fb82402d9ba625a8e94de2e46df11688dd14",
+      "sha256": "893bdbe35cdba409569511e0fa9333e1fdd1647aad8b61c6c755db10c2e17171"
+    },
+    {
+      "icon": "inv_jewelry_ring_05",
+      "file": "apps/web/public/icons/assets/inv_jewelry_ring_05.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Jewelry_Ring_05.PNG",
+      "gitBlobSha1": "2b79c3feafe81f6213281eea91a3fbf7a83fcfe7",
+      "sha256": "c630ee2a28d6e26277076070d3b22a7b3a53ec35619dfc518e71572a9e04dda2"
+    },
+    {
+      "icon": "inv_letter_05",
+      "file": "apps/web/public/icons/assets/inv_letter_05.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Letter_05.PNG",
+      "gitBlobSha1": "2774d40c08dba1c11833bcdec691bb6ec25507a3",
+      "sha256": "0a091d796e42fa75acc949fdc419ec831e5aad9ce04617c9e6c2671674d7a90c"
+    },
+    {
+      "icon": "inv_letter_15",
+      "file": "apps/web/public/icons/assets/inv_letter_15.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Letter_15.PNG",
+      "gitBlobSha1": "2aab59dc39deb03df4a78c763fe7e03b85a2eab5",
+      "sha256": "b1bdfd23695c670983bcac9e3e6e1ebde818e446d11adc19d6bc709fce9c8a1e"
+    },
+    {
+      "icon": "inv_mace_07",
+      "file": "apps/web/public/icons/assets/inv_mace_07.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Mace_07.PNG",
+      "gitBlobSha1": "a59292060af7f0a287fcfaf52deeab69d8329580",
+      "sha256": "05beb2ff05dfc9c9382bbfddca11b2128271f63dc5c73c2a6050a8f964389a16"
+    },
+    {
+      "icon": "inv_misc_bandana_03",
+      "file": "apps/web/public/icons/assets/inv_misc_bandana_03.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Misc_Bandana_03.PNG",
+      "gitBlobSha1": "44236a90eb2c62e4247d57bec9fdf3641c13481a",
+      "sha256": "55087185b30371985245cbe34d01710bb21afcb2c03da1010f776201e94fbfc1"
+    },
+    {
+      "icon": "inv_misc_food_19",
+      "file": "apps/web/public/icons/assets/inv_misc_food_19.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Misc_Food_19.PNG",
+      "gitBlobSha1": "c4a3bbbe5dd5274f2460130f65dbc8c9317d8557",
+      "sha256": "17957f9b3a1e8e92e60b134d57db28cbd7f9f80fb6085a479608be03825a7932"
+    },
+    {
+      "icon": "inv_misc_head_dwarf_01",
+      "file": "apps/web/public/icons/assets/inv_misc_head_dwarf_01.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Misc_Head_Dwarf_01.PNG",
+      "gitBlobSha1": "50c2577fb70988f98da8a17740ffd872741dcba7",
+      "sha256": "cbb353b8f6bbaf331031e3a521be7fef7dc7a250570c12fa208289f87a95d4f4"
+    },
+    {
+      "icon": "inv_misc_head_human_01",
+      "file": "apps/web/public/icons/assets/inv_misc_head_human_01.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Misc_Head_Human_01.PNG",
+      "gitBlobSha1": "6f88179218f58b902646f5f7646ed36dc7ca4d3f",
+      "sha256": "62f9ce8ee19846ee9d7e22ce33f9005ed758fc6e9ca79ba4cc5c0aa5b7164cc5"
+    },
+    {
+      "icon": "inv_misc_head_orc_01",
+      "file": "apps/web/public/icons/assets/inv_misc_head_orc_01.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Misc_Head_Orc_01.PNG",
+      "gitBlobSha1": "9cdd3505cd9901cc6041e0951b52834b851d4534",
+      "sha256": "56fb42980187f1ec0ab9c3acad5a9ea545d9369c468c3ac973f9c1a1570c19c7"
+    },
+    {
+      "icon": "inv_misc_note_02",
+      "file": "apps/web/public/icons/assets/inv_misc_note_02.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_MISC_NOTE_02.PNG",
+      "gitBlobSha1": "f71a98844255f3a88136ddcbef8a77c333e55c05",
+      "sha256": "8f0d186dd0cec394668af635d558dc36fa1877be6ab625e7d99a576ca467f4fe"
+    },
+    {
+      "icon": "inv_pants_03",
+      "file": "apps/web/public/icons/assets/inv_pants_03.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Pants_03.PNG",
+      "gitBlobSha1": "0c8312771186f66be8f76e39bef842c7e849fc94",
+      "sha256": "6881678ef764bfa0d8c328bf8b78c09de9d7163d986da82f4d3253c3ba83684f"
+    },
+    {
+      "icon": "inv_staff_16",
+      "file": "apps/web/public/icons/assets/inv_staff_16.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Staff_16.PNG",
+      "gitBlobSha1": "fe9da5062ed2869caec915564d6f96fe1fe8aefa",
+      "sha256": "27f20bcc49834168b87c0e8e1081ad469b8c2aea41a1facede487d9b66215194"
+    },
+    {
+      "icon": "inv_sword_20",
+      "file": "apps/web/public/icons/assets/inv_sword_20.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Sword_20.PNG",
+      "gitBlobSha1": "c33ebb5b9262a284568077bf49ca954d9b18d4f7",
+      "sha256": "31380503d8c9731e307ab58265ad57d0dbcc60a09d01694a8a922171b13a30e7"
+    },
+    {
+      "icon": "inv_weapon_shortblade_18",
+      "file": "apps/web/public/icons/assets/inv_weapon_shortblade_18.png",
+      "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/ICONS/INV_Weapon_ShortBlade_18.PNG",
+      "gitBlobSha1": "df378268dbe90c4167a09fb1476883d2c96edad6",
+      "sha256": "47bb21c00808cf56c07d44c99ec9aa48adc1d3fdb2aa852106777ac378c77e29"
+    }
+  ]
+}

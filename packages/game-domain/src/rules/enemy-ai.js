@@ -1,13 +1,19 @@
-import demonReference from '../../../game-data/data/class-demons-reference.json' with {type:'json'};
 import {distance,point} from '../../../sim-core/src/geometry.js';
-import reference from '../../../game-data/data/deadmines-reference.json' with {type:'json'};
-import {lookup,spells} from './catalog.js';
+import {lookup,spells,table} from './catalog.js';
 import {roll,rng,log} from './character.js';
 import {hasSpellAura,controlled} from '../../../sim-core/src/combat-auras.js';
 import {castEnemySpell,enemySpellInfo,tickEnemySpell} from './enemy-spells.js';
 
-const scripts=Object.groupBy([...reference.tables.creature_ai_scripts,...demonReference.tables.creature_ai_scripts],row=>row.creature_id);
+const scripts=Object.groupBy(table('creature_ai_scripts'),row=>row.creature_id);
 const alive=u=>u.hp>0&&!u.removed;
+function behindVictim(s,e,victim){
+ // This 2D combat model has no persistent facing angle: an actor faces its
+ // current combat target. Without that target, do not invent a rear arc.
+ const facing=s.combat.enemies.find(u=>alive(u)&&u.id===(victim?.cast?.target||victim?.target));
+ if(!victim||!facing)return false;
+ const origin=point(victim),front=point(facing),attacker=point(e);
+ return (front.x-origin.x)*(attacker.x-origin.x)+(front.y-origin.y)*(attacker.y-origin.y)<0;
+}
 function targetFor(s,e,actors,type,spell,flags,eventTarget){
  const sp=enemySpellInfo(e,spell),victim=actors.find(c=>c.id===e.target&&alive(c));
  if(type===0||type===15)return e;
@@ -58,9 +64,11 @@ export function enemyAITick(s,e,actors,hurt){
  for(const row of rows){
   const state=e.ai.events[row.id];if(state.done||row.event_inverse_phase_mask&(1<<e.ai.phase))continue;
   state.remaining=Math.max(0,state.remaining-elapsed);
-  if(state.remaining>0||![0,2,16,27].includes(row.event_type)||controlled(e,s.clock)||e.fleeing)continue;
+  if(state.remaining>0||![0,2,9,16,27,33].includes(row.event_type)||controlled(e,s.clock)||e.fleeing)continue;
   if((row.event_flags&1024)&&(e.cast||(e.nextAction||0)>s.clock))continue;
   const victim=actors.find(c=>c.id===e.target&&alive(c)),ranged=enemyDesiredRange(s,e)>5&&victim&&distance(e,victim)>5;
+  if(row.event_type===9&&(!victim||distance(e,victim)<row.event_param1||distance(e,victim)>row.event_param2))continue;
+  if(row.event_type===33&&(!victim||behindVictim(s,e,victim)!==(row.event_param1===0)))continue;
   if(row.event_flags&256&&!ranged||row.event_flags&512&&ranged)continue;
   if(row.event_type===2){const hp=Math.floor(e.hp/e.maxHp*100);if(hp>row.event_param1||hp<row.event_param2)continue;}
   if(row.event_type===27&&hasSpellAura(e,row.event_param1,s.clock))continue;

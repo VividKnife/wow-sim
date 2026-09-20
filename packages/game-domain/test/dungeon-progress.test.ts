@@ -4,10 +4,11 @@ import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
 import {makeItem, stats} from '../src/rules/character.js';
 import {dungeonView} from '../src/rules/dungeon-view.js';
-import {dungeonRoute} from '../src/rules/dungeon.js';
+import {dungeonRoute as routeFor} from '../src/rules/dungeon.js';
+const dungeonRoute=routeFor('deadmines');
 import type {Character, Instance, Rules} from '../src/model.ts';
 
-async function setup() {
+async function setup(contentId='deadmines') {
  const store = new MemoryStore();
  let now=1000;
  const options = {contentVersion:'test', now:()=>now, seed:()=>1234};
@@ -24,7 +25,7 @@ async function setup() {
   const characters = await tx.list<Character>('characters', {accountId:'a'});
   for (const c of characters) {
    c.rules.level = 20;
-   c.rules.location = 'deadmines';
+   c.rules.location = contentId;
    const st: Rules = stats(c.rules);
    c.rules.hp = st.maxHp;
    c.rules.mana = st.maxMana;
@@ -35,6 +36,23 @@ async function setup() {
  await send({type:'setParty', characterIds:ids});
  return {store, send, restart:()=>{service = new GameService(store, options);}, snapshot:()=>service.snapshot('a'), work:async(ms:number)=>{now+=ms;return service.work();}};
 }
+
+test('Stockades service entry, worker, exit and restart preserve the selected content and saved route',async()=>{
+ const game=await setup('stockades');
+ const entered=await game.send({type:'enterDungeon',contentId:'stockades'});
+ assert.ok(entered.instance);assert.equal(entered.instance.contentId,'stockades');assert.equal(entered.state.dungeon.id,'stockades');
+ const runId=entered.state.dungeon.runId;
+ const started=await game.send({type:'dungeonNext'});assert.equal(started.state.combat.runId,runId);
+ await game.send({type:'dungeonPause'});
+ for(let i=0;i<120&&(await game.snapshot()).state.combat;i++)await game.work(1000);
+ const settled=await game.snapshot();assert.equal(settled.state.combat,null);
+ if(settled.state.hp<=0){await game.send({type:'revive'});for(let i=0;i<12;i++)await game.work(1000);}
+ await game.send({type:'leaveDungeon'});game.restart();
+ const saved=await game.snapshot();assert.equal(saved.state.dungeonSaves.stockades.runId,runId);
+ const returned=await game.send({type:'enterDungeon',contentId:'stockades'});
+ assert.equal(returned.state.dungeon.id,'stockades');assert.equal(returned.state.dungeon.runId,runId);
+ assert.equal(returned.state.dungeonEntries.length,1);
+});
 
 test('the instance worker preserves automatic advancement across restart and accepts pause during combat', async () => {
  const game=await setup();const entered=await game.send({type:'enterDungeon'});
@@ -123,17 +141,17 @@ test('server preserves the full dungeon route through leaving, inventory work an
   const left = await game.send({type:leaveType});
   assert.equal(left.instanceId, null);
   assert.equal(left.state.dungeon, undefined);
-  assert.deepEqual(left.state.dungeonSave, route);
+  assert.deepEqual(left.state.dungeonSaves?.deadmines, route);
   assert.equal(dungeonView(left.state).saved, true);
   assert.equal(dungeonView(left.state).canReset, true);
   await game.send({type:'sortBag'});
   const linen = left.state.bag.find((item:Rules) => item.id === 2589);
   const edited = await game.send({type:'lockItem', uid:linen.uid});
   game.restart();
-  assert.deepEqual((await game.snapshot()).state.dungeonSave, route);
+  assert.deepEqual((await game.snapshot()).state.dungeonSaves?.deadmines, route);
   const returned = await game.send({type:'enterDungeon'});
   assert.deepEqual(returned.state.dungeon, route);
-  assert.equal(returned.state.dungeonSave, undefined);
+  assert.equal(returned.state.dungeonSaves?.deadmines, undefined);
   assert.equal(returned.state.dungeonEntries.length, 1);
   assert.equal(returned.state.party.length, 4);
   assert.deepEqual(returned.state.bag, edited.state.bag);
@@ -142,7 +160,7 @@ test('server preserves the full dungeon route through leaving, inventory work an
  const beforeReset = (await game.snapshot()).state;
  await game.send({type:'resetDungeon'});
  game.restart();
- assert.equal((await game.snapshot()).state.dungeonSave, undefined);
+ assert.equal((await game.snapshot()).state.dungeonSaves?.deadmines, undefined);
  const fresh = await game.send({type:'enterDungeon'});
  assert.notEqual(fresh.state.dungeon.runId, route.runId);
  assert.equal(fresh.state.dungeon.cursor, 0);

@@ -48,7 +48,7 @@ test('hearthstone rejects combat, death, travel, duplicate use and missing items
 test('using hearthstone exits a cleared dungeon safely and preserves its saved progress',()=>{
  let s=fresh();s.location='deadmines';s.dungeon={id:'deadmines',runId:'saved-run',cursor:3,defeated:{one:true},spawns:{}};
  s=command(s,{type:'useHearth'});assert.ok(s.dungeon);s=finish(s);
- assert.equal(s.location,'northshire');assert.equal(s.dungeon,undefined);assert.equal(s.dungeonSave.cursor,3);assert.equal(s.dungeonSave.defeated.one,true);
+ assert.equal(s.location,'northshire');assert.equal(s.dungeon,undefined);assert.equal(s.dungeonSaves?.deadmines.cursor,3);assert.equal(s.dungeonSaves?.deadmines.defeated.one,true);
 });
 
 test('innkeepers replace a missing hearthstone only when there is bag space',()=>{

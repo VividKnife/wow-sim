@@ -1,4 +1,16 @@
 import test from 'node:test';import assert from 'node:assert/strict';
+test('creation and character sheets share complete racial descriptions',async()=>{
+ const {racialTraits}=await import('../../../packages/game-data/racial-traits.js');
+ const domain=await import('../../../packages/game-domain/src/rules/class-support.js');
+ assert.equal(domain.racialTraits,racialTraits);
+ for(let raceId=1;raceId<=8;raceId++){
+  const traits=racialTraits({raceId});
+  assert.ok(traits.length>=4,`race ${raceId} has its racial traits`);
+  assert.ok(traits.every(({name,description})=>name&&description));
+  assert.equal(new Set(traits.map(({name})=>name)).size,traits.length);
+ }
+ assert.ok(racialTraits({raceId:6}).some(({name})=>name==='战争践踏'));
+});
 test('racial weapon skills and resistance are restricted to their actual race',async()=>{
  const racial=await import('../../../packages/game-domain/src/rules/racial-effects.js').catch(()=>({}));assert.equal(typeof racial.racialModifiers,'function');
  assert.equal(racial.racialModifiers({raceId:1}).weaponSkillBySubclass[7],5);assert.equal(racial.racialModifiers({raceId:1}).weaponSkillBySubclass[0]||0,0);

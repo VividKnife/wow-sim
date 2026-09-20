@@ -1,3 +1,4 @@
+import stockades from '../../../game-data/data/stockades-reference.json' with {type:'json'};
 import {companionKitItems} from './companion-kit.js';
 import {PARTY_QUEST} from './party-unlock.js';
 import classDemons from '../../../game-data/data/class-demons-reference.json' with {type:'json'};
@@ -8,6 +9,7 @@ import classIcons from '../../../game-data/data/class-icon-map.json' with { type
 import talentSource from '../../../game-data/data/mage-talents-2019.json' with { type: 'json' };
 import clientRules from '../../../game-data/data/client-rules-reference.json' with { type: 'json' };
 import localization from '../../../game-data/data/localization.json' with { type: 'json' };
+import stockadesAssets from '../../../game-data/data/stockades-item-assets.json' with {type:'json'};
 import journeyAssets from '../../../game-data/data/journey-item-assets.json' with { type: 'json' };
 import supplement from '../../../game-data/data/quest-supplement-reference.json' with { type: 'json' };
 import deadmines from '../../../game-data/data/deadmines-reference.json' with { type: 'json' };
@@ -21,7 +23,7 @@ import {additionalCityNodes,cityRoads} from './city-data.js';
 
 const cache = new Map();
 const tableKeys={
- creature:['guid'],gameobject:['guid'],item_template:['entry'],spell_template:['Id'],gameobject_template:['entry'],creature_template:['Entry'],creature_ai_scripts:['id'],
+ quest_template:['entry'],conditions:['condition_entry'],creature:['guid'],gameobject:['guid'],item_template:['entry'],spell_template:['Id'],gameobject_template:['entry'],creature_template:['Entry'],creature_ai_scripts:['id'],
  playercreateinfo:['race','class'],player_levelstats:['race','class','level'],player_classlevelstats:['class','level'],
  playercreateinfo_action:['race','class','button'],playercreateinfo_spell:['race','class','Spell'],playercreateinfo_item:['race','class','itemid'],
  playercreateinfo_skills:['raceMask','classMask','skill','step'],spell_chain:['spell_id'],
@@ -38,7 +40,7 @@ export function table(name) {
     const extra=name==='creature'?[...supplement.tables.creature,...supplement.tables.missingCreatureGuidSpawns,...supplement.tables.groupCreatureGuidSpawns]:keys[name]||name==='gameobject_loot_template'?supplement.tables[name]||[]:[];
     const key=r=>(tableKeys[name]||['entry','item','groupid']).map(field=>r[field]).join(':');
     const seen=new Set(rows.map(key));for(const row of extra)if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}
-    for(const row of deadmines.tables[name]||[])if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}
+    for(const row of [...(deadmines.tables[name]||[]),...(stockades.tables[name]||[])])if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}
     for(const packed of classReference.tables[name]||[]){const row=decode(classReference,packed);if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}else if(['spell_affect','spell_proc_event'].includes(name)){Object.assign(rows.find(existing=>key(existing)===key(row)),row);}}
     for(const packed of professionTemplates.tables[name]||[]){const row=decode(professionTemplates,packed);if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}}
     for(const row of classDemons.tables[name]||[])if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}
@@ -66,7 +68,7 @@ export const classLocks=classReference.classLocks;
 export const classStartingItems=classReference.classStartingItems;
 export const startingItems=classStartingItems['1:8'];
 export const lookup=Object.fromEntries(Object.entries(clientRules.lookupTables).map(([k,rows])=>[k,Object.fromEntries(rows.map(r=>[r.id,r]))]));
-export const localize=(kind,id)=>localization[kind]?.[id]||(kind==='items'?journeyAssets.items[id]:undefined);
+export const localize=(kind,id)=>(kind==='items'?stockadesAssets.items[id]:undefined)||stockades.localization?.[kind]?.[id]||localization[kind]?.[id]||(kind==='items'?journeyAssets.items[id]:undefined);
 export function nameOf(kind,id){return localize(kind,id)?.nameZhCN||(kind==='items'?professionNames[id]||utilityItemNames[id]||items[id]?.name:kind==='spells'?classReference.translations?.spellNamesByEnglish?.[spells[id]?.SpellName]||talentsBySpell[id]?.nameZhCN||spells[id]?.SpellName:kind==='quests'?quests[id]?.Title:creatures[id]?.Name)||String(id);}
 export const quests=index('quest_template','entry');
 quests[PARTY_QUEST]={entry:PARTY_QUEST,Title:'同路人',MinLevel:18,QuestLevel:18,MaxLevel:0,RequiredClasses:0,RequiredRaces:0,PrevQuestId:0,NextQuestId:0,ExclusiveGroup:0,RequiredCondition:0,SpecialFlags:0,RewOrReqMoney:0,Details:'前往暴风城贸易区，与旅店老板奥里森交谈。他会为你介绍值得信赖的伙伴。',Objectives:'与暴风城旅店老板交谈，解锁队伍系统。'};
@@ -75,16 +77,16 @@ quests[PARTY_QUEST]={entry:PARTY_QUEST,Title:'同路人',MinLevel:18,QuestLevel:
 // Horde (178) group are adapted; single-race and class quest masks stay exact.
 export const isSharedRouteQuest=q=>!!q&&!q.RequiredClasses&&[77,178].includes(q.RequiredRaces);
 export const sharedRouteQuestIds=new Set(Object.values(quests).filter(isSharedRouteQuest).map(q=>q.entry));
-export const questLinks=source.links.quests;
+export const questLinks={...source.links.quests,...stockades.questLinks};
 questLinks[PARTY_QUEST]={starts:[],ends:[{type:'creature',id:6740}]};
 export const xpTable=index('player_xp_for_level','lvl');
-export const questXp=helpers.questXpByPlayerLevel;
+export const questXp={...helpers.questXpByPlayerLevel,...stockades.questXpByPlayerLevel};
 const talentNameCorrections={'4:Camouflage':'伪装','9:Devastation':'破坏'};
 export const classTalentTrees=classReference.classTalentTrees.map(tree=>({...tree,talents:tree.talents.map(talent=>({...talent,nameZhCN:talentNameCorrections[`${tree.classId}:${talent.name}`]||talent.nameZhCN}))}));
 export const talentTrees=classTalentTrees.filter(tree=>tree.classId===8);
 export const talents=Object.fromEntries(classTalentTrees.flatMap(tree=>tree.talents.map(t=>[t.id,{...t,tree:tree.id,classId:tree.classId,rankEffects:t.rankEffects.map(effect=>({...effect,descriptionZhCN:talentDescriptionsZhCN.descriptions[effect.spellId]}))}])));
 const talentsBySpell=Object.fromEntries(Object.values(talents).flatMap(t=>t.ranks.map(id=>[id,t])));
-export const icon=(kind,id)=>kind==='items'&&items[id]?.appearanceItemId?icon('items',items[id].appearanceItemId):icons[kind]?.[id]?'/icons/'+icons[kind][id]:classIcons[kind]?.[id]?'/icons/'+classIcons[kind][id]:kind==='items'&&journeyAssets.items[id]?.icon?'/icons/'+journeyAssets.items[id].icon:kind==='spells'&&talentsBySpell[id]?icon('talents',talentsBySpell[id].id):null;
+export const icon=(kind,id)=>kind==='items'&&items[id]?.appearanceItemId?icon('items',items[id].appearanceItemId):icons[kind]?.[id]?'/icons/'+icons[kind][id]:classIcons[kind]?.[id]?'/icons/'+classIcons[kind][id]:kind==='items'&&stockadesAssets.items[id]?.icon?'/icons/'+stockadesAssets.items[id].icon:kind==='items'&&journeyAssets.items[id]?.icon?'/icons/'+journeyAssets.items[id].icon:kind==='spells'&&talentsBySpell[id]?icon('talents',talentsBySpell[id].id):null;
 export const provenance={database:source.meta,core:helpers.core,talents:talentSource.source,classes:classReference.meta};
 export const spellChain=index('spell_chain','spell_id');
 export const abilities=classAbilities[8];
@@ -128,6 +130,10 @@ const nodeRows=[
  ['coastnorth','长滩北岸','西部荒野',-9900,1850,11,15,'wild'],
  ['coast','长滩','西部荒野',-10700,2050,15,20,'wild'],
  ['lighthouse','西部荒野灯塔','西部荒野',-11400,1950,16,20,'town'],
+ ['stockades','暴风城监狱入口','暴风城',-8766,845,22,30,'dungeon'],
+ ['darkshire','夜色镇','暮色森林',-10560,-1180,20,30,'town'],
+ ['dunmodr','丹莫德','湿地',-2600,-2450,27,32,'outpost'],
+ ['menethil','米奈希尔港','湿地',-3740,-755,20,30,'town'],
  ['deadmines','死亡矿井入口','西部荒野',-11208,1676,17,22,'dungeon'],
  ['lakeshire','湖畔镇信使驿站','信使路线',-9270,-2190,15,20,'outpost'],
  ['ironforge','铁炉堡信使驿站','信使路线',-4845,-1140,15,20,'outpost'],
@@ -140,15 +146,15 @@ for(const [id,name,region,x,y,min,max,kind] of additionalCityNodes)nodes[id]={id
 for(const n of Object.values(nodes))if(n.region==='暴风城'){n.min=1;n.max=60;}
 for(const [id,node] of Object.entries(classTravelNodes))nodes[id]??={...node,region:'主城传送',x:null,y:null,min:node.level?.[0]??1,max:node.level?.[1]??60,transportOnly:true};
 // Coarse map restrictions: mine/interior approaches are walked in this 2D map.
-for(const id of ['echo','fargodeep','jasper','jansen','silverstream','deadmines','bluerecluse','magetower'])nodes[id].mountAllowed=false;
-const roads=[['northshire','northwood'],['northwood','echo'],['northshire','vineyard'],['northshire','goldshire'],['goldshire','fargodeep'],['fargodeep','stonefield'],['fargodeep','maclure'],['goldshire','crystal'],['goldshire','mirror'],['goldshire','stormwind'],['goldshire','westbrook'],['westbrook','forestedge'],['crystal','jasper'],['crystal','tower'],['tower','logging'],['tower','brackwell'],['maclure','brackwell'],['stonefield','forestedge'],['westbrook','furlbrow'],['stormwind','magetower'],['stormwind','oldtown'],['furlbrow','saldean'],['furlbrow','coastnorth'],['saldean','jansen'],['saldean','sentinel'],['jansen','alexton'],['alexton','coast'],['alexton','moonbrook'],['sentinel','moonbrook'],['sentinel','daggerhills'],['coastnorth','coast'],['coast','lighthouse'],['moonbrook','deadmines'],['deadmines','lighthouse'],['tower','lakeshire'],['ironforge','thelsamar']];
+for(const id of ['echo','fargodeep','jasper','jansen','silverstream','deadmines','stockades','bluerecluse','magetower'])nodes[id].mountAllowed=false;
+const roads=[['magetower','stockades'],['cathedral','stockades'],['tower','darkshire'],['algaz','menethil'],['menethil','dunmodr'],['northshire','northwood'],['northwood','echo'],['northshire','vineyard'],['northshire','goldshire'],['goldshire','fargodeep'],['fargodeep','stonefield'],['fargodeep','maclure'],['goldshire','crystal'],['goldshire','mirror'],['goldshire','stormwind'],['goldshire','westbrook'],['westbrook','forestedge'],['crystal','jasper'],['crystal','tower'],['tower','logging'],['tower','brackwell'],['maclure','brackwell'],['stonefield','forestedge'],['westbrook','furlbrow'],['stormwind','magetower'],['stormwind','oldtown'],['furlbrow','saldean'],['furlbrow','coastnorth'],['saldean','jansen'],['saldean','sentinel'],['jansen','alexton'],['alexton','coast'],['alexton','moonbrook'],['sentinel','moonbrook'],['sentinel','daggerhills'],['coastnorth','coast'],['coast','lighthouse'],['moonbrook','deadmines'],['deadmines','lighthouse'],['tower','lakeshire'],['ironforge','thelsamar']];
 export const edges=roads.map(([a,b])=>({a,b,distance:Math.ceil(Math.hypot(nodes[a].x-nodes[b].x,nodes[a].y-nodes[b].y)),status:'estimated road graph'}));
 for(const [a,b] of cityRoads)edges.push({a,b,distance:Math.ceil(Math.hypot(nodes[a].x-nodes[b].x,nodes[a].y-nodes[b].y)),status:'adapted city road'});
 for(const[a,b]of [['thelsamar','algaz'],['algaz','silverstream'],['magetower','bluerecluse']])edges.push({a,b,distance:Math.ceil(Math.hypot(nodes[a].x-nodes[b].x,nodes[a].y-nodes[b].y)),status:'estimated road graph'});
 edges.push({a:'dwarven',b:'ironforge',distance:0,duration:180000,transport:'tram',status:'estimated tram journey'});
 const positionedNodes=[...nodeRows,...additionalCityNodes];
-export function nearestNode(x,y,map=0){if(map===36)return 'deadmines';return positionedNodes.reduce((best,n)=>Math.hypot(x-n[3],y-n[4])<Math.hypot(x-nodes[best].x,y-nodes[best].y)?n[0]:best,'northshire');}
-const alternateEntries=Object.groupBy(supplement.tables.regionalCreatureSpawnEntry,r=>r.guid);
+export function nearestNode(x,y,map=0){if(map===36)return 'deadmines';if(map===34)return 'stockades';return positionedNodes.reduce((best,n)=>Math.hypot(x-n[3],y-n[4])<Math.hypot(x-nodes[best].x,y-nodes[best].y)?n[0]:best,'northshire');}
+const alternateEntries=Object.groupBy([...supplement.tables.regionalCreatureSpawnEntry,...(stockades.tables.creature_spawn_entry||[])],r=>r.guid);
 const creatureGroups=new Set(supplement.tables.spawn_group.filter(g=>g.Type===0).map(g=>g.Id));
 const groupEntries=Object.groupBy(supplement.tables.spawn_group_entry,r=>r.Id);
 const groupsByGuid=Object.groupBy(supplement.tables.spawn_group_spawn.filter(g=>creatureGroups.has(g.Id)),r=>r.Guid);
@@ -160,6 +166,7 @@ export const creatureLocations={};
 for(const spawn of spawns){const id=spawn.id;const node=nearestNode(spawn.position_x,spawn.position_y,spawn.map);(creatureLocations[id]??=[]);if(!creatureLocations[id].includes(node))creatureLocations[id].push(node);}
 // Quest destinations beyond the selected-region spawn rectangles.
 Object.assign(creatureLocations,{266:['lakeshire'],656:['ironforge'],514:['ironforge'],538:['thelsamar'],6122:['magetower'],5413:['dwarven'],12336:['cathedral']});
+for(const [id,places]of Object.entries(stockades.npcPlacements||{}))creatureLocations[id]=Array.isArray(places)?places:[places];
 export const objectLocations={};
 export const objectSpawnsByNode={};
 for(const spawn of table('gameobject')){const node=nearestNode(spawn.position_x,spawn.position_y,spawn.map);(objectSpawnsByNode[node+':'+spawn.id]??=[]).push(spawn);(objectLocations[spawn.id]??=[]);if(!objectLocations[spawn.id].includes(node))objectLocations[spawn.id].push(node);}
@@ -167,7 +174,7 @@ export function endpointNodes(endpoint){if(endpoint.type==='item')return [];retu
 export const outdoorCreatureLocations={};
 for(const spawn of spawns.filter(s=>s.map===0)){const node=nearestNode(spawn.position_x,spawn.position_y,0);(outdoorCreatureLocations[spawn.id]??=[]);if(!outdoorCreatureLocations[spawn.id].includes(node))outdoorCreatureLocations[spawn.id].push(node);}
 export const instanceSpawns=spawns.filter(s=>s.map===36);
-export const monsterIdsAt=node=>Object.keys(outdoorCreatureLocations).map(Number).filter(id=>id!==6492&&outdoorCreatureLocations[id].includes(node)&&creatures[id]?.MinLevel<=25&&creatures[id]?.NpcFlags===0&&!(creatures[id]?.UnitFlags&0x10102)&&![8,10,12].includes(creatures[id]?.CreatureType)&&!creatures[id]?.Civilian&&!creatures[id]?.Name.includes('Trigger')&&![1,35,12,11,55,80,84,1078].includes(creatures[id]?.Faction));
+export const monsterIdsAt=node=>Object.keys(outdoorCreatureLocations).map(Number).filter(id=>id!==6492&&![1754,1755].includes(id)&&outdoorCreatureLocations[id].includes(node)&&(creatures[id]?.MinLevel<=25||[1051,1052,1053,1054].includes(id))&&creatures[id]?.NpcFlags===0&&!(creatures[id]?.UnitFlags&0x10102)&&![8,10,12].includes(creatures[id]?.CreatureType)&&!creatures[id]?.Civilian&&!creatures[id]?.Name.includes('Trigger')&&![1,35,12,11,55,80,84,1078].includes(creatures[id]?.Faction));
 export const trainerNodes=['northshire','goldshire','magetower',...Object.keys(classTravelNodes)];
 export const flightNodes=['stormwind','sentinel'];
 export const flights=[{a:'stormwind',b:'sentinel',duration:78000,cost:110,status:'estimated flight time; reference base cost'}];

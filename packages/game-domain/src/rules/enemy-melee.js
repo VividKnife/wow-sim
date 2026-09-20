@@ -29,6 +29,7 @@ export function enemyMeleeTick(s,e,target,actors,hurt,api={}){
    log(s,`${e.name} 的攻击${{miss:'未命中',dodge:'被闪避',parry:'被招架'}[outcome]}`,'miss',{actorId:e.id,targetId:target.id,hand,extraAttack,outcome});return;
   }
   let amount=Math.max(0,roll(s,Math.floor(e.low),Math.ceil(e.high))+physicalDamageBonus(e,s.clock)+activeAuras(e,s.clock).filter(a=>a.type===99).reduce((n,a)=>n+a.amount,0)/14*e.swing/1000)*(hasAura(e,67,s.clock)?.5:1)*(hand==='off'?.5:1)*(1-armorReduction(st.armor,e.level));
+  for(const aura of activeAuras(e,s.clock))if(aura.type===79&&(aura.misc&1))amount*=1+aura.amount/100;
   if(outcome==='block'){
    target.revengeUntil=s.clock+5000;
    for(const a of auras.filter(a=>a.type===51&&a.charges>0))if(!--a.charges)a.until=s.clock;

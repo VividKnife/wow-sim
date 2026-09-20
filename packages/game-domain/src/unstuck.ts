@@ -40,7 +40,7 @@ export async function unstuck(this: GameService, tx: Transaction, actor: Charact
         s.nextTick = s.clock + 100;
         s.nextRegen = s.clock + 2000;
         s.activity = {type: 'idle'};
-        for (const field of ['combat', 'cast', 'rest', 'escort', 'mounted', 'queuedStrike', 'target', 'comboTarget', 'fall', 'cannibalize', 'shadowmeld', 'trap']) s[field] = null;
+        for (const field of ['combat', 'cast', 'rest', 'escort', 'stockadesQuestEvent', 'mounted', 'queuedStrike', 'target', 'comboTarget', 'fall', 'cannibalize', 'shadowmeld', 'trap']) s[field] = null;
         for (const field of ['auras', 'hots', 'periodicClass', 'groundEffects', 'flares', 'environmentBuffs']) s[field] = [];
         s.talentProcs = {};
         s.totems = {};
@@ -50,14 +50,15 @@ export async function unstuck(this: GameService, tx: Transaction, actor: Charact
         // Save only on the original leader, exactly as a normal dungeon exit.
         // Do not copy a shared run to every participant or use a predicted result.
         if (instance?.leaderId === c.id && instance.simulation?.dungeon) {
-            s.dungeonSave = clone(instance.simulation.dungeon);
-            s.dungeonSave.autoAdvance = false;
-            s.dungeonSave.advanceReason = '';
+            s.dungeonSaves ??= {};
+            const saved = s.dungeonSaves[instance.simulation.dungeon.id] = clone(instance.simulation.dungeon);
+            saved.autoAdvance = false;
+            saved.advanceReason = '';
             // Igniting the cannon already consumed powder. Cancelling that action
             // must return it so the preserved route can still open the door.
             const action = instance.simulation.activity;
-            const encounter = dungeonRoute[s.dungeonSave.cursor];
-            if (action.type === 'dungeonCannon' && encounter?.id === action.routeId && encounter.interaction && !s.dungeonSave.interactions[encounter.id]) {
+            const encounter = dungeonRoute(saved.id)[saved.cursor];
+            if (action.type === 'dungeonCannon' && encounter?.id === action.routeId && encounter.interaction && !saved.interactions[encounter.id]) {
                 receive(s, encounter.interaction.item, 1);
                 await persistAssets(tx, c, s, `${key}:cannon`, this.id);
             }
@@ -65,6 +66,7 @@ export async function unstuck(this: GameService, tx: Transaction, actor: Charact
         delete s.dungeon;
         delete s.preparationTravel;
         if (s.location === 'deadmines') s.location = 'moonbrook';
+        if (s.location === 'stockades') s.location = 'magetower';
         if (!s.visited.includes(s.location)) s.visited.push(s.location);
         if (s.hp <= 0) {
             const st = stats(s);

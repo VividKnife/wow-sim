@@ -142,6 +142,34 @@
       "sha256": "180b79a8faecec98a548b0ff9d2607c07e73c1241452761c32b30569edd49739",
       "bytes": 1029143,
       "durationSeconds": 64.313
+    },
+    {
+      "key": "duskwood",
+      "path": "music/duskwood.mp3",
+      "fileDataId": 53234,
+      "title": "haunted01",
+      "soundName": "Zone-HauntedCombo",
+      "url": "https://wow.zamimg.com/sound-ids/classic/enus/242/53234/haunted01.mp3",
+      "sourcePage": "https://www.wowhead.com/classic/sound=5374",
+      "sourceSha256": "ec89ef7bfa8ab069a9aaaefb62672a1b78de701f572d4e8b01b12f6c1ead3989",
+      "removedLeadingZeroBytes": 0,
+      "sha256": "ec89ef7bfa8ab069a9aaaefb62672a1b78de701f572d4e8b01b12f6c1ead3989",
+      "bytes": 994641,
+      "durationSeconds": 62.093
+    },
+    {
+      "key": "wetlands",
+      "path": "music/wetlands.mp3",
+      "fileDataId": 53253,
+      "title": "swamp01",
+      "soundName": "Moment-Swamp01",
+      "url": "https://wow.zamimg.com/sound-ids/classic/enus/5/53253/swamp01.mp3",
+      "sourcePage": "https://www.wowhead.com/classic/sound=4514",
+      "sourceSha256": "d5d0614397506091d8573ec63815123604e401d5680ba86ea48fc349075bb2b4",
+      "removedLeadingZeroBytes": 0,
+      "sha256": "d5d0614397506091d8573ec63815123604e401d5680ba86ea48fc349075bb2b4",
+      "bytes": 554112,
+      "durationSeconds": 34.56
     }
   ]
 }

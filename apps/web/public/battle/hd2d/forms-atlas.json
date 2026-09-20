@@ -1,0 +1,362 @@
+{
+  "image": "/battle/hd2d/forms.png",
+  "width": 768,
+  "height": 384,
+  "columns": 6,
+  "rows": 3,
+  "cellWidth": 128,
+  "cellHeight": 128,
+  "anchor": [
+    64,
+    112
+  ],
+  "anchorNormalized": [
+    0.5,
+    0.875
+  ],
+  "facing": "right",
+  "roles": [
+    "bear",
+    "cat",
+    "sheep"
+  ],
+  "poses": [
+    "idle",
+    "walk1",
+    "walk2",
+    "attack",
+    "cast",
+    "hurt"
+  ],
+  "sourceSize": [
+    1774,
+    887
+  ],
+  "normalizationScale": 0.36363636363636365,
+  "frames": [
+    {
+      "role": "bear",
+      "pose": "idle",
+      "row": 0,
+      "column": 0,
+      "sourceRect": [
+        18,
+        95,
+        304,
+        316
+      ],
+      "atlasRect": [
+        0,
+        0,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "bear",
+      "pose": "walk1",
+      "row": 0,
+      "column": 1,
+      "sourceRect": [
+        323,
+        95,
+        610,
+        316
+      ],
+      "atlasRect": [
+        128,
+        0,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "bear",
+      "pose": "walk2",
+      "row": 0,
+      "column": 2,
+      "sourceRect": [
+        623,
+        93,
+        902,
+        316
+      ],
+      "atlasRect": [
+        256,
+        0,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "bear",
+      "pose": "attack",
+      "row": 0,
+      "column": 3,
+      "sourceRect": [
+        911,
+        101,
+        1219,
+        315
+      ],
+      "atlasRect": [
+        384,
+        0,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "bear",
+      "pose": "cast",
+      "row": 0,
+      "column": 4,
+      "sourceRect": [
+        1217,
+        83,
+        1486,
+        326
+      ],
+      "atlasRect": [
+        512,
+        0,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "bear",
+      "pose": "hurt",
+      "row": 0,
+      "column": 5,
+      "sourceRect": [
+        1510,
+        106,
+        1753,
+        319
+      ],
+      "atlasRect": [
+        640,
+        0,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "cat",
+      "pose": "idle",
+      "row": 1,
+      "column": 0,
+      "sourceRect": [
+        22,
+        398,
+        297,
+        602
+      ],
+      "atlasRect": [
+        0,
+        128,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "cat",
+      "pose": "walk1",
+      "row": 1,
+      "column": 1,
+      "sourceRect": [
+        317,
+        425,
+        581,
+        602
+      ],
+      "atlasRect": [
+        128,
+        128,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "cat",
+      "pose": "walk2",
+      "row": 1,
+      "column": 2,
+      "sourceRect": [
+        609,
+        411,
+        878,
+        601
+      ],
+      "atlasRect": [
+        256,
+        128,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "cat",
+      "pose": "attack",
+      "row": 1,
+      "column": 3,
+      "sourceRect": [
+        901,
+        423,
+        1195,
+        592
+      ],
+      "atlasRect": [
+        384,
+        128,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "cat",
+      "pose": "cast",
+      "row": 1,
+      "column": 4,
+      "sourceRect": [
+        1213,
+        425,
+        1491,
+        599
+      ],
+      "atlasRect": [
+        512,
+        128,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "cat",
+      "pose": "hurt",
+      "row": 1,
+      "column": 5,
+      "sourceRect": [
+        1522,
+        411,
+        1753,
+        596
+      ],
+      "atlasRect": [
+        640,
+        128,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "sheep",
+      "pose": "idle",
+      "row": 2,
+      "column": 0,
+      "sourceRect": [
+        60,
+        659,
+        239,
+        830
+      ],
+      "atlasRect": [
+        0,
+        256,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "sheep",
+      "pose": "walk1",
+      "row": 2,
+      "column": 1,
+      "sourceRect": [
+        344,
+        662,
+        541,
+        830
+      ],
+      "atlasRect": [
+        128,
+        256,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "sheep",
+      "pose": "walk2",
+      "row": 2,
+      "column": 2,
+      "sourceRect": [
+        642,
+        663,
+        826,
+        826
+      ],
+      "atlasRect": [
+        256,
+        256,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "sheep",
+      "pose": "attack",
+      "row": 2,
+      "column": 3,
+      "sourceRect": [
+        927,
+        680,
+        1146,
+        829
+      ],
+      "atlasRect": [
+        384,
+        256,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "sheep",
+      "pose": "cast",
+      "row": 2,
+      "column": 4,
+      "sourceRect": [
+        1254,
+        649,
+        1436,
+        832
+      ],
+      "atlasRect": [
+        512,
+        256,
+        128,
+        128
+      ]
+    },
+    {
+      "role": "sheep",
+      "pose": "hurt",
+      "row": 2,
+      "column": 5,
+      "sourceRect": [
+        1554,
+        673,
+        1730,
+        826
+      ],
+      "atlasRect": [
+        640,
+        256,
+        128,
+        128
+      ]
+    }
+  ]
+}

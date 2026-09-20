@@ -16,12 +16,21 @@ export function parseAppearance(xml,id){
 }
 const appearances=new Map();
 const inFlight=new Map();
+async function fetchAsset(url,timeout){
+ for(let attempt=0;attempt<2;attempt++){
+  try{
+   const response=await fetch(url,{signal:AbortSignal.timeout(timeout),redirect:'manual'});
+   if(attempt===0&&[502,503,504].includes(response.status)){await response.body?.cancel();continue;}
+   return response;
+  }catch(error){if(attempt===1)throw error;}
+ }
+}
 async function appearance(id){
  const cached=appearances.get(id);
  if(cached&&cached.until>Date.now())return cached.value;
  if(inFlight.has(id))return inFlight.get(id);
  const pending=(async()=>{
-  const response=await fetch(`https://www.wowhead.com/classic/item=${id}&xml`,{signal:AbortSignal.timeout(12000),redirect:'manual'});
+  const response=await fetchAsset(`https://www.wowhead.com/classic/item=${id}&xml`,12000);
   if(!response.ok)throw new Error('Appearance request failed');
   const value=parseAppearance(await response.text(),id);
   if(appearances.size>=512)appearances.delete(appearances.keys().next().value);
@@ -43,7 +52,7 @@ export async function handleModelRequest(request){
  const upstream=assetUrl(path);
  if(!upstream||url.search)return new Response('Unknown model asset',{status:404});
  try{
-  const response=await fetch(upstream,{signal:AbortSignal.timeout(20000),redirect:'manual'});
+  const response=await fetchAsset(upstream,20000);
   if(!response.ok)return new Response('Model asset unavailable',{status:response.status===404?404:502,headers:{'Cache-Control':'no-store'}});
   const type=path.endsWith('.js')?'text/javascript; charset=utf-8':path.endsWith('.json')?'application/json':path.endsWith('.webp')?'image/webp':path.endsWith('.png')?'image/png':'application/octet-stream';
   return new Response(response.body,{headers:{'Content-Type':type,'Cache-Control':'public, max-age=86400, stale-while-revalidate=604800','X-Content-Type-Options':'nosniff'}});

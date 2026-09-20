@@ -21,7 +21,7 @@ const sourceCache={};
 export function itemSources(id){if(+id===7206)return ['mirror'];if(+id===7292)return ['bluerecluse'];if(sourceCache[id])return sourceCache[id];const places=new Set();for(const [lootId,rows]of Object.entries(creatureLoot)){if(rows.some(r=>r.item===id&&r.mincountOrRef>0))for(const c of Object.values(creatures).filter(c=>c.LootId===+lootId))for(const n of creatureLocations[c.Entry]||[])places.add(n);}
  for(const [lootId,rows]of Object.entries(objectLoot))if(rows.some(r=>r.item===id))for(const o of Object.values(objectTemplates).filter(o=>o.data1===+lootId))for(const n of objectLocations[o.entry]||[])places.add(n);
  return sourceCache[id]=[...places];}
-export const eventNodes=id=>({62:['fargodeep'],76:['jasper'],155:['sentinel','moonbrook'],1861:['mirror'],1920:['magetower']})[id]||[];
+export const eventNodes=id=>({62:['fargodeep'],76:['jasper'],155:['sentinel','moonbrook'],1861:['mirror'],1920:['magetower'],434:['keep']})[id]||[];
 export function creditExploration(s){
  // Area triggers 88 / 87 map to entering the corresponding mine node in 2D.
  for(const id of [62,76])if(s.quests[id]&&!s.quests[id].event&&eventNodes(id).includes(s.location)){s.quests[id].event=true;log(s,'探索完成：'+nameOf('quests',id),'quest');}
@@ -43,7 +43,7 @@ export function abandonQuest(s,id){
  log(s,'放弃任务：'+nameOf('quests',id),'quest');
 }
 export function turnIn(s,id,choice){const q=quests[id],p=questProgress(s,id);if(!q||!p?.complete||!atEndpoint(s,q,'ends'))throw new Error('任务未完成，或尚未到达交付地点。');if(p.choices.length&&!p.choices.some(i=>i.id===choice))throw new Error('请选择一件任务奖励。');for(let n=1;n<=4;n++)if(q['ReqItemId'+n])takeItem(s,q['ReqItemId'+n],q['ReqItemCount'+n]);s.money+=q.RewOrReqMoney;for(const reward of p.rewards)addItem(s,reward.id,reward.count);const selected=p.choices.find(i=>i.id===choice);if(selected)addItem(s,selected.id,selected.count);gainXp(s,s,p.xp);for(let n=1;n<=5;n++)if(q['RewRepFaction'+n])s.reputation[q['RewRepFaction'+n]]=(s.reputation[q['RewRepFaction'+n]]||0)+Math.floor(q['RewRepValue'+n]*(q['RewRepValue'+n]>0?1+racialModifiers(s).diplomacyPct:1));delete s.quests[id];s.completed[id]=(s.completed[id]||0)+1;if(+id===1921){s.questWaits??={};s.questWaits[1941]=s.clock+9500;}log(s,`完成任务：${p.name} · ${p.xp} 经验`,'quest');}
-export function creditKill(s,id){const c=creatures[id];for(const[qid,p]of Object.entries(s.quests)){const q=quests[qid];for(let n=1;n<=4;n++){const target=q['ReqCreatureOrGOId'+n];if(target>0&&[id,c?.KillCredit1,c?.KillCredit2].includes(target))p.kills[target]=Math.min(q['ReqCreatureOrGOCount'+n],(p.kills[target]||0)+1);}}}
+export function creditKill(s,id){const c=creatures[id];for(const[qid,p]of Object.entries(s.quests)){if(+qid===434&&(!s.stockadesQuestEvent||s.stockadesQuestEvent.cancelled||s.stockadesQuestEvent.stage!=='combat'||s.combat?.quest!==434||s.combat.questEventAttempt!==s.stockadesQuestEvent.attempt))continue;const q=quests[qid];for(let n=1;n<=4;n++){const target=q['ReqCreatureOrGOId'+n];if(target>0&&[id,c?.KillCredit1,c?.KillCredit2].includes(target))p.kills[target]=Math.min(q['ReqCreatureOrGOCount'+n],(p.kills[target]||0)+1);}}}
 function canLootStarter(s,id){
  const item=items[id],quest=item?.startquest;if(!quest||item.ExtraFlags&2)return true;
  return !s.quests[quest]&&(!s.completed[quest]||!!(quests[quest]?.SpecialFlags&1));

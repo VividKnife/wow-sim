@@ -23,7 +23,8 @@ const {items,spells,quests,abilities,monsterIdsAt,creatureLoot,creatures,nodes}=
 const {questProgress,gatherables}=await moduleAt('quests.js');
 const {questTools}=await moduleAt('quest-tools.js');
 const {countItem,knownRank,spellInfo,bagCapacity,canEquip,slotOf}=await moduleAt('character.js');
-const {dungeonRoute,remainingDungeonEnemies}=await moduleAt('dungeon.js');
+const {dungeonRoute:routeFor,remainingDungeonEnemies}=await moduleAt('dungeon.js');
+const dungeonRoute=routeFor('deadmines');
 const {protectedItem}=await moduleAt('inventory.js');
 const initial=readFileSync(input,'utf8');writeFileSync(resolve(out,'initial-state.json'),initial);
 let s=JSON.parse(initial);const began=s.clock,originalDeaths=s.totals.deaths;
@@ -102,7 +103,7 @@ try{
   if(s.dungeon){recover();command({type:'leaveDungeon'});}
   travel('sentinel');if(!s.completed[214]&&!s.quests[214])command({type:'accept',id:214});
   if(!s.completed[373]&&!s.quests[373]&&countItem(s,2874)){command({type:'accept',id:373});turnin(373);}
-  if(s.dungeonSave)command({type:'resetDungeon'});
+  if(s.dungeonSaves?.deadmines)command({type:'resetDungeon'});
  }
  if(s.combat){let seconds=0;while(s.combat&&seconds++<900)wait(1000);if(s.combat)throw new Error('Resumed encounter did not finish');}
  if(s.dungeon){recover();command({type:'leaveDungeon'});}
@@ -163,7 +164,7 @@ try{
  }
 }catch(error){report.error=error.stack;report.failures=s.logs.slice(-60);console.error(error.message);process.exitCode=1;}
 finally{
- report.final={level:s.level,seconds:(s.clock-began)/1000,deaths:s.totals.deaths-originalDeaths,money:s.money,cursor:(s.dungeon||s.dungeonSave)?.cursor,completedAt:(s.dungeon||s.dungeonSave)?.completedAt||null};
+ report.final={level:s.level,seconds:(s.clock-began)/1000,deaths:s.totals.deaths-originalDeaths,money:s.money,cursor:(s.dungeon||s.dungeonSaves?.deadmines)?.cursor,completedAt:(s.dungeon||s.dungeonSaves?.deadmines)?.completedAt||null};
  writeFileSync(resolve(out,'final-state.json'),JSON.stringify(s));writeFileSync(resolve(out,'summary.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report.final));
  const replay=spawnSync(process.execPath,[resolve(runtime,'apps/web/scripts/replay-playthrough.mjs'),out],{stdio:'inherit'});if(replay.status!==0)process.exitCode=1;
 }

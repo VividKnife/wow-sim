@@ -2,7 +2,8 @@ import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats,view} from '../../../packages/game-domain/src/rules/engine.js';
-import {enterDungeon,dungeonRoute} from '../../../packages/game-domain/src/rules/dungeon.js';
+import {enterDungeon,dungeonRoute as routeFor} from '../../../packages/game-domain/src/rules/dungeon.js';
+const dungeonRoute=routeFor('deadmines');
 import {addItem} from '../../../packages/game-domain/src/rules/character.js';
 
 function group(){let s=createGame('副本界面测试',283,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;for(const id of ['warrior','priest','rogue','mage'])s=recruitForTest(s,{type:'recruit',id},0);s.location='deadmines';return s;}

@@ -16,6 +16,7 @@ SELECTION = {
     'orgrimmar': 53198, 'undercity': 53217, 'thunderbluff': 53213,
     'darnassus': 53184, 'ironforge': 53192, 'moonglade': 53486,
     'deadmines': 53428,
+    'duskwood': 53234, 'wetlands': 53253,
 }
 
 def fetch(url):

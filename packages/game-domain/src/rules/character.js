@@ -89,6 +89,7 @@ export function stats(c){
  for(const buff of c.classBuffs||[]){if(buff.until<=(c.time||0))continue;for(const [key,value]of Object.entries(buff.stats||{})){if(key==='attackPower')attackPowerFlat+=value;else if(key==='rangedAttackPower')rangedAttackPowerFlat+=value;else if(key in result)result[key]+=value;}if(buff.armorPct)result.armor*=1+buff.armorPct;}
  const mods=talentModifiers(c);
  const liveAuras=(c.auras||[]).filter(a=>a.until>(c.time||0));
+ attackPowerFlat+=liveAuras.filter(a=>a.type===99).reduce((n,a)=>n+a.amount,0);
  for(const a of liveAuras)if(a.type===29&&!(c.classBuffs||[]).some(b=>b.spell===a.spell&&b.until>(c.time||0)))for(const [index,key]of ['str','agi','sta','int','spi'].entries())if(a.misc===-1||a.misc===index)result[key]+=a.amount;
  result.resistances=resistances(c);result.regenCasting=Math.min(1,(mods.regenCasting||0)+liveAuras.filter(a=>a.type===134).reduce((n,a)=>n+a.amount/100,0));
  for(const a of c.auras||[]){if(a.until<=(c.time||0))continue;if(a.type===137)for(const [index,key]of ['str','agi','sta','int','spi'].entries())if(a.misc===-1||a.misc===index)result[key]*=1+a.amount/100;}

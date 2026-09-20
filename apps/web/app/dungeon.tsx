@@ -20,13 +20,13 @@ export function RecoveryControls({state:s,data:d,busy,send}:GameProps){
 
 export default function Dungeon(props:GameProps){
  const {state:s,data:d,busy,send}=props,dm=d.dungeon;if(!dm)return null;
- if(!dm.active)return <section className="panel dungeon-entry" aria-label="死亡矿井入口">
-  <div className="section-heading"><div><div className="eyebrow">西部荒野 · 五人地下城</div><h2>死亡矿井</h2></div><span className="dungeon-sigil" aria-hidden="true">⚔</span></div>
-  <p>矿道深处，迪菲亚兄弟会正在建造一艘战舰。召集坦克、治疗和输出队友，深入矿井寻找范克里夫。</p>
-  <div className="dungeon-requirements"><span>最低等级 {dm.minimumLevel}</span><span>建议 18—20 级挑战</span><span>小队 {s.party.length+1} / 5 人</span></div>
+ if(!dm.active)return <section className="panel dungeon-entry" aria-label={`${dm.name}入口`}>
+  <div className="section-heading"><div><div className="eyebrow">{dm.zone} · 五人地下城</div><h2>{dm.name}</h2></div><span className="dungeon-sigil" aria-hidden="true">⚔</span></div>
+  <p>{dm.description}</p>
+  <div className="dungeon-requirements"><span>最低等级 {dm.minimumLevel}</span><span>建议 {dm.recommendedLevel} 级挑战</span><span>小队 {s.party.length+1} / 5 人</span></div>
   {dm.saved&&<p className="dungeon-notice">已保存路线进度 {dm.progress} / {dm.total}；再次进入会接续本次冒险。</p>}
-  {dm.saved&&<details className="dungeon-notice"><summary>重新挑战副本</summary><p>重置会清除本次路线、怪物和机关进度。已获得的装备及任务进度保留；下次进入从头开始。每小时最多进入五个新副本。</p><Button variant="outline" disabled={busy||!dm.canReset} onClick={()=>send({type:'resetDungeon'})}>清除旧路线并重置</Button>{dm.resetReason&&<p>{dm.resetReason}</p>}</details>}
-  <div className="action-row">{dm.atEntrance?<Button disabled={busy||!dm.canEnter} onClick={()=>send({type:'enterDungeon'})}>{dm.saved?'重返死亡矿井':'进入死亡矿井'}</Button>:<Button variant="outline" disabled={busy||!!s.combat||!['idle','hunt'].includes(s.activity.type)||s.hp<=0} onClick={()=>send({type:'travel',to:'deadmines'})}>前往死亡矿井入口</Button>}</div>
+  {dm.saved&&<details className="dungeon-notice"><summary>重新挑战副本</summary><p>重置会清除本次路线、怪物和机关进度。已获得的装备及任务进度保留；下次进入从头开始。每小时最多进入五个新副本。</p><Button variant="outline" disabled={busy||!dm.canReset} onClick={()=>send({type:'resetDungeon',contentId:dm.id})}>清除旧路线并重置</Button>{dm.resetReason&&<p>{dm.resetReason}</p>}</details>}
+  <div className="action-row">{dm.atEntrance?<Button disabled={busy||!dm.canEnter} onClick={()=>send({type:'enterDungeon',contentId:dm.id})}>{dm.saved?'重返':'进入'}{dm.name}</Button>:<Button variant="outline" disabled={busy||!!s.combat||!['idle','hunt'].includes(s.activity.type)||s.hp<=0} onClick={()=>send({type:'travel',to:dm.entrance})}>前往{dm.name}入口</Button>}</div>
   {dm.entryReason&&<p className="footnote">{dm.entryReason}</p>}
   <p className="footnote">开始推进后，小队会连续迎战、休整并完成机关；牧师存活时战后自动复活队友，牧师倒下、背包已满或拾取受阻时暂停。</p>
   {dm.atEntrance&&d.recovery.fallen.length>0&&<RecoveryControls {...props}/>}
@@ -34,8 +34,8 @@ export default function Dungeon(props:GameProps){
 
  const current=dm.current,progress=Math.min(100,dm.progress/dm.total*100);
  const activityLabels:Record<string,string>={dungeonCannon:'火炮已经点燃',resurrect:'牧师正在复活队友',revive:'倒下成员正在返回尸体',conjure:'正在制造补给'};
- return <section className="dungeon-expedition" aria-label="死亡矿井副本">
-  <header className="panel dungeon-header dungeon-loading-card"><div className="section-heading"><div><div className="eyebrow">五人地下城 · 当前冒险</div><h1>死亡矿井</h1></div><Button variant="outline" disabled={busy||!dm.canLeave} onClick={()=>send({type:'leaveDungeon'})}>离开副本</Button></div>
+ return <section className="dungeon-expedition" aria-label={`${dm.name}副本`}>
+  <header className="panel dungeon-header dungeon-loading-card"><div className="section-heading"><div><div className="eyebrow">五人地下城 · 当前冒险</div><h1>{dm.name}</h1></div><Button variant="outline" disabled={busy||!dm.canLeave} onClick={()=>send({type:'leaveDungeon'})}>离开副本</Button></div>
    <div className="section-heading"><span>{dm.completed?'路线已完成':`路线进度 ${dm.progress} / ${dm.total}`}</span><small>退出保留进度</small></div>
    <div className="dungeon-progress" role="progressbar" aria-label="副本路线进度" aria-valuemin={0} aria-valuemax={dm.total} aria-valuenow={dm.progress}><i style={{width:progress+'%'}}/></div>
    <p className="footnote">自动推进保留全部战斗与补给消耗。可随时暂停，战斗中的暂停会在本场结束后停止迎战。</p>
@@ -50,7 +50,7 @@ export default function Dungeon(props:GameProps){
      {current.interaction&&!current.enemies.length&&<><div className="dungeon-object"><Icon src={dm.interactionIcon} name="迪菲亚火药"/><div><h3>{dm.interactionLabel}</h3><p>{current.id==='dm-cannon'?'使用一份迪菲亚火药轰开铁门。':'守卫已清除，从火药箱中取出火药。'}</p></div></div>{!dm.autoAdvance&&<><Button disabled={busy||!dm.canInteract} onClick={()=>send({type:'dungeonInteract'})}>{dm.interactionLabel}</Button>{!dm.canInteract&&<p className="footnote">{dm.interactionReason}</p>}</>}</>}
      {!dm.autoAdvance&&dm.canSkip&&<Button variant="ghost" disabled={busy} onClick={()=>send({type:'dungeonSkip'})}>绕过这段可选路线</Button>}
     </>}
-   </>:<><div className="eyebrow">矿井旅程</div><h2>路线已完成</h2><p>整理战利品，离开矿井后回到任务人物处交付任务。</p></>}
+   </>:<><div className="eyebrow">地下城旅程</div><h2>路线已完成</h2><p>整理战利品，离开副本后回到任务人物处交付任务。</p></>}
    {s.activity.reason&&<p className="dungeon-notice" role="status">{s.activity.reason}</p>}
    {(s.pending.length>0||s.bag.length>=d.bagCapacity)&&<p className="dungeon-notice">背包需要整理。到「角色」装备新物品或拾取待领取战利品；也可离开副本后找商人出售。</p>}
    <RecoveryControls {...props}/>

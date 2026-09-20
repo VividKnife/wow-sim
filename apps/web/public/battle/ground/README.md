@@ -12,7 +12,7 @@
 
 预设与选择规则：`packages/game-data/battle-ground.js`。副本区域通过 `combat-areas.json` 的 `ground` 指定材质。野外先判断水中状态，再判断矿洞地点和区域；岸边不等同于水中。`startCombat` 保存 `combat.ground`，客户端投影与战斗历史保留该字段，回看不会受玩家后来所在地影响。
 
-新增材质时添加本目录资源和 `battleGrounds` 预设，再配置区域或地点规则。地面使用 CSS 背景，Pixi 与简化渲染共用同一材质。
+新增材质时添加本目录资源和 `battleGrounds` 预设，再配置区域或地点规则。HD-2D 战场使用 Three.js 地面网格与重复纹理，精细和简化特效共用同一材质；场景布景与光照见 `app/battle-hd2d/environment.tsx`。
 
 ## 生成提示词
 

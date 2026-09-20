@@ -1,5 +1,5 @@
 // Presentation only. Use the actual location, never the map's preview selection.
-const regions={'北郡':'forest','艾尔文':'forest','暴风城':'stormwind','西部荒野':'westfall'};
+const regions={'北郡':'forest','艾尔文':'forest','暴风城':'stormwind','西部荒野':'westfall','暮色森林':'duskwood','湿地':'wetlands'};
 const locations={lakeshire:'forest',thelsamar:'forest',algaz:'forest',silverstream:'forest',ironforge:'ironforge',darnassus:'darnassus',orgrimmar:'orgrimmar',undercity:'undercity',thunderbluff:'thunderbluff',moonglade:'moonglade'};
 export function zoneMusicForLocation(location,dungeon=false){
  if(!location)return null;

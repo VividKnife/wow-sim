@@ -13,9 +13,13 @@ export function enemySpellInfo(e,id){
  const sp=spells[id];if(!sp)return null;
  const cast=lookup.SpellCastTimes[sp.CastingTimeIndex],duration=lookup.SpellDuration[sp.DurationIndex],range=lookup.SpellRange[sp.RangeIndex];
  const durationMs=duration?.baseMs===-1?Number.MAX_SAFE_INTEGER:Math.max(0,(duration?.baseMs||0)+(duration?.perLevelMs||0)*e.level);
+ // Simulator adaptation: NPC rage/energy spells with no corresponding pool
+ // are governed by AI cooldowns, range and control checks. They must not spend
+ // mana or acquire fabricated player resources. Player spells remain separate.
+ const npcTimerResource=!e.classId&&(sp.PowerType===1&&!e.maxRage||sp.PowerType===3&&!e.maxEnergy);
  return {...sp,castMs:Math.max(cast?.minimumMs||0,(cast?.baseMs||0)+(cast?.perLevelMs||0)*e.level)*castTimeMultiplier(e,e.time||0),durationMs,
   range:range?.maximumYards||0,minRange:range?.minimumYards||0,
-  mana:Math.floor(sp.ManaCost+sp.ManaCostPerlevel*Math.max(0,e.level-sp.SpellLevel)+(e.maxMana??e.mana)*sp.ManaCostPercentage/100)};
+  mana:npcTimerResource?0:Math.floor(sp.ManaCost+sp.ManaCostPerlevel*Math.max(0,e.level-sp.SpellLevel)+(e.maxMana??e.mana)*sp.ManaCostPercentage/100)};
 }
 const living=units=>units.filter(u=>u.hp>0&&!u.removed);
 export function enemySpellMissChance(e,target,sp){
@@ -27,6 +31,14 @@ export function enemySpellMissChance(e,target,sp){
 function effectTargets(s,e,target,sp,n,actors){
  const a=sp['EffectImplicitTargetA'+n],b=sp['EffectImplicitTargetB'+n];
  const radius=lookup.SpellRadius[sp['EffectRadiusIndex'+n]]?.radiusYards||0;
+ if(sp['EffectChainTarget'+n]>1&&target?.hp>0){
+  const chain=[target],pool=living(actors);
+  while(chain.length<sp['EffectChainTarget'+n]){
+   const previous=chain.at(-1),next=pool.filter(u=>!chain.includes(u)&&distance(previous,u)<=10).sort((a,b)=>distance(previous,a)-distance(previous,b)||String(a.id).localeCompare(String(b.id)))[0];
+   if(!next)break;chain.push(next);
+  }
+  return chain;
+ }
  if(a===1)return[e];
  if(a===5)return living(s.combat.enemies).filter(u=>u.summonedBy===e.id&&u.pet);
  if(a===22&&b===30)return living(s.combat.enemies).filter(u=>distance(u,e)<=radius);
@@ -44,7 +56,8 @@ function summon(s,e,sp,n){
   s.combat.enemies.push(child);log(s,`${e.name} 召唤了 ${child.name}`,'combat',{actorId:e.id,targetId:child.id,spellId:sp.Id});
  }
 }
-function applySpell(s,e,target,sp,actors,hurt){
+function applySpell(s,e,target,sp,actors,hurt,ancestors=[]){
+ if(ancestors.length>=8||ancestors.includes(sp.Id))return;
  const name=nameOf('spells',sp.Id),hits=new Map();
  for(let n=1;n<=3;n++){
   const effect=sp['Effect'+n];if(!effect)continue;
@@ -55,24 +68,38 @@ function applySpell(s,e,target,sp,actors,hurt){
   }
   if(effect===40){e.dualWield=true;continue;}
   if(effect===19){e.extraAttacks=(e.extraAttacks||0)+effectRange(e,sp,n)[0];continue;}
-  for(const unit of effectTargets(s,e,target,sp,n,actors)){
+  for(const [jump,unit] of effectTargets(s,e,target,sp,n,actors).entries()){
    if(actors.includes(unit)){
     if(!hits.has(unit.id)){const miss=rng(s)<enemySpellMissChance(e,unit,sp);hits.set(unit.id,!miss);if(miss&&sp.DmgClass===1&&sp.School>0)onTalentEvent(s,unit,{type:'resist',spell:sp,target:e},{stats,rng,actors});if(miss)log(s,`${unit.name} 避开了 ${name}`,'miss',{actorId:e.id,targetId:unit.id,spellId:sp.Id});}
     if(!hits.get(unit.id))continue;
    }
    if(schoolImmune(unit,sp.School,s.clock)){log(s,`${unit.name} 免疫了 ${name}`,'miss',{actorId:e.id,targetId:unit.id,spellId:sp.Id});continue;}
-   const amount=roll(s,...effectRange(e,sp,n));
-   if(effect===2||effect===58){
-    let damage=amount;if(effect===58)damage+=roll(s,Math.floor(e.low),Math.ceil(e.high))+physicalDamageBonus(e,s.clock);
+   const amount=roll(s,...effectRange(e,sp,n))*(sp['EffectChainTarget'+n]>1?Math.pow(sp['DmgMultiplier'+n]||1,jump):1);
+   if(effect===2||effect===17||effect===58){
+    let damage=amount;if(effect===17||effect===58)damage+=roll(s,Math.floor(e.low),Math.ceil(e.high))+physicalDamageBonus(e,s.clock);
     if(sp.School===0)damage*=1-armorReduction(stats(unit).armor,e.level);
+    for(const aura of e.auras||[])if(aura.until>s.clock&&aura.type===79&&(aura.misc&(1<<sp.School)))damage*=1+aura.amount/100;
     hurt(s,e,unit,damage,name,{spellId:sp.Id,school:sp.School});
+   }else if(effect===68&&unit.cast){
+    const school=spells[unit.cast.spell]?.School;
+    if(school!=null){unit.schoolLockouts??={};unit.schoolLockouts[school]=s.clock+sp.durationMs;}
+    unit.cast=null;unit.nextAction=s.clock;
+    log(s,`${e.name} 打断了 ${unit.name}`,'interrupt',{actorId:e.id,targetId:unit.id,spellId:sp.Id});
+   }else if(effect===64){
+    const child=enemySpellInfo(e,sp['EffectTriggerSpell'+n]);
+    if(child)applySpell(s,e,unit,child,actors,hurt,[...ancestors,sp.Id]);
    }else if(effect===10){const healed=Math.min(unit.maxHp-unit.hp,amount);unit.hp+=healed;log(s,`${unit.name} 的${name}恢复了 ${healed} 点生命`,'heal',{actorId:e.id,targetId:unit.id,spellId:sp.Id,amount:healed});}
    else if(effect===6||effect===27){
     const auraType=sp['EffectApplyAuraName'+n],resist=talentControlResistance(unit,sp.Mechanic||sp['EffectMechanic'+n]||({7:5,12:12,27:9,26:7}[auraType]))+(unit.raceId===2&&auraType===12?.25:0);
     if(auraType===7&&unit.racialImmuneFearUntil>s.clock||resist>0&&rng(s)<resist)continue;
     const interval=sp['EffectAmplitude'+n]||0;
+    if(auraType===36)unit.auras=(unit.auras||[]).filter(a=>a.type!==36&&!a.stancePassive);
     addCombatAura(unit,{spell:sp.Id,effect:n,type:sp['EffectApplyAuraName'+n],amount,misc:sp['EffectMiscValue'+n],trigger:sp['EffectTriggerSpell'+n],school:sp.School,
      dispel:sp.Dispel,mechanic:sp.Mechanic||sp['EffectMechanic'+n],caster:e.id,casterName:e.name,until:sp.durationMs===Number.MAX_SAFE_INTEGER?sp.durationMs:s.clock+sp.durationMs,interval,next:interval?s.clock+interval:0},s.clock);
+    // The NPC stance spells use the same Classic stance passives as warriors.
+    // Parent ownership lets a stance change remove its passive modifiers too.
+    const passive=auraType===36?({7164:7376,7165:21156})[sp.Id]:null;
+    if(passive){const child=enemySpellInfo(e,passive);if(child){applySpell(s,e,unit,{...child,durationMs:sp.durationMs},actors,hurt,[...ancestors,sp.Id]);for(const aura of unit.auras||[])if(aura.spell===passive)aura.stancePassive=sp.Id;}}
    }
   }
  }

@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "../vendor/shadcn-tailwind-4.13.0.css";
 @import "./battle.css";
+@import "./battle-hd2d.css";
 @import "./dungeon.css";
 @import "./world-map.css";
 @theme inline { --color-background:#101619;--color-foreground:#e7e4d9;--color-primary:#d9b575;--color-primary-foreground:#171917;--color-secondary:#263137;--color-secondary-foreground:#e7e4d9;--color-muted:#202a2e;--color-muted-foreground:#96a5a6;--color-accent:#304046;--color-accent-foreground:#fff;--color-border:#354044;--color-input:#354044;--color-ring:#d9b575;--color-destructive:#cb7774;--radius-md:4px;--radius-lg:6px; }

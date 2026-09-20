@@ -1,0 +1,105 @@
+{
+  "status": "Display-only current Classic Chinese identities; verified pinned 2019 prelaunch PNG bytes; no numeric changes",
+  "items": {
+    "1264": {
+      "nameZhCN": "碎头者",
+      "icon": "assets/inv_mace_07.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/1264?locale=4"
+    },
+    "1317": {
+      "nameZhCN": "硬根法杖",
+      "icon": "assets/inv_staff_16.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/1317?locale=4"
+    },
+    "2033": {
+      "nameZhCN": "大使之靴",
+      "icon": "assets/inv_boots_08.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/2033?locale=4"
+    },
+    "2874": {
+      "nameZhCN": "未寄出的信",
+      "icon": "assets/inv_letter_15.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/2874?locale=4"
+    },
+    "2906": {
+      "nameZhCN": "夜色郡锁甲护腿",
+      "icon": "assets/inv_pants_03.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/2906?locale=4"
+    },
+    "2909": {
+      "nameZhCN": "红色毛纺面罩",
+      "icon": "assets/inv_misc_bandana_03.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/2909?locale=4"
+    },
+    "2926": {
+      "nameZhCN": "巴基尔·斯瑞德的头颅",
+      "icon": "assets/inv_misc_head_human_01.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/2926?locale=4"
+    },
+    "2933": {
+      "nameZhCN": "乌瑞恩的图章",
+      "icon": "assets/inv_jewelry_ring_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/2933?locale=4"
+    },
+    "2941": {
+      "nameZhCN": "监狱骨片",
+      "icon": "assets/inv_weapon_shortblade_18.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/2941?locale=4"
+    },
+    "2942": {
+      "nameZhCN": "铁指虎",
+      "icon": "assets/inv_gauntlets_04.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/2942?locale=4"
+    },
+    "2956": {
+      "nameZhCN": "有关迪菲亚兄弟会的报告",
+      "icon": "assets/inv_letter_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/2956?locale=4"
+    },
+    "3228": {
+      "nameZhCN": "弯曲护腕",
+      "icon": "assets/inv_bracer_02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/3228?locale=4"
+    },
+    "3400": {
+      "nameZhCN": "磷铝长剑",
+      "icon": "assets/inv_sword_20.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/3400?locale=4"
+    },
+    "3562": {
+      "nameZhCN": "辩护腰带",
+      "icon": "assets/inv_belt_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/3562?locale=4"
+    },
+    "3628": {
+      "nameZhCN": "迪克斯特·瓦德的手掌",
+      "icon": "assets/inv_gauntlets_09.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/3628?locale=4"
+    },
+    "3630": {
+      "nameZhCN": "塔格尔的头颅",
+      "icon": "assets/inv_misc_head_orc_01.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/3630?locale=4"
+    },
+    "3640": {
+      "nameZhCN": "卡姆·深怒的头颅",
+      "icon": "assets/inv_misc_head_dwarf_01.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/3640?locale=4"
+    },
+    "4306": {
+      "nameZhCN": "丝绸",
+      "icon": "assets/inv_fabric_silk_01.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/4306?locale=4"
+    },
+    "8683": {
+      "nameZhCN": "克拉拉的新鲜苹果",
+      "icon": "assets/inv_misc_food_19.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/8683?locale=4"
+    },
+    "8687": {
+      "nameZhCN": "神秘访客的资料",
+      "icon": "assets/inv_misc_note_02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/item/8687?locale=4"
+    }
+  }
+}

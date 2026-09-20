@@ -1,3 +1,4 @@
+import {dungeonIdFor} from './rules/dungeon-registry.js';
 import { act, advance } from './rules/engine.js';
 import { stats } from './rules/character.js';
 import { commandCombatCast } from './rules/combat.js';
@@ -16,7 +17,7 @@ const instanceCommands = new Set(['strategy', 'settings', 'petCommand', 'cast', 
 export const visitorCommands = Object.freeze(['strategy', 'settings', 'cast', 'petCommand']);
 function rosterIds(value: unknown): asserts value is string[] { requireThat(Array.isArray(value) && value.length > 0 && value.every(id => typeof id === 'string' && id.length > 0) && new Set(value).size === value.length, 'ROSTER', '副本名册必须是非空且不重复的角色 ID 数组', 400); }
 export async function createInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) {
-    const contentId = cmd.contentId ?? (cmd.type === 'enterDungeon' ? 'deadmines' : 'northshire-skirmish');
+    const contentId = cmd.contentId ?? (cmd.type === 'enterDungeon' ? dungeonIdFor(c.rules) : 'northshire-skirmish');
     requireThat(typeof contentId === 'string' && Object.hasOwn(instanceContents, contentId), 'CONTENT', '未知的副本内容', 400);
     const capacity = cmd.capacity ?? 5;
     requireThat([5, 10, 20, 40].includes(capacity), 'CAPACITY', '副本席位必须为 5、10、20 或 40', 400);
@@ -66,7 +67,7 @@ export async function startInstance(this: GameService, tx: Transaction, c: Chara
     }
     const content = instanceContents[instance.contentId as keyof typeof instanceContents];
     requireThat([s, ...s.party].every((p: Rules) => p.level >= content.minimumLevel && p.hp > 0), 'ENTRY', '角色等级或生命值不满足副本要求');
-    const savedRunId = s.dungeonSave?.runId;
+    const savedRunId = s.dungeonSaves?.[instance.contentId]?.runId;
     content.start(s);
     if (s.dungeon && !savedRunId)
         s.dungeon.runId = instance.id;

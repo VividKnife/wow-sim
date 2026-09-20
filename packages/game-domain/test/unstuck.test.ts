@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
 import {stats} from '../src/rules/character.js';
-import {dungeonRoute} from '../src/rules/dungeon.js';
+import {dungeonRoute as routeFor} from '../src/rules/dungeon.js';
+const dungeonRoute=routeFor('deadmines');
 import type {Character, Instance, Activity} from '../src/model.ts';
 
 async function fixture() {
@@ -22,7 +23,7 @@ test('old-version revive can be escaped; committed assets survive and old worker
     await f.store.transaction(async tx => {
         const c = (await tx.get<Character>('characters', f.hero))!;
         c.rules.hp = 0; c.rules.location = 'deadmines';
-        c.rules.dungeonSave = {runId: 'obsolete'};
+        c.rules.dungeonSaves = {deadmines:{runId:'obsolete'}};
         c.professionReadyAt = {alchemy: 9000};
         await tx.put('characters', c);
         const i = (await tx.get<Instance>('instances', instanceId))!;
@@ -41,7 +42,7 @@ test('old-version revive can be escaped; committed assets survive and old worker
     assert.equal(result.state.activity.type, 'idle');
     assert.equal(result.state.hp, Math.ceil(stats(result.state).maxHp / 2));
     assert.equal(result.state.location, 'moonbrook');
-    assert.deepEqual(result.state.dungeonSave, {runId: 'obsolete'});
+    assert.deepEqual(result.state.dungeonSaves?.deadmines, {runId: 'obsolete'});
     assert.equal(result.state.combat, null);
     assert.equal((await f.store.transaction(tx => tx.get<Character>('characters', f.hero)))!.professionReadyAt.alchemy, 9000);
     assert.deepEqual(await f.store.transaction(async tx => ({items: await tx.list('items'), wallets: await tx.list('wallets'), claims: await tx.list('reward_claims')})), assets);
@@ -143,9 +144,9 @@ test('escape preserves dungeon checkpoint on the leader and reentry retries only
     });
     f.service.contentVersion = 'v2';
     const escaped = await f.service.command('a', {type: 'unstuck', requestId: 'escape'});
-    assert.deepEqual(escaped.state.dungeonSave, checkpoint);
+    assert.deepEqual(escaped.state.dungeonSaves?.deadmines, checkpoint);
     const characters = await f.store.transaction(tx => tx.list<Character>('characters'));
-    assert.ok(characters.filter(c => c.id !== f.hero).every(c => !c.rules.dungeonSave));
+    assert.ok(characters.filter(c => c.id !== f.hero).every(c => !c.rules.dungeonSaves?.deadmines));
     const travel = await f.service.command('a', {type: 'travel', to: 'deadmines', requestId: 'return'});
     f.time(travel.state.wallAt + travel.state.activity.endsAt - travel.state.clock);
     assert.deepEqual((await f.service.work()).errors, []);
@@ -174,7 +175,7 @@ test('cancelling a stuck cannon refunds its consumed powder once and preserves t
     const command = {type: 'unstuck', requestId: 'escape'};
     await f.service.command('a', command);
     const after = await f.service.command('a', command);
-    assert.equal(after.state.dungeonSave.cursor, cursor);
-    assert.equal(after.state.dungeonSave.interactions[encounter.id], undefined);
+    assert.equal(after.state.dungeonSaves?.deadmines.cursor, cursor);
+    assert.equal(after.state.dungeonSaves?.deadmines.interactions[encounter.id], undefined);
     assert.equal([...after.state.bag, ...after.state.pending].filter(i => i.id === powder).reduce((n, i) => n + i.count, 0), 1);
 });

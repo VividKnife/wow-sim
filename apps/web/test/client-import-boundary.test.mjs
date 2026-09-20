@@ -31,8 +31,8 @@ async function importClosure(entry){
  }
  return [...seen].map(file=>relative(root,file).replaceAll('\\','/'));
 }
-for(const entry of ['app/game.tsx','lib/game-response.js'])test('browser import closure stays outside authoritative modules: '+entry,async()=>{
+for(const entry of ['app/game.tsx','app/saves.tsx','lib/game-response.js'])test('browser import closure stays outside authoritative modules: '+entry,async()=>{
  const closure=await importClosure(resolve(root,entry));
  for(const path of closure){assert.equal(path.includes('packages/game-domain/'),false,path+' reached from '+entry);assert.equal(forbiddenNames.has(path.split('/').at(-1)),false,path+' reached from '+entry);}
- if(entry==='app/game.tsx'){assert.ok(closure.includes('app/battle.tsx'));assert.ok(closure.includes('lib/battle-renderer.ts'));assert.ok(closure.some(path=>path.startsWith('components/ui/')));}
+ if(entry==='app/game.tsx'){assert.ok(closure.includes('app/battle.tsx'));assert.ok(closure.includes('app/battle-hd2d/scene.tsx'));assert.ok(closure.some(path=>path.startsWith('components/ui/')));}
 });

@@ -2,7 +2,8 @@ import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats,view} from '../../../packages/game-domain/src/rules/engine.js';
-import {dungeonRoute} from '../../../packages/game-domain/src/rules/dungeon.js';
+import {dungeonRoute as routeFor} from '../../../packages/game-domain/src/rules/dungeon.js';
+const dungeonRoute=routeFor('deadmines');
 import {addItem,bagCapacity,countItem,makeItem} from '../../../packages/game-domain/src/rules/character.js';
 import {resurrectionFor} from '../../../packages/game-domain/src/rules/recovery.js';
 
@@ -158,6 +159,6 @@ test('automatic state survives serialization and chunking, but leaving disarms i
  const initial=act(group(),{type:'dungeonNext'},0),whole=advance(initial,45000).state;
  let chunk=JSON.parse(JSON.stringify(initial));for(const at of [3000,11000,21000,45000])chunk=advance(chunk,at).state;
  assert.deepEqual(chunk,whole);
- let s=group();s.dungeon.autoAdvance=true;s=act(s,{type:'leaveDungeon'},0);assert.equal(s.dungeonSave.autoAdvance,false);
+ let s=group();s.dungeon.autoAdvance=true;s=act(s,{type:'leaveDungeon'},0);assert.equal(s.dungeonSaves?.deadmines.autoAdvance,false);
  s=act(s,{type:'enterDungeon'},0);s=step(s,1000);assert.equal(s.dungeon.autoAdvance,false);assert.equal(s.combat,null);
 });

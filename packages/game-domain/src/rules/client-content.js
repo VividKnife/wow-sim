@@ -1,3 +1,4 @@
+import {dungeonJournal} from './dungeon-journal.js';
 import {items,nameOf,icon,classDefinitions,raceDefinitions} from './catalog.js';
 import {marketView} from './inventory.js';
 import {enchants,bandages,potions} from './profession-data.js';
@@ -9,6 +10,7 @@ export function itemView(id){
 }
 
 const catalog={
+ dungeonJournal,
  items:Object.fromEntries(Object.keys(items).map(Number).map(id=>[id,itemView(id)]).filter(([,item])=>item)),
  market:marketView(),
  enchants,

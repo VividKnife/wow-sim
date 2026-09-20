@@ -1,0 +1,158 @@
+{
+  "seed": 812,
+  "fixture": "Initial level, learned spells, companion issued gear and supplies; non-quest inventory disposal between encounters; no combat health/stat/victory edits",
+  "runs": [
+    {
+      "level": 26,
+      "completed": true,
+      "cursor": 35,
+      "minutes": 43.666666666666664,
+      "kills": 93,
+      "deaths": 0,
+      "reason": "",
+      "hp": [
+        {
+          "classId": 8,
+          "hp": 703,
+          "maxHp": 703
+        },
+        {
+          "classId": 1,
+          "hp": 936,
+          "maxHp": 936
+        },
+        {
+          "classId": 5,
+          "hp": 712,
+          "maxHp": 712
+        },
+        {
+          "classId": 4,
+          "hp": 826,
+          "maxHp": 826
+        },
+        {
+          "classId": 8,
+          "hp": 703,
+          "maxHp": 703
+        }
+      ],
+      "spawnCounts": {
+        "1663": 1,
+        "1666": 1,
+        "1696": 1,
+        "1706": 18,
+        "1707": 24,
+        "1708": 20,
+        "1711": 11,
+        "1715": 14,
+        "1716": 1,
+        "1717": 1,
+        "1720": 1
+      },
+      "quests": {
+        "377": true,
+        "378": true,
+        "386": true,
+        "387": true,
+        "388": true,
+        "391": true
+      },
+      "discardedLootSlots": 36,
+      "casts": [
+        674,
+        7165,
+        6253,
+        6547,
+        3427,
+        7159,
+        13730,
+        1766,
+        6713,
+        9128,
+        8876,
+        8599,
+        8242,
+        7164,
+        421,
+        11976,
+        19134,
+        7964
+      ]
+    },
+    {
+      "level": 60,
+      "completed": true,
+      "cursor": 35,
+      "minutes": 23,
+      "kills": 93,
+      "deaths": 0,
+      "reason": "",
+      "hp": [
+        {
+          "classId": 8,
+          "hp": 1910,
+          "maxHp": 1910
+        },
+        {
+          "classId": 1,
+          "hp": 2865,
+          "maxHp": 2919
+        },
+        {
+          "classId": 5,
+          "hp": 1987,
+          "maxHp": 1987
+        },
+        {
+          "classId": 4,
+          "hp": 2373,
+          "maxHp": 2373
+        },
+        {
+          "classId": 8,
+          "hp": 1910,
+          "maxHp": 1910
+        }
+      ],
+      "spawnCounts": {
+        "1663": 1,
+        "1666": 1,
+        "1696": 1,
+        "1706": 18,
+        "1707": 24,
+        "1708": 20,
+        "1711": 11,
+        "1715": 14,
+        "1716": 1,
+        "1717": 1,
+        "1720": 1
+      },
+      "quests": {
+        "377": true,
+        "378": true,
+        "386": true,
+        "387": true,
+        "388": true,
+        "391": true
+      },
+      "discardedLootSlots": 33,
+      "casts": [
+        674,
+        7165,
+        6253,
+        6547,
+        7159,
+        1766,
+        3427,
+        6713,
+        9128,
+        13730,
+        8876,
+        8242,
+        7164,
+        11976
+      ]
+    }
+  ]
+}

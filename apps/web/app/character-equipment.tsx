@@ -87,7 +87,7 @@ export default function CharacterEquipment({state:s,data:d,busy,send,roster}:Gam
    <header className="classic-title"><span className="classic-portrait identity-crest">{d.className?.slice(0,1)}</span><div><h2>{s.name}</h2><p>等级 {s.level} · {d.raceName}{d.className}</p></div><span className="armory-faction">{d.faction==='Horde'?'部落':'联盟'}</span></header>
    <div className="paper-doll">
     <div className="equipment-column equipment-left">{leftSlots.map(renderEquipment)}</div>
-    <div className="character-stage"><div className="stage-arch"/><span className="stage-class">{d.className}</span>{s.raceId===1?<CharacterModel equipment={equipment} items={d.items} title={`人类${d.className} 3D 换装预览`} fallback={<MageSilhouette label={`人类${d.className}装备剪影`}/>} />:<div className="identity-paperdoll" role="img" aria-label={`${d.raceName}${d.className}身份卡`}><strong>{d.raceName}</strong><span>{d.className}</span><small>当前 3D 换装仅提供人类模型</small></div>}</div>
+    <div className="character-stage"><div className="stage-arch"/><span className="stage-class">{d.className}</span><CharacterModel raceId={s.raceId} classId={s.classId} equipment={equipment} items={d.items} title={`${d.raceName}${d.className} 3D 换装预览`} fallback={s.raceId===1?<MageSilhouette label={`${d.raceName}${d.className}装备剪影`}/>:<div className="identity-paperdoll"><strong>{d.raceName}</strong><span>{d.className}</span></div>}/></div>
     <div className="equipment-column equipment-right">{rightSlots.map(renderEquipment)}</div>
     <div className="weapon-slots">{weaponSlots.map(renderEquipment)}</div>
    </div>

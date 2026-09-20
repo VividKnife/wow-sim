@@ -23,7 +23,7 @@ await store.transaction(async tx=>{
  for(const [index,original] of [source,...source.party].entries()){
   const c=await tx.get('characters',ids[index]);
   const s={...newState(original.name,original.classId,original.raceId||1,1234,now,c.id),...structuredClone(original),id:c.id,party:[],location:'deadmines',wallAt:now,clock:source.clock,activity:{type:'idle'},combat:null,lastCombat:null};
-  delete s.dungeon;delete s.dungeonSave;s.dungeonEntries=[];s.dungeonSequence=0;
+  delete s.dungeon;delete s.dungeonSaves;s.dungeonEntries=[];s.dungeonSequence=0;
   for(const item of [...s.bag,...Object.values(s.equipment),...s.bags,...s.bank])if(item.ownerId)item.ownerId=mapping.get(item.ownerId)||item.ownerId;
   await persistCharacter(tx,c,s,now,`fixture-${index}`,options.id);
  }
