@@ -16,6 +16,14 @@ test('duplicate snapshots do not stall animation and a lost connection bounds pr
  assert.equal(clock.read(200),1200);
  assert.equal(clock.read(20000),2000);
 });
+test('a deterministic pull countdown reaches every second but never predicts past its deadline',()=>{
+ const clock=createBattleClock(1000,0);
+ assert.equal(clock.read(999,true,3000),1999);
+ assert.equal(clock.read(1000,true,3000),2000);
+ assert.equal(clock.read(2000,true,3000),3000);
+ assert.equal(clock.read(3000,true,3000),4000);
+ assert.equal(clock.read(20000,true,3000),4000);
+});
 test('new encounters reset and completed fights stop interpolating',()=>{
  const clock=createBattleClock(5000,0);
  clock.read(500);

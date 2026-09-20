@@ -35,7 +35,7 @@ import {beginUtilitySpell,finishUtilitySpell,useBagItem,utilityView} from './uti
 import {supportedSpellNames,supportedTalentNames,defaultClassRules,racialTraits} from './class-support.js';
 import {grantTalentRank,resetTalentGrants} from './talent-acquisition.js';
 import {finishClassUtility,useClassPortal,tickClassChannel,finishClassChannel,cancelClassChannel} from './class-utility.js';
-import {mountView,trainRiding,buyMount,beginMount,finishMount,endMount,dismount,travelRoute,updateTravelMount,travelDismountAt} from './mounts.js';
+import {mountView,trainRiding,buyMount,beginMount,automaticTravelMount,finishMount,endMount,dismount,travelRoute,updateTravelMount,travelDismountAt} from './mounts.js';
 import {soulstoneRevive,reincarnationUse,reincarnate} from './class-items.js';
 import {petCommand} from './class-spell-effects.js';
 import {combatMembers} from './combat-members.js';
@@ -68,8 +68,16 @@ function tick(s){s.time=s.clock;const st=stats(s),wasAlive=s.hp>0;environmentTic
  if(s.dungeon){recordDungeonProgress(s);advanceDungeon(s);}
  if(s.activity.type==='hunt'&&!s.rest&&s.clock>=s.nextPull){if([s,...s.party].some(c=>c.hp<=0)){idle(s,'有成员倒下，请先复活再继续狩猎。');if(s.hp<=0)s.activity={type:'dead',reason:'队长已倒下，请先复活。'};return;}const inventoryReason=huntInventoryBlockedReason(s);if(inventoryReason){if(s.pending.length)s.activity.reason=inventoryReason;else idle(s,inventoryReason);return;}if(s.activity.quest&&questProgress(s,s.activity.quest)?.complete){idle(s,'任务目标已完成。');return;}delete s.activity.reason;if(prepareAutoBuffs(s)||startRecovery(s))return;startCombat(s,[s.activity.target]);}
 }
+function beginGroundTravel(s,{to,hunt=null,quest=null},autoMount=true){
+ // Validate the route before beginning the summon so an invalid destination
+ // fails immediately instead of three seconds later.
+ const routeBeforeMount=travelRoute(s,to),mount=autoMount&&automaticTravelMount(s);
+ if(mount){beginMount(s,mount);s.activity.travel={to,hunt,quest};return;}
+ const r=s.mounted?travelRoute(s,to):routeBeforeMount;
+ s.activity={type:'travel',from:s.location,to,startedAt:s.clock,endsAt:s.clock+r.duration,hunt,quest,path:r.path};s.rest=null;s.groundEffects=[];
+}
 function finishActivity(s){const a=s.activity;if(a.type==='travel'){s.location=a.to;if(!s.visited.includes(a.to))s.visited.push(a.to);log(s,'抵达 '+nodes[a.to].name,'travel');creditExploration(s);idle(s);if(a.hunt){s.activity={type:'hunt',target:a.hunt,quest:a.quest||null};s.nextPull=s.clock;}}
- else if(a.type==='mount')finishMount(s);
+ else if(a.type==='mount'){const travel=a.travel;finishMount(s);if(travel&&s.mounted)beginGroundTravel(s,travel,false);}
  else if(a.type==='stockadesQuestEvent')stockadesQuestTick(s);
  else if(a.type==='escortMove')finishEscortMove(s);
  else if(a.type==='hearth'){finishHearth(s);idle(s);}
@@ -188,8 +196,8 @@ export function act(input,action,now){
  case 'abandon':ensureIdle(s);abandonQuest(s,action.id);break;
  case 'useQuestItem':beginQuestTool(s,action.id);break;
  case 'recruit':ensureIdle(s);recruit(s,action.id,action);break;
- case 'navigateQuest':{ensureIdle(s);const q=questProgress(s,action.id);if(!q?.active)throw new Error('请先接受这个任务。');const target=questNavigation(s,q);if(!target)throw new Error('这个任务暂时没有可导航的地点。');if(target.here)throw new Error('你已在任务区域，请完成目标或交付任务。');const r=travelRoute(s,target.to);s.activity={type:'travel',from:s.location,to:target.to,startedAt:s.clock,endsAt:s.clock+r.duration,path:r.path,quest:q.id};s.rest=null;s.groundEffects=[];break;}
- case 'travel':{const moving=s.activity.type==='travel';if(!moving)ensureIdle(s);else if(s.combat)throw new Error('战斗中不能更改目的地。');if(!moving&&action.to===s.location)throw new Error('你已经在这里');const r=moving?redirectedTravel(s,action.to):travelRoute(s,action.to);if(action.hunt&&!monsterIdsAt(action.to).includes(action.hunt))throw new Error('目的地没有这个狩猎目标');s.activity={type:'travel',from:moving?r.from:s.location,to:action.to,startedAt:moving?r.startedAt:s.clock,endsAt:moving?r.endsAt:s.clock+r.duration,hunt:action.hunt||null,quest:action.quest||null,path:r.path};s.rest=null;s.groundEffects=[];if(moving)log(s,'更改目的地：'+nodes[action.to].name+'，从当前位置重新规划路线。','travel');break;}
+ case 'navigateQuest':{ensureIdle(s);const q=questProgress(s,action.id);if(!q?.active)throw new Error('请先接受这个任务。');const target=questNavigation(s,q);if(!target)throw new Error('这个任务暂时没有可导航的地点。');if(target.here)throw new Error('你已在任务区域，请完成目标或交付任务。');beginGroundTravel(s,{to:target.to,quest:q.id});break;}
+ case 'travel':{const moving=s.activity.type==='travel';if(!moving)ensureIdle(s);else if(s.combat)throw new Error('战斗中不能更改目的地。');if(!moving&&action.to===s.location)throw new Error('你已经在这里');if(action.hunt&&!monsterIdsAt(action.to).includes(action.hunt))throw new Error('目的地没有这个狩猎目标');if(!moving)beginGroundTravel(s,{to:action.to,hunt:action.hunt||null,quest:action.quest||null});else{const r=redirectedTravel(s,action.to);s.activity={type:'travel',from:r.from,to:action.to,startedAt:r.startedAt,endsAt:r.endsAt,hunt:action.hunt||null,quest:action.quest||null,path:r.path};s.rest=null;s.groundEffects=[];log(s,'更改目的地：'+nodes[action.to].name+'，从当前位置重新规划路线。','travel');}break;}
  case 'hunt':ensureIdle(s);if(!monsterIdsAt(s.location).includes(action.id))throw new Error('当前地点没有这个怪物');{const blocked=huntInventoryBlockedReason(s);if(blocked)throw new Error(blocked);}s.activity={type:'hunt',target:action.id,quest:action.quest||null};s.nextPull=s.clock;break;
  case 'stop':if(s.stockadesQuestEvent){cancelStockadesQuestEvent(s);break;}pauseDungeonAdvance(s,'已停止推进。');{const row=s.journey?.find(row=>row.id===s.activity.journeySession);if(row)row.endedAt=s.clock;}if(s.escort){cancelEscort(s);break;}if(s.combat){s.activity={type:'idle',reason:'本场战斗结束后停止。'};}else if(s.activity.type==='travel'&&s.activity.flight){if(!s.activity.stopAtNext){s.activity.stopAtNext=true;log(s,'将在下一飞行点 '+nodes[s.activity.to].name+' 停靠。','travel');}}else if(s.activity.type==='travel')throw new Error('旅行中请在地图上更改目的地。');else if(s.activity.type==='dungeonCannon')throw new Error('火炮已经点燃，请等待铁门打开。');else idle(s,'已停止。');break;
  case 'train':{ensureIdle(s);const a=allAbilities().find(a=>a.spellId===action.id&&a.classId===s.classId)||allAbilities().find(a=>a.spellId===action.id),blocked=trainingBlocked(s,a);if(blocked)throw new Error(blocked);consumeTrainingBook(s,a);s.money-=a.costCopper;s.learned.push(a.spellId);grantHunterTrainingLinks(s,a.spellId);log(s,(a.acquisition==='classQuest'?'职业解锁（共用路线）：':'学会了 ')+nameOf('spells',a.spellId),'learn');break;}

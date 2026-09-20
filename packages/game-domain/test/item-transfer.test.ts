@@ -73,3 +73,17 @@ test('followers can transfer between pulls but not during shared combat or trave
  }
  assert.equal((await f.row('cloth'))!.data.count,2);
 });
+test('party members can transfer items inside a dungeon between pulls but not during combat',async()=>{
+ const f=await fixture();await f.add(f.helper,'cloth',2589,3);
+ const extra:string[]=[];for(const [name,classId] of [['Tank',1],['Healer',5],['Rogue',4]] as const){const roster=(await seedCompanion(f.service,'a',{name,classId})).roster;extra.push(roster.find(c=>![f.hero,f.helper,...extra].includes(c.id))!.id);}
+ const party=[f.hero,f.helper,...extra];
+ await f.store.transaction(async tx=>{for(const id of party){const c=(await tx.get<Character>('characters',id))!;c.rules.level=20;c.rules.location='deadmines';await tx.put('characters',c);}});
+ await f.service.command('a',{type:'setParty',characterIds:party,requestId:'party'});
+ await f.service.command('a',{type:'enterDungeon',characterId:f.hero,requestId:'enter'});
+ await f.move([{uid:'cloth',count:1}],'inside',f.hero,f.helper);
+ assert.equal((await f.row('cloth'))!.data.count,2);
+ assert.equal((await f.service.snapshot('a',f.hero)).state.bag.filter((item:any)=>item.id===2589).reduce((sum:number,item:any)=>sum+item.count,0),1);
+ await f.service.command('a',{type:'dungeonNext',characterId:f.hero,requestId:'pull'});
+ await assert.rejects(f.move([{uid:'cloth',count:1}],'in-combat',f.hero,f.helper),/战斗或赶路/);
+ assert.equal((await f.row('cloth'))!.data.count,2);
+});

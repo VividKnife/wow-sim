@@ -53,14 +53,17 @@ function Totem({height}:{height:number}){
 }
 
 export function BattleUnit({unit,scene,skills,onSelect}:{unit:BattleUnitData;scene:BattleScene;skills:BattleSkill[];onSelect:(id:string)=>void}){
- const group=useRef<Group>(null),ring=useRef<Mesh>(null),frame=useBattleFrame();
+ const group=useRef<Group>(null),ring=useRef<Mesh>(null),skillLabel=useRef<HTMLElement>(null),frame=useBattleFrame();
  const selected=unit.id===scene.selectedId,dead=unit.hp<=0;
  const height=actorHeight(scene.layout,unit);
  const skill=skills.find(s=>s.spellId===unit.cast?.spell),condition=unitCondition(unit,scene.clock);
  const event=scene.effects.findLast(e=>e.actorId===unit.id&&e.spellId&&['cast','launch'].includes(e.kind));
- const cue=skill||skills.find(s=>s.spellId===event?.spellId);
+ const casting=!!unit.cast&&scene.clock>=unit.cast.startedAt&&scene.clock<unit.cast.until;
+ const cue=casting?skill:skills.find(s=>s.spellId===event?.spellId);
  // Run before Drei Html (priority 0), so labels and the mesh see the same frame.
- useFrame(()=>{const f=frame.current;if(group.current){group.current.position.fromArray(unitPoint(f.layout,unit.id));group.current.visible=!unit.removed;}if(ring.current)ring.current.rotation.z=f.scene.reducedMotion?0:f.seconds*.12;},-2);
+ useFrame(()=>{const f=frame.current;if(group.current){group.current.position.fromArray(unitPoint(f.layout,unit.id));group.current.visible=!unit.removed;}if(ring.current)ring.current.rotation.z=f.scene.reducedMotion?0:f.seconds*.12;
+  if(skillLabel.current)skillLabel.current.hidden=casting?!(unit.cast&&f.clock>=unit.cast.startedAt&&f.clock<unit.cast.until):!(event&&f.wall>=event.shownAt&&f.wall-event.shownAt<1000);
+ },-2);
  if(unit.removed)return null;
  return <group ref={group} onClick={event=>{event.stopPropagation();onSelect(unit.id);}}>
   <mesh rotation={[-Math.PI/2,0,0]} position={[0,.02,0]} scale={[height*.28,height*.17,1]}><circleGeometry args={[1,32]}/><meshBasicMaterial color="#071017" transparent opacity={.32} depthWrite={false}/></mesh>
@@ -71,7 +74,7 @@ export function BattleUnit({unit,scene,skills,onSelect}:{unit:BattleUnitData;sce
     <span className="hd2d-unit-name">{unit.name}</span>
     {!dead&&<><span className="hd2d-health"><i style={{width:`${Math.max(0,Math.min(100,unit.hp/Math.max(1,unit.maxHp)*100))}%`}}/></span><span className="hd2d-action"><i style={{width:`${(unit.cast?actionProgress(unit.cast.startedAt,unit.cast.until,scene.clock):unit.swing||0)*100}%`,background:unit.cast?'#a9ceec':'#c7ad71'}}/></span></>}
     {condition&&<small className="hd2d-condition">{condition}</small>}
-    {selected&&cue&&!dead&&<small className="hd2d-skill" style={{color:schoolColor(cue.school)}}>{cue.name}</small>}
+    {cue&&!dead&&<small ref={skillLabel} className="hd2d-skill" title={cue.name} style={{color:schoolColor(cue.school)}}>{cue.icon?<img src={cue.icon} alt="" width={18} height={18}/>:<span className="hd2d-skill-placeholder" aria-hidden="true">{cue.name.slice(0,1)}</span>}<span className="hd2d-skill-name">{cue.name}</span></small>}
    </button>
   </Html>
   {scene.effects.filter(e=>e.targetId===unit.id&&(e.amount||e.kind==='miss')).slice(-3).map((e,i)=><Html key={e.id} position={[(i-1)*.35,height*.65,0]} center zIndexRange={[40,31]} style={{pointerEvents:'none'}}><span className={`hd2d-damage ${e.critical?'critical':''} ${scene.reducedMotion?'still':''}`} style={{color:schoolColor(e.school,e.kind==='heal')}}>{e.kind==='miss'?'未命中':`${e.kind==='heal'?'+':''}${e.amount}${e.critical?'!':''}`}</span></Html>)}

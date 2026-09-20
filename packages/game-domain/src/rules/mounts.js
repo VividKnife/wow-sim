@@ -80,6 +80,12 @@ export function beginMount(s,id){
  s.activity={type:'mount',mount:id,startedAt:s.clock,endsAt:s.clock+(m.classSpell?spellInfo(s,id).castMs:mountCastMs)};
  log(s,'正在召唤 '+m.name,'travel');
 }
+export function automaticTravelMount(s){
+ if(s.mounted)return null;
+ return [...mountCatalog,boostMount,...classMounts]
+  .filter(m=>owns(s,m.id)&&!summonReason(s,m))
+  .sort((a,b)=>b.bonus-a.bonus||a.id-b.id)[0]?.id||null;
+}
 export function finishMount(s){
  const id=s.activity.mount;s.activity={type:'idle'};const m=findMount(id);
  if(!m||summonReason(s,m))return;

@@ -22,7 +22,7 @@ const actorKeys=['id','name','classId','raceId','level','role','hp','mana','rage
 const enemyKeys=[...actorKeys,'minDamage','maxDamage','attackTime','spells','threat','smite','capturePhase','captureUntil'];
 const combatKeys=['lootGold','area','ground','id','runId','routeId','encounterId','startedAt','endedAt','dungeon','pull','participantIds','metrics','projectiles','actorsSnapshot'];
 const dungeonKeys=['id','runId','cursor','position','startedAt','completedAt','metrics'];
-const activityKeys=['type','reason','to','from','startedAt','endsAt','target','quest','spell','caster','targets','routeId','journeySession','auto','flight','stopAtNext'];
+const activityKeys=['type','reason','to','from','startedAt','endsAt','target','quest','spell','mount','caster','targets','routeId','journeySession','auto','flight','stopAtNext'];
 
 function copy(value: unknown): any {
   if (value === null || typeof value !== 'object') return value;

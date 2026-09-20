@@ -34,6 +34,8 @@ test('client snapshot retains the fields needed for active play and battle rende
  assert.ok(projected.player.bag.length>0);
  assert.equal(projected.player.pet.name,'伙伴');
  assert.ok(projected.view.stats.maxHp>0);
+ state.activity={type:'mount',mount:5656,startedAt:0,endsAt:3000};
+ assert.equal(projectClientSnapshot(state,view(state)).player.activity.mount,5656);
 });
 
 test('unlocked party candidates retain every selectable role',()=>{

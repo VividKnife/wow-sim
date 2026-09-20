@@ -13,7 +13,7 @@ export default function ItemTransfer({state:s,data:d,busy,send,roster=[]}:GamePr
  const filtered=s.bag.filter((i:any)=>(d.items[i.id]?.name||'').toLowerCase().includes(search.toLowerCase()));
  const chosen=s.bag.filter((i:any)=>Object.hasOwn(selected,i.uid));
  const invalid=chosen.some((i:any)=>reason(i)||!Number.isInteger(selected[i.uid])||selected[i.uid]<1||selected[i.uid]>i.count);
- const blocked=s.combat?'战斗结束后可以转移物品':s.dungeon?'离开副本后可以转移物品':s.hp<=0?'复活后可以转移物品':!['idle','hunt'].includes(s.activity.type)?'当前活动结束后可以转移物品':target&&target.location!==s.location?'接收角色需要与你位于同一地点':'';
+ const blocked=s.combat?'战斗结束后可以转移物品':s.hp<=0?'复活后可以转移物品':!['idle','hunt'].includes(s.activity.type)?'当前活动结束后可以转移物品':target&&target.location!==s.location?'接收角色需要与你位于同一地点':'';
  const update=(uid:string,count?:number)=>{setNotice('');setSelected(previous=>{const next={...previous};if(count===undefined)delete next[uid];else next[uid]=count;return next;});};
  async function transfer(){
   if(await send({type:'transferItems',recipientId:recipient,items:chosen.map((i:any)=>({uid:i.uid,count:selected[i.uid]}))})){

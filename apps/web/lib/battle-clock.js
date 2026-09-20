@@ -6,9 +6,10 @@ export function createBattleClock(clock,at){
    if(reset){last=next;sampleClock=next;sampleAt=now;}
    else if(next!==sampleClock){sampleClock=next;sampleAt=now;}
   },
-  read(now,live=true){
+  read(now,live=true,maxPredictionMs=1000){
    if(!live)return sampleClock;
-   last=Math.max(last,sampleClock+Math.min(1000,Math.max(0,now-sampleAt)));
+   const prediction=Number.isFinite(maxPredictionMs)?Math.max(0,maxPredictionMs):1000;
+   last=Math.max(last,sampleClock+Math.min(prediction,Math.max(0,now-sampleAt)));
    return last;
   },
  };

@@ -1,7 +1,8 @@
 import type {Transaction} from '../../persistence/src/store.ts';
 import type {GameService} from './service.ts';
-import {type Character, type Activity, type ActorLease, type Item, type Rules, requireThat} from './model.ts';
-import {owned, context, persistAssets, economicEvent} from './context.ts';
+import {type Character, type Activity, type ActorLease, type Instance, type Item, type Rules, requireThat} from './model.ts';
+import {owned, context, persistAssets, economicEvent, clone} from './context.ts';
+import {advance} from './rules/engine.js';
 import {items} from './rules/catalog.js';
 import {bagCapacity} from './rules/character.js';
 import {put, quantity, transferBlockedReason} from './rules/inventory.js';
@@ -13,12 +14,30 @@ export async function transferItems(this:GameService, tx:Transaction, source:Cha
  requireThat(target.id!==source.id,'TRANSFER_TARGET','请选择其他角色');
  requireThat(Array.isArray(cmd.items)&&cmd.items.length>0&&cmd.items.length<=200&&cmd.items.every((i:Rules)=>i&&typeof i.uid==='string')&&new Set(cmd.items.map((i:Rules)=>i.uid)).size===cmd.items.length,'TRANSFER_ITEMS','请选择物品，且不能重复选择');
  const activities=new Map<string,Activity>();
+ const leases=new Map<string,ActorLease>();
  for(const actor of [source,target]) {
   const lease=await tx.get<ActorLease>('actor_leases',actor.id);
   if(!lease)continue;
+  leases.set(actor.id,lease);
+  if(lease.kind==='instance')continue;
   const activity=lease.kind==='activity'?await tx.get<Activity>('activities',lease.ownerId):null;
-  requireThat(activity?.type==='personal','ACTOR_BUSY','请先结束副本或后台订单，再转移物品');
+  requireThat(activity?.type==='personal','ACTOR_BUSY','请先结束后台订单，再转移物品');
   activities.set(activity!.id,activity!);
+ }
+ const instanceLeases=[...leases.values()].filter(lease=>lease.kind==='instance');
+ let instance:Instance|null=null;
+ if(instanceLeases.length) {
+  const sourceLease=leases.get(source.id),targetLease=leases.get(target.id);
+  requireThat(sourceLease?.kind==='instance'&&targetLease?.kind==='instance'&&sourceLease.ownerId===targetLease.ownerId,'ACTOR_BUSY','两个角色需要在同一副本队伍中');
+  instance=await this.instanceFor(tx,source,sourceLease.ownerId);
+  requireThat(instance.roster.some(row=>row.characterId===target.id&&row.accountId===source.accountId),'FORBIDDEN','接收角色不在当前副本队伍中',403);
+  requireThat(['running','completed'].includes(instance.status)&&instance.simulation,'INSTANCE_NOT_RUNNING','副本尚未开始');
+  const deadline=await this.instanceDeadline(tx,instance),settled=advance(instance.simulation!,Math.min(now,deadline));
+  requireThat(settled.complete,'CATCHING_UP','副本仍在结算，请稍后再试');
+  instance.simulation=settled.state;
+  requireThat(!settled.state.combat&&!settled.state.escort&&['idle','hunt'].includes(settled.state.activity.type),'ACTOR_BUSY','请先结束队伍战斗或赶路，再转移物品');
+  instance.rngState=settled.state.rngState;instance.sequence++;
+  await this.persistInstance(tx,instance,now,`instance:${instance.id}:transfer:${cmd.requestId}`);
  }
  for(const activity of activities.values()) {
   await this.settleActivity(tx,activity,now);
@@ -52,6 +71,15 @@ export async function transferItems(this:GameService, tx:Transaction, source:Cha
  const key=`command:${source.accountId}:${cmd.requestId}`;
  await persistAssets(tx,source,from,key,this.id);
  await persistAssets(tx,target,to,key,this.id);
+ if(instance) {
+  for(const [id,state] of [[source.id,from],[target.id,to]] as [string,Rules][]) {
+   const actor=instance.simulation!.id===id?instance.simulation!:instance.simulation!.party.find((member:Rules)=>member.id===id);
+   if(actor)actor.bag=clone(state.bag);
+  }
+  await invalidateCombatPlan(tx,instance);
+  await tx.put('instances',instance);
+  await this.bumpInstanceAccounts(tx,instance,source.accountId);
+ }
  for(const activity of activities.values()) {
   await invalidateCombatPlan(tx,activity);
   await tx.put('activities',activity);
