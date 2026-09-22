@@ -6,6 +6,7 @@ import {GameProps,Icon,money,duration} from './game-ui';
 import './economy.css';
 import BatchTrade from './batch-trade';
 import type {InventoryItem,MarketItem,AuctionListing,MarketRecord} from './economy-types';
+import {useContentPack} from '../lib/use-content-pack';
 
 export function Bank({state:s,data:d,busy,send}:GameProps){
  const [search,setSearch]=useState(''),[count,setCount]=useState(1);
@@ -14,7 +15,14 @@ export function Bank({state:s,data:d,busy,send}:GameProps){
  return <section className="panel"><div className="section-heading"><div><div className="eyebrow">个人仓储</div><h2>银行 <small>{s.bank.length} / {d.bankCapacity} 格</small></h2></div><Button variant="outline" disabled={locked||!d.bankUpgradeCost||s.money<d.bankUpgradeCost} onClick={()=>send({type:'expandBank'})}>{d.bankUpgradeCost?'扩展 16 格 · '+money(d.bankUpgradeCost):'容量已满'}</Button></div><p>{d.bankHere?'你在银行附近，可以办理存取。':'银行位于暴风城贸易区与铁炉堡；当前可以查看库存。'}装备的附魔、绑定、耐久和锁定状态会保留。</p>{!d.bankHere&&<Button variant="outline" disabled={busy||!!s.combat||!!s.dungeon||!['idle','hunt'].includes(s.activity.type)} onClick={()=>send({type:'travel',to:'stormwind'})}>前往暴风城银行</Button>}<div className="economy-toolbar"><input aria-label="搜索银行物品" placeholder="搜索物品…" value={search} onChange={e=>setSearch(e.target.value)}/><label>每次数量 <input aria-label="存取数量" type="number" min={1} max={100} value={count} onChange={e=>setCount(Number(e.target.value))}/></label><Button variant="outline" disabled={locked} onClick={()=>send({type:'bankDepositMaterials'})}>材料一键存入</Button><Button variant="outline" disabled={locked} onClick={()=>send({type:'sortBank'})}>整理银行</Button></div><div className="storage-columns"><section><h3>随身背包 · {s.bag.length}/{d.bagCapacity}</h3>{rows(s.bag,true)}</section><section><h3>银行库存 · {s.bank.length}/{d.bankCapacity}</h3>{rows(s.bank,false)}</section></div></section>;
 }
 
-export function Auction({state:s,data:d,busy,send}:GameProps){
+export function Auction(props:GameProps){
+ const {data,error,retry}=useContentPack(props.data.contentVersion,props.data.market?.length?undefined:'market');
+ if(props.data.market?.length)return <AuctionContent {...props}/>;
+ if(!data)return <section className="panel" role="status">{error||'正在加载拍卖商品…'}{error&&<Button onClick={retry}>重试</Button>}</section>;
+ return <AuctionContent {...props} data={{...props.data,...data,items:{...props.data.items,...data.items}}}/>;
+}
+
+function AuctionContent({state:s,data:d,busy,send}:GameProps){
  const [mode,setMode]=useState('购买'),[search,setSearch]=useState(''),[category,setCategory]=useState('全部'),[count,setCount]=useState(1),[page,setPage]=useState(0);
  const locked=busy||!!s.combat||!!s.dungeon||!['idle','hunt'].includes(s.activity.type),valid=Number.isInteger(count)&&count>=1&&count<=100;
  const market=d.market.filter((r:MarketItem)=>d.items[r.id]?.name.includes(search)&&(category==='全部'||category==='附魔羊皮纸'&&r.enchant||category==='材料'&&d.items[r.id]?.class===7||category==='成品'&&d.items[r.id]?.class!==7&&!r.enchant));

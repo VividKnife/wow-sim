@@ -3,14 +3,15 @@ import {saveFetch} from '../lib/save-fetch';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {Tabs,TabsList,TabsTrigger,TabsContent} from '@/components/ui/tabs';
-import World from './world';
-import Character from './character';
+import dynamic from 'next/dynamic';
+const World=dynamic(()=>import('./world'),{loading:()=> <p role="status">正在加载世界…</p>});
+const Character=dynamic(()=>import('./character'),{loading:()=> <p role="status">正在加载角色…</p>});
 import CharacterPicker from './character-picker';
-import DungeonPage from './dungeon-page';
-import Arena from './arena';
-import Battle from './battle';
+const DungeonPage=dynamic(()=>import('./dungeon-page'),{loading:()=> <p role="status">正在加载地下城…</p>});
+const Arena=dynamic(()=>import('./arena'),{loading:()=> <p role="status">正在加载竞技场…</p>});
+const Battle=dynamic(()=>import('./battle'));
 import LootWindow from './loot-window';
-import Party from './party';
+const Party=dynamic(()=>import('./party'),{loading:()=> <p role="status">正在加载队伍…</p>});
 import JourneyActivity from './journey-activity';
 import JourneyLog from './journey-log';
 import ZoneMusic from './zone-music';
@@ -25,12 +26,7 @@ import {createSnapshotPoller} from '@/lib/snapshot-poller.js';
 import {combatPollDelay} from '@/lib/combat-playback.js';
 import {playQuestSound} from '@/lib/quest-audio.js';
 import {LocalSimulationClient} from '@/lib/local-simulation-client';
-const contentCache=new Map<string,Promise<any>>();
-function loadContent(version:string){
- let pending=contentCache.get(version);
- if(!pending){pending=fetch(`/api/game/content?version=${encodeURIComponent(version)}`).then(async response=>{if(!response.ok)throw new Error('游戏内容暂时无法加载，请稍后重试。');const content:any=await response.json();if(content?.contentVersion!==version)throw new Error('游戏内容版本不匹配，请刷新页面。');return content;}).catch(error=>{contentCache.delete(version);throw error;});contentCache.set(version,pending);}
- return pending;
-}
+import {loadContent,contentLoader,referencedItemIds} from '@/lib/content-loader.js';
 export default function Game(){
  const [activeTab,setActiveTab]=useState('world');
  const [characterSection,setCharacterSection]=useState('装备与背包');
@@ -42,18 +38,43 @@ export default function Game(){
  const acceptedResponse=useRef<any>(null),combatPolling=useRef(false),playbackRef=useRef<any>(null);
  combatPolling.current=!!game?.state?.combat&&battleOpen;playbackRef.current=game?.playback;
  battleVisible.current=battleOpen;
- const apply=useCallback(async(data:any)=>{const expected=selectedCharacterRef.current;if(!responseMatchesSelection(data,expected,lastRevision.current))return false;const content=await loadContent(data.contentVersion);if(!responseMatchesSelection(data,selectedCharacterRef.current,lastRevision.current))return false;const actorId=data.snapshot?.player?.id||'';if(!selectedCharacterRef.current&&actorId){selectedCharacterRef.current=actorId;setSelectedCharacter(actorId);}const merged=mergeGameResponse(acceptedResponse.current,data);if(!merged)return false;acceptedResponse.current=merged;lastRevision.current=data.revision;const local=localClient.current;const live=local?.ownerId===merged.localSimulation?.ownerId&&local?.latest?.player.id===actorId?local?.latest:null;const snapshot=live||merged.snapshot;setGame({...merged,playback:local?.active?null:merged.playback,state:snapshot?.player||null,view:snapshot?{...content,...snapshot.view}:null});local?.observe(merged.localSimulation,merged.contentVersion,actorId);return true;},[]);
+ const apply=useCallback(async(data:any)=>{
+  if(!responseMatchesSelection(data,selectedCharacterRef.current,lastRevision.current))return false;
+  const content=await loadContent(data.contentVersion,data.snapshot);
+  if(!responseMatchesSelection(data,selectedCharacterRef.current,lastRevision.current))return false;
+  const actorId=data.snapshot?.player?.id||'';
+  const local=localClient.current;
+  const live=local&&local.ownerId===data.localSimulation?.ownerId&&local.latest?.player.id===actorId?local.latest:null;
+  if(live)content.items=await contentLoader.ensureItems(data.contentVersion,referencedItemIds(live));
+  if(!responseMatchesSelection(data,selectedCharacterRef.current,lastRevision.current))return false;
+  const merged=mergeGameResponse(acceptedResponse.current,data);if(!merged)return false;
+  if(!selectedCharacterRef.current&&actorId){selectedCharacterRef.current=actorId;setSelectedCharacter(actorId);}
+  acceptedResponse.current=merged;lastRevision.current=data.revision;
+  setGame((previous:any)=>{
+   // A Worker overview may have advanced while the HTTP snapshot was hydrating.
+   const current=previous?.contentVersion===data.contentVersion&&previous.state?.id===actorId&&local?.active&&previous.state.clock>(live||merged.snapshot)?.player?.clock;
+   const snapshot=current?{player:previous.state,view:previous.view}:live||merged.snapshot;
+   return {...merged,playback:local?.active?null:merged.playback,state:snapshot?.player||null,
+    view:snapshot?{...content,...snapshot.view,items:{...content.items,...(current?previous.view.items:{})}}:null};
+  });
+  local?.observe(merged.localSimulation,merged.contentVersion,actorId);return true;
+ },[]);
  useEffect(()=>{
   const refresh=async()=>{const id=selectedCharacterRef.current;await apply(await readGameResponse(await saveFetch(`/api/game?${new URLSearchParams(id?{characterId:id}:{})}`)));};
   const client=new LocalSimulationClient({refresh,onStatus:setLocalStatus,onFull:snapshot=>{
    // Only the one-second overview reaches Game. Battle subscribes directly to
    // the small 10 Hz combat stream through useSyncExternalStore.
    if(snapshot.player.id!==selectedCharacterRef.current)return;
-   setGame((previous:any)=>{
-    if(!previous)return previous;
-    if(battleVisible.current&&snapshot.player.combat&&previous.state.combat?.id===snapshot.player.combat.id)return previous;
-    return {...previous,playback:null,state:snapshot.player,view:{...previous.view,...snapshot.view}};
-   });
+   const version=acceptedResponse.current?.contentVersion;
+   if(version)void contentLoader.ensureItems(version,referencedItemIds(snapshot)).then(items=>{
+    // A slow item fetch must never restore an older tick or another character.
+    if(client.latest!==snapshot||snapshot.player.id!==selectedCharacterRef.current)return;
+    setGame((previous:any)=>{
+     if(!previous||previous.contentVersion!==version)return previous;
+     if(battleVisible.current&&snapshot.player.combat&&previous.state.combat?.id===snapshot.player.combat.id)return previous;
+     return {...previous,playback:null,state:snapshot.player,view:{...previous.view,...snapshot.view,items}};
+    });
+   }).catch(error=>setConnectionError(error.message));
   }});
   localClient.current=client;
   const hide=()=>client.release();window.addEventListener('pagehide',hide);
@@ -107,7 +128,7 @@ export default function Game(){
  if(!s||!d)return <main className="game-shell"><section className="panel"><h1>{loading?'正在读取存档…':'无法进入游戏'}</h1>{error&&<p role="alert">{error}</p>}<a href={signedIn?'/':'/login'}>{signedIn?'返回角色选择':'重新登录'}</a></section></main>;
  return <main className="game-shell journey-shell">
  {localStatus&&<div className="activity-strip" role="status">{localStatus}</div>}
- <Tabs value={activeTab==='party'&&!d.partyUnlocked?'world':activeTab} onValueChange={setActiveTab} className="game-tabs adventure-tabs"><aside className="journey-rail"><a href="/" className="rail-brand"><span className="rail-sigil"><MapIcon size={21}/></span><span><strong>WOW SIM</strong><small>经典旧世 · 第一阶段</small></span></a><span className="rail-section">冒险</span><TabsList className="main-nav"><TabsTrigger value="world"><MapIcon/>世界</TabsTrigger><TabsTrigger value="character"><UserRound/>角色</TabsTrigger><TabsTrigger value="party" disabled={!d.partyUnlocked} title={d.partyUnlocked?"队友系统已开通":"18级解锁队友系统"}><UsersRound/>队友</TabsTrigger><TabsTrigger value="dungeon"><Castle/>地下城</TabsTrigger><TabsTrigger value="arena"><Swords/>竞技场</TabsTrigger><TabsTrigger value="log"><BookOpen/>战报</TabsTrigger></TabsList><ZoneMusic location={d.location} dungeon={!!s.dungeon} active={signedIn}/></aside><div className="journey-content">{d.partyUnlocked&&s.growthPolicy!=='companion'&&s.party.length===0&&<section className="activity-strip" role="status"><span>队友系统已开通！可随时招募或更换队友。</span><Button variant="outline" onClick={()=>setActiveTab('party')}>招募队友</Button></section>}{!signedIn&&<section className="activity-strip" role="alert"><span>登录已过期，请重新登录以继续冒险。</span><Button asChild><a href="/login">重新登录 →</a></Button></section>}{signedIn&&connectionError&&<div className="activity-strip" role="status">{connectionError}</div>}{activeTab!=='world'&&<><PlayerHud state={s} data={d}/>{journeyOverview}</>}{(s.combat||s.lastCombat)&&<Battle {...props} canLead={!game.instance||game.instance.leaderId===s.id} open={battleOpen} onOpenChange={setBattleOpen}/>}<TabsContent value="world"><World {...props} overview={journeyOverview} onOpenDungeon={()=>setActiveTab('dungeon')}/></TabsContent><TabsContent value="character">{game.roster?.length>1&&<section className="panel"><CharacterPicker roster={game.roster} value={selectedCharacter||s.id} disabled={busy} onChange={id=>void selectCharacter(id)}/></section>}<Character key={s.id} {...props} section={characterSection} onSectionChange={setCharacterSection}/></TabsContent><TabsContent value="party"><Party {...props}/></TabsContent><TabsContent value="dungeon"><DungeonPage {...props} onObserve={()=>setBattleOpen(true)} onOpenParty={()=>{if(d.partyUnlocked)setActiveTab('party');}} onConfigure={()=>{setCharacterSection('策略');setActiveTab('character');}}/></TabsContent><TabsContent value="arena"><Arena {...props}/></TabsContent><TabsContent value="log"><JourneyLog {...props} onObserve={()=>setBattleOpen(true)}/></TabsContent>
+ <Tabs value={activeTab==='party'&&!d.partyUnlocked?'world':activeTab} onValueChange={setActiveTab} className="game-tabs adventure-tabs"><aside className="journey-rail"><a href="/" className="rail-brand"><span className="rail-sigil"><MapIcon size={21}/></span><span><strong>WOW SIM</strong><small>经典旧世 · 第一阶段</small></span></a><span className="rail-section">冒险</span><TabsList className="main-nav"><TabsTrigger value="world"><MapIcon/>世界</TabsTrigger><TabsTrigger value="character"><UserRound/>角色</TabsTrigger><TabsTrigger value="party" disabled={!d.partyUnlocked} title={d.partyUnlocked?"队友系统已开通":"18级解锁队友系统"}><UsersRound/>队友</TabsTrigger><TabsTrigger value="dungeon"><Castle/>地下城</TabsTrigger><TabsTrigger value="arena"><Swords/>竞技场</TabsTrigger><TabsTrigger value="log"><BookOpen/>战报</TabsTrigger></TabsList><ZoneMusic location={d.location} dungeon={!!s.dungeon} active={signedIn}/></aside><div className="journey-content">{d.partyUnlocked&&s.growthPolicy!=='companion'&&s.party.length===0&&<section className="activity-strip" role="status"><span>队友系统已开通！可随时招募或更换队友。</span><Button variant="outline" onClick={()=>setActiveTab('party')}>招募队友</Button></section>}{!signedIn&&<section className="activity-strip" role="alert"><span>登录已过期，请重新登录以继续冒险。</span><Button asChild><a href="/login">重新登录 →</a></Button></section>}{signedIn&&connectionError&&<div className="activity-strip" role="status">{connectionError}</div>}{activeTab!=='world'&&<><PlayerHud state={s} data={d}/>{journeyOverview}</>}{battleOpen&&(s.combat||s.lastCombat)&&<Battle {...props} canLead={!game.instance||game.instance.leaderId===s.id} open={battleOpen} onOpenChange={setBattleOpen}/>}<TabsContent value="world"><World {...props} overview={journeyOverview} onOpenDungeon={()=>setActiveTab('dungeon')}/></TabsContent><TabsContent value="character">{game.roster?.length>1&&<section className="panel"><CharacterPicker roster={game.roster} value={selectedCharacter||s.id} disabled={busy} onChange={id=>void selectCharacter(id)}/></section>}<Character key={s.id} {...props} section={characterSection} onSectionChange={setCharacterSection}/></TabsContent><TabsContent value="party"><Party {...props}/></TabsContent><TabsContent value="dungeon"><DungeonPage {...props} onObserve={()=>setBattleOpen(true)} onOpenParty={()=>{if(d.partyUnlocked)setActiveTab('party');}} onConfigure={()=>{setCharacterSection('策略');setActiveTab('character');}}/></TabsContent><TabsContent value="arena"><Arena {...props}/></TabsContent><TabsContent value="log"><JourneyLog {...props} onObserve={()=>setBattleOpen(true)}/></TabsContent>
  <details className="panel account-drawer"><summary><span>角色与后台活动</span><small>管理角色、组队与后台生产 · 点击展开</small></summary> {<section className="panel account-overview" aria-label="账号角色与活动"><div className="section-heading"><div><div className="eyebrow">账号队伍</div><h2>账号队伍</h2></div>{game.roster?.length>1&&<CharacterPicker label="当前角色" roster={game.roster} value={selectedCharacter||s.id} disabled={busy} onChange={id=>void selectCharacter(id)}/>}</div>{game.activities?.length>0&&<div className="activity-roster">{game.activities.map((activity:any)=>{const actor=game.roster?.find((member:any)=>member.id===activity.actorId);return <div key={activity.id}><strong>{actor?.name||activity.actorId}</strong><span>{activity.type} · {activity.status}{activity.location?` · ${activity.location}`:''}</span>{activity.nextEventAt&&activity.nextEventAt<Number.MAX_SAFE_INTEGER&&<small>下次结算 {new Date(activity.nextEventAt).toLocaleTimeString()}</small>}{['craft','gather'].includes(activity.type)&&['running','returning'].includes(activity.status)&&<Button size="sm" variant="outline" disabled={busy||activity.status==='returning'} onClick={()=>send({type:'recall',activityId:activity.id})}>{activity.status==='returning'?'召回中':'召回'}</Button>}</div>})}</div>}</section>}
   <AccountControls game={game} busy={busy} send={send}/>
 </details>

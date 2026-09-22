@@ -1,6 +1,6 @@
 import {Suspense,useCallback,useEffect,useLayoutEffect} from 'react';
 import {Canvas,useThree} from '@react-three/fiber';
-import {useTexture} from '@react-three/drei';
+import {useGLTF,useTexture} from '@react-three/drei';
 import {groundTexture,spriteAppearance} from '@/lib/battle-hd2d.js';
 import {ACESFilmicToneMapping,WebGLRenderer,type WebGLRendererParameters} from 'three';
 import {EffectComposer,Bloom,DepthOfField} from '@react-three/postprocessing';
@@ -14,6 +14,7 @@ import {BattleEffects} from './effects';
 export function clearBattleAssets(scene:BattleScene){
  const urls=new Set([groundTexture(scene.ground),'/battle/hd2d/characters.png','/battle/hd2d/forms.png',...scene.units.map(unit=>spriteAppearance(unit,scene.clock).src)]);
  for(const url of urls)useTexture.clear(url);
+ for(const unit of scene.units)if(unit.visual?.model)useGLTF.clear(unit.visual.model.src);
 }
 function LoadingSignal({onLoading}:{onLoading:()=>void}){useLayoutEffect(onLoading,[onLoading]);return null;}
 function Lifecycle({low,visible,onReady,onLost}:{low:boolean;visible:boolean;onReady:()=>void;onLost:()=>void}){
@@ -24,13 +25,13 @@ function Lifecycle({low,visible,onReady,onLost}:{low:boolean;visible:boolean;onR
  useEffect(()=>{if(!low||!visible)return;const timer=setInterval(invalidate,1000/30);return()=>clearInterval(timer);},[low,visible,invalidate]);
  return null;
 }
-export default function BattleCanvas({scene,skills,onSelect,visible,onReady,onLoading,onLost}:{scene:BattleScene;skills:BattleSkill[];onSelect:(id:string)=>void;visible:boolean;onReady:()=>void;onLoading:()=>void;onLost:()=>void}){
+export default function BattleCanvas({scene,skills,onSelect,visible,onReady,onLoading,onLost,manual,onManual}:{scene:BattleScene;skills:BattleSkill[];onSelect:(id:string)=>void;visible:boolean;onReady:()=>void;onLoading:()=>void;onLost:()=>void;manual:boolean;onManual:()=>void}){
  const createRenderer=useCallback((defaults:WebGLRendererParameters)=>{try{const renderer=new WebGLRenderer({...defaults,antialias:true,alpha:false,powerPreference:'high-performance'});renderer.toneMapping=ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;return renderer;}catch(error){queueMicrotask(onLost);throw error;}},[onLost]);
- return <Canvas orthographic camera={{position:[0,25,32],zoom:24,near:.1,far:150}} shadows={scene.lowEffects?false:'percentage'}
+ return <Canvas camera={{position:[0,25,32],fov:42,near:.05,far:500}} shadows={scene.lowEffects?false:'percentage'}
   dpr={scene.lowEffects?1:[1,1.5]} frameloop={!visible?'never':scene.lowEffects?'demand':'always'} gl={createRenderer}
-  aria-label="HD-2D 三维战斗场景" fallback={null}>
+  aria-label="3D 战斗场景" fallback={null}>
   <BattleFrames scene={scene}>
-   <CameraRig/>
+   <CameraRig manual={manual} onManual={onManual}/>
    <Suspense fallback={<LoadingSignal onLoading={onLoading}/>}>
     <Environment ground={scene.ground||'grass'} low={scene.lowEffects} reduced={scene.reducedMotion}/>
     <BattleObstacles layout={scene.layout}/>

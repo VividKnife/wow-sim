@@ -23,7 +23,7 @@ export function combatSoundForEvent(event,skill={}){
 }
 
 export function createCombatAudio({createAudio=src=>new Audio(src),now=()=>Date.now(),maxVoices=4,schedule=(fn,ms)=>setTimeout(fn,ms),cancel=id=>clearTimeout(id)}={}){
- let enabled=false,active=false;
+ let enabled=false,active=false,volume=1;
  const voices=new Set(),lastPlayed=new Map(),deadlines=new Map();
  const clearDeadline=audio=>{if(deadlines.has(audio)){cancel(deadlines.get(audio));deadlines.delete(audio);}};
  const release=audio=>{clearDeadline(audio);audio.onended=null;audio.onerror=null;audio.onplaying=null;voices.delete(audio);};
@@ -32,12 +32,13 @@ export function createCombatAudio({createAudio=src=>new Audio(src),now=()=>Date.
   get activeCount(){return voices.size;},
   setEnabled(value){enabled=value;if(!value)stop();},
   setActive(value){active=value;if(!value)stop();},
+  setVolume(value){volume=Math.max(0,Math.min(1,Number.isFinite(value)?value:0));for(const audio of voices)audio.volume=(audio.src.includes('melee-swing')?.12:.22)*volume;},
   play(cue){
    if(!cue||!enabled||!active)return false;
    const time=now();if(time-(lastPlayed.get(cue)??-Infinity)<180)return false;
    // Drop excess cues instead of queuing an audible replay after a busy pull.
    if(voices.size>=maxVoices)return false;
-   const audio=createAudio(`/sounds/${cue}.ogg`);audio.volume=cue==='melee-swing'?.12:.22;
+   const audio=createAudio(`/sounds/${cue}.ogg`);audio.volume=(cue==='melee-swing'?.12:.22)*volume;
    voices.add(audio);lastPlayed.set(cue,time);
    audio.onended=()=>release(audio);audio.onerror=()=>release(audio);
    audio.onplaying=()=>clearDeadline(audio);

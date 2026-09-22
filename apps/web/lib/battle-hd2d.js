@@ -10,6 +10,7 @@ export function worldRadius(layout,radius){return radius*layout.scale/((layout.z
 // A minimum sprite scale made a humanoid almost 14 yards tall in a 90-yard room.
 export function actorScale(layout){return worldRadius(layout,1);}
 export function actorHeight(layout,unit){
+ if(unit.visual?.model)return unit.visual.model.yards*actorScale(layout);
  const kind=unitBody(unit,20).kind;
  const yards=unit.rank===3?5:unit.rank===1?3.8:unit.petUnit?2:kind==='giant'?4.5:2.8;
  return yards*actorScale(layout);

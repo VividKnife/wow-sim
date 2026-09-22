@@ -9,7 +9,7 @@ const app=fileURLToPath(new URL('../',import.meta.url)),repo=fileURLToPath(new U
 const port=Number(process.env.PREVIEW_PORT||5189),directory=repo+'.cache/molten-core-demo',savePath=directory+'/run.json';
 await mkdir(directory,{recursive:true});
 let run;
-try{const saved=JSON.parse(await readFile(savePath,'utf8'));if(saved.version===1&&saved.state&&Array.isArray(saved.cleared))run=saved;}catch(error){if(error.code!=='ENOENT')console.warn('Demo checkpoint could not be loaded; starting a fresh demo.');}
+try{const saved=JSON.parse(await readFile(savePath,'utf8'));if(saved.version===2&&saved.state&&Array.isArray(saved.cleared))run=saved;}catch(error){if(error.code!=='ENOENT')console.warn('Demo checkpoint could not be loaded; starting a fresh demo.');}
 run??=createMoltenCoreDemo();
 let paused=true,speed=1,lastAt=performance.now(),queue=Promise.resolve();
 async function save(){const temporary=savePath+'.tmp';await writeFile(temporary,JSON.stringify(run));await rename(temporary,savePath);}

@@ -8,7 +8,7 @@ import {presentationProjectiles} from './combat-view.js';
  */
 export function arenaBattleScene(match,{selectedId,zoom=1,effects=[],sampledAt=0,wallAt=0,lowEffects=false,reducedMotion=false}={}){
  const units=match.teams.flatMap(team=>team.members).filter(c=>!c.hidden&&Number.isFinite(c.x)&&Number.isFinite(c.y)).map(c=>({
-  id:c.id,name:c.name,hp:c.hp,maxHp:c.maxHp,classId:c.classId,form:c.form,kind:c.kind,creatureType:c.creatureType,
+  id:c.id,name:c.name,hp:c.hp,maxHp:c.maxHp,classId:c.classId,raceId:c.raceId,gender:c.gender,entry:c.entry,form:c.form,kind:c.kind,creatureType:c.creatureType,
   petUnit:c.petUnit,totemUnit:c.totemUnit,foe:c.teamId===1,position:c.x,positionY:c.y,target:c.targetId,
   marker:c.id===match.plan.focusId?'focus':c.id===match.plan.controlId?'control':undefined,
   polyUntil:Math.max(0,...c.effects.filter(a=>a.type===5).map(a=>a.until)),

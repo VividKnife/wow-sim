@@ -1,0 +1,8 @@
+.mc-model-gallery{max-width:1500px;margin:auto;padding:24px;color:#e8d9ba}
+.mc-model-gallery h1{font-size:28px;margin:8px 0}.mc-model-gallery header p{color:#b6a488;margin:8px 0}
+.mc-model-gallery button{padding:9px 13px;border:1px solid #665b45;border-radius:5px;background:#1e292e;color:#e8d9ba;cursor:pointer}
+.mc-model-gallery button[aria-pressed=true]{border-color:#e8ba70;background:#59412b}
+.mc-model-gallery .action-row{gap:8px;margin:18px 0;display:flex;flex-wrap:wrap}
+.mc-model-stage{height:570px;border:1px solid #665b45;border-radius:8px;overflow:hidden}.mc-model-stage.is-all{height:900px}
+.mc-model-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.mc-model-name{white-space:nowrap;background:#10171de0;color:#efd9b0;padding:3px 7px;border-radius:4px;font-size:12px;pointer-events:none}
+@media(max-width:700px){.mc-model-gallery{padding:12px}.mc-model-stage{height:440px}.mc-model-stage.is-all{height:650px}.mc-model-name{font-size:10px}}

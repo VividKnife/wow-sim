@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/immutability -- Three.js scene objects are external mutable state owned by the render loop. */
 import {createContext,useContext,useLayoutEffect,useMemo,useRef} from 'react';
 import {useFrame,useThree} from '@react-three/fiber';
-import {OrthographicCamera,Vector3} from 'three';
+import {PerspectiveCamera,Vector3} from 'three';
+import {OrbitControls} from '@react-three/drei';
+import type {OrbitControls as OrbitControlsInstance} from 'three-stdlib';
 import {createSceneMotion} from '@/lib/battle-scene.js';
 import {renderClock,CAMERA_TILT,cameraFit} from '@/lib/battle-hd2d.js';
 import type {BattleScene,BattleLayout} from '@/lib/battle-hd2d-types';
@@ -26,15 +28,17 @@ export function BattleFrames({scene,children}:{scene:BattleScene;children:React.
  return <FrameContext.Provider value={frame}>{children}</FrameContext.Provider>;
 }
 
-export function CameraRig(){
+export function CameraRig({manual,onManual}:{manual:boolean;onManual:()=>void}){
  const {camera,size}=useThree();
  const frame=useBattleFrame(),target=useMemo(()=>new Vector3(),[]),encounter=useRef<string|undefined|null>(null);
  const desired=useMemo(()=>new Vector3(),[]);
+ const controls=useRef<OrbitControlsInstance>(null);
  const cached=useRef<{layout:BattleLayout;units:BattleScene['units'];width:number;height:number;fit:ReturnType<typeof cameraFit>}|null>(null);
  // R3F size includes canvas top/left, which change while scrolling. Only this
  // frame loop owns the camera; a ResizeObserver update must never reset it.
  useFrame((_,delta)=>{
   const f=frame.current;
+  if(manual)return;
   // Fit the camera once per simulation sample/resize. Its interpolation below
   // still runs every display frame without allocating vectors or actor arrays.
   let entry=cached.current;
@@ -44,9 +48,12 @@ export function CameraRig(){
   const fit=entry.fit;
   const blend=f.scene.reducedMotion||encounter.current!==f.scene.encounterId?1:1-Math.exp(-delta*3);
   target.lerp(desired.set(fit.x,.7,fit.z),blend);
-  camera.position.set(target.x,target.y+40*CAMERA_TILT,target.z+40*Math.sqrt(1-CAMERA_TILT**2));camera.lookAt(target);
-  const c=camera as OrthographicCamera;c.zoom+=(fit.zoom-c.zoom)*blend;c.updateProjectionMatrix();
+  const c=camera as PerspectiveCamera;
+  const distance=size.height/Math.max(.1,fit.zoom)/(2*Math.tan(c.fov*Math.PI/360))*1.12;
+  camera.position.lerp(desired.set(target.x,target.y+distance*CAMERA_TILT,target.z+distance*Math.sqrt(1-CAMERA_TILT**2)),blend);
+  camera.lookAt(target);
+  if(controls.current){controls.current.target.copy(target);controls.current.update();}
   encounter.current=f.scene.encounterId;
  },-5);
- return null;
+ return <OrbitControls ref={controls} makeDefault enabled enableDamping dampingFactor={.12} minDistance={3} maxDistance={140} minPolarAngle={.15} maxPolarAngle={Math.PI/2-.08} onStart={onManual}/>;
 }

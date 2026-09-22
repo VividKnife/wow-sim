@@ -5,7 +5,14 @@
 .battle-dialog .battle-toolbar{background:#142127;padding:10px 22px;border-bottom:1px solid #a89a6f20}
 .hd2d-field{height:clamp(390px,53vh,610px);position:relative;isolation:isolate;overflow:hidden;background:#14202b;border-bottom:1px solid #b399613b}
 .hd2d-scene{position:absolute;inset:0;overflow:hidden}
-.hd2d-scene canvas{display:block;touch-action:pan-y;outline:none}
+.hd2d-scene canvas{display:block;touch-action:none;outline:none}
+.battle-3d-controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:8px 18px;background:#142127;color:#b9c8c9;font-size:12px;border-bottom:1px solid #a89a6f30}
+.battle-3d-controls button{border:1px solid #9c865e77;border-radius:5px;padding:5px 9px;background:#213135;color:#eee1c7;cursor:pointer}
+.battle-3d-controls button:focus-visible,.battle-3d-controls input:focus-visible{outline:2px solid #efd39a;outline-offset:3px}
+.battle-audio-controls{margin-left:auto;display:flex;align-items:center;gap:12px}
+.battle-audio-controls label{display:flex;align-items:center;gap:6px}
+.battle-audio-controls input{width:90px;accent-color:#dabb82}
+@media(max-width:700px){.battle-3d-controls{padding:8px;font-size:10px;gap:6px}.battle-3d-controls>span{display:none}.battle-audio-controls{gap:6px}.battle-audio-controls input{width:65px}}
 .hd2d-vignette{position:absolute;inset:0;pointer-events:none;z-index:41;box-shadow:inset 0 0 90px 20px #07101788;background:linear-gradient(180deg,#0a162c22,transparent 25%,transparent 80%,#0710156b)}
 .hd2d-scene-title{position:absolute;left:25px;top:23px;display:flex;flex-direction:column;gap:5px;z-index:42;pointer-events:none;text-shadow:0 2px 6px #091217}
 .hd2d-chapter{color:#d4bd8e;font-size:9px;font-weight:600;letter-spacing:3px}

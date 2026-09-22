@@ -3,12 +3,21 @@ import {useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {Item} from './game-ui';
 import {journalLootPage} from '../lib/dungeon-journal.js';
+import {useContentPack} from '../lib/use-content-pack';
 
 export type JournalBoss=(typeof import('../../../packages/game-domain/src/rules/dungeon-journal.js').dungeonJournal)[number]['bosses'][number];
 
 const slots:Record<number,string>={1:'头部',2:'颈部',3:'肩部',4:'衬衣',5:'胸部',6:'腰部',7:'腿部',8:'脚',9:'腕部',10:'手',11:'手指',12:'饰品',13:'单手',14:'盾牌',15:'远程',16:'背部',17:'双手',20:'胸部',21:'主手',22:'副手',23:'副手物品',25:'投掷',26:'远程'};
 
-export default function BossLoot({boss}:{boss:JournalBoss}){
+type BossSummary=Omit<JournalBoss,'loot'>&{loot?:JournalBoss['loot'];lootPack?:string;contentVersion?:string};
+export default function BossLoot({boss}:{boss:BossSummary}){
+ const {data,error,retry}=useContentPack(boss.contentVersion,boss.lootPack);
+ if(boss.loot)return <LoadedBossLoot key={boss.id} boss={boss as JournalBoss}/>;
+ if(!data)return <div role="status"><h3>{boss.name}</h3>{error||'正在加载首领掉落…'}{error&&<Button onClick={retry}>重试</Button>}</div>;
+ return <LoadedBossLoot key={boss.lootPack} boss={{...boss,loot:data.loot} as JournalBoss}/>;
+}
+
+function LoadedBossLoot({boss}:{boss:JournalBoss}){
  const [includeShared,setIncludeShared]=useState(false),[query,setQuery]=useState(''),[page,setPage]=useState(1);
  const result=journalLootPage(boss.loot,{includeShared,query,page});
  return <>
