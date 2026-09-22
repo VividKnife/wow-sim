@@ -1,6 +1,6 @@
 import {arenaAction,arenaCommands,arenaTick,arenaView} from './arena.js';
-import {goldRaidAction,settleGoldRaid,goldRaidView,goldAuctionStep,goldCommands} from './gold-raid.js';
-import {guildRaidAction,settleGuildRaid,guildRaidView} from './guild-raid.js';
+import {advanceGoldRoute,goldRaidAction,settleGoldRaid,goldRaidView,goldAuctionStep,goldCommands} from './gold-raid.js';
+import {advanceGuildRoute,guildRaidAction,settleGuildRaid,guildRaidView} from './guild-raid.js';
 import {beginStockadesQuestEvent,cancelStockadesQuestEvent,stockadesQuestTick,stockadesQuestEventView} from './stockades-quests.js';
 import {partyUnlocked} from './party-unlock.js';
 import {characterAttributes} from './character-attributes.js';
@@ -83,6 +83,8 @@ function beginGroundTravel(s,{to,hunt=null,quest=null},autoMount=true){
  s.activity={type:'travel',from:s.location,to,startedAt:s.clock,endsAt:s.clock+r.duration,hunt,quest,path:r.path};s.rest=null;s.groundEffects=[];
 }
 function finishActivity(s){const a=s.activity;if(a.type==='travel'){s.location=a.to;if(!s.visited.includes(a.to))s.visited.push(a.to);log(s,'抵达 '+nodes[a.to].name,'travel');creditExploration(s);idle(s);handleTownAmmo(s,'town');if(a.hunt){s.activity={type:'hunt',target:a.hunt,quest:a.quest||null};s.nextPull=s.clock;}}
+ else if(a.type==='raidTravel'){s.activity={type:'idle'};advanceGuildRoute(s);}
+ else if(a.type==='goldTravel'){s.activity={type:'idle'};advanceGoldRoute(s);}
  else if(a.type==='goldRecovery')settleGoldRaid(s);
  else if(a.type==='goldAuction')goldAuctionStep(s);
  else if(a.type==='raidRecovery')settleGuildRaid(s);
@@ -181,7 +183,7 @@ export function act(input,action,now){
  if(arenaCommands.includes(action.type)){arenaAction(s,action);return s;}
  if(s.stockadesQuestEvent&&!['stockadesQuestCancel','abandonCombat','stop','strategy','settings','sync','loot','cast','petCommand','useItem'].includes(action.type))throw new Error('正在进行袭击事件，请先完成或停止事件。');
  if(s.escort&&!['abandonCombat','escortCancel','stop','strategy','settings','sync','loot'].includes(action.type))throw new Error('正在护送，请先完成或停止护送。');
- if(s.hp<=0&&action.type!=='groupLoot'&&!goldCommands.includes(action.type)&&!['raidStart','raidRecover','raidTactics','stockadesQuestCancel','abandonCombat','dungeonPause','revive','resurrect','rest','escortCancel','soulstoneRevive','reincarnate','strategy','settings'].includes(action.type))throw new Error('角色已死亡，请先复活。');
+ if(s.hp<=0&&action.type!=='groupLoot'&&!goldCommands.includes(action.type)&&!['raidPause','raidStart','raidRecover','raidTactics','stockadesQuestCancel','abandonCombat','dungeonPause','revive','resurrect','rest','escortCancel','soulstoneRevive','reincarnate','strategy','settings'].includes(action.type))throw new Error('角色已死亡，请先复活。');
  if(s.dungeon&&!['groupLoot','abandonCombat','petCommand','reincarnate','soulstoneRevive','usePortal','useItem','useHearth','accept','abandon','dungeonNext','dungeonNavigate','dungeonPause','dungeonInteract','dungeonSkip','leaveDungeon','stop','strategy','settings','equip','equipBag','sortBag','discardJunk','lockItem','applyEnchant','useBandage','disenchant','disenchantAll','loot','conjure','cast','revive','resurrect','rest','sync','talent'].includes(action.type))throw new Error('请先离开副本再进行这项操作。');
  if(action.target&&s.party.some(c=>c.npcPlayer&&c.id===action.target)&&['equip','strategy','talent'].includes(action.type))throw new Error('NPC 玩家自行管理装备、天赋和策略。');
  if(npcCommands.includes(action.type)){npcAction(s,action);return s;}
@@ -206,8 +208,8 @@ export function act(input,action,now){
  case 'soulstoneRevive':soulstoneRevive(s);break;
  case 'petCommand':petCommand(s,action);break;
  case 'abandonCombat':abandonCombat(s,action.encounterId);settleGuildRaid(s);settleGoldRaid(s);recordDungeonProgress(s);pauseDungeonAdvance(s,'已放弃战斗，请恢复小队后继续。');break;
- case 'goldRules':case 'goldPublish':case 'goldRefresh':case 'goldInvite':case 'goldRecommend':case 'goldLaunch':case 'goldStart':case 'goldRecover':case 'goldTactics':case 'goldBid':case 'goldPass':case 'goldAuctionStep':case 'goldSettle':goldRaidAction(s,action);break;
- case 'raidStart':case 'raidTactics':case 'raidRecover':case 'raidRestart':guildRaidAction(s,action);break;
+ case 'goldNavigate':case 'goldPause':case 'goldRules':case 'goldPublish':case 'goldRefresh':case 'goldInvite':case 'goldRecommend':case 'goldLaunch':case 'goldStart':case 'goldRecover':case 'goldTactics':case 'goldBid':case 'goldPass':case 'goldAuctionStep':case 'goldSettle':goldRaidAction(s,action);break;
+ case 'raidNavigate':case 'raidPause':case 'raidStart':case 'raidTactics':case 'raidRecover':case 'raidRestart':guildRaidAction(s,action);break;
  case 'enterDungeon':enterDungeon(s,action.contentId);break;
  case 'leaveDungeon':leaveDungeon(s);break;
  case 'dungeonNext':ensureIdle(s);beginDungeonAdvance(s);break;

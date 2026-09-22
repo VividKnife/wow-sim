@@ -1,3 +1,4 @@
+import {raidNextMechanics} from './rules/molten-core-mechanics.js';
 import {beginMoltenCoreBattle} from './rules/molten-core-battle.js';
 import {createGame,advance} from './rules/engine.js';
 import {recruit} from './rules/party.js';
@@ -14,7 +15,7 @@ import {createRoster,guildSquadNames} from './molten-core-roster.ts';
 export {guildSquadNames};
 export type RaidTactics = typeof defaultRaidTactics;
 export interface MoltenCoreDemo {
- version:1; seed:number; revision:number; tactics:RaidTactics;
+ version:2; seed:number; revision:number; tactics:RaidTactics;
  cleared:string[]; rewards:{bossId:string;name:string}[];
  attempts:{bossId:string;number:number;won:boolean;duration:number;deaths:number;failures:Rules;support:Rules}[];
  status:'camp'|'combat'|'victory'|'defeat'|'complete'; activeBoss:string|null;
@@ -28,7 +29,7 @@ function freshState(seed:number):Rules {
 }
 export function createMoltenCoreDemo(seed=60325):MoltenCoreDemo {
  if(!Number.isInteger(seed)||seed<=0||seed>4294967295)throw new Error('无效随机种子。');
- return {version:1,seed,revision:0,tactics:{...defaultRaidTactics},cleared:[],rewards:[],attempts:[],status:'camp',activeBoss:null,state:freshState(seed),attemptNumber:0};
+ return {version:2,seed,revision:0,tactics:{...defaultRaidTactics},cleared:[],rewards:[],attempts:[],status:'camp',activeBoss:null,state:freshState(seed),attemptNumber:0};
 }
 export function configureMoltenCore(input:MoltenCoreDemo,patch:Partial<RaidTactics>):MoltenCoreDemo {
  if(input.status==='combat')throw new Error('战斗中不能修改整团战术，请先撤退。');
@@ -77,5 +78,5 @@ export function moltenCoreView(run:MoltenCoreDemo) {
   enemies:(battle?.enemies||[]).map((e:Rules)=>({id:e.id,name:e.name,hp:e.hp,maxHp:e.maxHp,position:e.position,positionY:e.positionY,enraged:e.enraged,target:e.target})),
   fires:raid?.fires||[],events:raid?.events||[],support:raid?.support||{},failures:raid?.failures||{},meter:meterRows(battle,s.clock),
   logs:s.logs.slice(-12).map((l:Rules)=>({id:l.id,text:l.text,kind:l.kind,at:l.at})),
-  nextMechanics:s.combat&&raid?(raid.id==='lucifron'?[{name:'末日降临',at:raid.nextDoom},{name:'鲁西弗隆的诅咒',at:raid.nextCurse}]:[{name:'熔岩炸弹',at:raid.nextBomb},{name:'狂暴',at:raid.nextFrenzy},{name:'恐慌',at:raid.nextFear}]):[]};
+  nextMechanics:raidNextMechanics(s.combat?.raidEncounter)};
 }

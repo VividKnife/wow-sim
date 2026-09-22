@@ -1,3 +1,4 @@
+import {moltenCoreRoute} from '../src/rules/molten-core-content.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
@@ -17,7 +18,12 @@ async function fixture(){
  await command('enterDungeon',{contentId:'molten-core-gold'});
  return {store,save,command,snapshot,step,elapse:(ms:number)=>{now+=ms;},restart:()=>{service=new GameService(store,options);}};
 }
-async function recruit(f:Awaited<ReturnType<typeof fixture>>){await f.command('goldPublish');await f.command('goldRecommend');return f.command('goldLaunch');}
+async function recruit(f:Awaited<ReturnType<typeof fixture>>,skipApproach=true){
+ await f.command('goldPublish');await f.command('goldRecommend');const snap=await f.command('goldLaunch');
+ // Auction/boss tests start after approach packs; route progression has its own integration suite.
+ if(skipApproach)await f.store.transaction(async tx=>{const row:any=await tx.get('instances',snap.instanceId!);row.simulation.goldRaid.clearedPacks=moltenCoreRoute.filter(n=>n.kind==='trash').map(n=>n.id);await tx.put('instances',row);});
+ return f.snapshot();
+}
 const assets=(s:Rules)=>s.money+s.party.filter((c:Rules)=>c.goldNpc).reduce((n:number,c:Rules)=>n+c.goldProfile.wallet+c.goldProfile.consumableSpent,0)+s.goldRaid.pot-s.goldRaid.paidOut+(s.goldRaid.auction?.price||0);
 
 test('bid racing an NPC round refreshes the quote without charging or rolling back progress',async()=>{
@@ -115,4 +121,15 @@ test('player purchase persists exactly once and emergency exit refunds open escr
  snap=await f.command('unstuck');assert.equal(snap.instanceId,null);assert.equal(snap.state!.goldRaid.active,false);
  assert.equal(snap.state!.money,beforeSecond+snap.state!.goldRaid.settlement.playerIncome);
  assert.equal(snap.state!.goldRaid.pot,10*GOLD);assert.equal(snap.state!.party.length,4);
+});
+
+
+test('gold map commands clear trash without auction and pause before the next pull',async()=>{
+ const f=await fixture();let snap=await recruit(f,false);
+ snap=await f.command('goldNavigate',{destination:'lucifron'});assert.equal(snap.state!.combat.raidEncounter.id,'mc-gate');
+ await f.store.transaction(async tx=>{const row:any=await tx.get('instances',snap.instanceId!);row.simulation.combat.enemies.forEach((e:Rules)=>e.hp=0);await tx.put('instances',row);});
+ snap=await f.step();assert.equal(snap.state!.goldRaid.phase,'camp');assert.equal(snap.state!.goldRaid.auction,null);assert.deepEqual(snap.state!.goldRaid.clearedPacks,['mc-gate']);
+ snap=await f.command('goldPause');assert.equal(snap.state!.goldRaid.autoAdvance,false);assert.equal(snap.state!.activity.type,'idle');
+ snap=await f.command('goldNavigate',{destination:'mc-bridge'});assert.equal(snap.state!.combat.raidEncounter.id,'mc-bridge');
+ await f.command('goldPause');assert.equal((await f.snapshot()).state!.goldRaid.autoAdvance,false);
 });

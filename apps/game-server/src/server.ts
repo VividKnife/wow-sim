@@ -4,6 +4,7 @@ import {WebSocketServer, type WebSocket} from 'ws';
 import {authenticateAuthorization, validateGameSecret} from './auth.ts';
 import {buildGameResponse} from '../../../packages/game-domain/src/rules/server-response.js';
 import {clientContent} from '../../../packages/game-domain/src/rules/client-content.js';
+import {contentPack} from '../../../packages/game-domain/src/rules/content-packs.js';
 import {workshopView} from '../../../packages/game-domain/src/rules/workshop.js';
 import {createDeltaEvent,type GameSnapshotEvent} from '../../../packages/contracts/src/events.ts';
 
@@ -179,14 +180,15 @@ export function createGameServer(options: GameServerOptions) {
           json(response, 409, {error: '内容版本不匹配，请刷新后重试。', code: 'CONTENT_VERSION'});
           return;
         }
-        const etag = JSON.stringify(content.contentVersion);
+        const body = contentPack(content, url.searchParams);
+        const etag = '"' + createHash('sha256').update(JSON.stringify(body)).digest('hex') + '"';
         const immutable = requestedVersion === content.contentVersion;
         if (immutable && request.headers['if-none-match'] === etag) {
           response.writeHead(304, {etag, 'cache-control': 'public, max-age=31536000, immutable'});
           response.end();
           return;
         }
-        json(response, 200, content, immutable
+        json(response, 200, body, immutable
           ? {etag, 'cache-control': 'public, max-age=31536000, immutable'}
           : {'cache-control': 'no-store'});
         return;

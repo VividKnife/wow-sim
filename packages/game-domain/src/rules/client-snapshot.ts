@@ -21,7 +21,7 @@ const viewKeys = [
 ] as const;
 
 const actorKeys=['npcPlayer','growthPolicy','id','name','classId','raceId','gender','level','role','hp','mana','rage','energy','power','form','stance','position','positionY','maxHp','maxMana','spell','kind','petUnit','totemUnit','ownerId','controlledBy','controlUntil','removed','dead','fleeing','stealthed','happiness','loyalty','target','combo','comboTarget','nextSwing','swingStartedAt','nextAttack','nextRanged','rangedStartedAt','nextOffhand','offhandStartedAt','swing','moveSpeed','speed','rootUntil','stunUntil','fearUntil','polyUntil','slowUntil','slow','movementSlows','cast','cooldowns','categoryCooldowns','globalCooldowns','equipment','learned','rules','strategyPolicy','autoBuffs','potions','ammunition','ammoPolicy','buffs','classBuffs','talentBuffs','auras','dots','hots','periodicClass','absorb','manaShield','seal','judgement','reactiveClass','weaponEnchants','weaponEnchant','talentProcs','racialEffects','racialBuff','cannibalize','bloodrage','totemWeaponEnchant','lightwell','totems','stats','soulShardCount','creatureType','entry','rank','visual','sourceGuid','attackPower','armor','resistances','equippable'];
-const enemyKeys=[...actorKeys,'minDamage','maxDamage','attackTime','spells','threat','smite','capturePhase','captureUntil'];
+const enemyKeys=['modelAnimation',...actorKeys,'minDamage','maxDamage','attackTime','spells','threat','smite','capturePhase','captureUntil'];
 const combatKeys=['lootGold','area','ground','id','runId','routeId','encounterId','startedAt','endedAt','dungeon','pull','participantIds','metrics','projectiles','actorsSnapshot'];
 const dungeonKeys=['id','runId','cursor','position','startedAt','completedAt','metrics'];
 const activityKeys=['type','reason','to','from','startedAt','endsAt','target','quest','spell','mount','caster','targets','routeId','journeySession','auto','flight','stopAtNext'];
@@ -61,6 +61,9 @@ export function projectClientSnapshot(state:Record<string,unknown>,view:Record<s
  if(!state||typeof state!=='object'||Array.isArray(state))throw new TypeError('state must be an object');
  if(!view||typeof view!=='object'||Array.isArray(view))throw new TypeError('view must be an object');
  const clientView=pick(view,viewKeys);
+ // World content grows independently of a player's quest log. Send only the
+ // active log and quests actionable here, including carried item starters.
+ if(Array.isArray((view as any).quests))clientView.quests=(view as any).quests.filter((quest:any)=>quest.active||quest.canAccept||quest.canTurnIn).map(copy);
  if((view as any).battleView)clientView.battleView=battlePresentationView((view as any).battleView);
  if(Array.isArray((view as any).party))clientView.party=(view as any).party.map(actorView);
  if((view as any).escortNpc)clientView.escortNpc=actorView((view as any).escortNpc);

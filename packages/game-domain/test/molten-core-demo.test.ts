@@ -69,7 +69,7 @@ test('both bosses are defeated through shared combat rules and grant demo reward
  assert.ok(moltenCoreView(run).meter.some((row:any)=>row.healing>0));
  assert.throws(()=>startMoltenCoreBoss(run,'lucifron'));
  run=finish(startMoltenCoreBoss(JSON.parse(JSON.stringify(run)),'magmadar'));
- assert.equal(run.status,'complete');assert.equal(run.rewards.length,2);
+ assert.equal(run.status,'victory');assert.equal(run.rewards.length,2);
  assert.ok(run.attempts[1].support.tranquilizes>0);assert.ok(run.attempts[1].support.wards>0);
  assert.equal(run.state.money,0);assert.equal(run.state.pending.length,0);
  assert.deepEqual(advanceMoltenCore(run,10000),run);

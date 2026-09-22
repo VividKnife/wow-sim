@@ -1,3 +1,4 @@
+import {moltenCoreRoute,moltenCoreBosses} from '../src/rules/molten-core-content.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
@@ -7,11 +8,16 @@ import {buildGameResponse} from '../src/rules/server-response.js';
 import {enterGuildRaid,leaveGuildRaid,guildRaidView} from '../src/rules/guild-raid.js';
 import type {Rules} from '../src/model.ts';
 
-async function fixture(){
+async function fixture(skipApproach=true){
  let now=Date.UTC(2026,8,21),seq=0;const store=new MemoryStore();
  const options={contentVersion:'test',now:()=>now,seed:()=>60325};let service=new GameService(store,options);
  const save=await service.createSave('raider',{name:'熔火团长',classId:8,raceId:1,raidReady:true},'raid-save');
- const command=(type:string,extra:Rules={})=>service.command(save.id,{type,requestId:'raid-'+(++seq),...extra});
+ const command=async(type:string,extra:Rules={})=>{
+ const snap=await service.command(save.id,{type,requestId:'raid-'+(++seq),...extra});
+ // These tests isolate boss persistence/rewards; full pack traversal is tested separately.
+ if(skipApproach&&type==='enterDungeon'&&snap.instanceId){await store.transaction(async tx=>{const row:any=await tx.get('instances',snap.instanceId!);row.simulation.guildRaid.clearedPacks=moltenCoreRoute.filter(n=>n.kind==='trash').map(n=>n.id);await tx.put('instances',row);});}
+ return snap;
+ };
  const snapshot=()=>service.snapshot(save.id);
  const step=async(ms=2000)=>{now+=ms;await service.snapshot(save.id,undefined,true);for(let n=0;n<Math.ceil(ms/2000);n++)assert.deepEqual((await service.work()).errors,[]);return snapshot();};
  return {store,save,command,snapshot,step,restart:()=>{service=new GameService(store,options);},service:()=>service};
@@ -38,7 +44,7 @@ test('guild instance enforces ownership, capacity, tactics locking and retreat r
  assert.equal((await f.store.read(tx=>tx.list('actor_leases'))).length,5);
  await assert.rejects(f.command('hireMercenary',{instanceId:snap.instanceId,templateId:'tank'}),/无需雇佣/);
  await assert.rejects(f.command('joinInstance',{instanceId:snap.instanceId}),/单个账号/);
- await assert.rejects(f.command('raidStart',{bossId:'magmadar'}),/未解锁/);
+ await assert.rejects(f.command('raidStart',{bossId:'majordomo'}),/符文/);
  snap=await f.command('raidStart',{bossId:'lucifron'});
  await assert.rejects(f.command('raidTactics',{patch:{dispel:false}}),/战斗结束/);
  await assert.rejects(f.command('leaveInstance'),/战斗结束/);
@@ -85,10 +91,26 @@ test('two real boss fights persist through service restart, award equippable loo
  for(let i=0;i<95&&snap.state!.combat;i++)snap=await f.step();
  assert.equal(snap.state!.combat,null);assert.deepEqual(snap.state!.guildRaid.cleared,['lucifron','magmadar']);
  assert.equal(snap.state!.guildRaid.rewards.length,2);
- await f.command('loot');await f.command('raidRestart');
+ await f.command('loot');await assert.rejects(f.command('raidRestart'),/完成本次/);
+ await f.store.transaction(async tx=>{const row:any=await tx.get('instances',snap.instanceId!);row.simulation.guildRaid.cleared=moltenCoreBosses.map(b=>b.id);await tx.put('instances',row);});
+ await f.command('raidRestart');
+ await f.store.transaction(async tx=>{const row:any=await tx.get('instances',snap.instanceId!);row.simulation.guildRaid.clearedPacks=moltenCoreRoute.filter(n=>n.kind==='trash').map(n=>n.id);await tx.put('instances',row);});
  snap=await f.command('raidStart',{bossId:'lucifron'});
  // The entire first-clear fights above exercise actual rules; shorten the repeat to audit reward idempotency.
  await f.store.transaction(async tx=>{const row:any=await tx.get('instances',snap.instanceId!);row.simulation.combat.enemies.forEach((e:Rules)=>{e.hp=0;});await tx.put('instances',row);});
  snap=await f.step();assert.equal(snap.state!.guildRaid.rewards.length,2);assert.equal(snap.state!.pending.length,0);
  const projected:any=buildGameResponse(snap.state,snap.revision);assert.equal(projected.snapshot.view.guildRaid.members.length,25);assert.equal(projected.snapshot.player.guildRaid,undefined);
+});
+
+
+test('server route commands persist trash checkpoints and continue scheduled travel after restart',async()=>{
+ const f=await fixture(false);let snap=await f.command('enterDungeon',{contentId:'molten-core'});
+ snap=await f.command('raidNavigate',{destination:'lucifron'});assert.equal(snap.state!.combat.raidEncounter.id,'mc-gate');
+ await f.store.transaction(async tx=>{const row:any=await tx.get('instances',snap.instanceId!);row.simulation.combat.enemies.forEach((e:Rules)=>e.hp=0);await tx.put('instances',row);});
+ snap=await f.step();assert.deepEqual(snap.state!.guildRaid.clearedPacks,['mc-gate']);assert.equal(snap.state!.pending.length,0);
+ f.restart();snap=await f.step(4000);assert.equal(snap.state!.combat.raidEncounter.id,'mc-bridge');
+ await f.command('raidPause');snap=await f.command('abandonCombat',{encounterId:snap.state!.combat.id});
+ assert.equal(snap.state!.guildRaid.autoAdvance,false);assert.deepEqual(snap.state!.guildRaid.clearedPacks,['mc-gate']);
+ await f.command('raidRecover');await f.step(10000);await f.command('leaveInstance');snap=await f.command('enterDungeon',{contentId:'molten-core'});
+ assert.deepEqual(snap.state!.guildRaid.clearedPacks,['mc-gate']);assert.equal(snap.state!.guildRaid.locationId,'mc-gate');
 });

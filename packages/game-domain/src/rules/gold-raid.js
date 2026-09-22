@@ -1,3 +1,6 @@
+import {raidRouteState,raidMapView} from './molten-core-content.js';
+import {navigateRaid,advanceRaid,pauseRaid,settleRaidRoute} from './molten-core-navigation.js';
+import {raidNextMechanics} from './molten-core-mechanics.js';
 import {items,nameOf} from './catalog.js';
 import {rng,stats,makeItem,canEquip,slotOf,log} from './character.js';
 import {combatRole} from './combat-roles.js';
@@ -8,7 +11,7 @@ import {GOLD,createGoldApplicants,goldNpcView,npcPriceLimit,prepareGoldNpc,perso
 import {meterRows} from '../../../sim-core/src/combat-meter.js';
 
 export const GOLD_RAID_ID='molten-core-gold';
-export const goldCommands=['goldRules','goldPublish','goldRefresh','goldInvite','goldRecommend','goldLaunch','goldStart','goldRecover','goldTactics','goldBid','goldPass','goldAuctionStep','goldSettle'];
+export const goldCommands=['goldNavigate','goldPause','goldRules','goldPublish','goldRefresh','goldInvite','goldRecommend','goldLaunch','goldStart','goldRecover','goldTactics','goldBid','goldPass','goldAuctionStep','goldSettle'];
 const need=(ok,text)=>{if(!ok)throw new Error(text);};
 const active=s=>{need(s.goldRaid?.active,'请先创建金团。');return s.goldRaid;};
 const announce=(s,text)=>{const g=s.goldRaid;g.chat.push({at:s.clock,text});g.chat=g.chat.slice(-50);};
@@ -17,7 +20,7 @@ export function enterGoldRaid(s){
  need(s.level===60&&s.growthPolicy!=='companion'&&!s.combat&&!s.dungeon&&!s.guildRaid?.active&&!s.goldRaid?.active,'需要空闲的60级团长。');
  need(s.party.length===4&&[s,...s.party].every(c=>c.level===60&&c.hp>0),'请带上五名存活的60级核心成员。');
  const serial=(s.goldRaid?.serial||0)+1;
- s.goldRaid={active:true,serial,phase:'draft',rules:{leaderFee:5,dpsBonus:10,supportBonus:10},tactics:{...defaultRaidTactics},applicants:[],applicantSequence:0,refreshes:0,selected:[],coreIds:[s,...s.party].map(c=>c.id),seats:[],contributions:{},cleared:[],attempts:[],lots:[],auction:null,sales:[],pot:0,paidOut:0,chat:[],settlement:null,recoverUntil:0};
+ s.goldRaid={...raidRouteState(),active:true,serial,phase:'draft',rules:{leaderFee:5,dpsBonus:10,supportBonus:10},tactics:{...defaultRaidTactics},applicants:[],applicantSequence:0,refreshes:0,selected:[],coreIds:[s,...s.party].map(c=>c.id),seats:[],contributions:{},cleared:[],attempts:[],lots:[],auction:null,sales:[],pot:0,paidOut:0,chat:[],settlement:null,recoverUntil:0};
  s.activity={type:'idle'};s.lastCombat=null;announce(s,'你创建了熔火之心金团。先公告分金规则，再招募20名玩家。');
 }
 function inPhase(g,...phases){need(phases.includes(g.phase),'当前阶段不能执行此操作。');}
@@ -81,6 +84,7 @@ export function goldAuctionStep(s){
 }
 export function goldRaidAction(s,a){
  const g=active(s);
+ if(a.type==='goldPause'){pauseRaid(s,g);return;}
  need(!s.combat,'战斗结束后再处理团务。');need(!g.recoverUntil,'团队正在休整。');
  if(a.type==='goldRules'){
   inPhase(g,'draft');const r=a.rules;
@@ -103,36 +107,39 @@ export function goldRaidAction(s,a){
   need(counts.tank>=2&&counts.healer>=5,'全团至少需要2名坦克、5名治疗。');
   s.party.push(...chosen);g.seats=actors.map(c=>({id:c.id,name:c.name,role:combatRole(c),core:!c.goldNpc}));g.applicants=[];g.phase='camp';announce(s,'25人名单已锁定。首领掉落全部进入公开拍卖，金币到账后才能分金。');
  }else if(a.type==='goldTactics'){inPhase(g,'camp');need(a.patch&&Object.entries(a.patch).every(([k,v])=>Object.hasOwn(defaultRaidTactics,k)&&typeof v==='boolean'),'战术无效。');Object.assign(g.tactics,a.patch);
- }else if(a.type==='goldRecover'){inPhase(g,'camp');g.recoverUntil=s.clock+10000;s.activity={type:'goldRecovery',endsAt:g.recoverUntil};
- }else if(a.type==='goldStart'){
-  inPhase(g,'camp');const index=moltenCoreBosses.findIndex(b=>b.id===a.bossId);
-  need(index>=0&&!g.cleared.includes(a.bossId)&&(index===0||g.cleared.includes(moltenCoreBosses[index-1].id)),'首领未解锁或已击败。');
-  need(!s.pending.length,'请先领取此前拍得的装备。');
-  need([s,...s.party].every(c=>c.hp>0),'请先全团休整复活。');
-  for(const c of [s,...s.party]){restoreRaidMember(c,s);if(c.goldNpc)prepareGoldNpc(s,c);}
-  beginMoltenCoreBattle(s,a.bossId,g.tactics);s.combat.requiresManualControl=true;g.phase='combat';g.activeBoss=a.bossId;
+ }else if(a.type==='goldRecover'){inPhase(g,'camp');g.autoAdvance=false;g.recoverUntil=s.clock+10000;s.activity={type:'goldRecovery',endsAt:g.recoverUntil};
+ }else if(a.type==='goldStart'||a.type==='goldNavigate'){
+  inPhase(g,'camp');navigateRaid(s,g,a.destination||a.bossId,id=>launchGoldEncounter(s,id));
  }else if(a.type==='goldBid'){inPhase(g,'auction');need(a.lotId===g.auction.id,'拍品已更新，请重新出价。');bid(s,'player',a.amount,a.recipient,a.quotedMinimum);
  }else if(a.type==='goldPass'){inPhase(g,'auction');need(a.lotId===g.auction.id,'拍品已更新。');g.auction.playerPassed=true;announce(s,`${s.name}：这件先让。`);goldAuctionStep(s);
  }else if(a.type==='goldAuctionStep'){need(a.lotId===g.auction?.id,'拍品已更新。');goldAuctionStep(s);}
  else if(a.type==='goldSettle'){inPhase(g,'camp','draft','recruiting');finishGoldRun(s);}
  else throw new Error('未知金团指令。');
 }
+function launchGoldEncounter(s,id){
+ for(const c of [s,...s.party]){restoreRaidMember(c,s);if(c.goldNpc)prepareGoldNpc(s,c);}
+ beginMoltenCoreBattle(s,id,s.goldRaid.tactics);s.goldRaid.phase='combat';
+}
+export function advanceGoldRoute(s){if(s.goldRaid?.phase==='camp')advanceRaid(s,s.goldRaid,id=>launchGoldEncounter(s,id));}
 export function settleGoldRaid(s){
  const g=s.goldRaid;if(!g?.active)return;
  if(g.recoverUntil&&s.clock>=g.recoverUntil){for(const c of [s,...s.party])restoreRaidMember(c,s);g.recoverUntil=0;s.activity={type:'idle'};}
- const b=s.lastCombat;if(s.combat||g.phase!=='combat'||!b?.raidEncounter||b.goldSettled)return;
+ const b=s.lastCombat;if(s.combat||g.phase!=='combat'||!b?.raidEncounter||b.raidMode!=='gold'||b.goldSettled)return;
  b.goldSettled=true;const won=!b.abandoned&&b.enemies.every(e=>e.hp<=0),seconds=Math.max(1,(b.endedAt-b.startedAt)/1000);
  g.attempts.push({bossId:g.activeBoss,won,seconds,deaths:[s,...s.party].filter(c=>c.hp<=0).length});g.attempts=g.attempts.slice(-20);
  const rows=meterRows(b,s.clock);
  for(const c of [s,...s.party]){const row=rows.find(r=>r.actorId===c.id),p=c.goldProfile;if(p){p.damage+=row?.damage||0;p.healing+=row?.healing||0;p.seconds+=seconds;if(c.hp<=0)p.deaths++;}
   if(won){const entry=g.contributions[c.id]??={damage:0,healing:0,seconds:0,kills:0};entry.damage+=row?.damage||0;entry.healing+=row?.healing||0;entry.seconds+=seconds;entry.kills++;}}
  g.phase='camp';s.activity={type:'idle'};
+ if(b.raidEncounter.kind==='trash'){
+  settleRaidRoute(s,g,b,won);announce(s,won?'怪物群已清理。':'清怪失败，休整后可重试。');return;
+ }
  if(won&&!g.cleared.includes(g.activeBoss)){
   g.cleared.push(g.activeBoss);announce(s,`${moltenCoreBosses.find(b=>b.id===g.activeBoss).name} 已击败。开始分配三件战利品。`);
   const pool=[...raidLoot[g.activeBoss]];
   for(let i=0;i<3;i++){const rare=i===2&&rng(s)<.3,itemId=rare?[992001,992002,992003][Math.floor(rng(s)*3)]:pool.splice(Math.floor(rng(s)*pool.length),1)[0];g.lots.push({id:`${g.serial}:${g.activeBoss}:${i}`,bossId:g.activeBoss,itemId,rare});}
-  nextLot(s);
- }else announce(s,'本次挑战失败。没有拍卖收入，已成交金币与已击败首领保留。休整后可重试。');
+  settleRaidRoute(s,g,b,true);g.autoAdvance=false;nextLot(s);
+ }else {settleRaidRoute(s,g,b,false);announce(s,'本次挑战失败。没有拍卖收入，已成交金币与已击败首领保留。休整后可重试。');}
 }
 function split(amount,seats,field,ledger){if(!seats.length)return amount;const each=Math.floor(amount/seats.length),remainder=amount%seats.length;seats.forEach((seat,i)=>ledger[seat.id][field]+=each+(i<remainder?1:0));return 0;}
 export function finishGoldRun(s){
@@ -146,7 +153,7 @@ export function finishGoldRun(s){
  const rows=Object.values(ledger).map(r=>({...r,total:r.base+r.dpsBonus+r.supportBonus,dps:g.contributions[r.id].damage/g.contributions[r.id].seconds}));
  let playerIncome=fee;for(const r of rows){if(r.core)playerIncome+=r.total;else{const npc=s.party.find(c=>c.id===r.id);if(npc)npc.goldProfile.wallet+=r.total;}}
  need(rows.reduce((n,r)=>n+r.total,fee)===g.pot,'账本不平，不能分金。');
- s.money+=playerIncome;g.paidOut=g.pot;g.settlement={pot:g.pot,fee,playerIncome,rows};g.phase='settled';s.activity={type:'idle'};announce(s,`分金完成：总收入 ${gold(g.pot)}，核心队与团长共收到 ${gold(playerIncome)}。`);
+ s.money+=playerIncome;g.paidOut=g.pot;g.settlement={pot:g.pot,fee,playerIncome,rows};g.phase='settled';g.autoAdvance=false;s.activity={type:'idle'};announce(s,`分金完成：总收入 ${gold(g.pot)}，核心队与团长共收到 ${gold(playerIncome)}。`);
 }
 export function emergencyGoldExit(s){const g=s.goldRaid;if(!g?.active)return;if(g.auction?.leader==='player')s.money+=g.auction.price;g.auction=null;g.lots=[];s.combat=null;if(!g.settlement)finishGoldRun(s);g.active=false;g.recoverUntil=0;}
 export function leaveGoldRaid(s){const g=active(s);need(g.phase==='settled','请先结束拍卖并结算本团，即使提前散团也需要分金。');g.active=false;s.party=s.party.filter(c=>!c.goldNpc);s.activity={type:'idle'};}
@@ -154,7 +161,7 @@ export function goldRaidView(s){
  const g=s.goldRaid,actors=[s,...s.party],r=s.combat?.raidEncounter;
  if(!g?.active)return {active:false,canEnter:s.level===60&&!s.combat&&!s.dungeon&&!s.guildRaid?.active&&s.party.length===4&&actors.every(c=>c.level===60&&c.hp>0),previous:g?.settlement||null};
  const a=g.auction;
- return {active:true,phase:g.phase,rules:g.rules,tactics:g.tactics,selected:g.selected,refreshes:g.refreshes,applicants:g.applicants.map(goldNpcView),members:s.party.filter(c=>c.goldNpc).map(goldNpcView),core:actors.filter(c=>g.coreIds.includes(c.id)).map(c=>({id:c.id,name:c.name,role:combatRole(c),canBid:a?canEquip(c,items[a.itemId]):false})),roles:roleCounts(g.phase==='recruiting'?[...actors,...g.applicants.filter(c=>g.selected.includes(c.id))]:actors),cleared:g.cleared,bosses:moltenCoreBosses,activeBoss:g.activeBoss,pot:g.pot,paidOut:g.paidOut,settlement:g.settlement,sales:g.sales,chat:g.chat,attempts:g.attempts,remaining:Math.max(0,g.recoverUntil-s.clock),recovering:!!g.recoverUntil,
+ return {map:raidMapView(s,g,g.phase==='camp'&&!s.combat&&!g.recoverUntil&&!s.pending.length&&actors.every(c=>c.hp>0)),active:true,phase:g.phase,rules:g.rules,tactics:g.tactics,selected:g.selected,refreshes:g.refreshes,applicants:g.applicants.map(goldNpcView),members:s.party.filter(c=>c.goldNpc).map(goldNpcView),core:actors.filter(c=>g.coreIds.includes(c.id)).map(c=>({id:c.id,name:c.name,role:combatRole(c),canBid:a?canEquip(c,items[a.itemId]):false})),roles:roleCounts(g.phase==='recruiting'?[...actors,...g.applicants.filter(c=>g.selected.includes(c.id))]:actors),cleared:g.cleared,bosses:moltenCoreBosses,activeBoss:g.activeBoss,pot:g.pot,paidOut:g.paidOut,settlement:g.settlement,sales:g.sales,chat:g.chat,attempts:g.attempts,remaining:Math.max(0,g.recoverUntil-s.clock),recovering:!!g.recoverUntil,
  auction:a?{id:a.id,name:nameOf('items',a.itemId),itemId:a.itemId,rare:a.rare,price:a.price,minimum:a.price?a.price+a.step:a.opening,step:a.step,leader:a.leader,winner:a.leader==='player'?s.name:s.party.find(c=>c.id===a.leader)?.name,quiet:a.quiet,bidNotice:a.bidNotice||null,bids:a.bids,remainingLots:g.lots.length,playerPassed:a.playerPassed}:null,
- nextMechanics:r?(r.id==='lucifron'?[{name:'末日',at:r.nextDoom},{name:'诅咒',at:r.nextCurse}]:[{name:'狂暴',at:r.nextFrenzy},{name:'恐慌',at:r.nextFear},{name:'熔岩',at:r.nextBomb}]):[]};
+ nextMechanics:raidNextMechanics(r)};
 }

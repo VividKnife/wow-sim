@@ -1,3 +1,4 @@
+import {moltenCoreBosses} from './molten-core-content.js';
 // Authored rewards for this game's 25-player raid; not original Classic loot.
 export const guildRaidItems=[
  [992001,'金焰·大法师的终章',2,0,0,5,52,7,34],
@@ -15,4 +16,12 @@ export const guildRaidItems=[
  [991014,'熔火堡垒胸甲',5,4,660,7,40,4,26],
  [991015,'熔火秘法护符',2,0,0,5,32,7,24],
  [991016,'熔火锋刃项链',2,0,0,3,32,4,24],
+ ...moltenCoreBosses.slice(2).flatMap((b,i)=>[
+  [991021+i*10,b.name+'·秘法腰带',6,1,60,5,32+i,7,22],
+  [991022+i*10,b.name+'·祈愿护腕',9,1,45,6,30+i,5,24],
+  [991023+i*10,b.name+'·追猎护肩',3,2,180,3,32+i,7,22],
+  [991024+i*10,b.name+'·守卫胸甲',5,4,680,7,36+i,4,26],
+  [991025+i*10,b.name+'·法术指环',11,0,0,5,30+i,7,22],
+  [991026+i*10,b.name+'·突击项链',2,0,0,3,30+i,4,22],
+ ]),
 ].map(([entry,name,InventoryType,subclass,armor,t1,v1,t2,v2])=>({entry,name,InventoryType,subclass,armor,class:4,Quality:4,ItemLevel:entry>=992000?74:66,RequiredLevel:60,AllowableClass:-1,AllowableRace:-1,stat_type1:t1,stat_value1:v1,stat_type2:t2,stat_value2:v2,stackable:1,bonding:1,maxcount:0,SellPrice:25000,BuyPrice:0,MaxDurability:0,raidReward:true}));
