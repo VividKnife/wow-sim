@@ -24,6 +24,8 @@ jobs:
       - run: npm ci
       - run: npm --prefix apps/web ci
       - run: npm run data:check
+      - run: npm run content:measure
+      - run: node --test apps/web/test/content-packs.test.mjs apps/web/test/client-snapshot.test.mjs
       - run: npm run typecheck
       - run: node --test apps/web/test/account-store.test.ts apps/web/test/game-backend.test.mjs apps/game-server/test/*.test.ts apps/game-worker/test/*.test.ts
       - run: npm --prefix apps/web run build

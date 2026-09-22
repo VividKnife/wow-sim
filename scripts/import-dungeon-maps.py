@@ -15,7 +15,7 @@ output = root / 'apps/web/public/maps/dungeons'
 output.mkdir(parents=True, exist_ok=True)
 manifest = {'revision': revision, 'copyright': 'Blizzard Entertainment', 'assets': []}
 
-for name, floors in [('TheDeadmines', [1, 2]), ('TheStockade', [1])]:
+for name, floors in [('TheDeadmines', [1, 2]), ('TheStockade', [1]), ('MoltenCore', [1])]:
     listing = json.load(urllib.request.urlopen(
         f'https://api.github.com/repos/Gethe/wow-ui-textures/contents/WorldMap/{name}?ref={revision}', timeout=30))
     indexed = {row['name']: row for row in listing}
