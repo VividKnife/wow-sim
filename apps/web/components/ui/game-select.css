@@ -1,0 +1,8 @@
+[data-game-select][data-slot]{min-width:0;max-width:100%;height:auto;min-height:36px;padding:8px 11px;gap:10px;border:1px solid #5c5945;border-radius:5px;background:#142024;color:#e4d4b3;font-size:12px;box-shadow:inset 0 1px #e4cc8b0a}
+[data-game-select][data-slot]:hover{border-color:#ac925f;background:#202c2b}
+[data-game-select][data-slot]:focus-visible{outline:2px solid #c1a366;outline-offset:2px}
+[data-game-select][data-slot]:disabled{opacity:.45;cursor:not-allowed}
+[data-game-select] [data-slot=select-value]{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+[data-game-select-menu][data-slot]{min-width:var(--radix-select-trigger-width);max-width:min(480px,calc(100vw - 24px));background:#142024;color:#e7dcc5;border:1px solid #756544;box-shadow:0 14px 40px #0009}
+[data-game-select-menu] [data-slot=select-item]{min-height:36px;font-size:12px;white-space:normal;overflow-wrap:anywhere}
+[data-game-select-menu] [data-highlighted]{background:#344138;color:#f2dfb4}

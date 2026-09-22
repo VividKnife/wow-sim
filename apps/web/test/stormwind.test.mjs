@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,view} from '../../../packages/game-domain/src/rules/engine.js';
-import {nodes,route,edges,creatureLocations} from '../../../packages/game-domain/src/rules/catalog.js';
+import {nodes,route,edges,travelSpeedMultiplier,creatureLocations} from '../../../packages/game-domain/src/rules/catalog.js';
 import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
 
 const player=(classId=8)=>{
@@ -20,12 +20,13 @@ test('city districts are reachable and travel only grants access after arrival',
  for(const id of ['dwarven','cathedral','park','keep','oldtown','magetower','bluerecluse'])assert.ok(route('stormwind',id).duration>0);
 });
 
-test('tram departs from dwarven district and retains the timed rail journey',()=>{
+test('tram departs from dwarven district with the global travel boost',()=>{
  const tram=edges.find(e=>e.transport==='tram');
  assert.equal(tram.a,'dwarven');assert.equal(tram.b,'ironforge');
  const s=act({...player(),location:'dwarven'},{type:'travel',to:'ironforge'},0);
- assert.equal(s.activity.endsAt,180000);assert.equal(s.location,'dwarven');
- assert.equal(advance(s,180000).state.location,'ironforge');
+ const duration=Math.ceil(180000/travelSpeedMultiplier);
+ assert.equal(s.activity.endsAt,duration);assert.equal(s.location,'dwarven');
+ assert.equal(advance(s,duration).state.location,'ironforge');
 });
 
 test('cathedral trains priests but rejects mage training without charging them',()=>{

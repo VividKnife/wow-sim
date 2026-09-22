@@ -13,6 +13,7 @@ import {potions} from './profession-data.js';
 import {elixirEffects,elixirDurationMs} from './utility-data.js';
 import {classUtilityUse,beginClassUtility,classUtilityView} from './class-utility.js';
 import {classItemUse,useClassItem} from './class-items.js';
+import {handleTownAmmo} from './ammunition.js';
 
 const teleports={3561:'stormwind',3562:'ironforge'};
 const mageBuffs=new Set(['Frost Armor','Arcane Intellect']);
@@ -60,6 +61,7 @@ export function finishUtilitySpell(s){
   s.activity={type:'idle'};if(s.dungeon)leaveDungeon(s);
   s.location=a.to;if(!s.visited.includes(a.to))s.visited.push(a.to);s.groundEffects=[];
   log(s,'传送至 '+nodes[a.to].name,'travel');
+  handleTownAmmo(s,'town');
  }
  s.activity={type:'idle'};stopRecovery(s);
 }

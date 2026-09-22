@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PostgresStore} from '../src/postgres.ts';
 import type {SqlPool} from '../src/postgres.ts';
-import type {Transaction} from '../src/store.ts';
+import {DatabaseBusyError, DatabaseOperationError, type Transaction} from '../src/store.ts';
 
 for (const code of ['40001', '40P01', '23505']) {
     test(`retries ${code} after releasing the connection and allowing a competitor to finish`, async () => {
@@ -55,4 +55,21 @@ test('non-retryable failures roll back and propagate without replaying business 
     assert.equal(calls, 1);
     assert.equal(released, true);
     assert.deepEqual(statements, ['BEGIN ISOLATION LEVEL SERIALIZABLE', 'ROLLBACK']);
+});
+
+test('background contention yields after one attempt and reports a retryable service failure', async () => {
+    let calls=0,releases=0;
+    const failure=Object.assign(new Error('could not serialize access'),{code:'40001'});
+    const store=new PostgresStore({
+        async connect(){return {query:async(sql:string)=>{if(sql==='COMMIT')throw failure;return {rows:[]};},release(){releases++;}};},
+        async end(){},
+    });
+    await assert.rejects(store.transaction(async()=>{calls++;},{attempts:1}),error=>error instanceof DatabaseBusyError && error.cause===failure && error.status===503);
+    assert.equal(calls,1);assert.equal(releases,1);
+});
+
+test('connection failures retain their cause without exposing driver text as a game rule error',async()=>{
+    const cause=Object.assign(new Error('private database connection details'),{code:'ECONNREFUSED'});
+    const store=new PostgresStore({connect:async()=>{throw cause;},end:async()=>{}});
+    await assert.rejects(store.transaction(async()=>42),error=>error instanceof DatabaseOperationError && error.cause===cause && error.status===503 && !error.message.includes('private'));
 });

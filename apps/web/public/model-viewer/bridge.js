@@ -41,7 +41,7 @@ function dispose(){
  if(viewer){const context=viewer.renderer?.context;viewer.destroy();context?.getExtension('WEBGL_lose_context')?.loseContext();viewer=null;}
  host.replaceChildren();controls.hidden=true;
 }
-async function render(items,revision,raceId,classId){
+async function render(items,revision,raceId,classId,gender){
  const token=++generation;currentRevision=revision;loadController?.abort();loadController=new AbortController();
  const signal=loadController.signal;dispose();notify('loading');
  try{
@@ -55,7 +55,7 @@ async function render(items,revision,raceId,classId){
   const missing=items.some(i=>!displays.has(i.id));
   // Each outfit is initialized from a complete snapshot. This avoids stale
   // asynchronous attachments and upstream clearSlots differences across builds.
-  viewer=new window.ZamModelViewer({type:2,container:window.jQuery(host),aspect:host.clientWidth/host.clientHeight,contentPath:ROOT,models:{id:raceId*2-1,type:16},items:items.filter(i=>displays.has(i.id)).map(i=>[i.slot,displays.get(i.id)]),dataEnv:'classic',env:'classic',gameDataEnv:'classic',hd:false,cls:classId,transparent:true});
+  viewer=new window.ZamModelViewer({type:2,container:window.jQuery(host),aspect:host.clientWidth/host.clientHeight,contentPath:ROOT,models:{id:raceId*2-(gender==='male'?1:0),type:16},items:items.filter(i=>displays.has(i.id)).map(i=>[i.slot,displays.get(i.id)]),dataEnv:'classic',env:'classic',gameDataEnv:'classic',hd:false,cls:classId,transparent:true});
   if(!viewer.renderer?.context)throw new Error('WebGL unavailable');
   let customized=false,quietSince=0;
   viewer.method('setCustomizationsLoadedCallback',[()=>{customized=true;}]);
@@ -83,10 +83,10 @@ window.addEventListener('message',event=>{
  if(event.source!==parent||event.origin!==location.origin)return;
  const message=event.data;
  if(message?.channel!=='wow-character-equipment'||typeof message.revision!=='string'||message.revision.length>2000||!Array.isArray(message.items)||message.items.length>19)return;
- if(!Number.isInteger(message.raceId)||message.raceId<1||message.raceId>8||![1,2,3,4,5,7,8,9,11].includes(message.classId))return;
+ if(!Number.isInteger(message.raceId)||message.raceId<1||message.raceId>8||![1,2,3,4,5,7,8,9,11].includes(message.classId)||!['male','female'].includes(message.gender))return;
  if(!message.items.every(i=>Number.isSafeInteger(i.id)&&i.id>0&&i.id<10000000&&[1,3,4,5,6,7,8,9,10,16,19,20,21,22,26].includes(i.slot)))return;
  if(message.revision===currentRevision)return;
- void render(message.items,message.revision,message.raceId,message.classId);
+ void render(message.items,message.revision,message.raceId,message.classId,message.gender);
 });
 new ResizeObserver(()=>{if(viewer&&host.clientWidth&&host.clientHeight){viewer.aspect=host.clientWidth/host.clientHeight;viewer.renderer.onResize(host.clientWidth,host.clientHeight,viewer.aspect);}}).observe(host);
 document.getElementById('zoom-in').onclick=()=>{if(viewer)viewer.setZoom(zoom=Math.min(7,zoom+1));};

@@ -1,17 +1,18 @@
 import {Suspense,useCallback,useEffect,useLayoutEffect} from 'react';
 import {Canvas,useThree} from '@react-three/fiber';
 import {useTexture} from '@react-three/drei';
-import {groundTheme,spriteAppearance} from '@/lib/battle-hd2d.js';
+import {groundTexture,spriteAppearance} from '@/lib/battle-hd2d.js';
 import {ACESFilmicToneMapping,WebGLRenderer,type WebGLRendererParameters} from 'three';
 import {EffectComposer,Bloom,DepthOfField} from '@react-three/postprocessing';
 import type {BattleScene,BattleSkill} from '@/lib/battle-hd2d-types';
 import {BattleFrames,CameraRig} from './frame';
 import {Environment} from './environment';
+import {BattleObstacles} from './obstacles';
 import {BattleUnit} from './unit';
 import {BattleEffects} from './effects';
 
 export function clearBattleAssets(scene:BattleScene){
- const urls=new Set([`/battle/ground/${groundTheme(scene.ground).id}.webp`,'/battle/hd2d/characters.png','/battle/hd2d/forms.png',...scene.units.map(unit=>spriteAppearance(unit,scene.clock).src)]);
+ const urls=new Set([groundTexture(scene.ground),'/battle/hd2d/characters.png','/battle/hd2d/forms.png',...scene.units.map(unit=>spriteAppearance(unit,scene.clock).src)]);
  for(const url of urls)useTexture.clear(url);
 }
 function LoadingSignal({onLoading}:{onLoading:()=>void}){useLayoutEffect(onLoading,[onLoading]);return null;}
@@ -32,6 +33,7 @@ export default function BattleCanvas({scene,skills,onSelect,visible,onReady,onLo
    <CameraRig/>
    <Suspense fallback={<LoadingSignal onLoading={onLoading}/>}>
     <Environment ground={scene.ground||'grass'} low={scene.lowEffects} reduced={scene.reducedMotion}/>
+    <BattleObstacles layout={scene.layout}/>
     {scene.units.map(unit=><BattleUnit key={`${scene.encounterId}:${unit.id}`} unit={unit} scene={scene} skills={skills} onSelect={onSelect}/>)}
     <BattleEffects scene={scene}/>
     {!scene.lowEffects&&<EffectComposer multisampling={0}><Bloom luminanceThreshold={.8} intensity={.35} mipmapBlur/><DepthOfField target={[0,0,0]} focusRange={16} bokehScale={1.2} height={360}/></EffectComposer>}

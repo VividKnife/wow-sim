@@ -10,9 +10,9 @@ async function fixture() {
   const service = new GameService(store, {contentVersion: 'test', now: () => 1000, seed: () => 123});
   const created = await service.createAccount('a', input, 'original');
   const invalidate = () => store.transaction(async tx => {
-    const row = (await tx.get('accounts', 'a'))!;
+    const row = (await tx.get('account_presence', 'a'))!;
     delete row.lastSeenAt;
-    await tx.put('accounts', row);
+    await tx.put('account_presence', row);
   });
   return {store, service, created, invalidate};
 }
@@ -27,12 +27,12 @@ test('create replaces invalid save and removes its assets, jobs and receipts ato
   const recreated = await f.service.createAccount('a', {...input, name: 'New'}, 'recreate');
   assert.notEqual(recreated.state.id, f.created.state.id);
   assert.equal(recreated.state.name, 'New');
-  assert.equal(recreated.account.lastSeenAt, 1000);
+  assert.equal((await f.store.read(tx => tx.get('account_presence','a')))!.lastSeenAt, 1000);
   assert.equal(recreated.roster.length, 1);
   assert.deepEqual(recreated.activities, []);
   await f.store.transaction(async tx => {
     for (const table of tables) {
-      if (table === 'accounts') continue;
+      if (table === 'accounts' || table === 'account_presence') continue;
       for (const row of oldRows[table]) assert.equal(await tx.get(table, row.id), null, `${table}:${row.id}`);
     }
   });
@@ -61,9 +61,9 @@ test('recreation ends affected shared instances and releases other accounts with
     const other = invalidAccount === 'a' ? 'b' : 'a';
     const before = await f.service.snapshot(other);
     await f.store.transaction(async tx => {
-      const row = (await tx.get('accounts', invalidAccount))!;
+      const row = (await tx.get('account_presence', invalidAccount))!;
       row.lastSeenAt = -1;
-      await tx.put('accounts', row);
+      await tx.put('account_presence', row);
     });
     await f.service.createAccount(invalidAccount, input, 'recreate');
     const after = await f.service.snapshot(other);

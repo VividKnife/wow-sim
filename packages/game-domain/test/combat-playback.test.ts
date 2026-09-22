@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,advance,act,stats} from '../src/rules/engine.js';
 import {startCombat} from '../src/rules/combat.js';
-import {simulateCombatRecording,playbackProjection,OFFLINE_BATCH_INTERVAL_MS} from '../src/combat-playback.ts';
+import {simulateCombatRecording,playbackProjection,OFFLINE_BATCH_INTERVAL_MS,OFFLINE_BATCH_TICKS} from '../src/combat-playback.ts';
 import {applyPlaybackFrame} from '../../contracts/src/combat-playback.ts';
 import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
@@ -100,8 +100,8 @@ test('recordings require character ownership and manual encounters stay realtime
 
 test('a command racing with background computation fences the stale recording',async()=>{
  const f=await fixture();let injected=false;
- const store:Store={close:async()=>{},transaction:async work=>{
-  const result:any=await f.store.transaction(work);
+ const store:Store={close:async()=>{},heartbeat:f.store.heartbeat.bind(f.store),transaction:f.store.transaction.bind(f.store),read:async work=>{
+  const result:any=await f.store.read(work);
   if(!injected&&result?.owner?.id===f.id&&result?.state){
    injected=true;
    await f.service.command('a',{type:'strategy',rules:[],requestId:'concurrent-command'});
@@ -123,15 +123,20 @@ test('offline solo combat batches work without recording animations or passing t
  f.time(6000);assert.deepEqual((await f.service.work()).errors,[]);
  const snapshot=await f.service.snapshot('a');assert.equal(snapshot.playback,null);
  assert.equal(await f.store.transaction(tx=>tx.get('combat_plans',f.id)),null);
- f.time(100000);await f.service.work();
+ f.time(100000);
+ for(let i=0;i<10&&(await f.service.snapshot('a')).state.wallAt<7000;i++)await f.service.work();
  assert.equal((await f.service.snapshot('a')).state.wallAt,7000);
  const row=(await f.store.transaction(tx=>tx.get<Instance>('instances',f.id)))!;
  assert.equal(row.resumeEventAt,7000+OFFLINE_BATCH_INTERVAL_MS);
 });
 
+test('offline catch-up stays bounded so another due owner is not starved',()=>{
+ assert.equal(OFFLINE_BATCH_TICKS,20);
+});
+
 test('personal hunting consumes its precomputed result and only writes assets that changed',async()=>{
  const store=new MemoryStore();let now=1000;const writes:string[]=[];
- const tracked:Store={close:async()=>{},transaction:async work=>store.transaction(tx=>work({...tx,put:async(table,row)=>{writes.push(table);await tx.put(table,row);}}))};
+ const tracked:Store={close:async()=>{},read:store.read.bind(store),heartbeat:store.heartbeat.bind(store),transaction:async work=>store.transaction(tx=>work({...tx,put:async(table,row)=>{writes.push(table);await tx.put(table,row);}}))};
  const service=new GameService(tracked,{contentVersion:'test',now:()=>now,seed:()=>283});
  await service.createAccount('a',{name:'Hunter',classId:8,raceId:1},'create');
  await service.command('a',{type:'hunt',id:299,requestId:'hunt'});

@@ -1,6 +1,5 @@
 import {items,quests,classAbilities,isSharedRouteQuest} from './catalog.js';
 import {canEquip,makeItem,slotOf,stats,log} from './character.js';
-import {syncPartyQuest,PARTY_QUEST} from './party-unlock.js';
 import {boostMount} from './mounts.js';
 
 export const LEVEL_20_BOOST_MONEY=500000;
@@ -44,20 +43,19 @@ export function applyLevel20Boost(s){
   equipment[slot]={...makeItem(s,item.entry),bound:true,ownerId:s.id,boostQuestId:questId};
  }
  s.equipment={...s.equipment,...equipment};
- // The project already has level-18 quest-issued recruit armor. Reuse these
+ // The project already has level-18 recruit armor. Reuse these
  // adaptation templates for slots absent from the source quest reward catalog.
- // The gift belongs to the hero; it does not complete the recruitment quest.
+ // The gift belongs to the hero.
  const kit=[1,2].includes(s.classId)?'tank':[3,4].includes(s.classId)?'melee':'caster';
  for(const item of Object.values(items).filter(i=>i.companionKit===kit)){
   const slot=item.companionSlot;
-  if(!s.equipment[slot]&&canEquip(s,item))s.equipment[slot]={...makeItem(s,item.entry),bound:true,ownerId:s.id,boostQuestId:PARTY_QUEST};
+  if(!s.equipment[slot]&&canEquip(s,item))s.equipment[slot]={...makeItem(s,item.entry),bound:true,ownerId:s.id,boostCompanionKit:true};
  }
  if(items[s.equipment[16]?.id]?.InventoryType===17)delete s.equipment[17];
  s.bags=Array.from({length:4},()=>makeItem(s,14046));
  s.mounts=[boostMount.id];s.riding.horse=true;
  s.location='goldshire';s.hearth='goldshire';s.visited=['northshire','goldshire'];
- syncPartyQuest(s);
  const st=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;
- log(s,'测试直升：已到达20级，获得50金币，并配发本职业可用的任务装备、四个符文布背包及旅行棕马，同时学会骑术。前往暴风城旅店完成“同路人”，自行选择队友。');
+ log(s,'测试直升：已到达20级，获得50金币，并配发本职业可用的任务装备、四个符文布背包及旅行棕马，同时学会骑术。队友系统已开通，可在队友页随时招募或更换队友。');
  return s;
 }

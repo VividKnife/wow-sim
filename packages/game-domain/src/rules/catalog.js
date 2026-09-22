@@ -1,6 +1,6 @@
+import {guildRaidItems} from './raid-rewards.js';
 import stockades from '../../../game-data/data/stockades-reference.json' with {type:'json'};
 import {companionKitItems} from './companion-kit.js';
-import {PARTY_QUEST} from './party-unlock.js';
 import classDemons from '../../../game-data/data/class-demons-reference.json' with {type:'json'};
 import source from '../../../game-data/data/classic-reference.json' with { type: 'json' };
 import helpers from '../../../game-data/data/gameplay-reference.json' with { type: 'json' };
@@ -52,6 +52,7 @@ const index=(name,key)=>Object.fromEntries(table(name).map(row=>[row[key],row]))
 export const creatures=index('creature_template','Entry');
 export const items=index('item_template','entry');
 for(const item of companionKitItems()){const appearance=Object.values(items).find(i=>!i.companionKit&&i.InventoryType===item.InventoryType&&i.subclass===item.subclass&&i.Quality===2&&icons.items?.[i.entry]);items[item.entry]={...item,appearanceItemId:appearance?.entry};}
+for(const item of guildRaidItems){const appearance=Object.values(items).find(i=>i.InventoryType===item.InventoryType&&i.subclass===item.subclass&&i.Quality>=2&&icons.items?.[i.entry]);items[item.entry]={...item,appearanceItemId:appearance?.entry};}
 for(const item of supplementalItems)items[item.entry]??=item;
 export const spells=index('spell_template','Id');
 for (const spell of clientRules.mageTalentSpells) spells[spell.Id]??=spell;
@@ -71,14 +72,12 @@ export const lookup=Object.fromEntries(Object.entries(clientRules.lookupTables).
 export const localize=(kind,id)=>(kind==='items'?stockadesAssets.items[id]:undefined)||stockades.localization?.[kind]?.[id]||localization[kind]?.[id]||(kind==='items'?journeyAssets.items[id]:undefined);
 export function nameOf(kind,id){return localize(kind,id)?.nameZhCN||(kind==='items'?professionNames[id]||utilityItemNames[id]||items[id]?.name:kind==='spells'?classReference.translations?.spellNamesByEnglish?.[spells[id]?.SpellName]||talentsBySpell[id]?.nameZhCN||spells[id]?.SpellName:kind==='quests'?quests[id]?.Title:creatures[id]?.Name)||String(id);}
 export const quests=index('quest_template','entry');
-quests[PARTY_QUEST]={entry:PARTY_QUEST,Title:'同路人',MinLevel:18,QuestLevel:18,MaxLevel:0,RequiredClasses:0,RequiredRaces:0,PrevQuestId:0,NextQuestId:0,ExclusiveGroup:0,RequiredCondition:0,SpecialFlags:0,RewOrReqMoney:0,Details:'前往暴风城贸易区，与旅店老板奥里森交谈。他会为你介绍值得信赖的伙伴。',Objectives:'与暴风城旅店老板交谈，解锁队伍系统。'};
 // This release puts every playable race on one shared Northshire adventure.
 // Only unrestricted quests whose source mask is the full Alliance (77) or
 // Horde (178) group are adapted; single-race and class quest masks stay exact.
 export const isSharedRouteQuest=q=>!!q&&!q.RequiredClasses&&[77,178].includes(q.RequiredRaces);
 export const sharedRouteQuestIds=new Set(Object.values(quests).filter(isSharedRouteQuest).map(q=>q.entry));
 export const questLinks={...source.links.quests,...stockades.questLinks};
-questLinks[PARTY_QUEST]={starts:[],ends:[{type:'creature',id:6740}]};
 export const xpTable=index('player_xp_for_level','lvl');
 export const questXp={...helpers.questXpByPlayerLevel,...stockades.questXpByPlayerLevel};
 const talentNameCorrections={'4:Camouflage':'伪装','9:Devastation':'破坏'};
@@ -151,7 +150,10 @@ const roads=[['magetower','stockades'],['cathedral','stockades'],['tower','darks
 export const edges=roads.map(([a,b])=>({a,b,distance:Math.ceil(Math.hypot(nodes[a].x-nodes[b].x,nodes[a].y-nodes[b].y)),status:'estimated road graph'}));
 for(const [a,b] of cityRoads)edges.push({a,b,distance:Math.ceil(Math.hypot(nodes[a].x-nodes[b].x,nodes[a].y-nodes[b].y)),status:'adapted city road'});
 for(const[a,b]of [['thelsamar','algaz'],['algaz','silverstream'],['magetower','bluerecluse']])edges.push({a,b,distance:Math.ceil(Math.hypot(nodes[a].x-nodes[b].x,nodes[a].y-nodes[b].y)),status:'estimated road graph'});
-edges.push({a:'dwarven',b:'ironforge',distance:0,duration:180000,transport:'tram',status:'estimated tram journey'});
+export const travelSpeedMultiplier=1.3;
+export const baseTravelSpeed=7*travelSpeedMultiplier;
+const fasterTravelDuration=duration=>Math.ceil(duration/travelSpeedMultiplier);
+edges.push({a:'dwarven',b:'ironforge',distance:0,duration:fasterTravelDuration(180000),transport:'tram',status:'estimated tram journey'});
 const positionedNodes=[...nodeRows,...additionalCityNodes];
 export function nearestNode(x,y,map=0){if(map===36)return 'deadmines';if(map===34)return 'stockades';return positionedNodes.reduce((best,n)=>Math.hypot(x-n[3],y-n[4])<Math.hypot(x-nodes[best].x,y-nodes[best].y)?n[0]:best,'northshire');}
 const alternateEntries=Object.groupBy([...supplement.tables.regionalCreatureSpawnEntry,...(stockades.tables.creature_spawn_entry||[])],r=>r.guid);
@@ -177,10 +179,10 @@ export const instanceSpawns=spawns.filter(s=>s.map===36);
 export const monsterIdsAt=node=>Object.keys(outdoorCreatureLocations).map(Number).filter(id=>id!==6492&&![1754,1755].includes(id)&&outdoorCreatureLocations[id].includes(node)&&(creatures[id]?.MinLevel<=25||[1051,1052,1053,1054].includes(id))&&creatures[id]?.NpcFlags===0&&!(creatures[id]?.UnitFlags&0x10102)&&![8,10,12].includes(creatures[id]?.CreatureType)&&!creatures[id]?.Civilian&&!creatures[id]?.Name.includes('Trigger')&&![1,35,12,11,55,80,84,1078].includes(creatures[id]?.Faction));
 export const trainerNodes=['northshire','goldshire','magetower',...Object.keys(classTravelNodes)];
 export const flightNodes=['stormwind','sentinel'];
-export const flights=[{a:'stormwind',b:'sentinel',duration:78000,cost:110,status:'estimated flight time; reference base cost'}];
-export function route(from,to,speed=7){
+export const flights=[{a:'stormwind',b:'sentinel',duration:fasterTravelDuration(78000),cost:110,status:'estimated flight time; reference base cost'}];
+export function route(from,to,speed=baseTravelSpeed){
  if(!nodes[from]||!nodes[to])throw new Error('未知目的地');
- if(speed>7)return ridingRoute(from,to,speed);
+ if(speed>baseTravelSpeed)return ridingRoute(from,to,speed);
  const distance={[from]:0},paths={[from]:[]},remaining=new Set(Object.keys(nodes));
  while(remaining.size){const current=[...remaining].sort((a,b)=>(distance[a]??Infinity)-(distance[b]??Infinity))[0];if(distance[current]===undefined)break;remaining.delete(current);if(current===to)return{duration:Math.ceil(distance[to]),path:paths[to],distance:paths[to].reduce((n,e)=>n+e.distance,0)};
   for(const e of edges.filter(e=>e.a===current||e.b===current)){const next=e.a===current?e.b:e.a;const value=distance[current]+(e.duration??e.distance/speed*1000);if(value<(distance[next]??Infinity)){distance[next]=value;paths[next]=[...paths[current],e];}}}
@@ -199,7 +201,7 @@ function ridingRoute(from,to,speed){
   for(const e of edges.filter(e=>e.a===current.node||e.b===current.node)){
    const next=e.a===current.node?e.b:e.a;
    const riding=current.riding&&e.duration===undefined&&e.mountAllowed!==false&&nodes[next].mountAllowed!==false;
-   const duration=e.duration??e.distance/(riding?speed:7)*1000,cost=current.cost+duration,k=key(next,riding);
+   const duration=e.duration??e.distance/(riding?speed:baseTravelSpeed)*1000,cost=current.cost+duration,k=key(next,riding);
    if(cost<(best.get(k)??Infinity)){best.set(k,cost);pending.push({node:next,riding,cost,path:[...current.path,{...e,duration,riding}]});}
   }
  }

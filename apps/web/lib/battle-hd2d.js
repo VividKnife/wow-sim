@@ -23,6 +23,8 @@ export function cameraFit(layout,units,size){
  return{x:(Math.min(...xs)+Math.max(...xs))/2,z:(Math.min(...zs)+Math.max(...zs))/2,zoom:manual*Math.min(size.width/Math.max(44*metric,Math.max(...xs)-Math.min(...xs)+10*metric),size.height/Math.max(24*metric,(Math.max(...zs)-Math.min(...zs))*CAMERA_TILT+headroom))};
 }
 const themes={
+ arena:{id:'arena',name:'竞技场',texture:'cave',sky:'#202a30',floor:'#827861',rock:'#625b4c',leaf:'#617363',light:'#ffe0ad',ambient:'#bbc9ca',accent:'#dec492',fog:78},
+ molten:{id:'molten',name:'熔火之心',sky:'#291510',floor:'#57463c',rock:'#382b29',leaf:'#735636',light:'#ffb470',ambient:'#dd9270',accent:'#ff7438',fog:64},
  grass:{id:'grass',name:'林间旷野',sky:'#182d31',floor:'#71856b',rock:'#71817d',leaf:'#48795d',light:'#ffe0a3',ambient:'#adcbd3',accent:'#e5c67c',fog:72},
  dirt:{id:'dirt',name:'暮色荒野',sky:'#40342f',floor:'#b29766',rock:'#a78a67',leaf:'#9a9856',light:'#ffd29a',ambient:'#c1c7d4',accent:'#efbd6e',fog:78},
  cave:{id:'cave',name:'幽深矿洞',sky:'#101c2b',floor:'#657381',rock:'#4d596c',leaf:'#47696c',light:'#8baedc',ambient:'#9eb5d4',accent:'#efa96b',fog:64},
@@ -30,6 +32,9 @@ const themes={
  water:{id:'water',name:'碧水浅滩',sky:'#163440',floor:'#609f9f',rock:'#718988',leaf:'#3c776c',light:'#d9f2cf',ambient:'#b7dce4',accent:'#8edfcc',fog:80},
 };
 export function groundTheme(key){return themes[key]||themes.grass;}
+export function groundTexture(key){const theme=groundTheme(key);return `/battle/ground/${theme.texture||(key==='molten'?'cave':theme.id)}.webp`;}
+/** @param {import('./battle-hd2d-types').BattleLayout} layout */
+export function battleObstacles(layout){return (layout.area?.obstacles||[]).map(o=>({position:worldPoint(layout,o),radius:worldRadius(layout,o.radius),height:worldRadius(layout,3.8)}));}
 export function renderClock(scene,now){return Math.min(scene.endClock??Infinity,scene.clock+(scene.live?Math.min(1000,Math.max(0,now-(scene.sampledAt??now))):0));}
 export function unitAnimation(unit,effects,clock,wall,moving){
  if(unit.hp<=0||unit.removed)return 'dead';

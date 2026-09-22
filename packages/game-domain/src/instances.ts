@@ -1,3 +1,7 @@
+import {resetLocalSession} from './local-simulation.ts';
+import {progressNpcWorld} from './rules/npc-world.js';
+import {leaveGoldRaid,goldCommands} from './rules/gold-raid.js';
+import {leaveGuildRaid} from './rules/guild-raid.js';
 import {dungeonIdFor} from './rules/dungeon-registry.js';
 import { act, advance } from './rules/engine.js';
 import { stats } from './rules/character.js';
@@ -6,27 +10,35 @@ import { petCommand } from './rules/class-spell-effects.js';
 import type { Transaction } from '../../persistence/src/store.ts';
 import { requireThat } from './model.ts';
 import type { Character, Party, Rules, Instance, InstanceLease } from './model.ts';
-import { account, owned, bump, context, newState, persistCharacter, persistAssets, economicEvent, clone, rebaseSimulation } from './context.ts';
+import { account, presence, owned, bump, context, newState, persistCharacter, persistAssets, economicEvent, clone, rebaseSimulation } from './context.ts';
 import { instanceContents, mercenaryTemplates } from './content.ts';
 import type { GameService } from './service.ts';
 import { PAUSED_EVENT_AT } from './presence.ts';
-import {simulationInterval,simulationTickBudget} from './simulation-cadence.ts';
-import {consumeCombatPlan, invalidateCombatPlan, combatExecutionMode} from './combat-execution.ts';
-import {OFFLINE_BATCH_TICKS, OFFLINE_BATCH_INTERVAL_MS} from './combat-playback.ts';
-const instanceCommands = new Set(['strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'abandonCombat', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext','dungeonNavigate','dungeonPause', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'discardJunk', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
+import {simulationInterval} from './simulation-cadence.ts';
+import {invalidateCombatPlan, combatExecutionMode} from './combat-execution.ts';
+import {OFFLINE_BATCH_INTERVAL_MS} from './combat-playback.ts';
+const instanceCommands = new Set(['groupLoot',...goldCommands,'raidStart','raidTactics','raidRecover','raidRestart','strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'abandonCombat', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext','dungeonNavigate','dungeonPause', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'discardJunk', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
 export const visitorCommands = Object.freeze(['strategy', 'settings', 'cast', 'petCommand']);
 function rosterIds(value: unknown): asserts value is string[] { requireThat(Array.isArray(value) && value.length > 0 && value.every(id => typeof id === 'string' && id.length > 0) && new Set(value).size === value.length, 'ROSTER', '副本名册必须是非空且不重复的角色 ID 数组', 400); }
 export async function createInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) {
     const contentId = cmd.contentId ?? (cmd.type === 'enterDungeon' ? dungeonIdFor(c.rules) : 'northshire-skirmish');
     requireThat(typeof contentId === 'string' && Object.hasOwn(instanceContents, contentId), 'CONTENT', '未知的副本内容', 400);
-    const capacity = cmd.capacity ?? 5;
-    requireThat([5, 10, 20, 40].includes(capacity), 'CAPACITY', '副本席位必须为 5、10、20 或 40', 400);
+    const capacity = cmd.capacity ?? (['molten-core','molten-core-gold'].includes(contentId) ? 25 : 5);
+    if(['molten-core','molten-core-gold'].includes(contentId))requireThat(capacity===25&&c.kind==='hero','RAID_ENTRY','熔火之心需要主角发起25人公会远征');
+    requireThat([5, 10, 20, 25, 40].includes(capacity), 'CAPACITY', '副本席位必须为 5、10、20、25 或 40', 400);
     const a = await account(tx, c.accountId), party = await tx.get<Party>('parties', a.partyId);
-    const ids = cmd.characterIds === undefined ? (cmd.type === 'enterDungeon' ? party!.characterIds : [c.id]) : cmd.characterIds;
+    const npcDraft = c.kind === 'hero' && ['deadmines','stockades'].includes(contentId) ? c.rules.npcWorld?.selection : null;
+    const ids = cmd.characterIds === undefined ? (npcDraft ? [c.id,...npcDraft] : cmd.type === 'enterDungeon' ? party!.characterIds : [c.id]) : cmd.characterIds;
     rosterIds(ids);
     requireThat(ids.includes(c.id) && ids.length <= capacity, 'ROSTER', '副本名册必须包含发起角色且不超过席位上限', 400);
     const instance: Instance = { id: this.id(), creatorAccountId: c.accountId, leaderId: c.id, contentId, contentVersion: this.contentVersion, capacity, status: 'forming', roster: [], simulation: null, rngState: this.seed(), sequence: 0, epoch: 0, nextEventAt: now + 1000, createdAt: now };
     for (const id of ids) {
+        const npc = c.kind === 'hero' && ['deadmines','stockades'].includes(contentId) && c.rules.npcWorld?.residents.find((p:Rules)=>p.id===id);
+        if (npc) {
+            // The world's hero lease below owns all NPC state for this instance.
+            instance.roster.push({characterId:id,accountId:c.accountId,controller:'npc'});
+            continue;
+        }
         const character = await owned(tx, c.accountId, id);
         await this.lock(tx, character, 'instance', instance.id);
         instance.roster.push({ characterId: id, accountId: c.accountId, controller: character.kind === 'hero' ? 'player' : 'companion' });
@@ -36,7 +48,7 @@ export async function createInstance(this: GameService, tx: Transaction, c: Char
         await this.startInstance(tx, c, { instanceId: instance.id }, now);
 }
 export async function instanceFor(this: GameService, tx: Transaction, c: Character, id: string) { const instance = await tx.get<Instance>('instances', id); requireThat(instance && instance.roster.some(r => r.characterId === c.id && r.accountId === c.accountId), 'FORBIDDEN', '未授权访问此副本', 403); return instance; }
-export async function joinInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) { const instance = await tx.get<Instance>('instances', cmd.instanceId); requireThat(instance, 'NOT_FOUND', '副本不存在', 404); requireThat(instance.status === 'forming', 'INSTANCE_STARTED', '副本已开始，不能加入'); const ids = cmd.characterIds === undefined ? [c.id] : cmd.characterIds; rosterIds(ids); requireThat(instance.roster.length + ids.length <= instance.capacity, 'CAPACITY', '副本名额已满'); for (const id of ids) {
+export async function joinInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) { const instance = await tx.get<Instance>('instances', cmd.instanceId); requireThat(instance, 'NOT_FOUND', '副本不存在', 404); requireThat(!['molten-core','molten-core-gold'].includes(instance.contentId),'RAID_SOLO','公会远征目前由单个账号率队'); requireThat(instance.status === 'forming', 'INSTANCE_STARTED', '副本已开始，不能加入'); const ids = cmd.characterIds === undefined ? [c.id] : cmd.characterIds; rosterIds(ids); requireThat(instance.roster.length + ids.length <= instance.capacity, 'CAPACITY', '副本名额已满'); for (const id of ids) {
     const character = await owned(tx, c.accountId, id);
     await this.lock(tx, character, 'instance', instance.id);
     instance.roster.push({ characterId: id, accountId: c.accountId, controller: character.kind === 'hero' ? 'player' : 'companion' });
@@ -50,12 +62,20 @@ export async function startInstance(this: GameService, tx: Transaction, c: Chara
     requireThat(instance.contentVersion === this.contentVersion, 'CONTENT_VERSION', '副本内容版本暂不可用');
     let s = await context(tx, c, now, false);
     s = advance(s, now).state;
+    progressNpcWorld(s);
     s.party = [];
     s.rngState = instance.rngState;
     for (const row of instance.roster) {
         if (row.characterId === c.id)
             continue;
-        if (row.controller === 'mercenary') {
+        if (row.controller === 'npc') {
+            const resident=s.npcWorld?.residents.find((p:Rules)=>p.id===row.characterId);
+            requireThat(resident,'NPC_MISSING','冒险者档案不存在');
+            const unit=clone(resident.unit),st=stats(unit);
+            unit.hp=st.maxHp;unit.mana=st.maxMana;unit.time=s.clock;unit.location=s.location;
+            s.party.push(unit);
+        }
+        else if (row.controller === 'mercenary') {
             const contract = await tx.get<Rules>('contracts', row.characterId);
             s.party.push(clone(contract!.unit));
         }
@@ -66,18 +86,20 @@ export async function startInstance(this: GameService, tx: Transaction, c: Chara
         }
     }
     const content = instanceContents[instance.contentId as keyof typeof instanceContents];
+    // The authoritative roster has already resolved the saved lobby draft.
+    if(s.npcWorld && ['deadmines','stockades'].includes(instance.contentId))s.npcWorld.selection=s.party.map((p:Rules)=>p.id);
     requireThat([s, ...s.party].every((p: Rules) => p.level >= content.minimumLevel && p.hp > 0), 'ENTRY', '角色等级或生命值不满足副本要求');
     const savedRunId = s.dungeonSaves?.[instance.contentId]?.runId;
     content.start(s);
     if (s.dungeon && !savedRunId)
         s.dungeon.runId = instance.id;
-    if (s.dungeon)
+    if (s.dungeon || s.goldRaid?.active)
         await persistCharacter(tx, c, s, s.wallAt, `instance:${instance.id}:start`, this.id);
     instance.simulation = s;
     instance.rngState = s.rngState;
     instance.status = 'running';
     instance.sequence++;
-    instance.nextEventAt = now + simulationInterval(s.combat, (await account(tx, c.accountId)).lastSeenAt, now);
+    instance.nextEventAt = now + simulationInterval(s.combat, (await presence(tx, c.accountId)).lastSeenAt, now);
     await tx.put('instances', instance);
     await this.bumpInstanceAccounts(tx, instance, c.accountId);
 }
@@ -88,7 +110,12 @@ export async function instanceCommand(this: GameService, tx: Transaction, c: Cha
     const instance = await this.instanceFor(tx, c, id);
     requireThat(['running', 'completed'].includes(instance.status) && instance.simulation, 'INSTANCE_NOT_RUNNING', '副本尚未开始');
     requireThat(instanceCommands.has(cmd.type), 'INSTANCE_COMMAND', '请先离开实例再进行这项操作');
+    if(instance.simulation?.goldRaid?.active){
+        requireThat(goldCommands.includes(cmd.type)||['abandonCombat','cast','loot','equip','strategy','settings'].includes(cmd.type),'GOLD_PHASE','请使用金团营地的操作');
+        if(['strategy','equip'].includes(cmd.type)&&cmd.target)requireThat(!instance.simulation.party.some((p:Rules)=>p.goldNpc&&p.id===cmd.target),'GOLD_NPC','NPC自行管理装备和打法，团长只能发布团队战术');
+    }
     const action = { ...cmd }, visitor = c.id !== instance.leaderId;
+    if(instance.roster.some(r=>r.controller==='npc') && action.target && instance.roster.some(r=>r.controller==='npc'&&r.characterId===action.target))requireThat(!['equip','strategy','talent'].includes(action.type),'NPC_CONTROL','NPC 玩家自行管理装备、天赋和策略');
     requireThat((!action.actorId || action.actorId === c.id) && (!action.casterId || action.casterId === c.id), 'FORBIDDEN', '只能控制自己的角色', 403);
     if (visitor) {
         requireThat(visitorCommands.includes(action.type), 'VISITOR_COMMAND', '访客仅支持自己的策略、恢复设置、法师手动战斗施法和宠物控制', 403);
@@ -105,7 +132,8 @@ export async function instanceCommand(this: GameService, tx: Transaction, c: Cha
     }
     const deadline = await this.instanceDeadline(tx, instance);
     requireThat(now <= deadline, 'OFFLINE_PARTICIPANT', '有副本参与者已超出离线时限，请等待其上线');
-    const s = advance(instance.simulation, now, {}).state;
+    const s = instance.localSimulation ? structuredClone(instance.simulation) : advance(instance.simulation, now, {}).state;
+    resetLocalSession(instance);
     const actor = visitor ? s.party.find((unit: Rules) => unit.id === c.id) : s;
     requireThat(actor, 'INSTANCE_ACTOR', '实例中找不到该角色');
     if (visitor && action.type === 'cast') {
@@ -123,6 +151,7 @@ export async function instanceCommand(this: GameService, tx: Transaction, c: Cha
     }
     else
         instance.simulation = act(s, action, s.wallAt);
+    if(action.type==='equip' && instance.simulation!.party.some((p:Rules)=>p.guildUnit&&p.id===action.target))throw new Error('公会成员使用公会配装，请为核心队分配掉落。');
     if (action.type === 'equip')
         await this.transferEquipment(tx, c, instance.simulation!);
     instance.sequence++;
@@ -134,7 +163,7 @@ export async function persistInstance(this: GameService, tx: Transaction, instan
     await invalidateCombatPlan(tx, instance);
     const s = instance.simulation!;
     for (const row of instance.roster) {
-        if (row.controller === 'mercenary')
+        if (row.controller === 'mercenary' || row.controller === 'npc')
             continue;
         const c = await owned(tx, row.accountId, row.characterId);
         if (c.id === s.id)
@@ -145,30 +174,38 @@ export async function persistInstance(this: GameService, tx: Transaction, instan
                 await this.persistMember(tx, unit, s.wallAt, key, { clock: s.clock, wallAt: s.wallAt, location: s.location });
         }
     }
-    if (!s.combat && (!s.dungeon || s.dungeon.completedAt) && !s.dungeon?.autoAdvance && ['idle', 'dead'].includes(s.activity.type) && !s.rest)
+    if (!s.groupLoot?.pending.length && !s.goldRaid?.active && !s.combat && (!s.dungeon || s.dungeon.completedAt) && !s.dungeon?.autoAdvance && ['idle', 'dead'].includes(s.activity.type) && !s.rest)
         instance.status = 'completed';
     else
         instance.status = 'running';
     let lastSeenAt = 0;
     for (const accountId of new Set(instance.roster.filter(r => r.controller !== 'mercenary').map(r => r.accountId)))
-        lastSeenAt = Math.max(lastSeenAt, (await account(tx, accountId)).lastSeenAt);
+        lastSeenAt = Math.max(lastSeenAt, (await presence(tx, accountId)).lastSeenAt);
     instance.nextEventAt = s.wallAt + (combatExecutionMode(instance, s) === 'recorded' && now - lastSeenAt >= 5_000 ? OFFLINE_BATCH_INTERVAL_MS : simulationInterval(s.combat, lastSeenAt, now));
+    if (s.goldRaid?.active && !s.combat) instance.nextEventAt = s.wallAt + 5_000;
     if (Number.isFinite(s.activity.endsAt)) instance.nextEventAt = Math.min(instance.nextEventAt, s.wallAt + Math.max(1, s.activity.endsAt - s.clock));
+    // Auctions change on inquiry rounds. Rewriting the entire raid every second
+    // creates unnecessary serialization conflicts with manual bids.
+    if (!s.combat && s.activity.type === 'goldAuction') instance.nextEventAt = s.wallAt + Math.max(1, s.activity.endsAt - s.clock);
     const deadline = await this.instanceDeadline(tx, instance);
     if (s.wallAt < deadline) instance.nextEventAt = Math.min(instance.nextEventAt, deadline);
     else if (instance.status === 'running') {
         instance.resumeEventAt = instance.nextEventAt;
         instance.nextEventAt = PAUSED_EVENT_AT;
     }
+    if (instance.localSimulation) instance.nextEventAt = PAUSED_EVENT_AT;
     await tx.put('instances', instance);
     await economicEvent(tx, key, instance.creatorAccountId, 'instanceSettled', { instanceId: instance.id, sequence: instance.sequence });
 }
 export async function leaveInstance(this: GameService, tx: Transaction, c: Character, id: string, now: number) {
     const instance = await this.instanceFor(tx, c, id);
+    resetLocalSession(instance);
     requireThat(!instance.simulation?.combat, 'IN_COMBAT', '战斗结束后才能离开');
     await invalidateCombatPlan(tx, instance);
-    const departing = instance.roster.filter(r => r.accountId === c.accountId), ownedRows = departing.filter(r => r.controller !== 'mercenary');
+    const departing = instance.roster.filter(r => r.accountId === c.accountId), ownedRows = departing.filter(r => !['mercenary','npc'].includes(r.controller));
     requireThat(!departing.some(r => r.characterId === instance.leaderId) || instance.roster.every(r => r.accountId === c.accountId), 'LEADER', '其他账号离开后队长才能离开');
+    if(instance.simulation?.goldRaid?.active){leaveGoldRaid(instance.simulation);await this.persistInstance(tx,instance,now,`instance:${id}:gold-leave:${instance.sequence}`);}
+    if(instance.simulation?.guildRaid?.active){leaveGuildRaid(instance.simulation);await this.persistInstance(tx,instance,now,`instance:${id}:guild-leave:${instance.sequence}`);}
     if (instance.simulation?.dungeon && departing.some(r => r.characterId === instance.leaderId)) {
         // Save the authoritative route before releasing actors to personal play.
         instance.simulation = act(instance.simulation, { type: 'leaveDungeon' }, instance.simulation.wallAt);
@@ -199,30 +236,6 @@ export async function leaveInstance(this: GameService, tx: Transaction, c: Chara
     await tx.put('instances', instance);
     await this.bumpInstanceAccounts(tx, instance, c.accountId);
 }
-export async function hireMercenary(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) { const instance = await this.instanceFor(tx, c, cmd.instanceId); const template = mercenaryTemplates[cmd.templateId as keyof typeof mercenaryTemplates]; requireThat(template, 'TEMPLATE', '佣兵模板不存在', 400); const businessKey = `contract:${instance.id}:${c.id}:${template.id}`; if (await tx.get('contracts', businessKey))
+export async function hireMercenary(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) { const instance = await this.instanceFor(tx, c, cmd.instanceId); requireThat(!['molten-core','molten-core-gold'].includes(instance.contentId),'RAID_GUILD','公会远征已由公会提供支援，无需雇佣佣兵'); const template = mercenaryTemplates[cmd.templateId as keyof typeof mercenaryTemplates]; requireThat(template, 'TEMPLATE', '佣兵模板不存在', 400); const businessKey = `contract:${instance.id}:${c.id}:${template.id}`; if (await tx.get('contracts', businessKey))
     return; requireThat(instance.status === 'forming' && instance.roster.length < instance.capacity, 'CAPACITY', '当前不能雇佣佣兵'); let s = await context(tx, c, now, false); requireThat(s.money >= template.cost, 'BALANCE', '佣金不足'); s.money -= template.cost; await persistAssets(tx, c, s, businessKey, this.id); const unit = newState(template.name, template.classId, template.raceId, this.seed(), now, businessKey); unit.level = c.rules.level; const st: Rules = stats(unit); unit.hp = st.maxHp; unit.mana = st.maxMana; await tx.insert('contracts', { id: businessKey, businessKey, instanceId: instance.id, accountId: c.accountId, payerId: c.id, templateId: template.id, contentVersion: this.contentVersion, cost: template.cost, status: 'paid', unit: this.member(unit) }); instance.roster.push({ characterId: businessKey, accountId: c.accountId, controller: 'mercenary' }); instance.sequence++; await tx.put('instances', instance); await economicEvent(tx, businessKey, c.accountId, 'mercenaryHired', { instanceId: instance.id }); await this.bumpInstanceAccounts(tx, instance, c.accountId); }
-export async function acquireInstanceLease(this: GameService, instanceId: string, workerId: string, now = this.now(), ttl = 10000) { requireThat(ttl > 0 && Number.isSafeInteger(ttl), 'LEASE', '租约时长无效', 400); return this.store.transaction(async (tx) => { const instance = await tx.get<Instance>('instances', instanceId); requireThat(instance, 'NOT_FOUND', '副本不存在', 404); const old = await tx.get<InstanceLease>('instance_leases', instanceId); requireThat(!old || old.expiresAt <= now || old.workerId === workerId, 'LEASE_HELD', '其他执行者持有副本租约'); const epoch = old && old.workerId === workerId && old.expiresAt > now ? old.epoch : instance.epoch + 1; instance.epoch = epoch; await tx.put('instances', instance); const lease = { id: instanceId, instanceId, workerId, epoch, expiresAt: now + ttl }; await tx.put('instance_leases', lease); return lease; }); }
-export async function advanceInstance(this: GameService, instanceId: string, workerId: string, epoch: number, now = this.now()) {
-    return this.store.transaction(async tx => {
-        const lease = await tx.get<InstanceLease>('instance_leases', instanceId);
-        const instance = await tx.get<Instance>('instances', instanceId);
-        requireThat(lease && instance && lease.workerId === workerId && lease.epoch === epoch && instance.epoch === epoch && lease.expiresAt > now, 'STALE_EPOCH', '副本执行租约已失效');
-        if (instance.status !== 'running' || instance.nextEventAt > now) return false;
-        requireThat(instance.contentVersion === this.contentVersion, 'CONTENT_VERSION', '副本内容版本暂不可用');
-        let lastSeenAt = 0;
-        for (const id of new Set(instance.roster.filter(r => r.controller !== 'mercenary').map(r => r.accountId)))
-            lastSeenAt = Math.max(lastSeenAt, (await account(tx, id)).lastSeenAt);
-        const key = `instance:${instance.id}:sequence:${instance.sequence + 1}`;
-        const deadline = await this.instanceDeadline(tx, instance);
-        const predicted = await consumeCombatPlan(tx, instance, Math.min(now, deadline), this.contentVersion);
-        const offline = combatExecutionMode(instance, instance.simulation!) === 'recorded' && now - lastSeenAt >= 5_000;
-        const batch = combatExecutionMode(instance, instance.simulation!) === 'recorded' && (offline || now - instance.simulation!.wallAt > 2_000);
-        const result = advance(predicted || instance.simulation!, Math.min(now, deadline), {maxTicks: batch ? OFFLINE_BATCH_TICKS : simulationTickBudget(lastSeenAt, now)});
-        instance.simulation = result.state;
-        instance.rngState = result.state.rngState;
-        instance.sequence++;
-        await this.persistInstance(tx, instance, now, key);
-        await this.bumpInstanceAccounts(tx, instance);
-        return true;
-    });
-}
+export async function acquireInstanceLease(this: GameService, instanceId: string, workerId: string, now = this.now(), ttl = 10000) { requireThat(ttl > 0 && Number.isSafeInteger(ttl), 'LEASE', '租约时长无效', 400); return this.store.transaction(async (tx) => { const instance = await tx.get<Instance>('instances', instanceId); requireThat(instance, 'NOT_FOUND', '副本不存在', 404); const old = await tx.get<InstanceLease>('instance_leases', instanceId); requireThat(!old || old.expiresAt <= now || old.workerId === workerId, 'LEASE_HELD', '其他执行者持有副本租约'); const epoch = old && old.workerId === workerId && old.expiresAt > now ? old.epoch : instance.epoch + 1; instance.epoch = epoch; await tx.put('instances', instance); const lease = { id: instanceId, instanceId, workerId, epoch, expiresAt: now + ttl }; await tx.put('instance_leases', lease); return lease; }, {attempts:1}); }

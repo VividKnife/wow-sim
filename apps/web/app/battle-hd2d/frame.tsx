@@ -29,12 +29,21 @@ export function BattleFrames({scene,children}:{scene:BattleScene;children:React.
 export function CameraRig(){
  const {camera,size}=useThree();
  const frame=useBattleFrame(),target=useMemo(()=>new Vector3(),[]),encounter=useRef<string|undefined|null>(null);
+ const desired=useMemo(()=>new Vector3(),[]);
+ const cached=useRef<{layout:BattleLayout;units:BattleScene['units'];width:number;height:number;fit:ReturnType<typeof cameraFit>}|null>(null);
  // R3F size includes canvas top/left, which change while scrolling. Only this
  // frame loop owns the camera; a ResizeObserver update must never reset it.
  useFrame((_,delta)=>{
-  const f=frame.current,fit=cameraFit(f.layout,f.scene.units,size);
+  const f=frame.current;
+  // Fit the camera once per simulation sample/resize. Its interpolation below
+  // still runs every display frame without allocating vectors or actor arrays.
+  let entry=cached.current;
+  if(!entry||entry.layout!==f.scene.layout||entry.units!==f.scene.units||entry.width!==size.width||entry.height!==size.height){
+   entry={layout:f.scene.layout,units:f.scene.units,width:size.width,height:size.height,fit:cameraFit(f.scene.layout,f.scene.units,size)};cached.current=entry;
+  }
+  const fit=entry.fit;
   const blend=f.scene.reducedMotion||encounter.current!==f.scene.encounterId?1:1-Math.exp(-delta*3);
-  target.lerp(new Vector3(fit.x,.7,fit.z),blend);
+  target.lerp(desired.set(fit.x,.7,fit.z),blend);
   camera.position.set(target.x,target.y+40*CAMERA_TILT,target.z+40*Math.sqrt(1-CAMERA_TILT**2));camera.lookAt(target);
   const c=camera as OrthographicCamera;c.zoom+=(fit.zoom-c.zoom)*blend;c.updateProjectionMatrix();
   encounter.current=f.scene.encounterId;

@@ -68,10 +68,12 @@ export function BattleUnit({unit,scene,skills,onSelect}:{unit:BattleUnitData;sce
  return <group ref={group} onClick={event=>{event.stopPropagation();onSelect(unit.id);}}>
   <mesh rotation={[-Math.PI/2,0,0]} position={[0,.02,0]} scale={[height*.28,height*.17,1]}><circleGeometry args={[1,32]}/><meshBasicMaterial color="#071017" transparent opacity={.32} depthWrite={false}/></mesh>
   {!dead&&<mesh ref={ring} rotation={[-Math.PI/2,0,0]} position={[0,.04,0]}><ringGeometry args={[height*.26,height*(selected?.3:.275),48]}/><meshBasicMaterial color={selected?'#ffe0a4':unit.foe?'#df896b':'#85d2b0'} transparent opacity={selected?.95:.45} depthWrite={false} toneMapped={false}/></mesh>}
+  {!dead&&unit.marker&&<mesh rotation={[-Math.PI/2,0,0]} position={[0,.055,0]}><ringGeometry args={[height*.34,height*.38,48]}/><meshBasicMaterial color={unit.marker==='focus'?'#f48c6a':'#c9a1ff'} transparent opacity={.9} depthWrite={false} toneMapped={false}/></mesh>}
   {unit.totemUnit?<Totem height={height}/>:<Sprite unit={unit} height={height} clock={scene.clock} school={skill?.school}/>}
   <Html position={[0,height*1.15/Math.sqrt(1-CAMERA_TILT**2),0]} center zIndexRange={[30,0]} style={{pointerEvents:'auto'}}>
-   <button type="button" onClick={()=>onSelect(unit.id)} aria-label={`${unit.name}，生命 ${Math.max(0,Math.ceil(unit.hp))}，${condition||'可行动'}`} aria-pressed={selected} className={`hd2d-unit-label ${unit.foe?'enemy':'ally'} ${selected?'selected':''} ${dead?'dead':''}`} data-unit-id={unit.id}>
+   <button type="button" onClick={()=>onSelect(unit.id)} aria-label={`${unit.name}，生命 ${Math.max(0,Math.ceil(unit.hp))}，${dead?'已倒下':condition||'可行动'}`} aria-pressed={selected} className={`hd2d-unit-label ${unit.foe?'enemy':'ally'} ${selected?'selected':''} ${dead?'dead':''}`} data-unit-id={unit.id}>
     <span className="hd2d-unit-name">{unit.name}</span>
+    {unit.marker&&!dead&&<small className={`hd2d-objective ${unit.marker}`}>{unit.marker==='focus'?'集火':'控场'}</small>}
     {!dead&&<><span className="hd2d-health"><i style={{width:`${Math.max(0,Math.min(100,unit.hp/Math.max(1,unit.maxHp)*100))}%`}}/></span><span className="hd2d-action"><i style={{width:`${(unit.cast?actionProgress(unit.cast.startedAt,unit.cast.until,scene.clock):unit.swing||0)*100}%`,background:unit.cast?'#a9ceec':'#c7ad71'}}/></span></>}
     {condition&&<small className="hd2d-condition">{condition}</small>}
     {cue&&!dead&&<small ref={skillLabel} className="hd2d-skill" title={cue.name} style={{color:schoolColor(cue.school)}}>{cue.icon?<img src={cue.icon} alt="" width={18} height={18}/>:<span className="hd2d-skill-placeholder" aria-hidden="true">{cue.name.slice(0,1)}</span>}<span className="hd2d-skill-name">{cue.name}</span></small>}

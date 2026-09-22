@@ -1,3 +1,5 @@
+import {enterGoldRaid} from './rules/gold-raid.js';
+import {enterGuildRaid} from './rules/guild-raid.js';
 import {dungeonDefinitions} from './rules/dungeon-registry.js';
 import { enterDungeon } from './rules/dungeon.js';
 import { startCombat } from './rules/combat.js';
@@ -6,6 +8,8 @@ import type { Rules } from './model.ts';
 // Larger capacities validate orchestration; they do not claim finished raid content.
 export const instanceContents = Object.freeze({
     ...Object.fromEntries(Object.values(dungeonDefinitions).map(d => [d.id, {id:d.id,name:d.name,minimumLevel:d.minimumLevel,start(state:Rules){enterDungeon(state,d.id);}}])),
+    'molten-core-gold': {id:'molten-core-gold',name:'熔火之心·金团',minimumLevel:60,start:enterGoldRaid},
+    'molten-core': {id:'molten-core',name:'熔火之心',minimumLevel:60,start:enterGuildRaid},
     'northshire-skirmish': { id: 'northshire-skirmish', name: '北郡遭遇', minimumLevel: 1, start(state: Rules) { startCombat(state, [6]); } },
 });
 export const mercenaryTemplates = Object.freeze({

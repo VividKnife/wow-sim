@@ -1,6 +1,6 @@
 # wow-sim
 
-面向手机网页的 2D 魔兽冒险模拟器。目标是以 2019 年 Classic 首发阶段为基础，保留角色成长、旅行、配装、队伍和副本策略。权威状态由 Node 游戏服务与 PostgreSQL 保存，后台 worker 独立推进到期活动和实例。
+面向手机网页的 2D 魔兽冒险模拟器。目标是以 2019 年 Classic 首发阶段为基础，保留角色成长、旅行、配装、队伍和副本策略。单人活动与单账号副本可由浏览器 Worker 接管模拟，Node 游戏服务与 PostgreSQL 保存检查点及资产；后台 worker 推进多人实例和未交给本地的活动。
 
 ## 当前进度
 
@@ -24,6 +24,7 @@
 - `apps/web` 负责界面、独立账号登录和签名代理；只访问认证表，不直接读写游戏存档。
 - `apps/game-server` 提供 HTTP/WebSocket 边界，`apps/game-worker` 主动结算活动与实例。
 - `packages/game-domain` 集中领域服务与确定性规则，`packages/game-data/data` 保存静态内容，`packages/persistence` 提供 PostgreSQL 事务存储。
+- 数据库按资产结算、只读查询、心跳与后台模拟分层，详见 [一致性与并发策略](docs/development/database-consistency.md)。
 - 数值证据记录的结构校验：区分未知、估计、参考与已验证，检查来源及版本。
 - 可保存恢复的确定性随机状态。
 - 按事件推进的时间线，支持同时间排序、分段结算、处理预算和 JSON 快照恢复。
@@ -91,10 +92,14 @@ console.log(result.state.world.location); // camp
 
 ## 资料与规划
 
+- [60级公会团本正式玩法](docs/development/guild-raid.md)：主游戏创建60级远征角色，在地下城集结25人公会，挑战双首领、拾取装备并保存周进度。
+- [熔火之心25人试玩](docs/development/molten-core-demo.md)：运行 `npm run demo:molten-core`，打开 `http://127.0.0.1:5189/molten-core-demo.html`，单人率领公会挑战鲁西弗隆和玛格曼达。
+- [60级团本设计与编队原型](docs/design/level-60-raids.md)：25人、2坦5疗18输出基线、公会补位与可选合作；附独立沙盘，尚未接入正式团本。
 - [重构后架构复核](docs/superpowers/specs/2026-09-16-post-refactor-architecture-review.md)：最终目标对照、新复现问题与下一轮收口门槛。
 - [基础架构重构交付记录](docs/development/foundation-refactor.md)：当前模块边界、验证结果、测量和交付限制。
 - [游戏运行说明](docs/development/game-runtime.md)：PostgreSQL、Node API、worker 与 Web 的本地配置。
 - [战斗运行与回放](docs/development/combat-execution.md)：单人预模拟、多人实时、挂机批量结算与性能验证。
+- [本地模拟与战斗渲染](docs/development/local-simulation.md)：单人浏览器执行、异步检查点、离线补算与高频战斗订阅。
 - [首版设计](docs/superpowers/specs/2026-09-15-wow-sim-first-playable-design.md)：人类法师 1—20 级，四名 AI 队友与死亡矿井。
 - [实施路线](docs/superpowers/plans/2026-09-15-wow-sim-roadmap.md)：数据、战斗、活动、存档、副本和手机界面的依赖顺序。
 - [模拟基础计划](docs/superpowers/plans/2026-09-15-simulation-foundation.md)：本阶段的接口和测试要求。
@@ -104,6 +109,10 @@ console.log(result.state.world.location); // camp
 
 ## 后续开发
 
+18级新增「冒险者大厅」：在队伍或地下城页面选择自有队友、NPC玩家或混编五人小队。24位固定NPC支持好友、持久装备、自动成长与需求/贪婪分装，野外队伍和现有队友培养保留。当前接入死亡矿井、暴风城监狱；说明与独立试玩见 [NPC玩家与副本组队](docs/development/npc-world.md)。
+
 后续世界内容可沿用当前职业系统，逐步扩展区域、原版任务链与副本。职业清单保留来源和执行路径，便于增加内容时检查依赖。
 
 2026-09-16 坐骑更新：按最新玩法要求，普通马与骑术在 20 级解锁。世界页「坐骑 → 马匹收藏与骑术」可前往东谷伐木场学习、购买和骑乘；普通马使可骑乘的户外路段移速提高 60%。迅捷马保持 60 级门槛。详见 [坐骑实现与资料边界](docs/research/import/mounts-reference.md)。
+
+- [金团模式](docs/design/gold-raids.md)：带自己的五人队招募20名NPC，公布分金规则、检查装备天赋、公开竞拍并按贡献分金。

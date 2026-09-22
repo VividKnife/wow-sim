@@ -1,4 +1,6 @@
 import {setCombatPosition} from './combat-area.js';
+import {pvpApplyControl,pvpAbilityAllowed} from './pvp-runtime.js';
+import {arenaSight} from '../../../sim-core/src/arena-space.js';
 import {weaponAttack} from './weapon-attacks.js';
 import {weaponDamage,effectiveArmor} from './companion-combat.js';
 import {spellPowerBonus} from './spell-scaling.js';
@@ -18,6 +20,7 @@ import {distance} from '../../../sim-core/src/geometry.js';
 import {moveToward,moveAway,inSpellRange,effectiveSpeed} from './combat-space.js';
 import {controlled,hasAura,addCombatAura} from '../../../sim-core/src/combat-auras.js';
 import {recordMetric} from './combat-metrics.js';
+import {ammoCount,consumeHunterAmmo,consumesHunterAmmo} from './ammunition.js';
 
 const heals=new Set(['Holy Light','Flash of Light','Healing Touch','Regrowth','Healing Wave','Lesser Healing Wave','Lesser Heal','Heal','Flash Heal']);
 const hots=new Set(['Renew','Rejuvenation']);
@@ -79,9 +82,9 @@ function applyClassEffect(s,c,target,sp,actors,api){
  if(name==='Rip'){target.dots.push({caster:c.id,spellId:sp.Id,school:0,amount:effectRange(c,sp)[0]+sp.EffectPointsPerComboPoint1*c.combo,next:s.clock+2000,interval:2000,remaining:Math.floor(sp.durationMs/2000),label:nameOf('spells',sp.Id)});c.combo=0;return;}
  if(name==='Growl'){target.threat[c.id]=Math.max(0,...Object.values(target.threat));target.tauntedBy=c.id;target.tauntUntil=s.clock+sp.durationMs;target.target=c.id;return;}
  if(name.endsWith('Totem')){const element=name==='Searing Totem'?'fire':name==='Healing Stream Totem'?'water':'earth';c.totems??={};c.totems[element]={spell:sp.Id,name,until:s.clock+sp.durationMs,next:s.clock+2000,position:c.position,positionY:c.positionY||0};return;}
- if(name==='Hammer of Justice'||name==='Gouge'){if(api.lands(s,c,target,sp)){target.stunUntil=s.clock+sp.durationMs+(name==='Gouge'?500*(r['Improved Gouge']||0):0);target.cast=null;}return;}
- if(name==='Kick'){if(target.cast){target.schoolLockouts??={};target.schoolLockouts[spells[target.cast.spell]?.School]=s.clock+5000;target.cast=null;target.nextAction=s.clock;log(s,c.name+' 打断了 '+target.name,'interrupt',{actorId:c.id,targetId:target.id,spellId:sp.Id});}return;}
- if(name==='Fear'){if(api.lands(s,c,target,sp))addCombatAura(target,{spell:sp.Id,effect:1,type:7,until:s.clock+sp.durationMs,caster:c.id},s.clock);return;}
+ if(name==='Hammer of Justice'||name==='Gouge'){if(api.lands(s,c,target,sp)){const duration=sp.durationMs+(name==='Gouge'?500*(r['Improved Gouge']||0):0);if(!pvpApplyControl(s,c,target,sp,12,duration))target.stunUntil=s.clock+duration;target.cast=null;}return;}
+ if(name==='Kick'){if(target.cast&&(!target.pvp||api.lands(s,c,target,sp))){target.schoolLockouts??={};target.schoolLockouts[spells[target.cast.spell]?.School]=s.clock+5000;target.cast=null;target.nextAction=s.clock;log(s,c.name+' 打断了 '+target.name,'interrupt',{actorId:c.id,targetId:target.id,spellId:sp.Id});}return;}
+ if(name==='Fear'){if(api.lands(s,c,target,sp)&&!pvpApplyControl(s,c,target,sp,7))addCombatAura(target,{spell:sp.Id,effect:1,type:7,until:s.clock+sp.durationMs,caster:c.id},s.clock);return;}
  if(name==='Concussive Shot'){if(api.lands(s,c,target,sp))addCombatAura(target,{spell:sp.Id,effect:1,type:33,amount:-50,until:s.clock+sp.durationMs},s.clock);return;}
  if(name==='Evasion'){addCombatAura(c,{spell:sp.Id,effect:1,type:49,amount:50,until:s.clock+sp.durationMs},s.clock);return;}
  if(name==='Sprint'){c.sprintUntil=s.clock+sp.durationMs;return;}
@@ -94,6 +97,7 @@ export function decideClass(s,c,e,actors,api,rules=c.rules||defaultClassRules(c.
  for(const rule of rules){
   const id=rule.enabled&&knownRank(c,rule.spell),sp=id&&spellInfo(c,id);if(!sp||!supportedSpellNames.has(sp.SpellName)||coreHandled.has(sp.SpellName))continue;
   const name=sp.SpellName;if(sp.School>0&&(c.silenceUntil>s.clock||hasAura(c,27,s.clock))||(c.schoolLockouts?.[sp.School]||0)>s.clock)continue;if(!ruleMatches(s,c,e,rule,sp)||!spellReady(c,sp,s.clock))continue;
+  if(consumesHunterAmmo(c,name)&&ammoCount(c)<1)continue;
   if(c.talentProcs?.spiritOfRedemption?.until>s.clock&&!['heal','dispel'].includes(classAbilityKind(sp)))continue;
   if(c.classId===8&&!['Cold Snap'].includes(name)&&!extendedSpellNames.has(name)&&!talentActiveNames.has(name)&&!racialActiveNames.has(name))continue;
   const prepared=prepareClassAbility(s,c,e,sp,actors);if(prepared===null)continue;
@@ -124,10 +128,12 @@ export function decideClass(s,c,e,actors,api,rules=c.rules||defaultClassRules(c.
   if(['Demoralizing Shout','Demoralizing Roar','Thunder Clap','Wing Clip','Insect Swarm'].includes(name)&&e.auras?.some(a=>a.caster===c.id&&spells[a.spell]?.SpellName===name&&a.until>s.clock+1500))continue;
   if(name==='Consecration'&&(s.groundEffects||[]).some(a=>a.caster===c.id&&a.spell===id&&a.until>s.clock+1500))continue;
   const pool=sp.PowerType===1?'rage':sp.PowerType===3?'energy':[4294967294,-2].includes(sp.PowerType)?'hp':'mana';if((c[pool]||0)<sp.mana||pool==='hp'&&c.hp<=sp.mana)continue;const reagents=Array.from({length:8},(_,i)=>({id:sp['Reagent'+(i+1)],count:sp['ReagentCount'+(i+1)]})).filter(r=>r.id>0&&r.count>0);if(c===s&&reagents.some(r=>usableCount(s,r.id)<r.count))continue;
+  if(!pvpAbilityAllowed(c,target,sp,s.clock))continue;
   if(target===e&&!strategyAllows(s,c,e,sp,rule))continue;
   if(target!==c&&!inSpellRange(c,target,sp)){if(target===e&&!mayApproachForSpell(s,c,target,sp))continue;if(distance(c,target)<sp.minRange){if(effectiveSpeed(c,s.clock)<=effectiveSpeed(target,s.clock))continue;moveAway(s,c,target,s.clock);}else moveToward(s,c,target,sp.range||5,s.clock);return true;}
   if(['Maul','Raptor Strike'].includes(name)){c.queuedStrike=id;return false;}
   if(c.form&&sp.PowerType===0&&!['Bear Form','Cat Form'].includes(name))c.form=null;
+  if(consumesHunterAmmo(c,name)&&!consumeHunterAmmo(c))continue;
   const talentCast=beginTalentCast(s,c,sp),timing=beginSpellTiming(c,sp,s.clock,{channel:name==='Tame Beast'||!!prepared?.channel,pool});if(c===s)for(const r of reagents)consume(s,r.id,r.count);
   s.combat.casts++;log(s,`${c.name} 施放 ${nameOf('spells',id)}`,'cast',{actorId:c.id,targetId:target.id,spellId:id,school:sp.School,duration:sp.castMs});
   if(name==='Tame Beast'){c.cast={spell:id,target:e.id,talentCast,timing,startedAt:s.clock,until:s.clock+sp.durationMs,next:s.clock+1000,interval:1000,channel:true,taming:true};c.nextAction=c.cast.until;}else if(prepared?.channel){const interval=classChannelInterval(sp);c.cast={spell:id,target:target.id,talentCast,timing,startedAt:s.clock,until:s.clock+sp.durationMs,next:s.clock+interval,interval,channel:true,extendedChannel:true,center:{x:e.position,y:e.positionY||0},friendly:target===c||actors.includes(target)};c.nextAction=c.cast.until;endTalentCast(s,c,sp,talentCast,{...api,actors,stats,rng,healAmount},{target});}
@@ -152,9 +158,10 @@ export function tickClassEffects(s,actors,api){
 
 export function petTick(s,pet,actors,damage){
  const owner=actors.find(c=>c.id===pet.ownerId);if(pet.mode==='passive'||pet.mode==='stay'||pet.mode==='follow'){if(pet.mode!=='stay'&&owner)moveToward(s,pet,owner,3,s.clock);return;}if(!owner||owner.hp<=0||pet.hp<=0||controlled(pet,s.clock))return;
- const e=s.combat.enemies.find(e=>e.id===pet.targetId&&e.hp>0)||s.combat.enemies.find(e=>e.hp>0&&!e.removed&&!protectCombatTarget(s,e));if(!e)return;
+ const e=s.combat.enemies.find(e=>e.id===(pet.targetId||owner.arenaTargetId)&&e.hp>0&&!protectCombatTarget(s,e))||s.combat.enemies.find(e=>e.hp>0&&!e.removed&&!protectCombatTarget(s,e));if(!e)return;
  if(!strategyAllows(s,owner,e,{SpellName:'Pet Attack'})){pet.cast=null;return;}
  pet.ownerMasterDemonologist=ranks(owner)['Master Demonologist']||0;
+ if(!arenaSight(pet,e)){moveToward(s,pet,e,pet.kind==='imp'?25:5,s.clock);return;}
  if(petSpellTick(s,pet,owner,e,actors,{damage:(s,p,t,v,l,m,d)=>damage(s,p,t,v,'宠物 · '+l,m,{...d,ownerId:owner.id}),healAmount,stats,rng}))return;
  pet.ownerMasterDemonologist=ranks(owner)['Master Demonologist']||0;const range=pet.kind==='imp'?25:5;if(distance(pet,e)>range){moveToward(s,pet,e,range,s.clock);return;}if(pet.nextSwing>s.clock)return;pet.nextSwing=s.clock+pet.swing;
  const r=ranks(owner),mod=talentPetModifiers(owner,pet),mult=mod.damage*petHappinessMultiplier(pet)*(owner.raceId===2?1.05:1),critical=rng(s)<.05+mod.crit;pet.nextSwing=s.clock+pet.swing/(1+mod.haste);const before=e.hp;

@@ -1,3 +1,4 @@
+import {pvpTriggeredControl} from './pvp-runtime.js';
 import {applySpellAura} from './spell-aura-lifecycle.js';
 import {resetSpellCooldowns} from './spell-timing.js';
 import {spells,lookup,talents,items} from './catalog.js';
@@ -54,7 +55,7 @@ const eventConditions={
 function triggerSource(s,c,target,source,api){
  for(let i=1;i<=3;i++){const id=source['EffectTriggerSpell'+i],sp=spells[id];if(!sp)continue;
   for(let j=1;j<=3;j++){const aura=sp['EffectApplyAuraName'+j],amount=sp['EffectBasePoints'+j]+1,ms=duration(sp)||5000;
-   if(!target)continue;if(aura===12){target.stunUntil=Math.max(target.stunUntil||0,s.clock+ms);target.cast=null;}
+   if(!target)continue;if([12,26].includes(aura)&&pvpTriggeredControl(s,c,target,id,aura,ms))continue;if(aura===12){target.stunUntil=Math.max(target.stunUntil||0,s.clock+ms);target.cast=null;}
    else if(aura===26)target.rootUntil=Math.max(target.rootUntil||0,s.clock+ms);
    else if(aura===27)applySpellAura(target,{spell:id,effect:j,type:aura,amount,misc:sp['EffectMiscValue'+j],dispel:sp.Dispel,mechanic:sp['EffectMechanic'+j]||sp.Mechanic,positive:false,caster:c.id,until:s.clock+ms},s.clock);
    else if(aura===33){target.slowUntil=s.clock+ms;target.movementSlows??=[];target.movementSlows.push({caster:c.id,spell:id,until:s.clock+ms,amount:Math.abs(amount)/100});}
@@ -81,7 +82,7 @@ export function onTalentEvent(s,c,event,api={}){
  }
  if(e.type==='damage'){
   if(!e.periodic&&sp.School===2&&e.target){
-   if(chance('Impact',.02*r.Impact)){e.target.stunUntil=now+2000;e.target.cast=null;e.target.nextAction=now;}
+   if(chance('Impact',.02*r.Impact)){if(!pvpTriggeredControl(s,c,e.target,12355,12,2000)){e.target.stunUntil=now+2000;e.target.cast=null;e.target.nextAction=now;}}
    if(e.critical&&r.Ignite){
     e.target.dots??=[];const previous=e.target.dots.find(d=>d.spellId===12654&&d.caster===c.id&&d.remaining>0);
     const bank=(previous?previous.amount*previous.remaining:0)+amount*.08*r.Ignite;
@@ -92,7 +93,7 @@ export function onTalentEvent(s,c,event,api={}){
   if(c.classId===8&&!e.periodic&&sp.School>0&&chance('Arcane Concentration',.02*r['Arcane Concentration']))proc(c,'clearcasting',now+15000);
   if(!e.periodic&&e.target?.auras)e.target.auras=e.target.auras.filter(a=>!(a.type===87&&a.charges>0&&(a.misc&(1<<(sp.School||0)))&&!--a.charges));
   if(name==='Blizzard'&&r['Improved Blizzard']&&e.target){e.target.movementSlows??=[];e.target.movementSlows=e.target.movementSlows.filter(a=>a.spell!==sp.Id);e.target.movementSlows.push({spell:sp.Id,caster:c.id,amount:[0,.3,.5,.65][r['Improved Blizzard']],until:now+1500+1000*(r.Permafrost||0)});}
-  if(['Rain of Fire','Hellfire','Soul Fire'].includes(name)&&chance('Pyroclasm',(.13*r.Pyroclasm)/(e.periodic?Math.max(1,(sp.durationMs||15000)/(sp.EffectAmplitude1||1000)):1))&&e.target){e.target.stunUntil=now+3000;e.target.cast=null;}
+  if(['Rain of Fire','Hellfire','Soul Fire'].includes(name)&&chance('Pyroclasm',(.13*r.Pyroclasm)/(e.periodic?Math.max(1,(sp.durationMs||15000)/(sp.EffectAmplitude1||1000)):1))&&e.target){if(!pvpTriggeredControl(s,c,e.target,18093,12,3000)){e.target.stunUntil=now+3000;e.target.cast=null;}}
   if(e.periodic&&['Corruption','Drain Life'].includes(name)&&chance('Nightfall',.02*r.Nightfall))proc(c,'nightfall',now+10000);
   if(e.critical&&!e.periodic&&sp.School>0&&r["Nature's Grace"])proc(c,'naturesGrace',now+15000);
   if(e.critical&&e.melee){
@@ -110,7 +111,7 @@ export function onTalentEvent(s,c,event,api={}){
   if(e.melee&&active('reckoning')){const charges=c.talentProcs.reckoning.charges;delete c.talentProcs.reckoning;for(let i=0;i<charges;i++)damage(s,c,e.target,e.weaponDamage||amount,20178,api);}
   if(!e.periodic&&[2,3,4].includes(sp.School)&&chance('Elemental Focus',.1))proc(c,'clearcasting',now+15000);
   if(e.melee&&chance('Sword Specialization',.01*r['Sword Specialization'])&&[7,8].includes(items[c.equipment?.[16]?.id]?.subclass))damage(s,c,e.target,e.weaponDamage||amount,16459,api);
-  if(e.melee&&chance('Mace Specialization',.01*r['Mace Specialization'])&&[4,5].includes(items[c.equipment?.[16]?.id]?.subclass)){e.target.stunUntil=now+3000;e.target.cast=null;}
+  if(e.melee&&chance('Mace Specialization',.01*r['Mace Specialization'])&&[4,5].includes(items[c.equipment?.[16]?.id]?.subclass)){if(!pvpTriggeredControl(s,c,e.target,5530,12,3000)){e.target.stunUntil=now+3000;e.target.cast=null;}}
   if(sp.School===5&&e.target?.vampiricEmbrace?.caster===c.id)for(const ally of api.actors||[c])heal(s,c,ally,amount*(.2+.05*(r['Improved Vampiric Embrace']||0)),15286,api);
   if(name==='Drain Mana'&&r['Improved Drain Mana'])damage(s,c,e.target,amount*.15*r['Improved Drain Mana'],sp.Id,api,5);
   for(const key of ['sweepingStrikes','bladeFlurry'])if(e.melee&&active(key)){const second=s.combat?.enemies?.find(t=>t.hp>0&&t.id!==e.target?.id&&!t.removed&&Math.hypot((t.position||0)-(c.position||0),(t.positionY||0)-(c.positionY||0))<=5);if(second){damage(s,c,second,amount,sp.Id,api);if(key==='sweepingStrikes'&&!--c.talentProcs[key].charges)delete c.talentProcs[key];}}
@@ -142,7 +143,7 @@ export function onTalentEvent(s,c,event,api={}){
   }
   if(e.blocked&&chance('Shield Specialization',.2*r['Shield Specialization']))restore(c,'rage',10,api);
   if(e.dodged&&chance('Setup',r.Setup/3)){c.combo=Math.min(5,(c.combo||0)+1);c.comboTarget=e.target?.id;}
-  if(active('naturesGrasp')&&e.melee&&random(s,api)<.35+[0,.15,.3,.45,.65][r["Improved Nature's Grasp"]||0]){e.target.rootUntil=now+27000;delete c.talentProcs.naturesGrasp;}
+  if(active('naturesGrasp')&&e.melee&&random(s,api)<.35+[0,.15,.3,.45,.65][r["Improved Nature's Grasp"]||0]){if(!pvpTriggeredControl(s,c,e.target,19975,26,27000))e.target.rootUntil=now+27000;delete c.talentProcs.naturesGrasp;}
   const ward=sp.School===2?'Improved Fire Ward':sp.School===4?'Frost Warding':null;
   if(ward&&r[ward]&&(c.absorb?.until>now||c.auras?.some(a=>a.type===69&&a.until>now))&&random(s,api)<.1*r[ward]){damage(s,c,e.target,amount,sp.Id,api,sp.School);amount=0;}
   if(amount>=c.hp&&c.hp>0&&r['Spirit of Redemption']&&!c.spiritRedemptionUsed){c.spiritRedemptionUsed=true;c.hp=1;proc(c,'spiritOfRedemption',now+10000);return 0;}
@@ -171,7 +172,7 @@ export function onTalentEvent(s,c,event,api={}){
 export function onPetTalentEvent(s,owner,pet,event,api={}){
  const r=ranks(owner),now=s.clock;if(event.type!=='damage')return;
  if(event.critical&&r.Frenzy&&random(s,api)<.2*r.Frenzy)proc(pet,'frenzy',now+8000,{stats:{meleeHastePct:.3}});
- if(pet.talentProcs?.intimidation?.until>now&&event.target){event.target.stunUntil=now+3000;event.target.cast=null;event.target.threat??={};event.target.threat[pet.id]=(event.target.threat[pet.id]||0)+(event.amount||0)*2;delete pet.talentProcs.intimidation;}
+ if(pet.talentProcs?.intimidation?.until>now&&event.target){if(!pvpTriggeredControl(s,pet,event.target,24394,12,3000)){event.target.stunUntil=now+3000;event.target.cast=null;}event.target.threat??={};event.target.threat[pet.id]=(event.target.threat[pet.id]||0)+(event.amount||0)*2;delete pet.talentProcs.intimidation;}
 }
 function consumableProcs(sp){const name=sp.SpellName||'',baseCast=lookup.SpellCastTimes[sp.CastingTimeIndex]?.baseMs||sp.castMs||0,cost=(sp.ManaCost||0)+(sp.ManaCostPercentage||0);return{clearcasting:cost>0,nightfall:name==='Shadow Bolt',naturesGrace:baseCast>0,presenceOfMind:baseCast>0&&baseCast<=10000,naturesSwiftness:sp.School===3&&baseCast>0,elementalMastery:[2,3,4].includes(sp.School)&&cost>0,innerFocus:cost>0,coldBlood:sp.School===0&&sp.DmgClass===2,divineFavor:['Holy Light','Flash of Light','Holy Shock'].includes(name),felDomination:name.startsWith('Summon '),amplifyCurse:name.startsWith('Curse of'),remorseless:['Sinister Strike','Backstab','Ambush','Ghostly Strike'].includes(name)};}
 export function beginTalentCast(s,c,sp){const conditions=consumableProcs(sp);return{startedAt:s.clock,spellId:sp.Id,procs:Object.fromEntries(Object.entries(c.talentProcs||{}).filter(([key,p])=>conditions[key]&&p.until>s.clock).map(([key,p])=>[key,{...p}]))};}

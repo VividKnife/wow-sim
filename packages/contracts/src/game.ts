@@ -18,7 +18,8 @@ export type GameResponse = Readonly<{
   scope: 'full' | 'combat';
   snapshot: ClientSnapshot | null;
   replayed?: boolean;
-  combatMode?: 'recorded' | 'realtime' | null;
+  combatMode?: 'recorded' | 'realtime' | 'local' | null;
+  localSimulation?: Readonly<{ownerId:string;sessionId:string|null}> | null;
   playback?: Readonly<{id:string;encounterId:string;startsAt:number;endsAt:number;startClock:number;endClock:number}> | null;
   account?: ClientAccount | null;
   roster?: readonly ClientRosterMember[];

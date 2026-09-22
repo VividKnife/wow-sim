@@ -7,7 +7,10 @@ import type {Rules, PlaybackManifest} from './model.ts';
 
 // One bounded recording per owner. Long fights continue in another segment.
 export const PLAYBACK_SEGMENT_MS = 60_000;
-export const OFFLINE_BATCH_TICKS = 3_000;
+// Keep offline catch-up small enough that one stale, large party cannot monopolize
+// the single worker loop and delay unrelated travel/activity confirmations.
+// The worker will immediately pick still-overdue owners up again on its next pass.
+export const OFFLINE_BATCH_TICKS = 20;
 export const OFFLINE_BATCH_INTERVAL_MS = 30_000;
 export type CombatRecording = PlaybackManifest & {
     contentVersion: string;

@@ -9,7 +9,13 @@ const counters=()=>Object.fromEntries(fields.map(key=>[key,0]));
 const finite=value=>Number.isFinite(value)?value:0;
 function actorRow(metrics,actor){
  const id=String(actor.id);
- return metrics.actors[id]??=({actorId:id,name:actor.name||id,classId:actor.classId||0,...counters(),spells:{}});
+ const row=metrics.actors[id]??=({actorId:id,name:actor.name||id,classId:actor.classId||0,...counters(),spells:{}});
+ // Ownership lets presentation include hunter and warlock pets in their owner's
+ // totals without losing individual pet skills, including after dungeon aggregation.
+ if(actor.ownerId)row.ownerId=String(actor.ownerId);
+ if(actor.petUnit)row.petUnit=true;
+ if(actor.kind)row.kind=actor.kind;
+ return row;
 }
 export function initializeMetrics(s){
  const battle=s.combat;if(!battle)return null;
@@ -37,7 +43,7 @@ export function recordMetric(s,actor,target,amount,detail={}){
 
 function mergeActors(destination,source){
  for(const row of Object.values(source.actors)){
-  const merged=actorRow(destination,{id:row.actorId,name:row.name,classId:row.classId});
+  const merged=actorRow(destination,{id:row.actorId,name:row.name,classId:row.classId,ownerId:row.ownerId,petUnit:row.petUnit,kind:row.kind});
   for(const key of fields)merged[key]+=finite(row[key]);
   for(const spell of Object.values(row.spells)){
    const current=merged.spells[String(spell.spellId)]??={spellId:spell.spellId,label:spell.label,...counters()};
@@ -81,4 +87,3 @@ export function finishCombat(s){
  if(s.battleHistory.length>20)s.battleHistory.splice(0,s.battleHistory.length-20);
  return battle;
 }
-

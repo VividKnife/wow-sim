@@ -4,7 +4,7 @@ import {once} from 'node:events';
 import WebSocket from 'ws';
 import {createGameServer, type GameServerOptions, type GameSnapshot} from '../src/server.ts';
 import {signGameToken} from '../src/auth.ts';
-import {createGame} from '../../../packages/game-domain/src/rules/engine.js';
+import {createGame,advance} from '../../../packages/game-domain/src/rules/engine.js';
 import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
 import {finishCombat} from '../../../packages/game-domain/src/rules/combat-metrics.js';
 import {GameService} from '../../../packages/game-domain/src/service.ts';
@@ -73,6 +73,27 @@ async function start(service: GameServerOptions['service'] = fakeService()): Pro
 async function auth(accountId: string) {
   return {Authorization: `Bearer ${await signGameToken({sub: accountId}, secret)}`};
 }
+
+test('authenticated local simulation accepts checkpoints larger than a command and fences foreign characters',async t=>{
+  let now=1000;
+  const store=new MemoryStore(),service=new GameService(store,{contentVersion:CONTENT_VERSION,now:()=>now});
+  await service.createAccount('local-a',{name:'Local',classId:8,raceId:1},'create');
+  const initial=await service.command('local-a',{type:'hunt',id:299,requestId:'hunt'});
+  const {game,url}=await start(service);t.after(()=>game.close());
+  const input={type:'claim',ownerId:initial.localSimulation!.ownerId,characterId:initial.state.id,contentVersion:CONTENT_VERSION,clientId:'browser',requestId:'claim-0001'};
+  const post=async(body:any,who='local-a')=>fetch(`${url}/game/local`,{method:'POST',headers:{...await auth(who),'content-type':'application/json'},body:JSON.stringify(body)});
+  assert.equal((await fetch(`${url}/game/local`,{method:'POST',body:JSON.stringify(input)})).status,401);
+  const claim=await post(input);assert.equal(claim.status,200);const session=await claim.json();
+  now=2000;const state=advance(session.state,now).state;
+  // The engine legitimately keeps a log/history much larger than command bodies.
+  state.logs.push({id:999,at:state.clock,text:'checkpoint evidence '.repeat(2000)});
+  const command={...input,type:'checkpoint',sessionId:session.session.id,sequence:1,state,requestId:'check-0001'};
+  assert.ok(JSON.stringify(command).length>16384);
+  const first=await post(command);assert.equal(first.status,200);
+  assert.deepEqual(await (await post(command)).json(),await first.json());
+  await service.createAccount('local-b',{name:'Other',classId:8,raceId:1},'create');
+  assert.equal((await post({...input,requestId:'foreign-1'},'local-b')).status,403);
+});
 
 test('server startup rejects a shared secret shorter than 32 bytes', () => {
   assert.throws(() => createGameServer({service: fakeService(), secret: 'weak'}), /32/);
@@ -151,6 +172,24 @@ test('character creation rejects malformed names and class choices before callin
   });
   assert.equal(response.status, 400);
   assert.equal(service.calls.length, 0);
+});
+
+test('character creation forwards a valid gender and rejects unknown values', async (t) => {
+  const {game, service, url} = await start();
+  t.after(() => game.close());
+  const created = await fetch(`${url}/game`, {
+    method: 'POST',
+    headers: {...await auth('account-a'), 'content-type': 'application/json'},
+    body: JSON.stringify({type: 'create', requestId: 'create-female', name: 'Hero', classId: 8, raceId: 1, gender: 'female'}),
+  });
+  assert.equal(created.status, 200);
+  assert.deepEqual(service.calls.at(-1), {method:'createAccount', accountId:'account-a', input:{name:'Hero',classId:8,raceId:1,gender:'female'}, requestId:'create-female'});
+  const invalid = await fetch(`${url}/game`, {
+    method: 'POST',
+    headers: {...await auth('account-a'), 'content-type': 'application/json'},
+    body: JSON.stringify({type: 'create', requestId: 'create-invalid-gender', name: 'Hero', classId: 8, raceId: 1, gender: 'other'}),
+  });
+  assert.equal(invalid.status, 400);
 });
 
 test('versioned content is immutable only for the exact version and mismatches fail', async (t) => {
@@ -264,6 +303,7 @@ test('the HTTP boundary integrates with a real GameService and isolates its crea
     snapshot: null,
     combatMode: null,
     playback: null,
+    localSimulation: null,
     account: null,
     roster: [],
     activities: [],
@@ -302,9 +342,9 @@ test('authenticated user can recreate an invalid save then read it normally', as
   const input = {name: 'Reborn', classId: 8, raceId: 1};
   const old = await service.createAccount('recreate', input, 'old-create');
   await store.transaction(async tx => {
-    const row = (await tx.get('accounts', 'recreate'))!;
+    const row = (await tx.get('account_presence', 'recreate'))!;
     delete row.lastSeenAt;
-    await tx.put('accounts', row);
+    await tx.put('account_presence', row);
   });
   const {game, url} = await start(service);
   t.after(async () => {await game.close(); await store.close();});
@@ -335,10 +375,10 @@ test('authenticated conditional polls refresh offline allowance even when the re
   now = 2500;
   const cached = await fetch(url + '/game', {headers: {...headers, 'if-none-match': first.headers.get('etag')!}});
   assert.equal(cached.status, 304);
-  assert.equal((await store.transaction(tx => tx.get('accounts', 'presence')))!.lastSeenAt, 2500);
+  assert.equal((await store.transaction(tx => tx.get('account_presence', 'presence')))!.lastSeenAt, 2500);
   now = 4000;
   await service.snapshot('presence');
-  assert.equal((await store.transaction(tx => tx.get('accounts', 'presence')))!.lastSeenAt, 2500);
+  assert.equal((await store.transaction(tx => tx.get('account_presence', 'presence')))!.lastSeenAt, 2500);
 });
 
 test('conditional snapshots validate identity and stop unchanged response serialization',async t=>{

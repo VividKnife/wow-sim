@@ -4,13 +4,14 @@ import {combatMembers} from './combat-members.js';
 import {stats,spellInfo} from './character.js';
 import {spells,items,nameOf,icon} from './catalog.js';
 import {effectiveSpeed} from './combat-space.js';
+import {ammoCount} from './ammunition.js';
 
 const formNames={bear:'熊形态',cat:'猎豹形态',moonkin:'枭兽形态',travel:'旅行形态',aquatic:'水栖形态',wolf:'幽魂之狼',shadow:'暗影形态'};
 const petModes={passive:'被动',defensive:'防御',aggressive:'主动',follow:'跟随',stay:'停留',attack:'攻击指定目标'};
 const spellKey=name=>name.toLowerCase().replace(/[^a-z0-9]/g,'');
 const namedSpells=new Map(Object.values(spells).map(sp=>[spellKey(sp.SpellName),sp.Id]));
 const elements={earth:'大地',fire:'火焰',water:'水流',air:'空气'};
-const spellDetail=id=>({spellId:Number(id),name:nameOf('spells',Number(id)),icon:icon('spells',Number(id))});
+const spellDetail=id=>({spellId:Number(id),name:Number(id)===992100?'金团战斗药剂':nameOf('spells',Number(id)),icon:icon('spells',Number(id))});
 const effectEnd=a=>a?.until??(a?.remaining>0&&a?.interval>0?a.next+(a.remaining-1)*a.interval:0);
 function effectsFor(actor,clock){
  const result=new Map();
@@ -49,11 +50,12 @@ export function battlePresentation(s){
    movement:{speed:actor.hp>0&&!actor.totemUnit?effectiveSpeed(actor,clock):0,baseSpeed:effectiveSpeed({...actor,rootUntil:0,stunUntil:0,polyUntil:0,slowUntil:0,movementSlows:[],auras:[]},clock)},
    effects,cooldowns,totems,cast,globalCooldown:globalCooldownRemaining(actor,clock),canCommand:live&&s.hp>0&&actor.hp>0&&actor.petUnit&&!actor.totemUnit&&actor.ownerId===s.id&&s.pet?.id===actor.id,petMode:petModes[actor.mode]||'防御',happiness:actor.kind==='beast'?((actor.happiness??166500)>=666000?'快乐':(actor.happiness??166500)>=333000?'满足':'不开心'):null,loyalty:actor.loyalty||null,
    controlled,ownerName:all.find(a=>a.id===(actor.ownerId||actor.controlledBy))?.name||null,controlUntil:controlled?actor.controlUntil:null,shards:actor.classId===9&&actor.id===s.id?(live?s.bag.filter(i=>i.id===6265).reduce((n,i)=>n+i.count,0):actor.soulShardCount||0):null,
-   attack:actor.classId===3&&actor.learned?.includes(75)&&items[actor.equipment?.[18]?.id]&&actor.equipment[18].durability!==0?{kind:'ranged',label:'自动射击',startedAt:actor.rangedStartedAt,until:actor.nextRanged,minRange:8,range:35}:null,
+   attack:actor.classId===3&&actor.learned?.includes(75)&&items[actor.equipment?.[18]?.id]&&actor.equipment[18].durability!==0&&ammoCount(actor)>0?{kind:'ranged',label:'自动射击',startedAt:actor.rangedStartedAt,until:actor.nextRanged,minRange:8,range:35}:null,
    offhand:actor.nextOffhand?{label:'副手攻击',startedAt:actor.offhandStartedAt,until:actor.nextOffhand}:null,
   };
  }
  const spellIds=[...new Set(Object.values(units).flatMap(u=>[u.spellId,...u.effects.map(e=>e.spellId),...u.cooldowns.map(c=>c.spellId),...u.totems.map(t=>t.spellId),u.cast?.spellId]).filter(Boolean))];
  const groundEffects=live?(s.groundEffects||[]).filter(a=>a.until>clock).map(a=>({...a,center:a.center||{x:a.position||0,y:a.positionY||0}})):[];
+ if(live)for(const f of s.combat?.raidEncounter?.fires||[])groundEffects.push({...f,school:2,actorId:'mc-boss',spellId:19411,startedAt:f.armedAt-2500,center:{x:f.position,y:f.positionY}});
  return{live,clock,units,spellIds,groundEffects,playerId:s.id};
 }

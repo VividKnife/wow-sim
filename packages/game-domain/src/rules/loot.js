@@ -1,10 +1,12 @@
 import {items,nameOf} from './catalog.js';
 import {makeItem,bagCapacity,log} from './character.js';
 import {put} from './inventory.js';
+import {queueGroupLoot} from './group-loot.js';
 
 // Keep rolled rewards out of the inventory until the player actually loots them.
 export function queueCombatLoot(s,id,count){
  const data=items[id];if(!data)return;
+ if(queueGroupLoot(s,id,count))return;
  const owned=[...s.bag,...s.pending,...s.bank,...Object.values(s.equipment),...s.auctions.map(a=>a.item)].filter(i=>i.id===id).reduce((n,i)=>n+i.count,0);
  if(data.maxcount>0)count=Math.min(count,Math.max(0,data.maxcount-owned));
  const max=Math.max(1,data.stackable||1);

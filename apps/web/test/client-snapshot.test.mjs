@@ -71,3 +71,17 @@ test('entered dungeons and battle actors expose no pre-rolled or whole-state int
  assert.equal('dungeon' in combatSnapshot.view.battleView.actors[0],false);
  assert.equal('internalPlan' in combatSnapshot.view.battleView.actors[0],false);
 });
+
+test('recruited companions retain replacement eligibility in the actual client projection',async()=>{
+ const {act}=await import('../../../packages/game-domain/src/rules/engine.js');
+ let state=createGame('队长',123,0);state.level=18;
+ state=act(state,{type:'recruit',id:'priest'},0);
+ const snapshot=projectClientSnapshot(state,view(state));
+ assert.equal(snapshot.player.party[0].growthPolicy,'companion');
+ const replaceable=snapshot.view.party.filter(c=>c.id!==snapshot.player.id&&c.growthPolicy==='companion');
+ assert.equal(replaceable.length,1);assert.equal(replaceable[0].id,state.party[0].id);
+ state.money=100000;
+ state=act(state,{type:'recruit',id:'paladin',replaceId:replaceable[0].id},0);
+ const replaced=projectClientSnapshot(state,view(state));
+ assert.equal(replaced.view.party[0].growthPolicy,'companion');assert.equal(replaced.view.party[0].classId,2);
+});

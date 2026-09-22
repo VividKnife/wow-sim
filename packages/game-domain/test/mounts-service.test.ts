@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
-import {route} from '../src/rules/catalog.js';
+import {route,baseTravelSpeed,travelSpeedMultiplier} from '../src/rules/catalog.js';
 import {mountView} from '../src/rules/mounts.js';
 import type {Character,Rules} from '../src/model.ts';
 
@@ -63,7 +63,7 @@ test('automatic travel mount prefers the fastest usable mount and keeps walking 
  const walker=await fixture();await walker.patch({location:'northshire'});
  const walking=await walker.command({type:'travel',to:'goldshire'});
  assert.equal(walking.state.activity.type,'travel');
- assert.equal(walking.state.activity.endsAt-walking.state.clock,Math.ceil(route('northshire','goldshire').distance/7*1000));
+ assert.equal(walking.state.activity.endsAt-walking.state.clock,Math.ceil(route('northshire','goldshire').distance/baseTravelSpeed*1000));
 
  const rider=await fixture();await rider.patch({level:60,location:'northshire',riding:{horse:true},mounts:[5656,18777]});
  const summoning=await rider.command({type:'travel',to:'goldshire'});
@@ -79,12 +79,13 @@ test('travel automatically summons the fastest owned mount, then settles the rid
  await f.patch({location:'northshire'});let trip=await f.command({type:'travel',to:'goldshire'});
  assert.equal(trip.state.activity.type,'mount');assert.equal(trip.state.activity.mount,5656);assert.deepEqual(trip.state.activity.travel,{to:'goldshire',hunt:null,quest:null});
  f.restart();await f.work(3000);trip=await f.work(0);assert.equal(trip.state.mounted,5656);assert.equal(trip.state.activity.type,'travel');
- const riding=trip.state.activity.endsAt-trip.state.clock,walk=Math.ceil(route('northshire','goldshire').distance/7*1000);
- assert.equal(riding,Math.ceil(route('northshire','goldshire').distance/11.2*1000));assert.ok(riding<walk);
+ const riding=trip.state.activity.endsAt-trip.state.clock,walk=Math.ceil(route('northshire','goldshire').distance/baseTravelSpeed*1000);
+ assert.equal(riding,Math.ceil(route('northshire','goldshire').distance/(baseTravelSpeed*1.6)*1000));assert.ok(riding<walk);
  await assert.rejects(f.command({type:'dismount'}),/旅行|活动/);f.restart();const arrival=await f.work(riding);assert.equal(arrival.state.location,'goldshire');assert.equal(arrival.state.mounted,5656);
  await f.money(110);await f.patch({location:'stormwind',flightPoints:['stormwind','sentinel']});trip=await f.command({type:'fly',to:'sentinel'});
- assert.equal(trip.state.mounted,null);assert.equal(trip.state.money,0);assert.equal(trip.state.activity.endsAt-trip.state.clock,78000);
- f.restart();assert.equal((await f.work(78000)).state.location,'sentinel');
+ const flightDuration=Math.ceil(78000/travelSpeedMultiplier);
+ assert.equal(trip.state.mounted,null);assert.equal(trip.state.money,0);assert.equal(trip.state.activity.endsAt-trip.state.clock,flightDuration);
+ f.restart();assert.equal((await f.work(flightDuration)).state.location,'sentinel');
  await f.command({type:'mount',id:5656});await f.work(3000);trip=await f.command({type:'useHearth'});assert.equal(trip.state.mounted,null);
  const cast=trip.state.activity.endsAt-trip.state.clock;assert.equal(cast,10000);f.restart();const home=await f.work(cast);assert.equal(home.state.location,'northshire');assert.deepEqual(home.state.mounts,[5656]);
  await assert.rejects(f.command({type:'useHearth'}),/冷却|恢复/);

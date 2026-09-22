@@ -10,19 +10,23 @@ import {recipes} from '../src/rules/profession-data.js';
 import {recipeAvailability} from '../src/rules/professions.js';
 import {buildGameResponse} from '../src/rules/server-response.js';
 import type {Character,Rules} from '../src/model.ts';
-function unlocked(){let s:Rules=createGame('队长',123,0);s.level=18;s.location='stormwind';return act(s,{type:'turnin',id:900001},0);}
+function unlocked(){let s:Rules=createGame('队长',123,0);s.level=18;s.location='stormwind';return s;}
 
-test('level 18 automatically accepts the inn quest; only Stormwind turn-in unlocks recruitment',()=>{
- let s:Rules=createGame('队长',123,0);s.level=17;s.location='stormwind';
+test('level 18 opens recruitment everywhere without an unlock quest and announces the level boundary once',()=>{
+ let s:Rules=createGame('队长',123,0);s.level=17;s.location='goldshire';
+ assert.equal(view(s).partyUnlocked,false);
+ assert.ok(view(s).candidates.every(c=>!c.canRecruit));
  assert.throws(()=>act(s,{type:'recruit',id:'mage'},0),/18级/);
- gainXp(s,s,xpTable[17].xp_for_next_level);assert.ok(s.quests[900001]);
- s.location='goldshire';assert.throws(()=>act(s,{type:'turnin',id:900001},0),/交付/);
- assert.throws(()=>act(s,{type:'recruit',id:'mage'},0),/任务/);
- assert.throws(()=>act(s,{type:'abandon',id:900001},0),/无法放弃/);
- s.location='stormwind';s=act(s,{type:'turnin',id:900001},0);
+ gainXp(s,s,xpTable[17].xp_for_next_level);
  assert.equal(buildGameResponse(s,1).snapshot!.view.partyUnlocked,true);
- assert.ok(!s.quests[900001]);assert.equal(advance(s,5000).state.quests[900001],undefined);
- s.location='goldshire';assert.throws(()=>act(s,{type:'recruit',id:'mage'},0),/暴风城/);
+ assert.equal(s.quests[900001],undefined);
+ gainXp(s,s,1);
+ assert.equal(s.logs.filter((l:Rules)=>l.text?.includes('队友系统已开通')).length,1);
+ s=act(s,{type:'recruit',id:'mage'},0);assert.equal(s.party.length,1);
+ s.money=100000;s.location='northshire';
+ s=act(s,{type:'recruit',id:'priest',replaceId:s.party[0].id},0);
+ assert.equal(s.party[0].classId,5);assert.equal(s.money,0);
+ assert.equal(advance(s,5000).state.quests[900001],undefined);
 });
 
 test('all nine classes and supported roles receive legal green kits, talents, skills and useful strategies',()=>{
@@ -63,8 +67,7 @@ test('service persists recruitment, replacement assets, profession pages and fre
  const store=new MemoryStore();let service=new GameService(store,{contentVersion:'test',now:()=>1000,seed:()=>123});
  const created=await service.createAccount('a',{name:'队长',classId:1,raceId:1},'create');const hero=created.account.primaryCharacterId;
  await assert.rejects(service.command('a',{type:'createCompanion',classId:8,name:'法师',requestId:'early'}),/18级/);
- await store.transaction(async tx=>{const c=(await tx.get<Character>('characters',hero))!;c.rules.level=18;c.rules.location='stormwind';await tx.put('characters',c);});
- await service.command('a',{type:'turnin',id:900001,requestId:'unlock'});
+ await store.transaction(async tx=>{const c=(await tx.get<Character>('characters',hero))!;c.rules.level=18;c.rules.location='goldshire';await tx.put('characters',c);});
  const recruited=await service.command('a',{type:'recruit',id:'warrior',role:'tank',requestId:'recruit'}),companion=recruited.roster.find(c=>c.kind==='companion')!.id;
  const before=await service.snapshot('a',companion);assert.equal(before.state.level,18);assert.ok(view(before.state).professions.some(p=>p.id==='alchemy'&&p.skill===75));
  const armor=before.state.equipment[5].uid;
@@ -79,7 +82,7 @@ test('service persists recruitment, replacement assets, profession pages and fre
  service=new GameService(store,{contentVersion:'test',now:()=>1000,seed:()=>123});
  const after=await service.snapshot('a',companion),owner=await service.snapshot('a');
  assert.deepEqual(after.state.bags,upgraded.state.bags);
- assert.equal(owner.state.money,0);assert.equal(after.state.classId,8);assert.equal(after.state.location,'stormwind');assert.equal(after.roster.length,2);
+ assert.equal(owner.state.money,0);assert.equal(after.state.classId,8);assert.equal(after.state.location,'goldshire');assert.equal(after.roster.length,2);
  assert.ok(owner.state.bag.some((i:Rules)=>i.uid===armor));assert.equal(after.state.growthPolicy,'companion');assert.ok(!after.state.quests[900001]);
  await service.command('a',{type:'resetTalents',characterId:companion,requestId:'reset'});
  assert.deepEqual((await service.snapshot('a',companion)).state.talents,{});

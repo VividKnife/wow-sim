@@ -1,4 +1,4 @@
-import {nodes} from './catalog.js';
+import {nodes,baseTravelSpeed} from './catalog.js';
 import {travelRoute} from './mounts.js';
 
 // Use the same road costs as travel, and never navigate to already credited objectives.
@@ -21,7 +21,7 @@ export function journeyPosition(s){
  const progress=Math.max(0,Math.min(1,(s.clock-a.startedAt)/(a.endsAt-a.startedAt)));
  if(a.flight||!a.path?.length)return {from:a.from,to:a.to,progress};
  let remaining=Math.max(0,s.clock-a.startedAt),from=a.from;
- for(const e of a.path){const to=e.a===from?e.b:e.a;const duration=e.duration??e.distance/7*1000;
+ for(const e of a.path){const to=e.a===from?e.b:e.a;const duration=e.duration??e.distance/baseTravelSpeed*1000;
   if(remaining<duration)return {from,to,progress:(e.startProgress||0)+(1-(e.startProgress||0))*remaining/duration};
   remaining-=duration;from=to;
  }
@@ -34,7 +34,7 @@ export function redirectedTravel(s,to){
  if(a.to===to)throw new Error('已经在前往这个目的地。');
  let from=a.from,elapsed=Math.max(0,s.clock-a.startedAt);
  for(const leg of a.path||[]){
-  const next=leg.a===from?leg.b:leg.a,duration=leg.duration??leg.distance/7*1000;
+  const next=leg.a===from?leg.b:leg.a,duration=leg.duration??leg.distance/baseTravelSpeed*1000;
   if(elapsed<duration){
    const initial=leg.startProgress||0,progress=initial+(1-initial)*elapsed/duration,fullDuration=duration/(1-initial);
    // Compare both ways off the current road. Reversal starts at the same point.

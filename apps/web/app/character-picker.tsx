@@ -1,4 +1,5 @@
 "use client";
+import ClassIcon from './class-icon';
 import type {CSSProperties} from 'react';
 import type {ClientRosterMember} from '../../../packages/contracts/src/game';
 import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from '@/components/ui/select';
@@ -9,7 +10,7 @@ const colors:Record<number,string>={1:'#c69b6d',2:'#f48cba',3:'#aad372',4:'#fff4
 function Identity({member}:{member:ClientRosterMember}){
  const name=classOptions.find(option=>option.id===member.classId)?.name||'未知职业';
  return <span className="character-picker-identity" style={{'--class-color':colors[member.classId]||'#cfb77e'} as CSSProperties}>
-  <span className="character-picker-mark" aria-hidden="true">{name.slice(0,1)}</span>
+  <span className="character-picker-mark" aria-hidden="true"><ClassIcon classId={member.classId}/></span>
   <span className="character-picker-copy"><span className="character-picker-name"><strong>{member.name}</strong><small>Lv.{member.level}</small><span className="character-picker-kind">{member.kind==='hero'?'主角':'队友'}</span></span><span className="character-picker-detail"><span>{name}</span><span> · {member.talentSummary}</span></span></span>
  </span>;
 }

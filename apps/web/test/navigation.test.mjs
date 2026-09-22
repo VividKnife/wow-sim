@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,view} from '../../../packages/game-domain/src/rules/engine.js';
 import {questNavigation,journeyPosition} from '../../../packages/game-domain/src/rules/navigation.js';
-import {nodes} from '../../../packages/game-domain/src/rules/catalog.js';
+import {nodes,baseTravelSpeed} from '../../../packages/game-domain/src/rules/catalog.js';
 import {mapPoints,mapRegion,mapRegions,playerMapPoint} from '../lib/world-map.js';
 import * as worldMap from '../lib/world-map.js';
 import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
@@ -136,7 +136,7 @@ test('every playable node can be placed on its region map',()=>{
 test('player marker follows timed road legs and returns to the destination after arrival',()=>{
  let s=createGame('地图',11,0);s=act(s,{type:'travel',to:'echo'},0);
  // First leg northshire -> northwood, halfway through its own travel cost.
- const leg=s.activity.path[0];s.clock=leg.distance/7*1000/2;
+ const leg=s.activity.path[0];s.clock=leg.distance/baseTravelSpeed*1000/2;
  const journey=journeyPosition(s);assert.equal(journey.from,'northshire');assert.equal(journey.to,'northwood');
  assert.ok(Math.abs(journey.progress-.5)<.001);
  const player=playerMapPoint(journey,Object.values(nodes));
@@ -147,9 +147,9 @@ test('player marker follows timed road legs and returns to the destination after
 
 test('cross-region flight shows transit at departure map until actual arrival',()=>{
  let s=createGame('地图',11,0);s.location='stormwind';s.flightPoints=['stormwind','sentinel'];s.money=200;
- s=act(s,{type:'fly',to:'sentinel'},0);s.clock=39000;
+ s=act(s,{type:'fly',to:'sentinel'},0);const duration=s.activity.endsAt;s.clock=duration/2;
  const p=playerMapPoint(journeyPosition(s),Object.values(nodes));
  assert.equal(p.region,'暴风城');assert.equal(p.crossing,true);assert.equal(p.x,57);
- s.clock=0;s=advance(s,78000).state;assert.equal(s.location,'sentinel');assert.equal(s.money,90);
+ s.clock=0;s=advance(s,duration).state;assert.equal(s.location,'sentinel');assert.equal(s.money,90);
  assert.equal(playerMapPoint(journeyPosition(s),Object.values(nodes)).region,'西部荒野');
 });

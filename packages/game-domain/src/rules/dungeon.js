@@ -6,6 +6,7 @@ import {sceneCombatArea} from './combat-area.js';
 import {startRecovery,stopRecovery,resurrectionFor,beginResurrection} from './recovery.js';
 import {spellReady} from './spell-timing.js';
 import {dungeonDestinationPath} from './dungeon-map.js';
+import {selectedDungeonMembers,npcRunStarted,syncNpcWorld} from './npc-world.js';
 
 const current=s=>s.dungeon&&dungeonRoute(s)[s.dungeon.cursor];
 const idle=s=>{if(s.combat)throw new Error('请先结束这场战斗。');if(s.activity.type!=='idle')throw new Error('请先结束当前活动。');};
@@ -22,20 +23,21 @@ export function dungeonResetReason(s,id=dungeonIdFor(s)){
 export function resetDungeon(s,id=dungeonIdFor(s)){const definition=dungeonDefinition(id),reason=dungeonResetReason(s,id);if(reason)throw new Error(reason);delete s.dungeonSaves[id];log(s,definition.name+'已重置。下次进入将开始新的冒险。','dungeon');}
 
 export function dungeonEntryReason(s,id=dungeonIdFor(s)){
- const definition=dungeonDefinition(id);
+ const definition=dungeonDefinition(id),party=selectedDungeonMembers(s);
  if(s.dungeon)return '你已经在副本中。';
  if(s.combat)return '请先结束这场战斗。';
  if(s.activity.type!=='idle')return '请先结束当前活动。';
  if(s.location!==definition.entrance)return '请先前往'+definition.name+'入口。';
- if([s,...s.party].some(c=>c.level<definition.minimumLevel))return '所有成员至少需要达到 '+definition.minimumLevel+' 级。';
- if(s.party.length!==4||[s,...s.party].some(c=>c.hp<=0))return '需要五名存活的小队成员。';
+ if([s,...party].some(c=>c.level<definition.minimumLevel))return '所有成员至少需要达到 '+definition.minimumLevel+' 级。';
+ if(party.length!==4||[s,...party].some(c=>c.hp<=0))return '需要五名存活的小队成员。';
  if(!s.dungeonSaves?.[id]&&recentEntries(s).length>=5)return '每小时最多进入五个新副本，请稍后再试。';
  return '';
 }
 export function enterDungeon(s,id=dungeonIdFor(s)){
  const definition=dungeonDefinition(id),reference=definition.reference,reason=dungeonEntryReason(s,id);if(reason)throw new Error(reason);
+ if(s.npcWorld?.selection)s.party=selectedDungeonMembers(s).map(clone);
  s.dungeonSaves??={};
- if(s.dungeonSaves[id]){s.dungeon=s.dungeonSaves[id];delete s.dungeonSaves[id];return;}
+ if(s.dungeonSaves[id]){s.dungeon=s.dungeonSaves[id];delete s.dungeonSaves[id];npcRunStarted(s);return;}
  s.dungeonEntries=[...recentEntries(s),s.wallAt];
  const d={id,runId:id+'-'+(s.dungeonSequence=(s.dungeonSequence||0)+1),cursor:0,locationId:'entrance',destination:'full',path:[],autoAdvance:false,advanceReason:'',spawns:{},phases:{},defeated:{},defeatedBosses:{},cleared:{},skipped:{},interactions:{},position:clone(reference.entrance),startedAt:s.clock};
  const rare=Object.fromEntries(Object.entries(definition.rareEntries).map(([entry,chance])=>[entry,rng(s)<chance]));
@@ -47,9 +49,10 @@ export function enterDungeon(s,id=dungeonIdFor(s)){
  }
  if(id==='deadmines')d.phases['3600073:643']=profile(s,643,'3600073:643',id);
  s.dungeon=d;s.rest=null;
+ npcRunStarted(s);
  log(s,'进入'+definition.name+'。小队等待你的下一步指令。','dungeon');
 }
-export function leaveDungeon(s){idle(s);if(!s.dungeon)throw new Error('当前不在副本中。');pauseDungeonAdvance(s);const definition=dungeonDefinition(s.dungeon.id);s.dungeonSaves??={};s.dungeonSaves[s.dungeon.id]=s.dungeon;delete s.dungeon;s.groundEffects=[];stopRecovery(s);log(s,'离开'+definition.name+'，保留本次副本进度。','dungeon');}
+export function leaveDungeon(s){idle(s);if(s.groupLoot?.pending.length)throw new Error('请先分配队伍战利品再离开。');syncNpcWorld(s);if(!s.dungeon)throw new Error('当前不在副本中。');pauseDungeonAdvance(s);const definition=dungeonDefinition(s.dungeon.id);s.dungeonSaves??={};s.dungeonSaves[s.dungeon.id]=s.dungeon;delete s.dungeon;s.groundEffects=[];stopRecovery(s);log(s,'离开'+definition.name+'，保留本次副本进度。','dungeon');}
 export function remainingDungeonEnemies(s,e){const d=s.dungeon,result=e.sourceGuids.map(g=>d.spawns[g]).filter(p=>p&&!d.defeated[p.sourceGuid]);
  if(e.id==='dm-sneed'&&d.defeated['3600073']&&!d.defeated['3600073:643'])result.push(d.phases['3600073:643']);return result;
 }
@@ -75,6 +78,7 @@ function gate(s,e){const reason=gateReason(s,e);if(reason)throw new Error(reason
 export function dungeonAdvanceReason(s){
  const e=current(s);
  if(!s.dungeon)return '请先进入副本。';
+ if(s.groupLoot?.pending.length)return '请先决定队伍战利品的需求、贪婪或放弃。';
  if(s.dungeon.destination!=='full'&&(s.dungeon.cleared[s.dungeon.destination]||s.dungeon.skipped[s.dungeon.destination]))return '目的地已完成，请选择新的目标或全清副本。';
  if(!e)return '这条路线已经完成。';
  if([s,...s.party].some(c=>c.hp<=0))return '先让倒下的成员复活，再继续推进。';
@@ -127,6 +131,7 @@ export function beginDungeonAdvance(s){
 }
 export function advanceDungeon(s,immediate=false){
  const d=s.dungeon;if(!d?.autoAdvance)return;
+ if(s.groupLoot?.pending.length)return;
  const members=[s,...s.party],fallen=members.filter(c=>c.hp<=0);
  if(fallen.length){
   const priests=members.filter(c=>c.classId===5&&c.hp>0);

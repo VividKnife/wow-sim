@@ -58,7 +58,7 @@ test('two mages reserve different caster targets before either cast completes',(
 
 test('caster preference still obeys the selected rule and avoids targets with damage over time',()=>{
  const s=encounter([299,598,1729]);s.rules[0].condition='enemyNear';s.rules[0].value=10;
- s.combat.enemies[1].position=9;s.combat.enemies[2].position=20;combatTick(s);
+ s.combat.enemies[1].position=9;s.combat.enemies[1].positionY=0;s.combat.enemies[2].position=20;combatTick(s);
  assert.equal(s.cast?.target,s.combat.enemies[1].id);
  const dotted=encounter([299,598,1729]);dotted.combat.enemies[2].dots=[{remaining:3,next:100000}];combatTick(dotted);
  assert.equal(dotted.cast?.target,dotted.combat.enemies[1].id);

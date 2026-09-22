@@ -12,7 +12,7 @@ import {clientContent} from '../../../packages/game-domain/src/rules/client-cont
 let components,directory,bundle;
 before(async()=>{
  const web=fileURLToPath(new URL('../',import.meta.url));directory=await mkdtemp(join(web,'.npc-ui-test-'));bundle=join(directory,'component.mjs');
- await build({absWorkingDir:web,stdin:{contents:"export {default as Hud} from './app/player-hud'; export {default as World} from './app/world'; export {NpcConversation,NpcPortrait} from './app/local-npcs';",resolveDir:web,loader:'tsx'},outfile:bundle,bundle:true,platform:'node',format:'esm',packages:'external',jsx:'automatic',loader:{'.css':'empty'},logLevel:'silent'});components=await import(pathToFileURL(bundle).href);
+ await build({absWorkingDir:web,stdin:{contents:"export {default as Hud} from './app/player-hud'; export {default as World} from './app/world'; export {NpcConversation,NpcPortrait,QuestConversation} from './app/local-npcs';",resolveDir:web,loader:'tsx'},outfile:bundle,bundle:true,platform:'node',format:'esm',packages:'external',jsx:'automatic',loader:{'.css':'empty'},logLevel:'silent'});components=await import(pathToFileURL(bundle).href);
 });
 after(async()=>{if(bundle)await unlink(bundle);if(directory)await rmdir(directory);});
 const props=s=>({state:s,data:{...clientContent(),...view(s)},busy:false,send:async()=>true});
@@ -37,6 +37,17 @@ test('quest interaction changes from giver to the proper turn-in NPC',()=>{
  assert.match(render(components.NpcConversation,{...p,npc}),/>接受任务</);
  s=act(s,{type:'accept',id:783},0);p=props(s);npc=p.data.interactions.find(n=>n.entry===197);
  assert.match(render(components.NpcConversation,{...p,npc}),/>完成任务</);
+});
+test('completed quest choices are directly selectable from their item rows',()=>{
+ const p=props(createGame('勇士',42,0));
+ const quest={id:999,name:'奖励选择',level:2,description:'选择一件奖励。',objectives:[],xp:170,money:0,rewards:[],choices:[{id:80,count:1},{id:79,count:1}],canAccept:false,complete:true};
+ const html=render(components.QuestConversation,{...p,quest});
+ assert.match(html,/role="radiogroup" aria-label="选择一件任务奖励"/);
+ assert.equal((html.match(/type="radio"/g)||[]).length,2);
+ assert.match(html,/class="reward-option"/);
+ assert.match(html,/点击选择/);
+ assert.doesNotMatch(html,/<select/);
+ assert.match(html,/<button[^>]*disabled[^>]*>完成任务</);
 });
 test('trainer and merchant conversation render their scoped services',()=>{
  const p=props(createGame('勇士',42,0));

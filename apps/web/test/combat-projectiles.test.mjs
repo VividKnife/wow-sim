@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {createGame,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
 import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
 import {castEnemySpell,tickEnemySpell,tickEnemyProjectiles} from '../../../packages/game-domain/src/rules/enemy-spells.js';
+import {launchProjectile,takeImpacts} from '../../../packages/game-domain/src/rules/combat-projectiles.js';
 function fixture(){const s=createGame('弹道',283,0);s.level=20;s.hp=10000;s.mana=stats(s).maxMana;s.learned=[133];s.rules=[{spell:133,condition:'always',value:0,enabled:true}];startCombat(s,[299]);const e=s.combat.enemies[0];e.hp=e.maxHp=10000;e.rootUntil=1e9;e.nextAttack=1e9;return s;}
 test('Fireball launches on cast completion and settles once after its flight',()=>{
  const s=fixture(),e=s.combat.enemies[0];combatTick(s);s.clock=s.cast.until;combatTick(s);
@@ -29,4 +30,12 @@ test('enemy missiles share authority flight timing and can outlive their caster'
  assert.equal(s.hp,before);assert.equal(s.combat.projectiles.length,1);
  const p=s.combat.projectiles[0];e.hp=0;s.clock=p.landsAt;tickEnemyProjectiles(s,[s],hurt);assert.ok(s.hp<before);
  const hp=s.hp;tickEnemyProjectiles(s,[s],hurt);assert.equal(s.hp,hp);
+});
+test('hunter shots get arrow flights even for zero-speed data and visual-only arrows never settle damage',()=>{
+ const s=fixture(),e=s.combat.enemies[0];s.classId=3;s.position=0;e.position=20;
+ assert.equal(launchProjectile(s,s,e,{Id:3044,SpellName:'Arcane Shot',School:6,Speed:0}),true);
+ assert.equal(s.combat.projectiles[0].visual,'hunter-shot');assert.ok(s.combat.projectiles[0].landsAt>s.clock);
+ assert.equal(launchProjectile(s,s,e,{Id:75,SpellName:'Auto Shot',School:0,Speed:55},'friendly',{presentationOnly:true}),true);
+ s.clock=Math.max(...s.combat.projectiles.map(projectile=>projectile.landsAt));
+ const impacts=takeImpacts(s,'friendly');assert.deepEqual(impacts.map(projectile=>projectile.spellId),[3044]);
 });

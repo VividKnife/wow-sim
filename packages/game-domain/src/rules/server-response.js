@@ -12,7 +12,7 @@ export function buildGameResponse(state,revision,extra={}){
  if(!Number.isSafeInteger(revision)||revision<0)throw new TypeError('revision must be a non-negative integer');
  const scope=extra.scope==='combat'&&state?.combat?'combat':'full';
  const payload={protocolVersion:PROTOCOL_VERSION,contentVersion:CONTENT_VERSION,revision,scope,snapshot:state==null?null:projectClientSnapshot(state,extra.view||(scope==='combat'?combatView(state):view(state)))};
- for(const key of ['replayed','instanceId','combatMode','playback'])if(Object.hasOwn(extra,key))payload[key]=extra[key];
+ for(const key of ['replayed','instanceId','combatMode','playback','localSimulation'])if(Object.hasOwn(extra,key))payload[key]=extra[key];
  if(Object.hasOwn(extra,'account'))payload.account=extra.account==null?null:accountView(extra.account);
  if(Object.hasOwn(extra,'roster'))payload.roster=rosterView(extra.roster);
  if(Object.hasOwn(extra,'activities'))payload.activities=activityView(extra.activities);

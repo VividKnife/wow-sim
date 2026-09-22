@@ -4,11 +4,11 @@ import {useEffect,useRef,useState,type ReactNode} from 'react';
 import {modelEquipment} from '@/lib/model-viewer.js';
 
 type Status='loading'|'loaded'|'partial'|'error';
-export default function CharacterModel({equipment,items,raceId,classId,fallback,title='角色 3D 换装预览'}:{equipment:Record<string,{id:number}>;items:Record<string,{slot:number}>;raceId:number;classId:number;fallback:ReactNode;title?:string}){
+export default function CharacterModel({equipment,items,raceId,classId,gender='male',fallback,title='角色 3D 换装预览'}:{equipment:Record<string,{id:number}>;items:Record<string,{slot:number}>;raceId:number;classId:number;gender?:'male'|'female';fallback:ReactNode;title?:string}){
  const container=useRef<HTMLDivElement>(null),frame=useRef<HTMLIFrameElement>(null);
  const [intersecting,setIntersecting]=useState(true),[foreground,setForeground]=useState(true),[attempt,setAttempt]=useState(0);
  const [state,setState]=useState<{revision:string;status:Status}>({revision:'',status:'loading'});
- const revision=JSON.stringify({raceId,classId,items:modelEquipment(equipment,items)});
+ const revision=JSON.stringify({raceId,classId,gender,items:modelEquipment(equipment,items)});
  const status=state.revision===revision?state.status:'loading';
  const visible=intersecting&&foreground;
  useEffect(()=>{

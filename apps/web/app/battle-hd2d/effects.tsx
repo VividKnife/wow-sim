@@ -23,6 +23,10 @@ function AreaMote({index,radius,color,frost,metric}:{index:number;radius:number;
  return <mesh ref={mesh} scale={metric}><octahedronGeometry args={[frost?.22:.14,0]}/><meshBasicMaterial color={color} transparent opacity={.65} toneMapped={false}/></mesh>;
 }
 function Projectile({flight}:{flight:BattleProjectile}){
+ if(flight.visual==='hunter-shot')return <HunterProjectile flight={flight}/>;
+ return <MagicProjectile flight={flight}/>;
+}
+function MagicProjectile({flight}:{flight:BattleProjectile}){
  const group=useRef<Group>(null),frame=useBattleFrame(),color=schoolColor(flight.school);
  useFrame(()=>{
   if(!group.current)return;const f=frame.current,t=actionProgress(flight.startedAt,flight.landsAt,f.clock);
@@ -34,16 +38,39 @@ function Projectile({flight}:{flight:BattleProjectile}){
  });
  return <group ref={group}>{Array.from({length:5},(_,i)=><mesh key={i}><icosahedronGeometry args={[i===0?.22:.16,1]}/><meshBasicMaterial color={i===0?'#fff3d6':color} transparent opacity={1-i*.17} toneMapped={false} blending={AdditiveBlending} depthWrite={false}/></mesh>)}</group>;
 }
+function HunterProjectile({flight}:{flight:BattleProjectile}){
+ const group=useRef<Group>(null),flash=useRef<Mesh>(null),frame=useBattleFrame();
+ useFrame(()=>{
+  if(!group.current)return;const f=frame.current,t=actionProgress(flight.startedAt,flight.landsAt,f.clock),metric=actorScale(f.layout);
+  group.current.visible=f.clock>=flight.startedAt&&f.clock<flight.landsAt;
+  const a=worldPoint(f.layout,flight.from),b=worldPoint(f.layout,flight.to),target=f.scene.units.find(u=>u.id===flight.targetId),source=f.scene.units.find(u=>u.id===flight.actorId);
+  if(target){const p=unitPoint(f.layout,target.id);b[0]=p[0];b[2]=p[2];}
+  const startHeight=actorHeight(f.layout,source||{})*.58,endHeight=actorHeight(f.layout,target||{})*.58,k=Math.min(1,t*1.04);
+  const position=new Vector3(a[0]+(b[0]-a[0])*k,startHeight+(endHeight-startHeight)*k+Math.sin(k*Math.PI)*metric*.35,a[2]+(b[2]-a[2])*k);
+  const direction=new Vector3(b[0]-a[0],endHeight-startHeight,b[2]-a[2]).normalize();
+  group.current.position.copy(position);group.current.quaternion.setFromUnitVectors(new Vector3(0,1,0),direction);group.current.scale.setScalar(metric*(flight.spellId===75?.9:1.08));
+  if(flash.current){const birth=Math.min(1,(f.clock-flight.startedAt)/110);flash.current.visible=!f.scene.lowEffects&&birth>=0&&birth<1;flash.current.scale.setScalar(1.5-birth);(flash.current.material as MeshBasicMaterial).opacity=(1-birth)*.9;}
+ });
+ const magic=(flight.school||0)>0,color=magic?schoolColor(flight.school):'#e7c77d';
+ return <group ref={group}>
+  <mesh position={[0,.1,0]}><cylinderGeometry args={[.035,.055,1.45,8]}/><meshBasicMaterial color={magic?'#fff4ce':'#6e4525'} toneMapped={false}/></mesh>
+  <mesh position={[0,.9,0]}><coneGeometry args={[.13,.34,8]}/><meshBasicMaterial color={magic?'#fff8df':'#d9d3bd'} toneMapped={false}/></mesh>
+  <mesh position={[0,-.72,0]} rotation={[0,0,.72]}><coneGeometry args={[.09,.32,4]}/><meshBasicMaterial color="#b54d36" toneMapped={false}/></mesh>
+  <mesh position={[0,-.72,0]} rotation={[0,0,-.72]}><coneGeometry args={[.09,.32,4]}/><meshBasicMaterial color="#d7a351" toneMapped={false}/></mesh>
+  <mesh position={[0,-.7,0]}><cylinderGeometry args={[.1,.025,1.7,6]}/><meshBasicMaterial color={color} transparent opacity={magic?.62:.32} toneMapped={false} blending={AdditiveBlending} depthWrite={false}/></mesh>
+  <mesh ref={flash} position={[0,-1.3,0]}><sphereGeometry args={[.3,10,6]}/><meshBasicMaterial color="#fff0a8" transparent toneMapped={false} blending={AdditiveBlending} depthWrite={false}/></mesh>
+ </group>;
+}
 function Impact({effect}:{effect:BattleEffect}){
- const group=useRef<Group>(null),ring=useRef<Mesh>(null),frame=useBattleFrame(),color=schoolColor(effect.school,effect.kind==='heal');
+ const group=useRef<Group>(null),ring=useRef<Mesh>(null),frame=useBattleFrame(),shot=effect.projectileVisual==='hunter-shot',color=shot?'#f4cf72':schoolColor(effect.school,effect.kind==='heal');
  useFrame(()=>{
   if(!group.current)return;const f=frame.current,age=f.wall-effect.shownAt,t=age/750;group.current.visible=age>=0&&age<750;
   group.current.position.fromArray(effect.center?worldPoint(f.layout,effect.center):unitPoint(f.layout,effect.targetId));group.current.scale.setScalar(actorScale(f.layout));
   if(ring.current){ring.current.scale.setScalar(f.scene.reducedMotion?1:.4+t*1.5);(ring.current.material as MeshBasicMaterial).opacity=Math.max(0,1-t)*.6;}
-  group.current.children.slice(1).forEach((mesh,i)=>{const a=i*2.399,spread=f.scene.reducedMotion?.6:t*1.7;mesh.position.set(Math.cos(a)*spread,.6+Math.sin(a)*spread+(effect.kind==='heal'?t:0),Math.sin(a)*spread*.5);mesh.scale.setScalar(Math.max(0,1-t));});
+  group.current.children.slice(1).forEach((mesh,i)=>{const a=i*2.399,spread=f.scene.reducedMotion?.6:t*(shot?2.4:1.7);mesh.position.set(Math.cos(a)*spread,.6+Math.sin(a)*spread+(effect.kind==='heal'?t:0),Math.sin(a)*spread*.5);mesh.scale.setScalar(Math.max(0,1-t)*(shot?1.35:1));});
  });
  return <group ref={group}><mesh ref={ring} rotation={[-Math.PI/2,0,0]} position={[0,.09,0]}><ringGeometry args={[.7,.82,40]}/><meshBasicMaterial color={color} transparent toneMapped={false} depthWrite={false}/></mesh>
-  {Array.from({length:8},(_,i)=><mesh key={i}><octahedronGeometry args={[effect.critical?.16:.09,0]}/><meshBasicMaterial color={color} toneMapped={false} transparent blending={AdditiveBlending} depthWrite={false}/></mesh>)}
+  {Array.from({length:shot?12:8},(_,i)=><mesh key={i}><octahedronGeometry args={[effect.critical?.16:shot?.075:.09,0]}/><meshBasicMaterial color={i%3===0&&shot?'#fff7db':color} toneMapped={false} transparent blending={AdditiveBlending} depthWrite={false}/></mesh>)}
  </group>;
 }
 

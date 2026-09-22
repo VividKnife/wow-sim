@@ -26,7 +26,7 @@ export default function World({state:s,data:d,busy,revision,send,overview,onOpen
  <StockadesQuestEvent state={s} data={d} busy={busy} send={send}/>
  <div className="interaction-grid">
  {(d.city||['全部','怪物'].includes(filter))&&d.monsters.map((m:any)=><button className={'interaction monster '+(m.min>s.level+2?'danger':'')} key={m.id} disabled={busy} onClick={()=>send({type:'hunt',id:m.id})}><CreaturePortrait unit={{entry:m.id}} className="monster-portrait"/><span className="mob-level">{m.min===m.max?m.min:`${m.min}—${m.max}`}{m.elite?' 精英':''}</span><strong>{m.name}</strong><small>开始自动狩猎 →</small></button>)}
- {(d.city||['全部','任务物件'].includes(filter))&&d.gatherables.map((o:any)=><button className="interaction" key={o.id} disabled={busy} onClick={()=>send({type:'gather',id:o.id})}><span className="quest-mark">◇</span><strong>{o.items[0]?.name||o.name}</strong><small>调查 / 采集 · 5 秒</small></button>)}
+ {(d.city||['全部','任务物件'].includes(filter))&&d.gatherables.map((o:any)=><button className="interaction" key={o.id} disabled={busy} onClick={()=>send({type:'gather',id:o.id})}><span className="quest-mark">◇</span><strong>{o.items[0]?.name||o.name}</strong><small>点击后持续自动采集，直至目标完成</small></button>)}
  </div>
  <section id="quest-list" className="panel quest-panel"><div className="section-heading"><div><div className="eyebrow">冒险手册</div><h2>任务日志 <small>{Object.keys(s.quests).length} / 20</small></h2></div><small>接受与交付任务，请与对应人物交谈</small></div>
  {!questList.length&&<p className="empty">还没有正在进行的任务。点击附近带有 ! 标记的人物，开始一段冒险。</p>}

@@ -26,6 +26,16 @@ test('effective healing is separate from damage and overhealing is capped',()=>{
  assert.equal(row.damage,0);assert.equal(row.healing,25);assert.equal(row.dps,0);
  assert.equal(row.healHits,2);assert.equal(row.healCrits,1);
 });
+test('hunter damage includes beast companion damage while retaining pet skill detail',()=>{
+ const s=state();s.classId=3;s.pet={...newCharacter('灰牙'),id:'hunter-pet',ownerId:s.id,classId:0,petUnit:true,kind:'beast'};
+ initializeMetrics(s);
+ recordMetric(s,s,{hp:500},70,{spellId:75,label:'自动射击'});
+ recordMetric(s,s.pet,{hp:500},30,{spellId:17253,label:'撕咬'});
+ const rows=meterRows(s.combat,2000),hunter=rows.find(row=>row.actorId===s.id);
+ assert.equal(rows.some(row=>row.actorId==='hunter-pet'),false);
+ assert.equal(hunter.damage,100);assert.equal(hunter.petDamage,30);assert.equal(hunter.share,1);
+ assert.equal(hunter.spells.find(spell=>spell.spellId===17253).label,'灰牙 · 撕咬');
+});
 test('finalization freezes encounter duration and accumulates each dungeon segment once',()=>{
  const s=state();initializeMetrics(s);recordMetric(s,s,{hp:1000},100,{spellId:133});s.clock=3000;
  const battle=finishCombat(s);assert.equal(s.combat,null);assert.equal(s.lastCombat,battle);
@@ -37,6 +47,59 @@ test('finalization freezes encounter duration and accumulates each dungeon segme
  recordMetric(s,s,{hp:1000},200,{spellId:133});s.clock=24000;finishCombat(s);
  const aggregate=meterRows(s.dungeon.metrics,90000)[0];
  assert.equal(s.dungeon.metrics.durationMs,6000);assert.equal(aggregate.damage,300);assert.equal(aggregate.dps,50);
+});
+
+test('hunter and warlock party pets stay attributed across encounters and dungeon totals',()=>{
+ const s=state();s.classId=3;s.raceId=2;
+ s.party=[{...newCharacter('术士甲'),id:'warlock-1',classId:9},{...newCharacter('术士乙'),id:'warlock-2',classId:9}];
+ const owners=[s,...s.party];
+ for(const [index,owner] of owners.entries())owner.pet={...newCharacter(index?'Imp':'灰牙'),id:`${owner.id}-pet`,ownerId:owner.id,classId:0,petUnit:true,kind:index?'imp':'beast'};
+ for(let segment=1;segment<=2;segment++){
+  s.combat={startedAt:s.clock,dungeon:true,runId:'run-1'};
+  initializeMetrics(s);
+  for(const [index,owner] of owners.entries()){
+   recordMetric(s,owner,{hp:500},70,{spellId:0,label:'近战攻击'});
+   recordMetric(s,owner.pet,{hp:500},30+index,{spellId:0,label:'宠物攻击',critical:true,periodic:true});
+  }
+  s.clock+=2000;
+  const raw=structuredClone(s.combat.metrics);
+  const verify=(source,multiplier)=>{
+   const rows=meterRows(JSON.parse(JSON.stringify(source)),s.clock);
+   assert.equal(rows.length,3);
+   for(const [index,owner] of owners.entries()){
+    const row=rows.find(row=>row.actorId===owner.id);
+    assert.equal(row.damage,(100+index)*multiplier);
+    assert.equal(row.petDamage,(30+index)*multiplier);
+    assert.equal(row.dps,(100+index)/2);
+    assert.equal(row.share,(100+index)/303);
+    assert.equal(row.hits,2*multiplier);assert.equal(row.crits,multiplier);
+    assert.equal(row.periodicDamage,(30+index)*multiplier);
+    assert.equal(row.spells.length,2);
+    assert.equal(new Set(row.spells.map(spell=>spell.key)).size,2);
+    assert.equal(row.spells.reduce((sum,spell)=>sum+spell.damage,0),row.damage);
+   }
+  };
+  verify(s.combat,1);verify(s.combat,1);
+  assert.deepEqual(s.combat.metrics,raw);
+  finishCombat(s);
+  verify(s.lastCombat,1);verify(s.dungeon.metrics,segment);
+ }
+});
+
+for(const kind of ['imp','voidwalker','succubus','felhunter','infernal','doomguard'])test(`${kind} damage belongs to its warlock even after the pet disappears`,()=>{
+ const s=state();s.classId=9;
+ const pet={id:'pet',name:kind,ownerId:s.id,petUnit:true,kind};
+ recordMetric(s,pet,{hp:100},25,{spellId:3110,label:'宠物技能'});
+ const row=meterRows(s.combat,2000).find(row=>row.actorId===s.id);
+ assert.equal(row.damage,25);assert.equal(row.petDamage,25);
+ assert.equal(meterRows(s.combat,2000).some(row=>row.actorId===pet.id),false);
+});
+
+test('pets with an absent owner retain their damage as a separate row',()=>{
+ const s=state();recordMetric(s,{id:'pet',name:'Imp',petUnit:true,kind:'imp',ownerId:'absent'},{hp:100},25,{});
+ const rows=meterRows(s.combat,2000);
+ assert.equal(rows.find(row=>row.actorId==='pet').damage,25);
+ assert.equal(rows.reduce((sum,row)=>sum+row.damage,0),25);
 });
 test('zero duration, legacy battles and foreign dungeon runs never invent precise statistics',()=>{
  const s=state();initializeMetrics(s);recordMetric(s,s,{hp:100},50,{});

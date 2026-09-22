@@ -47,4 +47,5 @@
 
 .modelStage button{background:#581010;color:#ffd66b;border:1px solid #8e784f;padding:4px 8px}
 .shell .hero{padding-top:0;padding-bottom:50px;justify-content:flex-end}.heroTitle{flex-shrink:0}
+.genderChoice{display:grid;grid-template-columns:repeat(2,82px);gap:6px;margin:-38px 0 10px;position:relative;z-index:2}.genderChoice button{height:34px;border:2px outset #766a50;background:linear-gradient(#292b25,#151711);color:#bdb29b;font:bold 13px "SimSun",serif;text-shadow:1px 1px #000}.genderChoice button span{font-size:18px;margin-right:6px;vertical-align:-1px}.genderChoice button.active{border-color:#d0a84f;background:linear-gradient(#5b4826,#302514);color:#ffd65e;box-shadow:inset 0 0 0 1px #a78442,0 0 10px #d5a83f55}.genderChoice button:disabled{opacity:.55}.genderChoice button:focus-visible{outline:2px solid #ffe19a;outline-offset:2px}
 @media(max-width:760px){.modelStage{height:380px;flex:none}.shell .hero{min-height:460px;padding-bottom:20px}}

@@ -1,3 +1,4 @@
+import {preparePvpAura} from './pvp-control.js';
 // Spell aura IDs and timing semantics follow the pinned CMaNGOS reference.
 export const activeAuras=(unit,clock)=>(unit.auras||[]).filter(a=>a.until>clock);
 export const hasAura=(unit,type,clock)=>activeAuras(unit,clock).some(a=>a.type===type);
@@ -28,6 +29,7 @@ export const physicalDamageBonus=(unit,clock)=>activeAuras(unit,clock).filter(a=
 
 export function addCombatAura(unit,aura,clock){
  if(aura.mechanic){const immunity=activeAuras(unit,clock).find(a=>a.type===77&&a.misc===aura.mechanic);if(immunity){if(immunity.consumeOnImmune)immunity.until=clock;return;}}
+ aura=preparePvpAura(unit,aura,clock);if(!aura)return;
  if(aura.type===27){unit.cast=null;unit.nextAction=clock;}
  // Refresh an existing effect rather than duplicating ticks or modifiers.
  unit.auras=(unit.auras||[]).filter(a=>a.until>clock&&!(a.spell===aura.spell&&a.effect===aura.effect&&(!aura.perCaster||a.caster===aura.caster)));

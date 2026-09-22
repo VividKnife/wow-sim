@@ -59,7 +59,7 @@ const replayDuration=e=>Math.min(1000,Math.max(160,e.landsAt-e.startedAt));
 export function mergeCombatEffects(previous,incoming,now,projectiles=[]){
  const active=previous.filter(e=>now-e.shownAt<1500),ids=new Set(active.map(e=>e.id));
  const replay=incoming.filter(e=>e.kind==='launch'&&e.from&&e.to&&!projectiles.some(p=>p.id===e.projectileId));
- return [...active,...incoming.filter(e=>!ids.has(e.id)).map(e=>{const flight=!e.periodic&&['damage','incoming','miss'].includes(e.kind)&&replay.find(p=>p.actorId===e.actorId&&p.targetId===e.targetId&&p.spellId===e.spellId);return{...e,shownAt:now+(flight?replayDuration(flight):0),replayFlight:replay.includes(e)};})].slice(-40);
+ return [...active,...incoming.filter(e=>!ids.has(e.id)).map(e=>{const flight=!e.periodic&&['damage','incoming','miss'].includes(e.kind)&&[...projectiles,...replay].find(p=>p.actorId===e.actorId&&p.targetId===e.targetId&&p.spellId===e.spellId);return{...e,shownAt:now+(flight?replayDuration(flight):0),replayFlight:replay.includes(e),projectileVisual:flight?.visual};})].slice(-40);
 }
 export function presentationProjectiles(projectiles,effects,clock,now,units=[]){
  const flights=[...projectiles,...effects.filter(e=>e.replayFlight&&now>=e.shownAt&&now-e.shownAt<replayDuration(e)&&!projectiles.some(p=>p.id===e.projectileId)).map(e=>({...e,id:e.projectileId||e.id,startedAt:clock-(now-e.shownAt),landsAt:clock+replayDuration(e)-(now-e.shownAt)}))];

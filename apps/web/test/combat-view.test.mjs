@@ -54,6 +54,19 @@ test('short flights completed between polls replay once before same-batch damage
  const live=combatView.mergeCombatEffects([], [launch],5000,[{...launch,id:'p1'}]);
  assert.equal(combatView.presentationProjectiles([],live,2600,5250).length,0);
 });
+test('hunter shot replay carries its dedicated projectile style into the hit effect',()=>{
+ const launch={id:10,kind:'launch',projectileId:'arrow',actorId:'hunter',targetId:'mob',spellId:75,visual:'hunter-shot',from:{x:0,y:0},to:{x:10,y:0},startedAt:1000,landsAt:1200};
+ const damage={id:11,kind:'damage',actorId:'hunter',targetId:'mob',spellId:75,amount:20};
+ const effects=combatView.mergeCombatEffects([], [launch,damage],5000,[]);
+ assert.equal(effects.find(effect=>effect.id===11).projectileVisual,'hunter-shot');
+ assert.equal(combatView.presentationProjectiles([],effects,2000,5100)[0].visual,'hunter-shot');
+});
+test('a live hunter arrow delays and styles its instant authoritative auto-shot hit',()=>{
+ const flight={id:'arrow',actorId:'hunter',targetId:'mob',spellId:75,visual:'hunter-shot',from:{x:0,y:0},to:{x:20,y:0},startedAt:1000,landsAt:1400};
+ const hit={id:12,kind:'damage',actorId:'hunter',targetId:'mob',spellId:75,amount:18};
+ const shown=combatView.mergeCombatEffects([], [hit],5000,[flight])[0];
+ assert.equal(shown.shownAt,5400);assert.equal(shown.projectileVisual,'hunter-shot');assert.equal(shown.replayFlight,false);
+});
 test('live and replayed projectile endpoints follow moving targets without rewriting authority',()=>{
  const flight={id:'p1',actorId:'a',targetId:'b',from:{x:0,y:0},to:{x:10,y:0},startedAt:1000,landsAt:2000};
  const original=structuredClone(flight),targets=[{id:'b',position:20,positionY:6}];

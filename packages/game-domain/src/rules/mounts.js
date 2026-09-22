@@ -1,4 +1,4 @@
-import {nodes,route,creatureLocations,spells,nameOf} from './catalog.js';
+import {nodes,route,baseTravelSpeed,creatureLocations,spells,nameOf} from './catalog.js';
 import {log,spellInfo} from './character.js';
 import {ranks} from './talent-effects.js';
 import {stopRecovery} from './recovery.js';
@@ -98,7 +98,7 @@ export function endMount(s){
 export function travelRoute(s,to){
  const m=findMount(s.mounted),canRide=m&&owns(s,m.id)&&(m.classSpell||trained(s)&&!mountEligibility(s,m))&&!outdoorReason(s)&&!s.dungeon&&s.hp>0;
  const pursuit=(ranks(s)['Pursuit of Justice']||0)*.04;const form={wolf:.4,travel:.4,cat:(ranks(s)['Feline Swiftness']||0)*.15}[s.form]||0;
- return route(s.location,to,canRide?7*(1+m.bonus/100)*(1+pursuit):7*(1+Math.max(pursuit,form))); 
+ return route(s.location,to,baseTravelSpeed*(canRide?(1+m.bonus/100)*(1+pursuit):1+Math.max(pursuit,form)));
 }
 // Paths carry their own segment times. Dismount exactly when entering a
 // restricted leg, including on one-shot offline catch-up and after reloading.
@@ -108,6 +108,6 @@ export function updateTravelMount(s){
 export function travelDismountAt(s){
  const a=s.activity;if(!s.mounted||a.type!=='travel'||!a.path?.length)return Infinity;
  let elapsed=0;
- for(const leg of a.path){if(leg.riding===false)return Math.max(s.clock,a.startedAt+Math.ceil(elapsed));elapsed+=leg.duration??leg.distance/7*1000;}
+ for(const leg of a.path){if(leg.riding===false)return Math.max(s.clock,a.startedAt+Math.ceil(elapsed));elapsed+=leg.duration??leg.distance/baseTravelSpeed*1000;}
  return Infinity;
 }

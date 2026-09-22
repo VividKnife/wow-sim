@@ -23,9 +23,12 @@ function equippedFor(c,sp){
 export function passiveTalentSpells(c){return [...selectedTalentSpells(c).filter(({spell})=>(spell.Attributes&64)&&equippedFor(c,spell)).map(x=>x.spell),...(c.talentBuffs||[]).filter(b=>b.until>(c.time||0)).map(b=>spells[b.spell]).filter(Boolean)];}
 /** DBC SPELLMOD operations. Flat modifiers add before percentages, once per learned rank. */
 export function talentSpellValue(c,sp,operation,value){
+ return applyTalentSpellValue(c,sp,operation,value,passiveTalentSpells(c));
+}
+function applyTalentSpellValue(c,sp,operation,value,passives){
  if(sp?.AttributesEx3&spellAttributesEx3.IGNORE_CASTER_MODIFIERS)return value;
  let flat=0,percent=0;
- for(const aura of passiveTalentSpells(c))for(let i=1;i<=3;i++){const type=aura['EffectApplyAuraName'+i];if(![107,108].includes(type)||aura['EffectMiscValue'+i]!==operation||!talentAffectsSpell(aura,i,sp))continue;const amount=aura['EffectBasePoints'+i]+1;if(type===107)flat+=amount;else percent+=amount;}
+ for(const aura of passives)for(let i=1;i<=3;i++){const type=aura['EffectApplyAuraName'+i];if(![107,108].includes(type)||aura['EffectMiscValue'+i]!==operation||!talentAffectsSpell(aura,i,sp))continue;const amount=aura['EffectBasePoints'+i]+1;if(type===107)flat+=amount;else percent+=amount;}
  let result=(value+flat)*(1+percent/100);
  if(c.talentProcs?.amplifyCurse?.until>(c.time||0)){if(operation===8&&['Curse of Agony','Curse of Weakness'].includes(sp?.SpellName))result*=1.5;if(operation===12&&sp?.SpellName==='Curse of Exhaustion')result-=20;}
  return result;
@@ -58,10 +61,12 @@ export function talentModifiers(c){
  return result;
 }
 export function modifySpell(c,sp,info){
- const changed={...info};for(const[key,operation]of Object.entries({mana:14,castMs:10,cooldownMs:11,range:5,radius:6,durationMs:1}))changed[key]=Math.max(0,talentSpellValue(c,sp,operation,info[key]||0));
+ // All fields describe the same actor at the same instant. Resolve applicable
+ // talents once for this call; never retain them across gameplay mutations.
+ const passives=passiveTalentSpells(c),changed={...info};for(const[key,operation]of Object.entries({mana:14,castMs:10,cooldownMs:11,range:5,radius:6,durationMs:1}))changed[key]=Math.max(0,applyTalentSpellValue(c,sp,operation,info[key]||0,passives));
  // A cooldown modifier applies to each populated recovery clock, not to an
  // artificial maximum that loses the shared category's identity.
- for(const key of ['spellCooldownMs','categoryCooldownMs'])changed[key]=info[key]>0?Math.max(0,talentSpellValue(c,sp,11,info[key])):0;
+ for(const key of ['spellCooldownMs','categoryCooldownMs'])changed[key]=info[key]>0?Math.max(0,applyTalentSpellValue(c,sp,11,info[key],passives)):0;
  const p=c.talentProcs||{},now=c.time||0;
  if(p.clearcasting?.until>now)changed.mana=0;
  if(p.nightfall?.until>now&&sp.SpellName==='Shadow Bolt')changed.castMs=0;
@@ -106,4 +111,3 @@ export function talentPetModifiers(c,pet){const r=ranks(c),base=talentModifiers(
 
 export function talentCombatDefense(c){const result={stealthLevel:0,stealthDetection:0,meleeCritReduction:0,rangedCritReduction:0,rangedAvoidance:0,spellAvoidance:0,resistances:{}};for(const sp of passiveTalentSpells(c))for(let i=1;i<=3;i++){const aura=sp['EffectApplyAuraName'+i],amount=sp['EffectBasePoints'+i]+1,misc=sp['EffectMiscValue'+i];if(aura===154)result.stealthLevel+=amount;if(aura===17)result.stealthDetection+=amount;if(aura===187)result.meleeCritReduction-=amount/100;if(aura===188)result.rangedCritReduction-=amount/100;if(aura===185)result.rangedAvoidance-=amount/100;if(aura===186)result.spellAvoidance-=amount/100;if(aura===22)for(let school=1;school<=6;school++)if(misc&(1<<school))result.resistances[school]=(result.resistances[school]||0)+amount;}
  const racial=racialModifiers(c);result.stealthLevel+=racial.stealthLevel;result.stealthDetection+=racial.stealthDetection;for(const [school,value]of Object.entries(racial.resistances))result.resistances[school]=(result.resistances[school]||0)+value;const rank=ranks(c)['Master Demonologist']||0;if(c.petUnit&&c.kind==='felhunter')for(let school=1;school<=6;school++)result.resistances[school]=(result.resistances[school]||0)+(c.level||1)*(c.ownerMasterDemonologist||0)/5;if(c.pet?.hp>0&&c.pet.kind==='felhunter')for(let school=1;school<=6;school++)result.resistances[school]=(result.resistances[school]||0)+(c.level||1)*rank/5;return result;}
-

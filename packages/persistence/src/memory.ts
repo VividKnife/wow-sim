@@ -1,5 +1,5 @@
 import { tables, assertTable, validateRow, uniqueFields, copy } from './store.ts';
-import type { Row, Store, Transaction, TableName, Where } from './store.ts';
+import type { Row, Store, Transaction, ReadView, TableName, Where } from './store.ts';
 // Test implementation: a detached working set commits only after the callback succeeds.
 // Production uses PostgreSQL. Keeping this serialized makes transaction tests deterministic.
 export class MemoryStore implements Store {
@@ -8,6 +8,27 @@ export class MemoryStore implements Store {
     private closed = false;
     constructor(initial: Partial<Record<TableName, Row[]>> = {}) {
         this.rows = new Map(tables.map(table => [table, new Map((initial[table] || []).map(row => [row.id, copy(row)]))]));
+    }
+    async read<T>(work: (view: ReadView) => Promise<T>): Promise<T> {
+        if (this.closed) throw new Error('Store is closed');
+        // Writers replace the map atomically; readers retain a stable committed map.
+        const rows = this.rows;
+        let active = true;
+        const getRows = (table: TableName) => { if (!active) throw new Error('Transaction is closed'); assertTable(table); return rows.get(table)!; };
+        const view: ReadView = {
+            get: async <T = Row>(table: TableName, id: string) => copy(getRows(table).get(id) ?? null) as T | null,
+            list: async <T = Row>(table: TableName, where: Where = {}) => copy([...getRows(table).values()].filter(row => Object.entries(where).every(([key, value]) => row[key] === value)).sort((a,b) => a.id.localeCompare(b.id))) as T[],
+            due: async <T = Row>(table: 'activities' | 'instances', now: number, limit: number) => copy([...getRows(table).values()].filter(row => ['running','returning'].includes(row.status) && row.nextEventAt <= now).sort((a,b) => a.nextEventAt-b.nextEventAt || a.id.localeCompare(b.id)).slice(0,limit)) as T[],
+        };
+        try { return await work(view); } finally { active = false; }
+    }
+    async heartbeat(accountId: string, now: number, interval: number, returnAfter: number): Promise<boolean> {
+        return this.transaction(async tx => {
+            const row = await tx.get('account_presence', accountId);
+            if (!Number.isSafeInteger(row?.lastSeenAt) || row!.lastSeenAt < 0 || now-row!.lastSeenAt >= returnAfter) return false;
+            if (now-row!.lastSeenAt >= interval) await tx.put('account_presence', {...row!, lastSeenAt:now});
+            return true;
+        });
     }
     async transaction<T>(work: (tx: Transaction) => Promise<T>): Promise<T> {
         if (this.closed)

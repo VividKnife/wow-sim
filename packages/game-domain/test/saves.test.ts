@@ -4,13 +4,26 @@ import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
 import {classDefinitions,items,quests} from '../src/rules/catalog.js';
 import {canEquip,bagCapacity,stats} from '../src/rules/character.js';
-import {partyUnlocked,PARTY_QUEST} from '../src/rules/party-unlock.js';
+import {partyUnlocked} from '../src/rules/party-unlock.js';
 import {boostEquipmentCandidates,LEVEL_20_BOOST_MONEY} from '../src/rules/boost.js';
 import {tables} from '../../persistence/src/store.ts';
 import {boostMount,mountView,beginMount,finishMount,travelRoute,buyMount} from '../src/rules/mounts.js';
 
 const input={name:'旅人',classId:8,raceId:1};
 const setup=()=>new GameService(new MemoryStore(),{contentVersion:'test',now:()=>1000,seed:()=>123});
+
+test('invalid presence does not hide the save list or prevent deletion and recreation',async()=>{
+ const service=setup();
+ const old=await service.createSave('alice',input,'old');
+ await service.store.transaction(tx=>tx.delete('account_presence',old.id));
+ const list=await service.listSaves('alice');
+ assert.equal(list.length,1);assert.equal(list[0].lastSeenAt,null);
+ await assert.rejects(service.snapshot(old.id),{code:'ACCOUNT_STATE'});
+ await service.deleteSave('alice',old.id);
+ const fresh=await service.createSave('alice',input,'fresh');
+ assert.equal((await service.listSaves('alice'))[0].id,fresh.id);
+ assert.equal((await service.listSaves('alice'))[0].lastSeenAt,1000);
+});
 test('multiple saves are isolated, owner checked and creation retries do not duplicate',async()=>{
  const service=setup();
  const a=await service.createSave('alice',input,'first-save');
@@ -31,7 +44,7 @@ test('multiple saves are isolated, owner checked and creation retries do not dup
   for(const table of tables)assert.equal((await tx.list(table,{accountId:a.id})).length,0,table);
  });
 });
-test('boost grants 50 gold, legal quest equipment, four runecloth bags, full resources and leaves recruitment locked for every race/class',async()=>{
+test('boost grants 50 gold, legal quest equipment, four runecloth bags, full resources and opens recruitment for every race/class',async()=>{
  const service=setup();
  for(const c of classDefinitions)for(const raceId of c.races){
   const {id}=await service.createSave(`user-${c.id}-${raceId}`,{...input,classId:c.id,raceId,boost:true},'boost-save');
@@ -45,19 +58,19 @@ test('boost grants 50 gold, legal quest equipment, four runecloth bags, full res
   assert.equal(s.mounted,boostMount.id);
   assert.ok(travelRoute(s,'northshire').duration<walking.duration);
   assert.equal(s.hp,stats(s).maxHp);assert.equal(s.mana,stats(s).maxMana);
-  assert.equal(partyUnlocked(s),false);assert.ok(s.quests[PARTY_QUEST]);assert.equal(s.party.length,0);assert.equal(snapshot.roster.length,1);
+  assert.equal(partyUnlocked(s),true);assert.equal(s.quests[900001],undefined);assert.equal(s.party.length,0);assert.equal(snapshot.roster.length,1);
   assert.deepEqual(s.talents,{});
   for(const slot of [1,2,3,5,6,7,8,9,10,11,12,13,14,15,16])assert.ok(s.equipment[slot],`${c.id}/${raceId} slot ${slot}`);
   for(const e of Object.values(s.equipment) as any[]){
+   if(e.boostCompanionKit){assert.ok(items[e.id].companionKit);assert.equal(items[e.id].RequiredLevel,18);assert.ok(canEquip(s,items[e.id]));continue;}
    if(!e.boostQuestId)continue;
    assert.ok(canEquip(s,items[e.id]));
    const q=quests[e.boostQuestId];assert.ok(q.MinLevel<=20&&q.QuestLevel<=20);
-   if(e.boostQuestId===PARTY_QUEST){assert.ok(items[e.id].companionKit);assert.equal(items[e.id].RequiredLevel,18);}
-   else assert.ok(Object.entries(q).some(([k,v])=>/^Rew(Choice)?ItemId/.test(k)&&v===e.id));
+   assert.ok(Object.entries(q).some(([k,v])=>/^Rew(Choice)?ItemId/.test(k)&&v===e.id));
   }
   assert.ok(boostEquipmentCandidates(s).length);
   if(items[s.equipment[16].id].InventoryType===17)assert.equal(s.equipment[17],undefined);
-  await assert.rejects(service.command(id,{type:'recruit',id:'mage',requestId:'recruit-too-early'}),/任务|暴风城/);
+  const recruited=await service.command(id,{type:'recruit',id:'mage',requestId:'recruit'});assert.equal(recruited.state.party.length,1);
  }
 });
 test('gift mount survives service reload and respects normal riding restrictions without being purchasable',async()=>{
@@ -86,4 +99,12 @@ test('invalid boost and race/class combinations do not leave partial saves',asyn
  await assert.rejects(service.createSave('alice',{...input,boost:'yes' as any},'bad-boost'));
  await assert.rejects(service.createSave('alice',{...input,classId:2,raceId:2},'bad-race'));
  assert.deepEqual(await service.listSaves('alice'),[]);
+});
+test('character gender is validated, persisted and returned in save summaries',async()=>{
+ const service=setup();
+ const {id}=await service.createSave('alice',{...input,gender:'female'},'female-save');
+ assert.equal((await service.snapshot(id)).state.gender,'female');
+ assert.equal((await service.listSaves('alice'))[0].gender,'female');
+ await assert.rejects(service.createSave('bob',{...input,gender:'unknown' as any},'bad-gender'),/性别/);
+ assert.deepEqual(await service.listSaves('bob'),[]);
 });

@@ -13,6 +13,7 @@ import {strategyAllows,companionRules,protectedTarget,protectCombatTarget} from 
 import {recordMetric} from './combat-metrics.js';
 import {talentModifiers,healingMultiplier,spellCritBonus,ranks} from './talent-effects.js';
 import {classEffect} from './class-mechanics.js';
+import {arenaSight} from '../../../sim-core/src/arena-space.js';
 
 const threatRows=Object.fromEntries(table('spell_threat').map(r=>[r.entry,r]));
 export const defensive=c=>c.classId===1&&(c.stance?c.stance==='defensive':c.learned.includes(71));
@@ -28,7 +29,7 @@ export function gainRage(c,damage,attacker){
  const conversion=.0091107836*c.level*c.level+3.225598133*c.level+4.2652911;
  c.rage=Math.min(1000,(c.rage||0)+Math.floor(damage/conversion*(attacker?7.5:2.5)*10));
 }
-export function effectiveArmor(e,clock){return armorWithAuras(e,Math.max(0,e.armor-(e.sunder?.until>clock?e.sunder.amount*e.sunder.stacks:0)),clock);}
+export function effectiveArmor(e,clock){if(e.pvp)return Math.max(0,stats(e).armor-(e.sunder?.until>clock?e.sunder.amount*e.sunder.stacks:0));return armorWithAuras(e,Math.max(0,e.armor-(e.sunder?.until>clock?e.sunder.amount*e.sunder.stacks:0)),clock);}
 export function weaponDamage(s,c,normalized=false){
  const weapon=!hasAura(c,67,s.clock)&&items[c.equipment[16]?.id],speed=c.form==='cat'?1:c.form==='bear'?2.5:normalized?(weapon?.subclass===15?1.7:weapon?.InventoryType===17?3.3:2.4):(weapon?.delay||2000)/1000;
  const power=stats(c).attackPower*(c.racialBuff?.kind==='bloodfury'&&c.racialBuff.until>s.clock?1.25:1);
@@ -97,6 +98,8 @@ function decidePriest(s,c,enemies,actors,api,rules){
 
 }
 export function companionTarget(s,c,enemies){enemies=enemies.filter(e=>!e.controlledBy&&detectsTarget(c,e,s.clock));
+ if(s.combat?.pvp)return enemies.find(e=>e.id===c.arenaTargetId)||enemies.find(e=>!protectCombatTarget(s,e));
+ const assigned=s.combat?.raidEncounter&&enemies.find(e=>e.id===c.raidTargetId);if(assigned)return assigned;
  const uncontrolled=enemies.filter(e=>!(e.polyUntil>s.clock));if(uncontrolled.length)enemies=uncontrolled;
  // Movement, weapon swings and abilities must agree on the rescue target.
  // Stay on a recently taunted enemy while building threat during its forced focus.
@@ -106,7 +109,7 @@ export function decideCompanion(s,c,enemies,actors,damage,spellLands,api,rules){
  if(c.strategyPolicy?.protectCC!==false)enemies=enemies.filter(e=>!protectCombatTarget(s,e));
  // Healing is independent of damage rules and remains the first priest decision.
  if(c.classId===5){return decidePriest(s,c,enemies,actors,api,rules);}
- const e=companionTarget(s,c,enemies);if(!e||distance(c,e)>5)return false;
+ const e=companionTarget(s,c,enemies);if(!e||distance(c,e)>5||!arenaSight(c,e))return false;
  if(c.classId===1){
   const taunt=c.learned.includes(355)&&spellInfo(c,355);
   if(taunt&&(!rules||rules.some(r=>r.enabled&&spells[r.spell]?.SpellName==='Taunt'&&strategyAllows(s,c,e,taunt,r)))&&stanceAllows(c,taunt)&&e.target&&e.target!==c.id&&spellReady(c,taunt,s.clock)){announce(s,c,e,taunt);if(spellLands(s,c,e,taunt)){e.threat[c.id]=Math.max(0,...Object.values(e.threat));e.tauntedBy=c.id;e.tauntUntil=s.clock+taunt.durationMs;e.target=c.id;}return true;}

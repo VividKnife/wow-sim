@@ -1,4 +1,4 @@
-import {syncPartyQuest} from './party-unlock.js';
+import {partyUnlocked} from './party-unlock.js';
 import {recordJourneyLog} from './journey.js';
 import {agilityChances,intellectCrit,baseAttackPower} from '../../../sim-core/src/class-stats.js';
 import {racialModifiers} from './racial-effects.js';
@@ -8,6 +8,32 @@ import {enchants,professionSkillIds,specializationKnown} from './profession-data
 import {talentModifiers,talentCombatDefense,modifySpell} from './talent-effects.js';
 export const clone=x=>JSON.parse(JSON.stringify(x));
 export const LEVEL_CAP=60;
+// Content tables are immutable during play. Index their first matching rows once;
+// dynamic equipment, buffs and talents are still evaluated on every stats call.
+const statTables=new Map();
+function statRow(name,fields,values){
+ let rows=statTables.get(name);
+ if(!rows){
+  rows=new Map();
+  for(const row of table(name)){const key=fields.map(field=>row[field]).join(':');if(!rows.has(key))rows.set(key,row);}
+  statTables.set(name,rows);
+ }
+ return rows.get(values.join(':'));
+}
+const itemStatMetadata=new WeakMap();
+function itemStats(item){
+ let metadata=itemStatMetadata.get(item);
+ if(!metadata){
+  const attributes=[],auras=[];
+  for(let n=1;n<=10;n++){const key={3:'agi',4:'str',5:'int',6:'spi',7:'sta'}[item['stat_type'+n]];if(key)attributes.push([key,item['stat_value'+n]]);}
+  for(let n=1;n<=5;n++){
+   const aura=spells[item['spellid_'+n]];if(item['spelltrigger_'+n]!==1||!aura)continue;
+   for(let j=1;j<=3;j++)auras.push({type:aura['EffectApplyAuraName'+j],misc:aura['EffectMiscValue'+j],amount:aura['EffectBasePoints'+j]+1});
+  }
+  metadata={attributes,auras};itemStatMetadata.set(item,metadata);
+ }
+ return metadata;
+}
 export function rng(s){let x=s.rngState>>>0;x^=x<<13;x^=x>>>17;x^=x<<5;s.rngState=x>>>0;return s.rngState/4294967296;}
 export const roll=(s,min,max)=>Math.floor(min+rng(s)*(max-min+1));
 export function log(s,text,kind='info',detail={}){s.logs.push({id:++s.logSequence,encounterId:s.combat?.id??null,at:s.clock,text,kind,...detail});if(s.logs.length>140)s.logs.shift();recordJourneyLog(s,s.logs.at(-1));}
@@ -53,7 +79,7 @@ function petPassiveAuras(c){
  return [...selected.values()].flatMap(({sp})=>[1,2,3].filter(n=>sp['Effect'+n]===6).map(n=>({spell:sp.Id,effect:n,type:sp['EffectApplyAuraName'+n],misc:sp['EffectMiscValue'+n],amount:sp['EffectBasePoints'+n]+1,until:Infinity})));
 }
 function petStats(c){
- const source=table('pet_levelstats').find(r=>r.creature_entry===(c.kind==='beast'?1:c.entry)&&r.level===c.level)||c.petStatBase||{hp:c.maxHp||0,mana:c.maxMana||0,armor:c.armor||0};
+ const source=statRow('pet_levelstats',['creature_entry','level'],[c.kind==='beast'?1:c.entry,c.level])||c.petStatBase||{hp:c.maxHp||0,mana:c.maxMana||0,armor:c.armor||0};
  const result={str:source.str||0,agi:source.agi||0,sta:source.sta||0,int:source.inte||0,spi:source.spi||0,armor:source.armor||0,maxHp:0,maxMana:0,baseMana:0,attackPower:0,rangedAttackPower:0,crit:.05,spellCrit:0,dodge:0,parry:0,hit:0,spellHit:0,spellPower:0,healing:0,regenCasting:0};
  const auras=[...petPassiveAuras(c),...(c.auras||[]).filter(a=>a.until>(c.time||0))],mod=c.ownerPetModifiers||{};let health=0,mana=0,healthPct=1,manaPct=1;
  for(const a of auras){if(a.type===29)for(const [i,key]of ['str','agi','sta','int','spi'].entries())if(a.misc===-1||a.misc===i)result[key]+=a.amount;if(a.type===34)health+=a.amount;if(a.type===35&&a.misc===0)mana+=a.amount;if(a.type===133)healthPct*=1+a.amount/100;if(a.type===132)manaPct*=1+a.amount/100;}
@@ -75,12 +101,18 @@ export function refreshPetStats(owner,pet,{heal=false}={}){
 export function stats(c){
  if(c.petUnit&&c.kind)return petStats(c);
  if(c.escortNpc||c.petUnit)return{str:0,agi:0,sta:0,int:0,spi:0,armor:armorWithAuras(c,c.armor||0,c.time||0),maxHp:c.maxHp||0,maxMana:c.maxMana||0,baseMana:0,attackPower:0,rangedAttackPower:0,crit:.05,spellCrit:0,dodge:0,parry:0,hit:0,spellHit:0,spellPower:0,healing:0,resistances:resistances(c),regenCasting:0};
- const base=table('player_levelstats').find(r=>r.race===(c.raceId||1)&&r.class===c.classId&&r.level===Math.min(LEVEL_CAP,c.level));
- const classBase=table('player_classlevelstats').find(r=>r.class===c.classId&&r.level===Math.min(LEVEL_CAP,c.level));
+ const base=statRow('player_levelstats',['race','class','level'],[c.raceId||1,c.classId,Math.min(LEVEL_CAP,c.level)]);
+ const classBase=statRow('player_classlevelstats',['class','level'],[c.classId,Math.min(LEVEL_CAP,c.level)]);
  if(!base||!classBase)throw new Error('缺少角色等级属性数据');
  const result={str:base.str,agi:base.agi,sta:base.sta,int:base.inte,spi:base.spi,armor:base.agi*2,maxHp:0,maxMana:0,spellPower:0,healing:0,weaponDamage:0,manaRegen:0,threat:0,schoolPower4:0,schoolPower16:0,schoolPower32:0};
  let gearArmor=0;const equipmentAuras=[];
- for(const e of Object.values(c.equipment||{})){const i=items[e.id];if(!i||e.durability===0&&i.MaxDurability)continue;result.armor+=i.armor;gearArmor+=i.armor||0;for(let n=1;n<=10;n++){const key={3:'agi',4:'str',5:'int',6:'spi',7:'sta'}[i['stat_type'+n]];if(key)result[key]+=i['stat_value'+n];}for(let n=1;n<=5;n++){const aura=spells[i['spellid_'+n]];if(i['spelltrigger_'+n]!==1||!aura)continue;for(let j=1;j<=3;j++){equipmentAuras.push({type:aura['EffectApplyAuraName'+j],misc:aura['EffectMiscValue'+j],amount:aura['EffectBasePoints'+j]+1});}}}
+ for(const e of Object.values(c.equipment||{})){
+  const i=items[e.id];if(!i||e.durability===0&&i.MaxDurability)continue;
+  result.armor+=i.armor;gearArmor+=i.armor||0;
+  const metadata=itemStats(i);
+  for(const [key,value]of metadata.attributes)result[key]+=value;
+  equipmentAuras.push(...metadata.auras);
+ }
  let enchantHealth=0,enchantMana=0,enchantDodge=0;
  for(const e of Object.values(c.equipment||{})){if(e.durability===0&&items[e.id]?.MaxDurability)continue;for(const [key,value]of Object.entries(enchants[e.enchant]?.stats||{})){if(key==='health')enchantHealth+=value;else if(key==='mana')enchantMana+=value;else if(key==='dodge')enchantDodge+=value/100;else if(key in result)result[key]+=value;}}
  for(const a of Object.values(c.buffs||{})){if(a.until<=c.time)continue;if(a.kind==='int')result.int+=a.amount;if(a.kind==='armor')result.armor+=a.amount;if(a.kind==='sta')result.sta+=a.amount;}
@@ -124,9 +156,18 @@ export function stats(c){
  result.armor=armorWithAuras(c,(result.armor+gearArmor*(1+(mods.itemArmorPct||0))*(formArmor-1))*(1+(mods.armorPct||0)),c.time||0);
  return result;
 }
-export function newCharacter(name,classId=8,level=1,raceId=1){const def=classDefinitions.find(c=>c.id===classId),learned=(classAbilities[classId]||[]).filter(a=>a.startingSpell&&(!a.startingRaces||a.startingRaces.includes(raceId))).map(a=>a.spellId);return{id:'player',name,classId,raceId,strategyProfiles:[],power:def?.power||'mana',level,xp:0,equipment:{},talents:{},talentResetCount:0,learned:[...new Set(learned)],cooldowns:{},buffs:{},hp:0,mana:0,rage:0,energy:100,time:0,lastManaUse:-5000};}
+export function newCharacter(name,classId=8,level=1,raceId=1,gender='male'){const def=classDefinitions.find(c=>c.id===classId),learned=(classAbilities[classId]||[]).filter(a=>a.startingSpell&&(!a.startingRaces||a.startingRaces.includes(raceId))).map(a=>a.spellId);return{id:'player',name,classId,raceId,gender,strategyProfiles:[],power:def?.power||'mana',level,xp:0,equipment:{},talents:{},talentResetCount:0,learned:[...new Set(learned)],cooldowns:{},buffs:{},hp:0,mana:0,rage:0,energy:100,time:0,lastManaUse:-5000,...(classId===3?{ammunition:{},ammoPolicy:{enabled:false,target:400}}:{})};}
 export function makeItem(s,id,count=1){const i=items[id];if(!i)throw new Error('物品数据缺失：'+id);return{uid:'i'+(++s.itemSequence),id,count,durability:i.MaxDurability,bound:!!(i.bonding===1||i.bonding===4)};}
-export function equipStarter(s){for(const row of classStartingItems[`${s.raceId||1}:${s.classId}`]||[]){const i=items[row.itemId];const item=makeItem(s,row.itemId,row.count||1);if(i.InventoryType&&i.class!==1)s.equipment[slotOf(i)]=item;else s.bag.push(item);}const st=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;s.rage=0;s.energy=100;}
+export function equipStarter(s){
+ for(const row of classStartingItems[`${s.raceId||1}:${s.classId}`]||[]){
+  const i=items[row.itemId],item=makeItem(s,row.itemId,row.count||1);
+  if(i.class===6){s.ammunition??={};s.ammunition[row.itemId]=(s.ammunition[row.itemId]||0)+(row.count||1);}
+  else if(i.ContainerSlots)s.bags.push(item);
+  else if(i.InventoryType&&[2,4].includes(i.class))s.equipment[slotOf(i)]=item;
+  else s.bag.push(item);
+ }
+ const st=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;s.rage=0;s.energy=100;
+}
 export const countItem=(s,id)=>s.bag.filter(i=>i.id===id).reduce((n,i)=>n+i.count,0);
 export const bagCapacity=s=>16+s.bags.reduce((n,i)=>n+(items[i.id]?.ContainerSlots||0),0);
 export function equipmentBlockedReason(c,item,requestedSlot,partyState=c){
@@ -156,11 +197,12 @@ export function addItem(s,id,count=1,pending=true){const data=items[id];if(!data
  while(count>0&&s.bag.length<bagCapacity(s)){const n=Math.min(max,count);s.bag.push(makeItem(s,id,n));count-=n;}
  if(count&&pending)s.pending.push(makeItem(s,id,count));return count===0;
 }
-export function gainXp(s,c,amount){if(c.level>=LEVEL_CAP)return;if(!Number.isFinite(amount)||amount<0)throw new Error('经验值无效');c.xp+=amount;if(c===s)s.totals.xp+=amount;while(c.level<LEVEL_CAP&&c.xp>=xpTable[c.level].xp_for_next_level){c.xp-=xpTable[c.level].xp_for_next_level;c.level++;const st=stats(c);c.hp=st.maxHp;c.mana=st.maxMana;log(s,`${c.name} 升到了 ${c.level} 级！`,'level');}if(c.level===LEVEL_CAP)c.xp=0;syncPartyQuest(s);}
+export function gainXp(s,c,amount){if(c.level>=LEVEL_CAP)return;if(!Number.isFinite(amount)||amount<0)throw new Error('经验值无效');const wasPartyUnlocked=partyUnlocked(s);c.xp+=amount;if(c===s)s.totals.xp+=amount;while(c.level<LEVEL_CAP&&c.xp>=xpTable[c.level].xp_for_next_level){c.xp-=xpTable[c.level].xp_for_next_level;c.level++;const st=stats(c);c.hp=st.maxHp;c.mana=st.maxMana;log(s,`${c.name} 升到了 ${c.level} 级！`,'level');}if(c.level===LEVEL_CAP)c.xp=0;if(!wasPartyUnlocked&&partyUnlocked(s)&&s.growthPolicy!=='companion')log(s,'队友系统已开通！可在队友页随时招募或更换队友。','party');}
 export function killXp(playerLevel,mobLevel,elite=false,dungeon=false){const diff=mobLevel-playerLevel;const base=playerLevel*5+45;const trivial=playerLevel<10?4:playerLevel<20?5:playerLevel<30?6:playerLevel<40?7:playerLevel<45?8:playerLevel<50?9:playerLevel<55?10:playerLevel<60?11:12;const zd=playerLevel<8?5:playerLevel<10?6:playerLevel<12?7:playerLevel<16?8:playerLevel<20?9:playerLevel<30?11:playerLevel<40?12:playerLevel<45?13:playerLevel<50?14:playerLevel<55?15:playerLevel<60?16:17;let amount=diff>=0?base*(1+.05*Math.min(4,diff)):-diff<=trivial?base*(1+diff/zd):0;if(elite)amount*=dungeon?2.5:2;const integer=Math.floor(amount),fraction=amount-integer;return fraction===.5?integer+(integer%2):Math.round(amount);}
 export function knownRank(c,first){const original=spells[first];return c.learned.filter(id=>spells[id]&&((spellChain[id]?.first_spell||id)===first||spells[id].SpellName===original?.SpellName)).sort((a,b)=>spells[b].SpellLevel-spells[a].SpellLevel)[0]||null;}
 export function spellInfo(c,id){const sp=spells[id];if(!sp)return null;const cast=lookup.SpellCastTimes[sp.CastingTimeIndex];const duration=lookup.SpellDuration[sp.DurationIndex];const range=lookup.SpellRange[sp.RangeIndex];let castMs=Math.max(cast?.minimumMs||0,(cast?.baseMs||0)+(cast?.perLevelMs||0)*c.level);
  let mana=sp.ManaCost+sp.ManaCostPerlevel*Math.max(0,c.level-sp.SpellLevel)+stats(c).baseMana*sp.ManaCostPercentage/100;
+ if(c.auras?.some(a=>a.raidCurse&&a.until>(c.time||0)))mana*=2;
  const info={...sp,baseCastMs:Math.max(0,castMs),castMs:Math.max(0,castMs),durationMs:Math.max(0,duration?.baseMs||0),range:range?.maximumYards||0,minRange:range?.minimumYards||0,radius:Math.max(0,...[1,2,3].map(n=>lookup.SpellRadius[sp['EffectRadiusIndex'+n]]?.radiusYards||0)),mana:Math.floor(mana),spellCooldownMs:sp.RecoveryTime||0,categoryCooldownMs:sp.CategoryRecoveryTime||0,cooldownMs:Math.max(sp.RecoveryTime||0,sp.CategoryRecoveryTime||0)};
  return modifySpell(c,sp,info);
 }

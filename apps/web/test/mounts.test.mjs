@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,view} from '../../../packages/game-domain/src/rules/engine.js';
-import {route,monsterIdsAt} from '../../../packages/game-domain/src/rules/catalog.js';
+import {route,baseTravelSpeed,travelSpeedMultiplier,monsterIdsAt} from '../../../packages/game-domain/src/rules/catalog.js';
 import {journeyPosition} from '../../../packages/game-domain/src/rules/navigation.js';
 import {startCombat,hurtPlayer} from '../../../packages/game-domain/src/rules/combat.js';
 import {mountView} from '../../../packages/game-domain/src/rules/mounts.js';
@@ -64,7 +64,7 @@ test('epic mounts require level sixty and reuse horse riding training',()=>{
  assert.throws(()=>command(owner(),{type:'buyMount',id:18777}),/60/);
  let s=owner(60);const gold=s.money;s=command(s,{type:'buyMount',id:18777});assert.equal(s.money,gold-10000000);
  s=finish(command(s,{type:'mount',id:18777}));assert.equal(view(s).mounts.speedBonus,100);
- s.location='northshire';const trip=command(s,{type:'travel',to:'goldshire'});assert.equal(trip.activity.endsAt-trip.clock,Math.ceil(route('northshire','goldshire').path[0].distance/14*1000));
+ s.location='northshire';const trip=command(s,{type:'travel',to:'goldshire'});assert.equal(trip.activity.endsAt-trip.clock,Math.ceil(route('northshire','goldshire').path[0].distance/(baseTravelSpeed*2)*1000));
 });
 
 test('mounting rejects combat, indoor locations, death, forms, escort and active travel',()=>{
@@ -77,7 +77,7 @@ test('mounting rejects combat, indoor locations, death, forms, escort and active
 test('ground trip, map and quest estimates agree; travel cannot be shortened by mount toggles',()=>{
  let s=rider();s.location='northshire';const estimate=view(s).map.find(n=>n.id==='goldshire').travel;
  s=command(s,{type:'travel',to:'goldshire'});assert.equal(s.activity.endsAt-s.clock,estimate);
- assert.equal(estimate,Math.ceil(route('northshire','goldshire').path[0].distance/11.2*1000));
+ assert.equal(estimate,Math.ceil(route('northshire','goldshire').path[0].distance/(baseTravelSpeed*1.6)*1000));
  assert.throws(()=>command(s,{type:'dismount'}),/旅行|活动/);
  const halfway={...s,clock:s.clock+(s.activity.endsAt-s.clock)/2};assert.ok(Math.abs(journeyPosition(halfway).progress-.5)<.001);
  const restored=finish(JSON.parse(JSON.stringify(s)));assert.equal(restored.location,'goldshire');assert.equal(restored.mounted,5656);
@@ -86,9 +86,9 @@ test('ground trip, map and quest estimates agree; travel cannot be shortened by 
  assert.equal(finish(s).mounted,null);
 });
 
-test('restricted legs remove riding speed and keep later legs on foot; tram time is fixed',()=>{
+test('restricted legs remove riding speed and keep later legs on foot; tram gets the global travel boost',()=>{
  let s=rider();s.location='dwarven';s=command(s,{type:'travel',to:'thelsamar'});
- assert.equal(s.activity.path[0].duration,180000);
+ assert.equal(s.activity.path[0].duration,Math.ceil(180000/travelSpeedMultiplier));
  assert.equal(s.activity.endsAt-s.clock,route('dwarven','thelsamar').duration);
  assert.equal(s.mounted,null);
  assert.equal(finish(s).mounted,null);
@@ -96,7 +96,7 @@ test('restricted legs remove riding speed and keep later legs on foot; tram time
 
 test('flight and combat remove mount without losing ownership',()=>{
  let s=rider();s.location='stormwind';s.flightPoints=['stormwind','sentinel'];const gold=s.money;
- s=command(s,{type:'fly',to:'sentinel'});assert.equal(s.mounted,null);assert.equal(s.activity.endsAt-s.clock,78000);assert.equal(s.money,gold-110);
+ s=command(s,{type:'fly',to:'sentinel'});assert.equal(s.mounted,null);assert.equal(s.activity.endsAt-s.clock,Math.ceil(78000/travelSpeedMultiplier));assert.equal(s.money,gold-110);
  s=rider();startCombat(s,[monsterIdsAt(s.location)[0]]);assert.equal(s.mounted,null);assert.ok(s.mounts.includes(5656));
 });
 

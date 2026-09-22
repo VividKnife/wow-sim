@@ -61,7 +61,6 @@ test('shared-instance escape releases everyone and notifies other accounts; unre
     const id = (await f.service.command('a', {type: 'createInstance', requestId: 'form'})).instanceId!;
     await f.service.command('b', {type: 'joinInstance', instanceId: id, requestId: 'join'});
     await f.service.command('a', {type: 'startInstance', instanceId: id, requestId: 'start'});
-    f.service.contentVersion = 'v2';
     await assert.rejects(f.service.command('a', {type: 'unstuck', characterId: guest, requestId: 'spoof'}), /不属于/);
     const revision = (await f.service.snapshot('a')).revision;
     await f.service.command('b', {type: 'unstuck', requestId: 'escape'});
@@ -71,18 +70,52 @@ test('shared-instance escape releases everyone and notifies other accounts; unre
     assert.equal((await f.store.transaction(tx => tx.list('actor_leases'))).length, 0);
 });
 
-test('healthy activities cannot be cancelled via escape, but overdue personal activities can', async () => {
+test('healthy personal activities can be cancelled immediately and repeated recovery stays safe', async () => {
     const f = await fixture();
     await f.service.command('a', {type: 'travel', to: 'goldshire', requestId: 'travel'});
-    await assert.rejects(f.service.command('a', {type: 'unstuck', requestId: 'early'}), /尚未停滞/);
-    const activity = (await f.store.transaction(tx => tx.list<Activity>('activities')))[0];
-    f.time(activity.nextEventAt + 60000);
-    await f.service.command('a', {type: 'unstuck', requestId: 'late'});
-    assert.equal((await f.service.snapshot('a')).state.activity.type, 'idle');
-    assert.equal((await f.store.transaction(tx => tx.get<Activity>('activities', activity.id)))!.status, 'cancelled');
+    const activity = (await f.store.read(tx => tx.list<Activity>('activities')))[0];
+    assert.ok(activity.nextEventAt > 1000);
+    const result = await f.service.command('a', {type: 'unstuck', requestId: 'early'});
+    assert.equal(result.state.activity.type, 'idle');
+    assert.equal(result.state.location, 'northshire');
+    assert.equal((await f.store.read(tx => tx.get<Activity>('activities', activity.id)))!.status, 'cancelled');
+    const assets = await f.store.read(async tx => ({items:await tx.list('items'),wallets:await tx.list('wallets')}));
+    await f.service.command('a', {type:'unstuck',requestId:'again'});
+    assert.deepEqual(await f.store.read(async tx => ({items:await tx.list('items'),wallets:await tx.list('wallets')})),assets);
+    assert.deepEqual((await f.service.work()).errors,[]);
 });
 
-test('escaping a stale craft refunds materials and the original tool once without creating output', async () => {
+test('a free character can clear residual combat and casting without an activity lease',async()=>{
+    const f = await fixture();
+    await f.store.transaction(async tx => {
+        const c = (await tx.get<Character>('characters',f.hero))!;
+        c.rules.combat = {broken:true};c.rules.cast={broken:true};c.rules.hp=0;
+        await tx.put('characters',c);
+    });
+    const result = await f.service.command('a',{type:'unstuck',requestId:'free'});
+    assert.equal(result.state.combat,null);assert.equal(result.state.cast,null);
+    assert.equal(result.state.hp,Math.ceil(stats(result.state).maxHp/2));
+    assert.equal(result.state.activity.type,'idle');
+});
+
+test('orphaned instance leases can be cleared without running broken reconnect logic',async()=>{
+    const f=await fixture();
+    const id=(await f.service.command('a',{type:'createInstance',requestId:'form'})).instanceId!;
+    await f.service.command('a',{type:'startInstance',instanceId:id,requestId:'start'});
+    await f.service.acquireInstanceLease(id,'worker');
+    await f.store.transaction(async tx=>{
+        await tx.delete('instances',id);
+        await tx.insert('combat_plans',{id,broken:true});
+    });
+    f.time(10_000_000);
+    const result=await f.service.command('a',{type:'unstuck',requestId:'orphan'});
+    assert.equal(result.instanceId,null);assert.equal(result.state.activity.type,'idle');
+    assert.deepEqual(await f.store.read(tx=>tx.list('actor_leases')),[]);
+    assert.equal(await f.store.read(tx=>tx.get('instance_leases',id)),null);
+    assert.equal(await f.store.read(tx=>tx.get('combat_plans',id)),null);
+});
+
+for (const orphan of [false,true]) test(`cancelling ${orphan?'orphaned':'healthy'} craft refunds materials and the original tool once without creating output`, async () => {
     const f = await fixture();
     await f.store.transaction(async tx => {
         const c = (await tx.get<Character>('characters', f.hero))!;
@@ -93,7 +126,7 @@ test('escaping a stale craft refunds materials and the original tool once withou
     });
     const rod = (await f.store.transaction(tx => tx.get('items', 'rod')))!.data;
     await f.service.command('a', {type: 'craft', id: 'spell-7418', count: 1, requestId: 'craft'});
-    f.service.contentVersion = 'v2';
+    if (orphan) await f.store.transaction(async tx=>{for(const row of await tx.list('activities'))await tx.delete('activities',row.id);});
     const command = {type: 'unstuck', requestId: 'escape'};
     await f.service.command('a', command);
     await f.service.command('a', command);
@@ -142,7 +175,6 @@ test('escape preserves dungeon checkpoint on the leader and reentry retries only
         instance.simulation!.combat.enemies[0].hp = 1;
         await tx.put('instances', instance);
     });
-    f.service.contentVersion = 'v2';
     const escaped = await f.service.command('a', {type: 'unstuck', requestId: 'escape'});
     assert.deepEqual(escaped.state.dungeonSaves?.deadmines, checkpoint);
     const characters = await f.store.transaction(tx => tx.list<Character>('characters'));
@@ -171,7 +203,6 @@ test('cancelling a stuck cannon refunds its consumed powder once and preserves t
         s.activity = {type: 'dungeonCannon', routeId: encounter.id, endsAt: s.clock + 10000};
         await tx.put('instances', instance);
     });
-    f.service.contentVersion = 'v2';
     const command = {type: 'unstuck', requestId: 'escape'};
     await f.service.command('a', command);
     const after = await f.service.command('a', command);

@@ -2,8 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PGlite} from '@electric-sql/pglite';
 import {PostgresStore} from '../src/postgres.ts';
+import {DatabaseOperationError} from '../src/store.ts';
 import type {SqlPool} from '../src/postgres.ts';
 import {GameService} from '../../game-domain/src/service.ts';
+import {advance} from '../../game-domain/src/rules/engine.js';
 
 function embeddedPool(db:PGlite):SqlPool {
  let tail=Promise.resolve();
@@ -15,6 +17,28 @@ function embeddedPool(db:PGlite):SqlPool {
  };
 }
 
+test('local checkpoints survive SQL serialization, restart and duplicate result delivery',async()=>{
+ const store=new PostgresStore(embeddedPool(new PGlite()));let now=1000;
+ try{
+  await store.initialize();
+  const service=new GameService(store,{contentVersion:'test',now:()=>now,seed:()=>283});
+  await service.createAccount('local',{name:'SQL',classId:8,raceId:1},'create');
+  const initial=await service.command('local',{type:'hunt',id:299,requestId:'hunt'});
+  const base={ownerId:initial.localSimulation!.ownerId,clientId:'browser',contentVersion:'test'};
+  const session=await service.localSimulation('local',{...base,type:'claim',requestId:'claim'});
+  now=10000;const state=advance(session.state,now).state;
+  const input={...base,type:'checkpoint',sessionId:session.session.id,sequence:1,state,requestId:'save'};
+  const saved=await service.localSimulation('local',input);
+  const restarted=new GameService(store,{contentVersion:'test',now:()=>now});
+  assert.deepEqual(JSON.parse(JSON.stringify(await restarted.localSimulation('local',input))),JSON.parse(JSON.stringify(saved)));
+  assert.equal((await restarted.snapshot('local')).state.wallAt,state.wallAt);
+  now+=10000;assert.deepEqual(await restarted.work(),{activities:0,instances:0,errors:[]});
+  const bad={...input,sequence:2,requestId:'bad',state:{...saved.state,money:-1}};
+  await assert.rejects(restarted.localSimulation('local',bad),{code:'BALANCE'});
+  assert.equal((await restarted.snapshot('local')).state.money,saved.state.money);
+ }finally{await store.close();}
+});
+
 test('PostgreSQL schema enforces uniqueness and rollback with real SQL',async()=>{
  const db=new PGlite(),store=new PostgresStore(embeddedPool(db));
  try{
@@ -23,7 +47,7 @@ test('PostgreSQL schema enforces uniqueness and rollback with real SQL',async()=
    await tx.insert('wallets',{id:'w',characterId:'char',balance:100});
    await tx.insert('actor_leases',{id:'job',actorId:'char'});
   });
-  await assert.rejects(store.transaction(tx=>tx.insert('actor_leases',{id:'instance',actorId:'char'})),/unique/i);
+  await assert.rejects(store.transaction(tx=>tx.insert('actor_leases',{id:'instance',actorId:'char'})),error=>error instanceof DatabaseOperationError && (error.cause as any)?.code==='23505');
   await assert.rejects(store.transaction(async tx=>{
    await tx.put('wallets',{id:'w',characterId:'char',balance:0});
    await tx.insert('outbox',{id:'award',status:'pending'});
@@ -50,9 +74,9 @@ test('invalid save recreation rolls back failed creation and persists a clean re
   const old = await service.createAccount('recreate', input, 'create');
   await service.command('recreate', {type: 'travel', to: 'goldshire', requestId: 'travel'});
   await store.transaction(async tx => {
-   const row = (await tx.get('accounts', 'recreate'))!;
+   const row = (await tx.get('account_presence', 'recreate'))!;
    delete row.lastSeenAt;
-   await tx.put('accounts', row);
+   await tx.put('account_presence', row);
   });
   await assert.rejects(service.createAccount('recreate', {...input, classId: 999}, 'bad'), {code: 'INVALID_CHARACTER'});
   assert.ok(await store.transaction(tx => tx.get('characters', old.state.id)));

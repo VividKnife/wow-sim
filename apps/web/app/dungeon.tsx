@@ -2,6 +2,7 @@
 import {Button} from '@/components/ui/button';
 import {Bar,Icon,GameProps,duration} from './game-ui';
 import DungeonMap from './dungeon-map';
+import {GroupLoot} from './adventure-hall';
 
 export function RecoveryControls({state:s,data:d,busy,send}:GameProps){
  const r=d.recovery;if(!r)return null;
@@ -24,7 +25,7 @@ export default function Dungeon(props:GameProps){
  if(!dm.active)return <section className="panel dungeon-entry" aria-label={`${dm.name}入口`}>
   <div className="section-heading"><div><div className="eyebrow">{dm.zone} · 五人地下城</div><h2>{dm.name}</h2></div><span className="dungeon-sigil" aria-hidden="true">⚔</span></div>
   <p>{dm.description}</p>
-  <div className="dungeon-requirements"><span>最低等级 {dm.minimumLevel}</span><span>建议 {dm.recommendedLevel} 级挑战</span><span>小队 {s.party.length+1} / 5 人</span></div>
+  <div className="dungeon-requirements"><span>最低等级 {dm.minimumLevel}</span><span>建议 {dm.recommendedLevel} 级挑战</span><span>小队 {dm.groupSize??s.party.length+1} / 5 人</span></div>
   {dm.saved&&<p className="dungeon-notice">已保存路线进度 {dm.progress} / {dm.total}；再次进入会接续本次冒险。</p>}
   {dm.saved&&<details className="dungeon-notice"><summary>重新挑战副本</summary><p>重置会清除本次路线、怪物和机关进度。已获得的装备及任务进度保留；下次进入从头开始。每小时最多进入五个新副本。</p><Button variant="outline" disabled={busy||!dm.canReset} onClick={()=>send({type:'resetDungeon',contentId:dm.id})}>清除旧路线并重置</Button>{dm.resetReason&&<p>{dm.resetReason}</p>}</details>}
   <div className="action-row">{dm.atEntrance?<Button disabled={busy||!dm.canEnter} onClick={()=>send({type:'enterDungeon',contentId:dm.id})}>{dm.saved?'重返':'进入'}{dm.name}</Button>:<Button variant="outline" disabled={busy||!!s.combat||!['idle','hunt'].includes(s.activity.type)||s.hp<=0} onClick={()=>send({type:'travel',to:dm.entrance})}>前往{dm.name}入口</Button>}</div>
@@ -44,6 +45,7 @@ export default function Dungeon(props:GameProps){
    {dm.autoAdvance?<p className="dungeon-notice" role="status">{s.combat?'自动推进中 · 小队正在战斗':dm.rescuing?(s.activity.type==='resurrect'?'自动推进中 · 牧师正在复活队友':'自动推进中 · 牧师恢复法力并准备复活队友'):dm.waitingForLoot?'自动推进中 · 等待战利品拾取':dm.recovering?'自动推进中 · 按恢复设置休整后继续':'自动推进中 · 小队正在完成机关'}</p>:!dm.completed&&<p className="dungeon-notice" role="status">{dm.nextReason||dm.advanceReason||'准备好后开始自动推进。'}</p>}
    {!s.settings.autoLoot&&<p className="footnote">自动拾取尚未开启；出现待拾取战利品时会暂停，拾取后可继续。可在战利品面板开启自动拾取。</p>}
   </header>
+  <GroupLoot {...props}/>
   <DungeonMap key={s.dungeon.runId} {...props}/>
   <div className="dungeon-columns"><section className="panel dungeon-encounter">
    {current?<><div className="eyebrow">{current.kind==='boss'?'首领遭遇':current.interaction&&!current.enemies.length?'机关交互':'前方路线'}{current.optional?' · 可选':''}</div><h2>{current.name}</h2>

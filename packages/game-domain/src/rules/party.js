@@ -20,7 +20,7 @@ export const roles=[
 ];
 export const roleNames={tank:'坦克',healer:'治疗',melee:'近战输出',ranged:'远程输出'};
 export function companionSkills(c){return [...new Set([...(c.learned||[]),...(classAbilities[c.classId]||[]).filter(a=>a.requiredLevel<=c.level&&!['talent','petTrainer'].includes(a.acquisition)&&(!(a.raceIds||a.startingRaces)?.length||(a.raceIds||a.startingRaces).includes(c.raceId||1))&&(!a.requiredTalentSpellId||c.learned?.includes(a.requiredTalentSpellId))).map(a=>a.spellId)])];}
-export function candidates(s){return roles.map(r=>({...r,role:roleNames[r.roles[0]],level:s.level,gearCap:20,canRecruit:partyUnlocked(s)&&s.growthPolicy!=='companion'&&s.location==='stormwind'&&!s.dungeon}));}
+export function candidates(s){return roles.map(r=>({...r,role:roleNames[r.roles[0]],level:s.level,gearCap:20,canRecruit:partyUnlocked(s)&&s.growthPolicy!=='companion'}));}
 function allocateTalents(c,tree){
  const pool=Object.values(talents).filter(t=>t.classId===c.classId&&t.tree===tree&&supportedTalentNames.has(t.name)).sort((a,b)=>a.row-b.row||a.col-b.col||a.id-b.id);
  for(let used=0;used<Math.max(0,c.level-9);used++){
@@ -42,7 +42,7 @@ function starterGear(c,role){
 }
 export function recruit(s,id,options={}){
  const candidate=candidates(s).find(c=>c.id===id),previous=options.replaceId?s.party.find(c=>c.id===options.replaceId):null;
- if(!candidate?.canRecruit)throw new Error('18级完成「同路人」任务后，请在暴风城旅店招募队友。');
+ if(!candidate?.canRecruit)throw new Error('主角达到18级后即可招募队友。');
  if(options.replaceId&&(!previous||previous.growthPolicy!=='companion'))throw new Error('请选择要更换的队友。');
  if(!previous&&s.party.length>=4)throw new Error('队伍最多五人。');
  if(previous&&s.money<PARTY_REPLACEMENT_COST)throw new Error('更换队友需要10金币。');

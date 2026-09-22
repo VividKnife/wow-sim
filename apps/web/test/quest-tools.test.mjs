@@ -26,8 +26,8 @@ test('full bags reject source-item acceptance atomically instead of creating an 
 test('Silver Stream crates require a visit and consume distinct original spawn instances',()=>{
  let s=createGame('采集学徒',44,0);s.level=20;s.completed[1920]=1;s.location='magetower';s=act(s,{type:'accept',id:1921},0);
  assert.throws(()=>act(s,{type:'gather',id:271},0));s=travel(s,'silverstream');
- for(let n=0;n<6;n++){s=act(s,{type:'gather',id:271},s.wallAt);s=advance(s,s.wallAt+5000).state;}
- assert.equal(countItem(s,7249),6);assert.equal(Object.keys(s.objectRespawns).length,6);assert.throws(()=>act(s,{type:'gather',id:271},s.wallAt));
+ s=act(s,{type:'gather',id:271},s.wallAt);s=advance(s,s.wallAt+30000).state;
+ assert.equal(countItem(s,7249),6);assert.equal(Object.keys(s.objectRespawns).length,6);assert.equal(s.activity.type,'idle');assert.match(s.activity.reason,/采集目标已完成/);assert.throws(()=>act(s,{type:'gather',id:271},s.wallAt));
 });
 test('delivering robe materials consumes them and honors the original tailoring delay',()=>{
  let s=createGame('长袍奖励',44,0);s.level=20;s.completed[1920]=1;s.location='magetower';s=act(s,{type:'accept',id:1921},0);

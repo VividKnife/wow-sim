@@ -1,6 +1,6 @@
 .strategy-rule-count{font-variant-numeric:tabular-nums;color:#d2bd89}
 .strategy-layout .rule-number{min-width:52px}
-.strategy-layout .rule-number select{width:100%;min-height:36px;padding:4px;font:inherit;color:inherit;background:#17251f;border:1px solid #51614c;border-radius:4px}
+.strategy-layout .rule-number [data-game-select]{width:100%;min-height:36px;padding:4px;font:inherit;color:inherit;background:#17251f;border:1px solid #51614c;border-radius:4px}
 .strategy-rule-disabled{border-style:dashed;opacity:.7}
 .strategy-rule-footer{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:16px}
 .strategy-rule-footer>span{flex:1;color:#aebaa9;font-size:12px}
@@ -8,7 +8,7 @@
 .strategy-profiles h3{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .strategy-profiles h3 small{font-size:12px;color:#aebaa9;font-weight:normal}
 .strategy-profile-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.strategy-profile-actions>input,.strategy-profile-actions>select{flex:1;min-width:160px;max-width:100%;padding:10px;background:#101a1e;border:1px solid #51614c;border-radius:4px;color:inherit;font-size:12px}
+.strategy-profile-actions>input,.strategy-profile-actions>[data-game-select]{flex:1;min-width:160px;max-width:100%;padding:10px;background:#101a1e;border:1px solid #51614c;border-radius:4px;color:inherit;font-size:12px}
 .strategy-profiles p.strategy-profile-hint{color:#d2bd89}
 @media(max-width:700px){
  .strategy-layout .rule-editor{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px}
@@ -17,11 +17,11 @@
  .strategy-layout .rule-fields{grid-column:1/-1;grid-row:2;min-width:0}
  .strategy-layout .rule-condition{flex-wrap:wrap}
  .strategy-layout .rule-condition>span{flex-basis:100%}
- .strategy-layout .rule-condition select{flex:1 1 160px;min-width:0;max-width:100%}
+ .strategy-layout .rule-condition [data-game-select]{flex:1 1 160px;min-width:0;max-width:100%}
  .strategy-layout .rule-condition input{flex:0 0 62px}
- .strategy-layout .rule-number select{min-height:44px}
+ .strategy-layout .rule-number [data-game-select]{min-height:44px}
  .strategy-rule-footer>span{flex-basis:calc(100% - 140px)}
  .strategy-rule-footer>button:last-child{width:100%}
- .strategy-profile-actions>input,.strategy-profile-actions>select{flex:1 0 100%;width:100%}
+ .strategy-profile-actions>input,.strategy-profile-actions>[data-game-select]{flex:1 0 100%;width:100%}
  .strategy-profile-actions>button{flex:1 0 100%;width:100%;white-space:normal;height:auto}
 }

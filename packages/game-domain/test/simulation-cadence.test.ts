@@ -46,26 +46,20 @@ test('shared instances publish subsecond snapshots without waiting for a command
  assert.equal(instance.nextEventAt,1400);
 });
 
-test('polling presence writes are throttled and commit before snapshot assembly',async()=>{
+test('polling heartbeat does not modify account revision or enter a critical transaction',async()=>{
  const f=await fixture();
- const transactions: {writes:string[];reads:string[]}[]=[];
- const tracked:Store={close:async()=>{},transaction:async work=>f.store.transaction(async tx=>{
-  const record={writes:[] as string[],reads:[] as string[]};transactions.push(record);
-  const wrapped:Transaction={...tx,
-   get:async (table,id)=>{record.reads.push(table);return tx.get(table,id);},
-   put:async (table,row)=>{record.writes.push(table);return tx.put(table,row);}
-  };
-  return work(wrapped);
- })};
+ let critical=0,reads=0;
+ const tracked:Store={close:async()=>{},heartbeat:f.store.heartbeat.bind(f.store),
+  read:async work=>{reads++;return f.store.read(work);},
+  transaction:async work=>{critical++;return f.store.transaction(work);}};
+ const before=await f.store.read(tx=>tx.get('accounts','a'));
  const service=new GameService(tracked,{contentVersion:'test',now:()=>2200});
  await service.snapshot('a',f.id,true);
- const heartbeat=transactions.find(t=>t.writes.includes('accounts'))!;
- assert.ok(heartbeat);
- assert.deepEqual(heartbeat.reads,['accounts','accounts']);
- assert.ok(transactions.some(t=>t.reads.includes('characters')&&!t.writes.includes('accounts')));
- transactions.length=0;
+ assert.equal(critical,0);assert.equal(reads,1);
+ assert.deepEqual(await f.store.read(tx=>tx.get('accounts','a')),before);
+ assert.equal((await f.store.read(tx=>tx.get('account_presence','a')))!.lastSeenAt,2200);
  await service.snapshot('a',f.id,true);
- assert.ok(transactions.every(t=>!t.writes.includes('accounts')));
+ assert.equal(critical,0);
 });
 
 test('observed instance catch-up commits bounded progress and eventually catches up',async()=>{

@@ -9,9 +9,11 @@ import {areaTargets,selfArea,groundArea,aliveEnemy} from './combat-space.js';
 import {combatMembers} from './combat-members.js';
 import {supportedSpellNames} from './class-support.js';
 import {MAX_STRATEGY_RULES,MAX_STRATEGY_EXTRA_CONDITIONS} from '../../../sim-core/src/strategy-config.js';
+import {pvpAbilityAllowed} from './pvp-runtime.js';
 
 export const defaultPolicy={protectCC:true,waitForTank:true,pullDelaySeconds:3};
 export function waitingTank(s,c){
+ if(s.combat?.pvp)return null;
  if(c.petUnit)c=combatMembers(s).find(a=>a.id===c.ownerId)||c;
  const policy={...defaultPolicy,...c.strategyPolicy};
  if(!s.combat||!policy.waitForTank||combatRole(c)==='tank'||c.escortNpc)return null;
@@ -75,9 +77,16 @@ function conditionMatches(s,c,e,rule,sp){const st=stats(c);switch(rule.condition
  default:return false;
 }}
 export function strategyAllows(s,c,e,sp,rule,center){
+ if(s.combat?.pvp){
+  if(!pvpAbilityAllowed(c,e,sp,s.clock))return false;
+  if(c.arenaWaitingBurst&&sp.Id&&c.arenaBurstSpells?.includes(sp.SpellName))return false;
+  const damaging=!sp.Id||[1,2,3].some(n=>[2,9,17,31,58,121].includes(sp['Effect'+n])||sp['EffectApplyAuraName'+n]===3);
+  if(e?.id===s.combat.controlTargetId&&damaging)return false;
+ }
  const policy={...defaultPolicy,...c.strategyPolicy};
  if(rule&&!ruleMatches(s,c,e,rule,sp))return false;
  const targets=areaSpell(sp)?areaTargets(s,c,e,sp,center,{uncapped:true}):e?[e]:[];
+ if(s.combat?.pvp&&targets.some(t=>t.id===s.combat.controlTargetId)&&(!sp.Id||[1,2,3].some(n=>[2,9,17,31,58,121].includes(sp['Effect'+n])||sp['EffectApplyAuraName'+n]===3)))return false;
  if(policy.protectCC&&targets.some(x=>protectCombatTarget(s,x)))return false;
  if(sp.SpellName!=='Polymorph'){
   const tank=waitingTank(s,c);

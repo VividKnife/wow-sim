@@ -1,3 +1,4 @@
+import {selectedDungeonMembers} from './npc-world.js';
 import {dungeonDefinitions,dungeonDefinition,dungeonIdFor} from './dungeon-registry.js';
 import {dungeonRoute,dungeonEntryReason,dungeonResetReason,remainingDungeonEnemies,dungeonAdvanceReason,dungeonDestinationReason} from './dungeon.js';
 import {dungeonMap,dungeonDestinationPath} from './dungeon-map.js';
@@ -34,7 +35,7 @@ export function dungeonView(s,id=dungeonIdFor(s)){
  const map=dungeonMap(id),objectives=run?dungeonQuestObjectives(s):[],bosses=dungeonJournal.find(d=>d.id===id).bosses;
  const navigateReason=!active?'请先进入副本。':[s,...s.party].some(c=>c.hp<=0)?'先让倒下的成员复活，再继续推进。':!s.combat&&!['idle','dungeonCannon'].includes(s.activity.type)?'请先结束当前活动。':'';
  return {active,saved:!!s.dungeonSaves?.[id],canReset:!dungeonResetReason(s,id),resetReason:dungeonResetReason(s,id),id,entrance:definition.entrance,zone:definition.zone,description:definition.description,atEntrance:s.location===definition.entrance,name:definition.name,minimumLevel:definition.minimumLevel,recommendedLevel:definition.recommendedLevel,
-  canEnter:!entryReason,entryReason,completed:!!run?.completedAt,progress:run?route.filter(e=>run.cleared[e.id]||run.skipped[e.id]).length:0,total:route.length,
+  groupSize:selectedDungeonMembers(s).length+1,canEnter:!entryReason,entryReason,completed:!!run?.completedAt,progress:run?route.filter(e=>run.cleared[e.id]||run.skipped[e.id]).length:0,total:route.length,
   destination:run?.destination||'full',locationId:run?.locationId||'entrance',path:run?.path||[],map,
   canNavigate:!navigateReason,navigateReason,
   canFullClear:!navigateReason&&active&&!dungeonDestinationReason(s,'full'),
@@ -42,7 +43,7 @@ export function dungeonView(s,id=dungeonIdFor(s)){
   rescuing:active&&!!run.autoAdvance&&!s.combat&&[s,...s.party].some(c=>c.hp<=0),
   waitingForLoot:active&&!!run.autoAdvance&&!s.combat&&s.pending.length>0,
   recovering:active&&!!run.autoAdvance&&!s.combat&&!s.pending.length&&s.activity.type==='idle',
-  canNext:!nextReason,nextReason,canSkip:!!(free&&encounter?.optional),canLeave:free,canInteract:!interactionReason,interactionReason,
+  canNext:!nextReason,nextReason,canSkip:!!(free&&encounter?.optional),canLeave:free&&!s.groupLoot?.pending.length,canInteract:!interactionReason,interactionReason,
   interactionLabel:encounter?.id==='dm-cannon'?'装填火炮':'拾取迪菲亚火药',interactionIcon:icon('items',5397),
   current:encounter?{id:encounter.id,name:encounter.nameZh,kind:encounter.kind,optional:!!encounter.optional,interaction:!!encounter.interaction,enemies}:null,
   route:route.map((e,i)=>{

@@ -6,7 +6,7 @@ type BackendEnvironment = Record<string, unknown> & {
 type ProxyOptions = {
   accountId: string | null;
   public?: boolean;
-  path: '/game' | '/game/replay' | '/content' | '/workshop' | '/saves';
+  path: '/game' | '/game/replay' | '/game/local' | '/content' | '/workshop' | '/saves';
   environment: BackendEnvironment;
   fetchImpl?: (request: Request) => Promise<Response>;
 };

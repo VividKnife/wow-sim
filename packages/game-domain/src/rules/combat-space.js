@@ -5,6 +5,7 @@ import {ranks,talentModifiers,talentCombatDefense} from './talent-effects.js';
 import {point,distance} from '../../../sim-core/src/geometry.js';
 import {setCombatPosition} from './combat-area.js';
 import {combatMembers} from './combat-members.js';
+import {arenaSight,arenaWaypoint} from '../../../sim-core/src/arena-space.js';
 
 // A small steering preference during an already requested walk. Never schedules
 // movement, interrupts a cast, or pushes another actor out of its position.
@@ -34,6 +35,13 @@ export function effectiveSpeed(unit,clock){
  return Math.max(0,(['swim','underwater'].includes(unit.environment?.mode)?environmentModifiers(unit,clock).swimSpeed:(unit.moveSpeed??7))*(1+Math.max(speedBuff,talentModifiers(unit).movementPct||0))*(unit.sprintUntil>clock?1.5:1)*(unit.stealthed?.5+.03*(ranks(unit).Camouflage||0):1)*Math.min(slow,movementMultiplier(unit,clock)));
 }
 export function moveToward(s,unit,target,range,clock,dtMs=100){
+ if(s?.combat?.pvp){
+  const visible=arenaSight(unit,target);if(distance(unit,target)<=range&&visible)return false;
+  const waypoint=arenaWaypoint(s.combat.area,unit,target,clock);if(!waypoint)return false;
+  const p=point(unit),gap=distance(unit,waypoint),direct=distance(waypoint,target)<1e-8;
+  const step=Math.min(Math.max(0,gap-(direct&&visible?Math.max(0,range-1e-8):0)),effectiveSpeed(unit,clock)*Math.max(0,dtMs)/1000);
+  return gap>0&&step>0?setCombatPosition(s,unit,{x:p.x+(waypoint.x-p.x)*step/gap,y:p.y+(waypoint.y-p.y)*step/gap}):false;
+ }
  // Stop infinitesimally inside the boundary: rounding a diagonal endpoint can
  // otherwise leave both actors at 5.000000000000001 yards forever.
  const stopRange=Math.max(0,range-1e-10);
@@ -50,7 +58,7 @@ export const selfArea=sp=>['Frost Nova','Arcane Explosion','Thunder Clap','Whirl
 export const groundArea=sp=>['Flamestrike','Blizzard','Rain of Fire','Hurricane','Volley'].includes(sp.SpellName);
 export function spellRadius(sp){return sp.radius||({'Frost Nova':10,'Arcane Explosion':10,'Flamestrike':5,'Blizzard':8,'Thunder Clap':8,'Cleave':5,'Swipe':5}[sp.SpellName]||0);}
 export function castRange(sp){return selfArea(sp)?spellRadius(sp):sp.range||0;}
-export function inSpellRange(c,target,sp){const d=distance(c,target);return d<=castRange(sp)+1e-9&&d>=(sp.minRange||0);}
+export function inSpellRange(c,target,sp){const d=distance(c,target);return d<=castRange(sp)+1e-9&&d>=(sp.minRange||0)&&arenaSight(c,target);}
 export function areaTargets(s,c,e,sp,center,options={}){
  const enemies=(s.combat?.enemies||[]).filter(u=>aliveEnemy(u)&&!u.controlledBy),radius=spellRadius(sp);
  if(['Multi-Shot','Chain Lightning'].includes(sp.SpellName)){
@@ -64,4 +72,4 @@ export function areaTargets(s,c,e,sp,center,options={}){
  return !options.uncapped&&sp.MaxAffectedTargets>0?targets.slice(0,sp.MaxAffectedTargets):targets;
 }
 
-export function detectsTarget(c,e,clock){if(!e.stealthed&&!e.invisible)return true;const detection=talentCombatDefense(c).stealthDetection+(c.classDetection?.until>clock?30:0),conceal=talentCombatDefense(e).stealthLevel;return distance(c,e)+1e-6<Math.max(1,5+(c.level-e.level)+(detection-conceal)/5);}
+export function detectsTarget(c,e,clock){if(!e.stealthed&&!e.invisible)return true;if(!arenaSight(c,e))return false;const detection=talentCombatDefense(c).stealthDetection+(c.classDetection?.until>clock?30:0),conceal=talentCombatDefense(e).stealthLevel;return distance(c,e)+1e-6<Math.max(1,5+(c.level-e.level)+(detection-conceal)/5);}

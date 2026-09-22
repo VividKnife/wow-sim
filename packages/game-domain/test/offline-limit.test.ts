@@ -118,9 +118,9 @@ test('missing persisted presence is rejected without corrupting active simulatio
   const f = await fixture();
   await travel(f);
   await f.store.transaction(async tx => {
-    const a = (await tx.get('accounts', 'a'))!;
+    const a = (await tx.get('account_presence', 'a'))!;
     delete a.lastSeenAt;
-    await tx.put('accounts', a);
+    await tx.put('account_presence', a);
   });
   f.time(20_000);
   await assert.rejects(f.service.snapshot('a', undefined, true), /在线状态/);

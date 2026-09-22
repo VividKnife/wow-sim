@@ -1,3 +1,4 @@
+import {unitCreatureType} from './pvp-runtime.js';
 import {setCombatPosition} from './combat-area.js';
 import {resolveSpellDamage} from './spell-resolution.js';
 import {applySpellAura,dispelSpellAuras} from './spell-aura-lifecycle.js';
@@ -52,11 +53,11 @@ export function prepareClassAbility(s,c,e,sp,actors){
  if(name==='Execute'&&e.hp/e.maxHp>.2)return null;
  if(name==='Hammer of Wrath'&&e.hp/e.maxHp>.2)return null;
  if(name==='Conflagrate'&&!e.dots.some(d=>d.caster===c.id&&spells[d.spell??d.spellId]?.SpellName==='Immolate'))return null;
- if(['Exorcism','Holy Wrath','Turn Undead','Shackle Undead'].includes(name)&&![3,6].includes(creatures[e.entry]?.CreatureType))return null;
- if(['Scare Beast','Hibernate'].includes(name)&&![1,...(name==='Hibernate'?[2]:[])].includes(creatures[e.entry]?.CreatureType))return null;
- if(name==='Banish'&&![3,4].includes(creatures[e.entry]?.CreatureType))return null;
- if(name==='Enslave Demon'&&(creatures[e.entry]?.CreatureType!==3||e.level>amount(c,sp)))return null;
- if(name==='Sap'&&(creatures[e.entry]?.CreatureType!==7||!c.stealthed))return null;
+ if(['Exorcism','Holy Wrath','Turn Undead','Shackle Undead'].includes(name)&&![3,6].includes(unitCreatureType(e)))return null;
+ if(['Scare Beast','Hibernate'].includes(name)&&![1,...(name==='Hibernate'?[2]:[])].includes(unitCreatureType(e)))return null;
+ if(name==='Banish'&&![3,4].includes(unitCreatureType(e)))return null;
+ if(name==='Enslave Demon'&&(unitCreatureType(e)!==3||e.level>amount(c,sp)))return null;
+ if(name==='Sap'&&(unitCreatureType(e)!==7||!c.stealthed))return null;
  if(name==='Shield Bash'||name==='Shield Block'||name==='Shield Slam'||name==='Shield Wall')if(items[c.equipment[17]?.id]?.InventoryType!==14)return null;
  if(['Pummel','Shield Bash','Counterspell','Silence'].includes(name)&&!e.cast)return null;
  if(c.classId===1&&!stanceAllows(c,sp))return null;
@@ -79,7 +80,7 @@ export function prepareClassAbility(s,c,e,sp,actors){
  if(name==='Berserker Stance'&&c.stance==='berserker')return null;
  if(name==='Curse of Doom'&&e.dots.some(d=>d.caster===c.id&&spells[d.spell??d.spellId]?.SpellName===name))return null;
  if(name.endsWith('Trap')&&(c.trap?.until>s.clock||s.clock>s.combat.startedAt+100&&!(c.feignUntil>s.clock)))return null;
- if(target?.entry&&sp.TargetCreatureType&&!(sp.TargetCreatureType&(1<<((creatures[target.entry]?.CreatureType||1)-1))))return null;
+ if((target?.entry||target?.pvp)&&sp.TargetCreatureType&&!(sp.TargetCreatureType&(1<<((unitCreatureType(target)||1)-1))))return null;
  if(name==='Mind Control'&&target.level>amount(c,sp))return null;
  return {target,channel:extendedChannels.has(name)};
 }

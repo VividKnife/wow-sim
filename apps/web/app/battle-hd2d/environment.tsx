@@ -2,7 +2,7 @@ import {useEffect,useMemo,useRef} from 'react';
 import {useFrame} from '@react-three/fiber';
 import {useTexture} from '@react-three/drei';
 import {BufferGeometry,Float32BufferAttribute,Mesh,NearestFilter,Points,RepeatWrapping,SRGBColorSpace} from 'three';
-import {groundTheme,sceneryLayout} from '@/lib/battle-hd2d.js';
+import {groundTheme,groundTexture,sceneryLayout} from '@/lib/battle-hd2d.js';
 import {useBattleFrame} from './frame';
 
 type Theme=ReturnType<typeof groundTheme>;
@@ -49,22 +49,23 @@ function Atmosphere({theme,low}:{theme:Theme;low:boolean}){
 }
 
 export function Environment({ground,low,reduced}:{ground:string;low:boolean;reduced:boolean}){
- const theme=groundTheme(ground),original=useTexture(`/battle/ground/${theme.id}.webp`);
+ const theme=groundTheme(ground),original=useTexture(groundTexture(ground));
  const texture=useMemo(()=>{const t=original.clone();t.wrapS=t.wrapT=RepeatWrapping;t.repeat.set(5,4);t.colorSpace=SRGBColorSpace;t.magFilter=NearestFilter;t.needsUpdate=true;return t;},[original]);
  useEffect(()=>()=>texture.dispose(),[texture]);
  const frame=useBattleFrame();
  useFrame(()=>{if(ground==='water'&&!reduced)texture.offset.set(Math.sin(frame.current.seconds*.08)*.015,frame.current.seconds*.003);});
- const props=useMemo(()=>sceneryLayout(theme.id),[theme.id]);
+ const props=useMemo(()=>ground==='arena'?[]:sceneryLayout(theme.id),[ground,theme.id]);
  return <>
   <color attach="background" args={[theme.sky]}/><fog attach="fog" args={[theme.sky,34,theme.fog]}/>
   <ambientLight intensity={.6} color={theme.ambient}/><hemisphereLight args={[theme.ambient,'#292b31',1.35]}/>
   <directionalLight position={[-14,24,6]} intensity={2.3} color={theme.light} castShadow={!low} shadow-mapSize={[1024,1024]} shadow-camera-left={-30} shadow-camera-right={30} shadow-camera-top={25} shadow-camera-bottom={-25} shadow-camera-far={80} shadow-bias={-.0005} shadow-normalBias={.07}/>
-  <mesh rotation={[-Math.PI/2,0,0]} position={[0,-.025,0]} receiveShadow><planeGeometry args={[90,70]}/><meshStandardMaterial map={texture} color="#c2c6be" roughness={ground==='water'?.36:1} metalness={ground==='water'?.22:0}/></mesh>
+  <mesh rotation={[-Math.PI/2,0,0]} position={[0,-.025,0]} receiveShadow><planeGeometry args={[90,70]}/><meshStandardMaterial map={texture} color={ground==='molten'?'#a5704b':'#c2c6be'} roughness={ground==='water'?.36:1} metalness={ground==='water'?.22:0}/></mesh>
   {/* A shallow raised floor gives the diorama real silhouettes at its edge. */}
   <mesh position={[0,-.65,0]} receiveShadow><boxGeometry args={[62,1.2,42]}/><meshStandardMaterial color={theme.rock} roughness={1}/></mesh>
   {props.slice(0,low?18:32).map(p=>ground==='deck'?p.index%3===0?<Crate key={p.index} x={p.x} z={p.z}/>:null:ground==='grass'&&p.index%3!==0?<Tree key={p.index} {...p} theme={theme}/>:<Rock key={p.index} {...p} theme={theme}/>)}
   {ground==='grass'&&[-1,1].map(s=><group key={s}>{Array.from({length:8},(_,i)=><mesh key={i} position={[s*(13+i*.9),.2,8+Math.sin(i*3)*2]} rotation={[0,i,0]}><coneGeometry args={[.25,.8,4]}/><meshStandardMaterial color={i%2?'#809059':'#547857'}/></mesh>)}</group>)}
   {ground==='cave'&&<><MineArch x={-11} z={-12}/><MineArch x={10} z={-14}/>{[-17,17].map(x=><mesh key={x} position={[x,1,-5]} rotation={[0,0,x*.02]}><octahedronGeometry args={[1.1,0]}/><meshStandardMaterial color="#84b9d8" emissive="#315a91" emissiveIntensity={.7} roughness={.3}/></mesh>)}</>}
+  {ground==='molten'&&[-1,1].map(side=><group key={side}><mesh rotation={[-Math.PI/2,0,side*.12]} position={[side*19,.025,0]}><planeGeometry args={[2.6,48]}/><meshStandardMaterial color="#b93b13" emissive="#ff591d" emissiveIntensity={1.7} roughness={.4}/></mesh><pointLight position={[side*18,2,-3]} intensity={18} distance={22} color="#ff713d"/></group>)}
   {ground==='deck'&&<>{[-14,14].map(z=><group key={z}>{Array.from({length:11},(_,i)=><mesh castShadow key={i} position={[-25+i*5,1,z]}><boxGeometry args={[.3,2,.3]}/><meshStandardMaterial color="#685541"/></mesh>)}<mesh position={[0,1.8,z]}><boxGeometry args={[53,.18,.18]}/><meshStandardMaterial color="#b49b6e"/></mesh></group>)}<Crate x={-17} z={-9}/><Crate x={16} z={-10}/><Crate x={18} z={-9}/></>}
   {ground==='dirt'&&<><Crate x={-17} z={-7}/><Crate x={-18} z={-9}/></>}
   <Lantern x={-14} z={-8} theme={theme}/><Lantern x={15} z={-9} theme={theme}/>

@@ -1,7 +1,8 @@
 import { createGame } from './rules/engine.js';
-import type { Transaction } from '../../persistence/src/store.ts';
+import {syncNpcWorld} from './rules/npc-world.js';
+import type { ReadView, Transaction } from '../../persistence/src/store.ts';
 import { DomainError, requireThat } from './model.ts';
-import type { Account, Character, Item, Wallet, Rules, Activity } from './model.ts';
+import type { Account, AccountPresence, Character, Item, Wallet, Rules, Activity } from './model.ts';
 const separated = ['id', 'money', 'bag', 'bags', 'bank', 'equipment', 'pending', 'auctions', 'party', 'activity', 'dungeon', 'receipts'];
 export const clone = <T>(value: T): T => structuredClone(value);
 // Explicit simulation timestamp projection when a character joins another clock.
@@ -37,28 +38,33 @@ export function rebaseSimulation(state: Rules, targetClock: number): Rules {
     walk(state);
     return state;
 }
-export function characterRules(state: Rules): Rules { const rules = clone(state); for (const key of separated)
+export function characterRules(state: Rules): Rules { syncNpcWorld(state); const rules = clone(state); for (const key of separated)
     delete rules[key]; return rules; }
-export async function owned(tx: Transaction, accountId: string, id: string): Promise<Character> { const c = await tx.get<Character>('characters', id); requireThat(c && c.accountId === accountId, 'FORBIDDEN', '角色不属于此账号', 403); return c; }
-export function validAccountPresence(row: Account): boolean {
-    return Number.isSafeInteger(row.lastSeenAt) && row.lastSeenAt >= 0;
+export async function owned(tx: ReadView, accountId: string, id: string): Promise<Character> { const c = await tx.get<Character>('characters', id); requireThat(c && c.accountId === accountId, 'FORBIDDEN', '角色不属于此账号', 403); return c; }
+export function validAccountPresence(row: AccountPresence | null): boolean {
+    return !!row && Number.isSafeInteger(row.lastSeenAt) && row.lastSeenAt >= 0;
 }
-export async function account(tx: Transaction, id: string): Promise<Account> {
+export async function account(tx: ReadView, id: string): Promise<Account> {
     const row = await tx.get<Account>('accounts', id);
     requireThat(row, 'NOT_FOUND', '请先创建角色', 404);
-    requireThat(validAccountPresence(row), 'ACCOUNT_STATE', '账号在线状态无效，请重新创建开发存档；点击创建将清除旧角色及进度，并结束关联副本');
+
     return row;
 }
+export async function presence(tx: ReadView, id: string): Promise<AccountPresence> {
+    const row = await tx.get<AccountPresence>('account_presence', id);
+    requireThat(validAccountPresence(row), 'ACCOUNT_STATE', '账号在线状态无效，请重新创建开发存档；点击创建将清除旧角色及进度，并结束关联副本');
+    return row!;
+}
 export async function bump(tx: Transaction, id: string) { const row = await account(tx, id); row.revision++; await tx.put('accounts', row); }
-export function newState(name: string, classId: number, raceId: number, seed: number, now: number, id: string): Rules { try {
-    const s = createGame(name, seed, now, { classId, raceId });
+export function newState(name: string, classId: number, raceId: number, seed: number, now: number, id: string, gender: 'male' | 'female' = 'male'): Rules { try {
+    const s = createGame(name, seed, now, { classId, raceId, gender });
     s.id = id;
     return rebaseSimulation(s, now);
 }
 catch (error) {
     throw new DomainError('INVALID_CHARACTER', (error as Error).message, 400);
 } }
-export async function context(tx: Transaction, character: Character, now: number, withActivity = true): Promise<Rules> {
+export async function context(tx: ReadView, character: Character, now: number, withActivity = true): Promise<Rules> {
     const rows = await tx.list<Item>('items', { ownerCharacterId: character.id });
     const s: Rules = { ...clone(character.rules), id: character.id, money: (await tx.get<Wallet>('wallets', character.id))?.balance || 0, bag: [], bags: [], bank: [], equipment: {}, pending: [], auctions: [], party: [], activity: { type: 'idle' }, receipts: [] };
     for (const row of rows.sort((a, b) => a.position - b.position)) {

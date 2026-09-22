@@ -6,6 +6,10 @@ export interface Account {
     partyId: string;
     revision: number;
     createdAt: number;
+}
+export interface AccountPresence {
+    id: string;
+    accountId: string;
     lastSeenAt: number;
 }
 export interface Character {
@@ -39,6 +43,7 @@ export interface Wallet {
     balance: number;
 }
 export interface Activity {
+    localSimulation?: import('./local-simulation.ts').LocalSession;
     playback?: PlaybackManifest;
     simulationVersion?: number;
     id: string;
@@ -62,6 +67,7 @@ export interface Activity {
     error?: string;
 }
 export interface Instance {
+    localSimulation?: import('./local-simulation.ts').LocalSession;
     playback?: PlaybackManifest;
     simulationVersion?: number;
     id: string;
@@ -69,12 +75,12 @@ export interface Instance {
     leaderId: string;
     contentId: string;
     contentVersion: string;
-    capacity: 5 | 10 | 20 | 40;
+    capacity: 5 | 10 | 20 | 25 | 40;
     status: 'forming' | 'running' | 'completed';
     roster: {
         characterId: string;
         accountId: string;
-        controller: 'player' | 'companion' | 'mercenary';
+        controller: 'player' | 'companion' | 'mercenary' | 'npc';
     }[];
     simulation: Rules | null;
     rngState: number;

@@ -2,6 +2,11 @@ import {stats,armorReduction} from './character.js';
 import {items} from './catalog.js';
 import {activeAuras,hasAura} from '../../../sim-core/src/combat-auras.js';
 
+// Reuse ICU's formatter across actors and replay frames instead of constructing
+// one for every displayed attribute (tens of thousands of times per encounter).
+const attributeNumberFormat=new Intl.NumberFormat('zh-CN',{maximumFractionDigits:2});
+const number=value=>attributeNumberFormat.format(Number(value||0));
+
 // Sheet values use the same stats and same-level defense adjustments as combat.
 // They describe standing, frontal defense; casting, control and facing still
 // determine whether an individual attack can actually be avoided.
@@ -13,7 +18,6 @@ export function characterAttributes(c,st=stats(c)){
  const offhand=items[c.equipment?.[17]?.id]?.class===2&&!c.form&&c.learned?.includes(674);
  const ranged=items[c.equipment?.[18]?.id]?.class===2;
  const skill=c.form==='cat'||c.form==='bear'?c.level*5:st.weaponSkill;
- const number=value=>Number(value||0).toLocaleString('zh-CN',{maximumFractionDigits:2});
  const percent=value=>(100*(value||0)).toFixed(2)+'%';
  const chance=value=>percent(Math.max(0,Math.min(1,value)));
  const row=(label,value)=>({label,value});

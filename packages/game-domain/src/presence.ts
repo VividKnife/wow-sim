@@ -1,6 +1,6 @@
-import type {Transaction} from '../../persistence/src/store.ts';
+import type {Transaction, ReadView} from '../../persistence/src/store.ts';
 import type {Activity, Character, Instance} from './model.ts';
-import {account, bump} from './context.ts';
+import {account, presence, bump} from './context.ts';
 import type {GameService} from './service.ts';
 import {invalidateCombatPlan} from './combat-execution.ts';
 
@@ -15,21 +15,22 @@ export function offlineLimit(value: unknown = DEFAULT_OFFLINE_LIMIT_MS): number 
     return duration;
 }
 
-export async function activityDeadline(this: GameService, tx: Transaction, a: Activity) {
+export async function activityDeadline(this: GameService, tx: ReadView, a: Activity) {
     const actor = (await tx.get<Character>('characters', a.actorId))!;
     if (a.type !== 'personal' && actor.kind === 'companion') return Infinity;
-    return (await account(tx, a.accountId)).lastSeenAt + this.offlineLimitMs;
+    return (await presence(tx, a.accountId)).lastSeenAt + this.offlineLimitMs;
 }
 
-export async function instanceDeadline(this: GameService, tx: Transaction, instance: Instance) {
+export async function instanceDeadline(this: GameService, tx: ReadView, instance: Instance) {
     const accounts = new Set(instance.roster.filter(r => r.controller !== 'mercenary').map(r => r.accountId));
     let deadline = Infinity;
-    for (const id of accounts) deadline = Math.min(deadline, (await account(tx, id)).lastSeenAt + this.offlineLimitMs);
+    for (const id of accounts) deadline = Math.min(deadline, (await presence(tx, id)).lastSeenAt + this.offlineLimitMs);
     return deadline;
 }
 
 export async function recordPresence(this: GameService, tx: Transaction, accountId: string, now: number) {
-    const a = await account(tx, accountId);
+    await account(tx, accountId);
+    const a = await presence(tx, accountId);
     if (now <= a.lastSeenAt) return;
     const oldDeadline = a.lastSeenAt + this.offlineLimitMs;
     const instances: {instance: Instance; deadline: number}[] = [];
@@ -43,17 +44,17 @@ export async function recordPresence(this: GameService, tx: Transaction, account
     }
     const returning = now - a.lastSeenAt >= 5_000;
     a.lastSeenAt = now;
-    await tx.put('accounts', a);
+    await tx.put('account_presence', a);
     if (now < oldDeadline) {
         if (returning) {
             for (const activity of await tx.list<Activity>('activities', {accountId})) {
-                if (activity.type !== 'personal' || activity.status !== 'running' || activity.playback) continue;
+                if (activity.localSimulation || activity.type !== 'personal' || activity.status !== 'running' || activity.playback) continue;
                 activity.nextEventAt = Math.min(activity.nextEventAt, now);
                 await tx.put('activities', activity);
             }
             for (const lease of await tx.list<{ownerId: string}>('actor_leases', {accountId, kind: 'instance'})) {
                 const instance = await tx.get<Instance>('instances', lease.ownerId);
-                if (!instance || instance.status !== 'running' || instance.playback) continue;
+                if (!instance || instance.localSimulation || instance.status !== 'running' || instance.playback) continue;
                 instance.nextEventAt = Math.min(instance.nextEventAt, now);
                 await tx.put('instances', instance);
             }
@@ -65,6 +66,7 @@ export async function recordPresence(this: GameService, tx: Transaction, account
     // unchanged, including allowed progress the worker has not processed yet.
     const skipped = now - oldDeadline;
     for (const activity of await tx.list<Activity>('activities', {accountId})) {
+        if (activity.localSimulation) continue;
         if (!['running', 'returning'].includes(activity.status)) continue;
         const actor = (await tx.get<Character>('characters', activity.actorId))!;
         if (activity.type !== 'personal' && actor.kind === 'companion') continue;
@@ -80,6 +82,7 @@ export async function recordPresence(this: GameService, tx: Transaction, account
         await tx.put('activities', activity);
     }
     for (const {instance, deadline} of instances) {
+        if (instance.localSimulation) continue;
         const newDeadline = await this.instanceDeadline(tx, instance);
         const resumedUntil = Math.min(now, newDeadline);
         const shift = Math.max(0, resumedUntil - deadline);
@@ -93,4 +96,12 @@ export async function recordPresence(this: GameService, tx: Transaction, account
         await this.bumpInstanceAccounts(tx, instance, accountId);
     }
     await bump(tx, accountId);
+}
+
+// Frequent liveness updates never touch the account revision or assets. Reconnects
+// can move simulation clocks and therefore still use the critical transaction path.
+export async function refreshPresence(this: GameService, accountId: string) {
+    const now = this.now();
+    if (await this.store.heartbeat(accountId, now, Math.min(1000, this.offlineLimitMs / 4), Math.min(5000, this.offlineLimitMs))) return;
+    await this.store.transaction(tx => this.recordPresence(tx, accountId, now));
 }

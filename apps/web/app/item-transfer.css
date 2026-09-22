@@ -3,8 +3,8 @@
 .item-transfer summary span{font-size:12px;color:var(--transfer-muted);margin-left:10px}
 .transfer-content{padding:0 20px 18px}.transfer-help{font-size:12px;color:var(--transfer-muted);line-height:1.7;margin:0 0 12px}
 .transfer-recipient{display:grid;gap:8px;font-size:13px;margin-bottom:12px}
-.item-transfer input:not([type=checkbox]),.item-transfer select{background:#111919;color:#e6d4a9;border:1px solid var(--transfer-line);border-radius:3px;padding:8px;min-width:0;width:100%}
-.item-transfer input:focus-visible,.item-transfer select:focus-visible,.item-transfer summary:focus-visible{outline:2px solid #e4bc6a;outline-offset:2px}
+.item-transfer input:not([type=checkbox]),.item-transfer [data-game-select]{background:#111919;color:#e6d4a9;border:1px solid var(--transfer-line);border-radius:3px;padding:8px;min-width:0;width:100%}
+.item-transfer input:focus-visible,.item-transfer [data-game-select]:focus-visible,.item-transfer summary:focus-visible{outline:2px solid #e4bc6a;outline-offset:2px}
 .transfer-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.transfer-toolbar>input{flex:1 1 140px}
 .transfer-items{max-height:360px;overflow-y:auto;overscroll-behavior:contain}.transfer-item{padding:10px 4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid #403b2a}.transfer-item.is-selected{background:var(--transfer-fill)}
 .transfer-item label{flex:1 1 170px;display:flex;gap:10px;align-items:center;cursor:pointer;min-width:0}.transfer-item input[type=checkbox]{accent-color:#d6ac63;width:17px;height:17px;flex-shrink:0}.transfer-item strong{font-size:13px;overflow-wrap:anywhere}.transfer-item small{display:block;color:var(--transfer-muted);font-size:11px;margin-top:4px}

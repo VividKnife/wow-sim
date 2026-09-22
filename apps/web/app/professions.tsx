@@ -1,4 +1,5 @@
 "use client";
+import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
 import {saveFetch} from '../lib/save-fetch';
 import {useEffect,useState} from 'react';
 import {Button} from '@/components/ui/button';
@@ -37,7 +38,7 @@ export default function Professions({state:s,data:d,busy,revision,send}:GameProp
    {p.id==='enchanting'&&<div className="economy-callout"><h3>装备分解</h3><p>按经典旧世物品的分解表产出尘、精华、碎片与水晶。一键分解仅处理背包中的绿色、蓝色装备；锁定、任务和已装备物品受保护。满包产物保留为待拾取战利品。</p><Button variant="outline" disabled={locked||!d.disenchantable.length} onClick={()=>send({type:'disenchantAll'})}>一键分解 {d.disenchantable.length} 件装备</Button></div>}
   </section>
   {p.recipeCount>0?<section className="panel"><div className="section-heading"><h2>配方制造 <small>{p.recipeCount} 条</small></h2><input aria-label="搜索配方" placeholder="中文、英文或配方编号…" value={search} onChange={e=>{setSearch(e.target.value);setPage(0);}}/></div>
-   <div className="economy-toolbar"><select aria-label="筛选配方" value={filter} onChange={e=>{setFilter(e.target.value);setPage(0);}}>{['全部','已解锁','可提升','专精配方','冷却配方'].map(x=><option key={x}>{x}</option>)}</select><label>制造次数 <input aria-label="制造次数" type="number" min={1} max={100} value={count} onChange={e=>setCount(Number(e.target.value))}/></label><label><input type="checkbox" checked={buyMissing} onChange={e=>setBuyMissing(e.target.checked)}/> 拍卖行自动补齐材料与工具</label></div>
+   <div className="economy-toolbar"><GameSelect aria-label="筛选配方" value={filter} onValueChange={nextValue=>{setFilter(nextValue);setPage(0);}}>{['全部','已解锁','可提升','专精配方','冷却配方'].map(x=><GameSelectOption value={x} key={x}>{x}</GameSelectOption>)}</GameSelect><label>制造次数 <input aria-label="制造次数" type="number" min={1} max={100} value={count} onChange={e=>setCount(Number(e.target.value))}/></label><label><input type="checkbox" checked={buyMissing} onChange={e=>setBuyMissing(e.target.checked)}/> 拍卖行自动补齐材料与工具</label></div>
    <p>达到熟练度后自动解锁。优先消耗背包内未锁定材料，工具保留；银行材料需先取出。有冷却的配方每次制造一次。需要熔炉、铁砧、月亮井等设施时，请到城镇工坊。</p>{pagination}
    {workshopError&&<p className="error" role="alert">{workshopError}</p>}<div className="recipe-list">{recipes.map(r=>{
     const cost=r.materials.reduce((n:number,m:Material)=>n+Math.max(0,m.count*count-m.have)*m.price,0)+r.tools.filter(t=>!t.have).reduce((n,t)=>n+t.price,0);

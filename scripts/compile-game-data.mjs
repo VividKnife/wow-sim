@@ -19,7 +19,7 @@ for(const name of names){
 // code. Pin those rules too: a running activity must never silently use a newer
 // definition merely because its JSON input happened not to change.
 const rules={};
-const sources=['../game-domain/src/content.ts'];
+const sources=['../game-domain/src/content.ts','../game-domain/src/molten-core-roster.ts'];
 for(const directory of ['../game-domain/src/rules/','../sim-core/src/']){
  for(const name of (await readdir(new URL(directory,root))).filter(name=>/\.(?:js|ts)$/.test(name)).sort())sources.push(directory+name);
 }

@@ -7,7 +7,7 @@ import { bagCapacity } from './rules/character.js';
 import type { Transaction } from '../../persistence/src/store.ts';
 import { requireThat } from './model.ts';
 import type { Character, Activity, Rules, Item } from './model.ts';
-import { account, owned, bump, context, persistCharacter, economicEvent, clone } from './context.ts';
+import { account, presence, owned, bump, context, persistCharacter, economicEvent, clone } from './context.ts';
 import {simulationInterval,simulationTickBudget} from './simulation-cadence.ts';
 import type { GameService } from './service.ts';
 import { PAUSED_EVENT_AT } from './presence.ts';
@@ -102,7 +102,7 @@ export async function recall(this: GameService, tx: Transaction, accountId: stri
     a.engineActivity = { type: 'returning', endsAt: (await owned(tx, accountId, a.actorId)).rules.clock + 3000 };
     await tx.put('activities', a);
 }
-export async function restoreReservation(this: GameService, tx: Transaction, a: Activity, now: number, key: string) { if (!a.reservationId)
+export async function restoreReservation(this: GameService, tx: Transaction, a: Pick<Activity, 'reservationId' | 'accountId' | 'payerId'>, now: number, key: string) { if (!a.reservationId)
     return; const reservation = await tx.get<Rules>('reservations', a.reservationId); if (!reservation || reservation.status !== 'reserved')
     return; const payer = await owned(tx, a.accountId, a.payerId!), s = await context(tx, payer, now, false); for (const material of reservation.materials) {
     if (material.tool)
@@ -110,14 +110,15 @@ export async function restoreReservation(this: GameService, tx: Transaction, a: 
     else
         receive(s, material.id, material.count);
 } await persistCharacter(tx, payer, s, s.wallAt, key, this.id); reservation.status = 'released'; await tx.put('reservations', { ...reservation, id: a.reservationId! }); }
-export async function settleActivity(this: GameService, tx: Transaction, a: Activity, now: number) {
+export async function settleActivity(this: GameService, tx: Transaction, a: Activity, now: number, prepared?: {state: Rules; interval: number}) {
+    if (a.localSimulation) return;
     const deadline = await this.activityDeadline(tx, a), wallNow = now;
     now = Math.min(now, deadline);
     // Bounded event catch-up: an automatic gather chain may contain several due
     // events, but completion never causes the remaining offline idle day to tick.
     for (let events = 0; events < 16 && ['running', 'returning'].includes(a.status) && a.nextEventAt <= now; events++) {
         const cursor = a.nextEventAt;
-        await settleActivityEvent.call(this, tx, a, now);
+        await settleActivityEvent.call(this, tx, a, now, prepared);
         if (a.nextEventAt <= cursor && a.status === 'running')
             break;
         if (a.type === 'personal')
@@ -130,7 +131,7 @@ export async function settleActivity(this: GameService, tx: Transaction, a: Acti
         await bump(tx, a.accountId);
     }
 }
-async function settleActivityEvent(this: GameService, tx: Transaction, a: Activity, now: number) {
+async function settleActivityEvent(this: GameService, tx: Transaction, a: Activity, now: number, prepared?: {state: Rules; interval: number}) {
     if (!['running', 'returning'].includes(a.status) || a.nextEventAt > now)
         return;
     requireThat(a.contentVersion === this.contentVersion, 'CONTENT_VERSION', '活动内容版本暂不可用');
@@ -149,8 +150,8 @@ async function settleActivityEvent(this: GameService, tx: Transaction, a: Activi
         return;
     }
     const c = await owned(tx, a.accountId, a.actorId);
-    let s = a.type === 'personal' ? await this.personalContext(tx, c, a.settledUntil) : await context(tx, c, a.settledUntil);
-    s.rngState = a.rngState;
+    let s = prepared ? clone(prepared.state) : a.type === 'personal' ? await this.personalContext(tx, c, a.settledUntil) : await context(tx, c, a.settledUntil);
+    if (!prepared) s.rngState = a.rngState;
     if (a.type === 'craft') {
         const reservation = await tx.get<Rules>('reservations', a.reservationId!);
         requireThat(reservation?.status === 'reserved', 'RESERVATION', '材料预留不存在');
@@ -185,19 +186,24 @@ async function settleActivityEvent(this: GameService, tx: Transaction, a: Activi
         a.rngState = s.rngState;
     }
     else {
-        const end = s.activity.endsAt;
-        const due = Number.isFinite(end) ? s.wallAt + Math.max(0, end - s.clock) : now;
-        const lastSeenAt = (await account(tx, a.accountId)).lastSeenAt;
-        const recorded = a.type === 'personal' && (s.combat || s.activity.type === 'hunt') && combatExecutionMode(a, s) === 'recorded';
-        const offline = recorded && now - lastSeenAt >= 5_000;
-        const batch = recorded && (offline || now - s.wallAt > 2_000);
-        const predicted = await consumeCombatPlan(tx, a, now, this.contentVersion);
-        const settled = advance(predicted || s, Math.min(now, due), { maxTicks: batch ? OFFLINE_BATCH_TICKS : a.type === 'personal' ? simulationTickBudget(lastSeenAt, now) : 20000 });
-        s = settled.state;
+        let interval: number;
+        if (prepared) {
+            interval = prepared.interval;
+            await consumeCombatPlan(tx, a, now, this.contentVersion);
+        } else {
+            const end = s.activity.endsAt;
+            const due = Number.isFinite(end) ? s.wallAt + Math.max(0, end - s.clock) : now;
+            const lastSeenAt = (await presence(tx, a.accountId)).lastSeenAt;
+            const recorded = a.type === 'personal' && (s.combat || s.activity.type === 'hunt') && combatExecutionMode(a, s) === 'recorded';
+            const offline = recorded && now - lastSeenAt >= 5_000;
+            const batch = recorded && (offline || now - s.wallAt > 2_000);
+            const predicted = await consumeCombatPlan(tx, a, now, this.contentVersion);
+            s = advance(predicted || s, Math.min(now, due), {maxTicks: batch ? OFFLINE_BATCH_TICKS : a.type === 'personal' ? simulationTickBudget(lastSeenAt, now) : 20000}).state;
+            interval = offline ? OFFLINE_BATCH_INTERVAL_MS : simulationInterval(s.combat, lastSeenAt, now);
+        }
         a.rngState = s.rngState;
         a.engineActivity = clone(s.activity);
         a.settledUntil = s.wallAt;
-        const interval = offline ? OFFLINE_BATCH_INTERVAL_MS : simulationInterval(s.combat, lastSeenAt, now);
         a.nextEventAt = Math.min(s.wallAt + interval, Number.isFinite(s.activity.endsAt) ? s.wallAt + Math.max(1, s.activity.endsAt - s.clock) : Infinity);
         const deadline = await this.activityDeadline(tx, a);
         if (s.wallAt < deadline) a.nextEventAt = Math.min(a.nextEventAt, deadline);

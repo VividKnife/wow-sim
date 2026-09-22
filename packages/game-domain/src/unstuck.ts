@@ -1,3 +1,5 @@
+import {emergencyGoldExit} from './rules/gold-raid.js';
+import {resolveGroupLoot} from './rules/group-loot.js';
 import type {Transaction} from '../../persistence/src/store.ts';
 import type {GameService} from './service.ts';
 import {type Activity, type ActorLease, type Character, type Instance, requireThat} from './model.ts';
@@ -7,31 +9,43 @@ import {log, stats} from './rules/character.js';
 import {dungeonRoute} from './rules/dungeon.js';
 import {receive} from './rules/inventory.js';
 
-const STALLED_MS = 60_000;
-
 // Emergency cancellation uses committed characters/assets, never advance() or a
 // predicted combat result. It remains usable when the old runner is unavailable.
 export async function unstuck(this: GameService, tx: Transaction, actor: Character, now: number, requestId: string) {
     const lease = await tx.get<ActorLease>('actor_leases', actor.id);
-    requireThat(lease, 'NOT_STUCK', '当前没有卡住的活动。');
-    const owner = lease.kind === 'instance'
+    const owner = !lease ? null : lease.kind === 'instance'
         ? await tx.get<Instance>('instances', lease.ownerId)
         : await tx.get<Activity>('activities', lease.ownerId);
-    requireThat(owner, 'NOT_STUCK', '找不到当前活动，请联系管理员。');
-    const instance = 'roster' in owner ? owner : null;
-    const activity = 'type' in owner ? owner : null;
-    requireThat(instance ? instance.roster.some(row => row.characterId === actor.id && row.accountId === actor.accountId) : activity!.accountId === actor.accountId,
+    const instance = owner && 'roster' in owner ? owner : null;
+    const activity = owner && 'type' in owner ? owner : null;
+    if (lease) requireThat(lease.actorId === actor.id && lease.accountId === actor.accountId,
+        'FORBIDDEN', '角色活动占用归属无效', 403);
+    if (owner) requireThat(instance ? instance.roster.some(row => row.characterId === actor.id && row.accountId === actor.accountId) : activity!.accountId === actor.accountId,
         'FORBIDDEN', '不能处理其他账号的活动', 403);
-    requireThat(owner.contentVersion !== this.contentVersion || now - owner.nextEventAt >= STALLED_MS || owner.status === 'failed',
-        'NOT_STUCK', '活动尚未停滞，请等待；结算逾期超过 60 秒后可脱离卡死。');
 
     const key = `unstuck:${actor.accountId}:${requestId}`;
-    await invalidateCombatPlan(tx, owner);
-    await tx.delete('combat_plans', owner.id);
+    if(instance?.simulation?.groupLoot?.pending.length && instance.roster.some(r=>r.controller==='npc')){
+        // Only committed drops are settled. Escape cannot reroll or transfer an
+        // NPC's winnings to the leader after the instance party is discarded.
+        const committed=instance.simulation,combat=committed.combat;
+        committed.combat=null;
+        for(const loot of [...committed.groupLoot.pending])resolveGroupLoot(committed,loot.id,'pass');
+        committed.combat=combat;
+        await this.persistInstance(tx,instance,now,`${key}:group-loot`);
+    }
+    if (owner) await invalidateCombatPlan(tx, owner);
+    if (lease) await tx.delete('combat_plans', lease.ownerId);
     if (activity) await this.restoreReservation(tx, activity, now, key);
-    const leases = await tx.list<ActorLease>('actor_leases', {kind: lease.kind, ownerId: owner.id});
+    if (lease?.kind === 'activity' && !activity) {
+        // An orphaned lease must not strand a committed material reservation.
+        for (const reserved of await tx.list('reservations', {activityId:lease.ownerId, accountId:actor.accountId, status:'reserved'}))
+            await this.restoreReservation(tx, {reservationId:reserved.id, accountId:actor.accountId, payerId:reserved.payerId}, now, key);
+    }
+    // With no lease, clear the selected character's residual simulation state too.
+    const leases = lease ? await tx.list<ActorLease>('actor_leases', {kind:lease.kind, ownerId:lease.ownerId}) : [];
+    const members = leases.length ? leases : [{actorId:actor.id, accountId:actor.accountId}];
     const accounts = new Set<string>();
-    for (const memberLease of leases) {
+    for (const memberLease of members) {
         const c = await owned(tx, memberLease.accountId, memberLease.actorId);
         const s = await context(tx, c, now, false);
         // Keep simulation time (and cooldowns) fixed while discarding unprocessed time.
@@ -63,7 +77,18 @@ export async function unstuck(this: GameService, tx: Transaction, actor: Charact
                 await persistAssets(tx, c, s, `${key}:cannon`, this.id);
             }
         }
+        if (s.goldRaid?.active) {
+            emergencyGoldExit(s);
+            await persistAssets(tx, c, s, `${key}:gold`, this.id);
+        }
         delete s.dungeon;
+        // Guild units belong to the instance; emergency exit keeps only the
+        // committed progression and releases the camp just like a normal exit.
+        if (s.guildRaid) {
+            s.guildRaid.active = false;
+            s.guildRaid.activeBoss = null;
+            s.guildRaid.recoverUntil = 0;
+        }
         delete s.preparationTravel;
         if (s.location === 'deadmines') s.location = 'moonbrook';
         if (s.location === 'stockades') s.location = 'magetower';
@@ -77,27 +102,29 @@ export async function unstuck(this: GameService, tx: Transaction, actor: Charact
         log(s, '已脱离卡死，结束当前活动。已保存的成长和物品保留，未结算收益不补发。');
         c.rules = characterRules(s);
         await tx.put('characters', c);
-        await this.release(tx, c.id, owner.id);
+        if (lease) await this.release(tx, c.id, lease.ownerId);
         accounts.add(c.accountId);
     }
-    delete owner.resumeEventAt;
-    if (instance) {
-        for (const contract of await tx.list('contracts', {instanceId: instance.id})) {
+    if (owner) delete owner.resumeEventAt;
+    if (lease?.kind === 'instance') {
+        await tx.delete('instance_leases', lease.ownerId);
+        for (const contract of await tx.list('contracts', {instanceId: lease.ownerId})) {
             contract.status = 'ended';
             await tx.put('contracts', contract);
         }
+    }
+    if (instance) {
         instance.status = 'completed';
         instance.simulation = null;
         instance.roster = [];
         instance.epoch++;
         instance.sequence++;
-        await tx.delete('instance_leases', instance.id);
         await tx.put('instances', instance);
-    } else {
-        activity!.status = 'cancelled';
-        activity!.engineActivity = {type: 'idle'};
-        activity!.settledUntil = now;
-        await tx.put('activities', activity!);
+    } else if (activity) {
+        activity.status = 'cancelled';
+        activity.engineActivity = {type: 'idle'};
+        activity.settledUntil = now;
+        await tx.put('activities', activity);
     }
     for (const id of accounts) if (id !== actor.accountId) await bump(tx, id);
 }

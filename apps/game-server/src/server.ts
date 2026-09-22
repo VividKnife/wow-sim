@@ -14,18 +14,20 @@ export type GameSnapshot = {
   roster: object[];
   activities: object[];
   instanceId: string | null;
-  combatMode?: 'recorded' | 'realtime' | null;
+  combatMode?: 'recorded' | 'realtime' | 'local' | null;
+  localSimulation?: {ownerId:string;sessionId:string|null} | null;
   playback?: import('../../../packages/game-domain/src/model.ts').PlaybackManifest | null;
   instance?: null | {sequence?: number; [key: string]: any};
 };
 
 export interface GameServiceLike {
+  localSimulation?(accountId:string, input:Record<string,any>):Promise<unknown>;
   listSaves?: (userId:string)=>Promise<unknown>;
-  createSave?: (userId:string,input:{name:string;classId:number;raceId:number;boost?:boolean},requestId:string)=>Promise<unknown>;
+  createSave?: (userId:string,input:{name:string;classId:number;raceId:number;gender?:'male'|'female';boost?:boolean;raidReady?:boolean},requestId:string)=>Promise<unknown>;
   deleteSave?: (userId:string,saveId:string)=>Promise<void>;
   resolveSave?: (userId:string,saveId:string|null)=>Promise<string>;
   snapshot(accountId: string, characterId?: string, online?: boolean): Promise<GameSnapshot>;
-  createAccount(accountId: string, input: {name: string; classId: number; raceId: number}, requestId: string): Promise<GameSnapshot>;
+  createAccount(accountId: string, input: {name: string; classId: number; raceId: number; gender?: 'male' | 'female'}, requestId: string): Promise<GameSnapshot>;
   command(accountId: string, command: Record<string, any>): Promise<GameSnapshot>;
   work(now?: number, limit?: number): Promise<unknown>;
   combatRecording?(accountId: string, characterId: string | undefined, recordingId: string): Promise<unknown>;
@@ -59,13 +61,13 @@ function errorDetails(error: unknown): {status: number; body: {error: string; co
   return {status: 500, body: {error: '游戏服务暂时不可用，请稍后重试。'}};
 }
 
-async function readJson(request: IncomingMessage): Promise<Record<string, any>> {
+async function readJson(request: IncomingMessage, maximumBytes = maximumBodyBytes): Promise<Record<string, any>> {
   const chunks: Buffer[] = [];
   let size = 0;
   for await (const chunk of request) {
     const value = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     size += value.length;
-    if (size > maximumBodyBytes) throw Object.assign(new Error('操作内容过长'), {status: 413, code: 'BODY_TOO_LARGE'});
+    if (size > maximumBytes) throw Object.assign(new Error('操作内容过长'), {status: 413, code: 'BODY_TOO_LARGE'});
     chunks.push(value);
   }
   try {
@@ -87,6 +89,7 @@ function gameResponse(snapshot: GameSnapshot, scope: 'full' | 'combat' = 'full')
     scope,
     combatMode: snapshot.combatMode ?? null,
     playback: snapshot.playback ?? null,
+    localSimulation: snapshot.localSimulation ?? null,
   });
 }
 
@@ -127,7 +130,8 @@ function validateCommand(body: Record<string, any>) {
   if (body.type === 'create' && (
     typeof body.name !== 'string' || !body.name.trim() || body.name.trim().length > 40 ||
     !Number.isInteger(body.classId) || body.classId < 1 ||
-    !Number.isInteger(body.raceId) || body.raceId < 1
+    !Number.isInteger(body.raceId) || body.raceId < 1 ||
+    (body.gender !== undefined && !['male', 'female'].includes(body.gender))
   )) throw Object.assign(new Error('角色创建选项无效'), {status: 400, code: 'INVALID_CHARACTER_CREATE'});
 }
 
@@ -160,7 +164,7 @@ export function createGameServer(options: GameServerOptions) {
         if(request.method==='GET'&&options.service.listSaves){json(response,200,{saves:await options.service.listSaves(userId)});return;}
         if(request.method==='POST'&&options.service.createSave){
           const body=await readJson(request);validateCommand({...body,type:'create'});
-          json(response,201,await options.service.createSave(userId,{name:body.name.trim(),classId:body.classId,raceId:body.raceId,boost:body.boost},body.requestId));return;
+          json(response,201,await options.service.createSave(userId,{name:body.name.trim(),classId:body.classId,raceId:body.raceId,...(body.gender?{gender:body.gender}:{}),boost:body.boost,raidReady:body.raidReady},body.requestId));return;
         }
         if(request.method==='DELETE'&&options.service.deleteSave){
           const id=url.searchParams.get('saveId');
@@ -211,12 +215,19 @@ export function createGameServer(options: GameServerOptions) {
         json(response, 200, gameResponse(snapshot, scope), {etag, 'cache-control': 'private, no-cache'});
         return;
       }
+      if (url.pathname === '/game/local' && request.method === 'POST' && options.service.localSimulation) {
+        const accountId = await selectedAccount(request, url);
+        const body = await readJson(request, 8 * 1024 * 1024);
+        validateCommand(body);
+        json(response, 200, await options.service.localSimulation(accountId, cleanCommand(body)));
+        return;
+      }
       if (url.pathname === '/game' && request.method === 'POST') {
         const accountId = await selectedAccount(request, url);
         const body = await readJson(request);
         validateCommand(body);
         const result = body.type === 'create'
-          ? await options.service.createAccount(accountId, {name: body.name.trim(), classId: body.classId, raceId: body.raceId}, body.requestId)
+          ? await options.service.createAccount(accountId, {name: body.name.trim(), classId: body.classId, raceId: body.raceId, ...(body.gender ? {gender: body.gender} : {})}, body.requestId)
           : await options.service.command(accountId, cleanCommand(body));
         json(response, 200, gameResponse(result), {'cache-control': 'no-store'});
         return;

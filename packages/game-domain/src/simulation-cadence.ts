@@ -4,9 +4,9 @@ export function simulationInterval(combat: unknown, lastSeenAt: number, now: num
   return combat && now - lastSeenAt < 5_000 ? 200 : 1_000;
 }
 
-// Presence writes can invalidate a SERIALIZABLE settlement. Keep observed catch-up
-// transactions short enough to commit between polls instead of replaying minutes.
-// Offline jobs retain the larger budget; incomplete progress is persisted normally.
+// Keep each simulation bounded so one owner cannot monopolize the worker.
+// Background combat computes outside transactions; incomplete progress is committed
+// as a checkpoint and resumed on the next iteration.
 export function simulationTickBudget(lastSeenAt: number, now: number) {
   return now - lastSeenAt < 5_000 ? 20 : 20_000;
 }
