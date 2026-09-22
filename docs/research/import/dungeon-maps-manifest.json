@@ -211,6 +211,76 @@
         }
       ],
       "transformation": "4 columns x 3 rows of original 256px tiles; viewport crop to 1002x668; lossless WebP"
+    },
+    {
+      "file": "moltencore-1.webp",
+      "floor": 1,
+      "width": 1002,
+      "height": 668,
+      "sha256": "32e6bc1cf43c4a51a8e980169d11beaceb811513064766878f2a53ba0237adaa",
+      "tiles": [
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/MoltenCore/MoltenCore1_1.PNG",
+          "gitBlob": "1d7d27f0b5cedc4f8d78e3aa90d56ea49ac97ac1",
+          "sha256": "3c0e2bcd19aed0c7c00954f4e96972a01f7c9a000797b58df42ee379c870ee6c"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/MoltenCore/MoltenCore1_2.PNG",
+          "gitBlob": "0cd493edc6ff33bd7cb601c3f50f76b9f72b118b",
+          "sha256": "9df638fa37c5d3c00ea9e2763c42551aa4e07b466ecb9c97fc5df2a22d263d72"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/MoltenCore/MoltenCore1_3.PNG",
+          "gitBlob": "269cb8a715a4fc56d67c6c8c1d3d8cc397e86ed3",
+          "sha256": "2885aba7623701671cd07bdd8e51e71df3eb628ac45445aacb98a33dd1923c6c"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/MoltenCore/MoltenCore1_4.PNG",
+          "gitBlob": "9aa3b2ab0cf1a9e9fe23e2c3c3c8b1eacdce99de",
+          "sha256": "9965468631ba2f7c0afb96a204ee8504a3cb0883d9ae539f8644f6422bef41ab"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/MoltenCore/MoltenCore1_5.PNG",
+          "gitBlob": "1dde2e2fffb6fea2938fa33f91dc61dd213c3b5b",
+          "sha256": "7d39078f604c8d2557bec5c303bf396ccf362fe68873ca4218efd75d4420db11"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/MoltenCore/MoltenCore1_6.PNG",
+          "gitBlob": "3af2455206d2f1f97a5f04aead91f1cdab1490f9",
+          "sha256": "b690f909271d91e13e97dd686c115502e926fba19336faa87c8ed9fd73e68f21"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/MoltenCore/MoltenCore1_7.PNG",
+          "gitBlob": "4ae109d65eb0ea5158604578c4517c23a7b8fb06",
+          "sha256": "e5f30554f5cd730e7ee5bf0e283ae95de6bf62e659f9fe3985e906c01da39d6f"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/MoltenCore/MoltenCore1_8.PNG",
+          "gitBlob": "fbc0d582d467460d9a59ae32aa3eaf142ca45bc0",
+          "sha256": "145a191fa7fd607ec1f3a94670a1e3d61b606810ac77f30df0c5a9eb1008134e"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/MoltenCore/MoltenCore1_9.PNG",
+          "gitBlob": "cfddd899c827e71dcfee486b7dffaf20522b59dc",
+          "sha256": "712e76d7b511220b7cb6ff68add0939bf255c17c8a03630689bb9dfae2d1e1b3"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/MoltenCore/MoltenCore1_10.PNG",
+          "gitBlob": "7f0dac53e4f9de661ea9d75f5ea35965a8879989",
+          "sha256": "4c246621f7d13ddbccce8132910f13cdd25e757c793c6a5b2f423a19df548766"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/MoltenCore/MoltenCore1_11.PNG",
+          "gitBlob": "a6bb4e62cf3b6fbddfde61be808192c3a708940d",
+          "sha256": "f35cf375d367eb5225a7dbe643f057f4fd081c2943261e28af575290e2b454c8"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/MoltenCore/MoltenCore1_12.PNG",
+          "gitBlob": "a4925d4920be79565dffc0a96ead3a97015d6f3d",
+          "sha256": "8cd3303122e473e61cff0b821fa8649e552d9826566bf84e021eb910030565af"
+        }
+      ],
+      "transformation": "4 columns x 3 rows of original 256px tiles; viewport crop to 1002x668; lossless WebP"
     }
   ]
 }

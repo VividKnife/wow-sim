@@ -1,0 +1,4350 @@
+{
+  "schemaVersion": 1,
+  "copyright": "Blizzard Entertainment artwork, original Classic assets hosted by Wowhead.",
+  "appearance": "Class starter outfits; inventory transmog is not applied.",
+  "characters": {
+    "1-1-1": {
+      "displayId": "1-1-1",
+      "modelId": 119563,
+      "path": "/characters/classic/1-1-1.glb",
+      "sha256": "8b76a6a818375cce9fba64a1eb15dd16fffbf69b895980a8350783e54e165918",
+      "bytes": 1353956,
+      "vertices": 4189,
+      "bones": 117,
+      "height": 1.9362460920820013,
+      "minY": -0.0006051609525457025,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        9,
+        17,
+        14,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        1,
+        74,
+        18,
+        53,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/1-1-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119563.m2",
+          "sha256": "8e779c15684f8384f92606d347b930e7040519f862fb652fe012934561197061",
+          "bytes": 1574550
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470980.skin",
+          "sha256": "0a223e6cf7e90f53af588d9500dfeb7c91f838a483c9f6323426405c4af41b7f",
+          "bytes": 60640
+        }
+      ],
+      "raceId": 1,
+      "gender": "female",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "1-0-1": {
+      "displayId": "1-0-1",
+      "modelId": 119940,
+      "path": "/characters/classic/1-0-1.glb",
+      "sha256": "0f4093cc418c4cbd02ab57c20a9dad5123a657b535bc6395f2c7c717e8c29fa7",
+      "bytes": 1364184,
+      "vertices": 3159,
+      "bones": 119,
+      "height": 2.0352424075244926,
+      "minY": -0.0007465769886039197,
+      "animations": [
+        0,
+        4,
+        5,
+        25,
+        1,
+        8,
+        14,
+        16,
+        51,
+        52,
+        74,
+        54,
+        53,
+        17,
+        9,
+        10,
+        19,
+        18,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/1-0-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119940.m2",
+          "sha256": "60e1b5abae6d5620b80468935b452dba6bb3b8b74b27fb673c09e52096de6aee",
+          "bytes": 1817618
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471055.skin",
+          "sha256": "ec62342c01d97610e50f6c814b303648226919404c68b64f30fe679ee7e158b1",
+          "bytes": 46368
+        }
+      ],
+      "raceId": 1,
+      "gender": "male",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "3-0-1": {
+      "displayId": "3-0-1",
+      "modelId": 118355,
+      "path": "/characters/classic/3-0-1.glb",
+      "sha256": "54c8f47eca140b65c41fcfcfc25e4c59cf3853f0176854a82ced4bbe46931af3",
+      "bytes": 1739528,
+      "vertices": 3246,
+      "bones": 142,
+      "height": 1.6753617268987,
+      "minY": -0.0034241420216858387,
+      "animations": [
+        0,
+        4,
+        5,
+        17,
+        9,
+        1,
+        8,
+        10,
+        14,
+        19,
+        18,
+        25,
+        16,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/3-0-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/118355.m2",
+          "sha256": "b73a92b7f9b4674803f71f6e32148e31c099a566f833ed108725014a59953745",
+          "bytes": 1695042
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470288.skin",
+          "sha256": "e6976ed95a379e5a1ed28e4130cf6e9f8e196bcc97deb8f9aabdb5e37ca1eee4",
+          "bytes": 48928
+        }
+      ],
+      "raceId": 3,
+      "gender": "male",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "3-1-1": {
+      "displayId": "3-1-1",
+      "modelId": 118135,
+      "path": "/characters/classic/3-1-1.glb",
+      "sha256": "b22735881fcb0952ff4c20d06bc3c1afb94c63f917677216068e8eda03243152",
+      "bytes": 1624168,
+      "vertices": 3458,
+      "bones": 138,
+      "height": 1.5407804080168717,
+      "minY": -0.0007765122572891414,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        9,
+        17,
+        14,
+        18,
+        10,
+        25,
+        16,
+        19,
+        52,
+        1,
+        51,
+        54,
+        74,
+        53,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/3-1-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/118135.m2",
+          "sha256": "1c3cf6def24881a88936abcea18f87415c8a44f50ef7d8c01eb66fba13099158",
+          "bytes": 1900306
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470268.skin",
+          "sha256": "29ddf861a11097b895c3fc42a7338a074a3fc8997b28ef405f0c674d79e09ccc",
+          "bytes": 50464
+        }
+      ],
+      "raceId": 3,
+      "gender": "female",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "4-0-1": {
+      "displayId": "4-0-1",
+      "modelId": 120791,
+      "path": "/characters/classic/4-0-1.glb",
+      "sha256": "8bdf95286b127663c0ce50312a35c31109a0b4a45ccbcbe26c91d8d5b6dc949e",
+      "bytes": 1617908,
+      "vertices": 2684,
+      "bones": 123,
+      "height": 2.574750858359039,
+      "minY": -0.011858182959258556,
+      "animations": [
+        4,
+        5,
+        0,
+        8,
+        1,
+        9,
+        10,
+        14,
+        25,
+        52,
+        51,
+        17,
+        18,
+        16,
+        54,
+        74,
+        19,
+        53,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/4-0-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/120791.m2",
+          "sha256": "d7640b86b8f1ae1e2f412e90ee5d2bb136286bdcf6f0843238e9e7e6acda6404",
+          "bytes": 2047048
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471277.skin",
+          "sha256": "ba5ce44b60dfd99cabb43b1aed5d2642de29e2600b5e7e1e0b2524dded7781cd",
+          "bytes": 40208
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/120792.webp",
+          "sha256": "6166734fd8345a2c448536a447d68294d1df65dda3af99debe671ffd9af2d964",
+          "bytes": 738
+        }
+      ],
+      "raceId": 4,
+      "gender": "male",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "4-1-1": {
+      "displayId": "4-1-1",
+      "modelId": 120590,
+      "path": "/characters/classic/4-1-1.glb",
+      "sha256": "2bd452a87e193dcb03730b39890917de3383a7e20e38fc3a2f34de7917fd548f",
+      "bytes": 2009000,
+      "vertices": 2417,
+      "bones": 141,
+      "height": 2.277476890827529,
+      "minY": -0.0014093954814597964,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        14,
+        25,
+        9,
+        10,
+        17,
+        16,
+        19,
+        18,
+        51,
+        52,
+        53,
+        1,
+        54,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/4-1-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/120590.m2",
+          "sha256": "f7040f9a1fa459153f859e821b77ebb3e45033ea3dde97730b5befc44d38fa74",
+          "bytes": 4028392
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471230.skin",
+          "sha256": "07361da86cd2e87518df9488673384824ec327aa755dca22b1fe4bacfbd7d134",
+          "bytes": 36128
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/120591.webp",
+          "sha256": "947a016e8d0251a61d98f6a27119e062415a6c1edc691877cf1e250382b9ef71",
+          "bytes": 794
+        }
+      ],
+      "raceId": 4,
+      "gender": "female",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "2-1-1": {
+      "displayId": "2-1-1",
+      "modelId": 121087,
+      "path": "/characters/classic/2-1-1.glb",
+      "sha256": "ac89865813d1ca1f024537769e9c995615efd21200660d55ce305259fccc6bf0",
+      "bytes": 1584416,
+      "vertices": 2826,
+      "bones": 129,
+      "height": 2.2177886911667883,
+      "minY": -0.006875986699014902,
+      "animations": [
+        0,
+        4,
+        5,
+        9,
+        8,
+        17,
+        14,
+        1,
+        18,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        74,
+        53,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/2-1-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121087.m2",
+          "sha256": "013cafe8348cfe63ecf2cb9d03492086b716ca63d44382a24fde675b6b401754",
+          "bytes": 1984962
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471401.skin",
+          "sha256": "c931779545714b62d823c7ec271eb83694f52fa481a7f93964d426bf59f5f35e",
+          "bytes": 41840
+        }
+      ],
+      "raceId": 2,
+      "gender": "female",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "6-0-1": {
+      "displayId": "6-0-1",
+      "modelId": 122055,
+      "path": "/characters/classic/6-0-1.glb",
+      "sha256": "c9e1054bbede952245312f3a2291787bb486971e5d823159137b6f508839d860",
+      "bytes": 1551788,
+      "vertices": 2737,
+      "bones": 135,
+      "height": 2.382051184773445,
+      "minY": -0.0534033328294754,
+      "animations": [
+        4,
+        5,
+        0,
+        10,
+        9,
+        8,
+        17,
+        14,
+        1,
+        18,
+        25,
+        16,
+        19,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/6-0-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122055.m2",
+          "sha256": "7820d0ad18eba27d839ef331039c2233c6778c844e042146e61106b0247bb5b8",
+          "bytes": 1714444
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472132.skin",
+          "sha256": "0881a92d158dc89ddf56e604ebc84d48ead13d149e4028ad7dcf20e372d43631",
+          "bytes": 43792
+        }
+      ],
+      "raceId": 6,
+      "gender": "male",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "2-0-1": {
+      "displayId": "2-0-1",
+      "modelId": 121287,
+      "path": "/characters/classic/2-0-1.glb",
+      "sha256": "937c48ee808ef2d54f3295e7472ac89ac5664acdef88d2ed2c96c27c6f27cb74",
+      "bytes": 1498636,
+      "vertices": 2728,
+      "bones": 129,
+      "height": 2.5425731013529003,
+      "minY": -0.006724960636347532,
+      "animations": [
+        0,
+        4,
+        5,
+        17,
+        9,
+        1,
+        8,
+        10,
+        14,
+        18,
+        25,
+        16,
+        19,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/2-0-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121287.m2",
+          "sha256": "593a5a317ff9de0d5e3debc529aa6ef8841bfea4929ad356912049b94e50fd19",
+          "bytes": 1720436
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471537.skin",
+          "sha256": "73c834e498f90eea33db50527d4680a7afc89b43fc8b125b8ef2975428243f7c",
+          "bytes": 40816
+        }
+      ],
+      "raceId": 2,
+      "gender": "male",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "5-1-1": {
+      "displayId": "5-1-1",
+      "modelId": 121608,
+      "path": "/characters/classic/5-1-1.glb",
+      "sha256": "bac5a7eb6f84224bd8311c2e2fe3a94cff7405ef3fa1ba11e745de7ef51fe003",
+      "bytes": 1668012,
+      "vertices": 3501,
+      "bones": 133,
+      "height": 2.1575414333492517,
+      "minY": -0.0009411964565515518,
+      "animations": [
+        4,
+        0,
+        9,
+        8,
+        10,
+        17,
+        18,
+        5,
+        25,
+        16,
+        19,
+        51,
+        53,
+        52,
+        54,
+        14,
+        1,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/5-1-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121608.m2",
+          "sha256": "2ed00dc7ab219719846b27f1fabe1d82044d4e8b586f852a77c7e16d32ee3173",
+          "bytes": 1868968
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471708.skin",
+          "sha256": "374a85ca407a04ff34fbcd7e379a8d5f50a2f0613baddab185fde7765b9818a7",
+          "bytes": 48608
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/121767.webp",
+          "sha256": "0e73ef098bcfe6fb7e1f4c66dc3158a762dc565d587f41f73688fe2f24a5ccb2",
+          "bytes": 690
+        }
+      ],
+      "raceId": 5,
+      "gender": "female",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "5-0-1": {
+      "displayId": "5-0-1",
+      "modelId": 121768,
+      "path": "/characters/classic/5-0-1.glb",
+      "sha256": "1a74086834bd8736dbd650f1ed58faf896a6b798da290a2b237d72a4933a75d4",
+      "bytes": 1618612,
+      "vertices": 3146,
+      "bones": 136,
+      "height": 2.361403155256994,
+      "minY": -0.0018953561084344983,
+      "animations": [
+        5,
+        4,
+        0,
+        17,
+        9,
+        10,
+        18,
+        8,
+        19,
+        25,
+        16,
+        1,
+        14,
+        51,
+        53,
+        52,
+        54,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/5-0-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121768.m2",
+          "sha256": "e3f20bc1732d9194bf96b568fe559d45de3f751c7405ac68119ffd08a7d3bb5a",
+          "bytes": 2429208
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471740.skin",
+          "sha256": "24d668d530ba3a28424796293da3fe76ee26ab40d9756db1b7938fd2769e0f2f",
+          "bytes": 45776
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/121767.webp",
+          "sha256": "0e73ef098bcfe6fb7e1f4c66dc3158a762dc565d587f41f73688fe2f24a5ccb2",
+          "bytes": 690
+        }
+      ],
+      "raceId": 5,
+      "gender": "male",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "7-0-1": {
+      "displayId": "7-0-1",
+      "modelId": 119159,
+      "path": "/characters/classic/7-0-1.glb",
+      "sha256": "a6ab7883589d9056349b18c5938cfe35ab3e35abd58295702b77ba16bd1b9387",
+      "bytes": 1374668,
+      "vertices": 2677,
+      "bones": 118,
+      "height": 1.1298055108636618,
+      "minY": -0.002086823806166649,
+      "animations": [
+        0,
+        10,
+        9,
+        1,
+        74,
+        51,
+        52,
+        25,
+        5,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/7-0-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119159.m2",
+          "sha256": "d689676bedcb960237f5f8c03af96532e02ca43b5abbb74f9803dd3c4fbc718e",
+          "bytes": 1838864
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470634.skin",
+          "sha256": "da08855c14eef21e414d1d54b7b73a2241bb6e18fe441d68c989728dd73f603d",
+          "bytes": 39344
+        }
+      ],
+      "raceId": 7,
+      "gender": "male",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "6-1-1": {
+      "displayId": "6-1-1",
+      "modelId": 121961,
+      "path": "/characters/classic/6-1-1.glb",
+      "sha256": "92b6729462eb0f806033967330a9b920b9c88f743f632f87be39ad57747e1ab8",
+      "bytes": 1690152,
+      "vertices": 2083,
+      "bones": 137,
+      "height": 2.2326853508129716,
+      "minY": -0.003572487272322178,
+      "animations": [
+        4,
+        0,
+        5,
+        8,
+        17,
+        14,
+        1,
+        18,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        74,
+        54,
+        53,
+        125,
+        9,
+        124
+      ],
+      "portrait": "/creatures/molten-core/6-1-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121961.m2",
+          "sha256": "ab3e5ac20a3a72828388fae60705588b68b11c4f52029d17c566c1ff8846f94a",
+          "bytes": 2580420
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472044.skin",
+          "sha256": "5644119610ad73ba4167b3e2448a76dd55bf0ef3bef05d12b04a7946d02054b1",
+          "bytes": 32576
+        }
+      ],
+      "raceId": 6,
+      "gender": "female",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "1-0-2": {
+      "displayId": "1-0-2",
+      "modelId": 119940,
+      "path": "/characters/classic/1-0-2.glb",
+      "sha256": "828f71201944ab97cd315e6d3171afb59ac275ddf6ba06304e9d065389e96e29",
+      "bytes": 1325792,
+      "vertices": 3159,
+      "bones": 119,
+      "height": 2.0352424075244926,
+      "minY": -0.0007465769886039197,
+      "animations": [
+        0,
+        4,
+        5,
+        25,
+        1,
+        8,
+        14,
+        16,
+        51,
+        52,
+        74,
+        54,
+        53,
+        17,
+        9,
+        10,
+        19,
+        18,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/1-0-2.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119940.m2",
+          "sha256": "60e1b5abae6d5620b80468935b452dba6bb3b8b74b27fb673c09e52096de6aee",
+          "bytes": 1817618
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471055.skin",
+          "sha256": "ec62342c01d97610e50f6c814b303648226919404c68b64f30fe679ee7e158b1",
+          "bytes": 46368
+        }
+      ],
+      "raceId": 1,
+      "gender": "male",
+      "classId": 2,
+      "weaponDisplay": 5194
+    },
+    "8-0-1": {
+      "displayId": "8-0-1",
+      "modelId": 122560,
+      "path": "/characters/classic/8-0-1.glb",
+      "sha256": "0d0c98a02fd0c9e771ff91f9bff225c0215ba352deee65fcd2b763d533e9d2f3",
+      "bytes": 1397736,
+      "vertices": 3513,
+      "bones": 118,
+      "height": 3.191554328070197,
+      "minY": -3.4352407965343446e-05,
+      "animations": [
+        10,
+        9,
+        74,
+        51,
+        52,
+        25,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        0,
+        124,
+        125,
+        5,
+        1
+      ],
+      "portrait": "/creatures/molten-core/8-0-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122560.m2",
+          "sha256": "47aa02dc5e862758a13517be9ac5df415f7da9c6a7dee4869494dae84e9f0387",
+          "bytes": 1653190
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472211.skin",
+          "sha256": "d47c040db779bfb8e22757677814c5510ea3c465fa83dce1b96d084e474e32b7",
+          "bytes": 48240
+        }
+      ],
+      "raceId": 8,
+      "gender": "male",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "3-0-2": {
+      "displayId": "3-0-2",
+      "modelId": 118355,
+      "path": "/characters/classic/3-0-2.glb",
+      "sha256": "d8e424b595594c1193b58ec5f5c5ff977fe7cf52e26fc443441866372541bec5",
+      "bytes": 1698048,
+      "vertices": 3246,
+      "bones": 142,
+      "height": 1.6753617268987,
+      "minY": -0.0034241420216858387,
+      "animations": [
+        0,
+        4,
+        5,
+        17,
+        9,
+        1,
+        8,
+        10,
+        14,
+        19,
+        18,
+        25,
+        16,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/3-0-2.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/118355.m2",
+          "sha256": "b73a92b7f9b4674803f71f6e32148e31c099a566f833ed108725014a59953745",
+          "bytes": 1695042
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470288.skin",
+          "sha256": "e6976ed95a379e5a1ed28e4130cf6e9f8e196bcc97deb8f9aabdb5e37ca1eee4",
+          "bytes": 48928
+        }
+      ],
+      "raceId": 3,
+      "gender": "male",
+      "classId": 2,
+      "weaponDisplay": 5194
+    },
+    "7-1-1": {
+      "displayId": "7-1-1",
+      "modelId": 119063,
+      "path": "/characters/classic/7-1-1.glb",
+      "sha256": "a9363570059ec1517d951bb7c6e6d9efda62e81ae96f7ba025c9bef84b162faa",
+      "bytes": 1422904,
+      "vertices": 2940,
+      "bones": 118,
+      "height": 1.1752522186143324,
+      "minY": -0.001466532121412456,
+      "animations": [
+        0,
+        10,
+        9,
+        1,
+        74,
+        51,
+        52,
+        25,
+        5,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/7-1-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119063.m2",
+          "sha256": "fedb3097859dff65668a4942abab542211b3bb6c101edb11becd7d56f1ec2390",
+          "bytes": 1656394
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470594.skin",
+          "sha256": "4f2a55e9e0dbc76ebaffa938bd9492ec5a95e8afeb7c3d4b6a4224be31f903bf",
+          "bytes": 42656
+        }
+      ],
+      "raceId": 7,
+      "gender": "female",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "8-1-1": {
+      "displayId": "8-1-1",
+      "modelId": 122414,
+      "path": "/characters/classic/8-1-1.glb",
+      "sha256": "39209b223d3d589927a6c38f10d03e724fa7347951aaacd6cedb8837c7627fc6",
+      "bytes": 1314608,
+      "vertices": 3122,
+      "bones": 120,
+      "height": 2.68176322162617,
+      "minY": 0.0018255215836688876,
+      "animations": [
+        5,
+        4,
+        0,
+        25,
+        52,
+        51,
+        17,
+        18,
+        19,
+        16,
+        53,
+        124,
+        54,
+        125,
+        1,
+        8,
+        9,
+        10,
+        74,
+        14
+      ],
+      "portrait": "/creatures/molten-core/8-1-1.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122414.m2",
+          "sha256": "5ccfb96ca45eeea0482dad23874c7b2492e592f602b67d80f65957fe78855c2e",
+          "bytes": 1234966
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472179.skin",
+          "sha256": "b7750c84495cb57b0b0684445929c560c2b59f88af16f77f8724a841b4e8d093",
+          "bytes": 46304
+        }
+      ],
+      "raceId": 8,
+      "gender": "female",
+      "classId": 1,
+      "weaponDisplay": 1542
+    },
+    "1-1-2": {
+      "displayId": "1-1-2",
+      "modelId": 119563,
+      "path": "/characters/classic/1-1-2.glb",
+      "sha256": "7ff2420701e1db00690ca76722216ccf9a86dee0b9d33a1e0e90573d9da3b677",
+      "bytes": 1339212,
+      "vertices": 4189,
+      "bones": 117,
+      "height": 1.9362460920820013,
+      "minY": -0.0006051609525457025,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        9,
+        17,
+        14,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        1,
+        74,
+        18,
+        53,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/1-1-2.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119563.m2",
+          "sha256": "8e779c15684f8384f92606d347b930e7040519f862fb652fe012934561197061",
+          "bytes": 1574550
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470980.skin",
+          "sha256": "0a223e6cf7e90f53af588d9500dfeb7c91f838a483c9f6323426405c4af41b7f",
+          "bytes": 60640
+        }
+      ],
+      "raceId": 1,
+      "gender": "female",
+      "classId": 2,
+      "weaponDisplay": 5194
+    },
+    "3-1-2": {
+      "displayId": "3-1-2",
+      "modelId": 118135,
+      "path": "/characters/classic/3-1-2.glb",
+      "sha256": "3d09e896536449a430bbb5a3980fbcc3fc852101326f77131fa1b74e05cbe344",
+      "bytes": 1607260,
+      "vertices": 3458,
+      "bones": 138,
+      "height": 1.5407804080168717,
+      "minY": -0.0007765122572891414,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        9,
+        17,
+        14,
+        18,
+        10,
+        25,
+        16,
+        19,
+        52,
+        1,
+        51,
+        54,
+        74,
+        53,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/3-1-2.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/118135.m2",
+          "sha256": "1c3cf6def24881a88936abcea18f87415c8a44f50ef7d8c01eb66fba13099158",
+          "bytes": 1900306
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470268.skin",
+          "sha256": "29ddf861a11097b895c3fc42a7338a074a3fc8997b28ef405f0c674d79e09ccc",
+          "bytes": 50464
+        }
+      ],
+      "raceId": 3,
+      "gender": "female",
+      "classId": 2,
+      "weaponDisplay": 5194
+    },
+    "3-1-3": {
+      "displayId": "3-1-3",
+      "modelId": 118135,
+      "path": "/characters/classic/3-1-3.glb",
+      "sha256": "863f33f089883708013cc97a7bfdc825d4cb39e090d21587714a5921fd4916a1",
+      "bytes": 1633300,
+      "vertices": 3458,
+      "bones": 138,
+      "height": 1.5407804080168717,
+      "minY": -0.0007765122572891414,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        9,
+        17,
+        14,
+        18,
+        10,
+        25,
+        16,
+        19,
+        52,
+        1,
+        51,
+        54,
+        74,
+        53,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/3-1-3.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/118135.m2",
+          "sha256": "1c3cf6def24881a88936abcea18f87415c8a44f50ef7d8c01eb66fba13099158",
+          "bytes": 1900306
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470268.skin",
+          "sha256": "29ddf861a11097b895c3fc42a7338a074a3fc8997b28ef405f0c674d79e09ccc",
+          "bytes": 50464
+        }
+      ],
+      "raceId": 3,
+      "gender": "female",
+      "classId": 3,
+      "weaponDisplay": 8483
+    },
+    "2-1-3": {
+      "displayId": "2-1-3",
+      "modelId": 121087,
+      "path": "/characters/classic/2-1-3.glb",
+      "sha256": "a0c6448fdf1690cdc8d2fc9bbcfba2242643bfeb73ae9b86f7f64339ce1b61d7",
+      "bytes": 1585676,
+      "vertices": 2826,
+      "bones": 129,
+      "height": 2.2177886911667883,
+      "minY": -0.006875986699014902,
+      "animations": [
+        0,
+        4,
+        5,
+        9,
+        8,
+        17,
+        14,
+        1,
+        18,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        74,
+        53,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/2-1-3.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121087.m2",
+          "sha256": "013cafe8348cfe63ecf2cb9d03492086b716ca63d44382a24fde675b6b401754",
+          "bytes": 1984962
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471401.skin",
+          "sha256": "c931779545714b62d823c7ec271eb83694f52fa481a7f93964d426bf59f5f35e",
+          "bytes": 41840
+        }
+      ],
+      "raceId": 2,
+      "gender": "female",
+      "classId": 3,
+      "weaponDisplay": 8483
+    },
+    "3-0-3": {
+      "displayId": "3-0-3",
+      "modelId": 118355,
+      "path": "/characters/classic/3-0-3.glb",
+      "sha256": "f777ccb483bb01a5d9cfe62416d78813a459ff6a7c594a86cf9687649d7fbe30",
+      "bytes": 1731812,
+      "vertices": 3246,
+      "bones": 142,
+      "height": 1.6753617268987,
+      "minY": -0.0034241420216858387,
+      "animations": [
+        0,
+        4,
+        5,
+        17,
+        9,
+        1,
+        8,
+        10,
+        14,
+        19,
+        18,
+        25,
+        16,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/3-0-3.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/118355.m2",
+          "sha256": "b73a92b7f9b4674803f71f6e32148e31c099a566f833ed108725014a59953745",
+          "bytes": 1695042
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470288.skin",
+          "sha256": "e6976ed95a379e5a1ed28e4130cf6e9f8e196bcc97deb8f9aabdb5e37ca1eee4",
+          "bytes": 48928
+        }
+      ],
+      "raceId": 3,
+      "gender": "male",
+      "classId": 3,
+      "weaponDisplay": 8483
+    },
+    "2-0-3": {
+      "displayId": "2-0-3",
+      "modelId": 121287,
+      "path": "/characters/classic/2-0-3.glb",
+      "sha256": "79724921fc8b6fcc8662f108eb183c65466836cf0343b53f0280be7c477998c7",
+      "bytes": 1486816,
+      "vertices": 2728,
+      "bones": 129,
+      "height": 2.5425731013529003,
+      "minY": -0.006724960636347532,
+      "animations": [
+        0,
+        4,
+        5,
+        17,
+        9,
+        1,
+        8,
+        10,
+        14,
+        18,
+        25,
+        16,
+        19,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/2-0-3.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121287.m2",
+          "sha256": "593a5a317ff9de0d5e3debc529aa6ef8841bfea4929ad356912049b94e50fd19",
+          "bytes": 1720436
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471537.skin",
+          "sha256": "73c834e498f90eea33db50527d4680a7afc89b43fc8b125b8ef2975428243f7c",
+          "bytes": 40816
+        }
+      ],
+      "raceId": 2,
+      "gender": "male",
+      "classId": 3,
+      "weaponDisplay": 8483
+    },
+    "4-0-3": {
+      "displayId": "4-0-3",
+      "modelId": 120791,
+      "path": "/characters/classic/4-0-3.glb",
+      "sha256": "f2d700acf1f4ec3f8f1e1f6e919185f504d6c95941f7faaaf98a1fd2280d05e5",
+      "bytes": 1611392,
+      "vertices": 2684,
+      "bones": 123,
+      "height": 2.574750858359039,
+      "minY": -0.011858182959258556,
+      "animations": [
+        4,
+        5,
+        0,
+        8,
+        1,
+        9,
+        10,
+        14,
+        25,
+        52,
+        51,
+        17,
+        18,
+        16,
+        54,
+        74,
+        19,
+        53,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/4-0-3.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/120791.m2",
+          "sha256": "d7640b86b8f1ae1e2f412e90ee5d2bb136286bdcf6f0843238e9e7e6acda6404",
+          "bytes": 2047048
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471277.skin",
+          "sha256": "ba5ce44b60dfd99cabb43b1aed5d2642de29e2600b5e7e1e0b2524dded7781cd",
+          "bytes": 40208
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/120792.webp",
+          "sha256": "6166734fd8345a2c448536a447d68294d1df65dda3af99debe671ffd9af2d964",
+          "bytes": 738
+        }
+      ],
+      "raceId": 4,
+      "gender": "male",
+      "classId": 3,
+      "weaponDisplay": 8483
+    },
+    "6-0-3": {
+      "displayId": "6-0-3",
+      "modelId": 122055,
+      "path": "/characters/classic/6-0-3.glb",
+      "sha256": "4e073ae26422d2f67cf3f7492a4663cfd64ed5e931d599a3d1cafc403ed87834",
+      "bytes": 1543628,
+      "vertices": 2737,
+      "bones": 135,
+      "height": 2.382051184773445,
+      "minY": -0.0534033328294754,
+      "animations": [
+        4,
+        5,
+        0,
+        10,
+        9,
+        8,
+        17,
+        14,
+        1,
+        18,
+        25,
+        16,
+        19,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/6-0-3.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122055.m2",
+          "sha256": "7820d0ad18eba27d839ef331039c2233c6778c844e042146e61106b0247bb5b8",
+          "bytes": 1714444
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472132.skin",
+          "sha256": "0881a92d158dc89ddf56e604ebc84d48ead13d149e4028ad7dcf20e372d43631",
+          "bytes": 43792
+        }
+      ],
+      "raceId": 6,
+      "gender": "male",
+      "classId": 3,
+      "weaponDisplay": 8483
+    },
+    "4-1-3": {
+      "displayId": "4-1-3",
+      "modelId": 120590,
+      "path": "/characters/classic/4-1-3.glb",
+      "sha256": "5dfcbc80b9398f6d249c4129852d59d27c987dd74a6bd72a01d63efa67a89bda",
+      "bytes": 2015544,
+      "vertices": 2417,
+      "bones": 141,
+      "height": 2.277476890827529,
+      "minY": -0.0014093954814597964,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        14,
+        25,
+        9,
+        10,
+        17,
+        16,
+        19,
+        18,
+        51,
+        52,
+        53,
+        1,
+        54,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/4-1-3.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/120590.m2",
+          "sha256": "f7040f9a1fa459153f859e821b77ebb3e45033ea3dde97730b5befc44d38fa74",
+          "bytes": 4028392
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471230.skin",
+          "sha256": "07361da86cd2e87518df9488673384824ec327aa755dca22b1fe4bacfbd7d134",
+          "bytes": 36128
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/120591.webp",
+          "sha256": "947a016e8d0251a61d98f6a27119e062415a6c1edc691877cf1e250382b9ef71",
+          "bytes": 794
+        }
+      ],
+      "raceId": 4,
+      "gender": "female",
+      "classId": 3,
+      "weaponDisplay": 8483
+    },
+    "8-0-3": {
+      "displayId": "8-0-3",
+      "modelId": 122560,
+      "path": "/characters/classic/8-0-3.glb",
+      "sha256": "e7d65ba242e9a1c3f7e9b032246ac50b6bb992e9ff200e0395330a928e3c1ca2",
+      "bytes": 1390744,
+      "vertices": 3513,
+      "bones": 118,
+      "height": 3.191554328070197,
+      "minY": -3.4352407965343446e-05,
+      "animations": [
+        10,
+        9,
+        74,
+        51,
+        52,
+        25,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        0,
+        124,
+        125,
+        5,
+        1
+      ],
+      "portrait": "/creatures/molten-core/8-0-3.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122560.m2",
+          "sha256": "47aa02dc5e862758a13517be9ac5df415f7da9c6a7dee4869494dae84e9f0387",
+          "bytes": 1653190
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472211.skin",
+          "sha256": "d47c040db779bfb8e22757677814c5510ea3c465fa83dce1b96d084e474e32b7",
+          "bytes": 48240
+        }
+      ],
+      "raceId": 8,
+      "gender": "male",
+      "classId": 3,
+      "weaponDisplay": 8483
+    },
+    "6-1-3": {
+      "displayId": "6-1-3",
+      "modelId": 121961,
+      "path": "/characters/classic/6-1-3.glb",
+      "sha256": "c8e849ea2774af18fd470e800dd19bd2c0b38d01703c20bbb9e7030d647ad8b8",
+      "bytes": 1689624,
+      "vertices": 2083,
+      "bones": 137,
+      "height": 2.2326853508129716,
+      "minY": -0.003572487272322178,
+      "animations": [
+        4,
+        0,
+        5,
+        8,
+        17,
+        14,
+        1,
+        18,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        74,
+        54,
+        53,
+        125,
+        9,
+        124
+      ],
+      "portrait": "/creatures/molten-core/6-1-3.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121961.m2",
+          "sha256": "ab3e5ac20a3a72828388fae60705588b68b11c4f52029d17c566c1ff8846f94a",
+          "bytes": 2580420
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472044.skin",
+          "sha256": "5644119610ad73ba4167b3e2448a76dd55bf0ef3bef05d12b04a7946d02054b1",
+          "bytes": 32576
+        }
+      ],
+      "raceId": 6,
+      "gender": "female",
+      "classId": 3,
+      "weaponDisplay": 8483
+    },
+    "8-1-3": {
+      "displayId": "8-1-3",
+      "modelId": 122414,
+      "path": "/characters/classic/8-1-3.glb",
+      "sha256": "050504b6f124b6ea4a6f29a4a8e8a29edafc6cd5b50813a262338203b89856fe",
+      "bytes": 1319984,
+      "vertices": 3122,
+      "bones": 120,
+      "height": 2.68176322162617,
+      "minY": 0.0018255215836688876,
+      "animations": [
+        5,
+        4,
+        0,
+        25,
+        52,
+        51,
+        17,
+        18,
+        19,
+        16,
+        53,
+        124,
+        54,
+        125,
+        1,
+        8,
+        9,
+        10,
+        74,
+        14
+      ],
+      "portrait": "/creatures/molten-core/8-1-3.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122414.m2",
+          "sha256": "5ccfb96ca45eeea0482dad23874c7b2492e592f602b67d80f65957fe78855c2e",
+          "bytes": 1234966
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472179.skin",
+          "sha256": "b7750c84495cb57b0b0684445929c560c2b59f88af16f77f8724a841b4e8d093",
+          "bytes": 46304
+        }
+      ],
+      "raceId": 8,
+      "gender": "female",
+      "classId": 3,
+      "weaponDisplay": 8483
+    },
+    "1-0-4": {
+      "displayId": "1-0-4",
+      "modelId": 119940,
+      "path": "/characters/classic/1-0-4.glb",
+      "sha256": "a747d3ceb59c038c16f1ee86b7319ce14d3699b7042d2df038d80b8c8d7006cf",
+      "bytes": 1325004,
+      "vertices": 3159,
+      "bones": 119,
+      "height": 2.0352424075244926,
+      "minY": -0.0007465769886039197,
+      "animations": [
+        0,
+        4,
+        5,
+        25,
+        1,
+        8,
+        14,
+        16,
+        51,
+        52,
+        74,
+        54,
+        53,
+        17,
+        9,
+        10,
+        19,
+        18,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/1-0-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119940.m2",
+          "sha256": "60e1b5abae6d5620b80468935b452dba6bb3b8b74b27fb673c09e52096de6aee",
+          "bytes": 1817618
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471055.skin",
+          "sha256": "ec62342c01d97610e50f6c814b303648226919404c68b64f30fe679ee7e158b1",
+          "bytes": 46368
+        }
+      ],
+      "raceId": 1,
+      "gender": "male",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "2-0-4": {
+      "displayId": "2-0-4",
+      "modelId": 121287,
+      "path": "/characters/classic/2-0-4.glb",
+      "sha256": "e26c5b2bdef8c4cc647f5fe3ce0c40ab9f9e608c074bbaa1225e4f7e627f9352",
+      "bytes": 1458772,
+      "vertices": 2728,
+      "bones": 129,
+      "height": 2.5425731013529003,
+      "minY": -0.006724960636347532,
+      "animations": [
+        0,
+        4,
+        5,
+        17,
+        9,
+        1,
+        8,
+        10,
+        14,
+        18,
+        25,
+        16,
+        19,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/2-0-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121287.m2",
+          "sha256": "593a5a317ff9de0d5e3debc529aa6ef8841bfea4929ad356912049b94e50fd19",
+          "bytes": 1720436
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471537.skin",
+          "sha256": "73c834e498f90eea33db50527d4680a7afc89b43fc8b125b8ef2975428243f7c",
+          "bytes": 40816
+        }
+      ],
+      "raceId": 2,
+      "gender": "male",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "1-1-4": {
+      "displayId": "1-1-4",
+      "modelId": 119563,
+      "path": "/characters/classic/1-1-4.glb",
+      "sha256": "3255e7ff3064bad02891a12927fe2f6eb75b76b4b8bf23529bcf996dea942a0a",
+      "bytes": 1323140,
+      "vertices": 4189,
+      "bones": 117,
+      "height": 1.9362460920820013,
+      "minY": -0.0006051609525457025,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        9,
+        17,
+        14,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        1,
+        74,
+        18,
+        53,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/1-1-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119563.m2",
+          "sha256": "8e779c15684f8384f92606d347b930e7040519f862fb652fe012934561197061",
+          "bytes": 1574550
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470980.skin",
+          "sha256": "0a223e6cf7e90f53af588d9500dfeb7c91f838a483c9f6323426405c4af41b7f",
+          "bytes": 60640
+        }
+      ],
+      "raceId": 1,
+      "gender": "female",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "2-1-4": {
+      "displayId": "2-1-4",
+      "modelId": 121087,
+      "path": "/characters/classic/2-1-4.glb",
+      "sha256": "73f925a35f1b78c31bcc8ea766d6c66baf023000c2d7fac8677e7daffcfe4c83",
+      "bytes": 1550256,
+      "vertices": 2826,
+      "bones": 129,
+      "height": 2.2177886911667883,
+      "minY": -0.006875986699014902,
+      "animations": [
+        0,
+        4,
+        5,
+        9,
+        8,
+        17,
+        14,
+        1,
+        18,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        74,
+        53,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/2-1-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121087.m2",
+          "sha256": "013cafe8348cfe63ecf2cb9d03492086b716ca63d44382a24fde675b6b401754",
+          "bytes": 1984962
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471401.skin",
+          "sha256": "c931779545714b62d823c7ec271eb83694f52fa481a7f93964d426bf59f5f35e",
+          "bytes": 41840
+        }
+      ],
+      "raceId": 2,
+      "gender": "female",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "3-0-4": {
+      "displayId": "3-0-4",
+      "modelId": 118355,
+      "path": "/characters/classic/3-0-4.glb",
+      "sha256": "0111a104bc4d20fbe425b04dababab343846fd34d03c2aac39f8a1d50e203e5e",
+      "bytes": 1699604,
+      "vertices": 3246,
+      "bones": 142,
+      "height": 1.6753617268987,
+      "minY": -0.0034241420216858387,
+      "animations": [
+        0,
+        4,
+        5,
+        17,
+        9,
+        1,
+        8,
+        10,
+        14,
+        19,
+        18,
+        25,
+        16,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/3-0-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/118355.m2",
+          "sha256": "b73a92b7f9b4674803f71f6e32148e31c099a566f833ed108725014a59953745",
+          "bytes": 1695042
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470288.skin",
+          "sha256": "e6976ed95a379e5a1ed28e4130cf6e9f8e196bcc97deb8f9aabdb5e37ca1eee4",
+          "bytes": 48928
+        }
+      ],
+      "raceId": 3,
+      "gender": "male",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "4-0-4": {
+      "displayId": "4-0-4",
+      "modelId": 120791,
+      "path": "/characters/classic/4-0-4.glb",
+      "sha256": "2413774229bfeef55768b32af9e2d461b0a8a9789891bbafc8aeeecd847f4478",
+      "bytes": 1578620,
+      "vertices": 2684,
+      "bones": 123,
+      "height": 2.574750858359039,
+      "minY": -0.011858182959258556,
+      "animations": [
+        4,
+        5,
+        0,
+        8,
+        1,
+        9,
+        10,
+        14,
+        25,
+        52,
+        51,
+        17,
+        18,
+        16,
+        54,
+        74,
+        19,
+        53,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/4-0-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/120791.m2",
+          "sha256": "d7640b86b8f1ae1e2f412e90ee5d2bb136286bdcf6f0843238e9e7e6acda6404",
+          "bytes": 2047048
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471277.skin",
+          "sha256": "ba5ce44b60dfd99cabb43b1aed5d2642de29e2600b5e7e1e0b2524dded7781cd",
+          "bytes": 40208
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/120792.webp",
+          "sha256": "6166734fd8345a2c448536a447d68294d1df65dda3af99debe671ffd9af2d964",
+          "bytes": 738
+        }
+      ],
+      "raceId": 4,
+      "gender": "male",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "3-1-4": {
+      "displayId": "3-1-4",
+      "modelId": 118135,
+      "path": "/characters/classic/3-1-4.glb",
+      "sha256": "2666380e5577b8fb6b610eb25940f88b18d561a4e41a591e73ac7ab967bcb5cc",
+      "bytes": 1590580,
+      "vertices": 3458,
+      "bones": 138,
+      "height": 1.5407804080168717,
+      "minY": -0.0007765122572891414,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        9,
+        17,
+        14,
+        18,
+        10,
+        25,
+        16,
+        19,
+        52,
+        1,
+        51,
+        54,
+        74,
+        53,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/3-1-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/118135.m2",
+          "sha256": "1c3cf6def24881a88936abcea18f87415c8a44f50ef7d8c01eb66fba13099158",
+          "bytes": 1900306
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470268.skin",
+          "sha256": "29ddf861a11097b895c3fc42a7338a074a3fc8997b28ef405f0c674d79e09ccc",
+          "bytes": 50464
+        }
+      ],
+      "raceId": 3,
+      "gender": "female",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "5-0-4": {
+      "displayId": "5-0-4",
+      "modelId": 121768,
+      "path": "/characters/classic/5-0-4.glb",
+      "sha256": "528a546ebac02fb9a84b111fe3008414bc7984c592748851174298f5ea9f3a94",
+      "bytes": 1581096,
+      "vertices": 3146,
+      "bones": 136,
+      "height": 2.361403155256994,
+      "minY": -0.0018953561084344983,
+      "animations": [
+        5,
+        4,
+        0,
+        17,
+        9,
+        10,
+        18,
+        8,
+        19,
+        25,
+        16,
+        1,
+        14,
+        51,
+        53,
+        52,
+        54,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/5-0-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121768.m2",
+          "sha256": "e3f20bc1732d9194bf96b568fe559d45de3f751c7405ac68119ffd08a7d3bb5a",
+          "bytes": 2429208
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471740.skin",
+          "sha256": "24d668d530ba3a28424796293da3fe76ee26ab40d9756db1b7938fd2769e0f2f",
+          "bytes": 45776
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/121767.webp",
+          "sha256": "0e73ef098bcfe6fb7e1f4c66dc3158a762dc565d587f41f73688fe2f24a5ccb2",
+          "bytes": 690
+        }
+      ],
+      "raceId": 5,
+      "gender": "male",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "4-1-4": {
+      "displayId": "4-1-4",
+      "modelId": 120590,
+      "path": "/characters/classic/4-1-4.glb",
+      "sha256": "f9e1d2745d20fcf98d3f889b3bfa38daf0d3edb4e375d5a342d60b2031985419",
+      "bytes": 1976052,
+      "vertices": 2417,
+      "bones": 141,
+      "height": 2.277476890827529,
+      "minY": -0.0014093954814597964,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        14,
+        25,
+        9,
+        10,
+        17,
+        16,
+        19,
+        18,
+        51,
+        52,
+        53,
+        1,
+        54,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/4-1-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/120590.m2",
+          "sha256": "f7040f9a1fa459153f859e821b77ebb3e45033ea3dde97730b5befc44d38fa74",
+          "bytes": 4028392
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471230.skin",
+          "sha256": "07361da86cd2e87518df9488673384824ec327aa755dca22b1fe4bacfbd7d134",
+          "bytes": 36128
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/120591.webp",
+          "sha256": "947a016e8d0251a61d98f6a27119e062415a6c1edc691877cf1e250382b9ef71",
+          "bytes": 794
+        }
+      ],
+      "raceId": 4,
+      "gender": "female",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "7-0-4": {
+      "displayId": "7-0-4",
+      "modelId": 119159,
+      "path": "/characters/classic/7-0-4.glb",
+      "sha256": "9c0db5e94f5a89bd10fcb074c6a33a743ea36f526576dcb1a0013dc9979c0a5b",
+      "bytes": 1336976,
+      "vertices": 2677,
+      "bones": 118,
+      "height": 1.1298055108636618,
+      "minY": -0.002086823806166649,
+      "animations": [
+        0,
+        10,
+        9,
+        1,
+        74,
+        51,
+        52,
+        25,
+        5,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/7-0-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119159.m2",
+          "sha256": "d689676bedcb960237f5f8c03af96532e02ca43b5abbb74f9803dd3c4fbc718e",
+          "bytes": 1838864
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470634.skin",
+          "sha256": "da08855c14eef21e414d1d54b7b73a2241bb6e18fe441d68c989728dd73f603d",
+          "bytes": 39344
+        }
+      ],
+      "raceId": 7,
+      "gender": "male",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "8-0-4": {
+      "displayId": "8-0-4",
+      "modelId": 122560,
+      "path": "/characters/classic/8-0-4.glb",
+      "sha256": "6c37b237e0fa03b87f0ea0b1a16db21aacd2f1b91e5ae0fbfdb33ad8bb41f327",
+      "bytes": 1357972,
+      "vertices": 3513,
+      "bones": 118,
+      "height": 3.191554328070197,
+      "minY": -3.4352407965343446e-05,
+      "animations": [
+        10,
+        9,
+        74,
+        51,
+        52,
+        25,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        0,
+        124,
+        125,
+        5,
+        1
+      ],
+      "portrait": "/creatures/molten-core/8-0-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122560.m2",
+          "sha256": "47aa02dc5e862758a13517be9ac5df415f7da9c6a7dee4869494dae84e9f0387",
+          "bytes": 1653190
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472211.skin",
+          "sha256": "d47c040db779bfb8e22757677814c5510ea3c465fa83dce1b96d084e474e32b7",
+          "bytes": 48240
+        }
+      ],
+      "raceId": 8,
+      "gender": "male",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "7-1-4": {
+      "displayId": "7-1-4",
+      "modelId": 119063,
+      "path": "/characters/classic/7-1-4.glb",
+      "sha256": "d1c4e1d02fe143b8caecca781c143c87b7afaa3bfc76382d8fe2cb396c46622f",
+      "bytes": 1390368,
+      "vertices": 2940,
+      "bones": 118,
+      "height": 1.1752522186143324,
+      "minY": -0.001466532121412456,
+      "animations": [
+        0,
+        10,
+        9,
+        1,
+        74,
+        51,
+        52,
+        25,
+        5,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/7-1-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119063.m2",
+          "sha256": "fedb3097859dff65668a4942abab542211b3bb6c101edb11becd7d56f1ec2390",
+          "bytes": 1656394
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470594.skin",
+          "sha256": "4f2a55e9e0dbc76ebaffa938bd9492ec5a95e8afeb7c3d4b6a4224be31f903bf",
+          "bytes": 42656
+        }
+      ],
+      "raceId": 7,
+      "gender": "female",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "5-1-4": {
+      "displayId": "5-1-4",
+      "modelId": 121608,
+      "path": "/characters/classic/5-1-4.glb",
+      "sha256": "ec85eaf05ca88446d061c1c87c1377ac337384383dad0afeb0c7d420d9275552",
+      "bytes": 1634916,
+      "vertices": 3501,
+      "bones": 133,
+      "height": 2.1575414333492517,
+      "minY": -0.0009411964565515518,
+      "animations": [
+        4,
+        0,
+        9,
+        8,
+        10,
+        17,
+        18,
+        5,
+        25,
+        16,
+        19,
+        51,
+        53,
+        52,
+        54,
+        14,
+        1,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/5-1-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121608.m2",
+          "sha256": "2ed00dc7ab219719846b27f1fabe1d82044d4e8b586f852a77c7e16d32ee3173",
+          "bytes": 1868968
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471708.skin",
+          "sha256": "374a85ca407a04ff34fbcd7e379a8d5f50a2f0613baddab185fde7765b9818a7",
+          "bytes": 48608
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/121767.webp",
+          "sha256": "0e73ef098bcfe6fb7e1f4c66dc3158a762dc565d587f41f73688fe2f24a5ccb2",
+          "bytes": 690
+        }
+      ],
+      "raceId": 5,
+      "gender": "female",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "8-1-4": {
+      "displayId": "8-1-4",
+      "modelId": 122414,
+      "path": "/characters/classic/8-1-4.glb",
+      "sha256": "6039adcef5b2c882bd59887700f11c30b356e7aa2359ad4786a73c10cdfaa99c",
+      "bytes": 1281016,
+      "vertices": 3122,
+      "bones": 120,
+      "height": 2.68176322162617,
+      "minY": 0.0018255215836688876,
+      "animations": [
+        5,
+        4,
+        0,
+        25,
+        52,
+        51,
+        17,
+        18,
+        19,
+        16,
+        53,
+        124,
+        54,
+        125,
+        1,
+        8,
+        9,
+        10,
+        74,
+        14
+      ],
+      "portrait": "/creatures/molten-core/8-1-4.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122414.m2",
+          "sha256": "5ccfb96ca45eeea0482dad23874c7b2492e592f602b67d80f65957fe78855c2e",
+          "bytes": 1234966
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472179.skin",
+          "sha256": "b7750c84495cb57b0b0684445929c560c2b59f88af16f77f8724a841b4e8d093",
+          "bytes": 46304
+        }
+      ],
+      "raceId": 8,
+      "gender": "female",
+      "classId": 4,
+      "weaponDisplay": 2704
+    },
+    "1-0-5": {
+      "displayId": "1-0-5",
+      "modelId": 119940,
+      "path": "/characters/classic/1-0-5.glb",
+      "sha256": "1b93839e43cc6ce5f6f4b88360508da47818073a3971d849f6a430add7ea4e74",
+      "bytes": 1309148,
+      "vertices": 3159,
+      "bones": 119,
+      "height": 2.0352424075244926,
+      "minY": -0.0007465769886039197,
+      "animations": [
+        0,
+        4,
+        5,
+        25,
+        1,
+        8,
+        14,
+        16,
+        51,
+        52,
+        74,
+        54,
+        53,
+        17,
+        9,
+        10,
+        19,
+        18,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/1-0-5.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119940.m2",
+          "sha256": "60e1b5abae6d5620b80468935b452dba6bb3b8b74b27fb673c09e52096de6aee",
+          "bytes": 1817618
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471055.skin",
+          "sha256": "ec62342c01d97610e50f6c814b303648226919404c68b64f30fe679ee7e158b1",
+          "bytes": 46368
+        }
+      ],
+      "raceId": 1,
+      "gender": "male",
+      "classId": 5,
+      "weaponDisplay": 472
+    },
+    "1-1-5": {
+      "displayId": "1-1-5",
+      "modelId": 119563,
+      "path": "/characters/classic/1-1-5.glb",
+      "sha256": "ad7dba023dd5f1e376fcf3dbe69a353cf0aa6ca6dd010cd673843a143d8a145b",
+      "bytes": 1336268,
+      "vertices": 4189,
+      "bones": 117,
+      "height": 1.9362460920820013,
+      "minY": -0.0006051609525457025,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        9,
+        17,
+        14,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        1,
+        74,
+        18,
+        53,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/1-1-5.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119563.m2",
+          "sha256": "8e779c15684f8384f92606d347b930e7040519f862fb652fe012934561197061",
+          "bytes": 1574550
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470980.skin",
+          "sha256": "0a223e6cf7e90f53af588d9500dfeb7c91f838a483c9f6323426405c4af41b7f",
+          "bytes": 60640
+        }
+      ],
+      "raceId": 1,
+      "gender": "female",
+      "classId": 5,
+      "weaponDisplay": 472
+    },
+    "3-0-5": {
+      "displayId": "3-0-5",
+      "modelId": 118355,
+      "path": "/characters/classic/3-0-5.glb",
+      "sha256": "0d45b71cd5ea1a8791eaf068ab7c8e0831b116bb466886f7f6d29d0860de26be",
+      "bytes": 1679088,
+      "vertices": 3246,
+      "bones": 142,
+      "height": 1.6753617268987,
+      "minY": -0.0034241420216858387,
+      "animations": [
+        0,
+        4,
+        5,
+        17,
+        9,
+        1,
+        8,
+        10,
+        14,
+        19,
+        18,
+        25,
+        16,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/3-0-5.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/118355.m2",
+          "sha256": "b73a92b7f9b4674803f71f6e32148e31c099a566f833ed108725014a59953745",
+          "bytes": 1695042
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470288.skin",
+          "sha256": "e6976ed95a379e5a1ed28e4130cf6e9f8e196bcc97deb8f9aabdb5e37ca1eee4",
+          "bytes": 48928
+        }
+      ],
+      "raceId": 3,
+      "gender": "male",
+      "classId": 5,
+      "weaponDisplay": 472
+    },
+    "3-1-5": {
+      "displayId": "3-1-5",
+      "modelId": 118135,
+      "path": "/characters/classic/3-1-5.glb",
+      "sha256": "a3beacb3a4b1fcc9d80a7e7a76958e5f3d576777879940c59dddb5710e0b9587",
+      "bytes": 1594532,
+      "vertices": 3458,
+      "bones": 138,
+      "height": 1.5407804080168717,
+      "minY": -0.0007765122572891414,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        9,
+        17,
+        14,
+        18,
+        10,
+        25,
+        16,
+        19,
+        52,
+        1,
+        51,
+        54,
+        74,
+        53,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/3-1-5.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/118135.m2",
+          "sha256": "1c3cf6def24881a88936abcea18f87415c8a44f50ef7d8c01eb66fba13099158",
+          "bytes": 1900306
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470268.skin",
+          "sha256": "29ddf861a11097b895c3fc42a7338a074a3fc8997b28ef405f0c674d79e09ccc",
+          "bytes": 50464
+        }
+      ],
+      "raceId": 3,
+      "gender": "female",
+      "classId": 5,
+      "weaponDisplay": 472
+    },
+    "5-0-5": {
+      "displayId": "5-0-5",
+      "modelId": 121768,
+      "path": "/characters/classic/5-0-5.glb",
+      "sha256": "e440fbe263d8fee308aec1b62115b41c996e6228d4c9f7b822082e39ed14150e",
+      "bytes": 1549016,
+      "vertices": 3146,
+      "bones": 136,
+      "height": 2.361403155256994,
+      "minY": -0.0018953561084344983,
+      "animations": [
+        5,
+        4,
+        0,
+        17,
+        9,
+        10,
+        18,
+        8,
+        19,
+        25,
+        16,
+        1,
+        14,
+        51,
+        53,
+        52,
+        54,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/5-0-5.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121768.m2",
+          "sha256": "e3f20bc1732d9194bf96b568fe559d45de3f751c7405ac68119ffd08a7d3bb5a",
+          "bytes": 2429208
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471740.skin",
+          "sha256": "24d668d530ba3a28424796293da3fe76ee26ab40d9756db1b7938fd2769e0f2f",
+          "bytes": 45776
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/121767.webp",
+          "sha256": "0e73ef098bcfe6fb7e1f4c66dc3158a762dc565d587f41f73688fe2f24a5ccb2",
+          "bytes": 690
+        }
+      ],
+      "raceId": 5,
+      "gender": "male",
+      "classId": 5,
+      "weaponDisplay": 472
+    },
+    "5-1-5": {
+      "displayId": "5-1-5",
+      "modelId": 121608,
+      "path": "/characters/classic/5-1-5.glb",
+      "sha256": "17963174c5cdf236aaa4f361e7c118d1ebb7aba5862e4de6bd5210ac2b8d774a",
+      "bytes": 1621440,
+      "vertices": 3501,
+      "bones": 133,
+      "height": 2.1575414333492517,
+      "minY": -0.0009411964565515518,
+      "animations": [
+        4,
+        0,
+        9,
+        8,
+        10,
+        17,
+        18,
+        5,
+        25,
+        16,
+        19,
+        51,
+        53,
+        52,
+        54,
+        14,
+        1,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/5-1-5.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121608.m2",
+          "sha256": "2ed00dc7ab219719846b27f1fabe1d82044d4e8b586f852a77c7e16d32ee3173",
+          "bytes": 1868968
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471708.skin",
+          "sha256": "374a85ca407a04ff34fbcd7e379a8d5f50a2f0613baddab185fde7765b9818a7",
+          "bytes": 48608
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/121767.webp",
+          "sha256": "0e73ef098bcfe6fb7e1f4c66dc3158a762dc565d587f41f73688fe2f24a5ccb2",
+          "bytes": 690
+        }
+      ],
+      "raceId": 5,
+      "gender": "female",
+      "classId": 5,
+      "weaponDisplay": 472
+    },
+    "4-0-5": {
+      "displayId": "4-0-5",
+      "modelId": 120791,
+      "path": "/characters/classic/4-0-5.glb",
+      "sha256": "dc907f8dc66463607df72211ceddbebc7c2f14da6d06fd6f1067cd6821e462f8",
+      "bytes": 1558248,
+      "vertices": 2684,
+      "bones": 123,
+      "height": 2.574750858359039,
+      "minY": -0.011858182959258556,
+      "animations": [
+        4,
+        5,
+        0,
+        8,
+        1,
+        9,
+        10,
+        14,
+        25,
+        52,
+        51,
+        17,
+        18,
+        16,
+        54,
+        74,
+        19,
+        53,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/4-0-5.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/120791.m2",
+          "sha256": "d7640b86b8f1ae1e2f412e90ee5d2bb136286bdcf6f0843238e9e7e6acda6404",
+          "bytes": 2047048
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471277.skin",
+          "sha256": "ba5ce44b60dfd99cabb43b1aed5d2642de29e2600b5e7e1e0b2524dded7781cd",
+          "bytes": 40208
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/120792.webp",
+          "sha256": "6166734fd8345a2c448536a447d68294d1df65dda3af99debe671ffd9af2d964",
+          "bytes": 738
+        }
+      ],
+      "raceId": 4,
+      "gender": "male",
+      "classId": 5,
+      "weaponDisplay": 472
+    },
+    "4-1-5": {
+      "displayId": "4-1-5",
+      "modelId": 120590,
+      "path": "/characters/classic/4-1-5.glb",
+      "sha256": "fdc41e005a14a1417fb9c6f553af7f8779e5c27110fd4544de127043a917f34e",
+      "bytes": 1976868,
+      "vertices": 2417,
+      "bones": 141,
+      "height": 2.277476890827529,
+      "minY": -0.0014093954814597964,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        14,
+        25,
+        9,
+        10,
+        17,
+        16,
+        19,
+        18,
+        51,
+        52,
+        53,
+        1,
+        54,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/4-1-5.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/120590.m2",
+          "sha256": "f7040f9a1fa459153f859e821b77ebb3e45033ea3dde97730b5befc44d38fa74",
+          "bytes": 4028392
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471230.skin",
+          "sha256": "07361da86cd2e87518df9488673384824ec327aa755dca22b1fe4bacfbd7d134",
+          "bytes": 36128
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/120591.webp",
+          "sha256": "947a016e8d0251a61d98f6a27119e062415a6c1edc691877cf1e250382b9ef71",
+          "bytes": 794
+        }
+      ],
+      "raceId": 4,
+      "gender": "female",
+      "classId": 5,
+      "weaponDisplay": 472
+    },
+    "8-0-5": {
+      "displayId": "8-0-5",
+      "modelId": 122560,
+      "path": "/characters/classic/8-0-5.glb",
+      "sha256": "4afe2a1a3a4fe5e899faba99a1ba64b38fe6d44dade40f115321151fce7b8a2d",
+      "bytes": 1331288,
+      "vertices": 3513,
+      "bones": 118,
+      "height": 3.191554328070197,
+      "minY": -3.4352407965343446e-05,
+      "animations": [
+        10,
+        9,
+        74,
+        51,
+        52,
+        25,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        0,
+        124,
+        125,
+        5,
+        1
+      ],
+      "portrait": "/creatures/molten-core/8-0-5.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122560.m2",
+          "sha256": "47aa02dc5e862758a13517be9ac5df415f7da9c6a7dee4869494dae84e9f0387",
+          "bytes": 1653190
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472211.skin",
+          "sha256": "d47c040db779bfb8e22757677814c5510ea3c465fa83dce1b96d084e474e32b7",
+          "bytes": 48240
+        }
+      ],
+      "raceId": 8,
+      "gender": "male",
+      "classId": 5,
+      "weaponDisplay": 472
+    },
+    "8-1-5": {
+      "displayId": "8-1-5",
+      "modelId": 122414,
+      "path": "/characters/classic/8-1-5.glb",
+      "sha256": "199cf83238fa45337baedce37f27d8ae881bfcae40d37555d498a93676794d9d",
+      "bytes": 1277100,
+      "vertices": 3122,
+      "bones": 120,
+      "height": 2.68176322162617,
+      "minY": 0.0018255215836688876,
+      "animations": [
+        5,
+        4,
+        0,
+        25,
+        52,
+        51,
+        17,
+        18,
+        19,
+        16,
+        53,
+        124,
+        54,
+        125,
+        1,
+        8,
+        9,
+        10,
+        74,
+        14
+      ],
+      "portrait": "/creatures/molten-core/8-1-5.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122414.m2",
+          "sha256": "5ccfb96ca45eeea0482dad23874c7b2492e592f602b67d80f65957fe78855c2e",
+          "bytes": 1234966
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472179.skin",
+          "sha256": "b7750c84495cb57b0b0684445929c560c2b59f88af16f77f8724a841b4e8d093",
+          "bytes": 46304
+        }
+      ],
+      "raceId": 8,
+      "gender": "female",
+      "classId": 5,
+      "weaponDisplay": 472
+    },
+    "2-1-7": {
+      "displayId": "2-1-7",
+      "modelId": 121087,
+      "path": "/characters/classic/2-1-7.glb",
+      "sha256": "b627a5b52468aa235f36c25f6ca98a60c7a77ed156d3690c2656a1dff77ba07c",
+      "bytes": 1579604,
+      "vertices": 2826,
+      "bones": 129,
+      "height": 2.2177886911667883,
+      "minY": -0.006875986699014902,
+      "animations": [
+        0,
+        4,
+        5,
+        9,
+        8,
+        17,
+        14,
+        1,
+        18,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        74,
+        53,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/2-1-7.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121087.m2",
+          "sha256": "013cafe8348cfe63ecf2cb9d03492086b716ca63d44382a24fde675b6b401754",
+          "bytes": 1984962
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471401.skin",
+          "sha256": "c931779545714b62d823c7ec271eb83694f52fa481a7f93964d426bf59f5f35e",
+          "bytes": 41840
+        }
+      ],
+      "raceId": 2,
+      "gender": "female",
+      "classId": 7,
+      "weaponDisplay": 5194
+    },
+    "6-1-7": {
+      "displayId": "6-1-7",
+      "modelId": 121961,
+      "path": "/characters/classic/6-1-7.glb",
+      "sha256": "a96a94238ef2333d1065fde65df98cb1d69e6cedf11fffc75311ae7bdb9fad3b",
+      "bytes": 1688192,
+      "vertices": 2083,
+      "bones": 137,
+      "height": 2.2326853508129716,
+      "minY": -0.003572487272322178,
+      "animations": [
+        4,
+        0,
+        5,
+        8,
+        17,
+        14,
+        1,
+        18,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        74,
+        54,
+        53,
+        125,
+        9,
+        124
+      ],
+      "portrait": "/creatures/molten-core/6-1-7.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121961.m2",
+          "sha256": "ab3e5ac20a3a72828388fae60705588b68b11c4f52029d17c566c1ff8846f94a",
+          "bytes": 2580420
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472044.skin",
+          "sha256": "5644119610ad73ba4167b3e2448a76dd55bf0ef3bef05d12b04a7946d02054b1",
+          "bytes": 32576
+        }
+      ],
+      "raceId": 6,
+      "gender": "female",
+      "classId": 7,
+      "weaponDisplay": 5194
+    },
+    "2-0-7": {
+      "displayId": "2-0-7",
+      "modelId": 121287,
+      "path": "/characters/classic/2-0-7.glb",
+      "sha256": "b43a905809d4a1819b19d6640741c2876783ad92e6c9e8308996e01fa67e097b",
+      "bytes": 1492628,
+      "vertices": 2728,
+      "bones": 129,
+      "height": 2.5425731013529003,
+      "minY": -0.006724960636347532,
+      "animations": [
+        0,
+        4,
+        5,
+        17,
+        9,
+        1,
+        8,
+        10,
+        14,
+        18,
+        25,
+        16,
+        19,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/2-0-7.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121287.m2",
+          "sha256": "593a5a317ff9de0d5e3debc529aa6ef8841bfea4929ad356912049b94e50fd19",
+          "bytes": 1720436
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471537.skin",
+          "sha256": "73c834e498f90eea33db50527d4680a7afc89b43fc8b125b8ef2975428243f7c",
+          "bytes": 40816
+        }
+      ],
+      "raceId": 2,
+      "gender": "male",
+      "classId": 7,
+      "weaponDisplay": 5194
+    },
+    "6-0-7": {
+      "displayId": "6-0-7",
+      "modelId": 122055,
+      "path": "/characters/classic/6-0-7.glb",
+      "sha256": "47c55dc6fa1d1f1fb90207da46f3bd2996ec8c60a9ef7649c2c9665465656e6a",
+      "bytes": 1550384,
+      "vertices": 2737,
+      "bones": 135,
+      "height": 2.382051184773445,
+      "minY": -0.0534033328294754,
+      "animations": [
+        4,
+        5,
+        0,
+        10,
+        9,
+        8,
+        17,
+        14,
+        1,
+        18,
+        25,
+        16,
+        19,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/6-0-7.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122055.m2",
+          "sha256": "7820d0ad18eba27d839ef331039c2233c6778c844e042146e61106b0247bb5b8",
+          "bytes": 1714444
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472132.skin",
+          "sha256": "0881a92d158dc89ddf56e604ebc84d48ead13d149e4028ad7dcf20e372d43631",
+          "bytes": 43792
+        }
+      ],
+      "raceId": 6,
+      "gender": "male",
+      "classId": 7,
+      "weaponDisplay": 5194
+    },
+    "8-0-7": {
+      "displayId": "8-0-7",
+      "modelId": 122560,
+      "path": "/characters/classic/8-0-7.glb",
+      "sha256": "e6be7bf533631574499b30f30713e93c08de8895952b6a97ca51d5718b44b134",
+      "bytes": 1392460,
+      "vertices": 3513,
+      "bones": 118,
+      "height": 3.191554328070197,
+      "minY": -3.4352407965343446e-05,
+      "animations": [
+        10,
+        9,
+        74,
+        51,
+        52,
+        25,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        0,
+        124,
+        125,
+        5,
+        1
+      ],
+      "portrait": "/creatures/molten-core/8-0-7.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122560.m2",
+          "sha256": "47aa02dc5e862758a13517be9ac5df415f7da9c6a7dee4869494dae84e9f0387",
+          "bytes": 1653190
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472211.skin",
+          "sha256": "d47c040db779bfb8e22757677814c5510ea3c465fa83dce1b96d084e474e32b7",
+          "bytes": 48240
+        }
+      ],
+      "raceId": 8,
+      "gender": "male",
+      "classId": 7,
+      "weaponDisplay": 5194
+    },
+    "8-1-7": {
+      "displayId": "8-1-7",
+      "modelId": 122414,
+      "path": "/characters/classic/8-1-7.glb",
+      "sha256": "c2de2af67e30cdaaa8629e4b66aae680f9f64bed4463a696ac258ffb46ba9bfb",
+      "bytes": 1310600,
+      "vertices": 3122,
+      "bones": 120,
+      "height": 2.68176322162617,
+      "minY": 0.0018255215836688876,
+      "animations": [
+        5,
+        4,
+        0,
+        25,
+        52,
+        51,
+        17,
+        18,
+        19,
+        16,
+        53,
+        124,
+        54,
+        125,
+        1,
+        8,
+        9,
+        10,
+        74,
+        14
+      ],
+      "portrait": "/creatures/molten-core/8-1-7.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122414.m2",
+          "sha256": "5ccfb96ca45eeea0482dad23874c7b2492e592f602b67d80f65957fe78855c2e",
+          "bytes": 1234966
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472179.skin",
+          "sha256": "b7750c84495cb57b0b0684445929c560c2b59f88af16f77f8724a841b4e8d093",
+          "bytes": 46304
+        }
+      ],
+      "raceId": 8,
+      "gender": "female",
+      "classId": 7,
+      "weaponDisplay": 5194
+    },
+    "1-0-8": {
+      "displayId": "1-0-8",
+      "modelId": 119940,
+      "path": "/characters/classic/1-0-8.glb",
+      "sha256": "9b7663c4a97f83e7393274462d70cf3ebcc59de5337614ed67e235fe0009ab3a",
+      "bytes": 1323472,
+      "vertices": 3159,
+      "bones": 119,
+      "height": 2.0352424075244926,
+      "minY": -0.0007465769886039197,
+      "animations": [
+        0,
+        4,
+        5,
+        25,
+        1,
+        8,
+        14,
+        16,
+        51,
+        52,
+        74,
+        54,
+        53,
+        17,
+        9,
+        10,
+        19,
+        18,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/1-0-8.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119940.m2",
+          "sha256": "60e1b5abae6d5620b80468935b452dba6bb3b8b74b27fb673c09e52096de6aee",
+          "bytes": 1817618
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471055.skin",
+          "sha256": "ec62342c01d97610e50f6c814b303648226919404c68b64f30fe679ee7e158b1",
+          "bytes": 46368
+        }
+      ],
+      "raceId": 1,
+      "gender": "male",
+      "classId": 8,
+      "weaponDisplay": 472
+    },
+    "5-0-8": {
+      "displayId": "5-0-8",
+      "modelId": 121768,
+      "path": "/characters/classic/5-0-8.glb",
+      "sha256": "10c6d59636a5128d1de5c15028f308bb4f4d02304ceb3c4f96ba71e57e098a23",
+      "bytes": 1563196,
+      "vertices": 3146,
+      "bones": 136,
+      "height": 2.361403155256994,
+      "minY": -0.0018953561084344983,
+      "animations": [
+        5,
+        4,
+        0,
+        17,
+        9,
+        10,
+        18,
+        8,
+        19,
+        25,
+        16,
+        1,
+        14,
+        51,
+        53,
+        52,
+        54,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/5-0-8.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121768.m2",
+          "sha256": "e3f20bc1732d9194bf96b568fe559d45de3f751c7405ac68119ffd08a7d3bb5a",
+          "bytes": 2429208
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471740.skin",
+          "sha256": "24d668d530ba3a28424796293da3fe76ee26ab40d9756db1b7938fd2769e0f2f",
+          "bytes": 45776
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/121767.webp",
+          "sha256": "0e73ef098bcfe6fb7e1f4c66dc3158a762dc565d587f41f73688fe2f24a5ccb2",
+          "bytes": 690
+        }
+      ],
+      "raceId": 5,
+      "gender": "male",
+      "classId": 8,
+      "weaponDisplay": 472
+    },
+    "1-1-8": {
+      "displayId": "1-1-8",
+      "modelId": 119563,
+      "path": "/characters/classic/1-1-8.glb",
+      "sha256": "37515e7a8253f85e4df2094b141f924cbb35b60c79d08545711cfba9064e98a0",
+      "bytes": 1351548,
+      "vertices": 4189,
+      "bones": 117,
+      "height": 1.9362460920820013,
+      "minY": -0.0006051609525457025,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        9,
+        17,
+        14,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        1,
+        74,
+        18,
+        53,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/1-1-8.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119563.m2",
+          "sha256": "8e779c15684f8384f92606d347b930e7040519f862fb652fe012934561197061",
+          "bytes": 1574550
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470980.skin",
+          "sha256": "0a223e6cf7e90f53af588d9500dfeb7c91f838a483c9f6323426405c4af41b7f",
+          "bytes": 60640
+        }
+      ],
+      "raceId": 1,
+      "gender": "female",
+      "classId": 8,
+      "weaponDisplay": 472
+    },
+    "5-1-8": {
+      "displayId": "5-1-8",
+      "modelId": 121608,
+      "path": "/characters/classic/5-1-8.glb",
+      "sha256": "378de6cb1810daba9a33532d35a4e159bb27a6414eadfd9b9a4ec1b19b56f653",
+      "bytes": 1635960,
+      "vertices": 3501,
+      "bones": 133,
+      "height": 2.1575414333492517,
+      "minY": -0.0009411964565515518,
+      "animations": [
+        4,
+        0,
+        9,
+        8,
+        10,
+        17,
+        18,
+        5,
+        25,
+        16,
+        19,
+        51,
+        53,
+        52,
+        54,
+        14,
+        1,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/5-1-8.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121608.m2",
+          "sha256": "2ed00dc7ab219719846b27f1fabe1d82044d4e8b586f852a77c7e16d32ee3173",
+          "bytes": 1868968
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471708.skin",
+          "sha256": "374a85ca407a04ff34fbcd7e379a8d5f50a2f0613baddab185fde7765b9818a7",
+          "bytes": 48608
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/121767.webp",
+          "sha256": "0e73ef098bcfe6fb7e1f4c66dc3158a762dc565d587f41f73688fe2f24a5ccb2",
+          "bytes": 690
+        }
+      ],
+      "raceId": 5,
+      "gender": "female",
+      "classId": 8,
+      "weaponDisplay": 472
+    },
+    "7-0-8": {
+      "displayId": "7-0-8",
+      "modelId": 119159,
+      "path": "/characters/classic/7-0-8.glb",
+      "sha256": "88445761ba9f000384441c0b6318d8c7cceb11171292ef9edacacbf98a0834a8",
+      "bytes": 1349792,
+      "vertices": 2677,
+      "bones": 118,
+      "height": 1.1298055108636618,
+      "minY": -0.002086823806166649,
+      "animations": [
+        0,
+        10,
+        9,
+        1,
+        74,
+        51,
+        52,
+        25,
+        5,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/7-0-8.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119159.m2",
+          "sha256": "d689676bedcb960237f5f8c03af96532e02ca43b5abbb74f9803dd3c4fbc718e",
+          "bytes": 1838864
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470634.skin",
+          "sha256": "da08855c14eef21e414d1d54b7b73a2241bb6e18fe441d68c989728dd73f603d",
+          "bytes": 39344
+        }
+      ],
+      "raceId": 7,
+      "gender": "male",
+      "classId": 8,
+      "weaponDisplay": 472
+    },
+    "8-0-8": {
+      "displayId": "8-0-8",
+      "modelId": 122560,
+      "path": "/characters/classic/8-0-8.glb",
+      "sha256": "a9df1343ad2ffffeaee1616385eaf590727147e47049de009db8dc300ae6679a",
+      "bytes": 1345900,
+      "vertices": 3513,
+      "bones": 118,
+      "height": 3.191554328070197,
+      "minY": -3.4352407965343446e-05,
+      "animations": [
+        10,
+        9,
+        74,
+        51,
+        52,
+        25,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        0,
+        124,
+        125,
+        5,
+        1
+      ],
+      "portrait": "/creatures/molten-core/8-0-8.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122560.m2",
+          "sha256": "47aa02dc5e862758a13517be9ac5df415f7da9c6a7dee4869494dae84e9f0387",
+          "bytes": 1653190
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472211.skin",
+          "sha256": "d47c040db779bfb8e22757677814c5510ea3c465fa83dce1b96d084e474e32b7",
+          "bytes": 48240
+        }
+      ],
+      "raceId": 8,
+      "gender": "male",
+      "classId": 8,
+      "weaponDisplay": 472
+    },
+    "8-1-8": {
+      "displayId": "8-1-8",
+      "modelId": 122414,
+      "path": "/characters/classic/8-1-8.glb",
+      "sha256": "dad47aa4ca2c75dde6d83b3ffa50dfff1373cf777b1edeeb80ab819c65aa482f",
+      "bytes": 1292812,
+      "vertices": 3122,
+      "bones": 120,
+      "height": 2.68176322162617,
+      "minY": 0.0018255215836688876,
+      "animations": [
+        5,
+        4,
+        0,
+        25,
+        52,
+        51,
+        17,
+        18,
+        19,
+        16,
+        53,
+        124,
+        54,
+        125,
+        1,
+        8,
+        9,
+        10,
+        74,
+        14
+      ],
+      "portrait": "/creatures/molten-core/8-1-8.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122414.m2",
+          "sha256": "5ccfb96ca45eeea0482dad23874c7b2492e592f602b67d80f65957fe78855c2e",
+          "bytes": 1234966
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472179.skin",
+          "sha256": "b7750c84495cb57b0b0684445929c560c2b59f88af16f77f8724a841b4e8d093",
+          "bytes": 46304
+        }
+      ],
+      "raceId": 8,
+      "gender": "female",
+      "classId": 8,
+      "weaponDisplay": 472
+    },
+    "7-1-8": {
+      "displayId": "7-1-8",
+      "modelId": 119063,
+      "path": "/characters/classic/7-1-8.glb",
+      "sha256": "5ddc03c5862e808da9fc8e48538606d3d85b1ee86448e24aa0b6d810749a97f8",
+      "bytes": 1413636,
+      "vertices": 2940,
+      "bones": 118,
+      "height": 1.1752522186143324,
+      "minY": -0.001466532121412456,
+      "animations": [
+        0,
+        10,
+        9,
+        1,
+        74,
+        51,
+        52,
+        25,
+        5,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/7-1-8.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119063.m2",
+          "sha256": "fedb3097859dff65668a4942abab542211b3bb6c101edb11becd7d56f1ec2390",
+          "bytes": 1656394
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470594.skin",
+          "sha256": "4f2a55e9e0dbc76ebaffa938bd9492ec5a95e8afeb7c3d4b6a4224be31f903bf",
+          "bytes": 42656
+        }
+      ],
+      "raceId": 7,
+      "gender": "female",
+      "classId": 8,
+      "weaponDisplay": 472
+    },
+    "1-0-9": {
+      "displayId": "1-0-9",
+      "modelId": 119940,
+      "path": "/characters/classic/1-0-9.glb",
+      "sha256": "4ad26c38f64df21d790465067c6db0c33fa1405b00950a13cf5cc0ea502150c2",
+      "bytes": 1309148,
+      "vertices": 3159,
+      "bones": 119,
+      "height": 2.0352424075244926,
+      "minY": -0.0007465769886039197,
+      "animations": [
+        0,
+        4,
+        5,
+        25,
+        1,
+        8,
+        14,
+        16,
+        51,
+        52,
+        74,
+        54,
+        53,
+        17,
+        9,
+        10,
+        19,
+        18,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/1-0-9.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119940.m2",
+          "sha256": "60e1b5abae6d5620b80468935b452dba6bb3b8b74b27fb673c09e52096de6aee",
+          "bytes": 1817618
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471055.skin",
+          "sha256": "ec62342c01d97610e50f6c814b303648226919404c68b64f30fe679ee7e158b1",
+          "bytes": 46368
+        }
+      ],
+      "raceId": 1,
+      "gender": "male",
+      "classId": 9,
+      "weaponDisplay": 472
+    },
+    "2-0-9": {
+      "displayId": "2-0-9",
+      "modelId": 121287,
+      "path": "/characters/classic/2-0-9.glb",
+      "sha256": "970bb11f252fcd1650ccd5d8b91cf24828ecc222228860c59e4de25a4c559d20",
+      "bytes": 1426272,
+      "vertices": 2728,
+      "bones": 129,
+      "height": 2.5425731013529003,
+      "minY": -0.006724960636347532,
+      "animations": [
+        0,
+        4,
+        5,
+        17,
+        9,
+        1,
+        8,
+        10,
+        14,
+        18,
+        25,
+        16,
+        19,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/2-0-9.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121287.m2",
+          "sha256": "593a5a317ff9de0d5e3debc529aa6ef8841bfea4929ad356912049b94e50fd19",
+          "bytes": 1720436
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471537.skin",
+          "sha256": "73c834e498f90eea33db50527d4680a7afc89b43fc8b125b8ef2975428243f7c",
+          "bytes": 40816
+        }
+      ],
+      "raceId": 2,
+      "gender": "male",
+      "classId": 9,
+      "weaponDisplay": 472
+    },
+    "1-1-9": {
+      "displayId": "1-1-9",
+      "modelId": 119563,
+      "path": "/characters/classic/1-1-9.glb",
+      "sha256": "f66b7944743f4e343066c8c3c51cf487399b9ab58a95295edd41a52afd70b80e",
+      "bytes": 1336268,
+      "vertices": 4189,
+      "bones": 117,
+      "height": 1.9362460920820013,
+      "minY": -0.0006051609525457025,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        9,
+        17,
+        14,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        1,
+        74,
+        18,
+        53,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/1-1-9.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119563.m2",
+          "sha256": "8e779c15684f8384f92606d347b930e7040519f862fb652fe012934561197061",
+          "bytes": 1574550
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470980.skin",
+          "sha256": "0a223e6cf7e90f53af588d9500dfeb7c91f838a483c9f6323426405c4af41b7f",
+          "bytes": 60640
+        }
+      ],
+      "raceId": 1,
+      "gender": "female",
+      "classId": 9,
+      "weaponDisplay": 472
+    },
+    "2-1-9": {
+      "displayId": "2-1-9",
+      "modelId": 121087,
+      "path": "/characters/classic/2-1-9.glb",
+      "sha256": "42dd30f6bcb389bbb53efb1eac437ca0a40471f042990e56262a0f02398ac7bb",
+      "bytes": 1543372,
+      "vertices": 2826,
+      "bones": 129,
+      "height": 2.2177886911667883,
+      "minY": -0.006875986699014902,
+      "animations": [
+        0,
+        4,
+        5,
+        9,
+        8,
+        17,
+        14,
+        1,
+        18,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        74,
+        53,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/2-1-9.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121087.m2",
+          "sha256": "013cafe8348cfe63ecf2cb9d03492086b716ca63d44382a24fde675b6b401754",
+          "bytes": 1984962
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471401.skin",
+          "sha256": "c931779545714b62d823c7ec271eb83694f52fa481a7f93964d426bf59f5f35e",
+          "bytes": 41840
+        }
+      ],
+      "raceId": 2,
+      "gender": "female",
+      "classId": 9,
+      "weaponDisplay": 472
+    },
+    "5-0-9": {
+      "displayId": "5-0-9",
+      "modelId": 121768,
+      "path": "/characters/classic/5-0-9.glb",
+      "sha256": "88dc02ac98253e933c44e16185c2eb0374140b59b9ec15aea5c199470212a498",
+      "bytes": 1549016,
+      "vertices": 3146,
+      "bones": 136,
+      "height": 2.361403155256994,
+      "minY": -0.0018953561084344983,
+      "animations": [
+        5,
+        4,
+        0,
+        17,
+        9,
+        10,
+        18,
+        8,
+        19,
+        25,
+        16,
+        1,
+        14,
+        51,
+        53,
+        52,
+        54,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/5-0-9.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121768.m2",
+          "sha256": "e3f20bc1732d9194bf96b568fe559d45de3f751c7405ac68119ffd08a7d3bb5a",
+          "bytes": 2429208
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471740.skin",
+          "sha256": "24d668d530ba3a28424796293da3fe76ee26ab40d9756db1b7938fd2769e0f2f",
+          "bytes": 45776
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/121767.webp",
+          "sha256": "0e73ef098bcfe6fb7e1f4c66dc3158a762dc565d587f41f73688fe2f24a5ccb2",
+          "bytes": 690
+        }
+      ],
+      "raceId": 5,
+      "gender": "male",
+      "classId": 9,
+      "weaponDisplay": 472
+    },
+    "7-0-9": {
+      "displayId": "7-0-9",
+      "modelId": 119159,
+      "path": "/characters/classic/7-0-9.glb",
+      "sha256": "f18652319e85274cac384b8f9c18244cbc6e27d7fb86ce68cf9bf3df48a9d361",
+      "bytes": 1335820,
+      "vertices": 2677,
+      "bones": 118,
+      "height": 1.1298055108636618,
+      "minY": -0.002086823806166649,
+      "animations": [
+        0,
+        10,
+        9,
+        1,
+        74,
+        51,
+        52,
+        25,
+        5,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/7-0-9.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119159.m2",
+          "sha256": "d689676bedcb960237f5f8c03af96532e02ca43b5abbb74f9803dd3c4fbc718e",
+          "bytes": 1838864
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470634.skin",
+          "sha256": "da08855c14eef21e414d1d54b7b73a2241bb6e18fe441d68c989728dd73f603d",
+          "bytes": 39344
+        }
+      ],
+      "raceId": 7,
+      "gender": "male",
+      "classId": 9,
+      "weaponDisplay": 472
+    },
+    "7-1-9": {
+      "displayId": "7-1-9",
+      "modelId": 119063,
+      "path": "/characters/classic/7-1-9.glb",
+      "sha256": "f573970ed5e36ac5c9247cc6df3eb46b5a70e3bed6e264deca20d322a29a906c",
+      "bytes": 1397028,
+      "vertices": 2940,
+      "bones": 118,
+      "height": 1.1752522186143324,
+      "minY": -0.001466532121412456,
+      "animations": [
+        0,
+        10,
+        9,
+        1,
+        74,
+        51,
+        52,
+        25,
+        5,
+        53,
+        54,
+        8,
+        14,
+        4,
+        17,
+        19,
+        18,
+        16,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/7-1-9.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/119063.m2",
+          "sha256": "fedb3097859dff65668a4942abab542211b3bb6c101edb11becd7d56f1ec2390",
+          "bytes": 1656394
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470594.skin",
+          "sha256": "4f2a55e9e0dbc76ebaffa938bd9492ec5a95e8afeb7c3d4b6a4224be31f903bf",
+          "bytes": 42656
+        }
+      ],
+      "raceId": 7,
+      "gender": "female",
+      "classId": 9,
+      "weaponDisplay": 472
+    },
+    "5-1-9": {
+      "displayId": "5-1-9",
+      "modelId": 121608,
+      "path": "/characters/classic/5-1-9.glb",
+      "sha256": "2412e97841456526891012acac722862c505d4d69da16ac7368c2c37ab3c3be6",
+      "bytes": 1621440,
+      "vertices": 3501,
+      "bones": 133,
+      "height": 2.1575414333492517,
+      "minY": -0.0009411964565515518,
+      "animations": [
+        4,
+        0,
+        9,
+        8,
+        10,
+        17,
+        18,
+        5,
+        25,
+        16,
+        19,
+        51,
+        53,
+        52,
+        54,
+        14,
+        1,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/5-1-9.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121608.m2",
+          "sha256": "2ed00dc7ab219719846b27f1fabe1d82044d4e8b586f852a77c7e16d32ee3173",
+          "bytes": 1868968
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471708.skin",
+          "sha256": "374a85ca407a04ff34fbcd7e379a8d5f50a2f0613baddab185fde7765b9818a7",
+          "bytes": 48608
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/121767.webp",
+          "sha256": "0e73ef098bcfe6fb7e1f4c66dc3158a762dc565d587f41f73688fe2f24a5ccb2",
+          "bytes": 690
+        }
+      ],
+      "raceId": 5,
+      "gender": "female",
+      "classId": 9,
+      "weaponDisplay": 472
+    },
+    "6-1-11": {
+      "displayId": "6-1-11",
+      "modelId": 121961,
+      "path": "/characters/classic/6-1-11.glb",
+      "sha256": "ebf4abb4ff6b26893e543a69a84781c7b9a943a2f1990b7c43111e48f9f24347",
+      "bytes": 1692708,
+      "vertices": 2083,
+      "bones": 137,
+      "height": 2.2326853508129716,
+      "minY": -0.003572487272322178,
+      "animations": [
+        4,
+        0,
+        5,
+        8,
+        17,
+        14,
+        1,
+        18,
+        10,
+        25,
+        16,
+        19,
+        51,
+        52,
+        74,
+        54,
+        53,
+        125,
+        9,
+        124
+      ],
+      "portrait": "/creatures/molten-core/6-1-11.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121961.m2",
+          "sha256": "ab3e5ac20a3a72828388fae60705588b68b11c4f52029d17c566c1ff8846f94a",
+          "bytes": 2580420
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472044.skin",
+          "sha256": "5644119610ad73ba4167b3e2448a76dd55bf0ef3bef05d12b04a7946d02054b1",
+          "bytes": 32576
+        }
+      ],
+      "raceId": 6,
+      "gender": "female",
+      "classId": 11,
+      "weaponDisplay": 472
+    },
+    "4-0-11": {
+      "displayId": "4-0-11",
+      "modelId": 120791,
+      "path": "/characters/classic/4-0-11.glb",
+      "sha256": "d1aca405ca3bf1bd9ba725cb6f1a181acc7f64ecbdd99d23b1d29c0697c71fd3",
+      "bytes": 1614884,
+      "vertices": 2684,
+      "bones": 123,
+      "height": 2.574750858359039,
+      "minY": -0.011858182959258556,
+      "animations": [
+        4,
+        5,
+        0,
+        8,
+        1,
+        9,
+        10,
+        14,
+        25,
+        52,
+        51,
+        17,
+        18,
+        16,
+        54,
+        74,
+        19,
+        53,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/4-0-11.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/120791.m2",
+          "sha256": "d7640b86b8f1ae1e2f412e90ee5d2bb136286bdcf6f0843238e9e7e6acda6404",
+          "bytes": 2047048
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471277.skin",
+          "sha256": "ba5ce44b60dfd99cabb43b1aed5d2642de29e2600b5e7e1e0b2524dded7781cd",
+          "bytes": 40208
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/120792.webp",
+          "sha256": "6166734fd8345a2c448536a447d68294d1df65dda3af99debe671ffd9af2d964",
+          "bytes": 738
+        }
+      ],
+      "raceId": 4,
+      "gender": "male",
+      "classId": 11,
+      "weaponDisplay": 472
+    },
+    "4-1-11": {
+      "displayId": "4-1-11",
+      "modelId": 120590,
+      "path": "/characters/classic/4-1-11.glb",
+      "sha256": "c3940db8247323cf233f09e9f57f9826cda384c0ed67eb34b59c9348faca6f23",
+      "bytes": 2022664,
+      "vertices": 2417,
+      "bones": 141,
+      "height": 2.277476890827529,
+      "minY": -0.0014093954814597964,
+      "animations": [
+        0,
+        4,
+        5,
+        8,
+        14,
+        25,
+        9,
+        10,
+        17,
+        16,
+        19,
+        18,
+        51,
+        52,
+        53,
+        1,
+        54,
+        74,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/4-1-11.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/120590.m2",
+          "sha256": "f7040f9a1fa459153f859e821b77ebb3e45033ea3dde97730b5befc44d38fa74",
+          "bytes": 4028392
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471230.skin",
+          "sha256": "07361da86cd2e87518df9488673384824ec327aa755dca22b1fe4bacfbd7d134",
+          "bytes": 36128
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/120591.webp",
+          "sha256": "947a016e8d0251a61d98f6a27119e062415a6c1edc691877cf1e250382b9ef71",
+          "bytes": 794
+        }
+      ],
+      "raceId": 4,
+      "gender": "female",
+      "classId": 11,
+      "weaponDisplay": 472
+    },
+    "6-0-11": {
+      "displayId": "6-0-11",
+      "modelId": 122055,
+      "path": "/characters/classic/6-0-11.glb",
+      "sha256": "3d2162fa6c1842faaafed9762a155906617d51dc2f9f3857e6941428c41e0f0f",
+      "bytes": 1543688,
+      "vertices": 2737,
+      "bones": 135,
+      "height": 2.382051184773445,
+      "minY": -0.0534033328294754,
+      "animations": [
+        4,
+        5,
+        0,
+        10,
+        9,
+        8,
+        17,
+        14,
+        1,
+        18,
+        25,
+        16,
+        19,
+        51,
+        53,
+        74,
+        52,
+        54,
+        124,
+        125
+      ],
+      "portrait": "/creatures/molten-core/6-0-11.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122055.m2",
+          "sha256": "7820d0ad18eba27d839ef331039c2233c6778c844e042146e61106b0247bb5b8",
+          "bytes": 1714444
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472132.skin",
+          "sha256": "0881a92d158dc89ddf56e604ebc84d48ead13d149e4028ad7dcf20e372d43631",
+          "bytes": 43792
+        }
+      ],
+      "raceId": 6,
+      "gender": "male",
+      "classId": 11,
+      "weaponDisplay": 472
+    }
+  },
+  "weapons": {
+    "472": {
+      "displayId": 472,
+      "modelId": 147530,
+      "path": "/characters/classic/472.glb",
+      "sha256": "4ecd6cb09c524a738863560c8f01ef77c0f1c44c91603db3812912cab09ad28c",
+      "bytes": 22572,
+      "vertices": 52,
+      "bones": 6,
+      "height": 0.21228023618459702,
+      "minY": -0.11628104746341705,
+      "animations": [
+        0
+      ],
+      "portrait": "/creatures/molten-core/472.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/147530.m2",
+          "sha256": "95284acc0584b1989d485c09a5ac3d17948d3e31e0594e18a1a2ee4b9bc213c1",
+          "bytes": 4210
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/491025.skin",
+          "sha256": "6891240d9aca8009703114438d988e83b307d88766813e6a3a5eb3d933deba43",
+          "bytes": 880
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/147533.webp",
+          "sha256": "01c56c5c6ed11498072c4b476eccc76b3065ee9d81baa16661a80b308540dfc9",
+          "bytes": 4778
+        }
+      ]
+    },
+    "5194": {
+      "displayId": 5194,
+      "modelId": 146531,
+      "path": "/characters/classic/5194.glb",
+      "sha256": "b99e684a72ea6e30b751468a16e4f3a2142015519062aee135cddc4524ade465",
+      "bytes": 25856,
+      "vertices": 122,
+      "bones": 8,
+      "height": 0.20196640491485596,
+      "minY": -0.10098371654748917,
+      "animations": [],
+      "portrait": "/creatures/molten-core/5194.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/146531.m2",
+          "sha256": "13c78a80f17082de6d8bcc1d689e7822caebc9cc003a0ea8c4808537ca1367cb",
+          "bytes": 7642
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/491961.skin",
+          "sha256": "ff16644d9d55eb3f03b11383ef6150f291ce88de0ae17eb6e580d2d6240a302b",
+          "bytes": 1520
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/146532.webp",
+          "sha256": "9f981c438148862c499a7ab215775ae7b750fbeab1a7eaee73f6af790e882414",
+          "bytes": 4832
+        }
+      ]
+    },
+    "1542": {
+      "displayId": 1542,
+      "modelId": 148132,
+      "path": "/characters/classic/1542.glb",
+      "sha256": "eae7015bd5fe2de16d774e1ad71f1b2eb7f90d5b0c9d366a20f5a43be1b39a25",
+      "bytes": 21484,
+      "vertices": 45,
+      "bones": 8,
+      "height": 0.34371577203273773,
+      "minY": -0.1723269671201706,
+      "animations": [],
+      "portrait": "/creatures/molten-core/1542.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/148132.m2",
+          "sha256": "aa5f1b0f5f09bb2ac64d27167a30e796762b63635f9e5c9f992b5b3abd4c725e",
+          "bytes": 3946
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/490774.skin",
+          "sha256": "b68a632810d02b70a2113b3fc639bf54920afe8612fc3a0870b06de77f15f6e7",
+          "bytes": 800
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/148134.webp",
+          "sha256": "00003ab62b107b47a45a5b5a2a4eecd706e4ee1efebb6365c92a9e4015f1d123",
+          "bytes": 4250
+        }
+      ]
+    },
+    "8483": {
+      "displayId": 8483,
+      "modelId": 144420,
+      "path": "/characters/classic/8483.glb",
+      "sha256": "5e7d03ba7d539c52a6e17caebaad0132dacc69ed68cc0f45520d90c4d5292f99",
+      "bytes": 28192,
+      "vertices": 80,
+      "bones": 6,
+      "height": 0.3663167431950569,
+      "minY": -0.29567447304725647,
+      "animations": [
+        0
+      ],
+      "portrait": "/creatures/molten-core/8483.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/144420.m2",
+          "sha256": "7c3f8ff978318ced1132f8a28b2a27e0f0304bd3f4ff0939b4c71e73e0ea4722",
+          "bytes": 5706
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/491687.skin",
+          "sha256": "633cf64ba6d3cd206c0acd7c98518c31ba1b1164f11764c90ed66ee53bb06d0b",
+          "bytes": 1168
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/144422.webp",
+          "sha256": "43050f06f7e23d3ff451240fcf61ab4d5ddbb9ffe9c6705b52e413b4d836008b",
+          "bytes": 6166
+        }
+      ]
+    },
+    "2704": {
+      "displayId": 2704,
+      "modelId": 146068,
+      "path": "/characters/classic/2704.glb",
+      "sha256": "1bac552266d4f250dfb0fa453a7df8572d571866b869d85a144d6ed25ccac4e5",
+      "bytes": 21112,
+      "vertices": 49,
+      "bones": 6,
+      "height": 0.2674729526042938,
+      "minY": -0.12697264552116394,
+      "animations": [
+        0
+      ],
+      "portrait": "/creatures/molten-core/2704.webp",
+      "portraitSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/146068.m2",
+          "sha256": "c2190f172800c954ae6864589dabe7e5e4473385f2e6ff4800bb94872241d55b",
+          "bytes": 4090
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/491845.skin",
+          "sha256": "714df0daddc59f28489a81ab4336a52e0bf67db0d1fe905494970c293cef70b1",
+          "bytes": 880
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/146069.webp",
+          "sha256": "38d00c6e0babc240164a367454f14d679da9be8f21320cef2e23bb3f2ec5afe7",
+          "bytes": 3988
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,1777 @@
+{
+  "schemaVersion": 1,
+  "copyright": "Blizzard Entertainment. Classic assets hosted by Wowhead.",
+  "entries": {
+    "12118": {
+      "displayId": 13031,
+      "modelId": 125777,
+      "identitySource": "https://www.wowhead.com/classic/npc=12118",
+      "identitySha256": "ddf429be3daf19cac288b7565c40e91666f54b3c9712a26d5496e0508d441a8f"
+    },
+    "11982": {
+      "displayId": 10193,
+      "modelId": 123834,
+      "identitySource": "https://www.wowhead.com/classic/npc=11982",
+      "identitySha256": "fe9cdb7f9ca5ed612091becd7aef8024ed5e39fc523cf69ced811476ba224e4d"
+    },
+    "12259": {
+      "displayId": 13030,
+      "modelId": 125777,
+      "identitySource": "https://www.wowhead.com/classic/npc=12259",
+      "identitySha256": "6c1afcbe03027ef679ace12440ead1cf929dc4ec25d30d42afad2dd3e18087ba"
+    },
+    "12057": {
+      "displayId": 12110,
+      "modelId": 123747,
+      "identitySource": "https://www.wowhead.com/classic/npc=12057",
+      "identitySha256": "e22ecce59d70287eff927a63a494bad6286baa4d0b63a3ba2d4ff1a6c4b1e084"
+    },
+    "12056": {
+      "displayId": 12129,
+      "modelId": 123934,
+      "identitySource": "https://www.wowhead.com/classic/npc=12056",
+      "identitySha256": "fe083015c0843e8e202e65562b43f0297123d9de5e596f031cefa3d1a9fa6e20"
+    },
+    "12264": {
+      "displayId": 13032,
+      "modelId": 125777,
+      "identitySource": "https://www.wowhead.com/classic/npc=12264",
+      "identitySha256": "5df518f7c2bc2c7e990a429407c9a6f939ab235646b3ba54e05d0969f27a4a0b"
+    },
+    "12098": {
+      "displayId": 13030,
+      "modelId": 125777,
+      "identitySource": "https://www.wowhead.com/classic/npc=12098",
+      "identitySha256": "28ab7ccd3026111b24b4a6c30a4df32ed34c6de57ff54ec49ca5d7decd867c52"
+    },
+    "11988": {
+      "displayId": 11986,
+      "modelId": 124952,
+      "identitySource": "https://www.wowhead.com/classic/npc=11988",
+      "identitySha256": "265c785ae996d1721dbe974f6a3cbcd72e433a1c10523c3fc81dcf85868b6149"
+    },
+    "12018": {
+      "displayId": 12029,
+      "modelId": 125777,
+      "identitySource": "https://www.wowhead.com/classic/npc=12018",
+      "identitySha256": "9fea6b12299d3ba00280165d818743671462939a390d4a8a69e6628358a4de46"
+    },
+    "11502": {
+      "displayId": 11121,
+      "modelId": 125519,
+      "identitySource": "https://www.wowhead.com/classic/npc=11502",
+      "identitySha256": "741d9a73ab4d2b19fcc174d4326eeeb285dd9d9249996a6e38dbe978b864e691"
+    },
+    "11658": {
+      "displayId": 8269,
+      "modelId": 124952,
+      "identitySource": "https://www.wowhead.com/classic/npc=11658",
+      "identitySha256": "6fad2bdd19ff49bbe4162f8b72e1cbc57831084743552b8e3455d430af480a7c"
+    },
+    "11659": {
+      "displayId": 12162,
+      "modelId": 124952,
+      "identitySource": "https://www.wowhead.com/classic/npc=11659",
+      "identitySha256": "32fd85eb738e023d11253fa9bd290dc19b8128dc30605934d9becfcdbfbc5136"
+    },
+    "11671": {
+      "displayId": 12168,
+      "modelId": 123834,
+      "identitySource": "https://www.wowhead.com/classic/npc=11671",
+      "identitySha256": "897259eec80ce91f7ce36dce7491fa519df2f639525e8601a2910c73231896ca"
+    },
+    "11673": {
+      "displayId": 12189,
+      "modelId": 123834,
+      "identitySource": "https://www.wowhead.com/classic/npc=11673",
+      "identitySha256": "84b800bd390e46361abc45e0d878d74ee6895bca5e435a00f6bbc152a8e0f051"
+    },
+    "11669": {
+      "displayId": 12190,
+      "modelId": 2199501,
+      "identitySource": "https://www.wowhead.com/classic/npc=11669",
+      "identitySha256": "5a95975026122a5b81bc27e5ae6f153d676030ca129c52544e0f22568b0c022f"
+    },
+    "12101": {
+      "displayId": 12239,
+      "modelId": 123747,
+      "identitySource": "https://www.wowhead.com/classic/npc=12101",
+      "identitySha256": "e7033ac6a784768b23ef29b2b8ad4634b5bbd3e37d6d7bbf8d5bc14828646af4"
+    },
+    "11665": {
+      "displayId": 12164,
+      "modelId": 123747,
+      "identitySource": "https://www.wowhead.com/classic/npc=11665",
+      "identitySha256": "57a5b8a2f412add15a0e748f9c910ec03702820fc5e8ba80f29fb1a9523da78a"
+    },
+    "11668": {
+      "displayId": 12231,
+      "modelId": 123934,
+      "identitySource": "https://www.wowhead.com/classic/npc=11668",
+      "identitySha256": "28b3f4b4feb2f5b68693cd26de3846ea3aa338946d78b3d68602ed6d13a88517"
+    },
+    "11661": {
+      "displayId": 12030,
+      "modelId": 125777,
+      "identitySource": "https://www.wowhead.com/classic/npc=11661",
+      "identitySha256": "a12db6d3850133730451e9003bf4ed5761c36d28f010b6cceb9798f42640c5c7"
+    },
+    "11662": {
+      "displayId": 12030,
+      "modelId": 125777,
+      "identitySource": "https://www.wowhead.com/classic/npc=11662",
+      "identitySha256": "c311a75c8c469a5801288f87b5decbf28d2a259741de424820764e4d3044533a"
+    },
+    "12076": {
+      "displayId": 5781,
+      "modelId": 123747,
+      "identitySource": "https://www.wowhead.com/classic/npc=12076",
+      "identitySha256": "6ce21965b112b7d3946ede06c8e4f94fd4e6efc267085579a6387b0f2a0ae86d"
+    },
+    "12119": {
+      "displayId": 12030,
+      "modelId": 125777,
+      "identitySource": "https://www.wowhead.com/classic/npc=12119",
+      "identitySha256": "c3511d5e3668c8ad30c90e084561849924eec27761ebd32e58ed627bdfba2faf"
+    },
+    "12099": {
+      "displayId": 5781,
+      "modelId": 123747,
+      "identitySource": "https://www.wowhead.com/classic/npc=12099",
+      "identitySha256": "588012d952b70191f52abb2384e97603a6469a4ba8ec06c5e7f8dd8747cd3035"
+    },
+    "11672": {
+      "displayId": 11997,
+      "modelId": 123834,
+      "identitySource": "https://www.wowhead.com/classic/npc=11672",
+      "identitySha256": "d828b904d73c2c7325e264b2089d7ca3519a4fdbabcc2bf59f1c86c357e6fb6a"
+    },
+    "11663": {
+      "displayId": 13029,
+      "modelId": 125777,
+      "identitySource": "https://www.wowhead.com/classic/npc=11663",
+      "identitySha256": "b14c9edb03fbac0f4deefe8c9b06e1b6e0b3153f9159e3852350bfd68b97ed2c"
+    },
+    "11664": {
+      "displayId": 12002,
+      "modelId": 125777,
+      "identitySource": "https://www.wowhead.com/classic/npc=11664",
+      "identitySha256": "f979e77dd488fe3a51bd01dca064cb051b9bfd33273f7ed272cb7c785ae9fbf2"
+    },
+    "12143": {
+      "displayId": 5488,
+      "modelId": 123934,
+      "identitySource": "https://www.wowhead.com/classic/npc=12143",
+      "identitySha256": "896b39c4d9e6db575f9af7480b01334d77cab47745e619deabb4d81d7782d402"
+    }
+  },
+  "models": {
+    "13031": {
+      "displayId": 13031,
+      "modelId": 125777,
+      "path": "/creatures/molten-core/13031.glb",
+      "sha256": "aa5bd0be71ce456d60403c6ffcec6211f18b6ac13b278d35c320f4804d885ebd",
+      "bytes": 1634520,
+      "vertices": 1189,
+      "bones": 76,
+      "height": 5.437126159667969,
+      "minY": -2.145311117172241,
+      "animations": [
+        4,
+        5,
+        0,
+        26,
+        28,
+        17,
+        19,
+        25,
+        16,
+        108,
+        111,
+        112,
+        107,
+        52,
+        125,
+        124,
+        51,
+        53,
+        54,
+        15,
+        8,
+        9,
+        10,
+        1,
+        42
+      ],
+      "portrait": "/creatures/molten-core/13031.webp",
+      "portraitSha256": "8fda42d485bbb0ae5e5169a018d32ccb0658308da5e7b47deb5bca7125f396f2",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/13031.json",
+          "sha256": "ca3f95846ab2381963e83ee3960e97a642ba9c805550e54e27364ffb9d1030a4",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/231/13031.webp",
+          "sha256": "8fda42d485bbb0ae5e5169a018d32ccb0658308da5e7b47deb5bca7125f396f2",
+          "bytes": 10206
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/125777.m2",
+          "sha256": "b1d833887eef89ef8d247cad189246a6b2c77f7f4d59bb1f4b8c2bdef8cfc6aa",
+          "bytes": 793596
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/479515.skin",
+          "sha256": "26a4354444cc5c47cbc2c8f82dfb4299fceee4e3cfe8fa8fa489a47ea3a20b0f",
+          "bytes": 16144
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125778.webp",
+          "sha256": "0cd2e3e22f9f63ab2264ee0a6fbeb476dd288b4f3348bed121697f68c2be8bfd",
+          "bytes": 38276
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125090.webp",
+          "sha256": "f966e741402035814c41c4f85ea3a0fda000e1f8e71a36daca701ece10d30af2",
+          "bytes": 736
+        }
+      ]
+    },
+    "10193": {
+      "displayId": 10193,
+      "modelId": 123834,
+      "path": "/creatures/molten-core/10193.glb",
+      "sha256": "010b155c8a6cc339e9a847bc0bfb61624b1a28dd780afb7aaaf2fa9aafb735d3",
+      "bytes": 775448,
+      "vertices": 1846,
+      "bones": 99,
+      "height": 4.72315776348114,
+      "minY": -0.013385653495788574,
+      "animations": [
+        4,
+        5,
+        0,
+        9,
+        10,
+        16,
+        118,
+        51,
+        52,
+        53,
+        54,
+        1
+      ],
+      "portrait": "/creatures/molten-core/10193.webp",
+      "portraitSha256": "75e061cce4664291dbd1742f3d47ac9b0ef16e81213cee7ec454ca286daad32c",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/10193.json",
+          "sha256": "c05c2ef90eb2e611c0772afea56d426f5e07765337d4d1e8fa0125600351de90",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/209/10193.webp",
+          "sha256": "75e061cce4664291dbd1742f3d47ac9b0ef16e81213cee7ec454ca286daad32c",
+          "bytes": 10866
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/123834.m2",
+          "sha256": "e8b1951434d5d674f103f063cf3392045647498ac2edee3e88c72d41d57259d6",
+          "bytes": 354594
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/475074.skin",
+          "sha256": "45083da741a5e3c2a4ede5fab7ee46e263ed2441d37a15e47c62f84ef4ab493f",
+          "bytes": 23968
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123836.webp",
+          "sha256": "56a9f543a565e26ff64226444e456eca164e9c377d9ec4b1233820c5cb6af16c",
+          "bytes": 40052
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/203244.webp",
+          "sha256": "51bf1a6a1d8d2a7f6a6b9ee938598e732715282fb91de52513f265e8c89fd97f",
+          "bytes": 1072
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/775194.webp",
+          "sha256": "3a40d8893131bc0204fa60226895e529a602a16e560c9f37cfdbe7b00c72b6b1",
+          "bytes": 766
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/202950.webp",
+          "sha256": "6690714d6f07398d8c90af584f761be066d674dc308a04532b370685a7f8e931",
+          "bytes": 2534
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/145314.webp",
+          "sha256": "fc270307378224fd21a8276d16be8e970c8ec67aa17701fee0010422ae90241f",
+          "bytes": 238
+        }
+      ]
+    },
+    "13030": {
+      "displayId": 13030,
+      "modelId": 125777,
+      "path": "/creatures/molten-core/13030.glb",
+      "sha256": "7cdc2bbd5a2b8a4ea17197ef3e563bcfa704d0bce9e4044289baedcd68458099",
+      "bytes": 1644556,
+      "vertices": 1189,
+      "bones": 76,
+      "height": 5.437126159667969,
+      "minY": -2.145311117172241,
+      "animations": [
+        4,
+        5,
+        0,
+        26,
+        28,
+        17,
+        19,
+        25,
+        16,
+        108,
+        111,
+        112,
+        107,
+        52,
+        125,
+        124,
+        51,
+        53,
+        54,
+        15,
+        8,
+        9,
+        10,
+        1,
+        42
+      ],
+      "portrait": "/creatures/molten-core/13030.webp",
+      "portraitSha256": "beff3c4d3573b1050e7b278b17b087ccc3aa9fe0de60f00f0dee07cfad6c035d",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/13030.json",
+          "sha256": "bb99f459651088d543251c3ebc9bb523a79dc0f1929af2f302995736d72b9315",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/230/13030.webp",
+          "sha256": "beff3c4d3573b1050e7b278b17b087ccc3aa9fe0de60f00f0dee07cfad6c035d",
+          "bytes": 9774
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/125777.m2",
+          "sha256": "b1d833887eef89ef8d247cad189246a6b2c77f7f4d59bb1f4b8c2bdef8cfc6aa",
+          "bytes": 793596
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/479515.skin",
+          "sha256": "26a4354444cc5c47cbc2c8f82dfb4299fceee4e3cfe8fa8fa489a47ea3a20b0f",
+          "bytes": 16144
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125780.webp",
+          "sha256": "99210ac8efd07fdab8f050c1926dc61a43c5a0b2e69884d3725c2f2b96bb848b",
+          "bytes": 38004
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125090.webp",
+          "sha256": "f966e741402035814c41c4f85ea3a0fda000e1f8e71a36daca701ece10d30af2",
+          "bytes": 736
+        }
+      ]
+    },
+    "12110": {
+      "displayId": 12110,
+      "modelId": 123747,
+      "path": "/creatures/molten-core/12110.glb",
+      "sha256": "d32f8ea8c0282c830ee81623238123e8c92faf912cea35c22dc4eda5418c0d2e",
+      "bytes": 470720,
+      "vertices": 1330,
+      "bones": 114,
+      "height": 3.232852429151535,
+      "minY": -0.16555115580558777,
+      "animations": [
+        4,
+        5,
+        0,
+        16,
+        10,
+        1,
+        9
+      ],
+      "portrait": "/creatures/molten-core/12110.webp",
+      "portraitSha256": "4d22e8ab50cd3e317220491ac4e7e8ef9a30382547cdd8bf2842601aa2f8d3cd",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/12110.json",
+          "sha256": "24326f98f5f0745e7bf695f09fb9ba0993084f56b90ff670bc8f73cd6ba25a75",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/78/12110.webp",
+          "sha256": "4d22e8ab50cd3e317220491ac4e7e8ef9a30382547cdd8bf2842601aa2f8d3cd",
+          "bytes": 13124
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/123747.m2",
+          "sha256": "34d1242fbfbb3ff1447b94a77f1f0464347ca030b4c50db4938b6b4bb8003b98",
+          "bytes": 210042
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/474860.skin",
+          "sha256": "fdb96422b1c24bd0c3beb68aed3d777aed1b181e8c216316c20855335bbd7721",
+          "bytes": 18048
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123749.webp",
+          "sha256": "875c8c95359748d41d4a9a042a99534004655cce6b24f2201e8f973f4fdce0c1",
+          "bytes": 34210
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/124636.webp",
+          "sha256": "880952601e54e4ddfe22eb3f86bdc2b2beecfd223b713d29f08ecb100d356fe3",
+          "bytes": 836
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123755.webp",
+          "sha256": "8a79362e140ea7b25eec08d3a1b0e08f33f3416a0e0c8332e7056f70c9daf9f2",
+          "bytes": 392
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123748.webp",
+          "sha256": "4b1277a6c679c1e38fe8c7f92369b0539873097ba917e2f552db5b24028de35a",
+          "bytes": 926
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123938.webp",
+          "sha256": "49b71c883f31773ac329c71e45f4210e60173a1d526cf15f7350c92a52a9eb54",
+          "bytes": 420
+        }
+      ]
+    },
+    "12129": {
+      "displayId": 12129,
+      "modelId": 123934,
+      "path": "/creatures/molten-core/12129.glb",
+      "sha256": "7a3de24b2fde7f31796a2a70ccb4a49d9c81786b16f8f737686972d43e324d9a",
+      "bytes": 527384,
+      "vertices": 651,
+      "bones": 111,
+      "height": 3.3549068197607994,
+      "minY": 0.09153292328119278,
+      "animations": [
+        0,
+        4,
+        5,
+        16,
+        32,
+        9,
+        10,
+        1
+      ],
+      "portrait": "/creatures/molten-core/12129.webp",
+      "portraitSha256": "1ab950ccb8c17b6b6545a2834c06569a9294093f5f1d31eb7b5a4e1ecfe39fd5",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/12129.json",
+          "sha256": "29e9a8442e9ff00bc97defc70055cd3515bff013343c3e0bac6111a77a379e83",
+          "bytes": 490
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/97/12129.webp",
+          "sha256": "1ab950ccb8c17b6b6545a2834c06569a9294093f5f1d31eb7b5a4e1ecfe39fd5",
+          "bytes": 18838
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/123934.m2",
+          "sha256": "60898f8597648ed944b1fd113421c6050ed225c1163e8464c4fe1533fce0972a",
+          "bytes": 234912
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/475711.skin",
+          "sha256": "f1382d39bdfb1abd76830671618305f02fd401b629a6d63ed6ad554e40c23e1c",
+          "bytes": 9680
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/126365.webp",
+          "sha256": "69229eb910798bcc84d71f6bd7bbb404f51a057796da9f58ede57acb90afa436",
+          "bytes": 2234
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123936.webp",
+          "sha256": "d0d91b69a8d1f50ce08b9499be79a76c835b6c7a6e53c3673ea21431856b8927",
+          "bytes": 24380
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123933.webp",
+          "sha256": "72f80664afbec41bdd79101e9bfe1eb638e50511295ada27157addafe4524f52",
+          "bytes": 268
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/145513.webp",
+          "sha256": "80bb1149e8e9bad5a65e033b2a843bc5c560186d19ec9603abb296b282046698",
+          "bytes": 8382
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123938.webp",
+          "sha256": "49b71c883f31773ac329c71e45f4210e60173a1d526cf15f7350c92a52a9eb54",
+          "bytes": 420
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/126366.webp",
+          "sha256": "65e2853ea8bf6c81a0e572ba91613abd6875a6a3776b0593a2bf78ab7843fe9d",
+          "bytes": 3058
+        }
+      ]
+    },
+    "13032": {
+      "displayId": 13032,
+      "modelId": 125777,
+      "path": "/creatures/molten-core/13032.glb",
+      "sha256": "a4374e7c77107a2d9da7a227730411991e562bc4f49bc4cb30801b9f0c6d7a89",
+      "bytes": 1642964,
+      "vertices": 1189,
+      "bones": 76,
+      "height": 5.437126159667969,
+      "minY": -2.145311117172241,
+      "animations": [
+        4,
+        5,
+        0,
+        26,
+        28,
+        17,
+        19,
+        25,
+        16,
+        108,
+        111,
+        112,
+        107,
+        52,
+        125,
+        124,
+        51,
+        53,
+        54,
+        15,
+        8,
+        9,
+        10,
+        1,
+        42
+      ],
+      "portrait": "/creatures/molten-core/13032.webp",
+      "portraitSha256": "e6ecd6136afb15688758db15e31c2ae9ca2b74fe60a74ab002acd2979b6e30f9",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/13032.json",
+          "sha256": "1306daaadafa51ab378cfee35146b287294f78eb0671c9b11e30ee48a3d8ae53",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/232/13032.webp",
+          "sha256": "e6ecd6136afb15688758db15e31c2ae9ca2b74fe60a74ab002acd2979b6e30f9",
+          "bytes": 10464
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/125777.m2",
+          "sha256": "b1d833887eef89ef8d247cad189246a6b2c77f7f4d59bb1f4b8c2bdef8cfc6aa",
+          "bytes": 793596
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/479515.skin",
+          "sha256": "26a4354444cc5c47cbc2c8f82dfb4299fceee4e3cfe8fa8fa489a47ea3a20b0f",
+          "bytes": 16144
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125779.webp",
+          "sha256": "5a7d001e3f8a92e752298b6e64bce4e4316b968df9a1b1eca26f133caf50a5ab",
+          "bytes": 41632
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125090.webp",
+          "sha256": "f966e741402035814c41c4f85ea3a0fda000e1f8e71a36daca701ece10d30af2",
+          "bytes": 736
+        }
+      ]
+    },
+    "11986": {
+      "displayId": 11986,
+      "modelId": 124952,
+      "path": "/creatures/molten-core/11986.glb",
+      "sha256": "e1c4b76a79e78003bf126ff9af53a34064c0d5acb9af81222bbbe2deb209a3eb",
+      "bytes": 818520,
+      "vertices": 787,
+      "bones": 60,
+      "height": 7.978801644407213,
+      "minY": -0.00981608685106039,
+      "animations": [
+        0,
+        108,
+        4,
+        5,
+        10,
+        9,
+        16,
+        107,
+        1
+      ],
+      "portrait": "/creatures/molten-core/11986.webp",
+      "portraitSha256": "cda1aae1c8c2d59339d9bb17151334d8afdd7f77c813f174e7b2f212091b1a80",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/11986.json",
+          "sha256": "ef570faa0fc75c9dc523db9611950b99f32154035d9c8d1904710a5a8159d9e7",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/210/11986.webp",
+          "sha256": "cda1aae1c8c2d59339d9bb17151334d8afdd7f77c813f174e7b2f212091b1a80",
+          "bytes": 14228
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/124952.m2",
+          "sha256": "c273ccf446c2478d874cfe720cd22993b067603c38158081c3e835beb8a897d3",
+          "bytes": 173496
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/478241.skin",
+          "sha256": "a63a99143293aaae77e1e288af33937b939ee66ca19bffe496e6ee06d222be39",
+          "bytes": 11488
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/124950.webp",
+          "sha256": "5c2a562a96377779218a4f6613c484e6fbfe8c0bc34568388f5d7ffe0f6ebaab",
+          "bytes": 126246
+        }
+      ]
+    },
+    "12029": {
+      "displayId": 12029,
+      "modelId": 125777,
+      "path": "/creatures/molten-core/12029.glb",
+      "sha256": "aaec5cdc5475ff50209d3b68324faf0b0c4c33ef5479f1fb73d6aa49e519a782",
+      "bytes": 1634520,
+      "vertices": 1189,
+      "bones": 76,
+      "height": 5.437126159667969,
+      "minY": -2.145311117172241,
+      "animations": [
+        4,
+        5,
+        0,
+        26,
+        28,
+        17,
+        19,
+        25,
+        16,
+        108,
+        111,
+        112,
+        107,
+        52,
+        125,
+        124,
+        51,
+        53,
+        54,
+        15,
+        8,
+        9,
+        10,
+        1,
+        42
+      ],
+      "portrait": "/creatures/molten-core/12029.webp",
+      "portraitSha256": "8008521defa9713a0202dbef7af34d8bcc5c8b32b8744431b16c348a7683fec0",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/12029.json",
+          "sha256": "4aa1b83eceeb11fdacd0484c3b2c39528eb726bf23cd38091490b0fdde75c6be",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/253/12029.webp",
+          "sha256": "8008521defa9713a0202dbef7af34d8bcc5c8b32b8744431b16c348a7683fec0",
+          "bytes": 10344
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/125777.m2",
+          "sha256": "b1d833887eef89ef8d247cad189246a6b2c77f7f4d59bb1f4b8c2bdef8cfc6aa",
+          "bytes": 793596
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/479515.skin",
+          "sha256": "26a4354444cc5c47cbc2c8f82dfb4299fceee4e3cfe8fa8fa489a47ea3a20b0f",
+          "bytes": 16144
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125778.webp",
+          "sha256": "0cd2e3e22f9f63ab2264ee0a6fbeb476dd288b4f3348bed121697f68c2be8bfd",
+          "bytes": 38276
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125090.webp",
+          "sha256": "f966e741402035814c41c4f85ea3a0fda000e1f8e71a36daca701ece10d30af2",
+          "bytes": 736
+        }
+      ]
+    },
+    "11121": {
+      "displayId": 11121,
+      "modelId": 125519,
+      "path": "/creatures/molten-core/11121.glb",
+      "sha256": "77dec76b84111100197d8d41bfce6d6d62fffe71811ef10dd87cb0efc5c2768a",
+      "bytes": 6455400,
+      "vertices": 2002,
+      "bones": 129,
+      "height": 54.410677671432495,
+      "minY": -2.3016879558563232,
+      "animations": [
+        0,
+        25,
+        16,
+        9,
+        10,
+        52,
+        51,
+        53,
+        54,
+        74,
+        1,
+        127,
+        201,
+        202,
+        125
+      ],
+      "portrait": "/creatures/molten-core/11121.webp",
+      "portraitSha256": "0c7d9b0aa901e5ff10866634f6c37aa589848848f48a82600111cbdd074637a1",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/11121.json",
+          "sha256": "c308fdc36d19af18aea4ab87d585087acd25c5b5de2a260e8ef6850397049fcc",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/113/11121.webp",
+          "sha256": "0c7d9b0aa901e5ff10866634f6c37aa589848848f48a82600111cbdd074637a1",
+          "bytes": 17978
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/125519.m2",
+          "sha256": "1d51c52ec5c46a2249966afc733bedbd7894a209cd0e1e24dfc0bd9020630067",
+          "bytes": 1211098
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/479311.skin",
+          "sha256": "5e3ffebf4711a863829c4a5dcc4377ee9e17910d599942ee9ffc60da13695493",
+          "bytes": 29168
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125521.webp",
+          "sha256": "17d56b940a5ef4c21f96c49ebcd645874641227d4531e1d15056ec8564d5f8ae",
+          "bytes": 123662
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/2175930.webp",
+          "sha256": "aaf258f2e0ef0c3ccc7c67136aec1b79ef5f058d6612d4c37869f887abf07772",
+          "bytes": 11044
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/2175931.webp",
+          "sha256": "e4c9b3a268c8f03f9bf38cfc0e14a903c7b223439eb158c02ff787e19597c302",
+          "bytes": 14306
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125520.webp",
+          "sha256": "6a79d957c68222d28022406682d2d1aca80d51d7e8ec6c8ab77b223e22a75ba1",
+          "bytes": 14818
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/2175932.webp",
+          "sha256": "dc8ff2595c2cae9a67bc5b12781b89adf3f31c9d4ce29be17d1e2551ab3c5d36",
+          "bytes": 270
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/2175933.webp",
+          "sha256": "63e609d606219dacff8bc9ca4cbda89904499083ade5735162e1b310197c96e7",
+          "bytes": 2798
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/2175934.webp",
+          "sha256": "42f3349ec9c36663b8adbcda0a33a0ddd6e3abf9e0ae1b06a5cbcfb8ad57939d",
+          "bytes": 554
+        }
+      ]
+    },
+    "8269": {
+      "displayId": 8269,
+      "modelId": 124952,
+      "path": "/creatures/molten-core/8269.glb",
+      "sha256": "9970b246dd6e32fbba7321c90a94f914b9f408f58d82230110695f3558bcde12",
+      "bytes": 818520,
+      "vertices": 787,
+      "bones": 60,
+      "height": 7.978801644407213,
+      "minY": -0.00981608685106039,
+      "animations": [
+        0,
+        108,
+        4,
+        5,
+        10,
+        9,
+        16,
+        107,
+        1
+      ],
+      "portrait": "/creatures/molten-core/8269.webp",
+      "portraitSha256": "f5e8e4dd340e04c34f4d0d37f38dff2ad8e05cf49cfacfe289b75f305615d1c1",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/8269.json",
+          "sha256": "67d892d91024d97280f7d85a6e1107fcf74c7ae503be13c4a5c49a3803a09f94",
+          "bytes": 512
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/77/8269.webp",
+          "sha256": "f5e8e4dd340e04c34f4d0d37f38dff2ad8e05cf49cfacfe289b75f305615d1c1",
+          "bytes": 13900
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/124952.m2",
+          "sha256": "c273ccf446c2478d874cfe720cd22993b067603c38158081c3e835beb8a897d3",
+          "bytes": 173496
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/478241.skin",
+          "sha256": "a63a99143293aaae77e1e288af33937b939ee66ca19bffe496e6ee06d222be39",
+          "bytes": 11488
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/124950.webp",
+          "sha256": "5c2a562a96377779218a4f6613c484e6fbfe8c0bc34568388f5d7ffe0f6ebaab",
+          "bytes": 126246
+        }
+      ]
+    },
+    "12162": {
+      "displayId": 12162,
+      "modelId": 124952,
+      "path": "/creatures/molten-core/12162.glb",
+      "sha256": "3036e21cfa23154285a5b687a2037ee173b53941207ec9b50b2df7f53cea34f8",
+      "bytes": 818520,
+      "vertices": 787,
+      "bones": 60,
+      "height": 7.978801644407213,
+      "minY": -0.00981608685106039,
+      "animations": [
+        0,
+        108,
+        4,
+        5,
+        10,
+        9,
+        16,
+        107,
+        1
+      ],
+      "portrait": "/creatures/molten-core/12162.webp",
+      "portraitSha256": "ccd95453500c586d48efaa50ee9c10e2b02988d85abdac7b3413628a4a7c804b",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/12162.json",
+          "sha256": "857b124f7b685a57361955f3876d511627179cb0a316b4a8f8e15ca276e13c35",
+          "bytes": 513
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/130/12162.webp",
+          "sha256": "ccd95453500c586d48efaa50ee9c10e2b02988d85abdac7b3413628a4a7c804b",
+          "bytes": 14606
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/124952.m2",
+          "sha256": "c273ccf446c2478d874cfe720cd22993b067603c38158081c3e835beb8a897d3",
+          "bytes": 173496
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/478241.skin",
+          "sha256": "a63a99143293aaae77e1e288af33937b939ee66ca19bffe496e6ee06d222be39",
+          "bytes": 11488
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/124950.webp",
+          "sha256": "5c2a562a96377779218a4f6613c484e6fbfe8c0bc34568388f5d7ffe0f6ebaab",
+          "bytes": 126246
+        }
+      ]
+    },
+    "12168": {
+      "displayId": 12168,
+      "modelId": 123834,
+      "path": "/creatures/molten-core/12168.glb",
+      "sha256": "3d1321eabd6c72a72511b2bbac93ac50de41d70cc383bf54ea12193930b33dc2",
+      "bytes": 775448,
+      "vertices": 1846,
+      "bones": 99,
+      "height": 4.72315776348114,
+      "minY": -0.013385653495788574,
+      "animations": [
+        4,
+        5,
+        0,
+        9,
+        10,
+        16,
+        118,
+        51,
+        52,
+        53,
+        54,
+        1
+      ],
+      "portrait": "/creatures/molten-core/12168.webp",
+      "portraitSha256": "f996224207a0e5b6ac58531f346acd17b41347c1d51172c8a7602a89e41db4a3",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/12168.json",
+          "sha256": "a10c2f47fb622c277b24ff522d8a1df9d9e40642f28d72b53b5c480b7005bdde",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/136/12168.webp",
+          "sha256": "f996224207a0e5b6ac58531f346acd17b41347c1d51172c8a7602a89e41db4a3",
+          "bytes": 14430
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/123834.m2",
+          "sha256": "e8b1951434d5d674f103f063cf3392045647498ac2edee3e88c72d41d57259d6",
+          "bytes": 354594
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/475074.skin",
+          "sha256": "45083da741a5e3c2a4ede5fab7ee46e263ed2441d37a15e47c62f84ef4ab493f",
+          "bytes": 23968
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123836.webp",
+          "sha256": "56a9f543a565e26ff64226444e456eca164e9c377d9ec4b1233820c5cb6af16c",
+          "bytes": 40052
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/203244.webp",
+          "sha256": "51bf1a6a1d8d2a7f6a6b9ee938598e732715282fb91de52513f265e8c89fd97f",
+          "bytes": 1072
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/775194.webp",
+          "sha256": "3a40d8893131bc0204fa60226895e529a602a16e560c9f37cfdbe7b00c72b6b1",
+          "bytes": 766
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/202950.webp",
+          "sha256": "6690714d6f07398d8c90af584f761be066d674dc308a04532b370685a7f8e931",
+          "bytes": 2534
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/145314.webp",
+          "sha256": "fc270307378224fd21a8276d16be8e970c8ec67aa17701fee0010422ae90241f",
+          "bytes": 238
+        }
+      ]
+    },
+    "12189": {
+      "displayId": 12189,
+      "modelId": 123834,
+      "path": "/creatures/molten-core/12189.glb",
+      "sha256": "ad584419b30ff2a19151c3ba20f88607095a1ca95d65af0b7f65b0121f9257fd",
+      "bytes": 775448,
+      "vertices": 1846,
+      "bones": 99,
+      "height": 4.72315776348114,
+      "minY": -0.013385653495788574,
+      "animations": [
+        4,
+        5,
+        0,
+        9,
+        10,
+        16,
+        118,
+        51,
+        52,
+        53,
+        54,
+        1
+      ],
+      "portrait": "/creatures/molten-core/12189.webp",
+      "portraitSha256": "7e2ea5778deb3aa92e7d40a6862235f65c7bb9dc4985b977479212af39854e46",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/12189.json",
+          "sha256": "21e2d710585701b3c9f29682aaba3be0dd6434591bc7fffa9a6b5428e8c10edd",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/157/12189.webp",
+          "sha256": "7e2ea5778deb3aa92e7d40a6862235f65c7bb9dc4985b977479212af39854e46",
+          "bytes": 11382
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/123834.m2",
+          "sha256": "e8b1951434d5d674f103f063cf3392045647498ac2edee3e88c72d41d57259d6",
+          "bytes": 354594
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/475074.skin",
+          "sha256": "45083da741a5e3c2a4ede5fab7ee46e263ed2441d37a15e47c62f84ef4ab493f",
+          "bytes": 23968
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123836.webp",
+          "sha256": "56a9f543a565e26ff64226444e456eca164e9c377d9ec4b1233820c5cb6af16c",
+          "bytes": 40052
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/203244.webp",
+          "sha256": "51bf1a6a1d8d2a7f6a6b9ee938598e732715282fb91de52513f265e8c89fd97f",
+          "bytes": 1072
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/775194.webp",
+          "sha256": "3a40d8893131bc0204fa60226895e529a602a16e560c9f37cfdbe7b00c72b6b1",
+          "bytes": 766
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/202950.webp",
+          "sha256": "6690714d6f07398d8c90af584f761be066d674dc308a04532b370685a7f8e931",
+          "bytes": 2534
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/145314.webp",
+          "sha256": "fc270307378224fd21a8276d16be8e970c8ec67aa17701fee0010422ae90241f",
+          "bytes": 238
+        }
+      ]
+    },
+    "12190": {
+      "displayId": 12190,
+      "modelId": 2199501,
+      "path": "/creatures/molten-core/12190.glb",
+      "sha256": "9babafefd1ca1529aee11f896b6622d161dedeeda2079ef8d68d5a27367d3e57",
+      "bytes": 641352,
+      "vertices": 506,
+      "bones": 58,
+      "height": 2.272730986267561,
+      "minY": 0.00032552084303461015,
+      "animations": [
+        4,
+        0,
+        52,
+        51,
+        5,
+        16,
+        10,
+        53,
+        9,
+        17,
+        54,
+        1,
+        41,
+        43,
+        44,
+        45,
+        42,
+        131,
+        132
+      ],
+      "portrait": "/creatures/molten-core/12190.webp",
+      "portraitSha256": "217805e179e9c53458071c67e3f10a0e52a69cf871fb4e43e121ed18d6dacdc4",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/12190.json",
+          "sha256": "da95bdcca6d655a8b03f781c6568e4274e61788cb803aac55c51cd938efa00bc",
+          "bytes": 513
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/158/12190.webp",
+          "sha256": "217805e179e9c53458071c67e3f10a0e52a69cf871fb4e43e121ed18d6dacdc4",
+          "bytes": 19740
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/2199501.m2",
+          "sha256": "15538f89b4db509a8aad1a560a5988a2a141d2fe8d7263c8126116efa6a82511",
+          "bytes": 232434
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/2199503.skin",
+          "sha256": "65217889a0bddaea203f321b0d2a86a2cf972d1af029e0bc50b86177b912a933",
+          "bytes": 7040
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/124627.webp",
+          "sha256": "5c0b2417a1484da02f94cc323cb00fb7a1f414a2d314713fc490db8ee84c5364",
+          "bytes": 32988
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/1327292.webp",
+          "sha256": "aaf258f2e0ef0c3ccc7c67136aec1b79ef5f058d6612d4c37869f887abf07772",
+          "bytes": 11044
+        }
+      ]
+    },
+    "12239": {
+      "displayId": 12239,
+      "modelId": 123747,
+      "path": "/creatures/molten-core/12239.glb",
+      "sha256": "17347672389efcd9c3dd86a9e9222f11cd1527980c166d16bdbcc095ca9412e4",
+      "bytes": 470720,
+      "vertices": 1330,
+      "bones": 114,
+      "height": 3.232852429151535,
+      "minY": -0.16555115580558777,
+      "animations": [
+        4,
+        5,
+        0,
+        16,
+        10,
+        1,
+        9
+      ],
+      "portrait": "/creatures/molten-core/12239.webp",
+      "portraitSha256": "8c1cfc9c1a51f406990a72fab07418abbcf81b76ee9f6f51796611a998cfebff",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/12239.json",
+          "sha256": "c2d76bb4811c2968bb14ab69d55057eda6139ccb2b4265f34f09d3d8aeebc95c",
+          "bytes": 513
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/207/12239.webp",
+          "sha256": "8c1cfc9c1a51f406990a72fab07418abbcf81b76ee9f6f51796611a998cfebff",
+          "bytes": 16082
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/123747.m2",
+          "sha256": "34d1242fbfbb3ff1447b94a77f1f0464347ca030b4c50db4938b6b4bb8003b98",
+          "bytes": 210042
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/474860.skin",
+          "sha256": "fdb96422b1c24bd0c3beb68aed3d777aed1b181e8c216316c20855335bbd7721",
+          "bytes": 18048
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123749.webp",
+          "sha256": "875c8c95359748d41d4a9a042a99534004655cce6b24f2201e8f973f4fdce0c1",
+          "bytes": 34210
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/124636.webp",
+          "sha256": "880952601e54e4ddfe22eb3f86bdc2b2beecfd223b713d29f08ecb100d356fe3",
+          "bytes": 836
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123755.webp",
+          "sha256": "8a79362e140ea7b25eec08d3a1b0e08f33f3416a0e0c8332e7056f70c9daf9f2",
+          "bytes": 392
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123748.webp",
+          "sha256": "4b1277a6c679c1e38fe8c7f92369b0539873097ba917e2f552db5b24028de35a",
+          "bytes": 926
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123938.webp",
+          "sha256": "49b71c883f31773ac329c71e45f4210e60173a1d526cf15f7350c92a52a9eb54",
+          "bytes": 420
+        }
+      ]
+    },
+    "12164": {
+      "displayId": 12164,
+      "modelId": 123747,
+      "path": "/creatures/molten-core/12164.glb",
+      "sha256": "1cfe39adb2f38cfc2c3d7e69207bebdbc80f6a36fc8a9b06f43d640390f12e21",
+      "bytes": 470720,
+      "vertices": 1330,
+      "bones": 114,
+      "height": 3.232852429151535,
+      "minY": -0.16555115580558777,
+      "animations": [
+        4,
+        5,
+        0,
+        16,
+        10,
+        1,
+        9
+      ],
+      "portrait": "/creatures/molten-core/12164.webp",
+      "portraitSha256": "0aad655f378607084a53b20cf18a8c2048a62ec1b676e1c43fee9d46bfa5a6e7",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/12164.json",
+          "sha256": "128444945e15af4792a6776474d396c2b1370cdc22ec237c8bbaaffadd6b7454",
+          "bytes": 512
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/132/12164.webp",
+          "sha256": "0aad655f378607084a53b20cf18a8c2048a62ec1b676e1c43fee9d46bfa5a6e7",
+          "bytes": 16022
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/123747.m2",
+          "sha256": "34d1242fbfbb3ff1447b94a77f1f0464347ca030b4c50db4938b6b4bb8003b98",
+          "bytes": 210042
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/474860.skin",
+          "sha256": "fdb96422b1c24bd0c3beb68aed3d777aed1b181e8c216316c20855335bbd7721",
+          "bytes": 18048
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123749.webp",
+          "sha256": "875c8c95359748d41d4a9a042a99534004655cce6b24f2201e8f973f4fdce0c1",
+          "bytes": 34210
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/124636.webp",
+          "sha256": "880952601e54e4ddfe22eb3f86bdc2b2beecfd223b713d29f08ecb100d356fe3",
+          "bytes": 836
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123755.webp",
+          "sha256": "8a79362e140ea7b25eec08d3a1b0e08f33f3416a0e0c8332e7056f70c9daf9f2",
+          "bytes": 392
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123748.webp",
+          "sha256": "4b1277a6c679c1e38fe8c7f92369b0539873097ba917e2f552db5b24028de35a",
+          "bytes": 926
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123938.webp",
+          "sha256": "49b71c883f31773ac329c71e45f4210e60173a1d526cf15f7350c92a52a9eb54",
+          "bytes": 420
+        }
+      ]
+    },
+    "12231": {
+      "displayId": 12231,
+      "modelId": 123934,
+      "path": "/creatures/molten-core/12231.glb",
+      "sha256": "416eaa16db69a3d3fd0a552fc6c762e989adb14598696432f72bd576a5ac23d8",
+      "bytes": 527384,
+      "vertices": 651,
+      "bones": 111,
+      "height": 3.3549068197607994,
+      "minY": 0.09153292328119278,
+      "animations": [
+        0,
+        4,
+        5,
+        16,
+        32,
+        9,
+        10,
+        1
+      ],
+      "portrait": "/creatures/molten-core/12231.webp",
+      "portraitSha256": "aee11ad93af3d83415041deb760e26cc817adbf00aaa64031dd667fcc0bbf9d9",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/12231.json",
+          "sha256": "cb67386894e1862069f1d8fbf8bf7c0fa62a3cebf2b79aa649ff2ca7676dd320",
+          "bytes": 490
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/199/12231.webp",
+          "sha256": "aee11ad93af3d83415041deb760e26cc817adbf00aaa64031dd667fcc0bbf9d9",
+          "bytes": 23776
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/123934.m2",
+          "sha256": "60898f8597648ed944b1fd113421c6050ed225c1163e8464c4fe1533fce0972a",
+          "bytes": 234912
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/475711.skin",
+          "sha256": "f1382d39bdfb1abd76830671618305f02fd401b629a6d63ed6ad554e40c23e1c",
+          "bytes": 9680
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/126365.webp",
+          "sha256": "69229eb910798bcc84d71f6bd7bbb404f51a057796da9f58ede57acb90afa436",
+          "bytes": 2234
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123936.webp",
+          "sha256": "d0d91b69a8d1f50ce08b9499be79a76c835b6c7a6e53c3673ea21431856b8927",
+          "bytes": 24380
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123933.webp",
+          "sha256": "72f80664afbec41bdd79101e9bfe1eb638e50511295ada27157addafe4524f52",
+          "bytes": 268
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/145513.webp",
+          "sha256": "80bb1149e8e9bad5a65e033b2a843bc5c560186d19ec9603abb296b282046698",
+          "bytes": 8382
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123938.webp",
+          "sha256": "49b71c883f31773ac329c71e45f4210e60173a1d526cf15f7350c92a52a9eb54",
+          "bytes": 420
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/126366.webp",
+          "sha256": "65e2853ea8bf6c81a0e572ba91613abd6875a6a3776b0593a2bf78ab7843fe9d",
+          "bytes": 3058
+        }
+      ]
+    },
+    "12030": {
+      "displayId": 12030,
+      "modelId": 125777,
+      "path": "/creatures/molten-core/12030.glb",
+      "sha256": "db9bac8618c5095b6a8e6867e8c2ddf9d18def5b86ee5ef44dd457091f7d07af",
+      "bytes": 1651348,
+      "vertices": 1189,
+      "bones": 76,
+      "height": 5.437126159667969,
+      "minY": -2.145311117172241,
+      "animations": [
+        4,
+        5,
+        0,
+        26,
+        28,
+        17,
+        19,
+        25,
+        16,
+        108,
+        111,
+        112,
+        107,
+        52,
+        125,
+        124,
+        51,
+        53,
+        54,
+        15,
+        8,
+        9,
+        10,
+        1,
+        42
+      ],
+      "portrait": "/creatures/molten-core/12030.webp",
+      "portraitSha256": "084b040e51f4ed986259e081bbf8dbf3b162577803a9a1f2a34d7d566607df27",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/12030.json",
+          "sha256": "cb1d28a89975b67c786783c8b4e0c2d100e73a7b5fb8b97c7724d542d2d4b9e5",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/254/12030.webp",
+          "sha256": "084b040e51f4ed986259e081bbf8dbf3b162577803a9a1f2a34d7d566607df27",
+          "bytes": 11414
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/125777.m2",
+          "sha256": "b1d833887eef89ef8d247cad189246a6b2c77f7f4d59bb1f4b8c2bdef8cfc6aa",
+          "bytes": 793596
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/479515.skin",
+          "sha256": "26a4354444cc5c47cbc2c8f82dfb4299fceee4e3cfe8fa8fa489a47ea3a20b0f",
+          "bytes": 16144
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125781.webp",
+          "sha256": "2759104823ed05af4948d6153af4e6dbf31a3944c686a6273686d355ceefe3a8",
+          "bytes": 41268
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125090.webp",
+          "sha256": "f966e741402035814c41c4f85ea3a0fda000e1f8e71a36daca701ece10d30af2",
+          "bytes": 736
+        }
+      ]
+    },
+    "5781": {
+      "displayId": 5781,
+      "modelId": 123747,
+      "path": "/creatures/molten-core/5781.glb",
+      "sha256": "a4a85974eeb986487c2f311a6d742a1f0a18206052b3cff5136753a789c7472b",
+      "bytes": 470716,
+      "vertices": 1330,
+      "bones": 114,
+      "height": 3.232852429151535,
+      "minY": -0.16555115580558777,
+      "animations": [
+        4,
+        5,
+        0,
+        16,
+        10,
+        1,
+        9
+      ],
+      "portrait": "/creatures/molten-core/5781.webp",
+      "portraitSha256": "f5d1c4f61cad238084381750648d0d4f2dc8dc612a12123fedbdda97a720af23",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/5781.json",
+          "sha256": "7950a27d80be7144270124c4fb0e12ea680adc3d3f8755a235f640607f24cbb8",
+          "bytes": 513
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/149/5781.webp",
+          "sha256": "f5d1c4f61cad238084381750648d0d4f2dc8dc612a12123fedbdda97a720af23",
+          "bytes": 56700
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/123747.m2",
+          "sha256": "34d1242fbfbb3ff1447b94a77f1f0464347ca030b4c50db4938b6b4bb8003b98",
+          "bytes": 210042
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/474860.skin",
+          "sha256": "fdb96422b1c24bd0c3beb68aed3d777aed1b181e8c216316c20855335bbd7721",
+          "bytes": 18048
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123749.webp",
+          "sha256": "875c8c95359748d41d4a9a042a99534004655cce6b24f2201e8f973f4fdce0c1",
+          "bytes": 34210
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/124636.webp",
+          "sha256": "880952601e54e4ddfe22eb3f86bdc2b2beecfd223b713d29f08ecb100d356fe3",
+          "bytes": 836
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123755.webp",
+          "sha256": "8a79362e140ea7b25eec08d3a1b0e08f33f3416a0e0c8332e7056f70c9daf9f2",
+          "bytes": 392
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123748.webp",
+          "sha256": "4b1277a6c679c1e38fe8c7f92369b0539873097ba917e2f552db5b24028de35a",
+          "bytes": 926
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123938.webp",
+          "sha256": "49b71c883f31773ac329c71e45f4210e60173a1d526cf15f7350c92a52a9eb54",
+          "bytes": 420
+        }
+      ]
+    },
+    "11997": {
+      "displayId": 11997,
+      "modelId": 123834,
+      "path": "/creatures/molten-core/11997.glb",
+      "sha256": "c92649e75463e799825ffe78e02114d87b01a8bfeccf73cbd36cbe8b31a6cf17",
+      "bytes": 775448,
+      "vertices": 1846,
+      "bones": 99,
+      "height": 4.72315776348114,
+      "minY": -0.013385653495788574,
+      "animations": [
+        4,
+        5,
+        0,
+        9,
+        10,
+        16,
+        118,
+        51,
+        52,
+        53,
+        54,
+        1
+      ],
+      "portrait": "/creatures/molten-core/11997.webp",
+      "portraitSha256": "af4362f8425132ec4b21eee4c66262dc1197a63f6378ea9b82d9b7a4d24b94d0",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/11997.json",
+          "sha256": "b62ccd3e63ade019f631e1125d6cddac55b243ef4c7e84a9a35427e822896af8",
+          "bytes": 512
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/221/11997.webp",
+          "sha256": "af4362f8425132ec4b21eee4c66262dc1197a63f6378ea9b82d9b7a4d24b94d0",
+          "bytes": 11444
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/123834.m2",
+          "sha256": "e8b1951434d5d674f103f063cf3392045647498ac2edee3e88c72d41d57259d6",
+          "bytes": 354594
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/475074.skin",
+          "sha256": "45083da741a5e3c2a4ede5fab7ee46e263ed2441d37a15e47c62f84ef4ab493f",
+          "bytes": 23968
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123836.webp",
+          "sha256": "56a9f543a565e26ff64226444e456eca164e9c377d9ec4b1233820c5cb6af16c",
+          "bytes": 40052
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/203244.webp",
+          "sha256": "51bf1a6a1d8d2a7f6a6b9ee938598e732715282fb91de52513f265e8c89fd97f",
+          "bytes": 1072
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/775194.webp",
+          "sha256": "3a40d8893131bc0204fa60226895e529a602a16e560c9f37cfdbe7b00c72b6b1",
+          "bytes": 766
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/202950.webp",
+          "sha256": "6690714d6f07398d8c90af584f761be066d674dc308a04532b370685a7f8e931",
+          "bytes": 2534
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/145314.webp",
+          "sha256": "fc270307378224fd21a8276d16be8e970c8ec67aa17701fee0010422ae90241f",
+          "bytes": 238
+        }
+      ]
+    },
+    "13029": {
+      "displayId": 13029,
+      "modelId": 125777,
+      "path": "/creatures/molten-core/13029.glb",
+      "sha256": "71bcd0a4ac0a28e061e7506b42384bf5659f368861449f2b0e0748b5a8f3eba1",
+      "bytes": 1644556,
+      "vertices": 1189,
+      "bones": 76,
+      "height": 5.437126159667969,
+      "minY": -2.145311117172241,
+      "animations": [
+        4,
+        5,
+        0,
+        26,
+        28,
+        17,
+        19,
+        25,
+        16,
+        108,
+        111,
+        112,
+        107,
+        52,
+        125,
+        124,
+        51,
+        53,
+        54,
+        15,
+        8,
+        9,
+        10,
+        1,
+        42
+      ],
+      "portrait": "/creatures/molten-core/13029.webp",
+      "portraitSha256": "8b57b1f851a30320a6b7172013985e0822290234a2c45da327804d8b296e3692",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/13029.json",
+          "sha256": "8b4b16722630cf74d2f2f15108ec1e98ac4fd22109c389467b47fb676264de99",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/229/13029.webp",
+          "sha256": "8b57b1f851a30320a6b7172013985e0822290234a2c45da327804d8b296e3692",
+          "bytes": 10050
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/125777.m2",
+          "sha256": "b1d833887eef89ef8d247cad189246a6b2c77f7f4d59bb1f4b8c2bdef8cfc6aa",
+          "bytes": 793596
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/479515.skin",
+          "sha256": "26a4354444cc5c47cbc2c8f82dfb4299fceee4e3cfe8fa8fa489a47ea3a20b0f",
+          "bytes": 16144
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125780.webp",
+          "sha256": "99210ac8efd07fdab8f050c1926dc61a43c5a0b2e69884d3725c2f2b96bb848b",
+          "bytes": 38004
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125090.webp",
+          "sha256": "f966e741402035814c41c4f85ea3a0fda000e1f8e71a36daca701ece10d30af2",
+          "bytes": 736
+        }
+      ]
+    },
+    "12002": {
+      "displayId": 12002,
+      "modelId": 125777,
+      "path": "/creatures/molten-core/12002.glb",
+      "sha256": "cd9662227c6c8859b0a16f451574c3366f0cca23199ef3a8b393ca8c87eee33e",
+      "bytes": 1651348,
+      "vertices": 1189,
+      "bones": 76,
+      "height": 5.437126159667969,
+      "minY": -2.145311117172241,
+      "animations": [
+        4,
+        5,
+        0,
+        26,
+        28,
+        17,
+        19,
+        25,
+        16,
+        108,
+        111,
+        112,
+        107,
+        52,
+        125,
+        124,
+        51,
+        53,
+        54,
+        15,
+        8,
+        9,
+        10,
+        1,
+        42
+      ],
+      "portrait": "/creatures/molten-core/12002.webp",
+      "portraitSha256": "f34ea0bf7a30e290de54ab63478fe7c33d7ed7a0d5acf33e7d34a0f8003be912",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/12002.json",
+          "sha256": "7ab80fbfc260d1a5555c25b48aef98a4b5a37812d0c832c5964bd36893787bb2",
+          "bytes": 510
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/226/12002.webp",
+          "sha256": "f34ea0bf7a30e290de54ab63478fe7c33d7ed7a0d5acf33e7d34a0f8003be912",
+          "bytes": 11586
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/125777.m2",
+          "sha256": "b1d833887eef89ef8d247cad189246a6b2c77f7f4d59bb1f4b8c2bdef8cfc6aa",
+          "bytes": 793596
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/479515.skin",
+          "sha256": "26a4354444cc5c47cbc2c8f82dfb4299fceee4e3cfe8fa8fa489a47ea3a20b0f",
+          "bytes": 16144
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125781.webp",
+          "sha256": "2759104823ed05af4948d6153af4e6dbf31a3944c686a6273686d355ceefe3a8",
+          "bytes": 41268
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/125090.webp",
+          "sha256": "f966e741402035814c41c4f85ea3a0fda000e1f8e71a36daca701ece10d30af2",
+          "bytes": 736
+        }
+      ]
+    },
+    "5488": {
+      "displayId": 5488,
+      "modelId": 123934,
+      "path": "/creatures/molten-core/5488.glb",
+      "sha256": "8677caf46530ed9e8848c170dd39dedbde42ddae3d3411ae95cb7ab9311b8c1c",
+      "bytes": 527384,
+      "vertices": 651,
+      "bones": 111,
+      "height": 3.3549068197607994,
+      "minY": 0.09153292328119278,
+      "animations": [
+        0,
+        4,
+        5,
+        16,
+        32,
+        9,
+        10,
+        1
+      ],
+      "portrait": "/creatures/molten-core/5488.webp",
+      "portraitSha256": "00e07abb021a3a3551a1dac4a31706e18cbd79e4c087c5f525998858a9c93f9d",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/meta/npc/5488.json",
+          "sha256": "780108b152157396acda788dca4c3f97a7b8fafe28e4add2aeaae83aeb1348ff",
+          "bytes": 493
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/112/5488.webp",
+          "sha256": "00e07abb021a3a3551a1dac4a31706e18cbd79e4c087c5f525998858a9c93f9d",
+          "bytes": 24228
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/123934.m2",
+          "sha256": "60898f8597648ed944b1fd113421c6050ed225c1163e8464c4fe1533fce0972a",
+          "bytes": 234912
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/475711.skin",
+          "sha256": "f1382d39bdfb1abd76830671618305f02fd401b629a6d63ed6ad554e40c23e1c",
+          "bytes": 9680
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/126365.webp",
+          "sha256": "69229eb910798bcc84d71f6bd7bbb404f51a057796da9f58ede57acb90afa436",
+          "bytes": 2234
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123936.webp",
+          "sha256": "d0d91b69a8d1f50ce08b9499be79a76c835b6c7a6e53c3673ea21431856b8927",
+          "bytes": 24380
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123933.webp",
+          "sha256": "72f80664afbec41bdd79101e9bfe1eb638e50511295ada27157addafe4524f52",
+          "bytes": 268
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/145513.webp",
+          "sha256": "80bb1149e8e9bad5a65e033b2a843bc5c560186d19ec9603abb296b282046698",
+          "bytes": 8382
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/123938.webp",
+          "sha256": "49b71c883f31773ac329c71e45f4210e60173a1d526cf15f7350c92a52a9eb54",
+          "bytes": 420
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/126366.webp",
+          "sha256": "65e2853ea8bf6c81a0e572ba91613abd6875a6a3776b0593a2bf78ab7843fe9d",
+          "bytes": 3058
+        }
+      ]
+    }
+  }
+}
