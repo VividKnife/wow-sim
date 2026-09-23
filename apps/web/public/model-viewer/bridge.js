@@ -1,10 +1,22 @@
 // The renderer runs in its own iframe. Messages contain only equipment IDs,
 // viewer slots and a revision; the asset relay never forwards credentials.
+import {worldCamera} from './world-camera.js';
 const ROOT='/api/model-viewer/';
 const host=document.getElementById('viewer'),controls=document.getElementById('controls');
 let viewer=null,generation=0,currentRevision=null,loadController=null,zoom=-2;
 let dependencies;
 let presentation='portrait',motion={animation:'Stand',paused:false};
+let modelReady=false;
+function frameWorld(){
+ if(!viewer||presentation==='portrait')return;
+ const bounds=viewer.method('getBounds');
+ if(!bounds?.[0]||!bounds?.[1])return;
+ const camera=worldCamera(bounds,host.clientWidth/host.clientHeight),renderer=viewer.renderer;
+ renderer.doUpdateBounds=false;
+ renderer.azimuth=camera.azimuth;renderer.zenith=camera.zenith;renderer.distance=camera.distance;
+ for(let axis=0;axis<3;axis++){renderer.target[axis]=camera.center[axis];renderer.translationFromModel[axis]=0;renderer.translation[axis]=0;}
+ viewer.setZoom(0);
+}
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 function applyMotion(){
  if(!viewer)return;
@@ -46,6 +58,7 @@ function loadDependencies(){return dependencies??=(async()=>{
  if(!window.ZamModelViewer)throw new Error('Renderer unavailable');
 })();}
 function dispose(){
+ modelReady=false;
  if(viewer){const context=viewer.renderer?.context;viewer.destroy();context?.getExtension('WEBGL_lose_context')?.loseContext();viewer=null;}
  host.replaceChildren();controls.hidden=true;
 }
@@ -80,9 +93,7 @@ async function render(items,revision,raceId,classId,gender,view,mountDisplayId){
    };tick();
   });
   if(token!==generation)return;
-  zoom=presentation==='flight'?-3:presentation==='world'?0:-2;viewer.setZoom(zoom);
-  // Viewer uses eye.z = -distance * cos(zenith): 135° gives a 45° downward view.
-  if(presentation!=='portrait'){viewer.renderer.azimuth=Math.PI/2+.18;viewer.renderer.zenith=3*Math.PI/4;}
+  modelReady=true;zoom=-2;viewer.setZoom(zoom);frameWorld();
   controls.hidden=presentation!=='portrait';applyMotion();notify(missing?'partial':'loaded');
  }catch(error){
   if(token!==generation)return;
@@ -104,7 +115,7 @@ window.addEventListener('message',event=>{
  if(message.revision===currentRevision)return;
  void render(message.items,message.revision,message.raceId,message.classId,message.gender,message.view||'portrait',message.mountDisplayId||0);
 });
-new ResizeObserver(()=>{if(viewer&&host.clientWidth&&host.clientHeight){viewer.aspect=host.clientWidth/host.clientHeight;viewer.renderer.onResize(host.clientWidth,host.clientHeight,viewer.aspect);}}).observe(host);
+new ResizeObserver(()=>{if(viewer&&host.clientWidth&&host.clientHeight){viewer.aspect=host.clientWidth/host.clientHeight;viewer.renderer.onResize(host.clientWidth,host.clientHeight,viewer.aspect);if(modelReady)frameWorld();}}).observe(host);
 document.getElementById('zoom-in').onclick=()=>{if(viewer)viewer.setZoom(zoom=Math.min(7,zoom+1));};
 document.getElementById('zoom-out').onclick=()=>{if(viewer)viewer.setZoom(zoom=Math.max(-10,zoom-1));};
 document.getElementById('reset').onclick=()=>{if(viewer){viewer.renderer.azimuth=0;viewer.renderer.zenith=Math.PI/2;viewer.setZoom(zoom=-2);}};
