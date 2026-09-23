@@ -14,8 +14,8 @@ import WorldScene from './world-scene';
 import CreaturePortrait from './creature-portrait';
 import {MapPin,Map as MapIcon,ScrollText} from 'lucide-react';
 import './journey.css';
-type WorldProps=GameProps&{overview?:ReactNode;onOpenDungeon?:()=>void;onObserve?:()=>void};
-export default function World({state:s,data:d,busy,revision,send,overview,onOpenDungeon,onObserve,playback,contentVersion}:WorldProps){
+type WorldProps=GameProps&{overview?:ReactNode;onOpenDungeon?:()=>void;onObserve?:()=>void;sceneActive?:boolean};
+export default function World({state:s,data:d,busy,revision,send,overview,onOpenDungeon,onObserve,playback,contentVersion,simulationStatus,sceneActive=true}:WorldProps){
  const [filter,setFilter]=useState('全部'),[mapOpen,setMapOpen]=useState(false);
  const questList=d.quests.filter((q:any)=>q.active);
  const completedQuests=questList.filter((q:any)=>q.complete).length;
@@ -25,7 +25,7 @@ export default function World({state:s,data:d,busy,revision,send,overview,onOpen
  if(s.dungeon)return <div className="world-main"><PlayerHud state={s} data={d}/>{overview}<section className="panel"><h2>{s.dungeon?'正在探索'+d.dungeon.name:d.dungeon.name}</h2><p>在地下城页面查看小队准备、路线进度与遭遇。</p><Button onClick={onOpenDungeon} disabled={!onOpenDungeon}>打开地下城 →</Button></section></div>;
  return <div className={'world-layout '+(d.city?'has-city':'')}><section className="world-main">
  <PlayerHud state={s} data={d}/>
- <WorldScene state={s} data={d} busy={busy} send={send} playback={playback} contentVersion={contentVersion} onObserve={onObserve}/>
+ <WorldScene key={s.id} state={s} data={d} busy={busy} send={send} playback={playback} contentVersion={contentVersion} simulationStatus={simulationStatus} active={sceneActive} onObserve={onObserve}/>
  <header className="location-heading">
   <div className="location-identity"><MapPin size={23} aria-hidden="true"/><div><span>{d.location.region} · {d.city?'城镇':'野外'}</span><h1>{d.location.name}</h1></div></div>
   <div className="location-actions"><a href="#quest-list" className="quest-shortcut"><ScrollText size={16}/><span>任务 {questList.length}{completedQuests>0&&<b> · {completedQuests} 可交付</b>}</span></a><Button variant="outline" aria-expanded={mapOpen} aria-controls="region-map" onClick={()=>setMapOpen(!mapOpen)}><MapIcon size={16}/>{mapOpen?'收起地图':'区域地图'}</Button></div>

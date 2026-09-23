@@ -2,7 +2,23 @@
 // viewer slots and a revision; the asset relay never forwards credentials.
 import {worldCamera} from './world-camera.js';
 const ROOT='/api/model-viewer/';
+// Narrow scope: only viewer iframe requests are intercepted, never game saves.
+const assetCacheReady=(async()=>{
+ if(!('serviceWorker' in navigator))return;
+ try{
+  await navigator.serviceWorker.register('/model-viewer/asset-cache-sw.js',{scope:'/model-viewer/',type:'module'});
+  if(navigator.serviceWorker.controller)return;
+  await new Promise(resolve=>{
+   const done=()=>{clearTimeout(timeout);navigator.serviceWorker.removeEventListener('controllerchange',done);resolve();};
+   const timeout=setTimeout(done,2500);
+   navigator.serviceWorker.addEventListener('controllerchange',done);
+   if(navigator.serviceWorker.controller)done();
+  });
+ }catch{/* HTTP cache remains available when persistent storage is disabled. */}
+})();
 const host=document.getElementById('viewer'),controls=document.getElementById('controls');
+host.dataset.cacheHits='0';
+function recordCacheHit(headers){if(headers.get('X-Model-Expires'))host.dataset.cacheHits=String(Number(host.dataset.cacheHits)+1);}
 let viewer=null,generation=0,currentRevision=null,loadController=null,zoom=-2;
 let dependencies;
 let presentation='portrait',motion={animation:'Stand',paused:false};
@@ -29,18 +45,21 @@ reducedMotion.addEventListener('change',applyMotion);
 let pendingAssets=0,assetFailed=false;
 const nativeFetch=window.fetch.bind(window);
 window.fetch=async(...args)=>{
+ const token=generation;
  ++pendingAssets;
  try{
   const response=await nativeFetch(...args);
+  recordCacheHit(response.headers);
   const bytes=await response.arrayBuffer();
-  if(!response.ok)assetFailed=true;
+  if(!response.ok&&token===generation)assetFailed=true;
   return new Response(bytes,{status:response.status,statusText:response.statusText,headers:response.headers});
- }catch(error){assetFailed=true;throw error;}finally{--pendingAssets;}
+ }catch(error){if(token===generation)assetFailed=true;throw error;}finally{if(token===generation)--pendingAssets;}
 };
 const nativeSend=XMLHttpRequest.prototype.send;
 XMLHttpRequest.prototype.send=function(...args){
+ const token=generation;
  ++pendingAssets;
- this.addEventListener('loadend',()=>{--pendingAssets;if(this.status<200||this.status>=300)assetFailed=true;},{once:true});
+ this.addEventListener('loadend',()=>{if(token!==generation)return;recordCacheHit({get:name=>this.getResponseHeader(name)});--pendingAssets;if(this.status<200||this.status>=300)assetFailed=true;},{once:true});
  return nativeSend.apply(this,args);
 };
 const notify=(status,revision=currentRevision)=>parent.postMessage({channel:'wow-character-model',status,revision},location.origin);
@@ -51,6 +70,7 @@ function script(src){return new Promise((resolve,reject)=>{
  document.head.append(tag);
 });}
 function loadDependencies(){return dependencies??=(async()=>{
+ await assetCacheReady;
  await script('https://code.jquery.com/jquery-3.7.1.min.js');
  window.jQuery(document).ajaxError((_event,_xhr,settings)=>console.warn('Model request failed',settings.url));
  window.WH={debug:()=>{},WebP:{getImageExtension:()=>'.webp'}};
@@ -64,8 +84,11 @@ function dispose(){
 }
 async function render(items,revision,raceId,classId,gender,view,mountDisplayId){
  const token=++generation;currentRevision=revision;loadController?.abort();loadController=new AbortController();
- const signal=loadController.signal;dispose();assetFailed=false;presentation=view;notify('loading');
+ host.dataset.renderCount=String(token);
+ const signal=loadController.signal;dispose();pendingAssets=0;assetFailed=false;presentation=view;notify('loading');
  try{
+  await assetCacheReady;
+  if(token!==generation)return;
   const ids=[...new Set(items.map(item=>item.id))];
   const [appearance]=await Promise.all([
    ids.length?fetch(ROOT+'appearance?items='+ids.join(','),{signal:AbortSignal.any([signal,AbortSignal.timeout(20000)])}).then(response=>{if(!response.ok)throw new Error('Appearance unavailable');return response.json();}):Promise.resolve({items:[]}),

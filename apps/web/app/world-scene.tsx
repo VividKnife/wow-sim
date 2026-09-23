@@ -8,22 +8,23 @@ import Battle from './battle';
 import type {GameProps} from './game-ui';
 import './world-scene.css';
 
-export default function WorldScene(props:GameProps&{onObserve?:()=>void}){
+export default function WorldScene(props:GameProps&{onObserve?:()=>void;active?:boolean}){
  const {state:s,data:d}=props,scene=worldSceneState(s,d);
  const container=useRef<HTMLElement>(null);
  const [paused,setPaused]=useState(false),[visible,setVisible]=useState(true);
+ const active=visible&&props.active!==false;
  useEffect(()=>{
   const observer=new IntersectionObserver(([entry])=>setVisible(entry.isIntersecting),{rootMargin:'120px'});
   if(container.current)observer.observe(container.current);
   return()=>observer.disconnect();
  },[]);
- return <section ref={container} className={`world-scene scenery-${worldScenery(d.location)} ${scene.flying?'is-flying':''} ${scene.moving&&!paused?'is-moving':''} ${scene.combat?'is-combat':''}`} aria-label="世界沉浸场景" data-motion={scene.animation}>
+ return <section ref={container} className={`world-scene scenery-${worldScenery(d.location)} ${scene.flying?'is-flying':''} ${scene.moving&&!paused&&active?'is-moving':''} ${scene.combat?'is-combat':''}`} aria-label="世界沉浸场景" data-motion={scene.animation}>
   <div className="world-exploration" aria-hidden={scene.combat} inert={scene.combat}>
    <WorldBackdrop city={!!d.city} flying={scene.flying}/><div className="world-scene-mist"/>
    {scene.flying&&<div className="world-flight-clouds" aria-hidden="true"/>}
    <div className={'world-avatar '+(scene.mountDisplayId?'is-mounted':'')}>
     <div className="world-avatar-shadow"/>
-    <CharacterModel equipment={s.equipment} items={d.items} raceId={s.raceId||1} classId={s.classId||8} gender={s.gender||'male'} view={scene.flying?'flight':'world'} animation={scene.animation as 'Stand'|'Run'|'Fly'|'Death'} mountDisplayId={scene.mountDisplayId} paused={paused||scene.combat} fallback={<span className="world-model-placeholder">✦</span>} title="第三人称角色与当前装备"/>
+    <CharacterModel equipment={s.equipment} items={d.items} raceId={s.raceId||1} classId={s.classId||8} gender={s.gender||'male'} view={scene.flying?'flight':'world'} animation={scene.animation as 'Stand'|'Run'|'Fly'|'Death'} mountDisplayId={scene.mountDisplayId} paused={paused||scene.combat||!active} fallback={<span className="world-model-placeholder">✦</span>} title="第三人称角色与当前装备"/>
    </div>
    <div className="world-scene-vignette"/>
    <header className="world-scene-heading"><span>艾泽拉斯 · {scene.flying?'天空航线':'旅途'}</span><h2>{d.location.name}{scene.flying?'上空':''}</h2><p>{d.location.region} · {scene.flying?'飞行途中':d.city?'城镇':'野外'}</p></header>
@@ -32,6 +33,6 @@ export default function WorldScene(props:GameProps&{onObserve?:()=>void}){
    <button className="world-scene-pause" onClick={()=>setPaused(value=>!value)} aria-label={paused?'播放场景动画':'暂停场景动画'} aria-pressed={paused}>{paused?<Play size={14}/>:<Pause size={14}/>}</button>
    {scene.flying&&<progress className="world-flight-progress" aria-label="飞行航程" max={1} value={scene.flightProgress}/>}
   </div>
-  {scene.combat&&<><div className="world-battle-pending" role="status">正在进入战场…</div><div className="world-scene-combat"><Battle {...props} embedded open={visible} onOpenChange={()=>{}}/>{props.onObserve&&<button className="world-battle-expand" onClick={props.onObserve}><Maximize2 size={14}/>展开战斗</button>}</div></>}
+  {scene.combat&&<><div className="world-battle-pending" role="status">正在进入战场…</div><div className="world-scene-combat"><Battle {...props} embedded open={active} onOpenChange={()=>{}}/>{props.onObserve&&<button className="world-battle-expand" onClick={props.onObserve}><Maximize2 size={14}/>展开战斗</button>}</div></>}
  </section>;
 }
