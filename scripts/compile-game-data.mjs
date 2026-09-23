@@ -9,7 +9,8 @@ for(const name of names){
  const bytes=await readFile(new URL(`data/${name}`,root));
  const data=JSON.parse(bytes);
  if(!data||typeof data!=='object'||Array.isArray(data))throw new Error(`${name}: expected content object`);
- if(data.schemas&&data.tables)for(const [table,rows] of Object.entries(data.tables)){
+ const tables=data.tableData?Object.fromEntries(Object.entries(data.tableData).map(([name,rows])=>[name,JSON.parse(rows)])):data.tables;
+ if(data.schemas&&tables)for(const [table,rows] of Object.entries(tables)){
   const schema=data.schemas[table];if(!schema)continue;
   for(const row of rows)if(Array.isArray(row)&&row.length!==schema.length)throw new Error(`${name}/${table}: packed row width does not match schema`);
  }
@@ -19,7 +20,7 @@ for(const name of names){
 // code. Pin those rules too: a running activity must never silently use a newer
 // definition merely because its JSON input happened not to change.
 const rules={};
-const sources=['../game-domain/src/content.ts','../game-domain/src/molten-core-roster.ts'];
+const sources=['world-content.js','../game-domain/src/content.ts','../game-domain/src/molten-core-roster.ts','../game-domain/src/raid-loadouts.ts'];
 for(const directory of ['../game-domain/src/rules/','../sim-core/src/']){
  for(const name of (await readdir(new URL(directory,root))).filter(name=>/\.(?:js|ts)$/.test(name)).sort())sources.push(directory+name);
 }

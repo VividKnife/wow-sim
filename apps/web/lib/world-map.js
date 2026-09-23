@@ -1,3 +1,5 @@
+import {worldNodes,worldDungeons} from '../../../packages/game-data/world-content.js';
+import atlas from '../../../packages/game-data/data/world-map-atlas.json' with {type:'json'};
 // Hand-placed locations on the full reference artwork, in percentages.
 // These mark the game's adapted location nodes, not precise NPC coordinates.
 export const mapRegions={
@@ -39,6 +41,18 @@ export const mapPoints={
  lakeshire:[22,79],ironforge:[22,22],thelsamar:[57,45],algaz:[78,20],silverstream:[81,65],
  darkshire:[74,46],menethil:[12,64],dunmodr:[47,17],
 };
+for(const [region,places]of Object.entries(Object.groupBy(worldNodes,n=>n.region))){
+ if(region==='暴风城')continue;
+ const original=atlas.regions[region];
+ mapRegions[region]=original||{name:region+' · 区域路线',image:null};
+ const minX=Math.min(...places.map(n=>n.x)),maxX=Math.max(...places.map(n=>n.x)),minY=Math.min(...places.map(n=>n.y)),maxY=Math.max(...places.map(n=>n.y));
+ for(const n of places){
+  if(original){const [left,right,top,bottom]=original.bounds;mapPoints[n.id]=[(n.y-left)/(right-left)*100,(n.x-top)/(bottom-top)*100];}
+  else mapPoints[n.id]=[15+70*(maxY-n.y)/Math.max(1,maxY-minY),15+70*(maxX-n.x)/Math.max(1,maxX-minX)];
+ }
+}
+for(const d of worldDungeons){const parent=mapPoints[d.parent];if(parent)mapPoints[d.id]=[Math.min(94,parent[0]+7),Math.min(94,parent[1]+6)];}
+delete mapRegions['主城传送'];delete mapRegions['信使路线'];
 
 export function playerMapPoint(journey,map){
  const from=map.find(n=>n.id===journey.from),to=map.find(n=>n.id===journey.to);

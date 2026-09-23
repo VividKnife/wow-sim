@@ -17,7 +17,7 @@ let components,directory,bundle;
 before(async()=>{
  const web=fileURLToPath(new URL('../',import.meta.url));
  directory=await mkdtemp(join(web,'.battle-ui-test-'));bundle=join(directory,'components.mjs');
- await build({absWorkingDir:web,entryPoints:['app/battle-class-panel.tsx'],outfile:bundle,bundle:true,platform:'node',format:'esm',packages:'external',jsx:'automatic',logLevel:'silent'});
+ await build({absWorkingDir:web,entryPoints:['app/battle-class-panel.tsx'],outfile:bundle,bundle:true,platform:'node',format:'esm',packages:'external',jsx:'automatic',loader:{'.css':'empty'},logLevel:'silent'});
  components=await import(pathToFileURL(bundle).href);
 });
 after(async()=>{if(bundle)await unlink(bundle);if(directory)await rmdir(directory);});

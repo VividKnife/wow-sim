@@ -16,5 +16,5 @@ test('alternative and group spawns expose quest enemies in their original region
  assert.ok(creatureLocations[1343].includes('algaz'));
  assert.ok(objectLocations[271].includes('silverstream'));
  assert.ok(objectLocations[33]?.length);assert.ok(objectLocations[34]?.length);
- assert.equal(quests[578],undefined,'level-32 provenance must not become a stage quest');
+ assert.equal(quests[578].QuestLevel,37,'level-37 quests are now inside the world scope');
 });

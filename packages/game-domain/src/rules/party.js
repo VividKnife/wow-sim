@@ -30,10 +30,11 @@ function allocateTalents(c,tree){
 }
 function starterGear(c,role){
  const kind=['healer','ranged'].includes(role)&&c.classId!==3?'caster':[1,2].includes(c.classId)?'tank':'melee';
- const gear=Object.fromEntries(Object.values(items).filter(i=>i.companionKit===kind).map(i=>[i.companionSlot,i.entry]));
+ const gear=Object.fromEntries(Object.values(items).filter(i=>i.companionKit===kind&&canEquip(c,i)).map(i=>[i.companionSlot,i.entry]));
  const pool=Object.values(items).filter(i=>!i.companionKit&&i.Quality===2&&i.ItemLevel<=25&&canEquip(c,i)&&!i.requiredhonorrank&&!i.RequiredCityRank&&!i.RequiredReputationFaction&&!i.requiredspell);
  const score=i=>i.ItemLevel+(i.armor||0)*(role==='tank'?.05:0);
- for(const slot of [16,17,18]){
+ for(const slot of [1,3,5,6,7,8,9,10,15,16,17,18]){
+  if(slot<16&&gear[slot])continue;
   if(slot===17&&items[gear[16]]?.InventoryType===17)continue;
   const eligible=pool.filter(i=>slotOf(i)===slot&&(slot!==16||i.class===2&&(role!=='tank'||c.classId===11||i.InventoryType!==17))&&(slot!==17||role==='tank'&&i.InventoryType===14));
   eligible.sort((a,b)=>score(b)-score(a)||a.entry-b.entry);if(eligible[0])gear[slot]=eligible[0].entry;
@@ -42,7 +43,7 @@ function starterGear(c,role){
 }
 export function recruit(s,id,options={}){
  const candidate=candidates(s).find(c=>c.id===id),previous=options.replaceId?s.party.find(c=>c.id===options.replaceId):null;
- if(!candidate?.canRecruit)throw new Error('主角达到18级后即可招募队友。');
+ if(!candidate?.canRecruit)throw new Error('主角达到10级后即可招募队友。');
  if(options.replaceId&&(!previous||previous.growthPolicy!=='companion'))throw new Error('请选择要更换的队友。');
  if(!previous&&s.party.length>=4)throw new Error('队伍最多五人。');
  if(previous&&s.money<PARTY_REPLACEMENT_COST)throw new Error('更换队友需要10金币。');

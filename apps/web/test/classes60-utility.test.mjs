@@ -27,7 +27,7 @@ test('summoning ritual requires two assistants and moves only a living distant p
  s=act(s,{type:'cast',id:698,target:'target'},0);assert.equal(s.party[2].position,60);s=advance(s,s.activity.endsAt).state;assert.equal(s.party[2].position,0);assert.equal(s.party[2].location,s.location);assert.equal(s.bag.some(i=>i.id===6265),false);
 });
 test('public hunter taming retains real beast identity through dismissal and recall',()=>{
- let s=game(3,2);s.learned.push(1515,883,2641);s.rules=[];s=act(s,{type:'cast',id:1515,target:'npc:299'},0);assert.ok(s.cast?.channel);s=advance(s,25000).state;assert.equal(s.hunterPet?.entry,299);assert.equal(s.pet?.entry,299);s.activity={type:'idle'};s.combat=null;s=act(s,{type:'cast',id:2641},s.wallAt);s=advance(s,s.wallAt+6000).state;assert.equal(s.pet,null);s=advance(s,s.wallAt+2000).state;s=act(s,{type:'cast',id:883},s.wallAt);s=advance(s,s.wallAt+5000).state;assert.equal(s.pet.entry,299);
+ let s=game(3,2);s.location='northshire';s.learned.push(1515,883,2641);s.rules=[];s=act(s,{type:'cast',id:1515,target:'npc:299'},0);assert.ok(s.cast?.channel);s=advance(s,25000).state;assert.equal(s.hunterPet?.entry,299);assert.equal(s.pet?.entry,299);s.activity={type:'idle'};s.combat=null;s=act(s,{type:'cast',id:2641},s.wallAt);s=advance(s,s.wallAt+6000).state;assert.equal(s.pet,null);s=advance(s,s.wallAt+2000).state;s=act(s,{type:'cast',id:883},s.wallAt);s=advance(s,s.wallAt+5000).state;assert.equal(s.pet.entry,299);
 });
 test('new mage characters begin with source starting proficiencies and retain them on sync',()=>{
  const s=createGame('新法师',283,0,{classId:8,raceId:1});const restored=advance(s,0).state;
@@ -36,7 +36,7 @@ test('new mage characters begin with source starting proficiencies and retain th
 });
 
 test('public taming rejects busy and global-cooldown states before starting an encounter',()=>{
- const s=game(3,2);s.learned.push(1515);s.activity={type:'travel',endsAt:50000};
+ const s=game(3,2);s.location='northshire';s.learned.push(1515);s.activity={type:'travel',endsAt:50000};
  assert.throws(()=>act(s,{type:'cast',id:1515,target:'npc:299'},0),/当前活动/);
  s.activity={type:'idle'};s.globalCooldowns={133:1500};
  assert.throws(()=>act(s,{type:'cast',id:1515,target:'npc:299'},0),/冷却/);

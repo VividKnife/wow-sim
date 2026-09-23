@@ -3,6 +3,7 @@ import {recruit} from './rules/party.js';
 import {items} from './rules/catalog.js';
 import {canEquip,slotOf,stats,clone} from './rules/character.js';
 import {combatRole} from './rules/combat-roles.js';
+import {raidLoadouts} from './raid-loadouts.ts';
 import type {Rules} from './model.ts';
 
 const roster: [string,string,string][] = [
@@ -20,8 +21,7 @@ export function gearScore(item:Rules,role:string,classId:number) {
  return score;
 }
 function equipDemo(c:Rules) {
- const role=combatRole(c),pool=(Object.values(items) as Rules[]).filter(i=>i.Quality===3&&i.ItemLevel>=50&&i.ItemLevel<=63&&canEquip(c,i)&&!i.RequiredSkill&&!i.requiredspell&&!i.RequiredReputationFaction);
- pool.sort((a,b)=>gearScore(b,role,c.classId)-gearScore(a,role,c.classId)||a.entry-b.entry);
+ const role=combatRole(c),pool=raidLoadouts[`${c.classId}:${role}`].map(id=>items[id]).filter(i=>canEquip(c,i));
  c.equipment={};
  for(const item of pool){
   if(![2,4].includes(item.class)||[4,19].includes(item.InventoryType))continue;

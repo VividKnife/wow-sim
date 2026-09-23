@@ -38,7 +38,7 @@ function OwnedParty({state:s,data:d,busy,send}:GameProps){
  const blocked=s.combat?'战斗结束后可招募':s.dungeon?'离开副本后可招募':!['idle','hunt'].includes(s.activity.type)?'结束当前活动后可招募':!replacing&&s.party.length>=4?'队伍已满，请选择更换队友':replacing&&s.money<100000?'更换需要10金币':profession1===profession2?'请选择两个不同的生活职业':'';
  const shown=plan.candidates.filter((c:any)=>filter==='all'||c.roles.some((role:string)=>groupRole(role)===filter));
  const chooseRole=(c:any)=>choices[c.id]||(filter!=='all'?c.roles.find((role:string)=>groupRole(role)===filter):null)||c.preferredRole;
- if(!d.partyUnlocked&&canManage)return <section className="panel"><h2>队友系统 · 18级解锁</h2><p>达到18级后自动开通，可随时招募或更换队友。</p></section>;
+ if(!d.partyUnlocked&&canManage)return <section className="panel"><h2>队友系统 · 10级解锁</h2><p>达到10级后自动开通，可随时招募或更换队友。</p></section>;
  return <div className={styles.page}>
   <section className={styles.overview} aria-label="阵容推荐">
    <div className={styles.heading}><div><span className={styles.eyebrow}>集结你的冒险小队</span><h2>可靠的伙伴，从合适的阵容开始</h2><p>经典五人阵容 · 1 坦克 / 1 治疗 / 3 输出</p></div><span className={styles.size}><UsersRound size={18}/>{s.party.length+1}<small>/ 5</small></span></div>

@@ -295,7 +295,7 @@ export class GameService {
         }
         const beforeParty = new Set(s.party.map((p: Rules) => p.id));
         const action = { ...cmd };
-        if (action.target && ['strategy', 'equip', 'equipBag'].includes(action.type)) {
+        if (action.target && ['strategy', 'pvpConfigure', 'equip', 'equipBag'].includes(action.type)) {
             const target = s.party.find((p: Rules) => p.id === action.target);
             if (target)
                 await owned(tx, c.accountId, target.id);

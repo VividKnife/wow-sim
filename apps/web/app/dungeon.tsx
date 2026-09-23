@@ -37,7 +37,7 @@ export default function Dungeon(props:GameProps){
  const current=dm.current,progress=Math.min(100,dm.progress/dm.total*100);
  const activityLabels:Record<string,string>={dungeonCannon:'火炮已经点燃',resurrect:'牧师正在复活队友',revive:'倒下成员正在返回尸体',conjure:'正在制造补给'};
  return <section className="dungeon-expedition" aria-label={`${dm.name}副本`}>
-  <header className="panel dungeon-header dungeon-loading-card"><div className="section-heading"><div><div className="eyebrow">五人地下城 · 当前冒险</div><h1>{dm.name}</h1></div><Button variant="outline" disabled={busy||!dm.canLeave} onClick={()=>send({type:'leaveDungeon'})}>离开副本</Button></div>
+  <header className="panel dungeon-header dungeon-loading-card" style={dm.background?{backgroundImage:`linear-gradient(90deg,#161a18ed,#1419179c),url(${dm.background})`,backgroundSize:'cover',backgroundPosition:'center'}:undefined}><div className="section-heading"><div><div className="eyebrow">五人地下城 · 当前冒险</div><h1>{dm.name}</h1></div><Button variant="outline" disabled={busy||!dm.canLeave} onClick={()=>send({type:'leaveDungeon'})}>离开副本</Button></div>
    <div className="section-heading"><span>{dm.completed?'路线已完成':`路线进度 ${dm.progress} / ${dm.total}`}</span><small>退出保留进度</small></div>
    <div className="dungeon-progress" role="progressbar" aria-label="副本路线进度" aria-valuemin={0} aria-valuemax={dm.total} aria-valuenow={dm.progress}><i style={{width:progress+'%'}}/></div>
    <p className="footnote">自动推进保留全部战斗与补给消耗。可随时暂停，战斗中的暂停会在本场结束后停止迎战。</p>

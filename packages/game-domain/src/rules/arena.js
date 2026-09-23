@@ -1,33 +1,27 @@
+import {arenaTacticalTick} from './arena-tactics.js';
 import {arenaMaps,arenaSight,arenaPointAllowed} from '../../../sim-core/src/arena-space.js';
-import {activeAuras,controlled} from '../../../sim-core/src/combat-auras.js';
-import {pvpControlProfile,pvpControlRemaining,pvpAbilityAllowed,unitCreatureType} from './pvp-runtime.js';
-import {stats,clone,knownRank,spellInfo,log} from './character.js';
+import {activeAuras} from '../../../sim-core/src/combat-auras.js';
+import {unitCreatureType} from './pvp-runtime.js';
+import {stats,clone,spellInfo,log} from './character.js';
 import {spells,nameOf,classDefinitions,icon} from './catalog.js';
 import {recruit} from './party.js';
 import {combatRole} from './combat-roles.js';
 import {combatTick} from './combat.js';
 import {recoveryTick} from './recovery.js';
-import {spellReady} from './spell-timing.js';
 import {detectsTarget} from './combat-space.js';
-import {distance} from '../../../sim-core/src/geometry.js';
+import {applyPvpProfile,savePvpProfile} from './pvp-profiles.js';
 
-export const arenaCommands=['arenaPrepare','arenaSave','arenaStart','arenaCancel','arenaSurrender'];
+export const arenaCommands=['arenaPrepare','arenaSave','arenaStart','arenaCancel','arenaSurrender','pvpConfigure'];
 export const arenaOpponents=[
  {id:'rmp',name:'银月试炼队',description:'盗贼压制，法师控场，牧师支援。',members:[['rogue','melee'],['mage','ranged'],['priest','healer'],['warrior','melee'],['paladin','healer']]},
  {id:'cleave',name:'赤砂突击队',description:'近战持续施压，萨满负责治疗与打断。',members:[['warrior','melee'],['rogue','melee'],['shaman','healer'],['hunter','ranged'],['paladin','healer']]},
  {id:'casters',name:'暮光织法者',description:'法术压制与控制，依靠柱体维持距离。',members:[['warlock','ranged'],['mage','ranged'],['druid','healer'],['priest','ranged'],['shaman','healer']]},
 ];
 const tasks=['focus','pressure','protect','control'];
-const taskLabels={focus:'集火',pressure:'压制',protect:'保护',control:'控制接力'};
-const controlNames=['Polymorph','Fear','Hammer of Justice','Kidney Shot','Gouge','Bash','Psychic Scream','Intimidating Shout'];
-const interruptNames=['Counterspell','Kick','Earth Shock','Pummel','Shield Bash','Silence'];
-const survivalNames=['Ice Block','Divine Shield','Shield Wall','Last Stand','Barkskin','Evasion','Vanish','Deterrence'];
-const rootIds=names=>Object.values(spells).filter(sp=>names.includes(sp.SpellName)).map(sp=>sp.Id);
-const controlIds=rootIds(controlNames),interruptIds=rootIds(interruptNames),survivalIds=rootIds(survivalNames);
 const need=(condition,message)=>{if(!condition)throw new Error(message);};
 const living=team=>team.members.filter(c=>c.hp>0);
 function prepareActor(source,id,side,index,map){
- const c=clone(source);for(const key of ['arena','party','combat','lastCombat','battleHistory','journey','quests','completed','logs','receipts','bank','auctions','pending','guildRaid','goldRaid','activity','dungeon','mounted','rest','cast','pet','totems','talentProcs','racialBuff','racialEffects','soulstone','bloodrage','classBuffs','classBuff','flares','trap','sunder','absorb','manaShield','groundEffects','stealthed','invisible','queuedStrike'])delete c[key];
+ const c=applyPvpProfile(clone(source));for(const key of ['arena','party','combat','lastCombat','battleHistory','journey','quests','completed','logs','receipts','bank','auctions','pending','guildRaid','goldRaid','activity','dungeon','mounted','rest','cast','pet','totems','talentProcs','racialBuff','racialEffects','soulstone','bloodrage','classBuffs','classBuff','flares','trap','sunder','absorb','manaShield','groundEffects','stealthed','invisible','queuedStrike'])delete c[key];
  c.sourceId=source.id;c.id=id;c.teamId=side;c.pvp=true;c.arenaArea=map;c.arenaBag=clone(source.bag||[]);delete c.bag;
  Object.assign(c,{time:0,cooldowns:{},categoryCooldowns:{},globalCooldowns:{},schoolLockouts:{},buffs:{},auras:[],dots:[],hots:[],periodicClass:[],movementSlows:[],diminishing:{},threat:{},form:null,stunUntil:0,rootUntil:0,polyUntil:0,slowUntil:0,frozenUntil:0,silenceUntil:0,weakenedSoulUntil:0,combo:0,comboTarget:null,rage:0,energy:100,inCombat:false,lastManaUse:-5000,nextAction:3000,nextSwing:3000,nextRanged:3000,nextOffhand:3000,nextPowerRegen:5000,position:side===0?map.minX+5:map.maxX-5,positionY:index*3-3,moveSpeed:7,dead:false});
  c.strategyPolicy={...c.strategyPolicy,waitForTank:false,protectCC:true};c.potions={...c.potions,enabled:false};
@@ -39,20 +33,31 @@ function npcMembers(s,opponent,size,map){
 }
 function defaults(members,enemies){
  const healer=enemies.find(c=>combatRole(c)==='healer')||enemies.at(-1),focus=enemies.find(c=>c.id!==healer?.id)||enemies[0],ownHealer=members.find(c=>combatRole(c)==='healer')||members[0];
- return {focusId:focus.id,controlId:healer.id,burst:'controlled',assignments:members.map(c=>({actorId:c.id,task:combatRole(c)==='healer'?'focus':c.classId===8?'control':'focus',targetId:focus.id,protectId:ownHealer.id,retreatBelow:30,leash:30})),controlOrder:members.map(c=>c.id)};
+ return {focusId:focus.id,controlId:healer.id,killOrder:enemies.map(c=>c.id),swapOnImmunity:true,minControlMs:3000,maxBurstWaitMs:12000,burst:'controlled',assignments:members.map(c=>({actorId:c.id,task:combatRole(c)==='healer'?'focus':c.classId===8?'control':'focus',targetId:focus.id,protectId:ownHealer.id,retreatBelow:30,leash:30,interrupt:'healer'})),controlOrder:members.map(c=>c.id)};
 }
 function validatePlan(arena,input){
  need(input&&typeof input==='object','战术配置无效。');const own=arena.teams[0].members,enemy=arena.teams[1].members;
  need(enemy.some(c=>c.id===input.focusId)&&enemy.some(c=>c.id===input.controlId)&&input.focusId!==input.controlId,'集火与控制对象必须是不同的敌方成员。');
  need(['controlled','immediate'].includes(input.burst),'爆发条件无效。');
+ need(Array.isArray(input.killOrder)&&input.killOrder.length===enemy.length&&new Set(input.killOrder).size===enemy.length&&input.killOrder.every(id=>enemy.some(e=>e.id===id)),'转火顺序必须包含所有敌方成员。');
+ need(typeof input.swapOnImmunity==='boolean'&&[1000,3000,5000].includes(input.minControlMs)&&[8000,12000,20000].includes(input.maxBurstWaitMs),'控制与爆发窗口设置无效。');
  need(Array.isArray(input.assignments)&&input.assignments.length===own.length,'请为每名出战成员设置战术。');
- const seen=new Set(),assignments=input.assignments.map(a=>{need(a&&own.some(c=>c.id===a.actorId)&&!seen.has(a.actorId),'战术成员无效或重复。');seen.add(a.actorId);need(tasks.includes(a.task)&&enemy.some(c=>c.id===a.targetId)&&own.some(c=>c.id===a.protectId),'战术任务或目标无效。');need(Number.isFinite(a.retreatBelow)&&a.retreatBelow>=0&&a.retreatBelow<=80&&Number.isFinite(a.leash)&&a.leash>=10&&a.leash<=50,'回撤生命阈值应为0–80%，追击距离应为10–50码。');return{actorId:a.actorId,task:a.task,targetId:a.targetId,protectId:a.protectId,retreatBelow:a.retreatBelow,leash:a.leash};});
+ const seen=new Set(),assignments=input.assignments.map(a=>{need(a&&own.some(c=>c.id===a.actorId)&&!seen.has(a.actorId),'战术成员无效或重复。');seen.add(a.actorId);need(tasks.includes(a.task)&&enemy.some(c=>c.id===a.targetId)&&own.some(c=>c.id===a.protectId),'战术任务或目标无效。');need(Number.isFinite(a.retreatBelow)&&a.retreatBelow>=0&&a.retreatBelow<=80&&Number.isFinite(a.leash)&&a.leash>=10&&a.leash<=50,'回撤生命阈值应为0–80%，追击距离应为10–50码。');need(['off','focus','healer','any'].includes(a.interrupt),'打断职责无效。');return{actorId:a.actorId,task:a.task,targetId:a.targetId,protectId:a.protectId,retreatBelow:a.retreatBelow,leash:a.leash,interrupt:a.interrupt};});
  need(Array.isArray(input.controlOrder)&&input.controlOrder.length===own.length&&new Set(input.controlOrder).size===own.length&&input.controlOrder.every(id=>seen.has(id)),'控制顺序必须包含每名队员且不能重复。');
  need(!assignments.some(a=>a.task==='control')||!assignments.some(a=>a.task==='pressure'&&a.targetId===input.controlId),'压制目标与控场目标冲突，请选择不同目标或停用控制接力。');
  const positions=(input.positions||[]).map(p=>{need(seen.has(p.id)&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x<=arena.map.minX+10&&arenaPointAllowed(arena.map,p),'初始站位必须位于己方出生区。');return{id:p.id,x:p.x,y:p.y};});
- need(new Set(positions.map(p=>p.id)).size===positions.length,'初始站位重复。');return{focusId:input.focusId,controlId:input.controlId,burst:input.burst,assignments,controlOrder:[...input.controlOrder],positions};
+ need(new Set(positions.map(p=>p.id)).size===positions.length,'初始站位重复。');return{focusId:input.focusId,controlId:input.controlId,killOrder:[...input.killOrder],swapOnImmunity:input.swapOnImmunity,minControlMs:input.minControlMs,maxBurstWaitMs:input.maxBurstWaitMs,burst:input.burst,assignments,controlOrder:[...input.controlOrder],positions};
 }
 export function arenaAction(s,a){
+ if(a.type==='pvpConfigure'){
+  need(!['countdown','combat'].includes(s.arena?.phase),'开战后 PvP 配置已锁定，请在下一场准备时修改。');
+  const source=savePvpProfile(s,a),arena=s.arena;
+  if(arena?.phase==='preparing'){
+   const members=arena.teams[0].members,index=members.findIndex(c=>c.sourceId===source.id);
+   if(index>=0){const old=members[index],next=prepareActor(source,old.id,0,index,arena.map);next.position=old.position;next.positionY=old.positionY;members[index]=next;arena.planRevision++;}
+  }
+  return;
+ }
  if(a.type==='arenaPrepare'){
   need(!s.combat&&!s.dungeon&&!s.guildRaid?.active&&!s.goldRaid?.active&&s.activity.type==='idle'&&s.hp>0,'请先结束当前活动并离开副本。');
   need(s.level>=18&&s.growthPolicy!=='companion','主角达到18级后可以率领小队参加竞技场。');
@@ -71,43 +76,6 @@ export function arenaAction(s,a){
  arena.teams[0].plan=validatePlan(arena,a.plan);arena.planRevision++;
  if(a.type==='arenaStart'){for(const p of arena.teams[0].plan.positions){const c=arena.teams[0].members.find(c=>c.id===p.id);c.position=p.x;c.positionY=p.y;}arena.phase='countdown';s.activity={type:'arenaCombat'};}
 }
-function availableControl(c,target,clock){
- return controlIds.map(id=>knownRank(c,id)).filter((id,i,all)=>id&&all.indexOf(id)===i).map(id=>spellInfo(c,id)).find(sp=>{
-  const pool=sp.PowerType===1?'rage':sp.PowerType===3?'energy':'mana';
-  return pvpAbilityAllowed(c,target,sp,clock)&&!c.cast&&!controlled(c,clock)&&spellReady(c,sp,clock)&&(c[pool]||0)>=sp.mana&&!(c.schoolLockouts?.[sp.School]>clock)&&pvpControlRemaining(target,sp.Id,clock,sp.durationMs)>0&&(!['Kidney Shot','Bash'].includes(sp.SpellName)||sp.SpellName==='Kidney Shot'&&c.combo>0&&c.comboTarget===target.id||sp.SpellName==='Bash'&&c.form==='bear');
- });
-}
-function tacticalTick(root,team,enemy){
- const clock=root.clock,plan=team.plan,alive=enemy.filter(c=>c.hp>0&&!c.petUnit&&!c.totemUnit),control=alive.find(c=>c.id===plan.controlId),focus=alive.find(c=>c.id===plan.focusId)||alive.find(c=>c!==control)||alive[0];
- const controlActive=control&&activeAuras(control,clock).filter(a=>[5,7,12].includes(a.type)),remaining=Math.max(0,...(controlActive||[]).map(a=>a.until-clock));
- root.combat.controlTargetId=control&&alive.length>1&&team.members.some(c=>c.hp>0&&team.plan.assignments.find(a=>a.actorId===c.id)?.task==='control')?control.id:null;
- if(remaining>0)team.burstReleased=true;
- let controller=null,controlSpell=null;
- if(root.combat.controlTargetId&&remaining<650&&!team.members.some(c=>c.cast?.target===control.id&&pvpControlProfile(c.cast.spell))){
-  for(const id of plan.controlOrder){const c=team.members.find(c=>c.id===id&&c.hp>0);if(!c||!detectsTarget(c,control,clock)||!arenaSight(c,control))continue;const sp=availableControl(c,control,clock);if(sp){controller=c;controlSpell=sp;break;}}
- }
- for(const c of team.members){
-  const assignment=plan.assignments.find(a=>a.actorId===c.id),protect=team.members.find(a=>a.id===assignment.protectId&&a.hp>0)||team.members.find(a=>combatRole(a)==='healer'&&a.hp>0);
-  const threats=alive.filter(e=>e.target===protect?.id&&distance(e,protect)<12).sort((a,b)=>distance(a,protect)-distance(b,protect));
-  let target=assignment.task==='pressure'?alive.find(e=>e.id===assignment.targetId)||focus:focus,reason=taskLabels[assignment.task];
-  if(assignment.task==='protect'&&threats.length){target=threats[0];reason='保护 '+protect.name;}
-  if(target&&(!detectsTarget(c,target,clock)))target=alive.find(e=>detectsTarget(c,e,clock)&&e!==control);
-  c.arenaRetreatTarget=null;
-  if(protect&&protect!==c&&(c.hp/c.maxHp*100<assignment.retreatBelow||distance(c,protect)>assignment.leash)){
-   c.arenaRetreatTarget=protect.id;reason='回撤寻求支援';
-  }
-  const peel=c!==controller&&assignment.task==='protect'&&threats[0]&&!controlled(threats[0],clock)?availableControl(c,threats[0],clock):null;
-  c.arenaTargetId=target?.id;c.arenaControlTarget=c===controller?control?.id:peel?threats[0].id:null;c.arenaControlSpell=c===controller?controlSpell.SpellName:peel?.SpellName||null;
-  if(peel)reason='援护控场 '+threats[0].name;
-  if(c===controller)reason='接控 '+control.name;
-  if(c.arenaIntent!==reason){c.arenaIntent=reason;log(root,c.name+'：'+reason,'tactic',{actorId:c.id,targetId:target?.id});}
-  const extra=[];for(const ids of [survivalIds,interruptIds])for(const id of ids){const learned=knownRank(c,id);if(!learned||extra.some(r=>r.spell===learned))continue;extra.push({spell:learned,condition:ids===survivalIds?'healthBelow':'targetCasting',value:ids===survivalIds?35:0,enabled:true});}
-  if(controlSpell&&c===controller||peel)extra.push({spell:c===controller?controlSpell.Id:peel.Id,condition:'always',value:0,enabled:true});
-  c.rules=[...extra,...c.baseRules.filter(r=>!controlNames.includes(spells[r.spell]?.SpellName))];
-  c.arenaWaitingBurst=plan.burst==='controlled'&&!!root.combat.controlTargetId&&!team.burstReleased;
-  c.arenaBurstSpells=['Adrenaline Rush','Arcane Power','Recklessness','Rapid Fire','Bestial Wrath'];
- }
-}
 function arenaUnits(team,map,initialize=true){
  const units=[...team.members,...team.members.flatMap(c=>c.pet?[c.pet]:[]),...team.members.flatMap(c=>Object.values(c.totems||{}).filter(t=>t.totemUnit))];
  if(initialize)for(const c of units){c.pvp=true;c.teamId=team.members[0].teamId;c.arenaArea=map;c.dots??=[];c.threat??={};c.equipment??={};c.talents??={};c.learned??=[];}
@@ -119,7 +87,7 @@ function simulateTeam(arena,index){
  const old=new Map(Object.keys(injected).map(key=>[key,{present:Object.hasOwn(root,key),value:root[key]}]));Object.assign(root,injected);
  try{
   for(const c of actors){c.time=arena.clock;const st=stats(c);c.maxHp=st.maxHp;c.maxMana=st.maxMana;}
-  recoveryTick(root,arena.clock%2000===0);tacticalTick(root,team,enemies);combatTick(root,{pvpTeam:true});
+  recoveryTick(root,arena.clock%2000===0);arenaTacticalTick(root,team,enemies);combatTick(root,{pvpTeam:true});
   arena.rngState=root.rngState;arena.logSequence=root.logSequence;team.projectiles=root.combat.projectiles;team.projectileSequence=root.combat.projectileSequence;team.groundEffects=root.groundEffects;
  }finally{for(const [key,previous]of old)if(previous.present)root[key]=previous.value;else delete root[key];}
 }
@@ -139,7 +107,7 @@ export function arenaTick(s){
 }
 function memberView(c,clock,own){
  const st=stats(c),definition=classDefinitions.find(d=>d.id===c.classId),cast=c.cast,castInfo=cast?spellInfo(c,cast.spell):null;
- return{id:c.id,sourceId:c.sourceId,name:c.name,classId:c.classId,raceId:c.raceId,gender:c.gender,entry:c.entry,className:definition?.name,level:c.level,role:combatRole(c),hp:c.hp,maxHp:st.maxHp,mana:c.mana,maxMana:st.maxMana,energy:c.energy,rage:c.rage,power:c.power,x:c.position,y:c.positionY,teamId:c.teamId,petUnit:!!c.petUnit,totemUnit:!!c.totemUnit,kind:c.kind,form:c.form,creatureType:unitCreatureType(c),hidden:false,stealthed:!!c.stealthed,targetId:c.target,intent:own?c.arenaIntent:undefined,cast:cast?{spellId:cast.spell,school:spells[cast.spell]?.School,range:castInfo.range,radius:castInfo.radius,channel:!!cast.channel,center:cast.center,name:nameOf('spells',cast.spell),startedAt:cast.startedAt,until:cast.until,targetId:cast.target}:null,effects:activeAuras(c,clock).filter(a=>[5,7,12,26,27,67].includes(a.type)).map(a=>({spellId:a.spell,name:nameOf('spells',a.spell),type:a.type,until:a.until})),diminishing:clone(c.diminishing||{})};
+ return{id:c.id,sourceId:c.sourceId,name:c.name,classId:c.classId,raceId:c.raceId,gender:c.gender,entry:c.entry,pvpProfileName:c.pvpProfileName,className:definition?.name,level:c.level,role:combatRole(c),hp:c.hp,maxHp:st.maxHp,mana:c.mana,maxMana:st.maxMana,energy:c.energy,rage:c.rage,power:c.power,x:c.position,y:c.positionY,teamId:c.teamId,petUnit:!!c.petUnit,totemUnit:!!c.totemUnit,kind:c.kind,form:c.form,creatureType:unitCreatureType(c),hidden:false,stealthed:!!c.stealthed,targetId:c.target,intent:own?c.arenaIntent:undefined,cast:cast?{spellId:cast.spell,school:spells[cast.spell]?.School,range:castInfo.range,radius:castInfo.radius,channel:!!cast.channel,center:cast.center,name:nameOf('spells',cast.spell),startedAt:cast.startedAt,until:cast.until,targetId:cast.target}:null,effects:activeAuras(c,clock).filter(a=>[5,7,12,26,27,67].includes(a.type)).map(a=>({spellId:a.spell,name:nameOf('spells',a.spell),type:a.type,until:a.until})),diminishing:clone(c.diminishing||{})};
 }
 export function arenaView(s){
  const a=s.arena,roster=[s,...s.party].map(c=>({id:c.id,name:c.name,classId:c.classId,role:combatRole(c),level:c.level,alive:c.hp>0}));
@@ -152,5 +120,5 @@ export function arenaView(s){
  const groundEffects=a.teams.flatMap(t=>t.groundEffects).filter(e=>!hidden.has(e.caster)).map((e,i)=>({id:`ground:${i}`,actorId:e.caster,spellId:e.spellId||e.spell,center:e.center||{x:e.position,y:e.positionY||0},radius:e.radius,startedAt:e.startedAt,until:e.until,school:e.school}));
  const spellIds=new Set([...logs.map(e=>e.spellId),...projectiles.map(e=>e.spellId),...groundEffects.map(e=>e.spellId),...teams.flatMap(t=>t.members.map(c=>c.cast?.spellId))]);
  const skills=[...spellIds].filter(id=>spells[id]).map(id=>({spellId:id,name:nameOf('spells',id),icon:icon('spells',id),school:spells[id].School}));
- return{...base,match:{id:a.id,revision:a.planRevision,size:a.size,phase:a.phase,map:a.map,opponentName:a.opponentName,clock:a.clock,plan:clone(a.teams[0].plan),teams,result:a.result,logs,metrics:Object.values(a.metrics.actors).map(m=>({actorId:m.actorId,name:m.name,damage:m.damage,healing:m.healing})),projectiles,groundEffects,skills}};
+ return{...base,match:{id:a.id,revision:a.planRevision,size:a.size,phase:a.phase,map:a.map,opponentName:a.opponentName,clock:a.clock,activeFocusId:a.teams[0].currentFocusId,tacticalStatus:a.teams[0].tacticalStatus,plan:clone(a.teams[0].plan),teams,result:a.result,logs,metrics:Object.values(a.metrics.actors).map(m=>({actorId:m.actorId,name:m.name,damage:m.damage,healing:m.healing})),projectiles,groundEffects,skills}};
 }

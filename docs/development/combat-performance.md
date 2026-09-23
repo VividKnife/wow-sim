@@ -1,5 +1,37 @@
 # 战斗实时更新优化验证
 
+## 3D 骨骼与资源加载修复（2026-09-23）
+
+本次修改共用的 `BattleHD2D` 渲染链路，适用于野外、副本、团队和竞技场，不改变模拟步长、伤害或战斗结果。
+
+- `SkeletonUtils.clone` 会为每个网格分块克隆骨骼。人类男性身体有 56 个分块、119 根骨骼，原实现为这些分块保留 56 份相同的骨骼矩阵。`createCreatureInstance` 现在按源 skin 合并为每角色一份；不同角色、不同 skin 仍保持独立。Three 每帧只需更新和上传一份共用矩阵。
+- 出场时不再为全部 20 个动作预先创建 AnimationAction 与轨道绑定，改为首次使用时创建并复用。相同皮肤只在纹理配置变化时标记上传，不再按身体分块、角色重复标记。
+- 角色模型使用独立 Suspense 边界。新召唤物、变形或换外观所需的资源尚未加载时，现有战场与其他角色继续显示，待加载角色保留可选择的状态标签。
+- 地形装饰和后处理组件使用 memo，避免每次生命值／时钟更新重复遍历静态组件树。其逐帧动画和画质切换仍然生效。
+
+在同一台机器、Chromium 无头浏览器、1440 × 1050、DPR 1、精细特效下，使用 `/battle-3d.html` 的 MC 25 人场景采样。资源就绪后暂停试玩模拟，预热 3.5 秒，记录 8 秒 rAF 间隔及浏览器 CPU profile，隔离绘制成本：
+
+| 指标 | 修复前 | 骨骼修复后 | 最终版本复测 |
+| --- | ---: | ---: | ---: |
+| rAF P95 间隔 | 27.8 ms | 20.9 ms | 20.9 ms |
+| rAF 最大间隔 | 69.4 ms | 48.7 ms | 69.4 ms |
+| 超过 50 ms 的主线程长任务 | 1 | 0 | 1 |
+
+两次修复后采样的 P95 均降低约 25%；最终复测仍有一次长帧，不能宣称已消除所有偶发卡顿。
+
+这是暂停模拟后的渲染采样，不能当作实时战斗端到端帧率或所有设备稳定 60 FPS 的保证。该试玩页面将 `advance` 和完整 `view` 放在主线程每 100 ms 执行；不暂停时，本次测到 636 ms 的主线程长任务，CPU 热点包括天赋、技能和属性投影。正式游戏通过 `local-simulation.worker.ts` 执行这些计算，所以不能直接用这个试玩页的运行中采样推断正式游戏绘制成本。
+
+验证：74 项相关测试通过，Web TypeScript 检查通过；ESLint 无错误，仅保留角色标签现有的原生图片提示。新增回归验证真实模型各分块在待机、移动、攻击、施法、死亡动作下与原实现的顶点位置一致、角色间骨骼隔离、皮肤不重复上传、资源只释放一次、Strict Mode 重连和新模型加载不挂起整个战场。
+
+```powershell
+node --test apps/web/test/creature-instance.test.mjs apps/web/test/battle-hd2d-frame.test.mjs apps/web/test/battle-hd2d.test.mjs apps/web/test/battle-scene.test.mjs apps/web/test/character-models.test.mjs apps/web/test/molten-core-models.test.mjs apps/web/test/arena-battle-scene.test.mjs
+node node_modules/typescript/bin/tsc --noEmit -p apps/web/tsconfig.json
+```
+
+浏览器复查覆盖野外、五人副本、5v5 竞技场和 MC 的模型显示、标签选择、视野缩放、精细／简化特效切换、手动镜头及恢复自动镜头，未出现页面运行错误；已检查四种场景截图。
+
+## 历史验证记录
+
 2026-09-21：属性与回放 CPU 优化的最新测量见 [战斗预计算 CPU 优化](combat-compute-performance.md)。相同口径的五人队样例预计算由 3.32 秒降到 1.61 秒；这不是整机容量压测。
 
 2026-09-20：画面已替换为 Three.js / React Three Fiber HD-2D 场景，见 [HD-2D 战场](hd2d-battle.md)。以下 Pixi 帧率与性能采样是历史结果，不作为新渲染器的性能结论。

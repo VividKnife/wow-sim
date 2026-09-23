@@ -1,3 +1,4 @@
+import {capitalDistricts} from '../../../game-data/world-content.js';
 // Authored node-based city experience. Coordinates and roads are an adaptation,
 // not measured client paths; NPC labels describe service roles.
 export const cityServices={
@@ -13,6 +14,7 @@ export const cityServices={
 };
 
 export const cityDistricts=[
+ ...capitalDistricts,
  {id:'stormwind',name:'贸易区',subtitle:'城市的心跳',description:'人声穿过拱廊，商队在运河边卸货。银行、旅店和狮鹫塔都在附近。',point:[57,56],services:['bank','auction','shop','inn','flight','quests']},
  {id:'magetower',name:'法师区',subtitle:'高塔与奥术',description:'石阶向高塔盘旋，魔法的微光映在蓝色屋顶上。这里也是共享路线的职业训练站。',point:[35,69],services:['trainer','professions','shop','quests'],classes:[8,9,7]},
  {id:'bluerecluse',name:'蓝色隐士',subtitle:'酒馆里的秘密',description:'杯盏轻响，低语在烛光中流动。法师们的研究偶尔会带来意想不到的访客。',point:[43,80],services:['shop','quests']},

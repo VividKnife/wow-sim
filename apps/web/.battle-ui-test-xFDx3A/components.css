@@ -1,0 +1,116 @@
+/* app/item-details.css */
+.item-details {
+  margin-top: 7px;
+  font-size: 12px;
+  color: #d7cfb8;
+}
+.item-details summary {
+  cursor: pointer;
+  color: #bda979;
+  width: fit-content;
+  padding: 3px 0;
+}
+.item-details summary:focus-visible {
+  outline: 2px solid #e0c58b;
+  outline-offset: 3px;
+}
+.item-tooltip {
+  margin-top: 8px;
+  padding: 12px 14px;
+  background: #080b16ef;
+  border: 1px solid #776b91;
+  border-radius: 4px;
+  box-shadow: 0 3px 9px #0005;
+  line-height: 1.8;
+  color: #e6e0d2;
+}
+.item-effect {
+  color: #48e65a;
+}
+.item-flavor {
+  color: #eed475;
+}
+.item-row .grow {
+  min-width: 0;
+}
+.item-tooltip > div {
+  overflow-wrap: anywhere;
+}
+.classic-item-tooltip {
+  box-sizing: border-box;
+  width: 340px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  background:
+    linear-gradient(
+      135deg,
+      #101023fa,
+      #080810fc);
+  border: 2px solid #9993ab;
+  border-radius: 5px;
+  box-shadow:
+    inset 0 0 0 1px #242033,
+    0 0 0 1px #09080d,
+    0 5px 14px #0009;
+  color: #fff;
+  font:
+    13px/1.55 Arial,
+    "Microsoft YaHei",
+    sans-serif;
+  text-shadow: 1px 1px 1px #000;
+  overflow-wrap: anywhere;
+}
+.item-details > .classic-item-tooltip {
+  margin-top: 8px;
+}
+.classic-item-tooltip .classic-item-name {
+  display: block;
+  font-size: 16px;
+  line-height: 1.4;
+  margin-bottom: 3px;
+  font-weight: 600;
+}
+.classic-item-name.quality-0 {
+  color: #9d9d9d;
+}
+.classic-item-name.quality-1 {
+  color: #fff;
+}
+.classic-item-name.quality-2 {
+  color: #1eff00;
+}
+.classic-item-name.quality-3 {
+  color: #0070dd;
+}
+.classic-item-name.quality-4 {
+  color: #a335ee;
+}
+.classic-item-name.quality-5 {
+  color: #ff8000;
+}
+.classic-item-pair {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+}
+.classic-item-muted {
+  color: #9d9d9d;
+}
+.classic-item-tooltip .item-effect {
+  color: #1eff00;
+}
+.classic-item-tooltip .item-flavor {
+  color: #ffd100;
+}
+.classic-item-set {
+  margin-top: 12px;
+  color: #ffd100;
+}
+.classic-item-set > span {
+  display: block;
+}
+.classic-item-sell {
+  margin-top: 10px;
+  color: #fff;
+}

@@ -75,7 +75,8 @@ function applySpell(s,e,target,sp,actors,hurt,ancestors=[]){
    }
    if(schoolImmune(unit,sp.School,s.clock)){log(s,`${unit.name} 免疫了 ${name}`,'miss',{actorId:e.id,targetId:unit.id,spellId:sp.Id});continue;}
    const amount=roll(s,...effectRange(e,sp,n))*(sp['EffectChainTarget'+n]>1?Math.pow(sp['DmgMultiplier'+n]||1,jump):1);
-   if(effect===2||effect===17||effect===58){
+   if(effect===1&&unit===e){e.hp=0;e.cast=null;}
+   else if(effect===2||effect===17||effect===58){
     let damage=amount;if(effect===17||effect===58)damage+=roll(s,Math.floor(e.low),Math.ceil(e.high))+physicalDamageBonus(e,s.clock);
     if(sp.School===0)damage*=1-armorReduction(stats(unit).armor,e.level);
     for(const aura of e.auras||[])if(aura.until>s.clock&&aura.type===79&&(aura.misc&(1<<sp.School)))damage*=1+aura.amount/100;
@@ -133,6 +134,14 @@ export function tickEnemyAuras(s,actors,hurt){
  s.groundEffects=(s.groundEffects||[]).filter(a=>a.until>s.clock);
  for(const unit of [...actors,...(s.combat?.enemies||[])]){
   if(unit.hp<=0){unit.auras=[];continue;}
+  // NPC periodic trigger auras (for example Herod's Whirlwind) use the same
+  // spell effects and radius checks as their ordinary casts.
+  for(const aura of [...(unit.auras||[])])if(aura.type===23&&aura.interval&&aura.trigger){
+   const caster=s.combat?.enemies.find(e=>e.id===aura.caster&&e.hp>0&&!e.removed);
+   if(!caster)continue;
+   const spell=enemySpellInfo(caster,aura.trigger);if(!spell)continue;
+   while(aura.next<=s.clock&&aura.next<=aura.until&&unit.hp>0){applySpell(s,caster,unit,spell,actors,hurt,[aura.spell]);aura.next+=aura.interval;}
+  }
   for(const aura of unit.auras||[])if(aura.type===3&&aura.interval){
    while(aura.next<=s.clock&&aura.next<=aura.until&&unit.hp>0){
     const caster=s.combat?.enemies.find(e=>e.id===aura.caster)||{id:aura.caster,name:aura.casterName};

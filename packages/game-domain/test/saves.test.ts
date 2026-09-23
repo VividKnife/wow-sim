@@ -1,3 +1,4 @@
+import {racialHomes} from '../../game-data/world-content.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
@@ -49,14 +50,14 @@ test('boost grants 50 gold, legal quest equipment, four runecloth bags, full res
  for(const c of classDefinitions)for(const raceId of c.races){
   const {id}=await service.createSave(`user-${c.id}-${raceId}`,{...input,classId:c.id,raceId,boost:true},'boost-save');
   const snapshot=await service.snapshot(id),s=snapshot.state;
-  assert.equal(s.level,20);assert.equal(s.xp,0);assert.equal(s.money,LEVEL_20_BOOST_MONEY);assert.equal(s.location,'goldshire');
+  assert.equal(s.level,20);assert.equal(s.xp,0);assert.equal(s.money,LEVEL_20_BOOST_MONEY);assert.equal(s.location,racialHomes[raceId as keyof typeof racialHomes].capital);
   assert.equal(s.bags.length,4);assert.ok(s.bags.every((i:any)=>i.id===14046));assert.equal(bagCapacity(s),72);
   assert.deepEqual(s.mounts,[boostMount.id]);assert.equal(s.riding.horse,true);
   assert.equal(mountView(s).collection.find(m=>m.id===boostMount.id)!.canMount,true);
-  const walking=travelRoute(s,'northshire');
+  const destination=racialHomes[raceId as keyof typeof racialHomes].start;const walking=travelRoute(s,destination);
   beginMount(s,boostMount.id);s.clock=s.activity.endsAt;finishMount(s);
   assert.equal(s.mounted,boostMount.id);
-  assert.ok(travelRoute(s,'northshire').duration<walking.duration);
+  assert.ok(travelRoute(s,destination).duration<walking.duration);
   assert.equal(s.hp,stats(s).maxHp);assert.equal(s.mana,stats(s).maxMana);
   assert.equal(partyUnlocked(s),true);assert.equal(s.quests[900001],undefined);assert.equal(s.party.length,0);assert.equal(snapshot.roster.length,1);
   assert.deepEqual(s.talents,{});

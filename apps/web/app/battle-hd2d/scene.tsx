@@ -1,4 +1,4 @@
-import {Suspense,useCallback,useEffect,useLayoutEffect} from 'react';
+import {memo,Suspense,useCallback,useEffect,useLayoutEffect} from 'react';
 import {Canvas,useThree} from '@react-three/fiber';
 import {useGLTF,useTexture} from '@react-three/drei';
 import {groundTexture,spriteAppearance} from '@/lib/battle-hd2d.js';
@@ -14,9 +14,12 @@ import {BattleEffects} from './effects';
 export function clearBattleAssets(scene:BattleScene){
  const urls=new Set([groundTexture(scene.ground),'/battle/hd2d/characters.png','/battle/hd2d/forms.png',...scene.units.map(unit=>spriteAppearance(unit,scene.clock).src)]);
  for(const url of urls)useTexture.clear(url);
- for(const unit of scene.units)if(unit.visual?.model)useGLTF.clear(unit.visual.model.src);
+ for(const unit of scene.units)if(unit.visual?.model){const model=unit.visual.model;useGLTF.clear(model.src);useGLTF.clear((model.attachments||[]).map(a=>a.src));useTexture.clear(Object.values(model.textures||{}));}
 }
 function LoadingSignal({onLoading}:{onLoading:()=>void}){useLayoutEffect(onLoading,[onLoading]);return null;}
+const PostEffects=memo(function PostEffects(){
+ return <EffectComposer multisampling={0}><Bloom luminanceThreshold={.8} intensity={.35} mipmapBlur/><DepthOfField target={[0,0,0]} focusRange={16} bokehScale={1.2} height={360}/></EffectComposer>;
+});
 function Lifecycle({low,visible,onReady,onLost}:{low:boolean;visible:boolean;onReady:()=>void;onLost:()=>void}){
  const {gl,invalidate}=useThree();
  // Layout effects are reconnected when Suspense reveals a newly loaded terrain or creature.
@@ -37,7 +40,7 @@ export default function BattleCanvas({scene,skills,onSelect,visible,onReady,onLo
     <BattleObstacles layout={scene.layout}/>
     {scene.units.map(unit=><BattleUnit key={`${scene.encounterId}:${unit.id}`} unit={unit} scene={scene} skills={skills} onSelect={onSelect}/>)}
     <BattleEffects scene={scene}/>
-    {!scene.lowEffects&&<EffectComposer multisampling={0}><Bloom luminanceThreshold={.8} intensity={.35} mipmapBlur/><DepthOfField target={[0,0,0]} focusRange={16} bokehScale={1.2} height={360}/></EffectComposer>}
+    {!scene.lowEffects&&<PostEffects/>}
     <Lifecycle low={scene.lowEffects} visible={visible} onReady={onReady} onLost={onLost}/>
    </Suspense>
   </BattleFrames>

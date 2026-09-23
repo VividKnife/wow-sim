@@ -40,6 +40,8 @@ test('cancelled escort cannot later award completion and split advances preserve
 test('priest heals an injured escort during real combat and the escort deals melee damage',()=>{
  let s=act(ready(),{type:'escortStart'},0);
  s.activity={type:'idle'};startCombat(s,[589]);s.escort.npc.hp=80;
+ // Keep the encounter alive long enough to observe escort movement and its swing, independent of recruited gear.
+ for(const enemy of s.combat.enemies)enemy.hp=enemy.maxHp=3000;
  let healed=false,attacked=false;
  for(let i=0;s.combat&&i<300;i++){
   s=advance(s,s.wallAt+100).state;

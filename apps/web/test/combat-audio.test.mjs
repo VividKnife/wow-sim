@@ -29,6 +29,13 @@ function harness(options={}){
  },...options});
  return {player,voices,advance:ms=>time+=ms};
 }
+
+test('volume changes apply to active voices and clamp invalid settings',()=>{
+ const {player,voices}=harness();player.setActive(true);player.setEnabled(true);player.setVolume(.5);
+ player.play('fire-cast');player.play('melee-swing');assert.equal(voices[0].volume,.11);assert.equal(voices[1].volume,.06);
+ player.setVolume(2);assert.equal(voices[0].volume,.22);assert.equal(voices[1].volume,.12);
+ player.setVolume(NaN);assert.ok(voices.every(v=>v.volume===0));player.dispose();
+});
 test('audio is opt-in, voice-limited, rate-limited and fully stopped by mute or close',()=>{
  const {player,voices,advance}=harness();
  player.play('fire-cast');assert.equal(voices.length,0);

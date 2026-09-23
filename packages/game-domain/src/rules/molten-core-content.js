@@ -74,7 +74,7 @@ export function raidRouteLock(r,id){
 }
 export function raidMapView(s,r,canNavigate){
  const plan=r.destination?raidRoutePlan(r,r.destination):[];
- return {id:'molten-core',name:'熔火之心',locationId:r.locationId,destination:r.destination,path:plan,autoAdvance:r.autoAdvance,canFullClear:canNavigate&&route.some(n=>!r.cleared.includes(n.id)&&!r.clearedPacks.includes(n.id)),navigateReason:canNavigate?'':'请先结束战斗、休整或拍卖，并领取战利品。',map:moltenCoreMap,
+ return {id:'molten-core',name:'熔火之心',locationId:r.locationId,destination:r.destination,path:plan,autoAdvance:r.autoAdvance,canFullClear:canNavigate&&route.some(n=>!r.cleared.includes(n.id)&&!r.clearedPacks.includes(n.id)),navigateReason:canNavigate?'':'请先结束战斗或休整，并处理待领取战利品。',map:moltenCoreMap,
  route:route.map(n=>{const cleared=(n.kind==='boss'?r.cleared:r.clearedPacks).includes(n.id),lock=raidRouteLock(r,n.id);return {...n,status:cleared?'cleared':s.combat?.raidEncounter?.id===n.id?'current':'ahead',bossIds:n.kind==='boss'?[moltenCoreBosses.find(b=>b.id===n.id).entry]:[],quests:[],enemies:n.types?.map(t=>moltenCoreTrash[t])||[],path:moltenCorePath(r.locationId,n.id),canNavigate:canNavigate&&!cleared&&!lock,navigateReason:lock};})};
 }
 

@@ -4,7 +4,7 @@ import {createGame,act,advance,view} from '../../../packages/game-domain/src/rul
 import {stats} from '../../../packages/game-domain/src/rules/character.js';
 import {petSpellTick} from '../../../packages/game-domain/src/rules/class-spell-effects.js';
 import {spells} from '../../../packages/game-domain/src/rules/catalog.js';
-const game=()=>{const s=createGame('trainer',7,0,{classId:3,raceId:2});s.level=60;s.money=10000000;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rules=[];return s;};
+const game=()=>{const s=createGame('trainer',7,0,{classId:3,raceId:3});s.location='northshire';s.level=60;s.money=10000000;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rules=[];return s;};
 test('public trainer to tame to pet training preserves actual acquired Growl without unlocking wild skills',()=>{
  let s=game();for(const id of[1515,883,5149,1853])if(!s.learned.includes(id))s=act(s,{type:'train',id},s.wallAt);
  s=act(s,{type:'cast',id:1515,target:'npc:299'},s.wallAt);s=advance(s,s.wallAt+25000).state;assert.equal(s.pet.entry,299);assert.ok(s.pet.availableSkills.includes(2649));assert.ok(!s.pet.learned.includes(2649));assert.ok(!s.pet.availableSkills.includes(24597),'wild Furious Howl was never acquired');

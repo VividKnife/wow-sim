@@ -1,0 +1,356 @@
+{
+  "source": "https://github.com/TheGrayDot/wow-vanilla-world-coords/blob/a89f74022f5737295dc805640a35f7b0f770fb40/worldmaparea.csv",
+  "sha256": "fc2a2a99e51d755036a0c45ff9e1833465efe7be878db4c5f96dc05b5b2b5ebc",
+  "regions": {
+    "艾尔文": {
+      "name": "艾尔文",
+      "image": "/maps/elwynn-classic.jpg",
+      "bounds": [
+        1535.4166,
+        -1935.4166,
+        -7939.583,
+        -10254.166
+      ]
+    },
+    "西部荒野": {
+      "name": "西部荒野",
+      "image": "/maps/westfall-classic.jpg",
+      "bounds": [
+        3016.6665,
+        -483.3333,
+        -9400.0,
+        -11733.333
+      ]
+    },
+    "丹莫罗": {
+      "name": "丹莫罗",
+      "image": "/maps/dun-morogh-classic.jpg",
+      "bounds": [
+        1802.0833,
+        -3122.9165,
+        -3877.0833,
+        -7160.4165
+      ]
+    },
+    "洛克莫丹": {
+      "name": "洛克莫丹",
+      "image": "/maps/loch-modan-classic.jpg",
+      "bounds": [
+        -1993.7499,
+        -4752.083,
+        -4487.5,
+        -6327.083
+      ]
+    },
+    "赤脊山": {
+      "name": "赤脊山",
+      "image": "/maps/redridge-mountains-classic.jpg",
+      "bounds": [
+        -1570.8333,
+        -3741.6665,
+        -8575.0,
+        -10022.916
+      ]
+    },
+    "暮色森林": {
+      "name": "暮色森林",
+      "image": "/maps/duskwood-classic.jpg",
+      "bounds": [
+        833.3333,
+        -1866.6666,
+        -9716.666,
+        -11516.666
+      ]
+    },
+    "湿地": {
+      "name": "湿地",
+      "image": "/maps/wetlands-classic.jpg",
+      "bounds": [
+        -389.5833,
+        -4525.0,
+        -2147.9165,
+        -4904.1665
+      ]
+    },
+    "泰达希尔": {
+      "name": "泰达希尔",
+      "image": "/maps/teldrassil-classic.jpg",
+      "bounds": [
+        3814.5833,
+        -1277.0833,
+        11831.25,
+        8437.5
+      ]
+    },
+    "黑海岸": {
+      "name": "黑海岸",
+      "image": "/maps/darkshore-classic.jpg",
+      "bounds": [
+        2941.6665,
+        -3608.3333,
+        8333.333,
+        3966.6665
+      ]
+    },
+    "杜隆塔尔": {
+      "name": "杜隆塔尔",
+      "image": "/maps/durotar-classic.jpg",
+      "bounds": [
+        -1962.4999,
+        -7249.9995,
+        1808.3333,
+        -1716.6666
+      ]
+    },
+    "莫高雷": {
+      "name": "莫高雷",
+      "image": "/maps/mulgore-classic.jpg",
+      "bounds": [
+        2047.9166,
+        -3089.5833,
+        -272.91666,
+        -3697.9165
+      ]
+    },
+    "提瑞斯法林地": {
+      "name": "提瑞斯法林地",
+      "image": "/maps/tirisfal-glades-classic.jpg",
+      "bounds": [
+        3033.3333,
+        -1485.4166,
+        3837.4998,
+        824.99994
+      ]
+    },
+    "银松森林": {
+      "name": "银松森林",
+      "image": "/maps/silverpine-forest-classic.jpg",
+      "bounds": [
+        3449.9998,
+        -750.0,
+        1666.6666,
+        -1133.3333
+      ]
+    },
+    "贫瘠之地": {
+      "name": "贫瘠之地",
+      "image": "/maps/barrens-classic.jpg",
+      "bounds": [
+        2622.9165,
+        -7510.4165,
+        1612.4999,
+        -5143.75
+      ]
+    },
+    "石爪山脉": {
+      "name": "石爪山脉",
+      "image": "/maps/stonetalon-mountains-classic.jpg",
+      "bounds": [
+        3245.8333,
+        -1637.4999,
+        2916.6665,
+        -339.5833
+      ]
+    },
+    "灰谷": {
+      "name": "灰谷",
+      "image": "/maps/ashenvale-classic.jpg",
+      "bounds": [
+        1699.9999,
+        -4066.6665,
+        4672.9165,
+        829.1666
+      ]
+    },
+    "希尔斯布莱德丘陵": {
+      "name": "希尔斯布莱德丘陵",
+      "image": "/maps/hillsbrad-foothills-classic.jpg",
+      "bounds": [
+        1066.6666,
+        -2133.3333,
+        400.0,
+        -1733.3333
+      ]
+    },
+    "千针石林": {
+      "name": "千针石林",
+      "image": "/maps/thousand-needles-classic.jpg",
+      "bounds": [
+        -433.3333,
+        -4833.333,
+        -3966.6665,
+        -6899.9995
+      ]
+    },
+    "阿拉希高地": {
+      "name": "阿拉希高地",
+      "image": "/maps/arathi-highlands-classic.jpg",
+      "bounds": [
+        -866.6666,
+        -4466.6665,
+        -133.33333,
+        -2533.3333
+      ]
+    },
+    "凄凉之地": {
+      "name": "凄凉之地",
+      "image": "/maps/desolace-classic.jpg",
+      "bounds": [
+        4233.333,
+        -262.5,
+        452.0833,
+        -2545.8333
+      ]
+    },
+    "荆棘谷": {
+      "name": "荆棘谷",
+      "image": "/maps/stranglethorn-vale-classic.jpg",
+      "bounds": [
+        2220.8333,
+        -4160.4165,
+        -11168.75,
+        -15422.916
+      ]
+    },
+    "荒芜之地": {
+      "name": "荒芜之地",
+      "image": "/maps/badlands-classic.jpg",
+      "bounds": [
+        -2079.1665,
+        -4566.6665,
+        -5889.583,
+        -7547.9165
+      ]
+    },
+    "悲伤沼泽": {
+      "name": "悲伤沼泽",
+      "image": "/maps/swamp-of-sorrows-classic.jpg",
+      "bounds": [
+        -2222.9165,
+        -4516.6665,
+        -9620.833,
+        -11150.0
+      ]
+    },
+    "尘泥沼泽": {
+      "name": "尘泥沼泽",
+      "image": "/maps/dustwallow-marsh-classic.jpg",
+      "bounds": [
+        -974.99994,
+        -6225.0,
+        -2033.3333,
+        -5533.333
+      ]
+    },
+    "奥特兰克山脉": {
+      "name": "奥特兰克山脉",
+      "image": "/maps/alterac-mountains-classic.jpg",
+      "bounds": [
+        783.3333,
+        -2016.6666,
+        1500.0,
+        -366.66666
+      ]
+    },
+    "塔纳利斯": {
+      "name": "塔纳利斯",
+      "image": "/maps/tanaris-classic.jpg",
+      "bounds": [
+        -218.74998,
+        -7118.7495,
+        -5875.0,
+        -10475.0
+      ]
+    },
+    "菲拉斯": {
+      "name": "菲拉斯",
+      "image": "/maps/feralas-classic.jpg",
+      "bounds": [
+        5441.6665,
+        -1508.3333,
+        -2366.6665,
+        -6999.9995
+      ]
+    },
+    "辛特兰": {
+      "name": "辛特兰",
+      "image": "/maps/hinterlands-classic.jpg",
+      "bounds": [
+        -1575.0,
+        -5425.0,
+        1466.6666,
+        -1100.0
+      ]
+    },
+    "月光林地": {
+      "name": "月光林地",
+      "image": "/maps/moonglade-classic.jpg",
+      "bounds": [
+        -1381.25,
+        -3689.5833,
+        8491.666,
+        6952.083
+      ]
+    },
+    "铁炉堡": {
+      "name": "铁炉堡",
+      "image": "/maps/ironforge-classic.jpg",
+      "bounds": [
+        -713.5914,
+        -1504.2164,
+        -4569.241,
+        -5096.8457
+      ]
+    },
+    "达纳苏斯": {
+      "name": "达纳苏斯",
+      "image": "/maps/darnassus-classic.jpg",
+      "bounds": [
+        2938.3628,
+        1880.0295,
+        10238.316,
+        9532.587
+      ]
+    },
+    "奥格瑞玛": {
+      "name": "奥格瑞玛",
+      "image": "/maps/orgrimmar-classic.jpg",
+      "bounds": [
+        -3680.601,
+        -5083.2056,
+        2273.8772,
+        1338.4606
+      ]
+    },
+    "雷霆崖": {
+      "name": "雷霆崖",
+      "image": "/maps/thunder-bluff-classic.jpg",
+      "bounds": [
+        516.6666,
+        -527.0833,
+        -849.99994,
+        -1545.8333
+      ]
+    },
+    "幽暗城": {
+      "name": "幽暗城",
+      "image": "/maps/undercity-classic.jpg",
+      "bounds": [
+        873.1926,
+        -86.1824,
+        1877.9453,
+        1237.8412
+      ]
+    },
+    "暴风城": {
+      "name": "暴风城",
+      "image": "/maps/stormwind-classic.jpg",
+      "bounds": [
+        1380.9714,
+        36.70063,
+        -8278.851,
+        -9175.205
+      ]
+    }
+  }
+}

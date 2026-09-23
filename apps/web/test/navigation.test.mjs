@@ -1,3 +1,4 @@
+import {flightNodes} from '../../../packages/game-domain/src/rules/catalog.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,view} from '../../../packages/game-domain/src/rules/engine.js';
@@ -102,7 +103,7 @@ test('navigation rejects inactive quests and cannot interrupt travel or combat',
 
 test('map identifies every flight point and reflects discovery without unlocking it remotely',()=>{
  const s=createGame('地图',11,0);s.flightPoints=['stormwind'];const d=view(s);
- assert.deepEqual(d.map.filter(n=>n.hasFlight).map(n=>n.id).sort(),['sentinel','stormwind']);
+ assert.deepEqual(d.map.filter(n=>n.hasFlight).map(n=>n.id).sort(),[...flightNodes].sort());
  assert.equal(d.map.find(n=>n.id==='stormwind').flightUnlocked,true);
  assert.equal(d.map.find(n=>n.id==='sentinel').flightUnlocked,false);
  assert.throws(()=>act(s,{type:'unlockFlight'},0),/飞行管理员/);

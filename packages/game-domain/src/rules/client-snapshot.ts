@@ -11,8 +11,8 @@ const playerKeys = [
 
 const viewKeys = [
   'npcWorld','groupLoot',
-  'arena',
-  'goldRaid','guildRaid','partyUnlocked','battleView','reincarnation','canSoulstoneRevive','skillUsesByTarget','environment','trackingKind','trackedTreasures','lockpicking',
+  'arena','pvp','battleground',
+  'raidCommand','goldRaid','guildRaid','partyUnlocked','battleView','reincarnation','canSoulstoneRevive','skillUsesByTarget','environment','trackingKind','trackedTreasures','lockpicking',
   'trackedTargets','scouting','lockTargets','petControls','classPortals','skillUses','itemUses','itemBuffs','professions','professionRecipeCount','canTrainProfession',
   'resources','disenchantable','className','raceName','faction','resource','raceTraits','talentTrees','talentResetCost','canResetTalents',
   'talentResetBlockedReason','bankCapacity','bankHere','bankUpgradeCost','inventoryActions','escort','escortNpc','hearthstone','mounts',

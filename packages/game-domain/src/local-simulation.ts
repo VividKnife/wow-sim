@@ -41,6 +41,9 @@ export async function guardLocalCommand(service: GameService, tx: ReadView, cId:
     const owner = lease ? await tx.get<Owner>(lease.kind === 'instance' ? 'instances' : 'activities', lease.ownerId) : null;
     const local = owner?.localSimulation;
     if (!local || cmd.type === 'unstuck') return;
+    // A finished or released browser session has no owner. Keep the tombstone
+    // to fence late checkpoints, but allow a fresh command without credentials.
+    if (!local.id && !cmd.localSessionId && !cmd.localClientId) return;
     requireThat(local.expiresAt <= now || local.clientId === cmd.localClientId, 'LOCAL_HELD', '此角色正在另一个页面中冒险，请先在该页面暂停或关闭它');
     requireThat(cmd.localSessionId === local.id && cmd.localClientId === local.clientId, 'LOCAL_SYNC_REQUIRED', '请先同步本地冒险进度后再操作');
 }

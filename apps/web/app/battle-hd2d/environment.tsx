@@ -1,4 +1,4 @@
-import {useEffect,useMemo,useRef} from 'react';
+import {memo,useEffect,useMemo,useRef} from 'react';
 import {useFrame} from '@react-three/fiber';
 import {useTexture} from '@react-three/drei';
 import {BufferGeometry,Float32BufferAttribute,Mesh,NearestFilter,Points,RepeatWrapping,SRGBColorSpace} from 'three';
@@ -48,7 +48,7 @@ function Atmosphere({theme,low}:{theme:Theme;low:boolean}){
  return <points ref={points} geometry={geometry}><pointsMaterial color={theme.accent} size={.055} transparent opacity={.55} depthWrite={false} sizeAttenuation/></points>;
 }
 
-export function Environment({ground,low,reduced}:{ground:string;low:boolean;reduced:boolean}){
+export const Environment=memo(function Environment({ground,low,reduced}:{ground:string;low:boolean;reduced:boolean}){
  const theme=groundTheme(ground),original=useTexture(groundTexture(ground));
  const texture=useMemo(()=>{const t=original.clone();t.wrapS=t.wrapT=RepeatWrapping;t.repeat.set(5,4);t.colorSpace=SRGBColorSpace;t.magFilter=NearestFilter;t.needsUpdate=true;return t;},[original]);
  useEffect(()=>()=>texture.dispose(),[texture]);
@@ -71,4 +71,4 @@ export function Environment({ground,low,reduced}:{ground:string;low:boolean;redu
   <Lantern x={-14} z={-8} theme={theme}/><Lantern x={15} z={-9} theme={theme}/>
   {!reduced&&<Atmosphere theme={theme} low={low}/>}
  </>;
-}
+});

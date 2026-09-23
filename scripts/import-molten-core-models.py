@@ -235,6 +235,9 @@ def convert(display, meta, out=None, url_root='/creatures/molten-core', animatio
             continue
         kind = unpack(m,p,'I')[0]
         texture_id = (meta.get('Textures') or {}).get(str(kind)) if kind else txids[i]
+        if not texture_id and kind in meta.get('_emptyTextureSlots',[]):
+            texture_indices.append(None)
+            continue
         assert texture_id, f'Unresolved texture {display}:{kind}'
         raw = Path(texture_id).read_bytes() if isinstance(texture_id,str) and Path(texture_id).is_file() else resource(f'textures/{texture_id}.webp')
         im = Image.open(io.BytesIO(raw)).convert('RGBA'); encoded = io.BytesIO(); im.save(encoded,format='PNG')
@@ -250,7 +253,10 @@ def convert(display, meta, out=None, url_root='/creatures/molten-core', animatio
         start,n = unpack(skin,sp+8,'HH');start += unpack(skin,sp+2,'H')[0]<<16
         if not n: continue
         flags,blend = materials[mat]
-        material = {'name':f'material_{section}_{mat}','pbrMetallicRoughness':{
+        texture_slot=lookup[combo]
+        if texture_indices[texture_slot] is None:continue
+        texture_kind=unpack(m,array(m,80,16)[texture_slot],'I')[0]
+        material = {'name':f'material_{section}_{mat}','extras':{'classicGeoset':unpack(skin,sp,'H')[0],'classicTextureType':texture_kind,'classicBlend':blend},'pbrMetallicRoughness':{
             'baseColorTexture':{'index':texture_indices[lookup[combo]]},'metallicFactor':0,'roughnessFactor':1},
             'doubleSided':bool(flags&4),'alphaMode':'OPAQUE' if blend==0 else 'MASK' if blend==1 else 'BLEND'}
         if blend==1:material['alphaCutoff']=.5
@@ -313,7 +319,7 @@ def convert(display, meta, out=None, url_root='/creatures/molten-core', animatio
                 clip['channels'].append({'sampler':len(clip['samplers'])-1,'target':{'node':bi+1,'path':kind}})
         if clip['channels']:
             glb.doc['animations'].append(clip);clips.append(animation['id'])
-    assert primitives and (meta.get('Item') or clips and 0 in clips)
+    assert primitives and (meta.get('Item') or meta.get('_staticModel') or clips and 0 in clips)
     path=out/f'{display}.glb'
     sha=glb.write(path)
     height=max(v[1] for v in positions)-min(v[1] for v in positions)

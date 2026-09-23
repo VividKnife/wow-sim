@@ -6,11 +6,11 @@ import {Command,CommandInput,CommandList,CommandEmpty,CommandItem} from '@/compo
 import {Icon} from './game-ui';
 
 type Skill={spellId:number;name:string;nameEn:string;icon:string;rank:string};
-export function StrategySkillPicker({skills,value,label,onChange}:{skills:Skill[];value:number;label:string;onChange:(id:number)=>void}){
+export function StrategySkillPicker({skills,value,label,onChange,disabled=false}:{skills:Skill[];value:number;label:string;onChange:(id:number)=>void;disabled?:boolean}){
  const [open,setOpen]=useState(false);
  const selected=skills.find(skill=>skill.spellId===value);
  return <Popover open={open} onOpenChange={setOpen}>
-  <PopoverTrigger asChild><Button variant="outline" role="combobox" aria-label={label} aria-expanded={open} className="strategy-skill-trigger" disabled={!skills.length}>
+  <PopoverTrigger asChild><Button variant="outline" role="combobox" aria-label={label} aria-expanded={open} className="strategy-skill-trigger" disabled={disabled||!skills.length}>
    {selected&&<Icon src={selected.icon} name={selected.name} size={28}/>}
    <span>{selected?.name||'选择已学技能'} <small>{selected?.rank}</small></span><span aria-hidden="true">⌄</span>
   </Button></PopoverTrigger>

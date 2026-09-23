@@ -22,6 +22,9 @@ export class LocalSimulationClient {
   private commandPending=0;
   private capture:((state:any)=>void)|null=null;
   private captureReject:((reason:Error)=>void)|null=null;
+  private captureId:string|null=null;
+  private captureProgress:((wallAt:number)=>void)|null=null;
+  private failure:Error|null=null;
   private failed=false;
   private suspended=false;
   private observedSession:string|null=null;
@@ -36,9 +39,12 @@ export class LocalSimulationClient {
       if (data.type==='full') {
         this.behindMs=data.behindMs;
         this.snapshot=data.snapshot;this.options.onFull(data.snapshot);
-        this.options.onStatus(data.behindMs>2000?'正在结算离线冒险…':'');
+        this.options.onStatus(data.behindMs>2000?(this.commandPending?'正在结算离线冒险，完成后自动执行操作…':'正在结算离线冒险…'):'');
       }
-      if (data.type==='checkpoint') {this.capture?.(data.state);this.capture=null;this.captureReject=null;}
+      if (data.requestId===this.captureId) {
+        if (data.type==='checkpointProgress')this.captureProgress?.(data.wallAt);
+        if (data.type==='checkpoint')this.capture?.(data.state);
+      }
       if (data.type==='boundary') this.schedule(500);
       if (data.type==='error') this.fail(new Error(data.error));
     };
@@ -46,7 +52,7 @@ export class LocalSimulationClient {
     this.worker.postMessage({type:'visibility',...this.presentation});
   }
   private fail(error:Error) {
-    this.failed=true;clearTimeout(this.timer);this.captureReject?.(error);this.capture=null;this.captureReject=null;
+    this.failed=true;this.failure=error;clearTimeout(this.timer);this.captureReject?.(error);
     this.options.onStatus(error.message);
   }
   get active() {return !!this.session;}
@@ -113,7 +119,7 @@ export class LocalSimulationClient {
     }).catch(error=>this.report(error)),ms);
   }
   private clear() {
-    this.captureReject?.(new Error('本地会话已更新，请重试操作'));this.capture=null;this.captureReject=null;
+    this.captureReject?.(new Error('本地会话已更新，请重试操作'));
     clearTimeout(this.timer);this.worker?.postMessage({type:'stop'});this.session=null;this.snapshot=null;this.pending=null;publishLocalCombat(null);
     if(!this.stopped)this.options.onStatus('');
   }
@@ -124,10 +130,17 @@ export class LocalSimulationClient {
     clearTimeout(this.timer);
     if(!this.pending) {
       const state=await new Promise<any>((resolve,reject)=>{
-        if(this.failed){reject(new Error('本地战斗引擎已停止，请刷新页面'));return;}
-        const timeout=setTimeout(()=>{this.capture=null;this.captureReject=null;reject(new Error('本地战斗引擎响应超时，请刷新页面'));},15000);
-        this.capture=s=>{clearTimeout(timeout);resolve(s);};this.captureReject=e=>{clearTimeout(timeout);reject(e);};
-        this.worker!.postMessage({type:'checkpoint',pause,requestId:crypto.randomUUID()});
+        if(this.failed){reject(this.failure||new Error('本地战斗引擎已停止，请刷新页面'));return;}
+        const requestId=crypto.randomUUID();let lastProgress=-Infinity;
+        let timeout:ReturnType<typeof setTimeout>;
+        const cleanup=()=>{clearTimeout(timeout);this.capture=null;this.captureReject=null;this.captureProgress=null;this.captureId=null;};
+        const arm=()=>{clearTimeout(timeout);timeout=setTimeout(()=>{cleanup();reject(new Error('本地战斗引擎响应超时，请刷新页面'));},15000);};
+        this.captureId=requestId;
+        this.capture=s=>{cleanup();resolve(s);};this.captureReject=e=>{cleanup();reject(e);};
+        // Long offline fights may take several slices. Renew only on actual
+        // simulation progress, so a hung Worker still times out.
+        this.captureProgress=wallAt=>{if(wallAt>lastProgress){lastProgress=wallAt;arm();}};
+        arm();this.worker!.postMessage({type:'checkpoint',pause,requestId,generation:this.session.session.id});
       });
       this.pending={type:'checkpoint',ownerId:this.session.ownerId,characterId:this.session.characterId,contentVersion:this.session.contentVersion,
         clientId:this.clientId,sessionId:this.session.session.id,sequence:this.session.session.sequence+1,state,requestId:crypto.randomUUID()};
@@ -149,7 +162,8 @@ export class LocalSimulationClient {
     try{return await this.enqueue(async()=>{
       clearTimeout(this.timer);
       if(!this.session&&this.desired)await this.claim();
-      if(this.session&&this.behindMs>2000)throw Object.assign(new Error('正在结算离线冒险，请稍后操作'),{status:409});
+      if(this.failed)throw this.failure||new Error('本地战斗引擎已停止，请刷新页面');
+      if(this.session&&this.behindMs>2000)this.options.onStatus('正在结算离线冒险，完成后自动执行操作…');
       await this.checkpoint(true);
       const credentials=this.session?{localClientId:this.clientId,localSessionId:this.session.session.id}:{};
       try{return await execute(credentials,command=>remapItemReferences(structuredClone(command),this.itemIds));}finally{this.clear();}

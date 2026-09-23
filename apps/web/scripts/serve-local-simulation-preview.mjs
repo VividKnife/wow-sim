@@ -7,6 +7,7 @@ import {MemoryStore} from '../../../packages/persistence/src/memory.ts';
 import {GameService} from '../../../packages/game-domain/src/service.ts';
 import {buildGameResponse} from '../../../packages/game-domain/src/rules/server-response.js';
 import {clientContent,CONTENT_VERSION} from '../../../packages/game-domain/src/rules/client-content.js';
+import {contentPack} from '../../../packages/game-domain/src/rules/content-packs.js';
 const app=fileURLToPath(new URL('../',import.meta.url));
 const store=new MemoryStore(),service=new GameService(store,{contentVersion:CONTENT_VERSION,seed:()=>60325});
 const raid=await service.createSave('preview',{name:'本地远征',classId:8,raceId:1,raidReady:true},'raid');
@@ -23,7 +24,7 @@ const api={name:'local-simulation-preview',configureServer(server){server.middle
   const url=new URL(req.url,'http://localhost'),accountId=url.searchParams.get('saveId')||raid.id;
   res.setHeader('content-type','application/json');res.setHeader('cache-control','no-store');
   let data;
-  if(url.pathname==='/api/game/content')data=clientContent();
+  if(url.pathname==='/api/game/content')data=contentPack(clientContent(),url.searchParams);
   else if(url.pathname==='/api/metrics')data={claims,checkpoints,commands,workerCommits};
   else if(url.pathname==='/api/game/local'){
    let body='';for await(const chunk of req)body+=chunk;
@@ -37,7 +38,7 @@ const api={name:'local-simulation-preview',configureServer(server){server.middle
    const {state,revision,...extra}=snapshot;data=buildGameResponse(state,revision,extra);
   } else {res.statusCode=404;data={error:'未实现的预览接口'};}
   res.end(JSON.stringify(data));
- })().catch(error=>{res.statusCode=error.status||500;res.end(JSON.stringify({error:error.message,code:error.code}));});
+ })().catch(error=>{console.warn('Local simulation preview request failed:',req.method,req.url,error.message);res.statusCode=error.status||500;res.end(JSON.stringify({error:error.message,code:error.code}));});
  });}};
 const server=await createServer({configFile:false,root:app+'test/browser',publicDir:app+'public',plugins:[react(),api],resolve:{alias:{'@':app}},css:{postcss:{plugins:[tailwind()]}},server:{hmr:false,host:'127.0.0.1',port:Number(process.env.PREVIEW_PORT||5192),strictPort:true,fs:{allow:[fileURLToPath(new URL('../../../',import.meta.url))]}}});
 await server.listen();

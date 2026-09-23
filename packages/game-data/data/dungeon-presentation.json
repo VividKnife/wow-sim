@@ -1,0 +1,374 @@
+{
+  "revision": "b852b560442b31579e77ef3967b3c2d594832da8",
+  "copyright": "Blizzard Entertainment artwork; source client snapshot 1.13.2.",
+  "dungeons": {
+    "wailing-caverns": {
+      "background": "/journal/dungeons/wailing-caverns.webp"
+    },
+    "deadmines": {
+      "background": "/journal/dungeons/deadmines.webp"
+    },
+    "stockades": {
+      "background": "/journal/dungeons/stockades.webp"
+    },
+    "blackfathom-deeps": {
+      "background": "/journal/dungeons/blackfathom-deeps.webp"
+    },
+    "shadowfang-keep": {
+      "background": "/journal/dungeons/shadowfang-keep.webp"
+    },
+    "ragefire-chasm": {
+      "background": "/journal/dungeons/ragefire-chasm.webp"
+    },
+    "gnomeregan": {
+      "background": "/journal/dungeons/gnomeregan.webp"
+    },
+    "razorfen-kraul": {
+      "background": "/journal/dungeons/razorfen-kraul.webp"
+    },
+    "scarlet-monastery-graveyard": {
+      "background": "/journal/dungeons/scarlet-monastery-graveyard.webp"
+    },
+    "scarlet-monastery-library": {
+      "background": "/journal/dungeons/scarlet-monastery-library.webp"
+    },
+    "scarlet-monastery-armory": {
+      "background": "/journal/dungeons/scarlet-monastery-armory.webp"
+    },
+    "scarlet-monastery-cathedral": {
+      "background": "/journal/dungeons/scarlet-monastery-cathedral.webp"
+    },
+    "uldaman": {
+      "background": "/journal/dungeons/uldaman.webp"
+    },
+    "razorfen-downs": {
+      "background": "/journal/dungeons/razorfen-downs.webp"
+    },
+    "maraudon-purple": {
+      "background": "/journal/dungeons/maraudon-purple.webp"
+    },
+    "maraudon-inner": {
+      "background": "/journal/dungeons/maraudon-inner.webp"
+    },
+    "zul-farrak": {
+      "background": "/journal/dungeons/zul-farrak.webp"
+    },
+    "maraudon-orange": {
+      "background": "/journal/dungeons/maraudon-orange.webp"
+    },
+    "sunken-temple": {
+      "background": "/journal/dungeons/sunken-temple.webp"
+    },
+    "blackrock-depths": {
+      "background": "/journal/dungeons/blackrock-depths.webp"
+    },
+    "lower-blackrock-spire": {
+      "background": "/journal/dungeons/lower-blackrock-spire.webp"
+    },
+    "upper-blackrock-spire": {
+      "background": "/journal/dungeons/upper-blackrock-spire.webp"
+    },
+    "dire-maul-east": {
+      "background": "/journal/dungeons/dire-maul-east.webp"
+    },
+    "dire-maul-west": {
+      "background": "/journal/dungeons/dire-maul-west.webp"
+    },
+    "dire-maul-north": {
+      "background": "/journal/dungeons/dire-maul-north.webp"
+    },
+    "scholomance": {
+      "background": "/journal/dungeons/scholomance.webp"
+    },
+    "stratholme-live": {
+      "background": "/journal/dungeons/stratholme-live.webp"
+    },
+    "stratholme-undead": {
+      "background": "/journal/dungeons/stratholme-undead.webp"
+    }
+  },
+  "bosses": {
+    "3671": "/journal/bosses/3671.webp",
+    "4887": "/journal/bosses/4887.webp",
+    "3887": "/journal/bosses/3887.webp",
+    "3669": "/journal/bosses/3669.webp",
+    "11517": "/journal/bosses/11517.webp",
+    "6231": "/journal/bosses/6231.webp",
+    "4278": "/journal/bosses/4278.webp",
+    "4831": "/journal/bosses/4831.webp",
+    "4421": "/journal/bosses/4421.webp",
+    "11518": "/journal/bosses/11518.webp",
+    "3670": "/journal/bosses/3670.webp",
+    "7361": "/journal/bosses/7361.webp",
+    "6243": "/journal/bosses/6243.webp",
+    "4420": "/journal/bosses/4420.webp",
+    "3673": "/journal/bosses/3673.webp",
+    "11519": "/journal/bosses/11519.webp",
+    "3983": "/journal/bosses/3983.webp",
+    "7079": "/journal/bosses/7079.webp",
+    "3653": "/journal/bosses/3653.webp",
+    "11520": "/journal/bosses/11520.webp",
+    "4543": "/journal/bosses/4543.webp",
+    "6235": "/journal/bosses/6235.webp",
+    "12902": "/journal/bosses/12902.webp",
+    "4422": "/journal/bosses/4422.webp",
+    "3974": "/journal/bosses/3974.webp",
+    "12876": "/journal/bosses/12876.webp",
+    "6229": "/journal/bosses/6229.webp",
+    "4424": "/journal/bosses/4424.webp",
+    "3975": "/journal/bosses/3975.webp",
+    "7800": "/journal/bosses/7800.webp",
+    "6487": "/journal/bosses/6487.webp",
+    "4830": "/journal/bosses/4830.webp",
+    "3654": "/journal/bosses/3654.webp",
+    "3976": "/journal/bosses/3976.webp",
+    "4428": "/journal/bosses/4428.webp",
+    "4832": "/journal/bosses/4832.webp",
+    "3674": "/journal/bosses/3674.webp",
+    "6168": "/journal/bosses/6168.webp",
+    "6910": "/journal/bosses/6910.webp",
+    "4829": "/journal/bosses/4829.webp",
+    "3977": "/journal/bosses/3977.webp",
+    "7355": "/journal/bosses/7355.webp",
+    "5775": "/journal/bosses/5775.webp",
+    "6906": "/journal/bosses/6906.webp",
+    "4542": "/journal/bosses/4542.webp",
+    "7357": "/journal/bosses/7357.webp",
+    "6907": "/journal/bosses/6907.webp",
+    "12236": "/journal/bosses/12236.webp",
+    "12225": "/journal/bosses/12225.webp",
+    "8567": "/journal/bosses/8567.webp",
+    "6908": "/journal/bosses/6908.webp",
+    "12203": "/journal/bosses/12203.webp",
+    "13282": "/journal/bosses/13282.webp",
+    "7358": "/journal/bosses/7358.webp",
+    "7291": "/journal/bosses/7291.webp",
+    "13601": "/journal/bosses/13601.webp",
+    "12258": "/journal/bosses/12258.webp",
+    "5709": "/journal/bosses/5709.webp",
+    "8127": "/journal/bosses/8127.webp",
+    "13596": "/journal/bosses/13596.webp",
+    "7228": "/journal/bosses/7228.webp",
+    "9018": "/journal/bosses/9018.webp",
+    "12201": "/journal/bosses/12201.webp",
+    "5710": "/journal/bosses/5710.webp",
+    "9196": "/journal/bosses/9196.webp",
+    "7023": "/journal/bosses/7023.webp",
+    "7272": "/journal/bosses/7272.webp",
+    "5721": "/journal/bosses/5721.webp",
+    "7271": "/journal/bosses/7271.webp",
+    "9236": "/journal/bosses/9236.webp",
+    "9816": "/journal/bosses/9816.webp",
+    "9025": "/journal/bosses/9025.webp",
+    "8443": "/journal/bosses/8443.webp",
+    "7206": "/journal/bosses/7206.webp",
+    "10430": "/journal/bosses/10430.webp",
+    "7796": "/journal/bosses/7796.webp",
+    "9237": "/journal/bosses/9237.webp",
+    "10429": "/journal/bosses/10429.webp",
+    "7795": "/journal/bosses/7795.webp",
+    "9016": "/journal/bosses/9016.webp",
+    "2748": "/journal/bosses/2748.webp",
+    "10596": "/journal/bosses/10596.webp",
+    "4854": "/journal/bosses/4854.webp",
+    "14327": "/journal/bosses/14327.webp",
+    "7267": "/journal/bosses/7267.webp",
+    "9319": "/journal/bosses/9319.webp",
+    "11489": "/journal/bosses/11489.webp",
+    "10339": "/journal/bosses/10339.webp",
+    "10584": "/journal/bosses/10584.webp",
+    "11487": "/journal/bosses/11487.webp",
+    "10363": "/journal/bosses/10363.webp",
+    "10096": "/journal/bosses/10096.webp",
+    "9736": "/journal/bosses/9736.webp",
+    "7797": "/journal/bosses/7797.webp",
+    "13280": "/journal/bosses/13280.webp",
+    "14326": "/journal/bosses/14326.webp",
+    "9024": "/journal/bosses/9024.webp",
+    "10220": "/journal/bosses/10220.webp",
+    "11488": "/journal/bosses/11488.webp",
+    "7273": "/journal/bosses/7273.webp",
+    "14322": "/journal/bosses/14322.webp",
+    "11490": "/journal/bosses/11490.webp",
+    "9031": "/journal/bosses/9031.webp",
+    "10268": "/journal/bosses/10268.webp",
+    "11496": "/journal/bosses/11496.webp",
+    "14321": "/journal/bosses/14321.webp",
+    "11486": "/journal/bosses/11486.webp",
+    "14323": "/journal/bosses/14323.webp",
+    "9029": "/journal/bosses/9029.webp",
+    "9568": "/journal/bosses/9568.webp",
+    "9028": "/journal/bosses/9028.webp",
+    "10558": "/journal/bosses/10558.webp",
+    "14325": "/journal/bosses/14325.webp",
+    "10506": "/journal/bosses/10506.webp",
+    "14324": "/journal/bosses/14324.webp",
+    "9030": "/journal/bosses/9030.webp",
+    "10516": "/journal/bosses/10516.webp",
+    "10503": "/journal/bosses/10503.webp",
+    "11501": "/journal/bosses/11501.webp",
+    "10435": "/journal/bosses/10435.webp",
+    "10808": "/journal/bosses/10808.webp",
+    "11492": "/journal/bosses/11492.webp",
+    "11622": "/journal/bosses/11622.webp",
+    "9027": "/journal/bosses/9027.webp",
+    "10437": "/journal/bosses/10437.webp",
+    "10813": "/journal/bosses/10813.webp",
+    "10433": "/journal/bosses/10433.webp",
+    "10438": "/journal/bosses/10438.webp",
+    "9032": "/journal/bosses/9032.webp",
+    "10436": "/journal/bosses/10436.webp",
+    "9041": "/journal/bosses/9041.webp",
+    "10432": "/journal/bosses/10432.webp",
+    "10439": "/journal/bosses/10439.webp",
+    "9437": "/journal/bosses/9437.webp",
+    "16118": "/journal/bosses/16118.webp",
+    "9438": "/journal/bosses/9438.webp",
+    "10508": "/journal/bosses/10508.webp",
+    "9439": "/journal/bosses/9439.webp",
+    "10505": "/journal/bosses/10505.webp",
+    "11261": "/journal/bosses/11261.webp",
+    "10901": "/journal/bosses/10901.webp",
+    "9441": "/journal/bosses/9441.webp",
+    "10507": "/journal/bosses/10507.webp",
+    "9442": "/journal/bosses/9442.webp",
+    "9443": "/journal/bosses/9443.webp",
+    "10504": "/journal/bosses/10504.webp",
+    "9056": "/journal/bosses/9056.webp",
+    "10502": "/journal/bosses/10502.webp",
+    "9017": "/journal/bosses/9017.webp",
+    "9156": "/journal/bosses/9156.webp",
+    "1853": "/journal/bosses/1853.webp",
+    "9033": "/journal/bosses/9033.webp",
+    "8983": "/journal/bosses/8983.webp",
+    "9537": "/journal/bosses/9537.webp",
+    "9543": "/journal/bosses/9543.webp",
+    "9499": "/journal/bosses/9499.webp",
+    "9502": "/journal/bosses/9502.webp",
+    "9938": "/journal/bosses/9938.webp",
+    "8929": "/journal/bosses/8929.webp",
+    "9040": "/journal/bosses/9040.webp",
+    "9034": "/journal/bosses/9034.webp",
+    "9035": "/journal/bosses/9035.webp",
+    "9036": "/journal/bosses/9036.webp",
+    "9037": "/journal/bosses/9037.webp",
+    "9038": "/journal/bosses/9038.webp",
+    "9039": "/journal/bosses/9039.webp"
+  },
+  "floors": {
+    "Ragefire": [
+      {
+        "id": 1,
+        "image": "/maps/dungeons/ragefire-1.webp"
+      }
+    ],
+    "WailingCaverns": [
+      {
+        "id": 1,
+        "image": "/maps/dungeons/wailingcaverns-1.webp"
+      }
+    ],
+    "ShadowfangKeep": [
+      {
+        "id": 1,
+        "image": "/maps/dungeons/shadowfangkeep-1.webp"
+      },
+      {
+        "id": 2,
+        "image": "/maps/dungeons/shadowfangkeep-2.webp"
+      },
+      {
+        "id": 3,
+        "image": "/maps/dungeons/shadowfangkeep-3.webp"
+      },
+      {
+        "id": 4,
+        "image": "/maps/dungeons/shadowfangkeep-4.webp"
+      },
+      {
+        "id": 5,
+        "image": "/maps/dungeons/shadowfangkeep-5.webp"
+      },
+      {
+        "id": 6,
+        "image": "/maps/dungeons/shadowfangkeep-6.webp"
+      },
+      {
+        "id": 7,
+        "image": "/maps/dungeons/shadowfangkeep-7.webp"
+      }
+    ],
+    "BlackFathomDeeps": [
+      {
+        "id": 1,
+        "image": "/maps/dungeons/blackfathomdeeps-1.webp"
+      },
+      {
+        "id": 2,
+        "image": "/maps/dungeons/blackfathomdeeps-2.webp"
+      },
+      {
+        "id": 3,
+        "image": "/maps/dungeons/blackfathomdeeps-3.webp"
+      }
+    ],
+    "Gnomeregan": [
+      {
+        "id": 1,
+        "image": "/maps/dungeons/gnomeregan-1.webp"
+      },
+      {
+        "id": 2,
+        "image": "/maps/dungeons/gnomeregan-2.webp"
+      },
+      {
+        "id": 3,
+        "image": "/maps/dungeons/gnomeregan-3.webp"
+      },
+      {
+        "id": 4,
+        "image": "/maps/dungeons/gnomeregan-4.webp"
+      }
+    ],
+    "RazorfenKraul": [
+      {
+        "id": 1,
+        "image": "/maps/dungeons/razorfenkraul-1.webp"
+      }
+    ],
+    "RazorfenDowns": [
+      {
+        "id": 1,
+        "image": "/maps/dungeons/razorfendowns-1.webp"
+      }
+    ],
+    "ScarletMonastery": [
+      {
+        "id": 1,
+        "image": "/maps/dungeons/scarletmonastery-1.webp"
+      },
+      {
+        "id": 2,
+        "image": "/maps/dungeons/scarletmonastery-2.webp"
+      },
+      {
+        "id": 3,
+        "image": "/maps/dungeons/scarletmonastery-3.webp"
+      },
+      {
+        "id": 4,
+        "image": "/maps/dungeons/scarletmonastery-4.webp"
+      }
+    ],
+    "Uldaman": [
+      {
+        "id": 1,
+        "image": "/maps/dungeons/uldaman-1.webp"
+      },
+      {
+        "id": 2,
+        "image": "/maps/dungeons/uldaman-2.webp"
+      }
+    ]
+  }
+}

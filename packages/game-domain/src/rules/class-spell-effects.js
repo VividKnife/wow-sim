@@ -37,7 +37,7 @@ function aura(s,c,target,sp,n,value=amount(c,sp,n),until=s.clock+(duration(sp,c.
 function heal(s,c,t,value,sp,api){if(api.healAmount)return api.healAmount(s,c,t,value,sp.Id,sp.SpellName);if(!t||t.hp<=0)return;const actual=Math.min(stats(t).maxHp-t.hp,Math.max(0,Math.round(value)));t.hp+=actual;}
 function damage(s,c,t,value,sp,api,periodic=false,options={}){return resolveSpellDamage(s,c,t,value,sp,api.damage,{...options,periodic}).dealt;}
 export function prepareClassAbility(s,c,e,sp,actors){
- const name=sp.SpellName;if(!extendedSpellNames.has(name))return undefined;if(name==='Ritual of Doom')return null;
+ const name=sp.SpellName;if(s.combat?.raidEncounter?.command&&['Dispel Magic','Remove Lesser Curse','Tranquilizing Shot','Fear Ward'].includes(name))return null;if(s.combat?.raidEncounter?.command&&(c.raidReservedSpells||[]).some(id=>spells[id]?.SpellName===name))return null;if(!extendedSpellNames.has(name))return undefined;if(name==='Ritual of Doom')return null;
  let target=e;
  if(extendedBuffs.has(name)||extendedSeals.has(name)||extendedEnchants.has(name)||extendedTotems.has(name)||extendedSummons.has(name)&&name!=='Inferno'||selfControls.has(name)||['Evocation','Tranquility'].includes(name))target=c;
  if(extendedHeals.has(name)&&!['Holy Shock','Holy Nova','Rebirth','Tranquility'].includes(name)){target=actors.filter(a=>a.hp>0&&a.hp<stats(a).maxHp*.9).sort((a,b)=>a.hp/stats(a).maxHp-b.hp/stats(b).maxHp)[0];if(!target)return null;}

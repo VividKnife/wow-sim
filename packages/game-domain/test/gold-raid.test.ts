@@ -1,3 +1,4 @@
+import {advance} from '../src/rules/engine.js';
 import {moltenCoreRoute} from '../src/rules/molten-core-content.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -32,10 +33,10 @@ test('bid racing an NPC round refreshes the quote without charging or rolling ba
  await f.step();
  await f.store.transaction(async tx=>{
   const i:any=await tx.get('instances',snap.instanceId!),s=i.simulation,npc=s.party.find((c:Rules)=>c.goldNpc);
-  npc.goldProfile.personality='saver';s.goldRaid.auction.itemId=991005;s.goldRaid.auction.limits={[npc.id]:30*GOLD};await tx.put('instances',i);
+  npc.goldProfile.personality='saver';s.goldRaid.auction.itemId=19147;i.simulation.goldRaid.auction.count=1;s.goldRaid.auction.limits={[npc.id]:30*GOLD};await tx.put('instances',i);
  });
  snap=await f.snapshot();const s=snap.state!,a=s.goldRaid.auction,before=s.money,total=assets(s);
- f.elapse(s.activity.endsAt-s.clock+1); // NPC bids after the displayed quote, before POST.
+ f.elapse(s.goldRaid.auction.nextRoundAt-s.clock+1); // NPC bids after the displayed quote, before POST.
  const stale={lotId:a.id,amount:a.opening,quotedMinimum:a.opening,recipient:s.id,requestId:'racing-bid'};
  snap=await f.command('goldBid',stale);
  assert.equal(snap.state!.money,before);assert.equal(snap.state!.goldRaid.auction.price,10*GOLD);
@@ -73,32 +74,33 @@ test('recruitment creates legal randomized gear/talents and locks announced cont
 test('player escrow, NPC budgets, loot ownership, payout conservation and repeat requests',async()=>{
  const f=await fixture();let snap=await recruit(f);await f.command('goldStart',{bossId:'lucifron'});
  await f.store.transaction(async tx=>{const i:any=await tx.get('instances',snap.instanceId!);i.simulation.combat.enemies.forEach((e:Rules)=>e.hp=0);await tx.put('instances',i);});
- snap=await f.step();const s=snap.state!,g=s.goldRaid;assert.equal(g.phase,'auction');assert.equal(g.lots.length,2);
+ snap=await f.step();const s=snap.state!,g=s.goldRaid;assert.equal(g.phase,'camp');const lotCount=g.lots.length+1;assert.ok(lotCount>=3);g.auction.itemId=19147;g.auction.count=1;
  const total=assets(s),original=s.money,a=g.auction,recipient=[s,...s.party].find(c=>g.coreIds.includes(c.id)&&canEquip(c,items[a.itemId]));assert.ok(recipient);
  goldRaidAction(s,{type:'goldBid',lotId:a.id,amount:a.minimum||a.opening,recipient:recipient.id});assert.equal(s.money,original-a.price);assert.equal(assets(s),total);
  assert.throws(()=>goldRaidAction(s,{type:'goldBid',lotId:'stale',amount:1,recipient:s.id}),/拍品已更新/);
  assert.throws(()=>goldRaidAction(s,{type:'goldBid',lotId:a.id,amount:Infinity,recipient:s.id}),/整数/);
  // No forced outcome: finish real NPC bidding and retain each participant's budget.
  for(let i=0;i<300&&g.auction;i++){goldAuctionStep(s);assert.equal(assets(s),total);assert.ok(s.party.filter((c:Rules)=>c.goldNpc).every((c:Rules)=>c.goldProfile.wallet>=0));}
- assert.equal(g.auction,null);assert.equal(g.sales.length,3);assert.ok(g.sales.some((sale:Rules)=>sale.price>0));
+ assert.equal(g.auction,null);assert.equal(g.sales.length,lotCount);assert.ok(g.sales.some((sale:Rules)=>sale.price>0));
  const before=s.money;finishGoldRun(s);assert.equal(s.money-before,g.settlement.playerIncome);assert.equal(assets(s),total);assert.equal(g.settlement.rows.length,25);
  assert.equal(g.settlement.rows.reduce((sum:number,r:Rules)=>sum+r.total,g.settlement.fee),g.pot);assert.throws(()=>finishGoldRun(s),/已经/);
  assert.ok(!JSON.stringify(goldRaidView(s)).includes('limits'));
 });
 
 test('recommended NPC raid beats both real encounters without replacing the combat engine',async()=>{
- const f=await fixture();let snap=await recruit(f);
+ const f=await fixture();let snap=await recruit(f),expectedSales=0;
  for(const bossId of ['lucifron','magmadar']){
   snap=await f.command('goldStart',{bossId});
   for(let i=0;i<100&&snap.state!.combat;i++){snap=await f.step();if(i===10)f.restart();}
   assert.equal(snap.state!.combat,null);assert.ok(snap.state!.goldRaid.cleared.includes(bossId),JSON.stringify(snap.state!.goldRaid.attempts));
   assert.ok(snap.state!.party.some((c:Rules)=>c.goldNpc&&c.goldProfile.consumableSpent>0));
+  expectedSales+=snap.state!.goldRaid.lots.length+(snap.state!.goldRaid.auction?1:0);
   // Bidding uses the real service, transaction receipts and virtual wallets.
   for(let i=0;i<300&&snap.state!.goldRaid.auction;i++)snap=await f.command('goldAuctionStep',{lotId:snap.state!.goldRaid.auction.id});
   await f.command('loot');
   await f.command('goldRecover');for(let i=0;i<5;i++)await f.step();
  }
- snap=await f.command('goldSettle');assert.ok(snap.state!.goldRaid.settlement);assert.equal(snap.state!.goldRaid.sales.length,6);
+ snap=await f.command('goldSettle');assert.ok(snap.state!.goldRaid.settlement);assert.equal(snap.state!.goldRaid.sales.length,expectedSales);
  const money=snap.state!.money;await assert.rejects(f.command('goldSettle'),/当前阶段/);assert.equal((await f.snapshot()).state!.money,money);
  snap=await f.command('leaveInstance');assert.equal(snap.state!.party.length,4);assert.equal(snap.state!.goldRaid.active,false);
 });
@@ -107,15 +109,15 @@ test('player purchase persists exactly once and emergency exit refunds open escr
  const f=await fixture();let snap=await recruit(f);await f.command('goldStart',{bossId:'lucifron'});
  await f.store.transaction(async tx=>{const i:any=await tx.get('instances',snap.instanceId!);i.simulation.combat.enemies.forEach((e:Rules)=>e.hp=0);await tx.put('instances',i);});
  snap=await f.step();
- await f.store.transaction(async tx=>{const i:any=await tx.get('instances',snap.instanceId!);i.simulation.goldRaid.auction.itemId=991005;i.simulation.goldRaid.auction.limits={};await tx.put('instances',i);});
+ await f.store.transaction(async tx=>{const i:any=await tx.get('instances',snap.instanceId!);i.simulation.goldRaid.auction.itemId=19147;i.simulation.goldRaid.auction.count=1;i.simulation.goldRaid.auction.limits={};await tx.put('instances',i);});
  const lotId=snap.state!.goldRaid.auction.id,extra={lotId,amount:10*GOLD,recipient:snap.state!.id,requestId:'same-winning-bid'};
  const before=snap.state!.money;
  snap=await f.command('goldBid',extra);assert.equal(snap.state!.money,before-10*GOLD);
  snap=await f.command('goldBid',extra);assert.equal(snap.state!.money,before-10*GOLD);
  for(let n=0;n<3;n++)snap=await f.command('goldAuctionStep',{lotId});
- assert.equal(snap.state!.pending.filter((i:Rules)=>i.id===991005).length,1);
- snap=await f.command('loot');assert.equal(snap.state!.bag.filter((i:Rules)=>i.id===991005).length,1);
- await f.store.transaction(async tx=>{const i:any=await tx.get('instances',snap.instanceId!);i.simulation.goldRaid.auction.itemId=991005;i.simulation.goldRaid.auction.limits={};await tx.put('instances',i);});
+ assert.equal(snap.state!.pending.filter((i:Rules)=>i.id===19147).length,1);
+ snap=await f.command('loot');assert.equal(snap.state!.bag.filter((i:Rules)=>i.id===19147).length,1);
+ await f.store.transaction(async tx=>{const i:any=await tx.get('instances',snap.instanceId!);i.simulation.goldRaid.auction.itemId=19147;i.simulation.goldRaid.auction.count=1;i.simulation.goldRaid.auction.limits={};await tx.put('instances',i);});
  const beforeSecond=snap.state!.money;
  snap=await f.command('goldBid',{lotId:snap.state!.goldRaid.auction.id,amount:10*GOLD,recipient:snap.state!.id});
  snap=await f.command('unstuck');assert.equal(snap.instanceId,null);assert.equal(snap.state!.goldRaid.active,false);
@@ -124,12 +126,52 @@ test('player purchase persists exactly once and emergency exit refunds open escr
 });
 
 
-test('gold map commands clear trash without auction and pause before the next pull',async()=>{
+test('gold map commands roll trash loot without blocking navigation and pause before the next pull',async()=>{
  const f=await fixture();let snap=await recruit(f,false);
  snap=await f.command('goldNavigate',{destination:'lucifron'});assert.equal(snap.state!.combat.raidEncounter.id,'mc-gate');
  await f.store.transaction(async tx=>{const row:any=await tx.get('instances',snap.instanceId!);row.simulation.combat.enemies.forEach((e:Rules)=>e.hp=0);await tx.put('instances',row);});
- snap=await f.step();assert.equal(snap.state!.goldRaid.phase,'camp');assert.equal(snap.state!.goldRaid.auction,null);assert.deepEqual(snap.state!.goldRaid.clearedPacks,['mc-gate']);
+ snap=await f.step();assert.equal(snap.state!.goldRaid.phase,'camp');assert.equal(snap.state!.goldRaid.auction.bossId,'mc-gate');assert.ok(snap.state!.goldRaid.auction.count>0);assert.deepEqual(snap.state!.goldRaid.clearedPacks,['mc-gate']);
  snap=await f.command('goldPause');assert.equal(snap.state!.goldRaid.autoAdvance,false);assert.equal(snap.state!.activity.type,'idle');
  snap=await f.command('goldNavigate',{destination:'mc-bridge'});assert.equal(snap.state!.combat.raidEncounter.id,'mc-bridge');
  await f.command('goldPause');assert.equal((await f.snapshot()).state!.goldRaid.autoAdvance,false);
+});
+
+async function auctionFixture(){
+ const f=await fixture();let snap=await recruit(f);await f.command('goldStart',{bossId:'lucifron'});
+ await f.store.transaction(async tx=>{const i:any=await tx.get('instances',snap.instanceId!);i.simulation.combat.enemies.forEach((e:Rules)=>e.hp=0);await tx.put('instances',i);});
+ snap=await f.step();return {f,snap};
+}
+test('background auction keeps its timer during combat and queues the next boss loot',async()=>{
+ const {f,snap:initial}=await auctionFixture();const lotId=initial.state!.goldRaid.auction.id;
+ let snap=await f.command('goldStart',{bossId:'magmadar'});const combatId=snap.state!.combat.id;
+ assert.equal(snap.state!.goldRaid.phase,'combat');assert.equal(snap.state!.goldRaid.auction.id,lotId);
+ const round=snap.state!.goldRaid.auction.round;
+ const advanced=advance(snap.state!,snap.state!.wallAt+4100).state;
+ assert.equal(advanced.combat.id,combatId);assert.ok(advanced.goldRaid.auction.round>round);
+ assert.ok(advanced.logs.some((entry:Rules)=>entry.kind==='damage'));
+ snap=await f.command('goldPass',{lotId});assert.equal(snap.state!.combat.id,combatId);assert.equal(snap.state!.activity.type,'idle');
+ await f.store.transaction(async tx=>{const i:any=await tx.get('instances',snap.instanceId!);i.simulation.combat.enemies.forEach((e:Rules)=>e.hp=0);await tx.put('instances',i);});
+ snap=await f.step();assert.equal(snap.state!.goldRaid.auction.id,lotId);assert.ok(snap.state!.goldRaid.lots.filter((lot:Rules)=>lot.bossId==='magmadar').length>=3);assert.equal(snap.state!.goldRaid.lots.filter((lot:Rules)=>lot.bossId==='lucifron').length,initial.state!.goldRaid.lots.length);
+ assert.throws(()=>finishGoldRun(snap.state!),/拍卖/);
+});
+test('background inquiry and settlement preserve recovery and its completion',async()=>{
+ const {f}=await auctionFixture();let snap=await f.command('goldRecover');
+ const until=snap.state!.goldRaid.recoverUntil,lotId=snap.state!.goldRaid.auction.id;
+ snap=await f.command('goldAuctionStep',{lotId});assert.equal(snap.state!.activity.type,'goldRecovery');assert.equal(snap.state!.activity.endsAt,until);
+ const state=snap.state!;state.goldRaid.lots=[];state.goldRaid.auction.limits={};state.goldRaid.auction.quiet=2;
+ const result=advance(state,state.wallAt+10001).state;
+ assert.equal(result.goldRaid.auction,null);assert.equal(result.goldRaid.recoverUntil,0);assert.equal(result.activity.type,'idle');
+});
+test('player can bid in combat; purchased delivery does not block the next encounter',async()=>{
+ const {f,snap:initial}=await auctionFixture();
+ await f.store.transaction(async tx=>{const i:any=await tx.get('instances',initial.instanceId!);i.simulation.goldRaid.auction.itemId=19147;i.simulation.goldRaid.auction.count=1;i.simulation.goldRaid.auction.limits={};await tx.put('instances',i);});
+ let snap=await f.command('goldStart',{bossId:'magmadar'});const lotId=snap.state!.goldRaid.auction.id,combatId=snap.state!.combat.id;
+ snap=await f.command('goldBid',{lotId,amount:10*GOLD,recipient:snap.state!.id});
+ assert.equal(snap.state!.combat.id,combatId);assert.equal(snap.state!.goldRaid.auction.leader,'player');
+ await assert.rejects(f.command('goldPass',{lotId}),/领先/);
+ for(let n=0;n<3;n++)snap=await f.command('goldAuctionStep',{lotId});
+ assert.ok(snap.state!.pending.some((item:Rules)=>item.id===19147));assert.equal(snap.state!.combat.id,combatId);
+ await f.store.transaction(async tx=>{const i:any=await tx.get('instances',initial.instanceId!);i.simulation.combat.enemies.forEach((e:Rules)=>e.hp=0);await tx.put('instances',i);});
+ snap=await f.step();assert.equal(snap.state!.goldRaid.phase,'camp');assert.ok(goldRaidView(snap.state!).map!.canFullClear);
+ snap=await f.command('goldStart',{bossId:'gehennas'});assert.ok(snap.state!.combat);assert.ok(snap.state!.pending.length);
 });

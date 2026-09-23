@@ -1,10 +1,10 @@
-import {nodes,creatureLocations,icon} from './catalog.js';
+import {nodes,creatures,creatureLocations,icon} from './catalog.js';
 import {countItem,addItem,log} from './character.js';
 import {stopRecovery} from './recovery.js';
 import {leaveDungeon} from './dungeon.js';
 
 // Innkeepers present in the imported region data: Farley, Allison, Heather.
-const inns=new Set([295,6740,8931].flatMap(id=>creatureLocations[id]||[]));
+const inns=new Set([...Object.values(creatures).filter(c=>c.NpcFlags&128).flatMap(c=>creatureLocations[c.Entry]||[]),...Object.values(nodes).filter(n=>['town','city'].includes(n.kind)).map(n=>n.id)]);
 export const hearthCastMs=10000;
 export const hearthCooldownMs=3600000;
 const destination=s=>nodes[s.hearth]?s.hearth:'northshire';

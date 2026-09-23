@@ -7,13 +7,13 @@ import {stats} from '../src/rules/character.js';
 import {items} from '../src/rules/catalog.js';
 import {equipmentUpgrade} from '../src/rules/npc-equipment.js';
 import {queueGroupLoot,resolveGroupLoot,groupLootView,tickGroupLoot} from '../src/rules/group-loot.js';
-import {progressNpcWorld,syncNpcWorld} from '../src/rules/npc-world.js';
+import {progressNpcWorld,syncNpcWorld,NPC_REFRESH_MS} from '../src/rules/npc-world.js';
 import {projectClientSnapshot} from '../src/rules/client-snapshot.ts';
 import {localEligible} from '../src/local-simulation.ts';
 import type {Rules} from '../src/model.ts';
 
 function world(){let s:Rules=createGame('旅人',1729,0);s.level=24;s.location='deadmines';const st=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;s=act(s,{type:'npcVisit'},0);return act(s,{type:'npcRecommend'},0);}
-function run(){return act(world(),{type:'enterDungeon',contentId:'deadmines'},0);}
+function run(){let s=world();s=act(s,{type:'npcGroup',memberIds:[0,4,2,3].map(i=>s.npcWorld.residents[i].id)},0);return act(s,{type:'enterDungeon',contentId:'deadmines'},0);}
 async function fixture(){
  let now=100000,sequence=0;const store=new MemoryStore();const options={contentVersion:'npc-test',now:()=>now,seed:()=>1729};let service=new GameService(store,options);
  const created=await service.createAccount('npc-world-test',{name:'旅人',classId:8,raceId:1},'create');const hero=created.account.primaryCharacterId;
@@ -23,8 +23,11 @@ async function fixture(){
  return {store,hero,command,snapshot:()=>service.snapshot('npc-world-test'),restart:()=>{service=new GameService(store,options);},elapse:(ms:number)=>{now+=ms;},service:()=>service};
 }
 
-test('24 persistent residents cover all roles; recommendation fills around the hero and preserves friends',()=>{
- const s=world();assert.equal(s.npcWorld.residents.length,24);assert.equal(new Set(s.npcWorld.residents.map((p:Rules)=>p.id)).size,24);
+test('50 distinct persistent residents balance all nine classes; recommendations preserve friends',()=>{
+ const s=world();assert.equal(s.npcWorld.residents.length,50);assert.equal(new Set(s.npcWorld.residents.map((p:Rules)=>p.id)).size,50);
+ assert.equal(new Set(s.npcWorld.residents.map((p:Rules)=>p.unit.name)).size,50);
+ const classes=Object.values(s.npcWorld.residents.reduce((counts:Rules,p:Rules)=>{counts[p.unit.classId]=(counts[p.unit.classId]||0)+1;return counts;},{})) as number[];
+ assert.equal(classes.length,9);assert.ok(classes.every(n=>n===5||n===6));
  const v=view(s).npcWorld;assert.equal(v.selected.length,4);assert.equal(v.selected.filter((p:Rules)=>p.role==='tank').length,1);assert.equal(v.selected.filter((p:Rules)=>p.role==='healer').length,1);
  const friend=v.residents.find((p:Rules)=>p.role==='tank');const next=act(s,{type:'npcFriend',id:friend.id,friend:true},0);const recommended=act(next,{type:'npcRecommend'},0);
  assert.ok(recommended.npcWorld.selection.includes(friend.id));assert.deepEqual(recommended.party,[]);
@@ -85,7 +88,7 @@ test('service saves NPCs independently of owned companions and restores the mixe
 });
 
 test('committed NPC loot survives service restart, duplicate command and subsequent dungeon entry',async()=>{
- const f=await fixture();await f.command('npcRecommend');let snap=await f.command('enterDungeon',{contentId:'deadmines'});let lootId='',npcId='';
+ const f=await fixture();let ready=await f.snapshot();await f.command('npcGroup',{memberIds:[0,4,2,3].map(i=>ready.state.npcWorld.residents[i].id)});let snap=await f.command('enterDungeon',{contentId:'deadmines'});let lootId='',npcId='';
  await f.store.transaction(async tx=>{const i:any=await tx.get('instances',snap.instanceId!);const s=i.simulation,c=s.party.find((p:Rules)=>p.classId===4);npcId=c.id;c.equipment={};queueGroupLoot(s,5191,1);const l=s.groupLoot.pending[0];lootId=l.id;for(const m of l.members)m.roll=m.id===npcId?100:1;await tx.put('instances',i);});
  snap=await f.command('groupLoot',{id:lootId,choice:'pass',requestId:'same-roll'});f.restart();const saved=await f.command('groupLoot',{id:lootId,choice:'pass',requestId:'same-roll'});
  assert.equal(saved.state.groupLoot.history.length,1);assert.equal(saved.state.party.find((c:Rules)=>c.id===npcId).equipment[16].id,5191);
@@ -105,7 +108,7 @@ test('actual NPC dungeon combat advances using existing combat engine',()=>{
 });
 
 test('emergency exit settles only committed drops and preserves NPC winnings without stale pending rolls',async()=>{
- const f=await fixture();await f.command('npcRecommend');let snap=await f.command('enterDungeon',{contentId:'deadmines'});let npcId='';
+ const f=await fixture();let ready=await f.snapshot();await f.command('npcGroup',{memberIds:[0,4,2,3].map(i=>ready.state.npcWorld.residents[i].id)});let snap=await f.command('enterDungeon',{contentId:'deadmines'});let npcId='';
  await f.store.transaction(async tx=>{const i:any=await tx.get('instances',snap.instanceId!);const s=i.simulation,c=s.party.find((p:Rules)=>p.classId===4);npcId=c.id;c.equipment={};queueGroupLoot(s,5191,1);for(const m of s.groupLoot.pending[0].members)m.roll=m.id===npcId?100:1;await tx.put('instances',i);});
  snap=await f.command('unstuck');assert.equal(snap.state.groupLoot.pending.length,0);assert.equal(snap.state.npcWorld.residents.find((p:Rules)=>p.id===npcId).unit.equipment[16].id,5191);assert.equal(snap.state.pending.filter((i:Rules)=>i.id===5191).length,0);
  assert.equal((await f.store.read(tx=>tx.list('actor_leases'))).length,0);f.restart();snap=await f.snapshot();assert.equal(snap.state.groupLoot.history.length,1);
@@ -135,4 +138,47 @@ test('automatic group rolls do not disarm dungeon auto advance between encounter
  // Existing combat must end before a queued roll can change equipment.
  s.combat=null;s.activity={type:'idle'};queueGroupLoot(s,5191,1);
  const result=advance(s,100).state;assert.equal(result.groupLoot.pending.length,0);assert.equal(result.dungeon.autoAdvance,true);
+});
+
+test('six-person batches cover roles, never repeat the previous batch and eventually introduce all 50',()=>{
+ let s=world();const seen=new Set<string>();let previous:string[]=[];
+ for(let turn=0;turn<12;turn++){
+  if(turn)s=act(s,{type:'npcRefresh'},turn*NPC_REFRESH_MS);
+  const board=view(s).npcWorld.board!;assert.equal(board.ids.length,6);assert.equal(new Set(board.ids).size,6);
+  assert.ok(board.ids.every((id:string)=>!previous.includes(id)));board.ids.forEach((id:string)=>seen.add(id));
+  const batch=view(s).npcWorld.residents.filter((p:Rules)=>board.ids.includes(p.id));
+  assert.equal(batch.filter((p:Rules)=>p.role==='tank').length,1);assert.equal(batch.filter((p:Rules)=>p.role==='healer').length,1);
+  assert.equal(board.remaining,NPC_REFRESH_MS);assert.equal(board.sequence,turn+1);previous=board.ids;
+ }
+ assert.equal(seen.size,50);
+});
+
+test('refresh cooldown is authoritative and browsing never rerolls gear, friends, selection or adventure randomness',()=>{
+ let s=world(),id=s.npcWorld.board.ids[0];s=act(s,{type:'npcFriend',id,friend:true},0);
+ const residents=structuredClone(s.npcWorld.residents),selection=[...s.npcWorld.selection],rng=s.rngState,board=structuredClone(s.npcWorld.board);
+ assert.throws(()=>act(s,{type:'npcRefresh'},0),/秒后/);assert.throws(()=>act(s,{type:'npcRefresh'},NPC_REFRESH_MS-1),/秒后/);
+ s=act(s,{type:'npcVisit'},1000);assert.deepEqual(s.npcWorld.board,board);
+ const copy=structuredClone(s);s=act(s,{type:'npcRefresh'},NPC_REFRESH_MS);const repeated=act(copy,{type:'npcRefresh'},NPC_REFRESH_MS);
+ assert.deepEqual(s.npcWorld.board,repeated.npcWorld.board);assert.deepEqual(s.npcWorld.residents,residents);assert.deepEqual(s.npcWorld.selection,selection);assert.equal(s.rngState,rng);
+ assert.ok(!s.npcWorld.board.ids.includes(id));assert.equal(view(s).npcWorld.residents.find((p:Rules)=>p.id===id).friend,true);
+ assert.ok(!Object.hasOwn(view(s).npcWorld.board!,'rngState'));assert.ok(!Object.hasOwn(view(s).npcWorld.board!,'shown'));
+});
+
+test('recommendation stays within current arrivals and known companions instead of bypassing the board',()=>{
+ const s=world(),v=view(s).npcWorld;
+ assert.ok(v.selected.every((p:Rules)=>v.board!.ids.includes(p.id)));
+ const next=act(s,{type:'npcRefresh'},NPC_REFRESH_MS),oldIds=[...next.npcWorld.selection];
+ const recommended=act(next,{type:'npcRecommend'},NPC_REFRESH_MS),allowed=new Set([...next.npcWorld.board.ids,...oldIds]);
+ assert.ok(recommended.npcWorld.selection.every((id:string)=>allowed.has(id)));
+});
+
+test('service restart and duplicate refresh requests preserve the same batch and remaining cooldown',async()=>{
+ const f=await fixture(),before=await f.snapshot(),ids=before.state.npcWorld.board.ids;
+ f.elapse(NPC_REFRESH_MS-1);f.restart();await assert.rejects(f.command('npcRefresh'),/秒后/);
+ f.elapse(1);const first=await f.command('npcRefresh',{requestId:'one-refresh'});f.restart();
+ const repeated=await f.command('npcRefresh',{requestId:'one-refresh'});
+ assert.deepEqual(repeated.state.npcWorld.board,first.state.npcWorld.board);assert.equal(first.state.npcWorld.board.sequence,2);
+ assert.ok(first.state.npcWorld.board.ids.every((id:string)=>!ids.includes(id)));
+ await assert.rejects(f.command('npcRefresh'),/秒后/);
+ const snapshot=await f.snapshot();assert.equal(view(snapshot.state).npcWorld.board!.remaining,NPC_REFRESH_MS);
 });

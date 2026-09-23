@@ -7,7 +7,7 @@ import portraits from '../packages/game-data/data/creature-portraits-manifest.js
 const root=new URL('../',import.meta.url);
 const assets=new Map(portraits.assets.map(a=>[a.displayId,a]));
 const entries={...portraits.entries};
-const ids=[...new Set([...Object.keys(creatureLocations).map(Number),467,68,197,54,295,332,8670,914,1205,4981,6740])];
+const ids=[...new Set([...Object.keys(creatureLocations).map(Number),467,68,197,54,295,332,8670,914,1205,4981,6740,7915,6575])];
 const pending=new Map();
 for(const entry of ids){
  if(entries[entry])continue;

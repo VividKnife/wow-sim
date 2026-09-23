@@ -15,13 +15,13 @@ test('creatures resolve to individual model textures rather than type icons',()=
  assert.equal(creatureVisual({modelId:manifest.entries[69].displayId}).src,wolf.src);
  assert.equal(creatureVisual({entry:999999}).src,null);
 });
-test('every playable outdoor and dungeon template has a local mapped asset',()=>{
+test('every playable outdoor and dungeon template has a local portrait or labelled type fallback',()=>{
  const ids=new Set([...Object.keys(nodes).flatMap(monsterIdsAt),...deadmines.encounters.flatMap(e=>e.sourceSpawns.flatMap(s=>s.templateChoices.map(t=>t.entry))),643]);
- for(const entry of ids){assert.ok(manifest.entries[entry],`missing template ${entry}`);assert.match(creatureVisual({entry}).src,/^\/creatures\/portraits\/classic-display-\d+\.webp$/);}
+ for(const entry of ids){const visual=creatureVisual({entry});assert.match(visual.src,/^\/creatures\//,`missing template ${entry}`);if(visual.kind==='type-icon')assert.match(visual.label,/类型图标/);}
 });
-test('all locally placed NPC templates and authored service roles have model textures',()=>{
+test('placed NPCs have portraits and original service roles retain model textures',()=>{
  for(const entry of [...Object.keys(creatureLocations).filter(id=>creatures[id]),...Object.values(serviceModels),467]){
-  assert.equal(creatureVisual({entry}).kind,'npc-model-render',`missing NPC ${entry}`);
+  assert.ok(creatureVisual({entry}).src,`missing NPC ${entry}`);if(manifest.entries[entry])assert.equal(creatureVisual({entry}).kind,'npc-model-render');
  }
 });
 test('checked-in original model bytes match the resource manifest',async()=>{

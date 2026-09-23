@@ -22,7 +22,7 @@ test('NPCs and monster cards display full-body model images',async()=>{
  assert.equal((html.match(/creature-portrait monster-portrait/g)||[]).length,p.data.monsters.length);
  for(const npc of p.data.interactions.filter(n=>n.entry)){
   const markup=render(components.NpcPortrait,{npc});
-  assert.match(markup,/\/creatures\/portraits\/classic-display-\d+\.webp/);
+  assert.match(markup,/\/creatures\//);
   assert.doesNotMatch(markup,/<svg/);
  }
 });

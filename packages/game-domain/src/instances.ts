@@ -17,7 +17,7 @@ import { PAUSED_EVENT_AT } from './presence.ts';
 import {simulationInterval} from './simulation-cadence.ts';
 import {invalidateCombatPlan, combatExecutionMode} from './combat-execution.ts';
 import {OFFLINE_BATCH_INTERVAL_MS} from './combat-playback.ts';
-const instanceCommands = new Set(['groupLoot',...goldCommands,'raidNavigate','raidPause','raidStart','raidTactics','raidRecover','raidRestart','strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'abandonCombat', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext','dungeonNavigate','dungeonPause', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'discardJunk', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
+const instanceCommands = new Set(['raidPlan','raidOrder','groupLoot',...goldCommands,'raidNavigate','raidPause','raidStart','raidTactics','raidRecover','raidRestart','strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'abandonCombat', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext','dungeonNavigate','dungeonPause', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'discardJunk', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
 export const visitorCommands = Object.freeze(['strategy', 'settings', 'cast', 'petCommand']);
 function rosterIds(value: unknown): asserts value is string[] { requireThat(Array.isArray(value) && value.length > 0 && value.every(id => typeof id === 'string' && id.length > 0) && new Set(value).size === value.length, 'ROSTER', '副本名册必须是非空且不重复的角色 ID 数组', 400); }
 export async function createInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) {
@@ -111,7 +111,7 @@ export async function instanceCommand(this: GameService, tx: Transaction, c: Cha
     requireThat(['running', 'completed'].includes(instance.status) && instance.simulation, 'INSTANCE_NOT_RUNNING', '副本尚未开始');
     requireThat(instanceCommands.has(cmd.type), 'INSTANCE_COMMAND', '请先离开实例再进行这项操作');
     if(instance.simulation?.goldRaid?.active){
-        requireThat(goldCommands.includes(cmd.type)||['abandonCombat','cast','loot','equip','strategy','settings'].includes(cmd.type),'GOLD_PHASE','请使用金团营地的操作');
+        requireThat(goldCommands.includes(cmd.type)||['raidPlan','raidOrder','abandonCombat','cast','loot','equip','strategy','settings'].includes(cmd.type),'GOLD_PHASE','请使用金团营地的操作');
         if(['strategy','equip'].includes(cmd.type)&&cmd.target)requireThat(!instance.simulation.party.some((p:Rules)=>p.goldNpc&&p.id===cmd.target),'GOLD_NPC','NPC自行管理装备和打法，团长只能发布团队战术');
     }
     const action = { ...cmd }, visitor = c.id !== instance.leaderId;
@@ -186,7 +186,7 @@ export async function persistInstance(this: GameService, tx: Transaction, instan
     if (Number.isFinite(s.activity.endsAt)) instance.nextEventAt = Math.min(instance.nextEventAt, s.wallAt + Math.max(1, s.activity.endsAt - s.clock));
     // Auctions change on inquiry rounds. Rewriting the entire raid every second
     // creates unnecessary serialization conflicts with manual bids.
-    if (!s.combat && s.activity.type === 'goldAuction') instance.nextEventAt = s.wallAt + Math.max(1, s.activity.endsAt - s.clock);
+    if (s.goldRaid?.active && s.goldRaid.auction) instance.nextEventAt = Math.min(instance.nextEventAt, s.wallAt + Math.max(1, s.goldRaid.auction.nextRoundAt - s.clock));
     const deadline = await this.instanceDeadline(tx, instance);
     if (s.wallAt < deadline) instance.nextEventAt = Math.min(instance.nextEventAt, deadline);
     else if (instance.status === 'running') {

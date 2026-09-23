@@ -1,3 +1,4 @@
+import {raidCommandTick,assignedRaidSupport,raidDispelTargets} from './raid-command.js';
 // Authored 25-player adaptation. Boss scripts use the existing combat damage,
 // aura, movement, resource and cooldown systems; no parallel combat calculator.
 import {goldNpcTick,goldAvoidsFire} from './gold-raid-npcs.js';
@@ -30,6 +31,11 @@ function randomTargets(s,actors,count) {
  while(pool.length&&chosen.length<count)chosen.push(pool.splice(Math.floor(rng(s)*pool.length),1)[0]);
  return chosen;
 }
+function supportActor(s,living,job,spell,target){
+ const ids=s.combat.raidEncounter.command?.plan.jobs[job];
+ const candidates=ids?ids.map(id=>living.find(c=>c.id===id)).filter(Boolean):living;
+ return candidates.find(c=>c.raidEvadingAt!==s.clock&&ready(s,c,spell,target));
+}
 export function moltenCoreTick(s,actors,hurt) {
  const raid=s.combat?.raidEncounter;if(!raid)return;
  const original=s.combat.enemies.find(e=>e.id===raid.bossId);
@@ -38,8 +44,9 @@ export function moltenCoreTick(s,actors,hurt) {
  if(!boss||boss.hp<=0)return;
  extendedMoltenCoreTick(s,actors,boss,hurt,randomTargets);
  goldNpcTick(s,actors);
+ raidCommandTick(s,actors);
  const adds=s.combat.enemies.filter(e=>e.id!==boss.id&&e.hp>0).sort((a,b)=>Number(!!b.raidHealer)-Number(!!a.raidHealer)||Number(b.trashType==='priest')-Number(a.trashType==='priest'));
- const focus=raid.id!=='golemagg'&&raid.tactics.focusAdds;
+ const focus=raid.tactics.focusAdds;
  const tanks=living.filter(c=>combatRole(c)==='tank');
  for(const c of living){
   c.raidTargetId=combatRole(c)==='tank'?((c.raidMainTank&&!raid.submerged)||!adds.length?boss.id:adds[0].id):((focus||raid.submerged)&&adds.length?adds[0].id:boss.id);
@@ -89,6 +96,7 @@ export function moltenCoreTick(s,actors,hurt) {
    if(s.clock>=fire.next&&s.clock<fire.until){fire.next+=1000;for(const c of living.filter(c=>distance(c,fire)<=fire.radius)){raid.failures.fire++;if(c.goldNpc)c.goldProfile.fireHits++;hurt(s,boss,c,750,'熔岩灼烧',{spellId:19411,school:2,periodic:true});}}
    if(raid.tactics.avoidFire)for(const c of living.filter(c=>distance(c,fire)<=fire.radius+1&&!controlled(c,s.clock)&&goldAvoidsFire(s,c,fire))){
     const dx=c.position-fire.position,dy=c.positionY-fire.positionY,angle=Math.hypot(dx,dy)<.1?(Number(c.raidIndex)%2?1:-1)*Math.PI/2:Math.atan2(dy,dx);
+    if(raid.command?.plan.movement==='finishCast'&&c.cast&&s.clock<fire.armedAt)continue;
     c.cast=null;moveToward(s,c,{position:fire.position+Math.cos(angle)*(fire.radius+4),positionY:fire.positionY+Math.sin(angle)*(fire.radius+4)},0,s.clock);c.raidEvadingAt=s.clock;
    }
   }
@@ -96,17 +104,17 @@ export function moltenCoreTick(s,actors,hurt) {
  }
  for(const c of living){
   if(c.raidEvadingAt===s.clock)continue;
-  if(raid.tactics.dispel&&[5,8].includes(c.classId)){
-   const type=c.classId===5?1:2,target=living.find(a=>(a.auras||[]).some(e=>e.dispel===type&&e.until>s.clock));
+  if(raid.tactics.dispel&&[5,8].includes(c.classId)&&assignedRaidSupport(s,c,c.classId===5?'magic':'curse')){
+   const type=c.classId===5?1:2,target=raidDispelTargets(s,c,living,c.classId===5?'magic':'curse',type)[0];
    const sp=target&&ready(s,c,c.classId===5?527:475,target);
    if(sp&&supportCast(s,c,sp,target,()=>{raid.support.dispels+=dispelSpellAuras(target,[type],1,s,'negative');},type===1?'驱散魔法':'解除诅咒'))continue;
   }
-  if(raid.tactics.tranquilize&&c.classId===3&&boss.enraged){
+  if(raid.tactics.tranquilize&&c.classId===3&&boss.enraged&&c===supportActor(s,living,'tranquilize',19801,boss)){
    const sp=ready(s,c,19801,boss);
    if(sp&&consumeHunterAmmo(c,'Tranquilizing Shot')&&supportCast(s,c,sp,boss,()=>{dispelSpellAuras(boss,[9],1,s);boss.enraged=false;raid.support.tranquilizes++;},'宁神射击'))continue;
   }
   const tank=tanks.find(a=>a.raidMainTank)||tanks[0];
-  if(raid.id==='magmadar'&&raid.tactics.fearWard&&c.classId===5&&tank&&!tank.auras?.some(a=>a.spell===6346&&a.until>s.clock)){
+  if(raid.id==='magmadar'&&raid.tactics.fearWard&&c.classId===5&&tank&&c===supportActor(s,living,'ward',6346,tank)&&!tank.auras?.some(a=>a.spell===6346&&a.until>s.clock)){
    const sp=ready(s,c,6346,tank);
    if(sp)supportCast(s,c,sp,tank,()=>{applySpellAura(tank,{spell:6346,effect:1,type:77,misc:5,amount:1,positive:true,consumeOnImmune:true,until:s.clock+180000,caster:c.id},s.clock);raid.support.wards++;},'防护恐惧结界');
   }

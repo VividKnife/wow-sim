@@ -156,7 +156,7 @@ export function stats(c){
  result.armor=armorWithAuras(c,(result.armor+gearArmor*(1+(mods.itemArmorPct||0))*(formArmor-1))*(1+(mods.armorPct||0)),c.time||0);
  return result;
 }
-export function newCharacter(name,classId=8,level=1,raceId=1,gender='male'){const def=classDefinitions.find(c=>c.id===classId),learned=(classAbilities[classId]||[]).filter(a=>a.startingSpell&&(!a.startingRaces||a.startingRaces.includes(raceId))).map(a=>a.spellId);return{id:'player',name,classId,raceId,gender,strategyProfiles:[],power:def?.power||'mana',level,xp:0,equipment:{},talents:{},talentResetCount:0,learned:[...new Set(learned)],cooldowns:{},buffs:{},hp:0,mana:0,rage:0,energy:100,time:0,lastManaUse:-5000,...(classId===3?{ammunition:{},ammoPolicy:{enabled:false,target:400}}:{})};}
+export function newCharacter(name,classId=8,level=1,raceId=1,gender='male'){const def=classDefinitions.find(c=>c.id===classId),learned=(classAbilities[classId]||[]).filter(a=>a.startingSpell&&(!a.startingRaces||a.startingRaces.includes(raceId))).map(a=>a.spellId);return{id:'player',name,classId,raceId,gender,pvpProfile:null,strategyProfiles:[],power:def?.power||'mana',level,xp:0,equipment:{},talents:{},talentResetCount:0,learned:[...new Set(learned)],cooldowns:{},buffs:{},hp:0,mana:0,rage:0,energy:100,time:0,lastManaUse:-5000,...(classId===3?{ammunition:{},ammoPolicy:{enabled:false,target:400}}:{})};}
 export function makeItem(s,id,count=1){const i=items[id];if(!i)throw new Error('物品数据缺失：'+id);return{uid:'i'+(++s.itemSequence),id,count,durability:i.MaxDurability,bound:!!(i.bonding===1||i.bonding===4)};}
 export function equipStarter(s){
  for(const row of classStartingItems[`${s.raceId||1}:${s.classId}`]||[]){

@@ -12,12 +12,12 @@ import {buildGameResponse} from '../src/rules/server-response.js';
 import type {Character,Rules} from '../src/model.ts';
 function unlocked(){let s:Rules=createGame('队长',123,0);s.level=18;s.location='stormwind';return s;}
 
-test('level 18 opens recruitment everywhere without an unlock quest and announces the level boundary once',()=>{
- let s:Rules=createGame('队长',123,0);s.level=17;s.location='goldshire';
+test('level 10 opens recruitment everywhere without an unlock quest and announces the level boundary once',()=>{
+ let s:Rules=createGame('队长',123,0);s.level=9;s.location='goldshire';
  assert.equal(view(s).partyUnlocked,false);
  assert.ok(view(s).candidates.every(c=>!c.canRecruit));
- assert.throws(()=>act(s,{type:'recruit',id:'mage'},0),/18级/);
- gainXp(s,s,xpTable[17].xp_for_next_level);
+ assert.throws(()=>act(s,{type:'recruit',id:'mage'},0),/10级/);
+ gainXp(s,s,xpTable[9].xp_for_next_level);
  assert.equal(buildGameResponse(s,1).snapshot!.view.partyUnlocked,true);
  assert.equal(s.quests[900001],undefined);
  gainXp(s,s,1);
@@ -66,7 +66,7 @@ test('replacement preserves compatible item identity, returns incompatible equip
 test('service persists recruitment, replacement assets, profession pages and free respec without a create bypass',async()=>{
  const store=new MemoryStore();let service=new GameService(store,{contentVersion:'test',now:()=>1000,seed:()=>123});
  const created=await service.createAccount('a',{name:'队长',classId:1,raceId:1},'create');const hero=created.account.primaryCharacterId;
- await assert.rejects(service.command('a',{type:'createCompanion',classId:8,name:'法师',requestId:'early'}),/18级/);
+ await assert.rejects(service.command('a',{type:'createCompanion',classId:8,name:'法师',requestId:'early'}),/10级/);
  await store.transaction(async tx=>{const c=(await tx.get<Character>('characters',hero))!;c.rules.level=18;c.rules.location='goldshire';await tx.put('characters',c);});
  const recruited=await service.command('a',{type:'recruit',id:'warrior',role:'tank',requestId:'recruit'}),companion=recruited.roster.find(c=>c.kind==='companion')!.id;
  const before=await service.snapshot('a',companion);assert.equal(before.state.level,18);assert.ok(view(before.state).professions.some(p=>p.id==='alchemy'&&p.skill===75));

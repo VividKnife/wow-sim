@@ -1,6 +1,10 @@
+import {worldNodes} from '../../../packages/game-data/world-content.js';
 // Presentation only. Use the actual location, never the map's preview selection.
 const regions={'北郡':'forest','艾尔文':'forest','暴风城':'stormwind','西部荒野':'westfall','暮色森林':'duskwood','湿地':'wetlands'};
 const locations={lakeshire:'forest',thelsamar:'forest',algaz:'forest',silverstream:'forest',ironforge:'ironforge',darnassus:'darnassus',orgrimmar:'orgrimmar',undercity:'undercity',thunderbluff:'thunderbluff',moonglade:'moonglade'};
+// New regions reuse verified local ambience until their individual tracks are
+// imported. These are thematic selections, not claims of original zone music.
+for(const n of worldNodes)regions[n.region]??=n.region==='丹莫罗'?'ironforge':n.region==='泰达希尔'?'darnassus':n.region==='提瑞斯法林地'||n.region==='银松森林'?'undercity':n.faction==='Horde'?'orgrimmar':'forest';
 export function zoneMusicForLocation(location,dungeon=false){
  if(!location)return null;
  const key=dungeon?'deadmines':locations[location.id]||regions[location.region];

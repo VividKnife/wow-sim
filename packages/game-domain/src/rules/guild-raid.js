@@ -1,18 +1,19 @@
-import {raidRouteState,raidMapView,moltenCoreBosses as raidBosses} from './molten-core-content.js';
+import {raidAttemptReview} from './raid-command.js';
+import {raidRouteState,raidMapView} from './molten-core-content.js';
 import {navigateRaid,advanceRaid,pauseRaid,settleRaidRoute} from './molten-core-navigation.js';
 import {raidNextMechanics} from './molten-core-mechanics.js';
 import {createRoster,guildSquadNames} from '../molten-core-roster.ts';
 import {moltenCoreBosses,defaultRaidTactics} from './molten-core-encounter.js';
 import {beginMoltenCoreBattle} from './molten-core-battle.js';
-import {stats,clone,log,makeItem,canEquip,rng} from './character.js';
+import {stats,clone,log,makeItem} from './character.js';
 import {items,nameOf} from './catalog.js';
 import {combatRole} from './combat-roles.js';
 import {collectLoot} from './loot.js';
 
 export const MOLTEN_CORE_ID='molten-core';
 const WEEK=604800000,weekAt=at=>Math.floor((at-345600000)/WEEK);
-// Explicit authored reward pools: actual catalog equipment, 25-player reward rules.
-export const raidLoot=Object.fromEntries(raidBosses.map((b,i)=>[b.id,Array.from({length:6},(_,n)=>991001+i*10+n)]));
+import {raidLoot,rollRaidLoot} from './raid-rewards.js';
+export {raidLoot} from './raid-rewards.js';
 const active=s=>{if(!s.guildRaid?.active)throw new Error('请先进入熔火之心。');return s.guildRaid;};
 const camp=s=>{const r=active(s);if(s.combat)throw new Error('战斗结束后才能调整营地。');if(r.recoverUntil>s.clock)throw new Error('公会正在休整，请稍候。');return r;};
 export function enterGuildRaid(s){
@@ -68,21 +69,19 @@ export function settleGuildRaid(s){
  if(s.combat||!b?.raidEncounter||b.raidMode!=='guild'||b.guildSettled)return;
  b.guildSettled=true;
  const won=!b.abandoned&&b.enemies.every(e=>e.hp<=0),bossId=b.raidEncounter.id;
- r.attempts.push({bossId,won,abandoned:!!b.abandoned,duration:b.endedAt-b.startedAt,deaths:[s,...s.party].filter(c=>c.hp<=0).length,support:clone(b.raidEncounter.support),failures:clone(b.raidEncounter.failures)});
+ r.attempts.push({bossId,won,abandoned:!!b.abandoned,duration:b.endedAt-b.startedAt,deaths:[s,...s.party].filter(c=>c.hp<=0).length,review:raidAttemptReview(s,b),support:clone(b.raidEncounter.support),failures:clone(b.raidEncounter.failures)});
  r.attempts=r.attempts.slice(-20);
  if(won){
   if(b.raidEncounter.kind==='boss'&&!r.cleared.includes(bossId))r.cleared.push(bossId);
-  if(b.raidEncounter.kind==='boss'&&!r.claims[bossId]){
-   const eligible=raidLoot[bossId].filter(id=>items[id]&&canEquip(s,items[id]));
-   const mainStat=combatRole(s)==='healer'?6:[5,7,8,9,11].includes(s.classId)?5:s.classId===1?7:3;
-   const suited=eligible.filter(id=>items[id].stat_type1===mainStat);
-   const pool=suited.length?suited:eligible.length?eligible:raidLoot[bossId].filter(id=>items[id]);
-   const id=pool[Math.floor(rng(s)*pool.length)];
-   if(!id)throw new Error('首领奖励内容缺失。');
-   s.pending.push({...makeItem(s,id),bound:true,lootBattleId:b.id,raidSource:bossId});
-   r.claims[bossId]=true;
-   r.rewards.push({bossId,itemId:id,name:nameOf('items',id),week:r.week});
-   log(s,`首领奖励：${nameOf('items',id)}。`,'loot');
+  const claimKey=b.raidEncounter.kind==='boss'?bossId:'trash:'+bossId;
+  if(!r.claims[claimKey]){
+   for(const {itemId,count} of rollRaidLoot(s,bossId)){
+    const max=Math.max(1,items[itemId].stackable);
+    for(let left=count;left>0;left-=max)s.pending.push({...makeItem(s,itemId,Math.min(left,max)),lootBattleId:b.id,raidSource:bossId});
+    r.rewards.push({bossId,itemId,count,name:nameOf('items',itemId),week:r.week});
+    log(s,`掉落：${nameOf('items',itemId)} ×${count}。`,'loot');
+   }
+   r.claims[claimKey]=true;
   }else if(b.raidEncounter.kind==='boss')log(s,'练习战完成：本周该首领奖励已领取。','raid');
   s.activity={type:s.hp>0?'idle':'dead',reason:b.raidEncounter.kind==='boss'?'首领已击败，领取战利品并休整后继续。':'怪物群已清理，可以继续推进。'};
   if(s.hp>0&&s.settings.autoLoot)collectLoot(s);

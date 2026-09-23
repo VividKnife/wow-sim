@@ -5,8 +5,17 @@ import {combatRole} from './combat-roles.js';
 import {equipmentUpgrade,equipNpcItem} from './npc-equipment.js';
 import {dungeonJournal} from './dungeon-journal.js';
 
-export const npcCommands=['npcVisit','npcFriend','npcGroup','npcRecommend','npcLootPolicy'];
-const names=['晚风归来','茶馆老陈','星河漫步','雪落无声','一盾当关','橘子汽水','夜色微凉','小满不加班','白露听风','山海有约','浮生半日','风铃响了','追光旅人','摸鱼有理','月下独酌','远山来信','晴空未晚','北境松鼠','咕咕早起','沉舟拾贝','秋水长歌','薄荷拿铁','长夜灯火','云间散步'];
+export const npcCommands=['npcVisit','npcRefresh','npcFriend','npcGroup','npcRecommend','npcLootPolicy'];
+export const NPC_BATCH_SIZE=6,NPC_REFRESH_MS=5*60*1000;
+// Nine classes rotate evenly: five classes have six residents, four have five.
+const names=[
+ '盾墙还有三秒','圣光不加班','风行者的箭袋','潜行摸个箱','奶你一口先', '石蹄听雷','面包管够','糖在包里','月爪·林歌',
+ '格雷恩·铁砧','洛瑞安·晨誓','短弓与长路','背后有只贼','塞蕾娜·白烛', '莫戈·雷语','诺兰·霜纹','维萨·暮契','熊德不迷路',
+ '冲锋别关门','阿尔文·银誓','豹哥先上','匕首不蘸糖','星光落肩', '图腾插这里','寒冰搓到天亮','灵魂石已绑','伊芙·苔枝',
+ '布洛克·石盾','审判之后喝茶','林深见兽','影步拾荒者','祈祷别空蓝', '卡鲁·风鼓','米瑞尔·蓝焰','鸦羽契约','咕咕借过',
+ '拉稳再开打','曦光守誓人','弹药还剩两组','黑巷无声','伊莲·晨祷', '风怒又触发了','传送门收摊','小鬼别开怪','橡木与月光',
+ '凯恩·赤铁','圣印未熄','荒野巡哨','消失等冷却','最后一口大奶',
+];
 const styles=[{id:'steady',name:'稳健派',quote:'等坦克接稳，我们慢慢打。'},{id:'keen',name:'热心派',quote:'缺人喊我，任务也可以一起做。'},{id:'collector',name:'装备控',quote:'有提升才需求，装备到手就毕业。'}];
 const cadence=20*60*1000,maxCatchup=2*60*60*1000;
 function seedOf(text){let n=2166136261;for(const c of text)n=Math.imul(n^c.charCodeAt(0),16777619);return n>>>0||1;}
@@ -62,7 +71,23 @@ export function ensureNpcWorld(s){
   return {id:unit.id,index,unit,friend:false,personality:styles[index%styles.length],runs:0,events:0,history:[],completedQuests:[],rngState:seedOf(unit.id),lastProgressWall:s.wallAt,steps:0,wallet:100000};
  })};
  for(const p of s.npcWorld.residents)note(p,'来到冒险者大厅，期待结识新的伙伴。');
+ s.npcWorld.board={ids:[],shown:{},rngState:seedOf(`${s.id}:hall`),refreshAt:0,sequence:0};
+ refreshBoard(s);
  return s.npcWorld;
+}
+function refreshBoard(s){
+ const w=s.npcWorld,b=w.board,previous=new Set(b.ids),chosen=[];
+ // A separate random stream keeps browsing independent of combat and adventures.
+ const order=w.residents.map(p=>({p,tie:rng(b)}));
+ const group=p=>['tank','healer'].includes(combatRole(p.unit))?combatRole(p.unit):'dps';
+ for(const role of ['tank','healer','dps','dps','dps','dps']){
+  const classes=new Set(chosen.map(p=>p.unit.classId));
+  const pool=order.filter(({p})=>group(p)===role&&!previous.has(p.id)&&!chosen.includes(p));
+  pool.sort((a,c)=>(b.shown[a.p.id]||0)-(b.shown[c.p.id]||0)||Number(classes.has(a.p.unit.classId))-Number(classes.has(c.p.unit.classId))||a.tie-c.tie);
+  chosen.push(pool[0].p);
+ }
+ b.ids=chosen.map(p=>p.id);for(const id of b.ids)b.shown[id]=(b.shown[id]||0)+1;
+ b.refreshAt=s.wallAt+NPC_REFRESH_MS;b.sequence++;
 }
 const rewardSources=Object.values(quests).filter(q=>q.QuestLevel>0&&q.QuestLevel<=60&&questLinks[q.entry]?.ends?.some(e=>e.type==='creature'&&(creatureLocations[e.id]||[]).some(id=>nodes[id])));
 function questEvent(p){
@@ -128,14 +153,18 @@ export function selectedDungeonMembers(s){
 export function npcAction(s,a){
  if(s.combat||s.dungeon||s.activity.type!=='idle')throw new Error('请结束当前活动并离开副本后再安排冒险者。');
  const world=ensureNpcWorld(s);progressNpcWorld(s);
- if(a.type==='npcFriend'){
+ if(a.type==='npcRefresh'){
+  if(s.wallAt<world.board.refreshAt)throw new Error(`旅店正在联络下一批冒险者，请在${Math.ceil((world.board.refreshAt-s.wallAt)/1000)}秒后再来。`);
+  refreshBoard(s);
+ }else if(a.type==='npcFriend'){
   const p=world.residents.find(p=>p.id===a.id);if(!p||typeof a.friend!=='boolean')throw new Error('冒险者或好友设置无效。');p.friend=a.friend;
  }else if(a.type==='npcGroup'){
   if(a.memberIds===null){world.selection=null;return;}
   if(!Array.isArray(a.memberIds)||a.memberIds.length>4||new Set(a.memberIds).size!==a.memberIds.length||a.memberIds.some(id=>![...s.party,...world.residents.map(p=>p.unit)].some(c=>c.id===id)))throw new Error('请选择至多四名不同的同行成员。');
   world.selection=[...a.memberIds];
  }else if(a.type==='npcRecommend'){
-  const chosen=a.keep?selectedDungeonMembers(s).map(c=>c.id):[],available=[...world.residents].sort((a,b)=>Number(b.friend)-Number(a.friend)||b.runs-a.runs||a.index-b.index);
+  const selectedIds=new Set(selectedDungeonMembers(s).map(c=>c.id));
+  const chosen=a.keep?[...selectedIds]:[],available=world.residents.filter(p=>p.friend||p.runs>0||world.board.ids.includes(p.id)||selectedIds.has(p.id)).sort((a,b)=>Number(b.friend)-Number(a.friend)||b.runs-a.runs||a.index-b.index);
   const group=role=>role==='tank'||role==='healer'?role:'dps';
   const count=role=>[s,...chosen.map(id=>s.party.find(c=>c.id===id)||world.residents.find(p=>p.id===id)?.unit)].filter(c=>c&&group(combatRole(c))===role).length;
   for(const role of ['tank','healer','dps'])while(chosen.length<4&&count(role)<({tank:1,healer:1,dps:3}[role])){
@@ -165,5 +194,6 @@ export function npcWorldView(s){
  const w=s.npcWorld,selected=selectedDungeonMembers(s),active=!!s.dungeon;
  const member=c=>({id:c.id,name:c.name,classId:c.classId,level:c.level,role:combatRole(c),npc:!!c.npcPlayer,hp:c.hp});
  return {unlocked:s.level>=18&&s.growthPolicy!=='companion',ready:!!w,locked:!!s.combat||active||s.activity.type!=='idle',custom:w?.selection!==null&&!!w,autoLoot:!!w?.autoLoot,selected:selected.map(member),owned:s.party.filter(c=>!c.npcPlayer).map(member),
+  total:w?.residents.length||names.length,board:w?{ids:w.board.ids,sequence:w.board.sequence,remaining:Math.max(0,w.board.refreshAt-s.wallAt),cooldown:NPC_REFRESH_MS}:null,
   residents:(w?.residents||[]).map(p=>{const c=s.party.find(c=>c.id===p.id)||p.unit;return {...member(c),friend:p.friend,personality:p.personality,runs:p.runs,history:p.history,wallet:p.wallet,status:active&&s.party.some(c=>c.id===p.id)?'与你冒险':p.steps%2?'正在任务历练':'等待组队',equipment:Object.entries(c.equipment).map(([slot,item])=>({slot:Number(slot),...item})),talents:c.talents,stats:stats(c),nextXp:xpTable[c.level]?.xp_for_next_level||0,xp:c.xp};})};
 }

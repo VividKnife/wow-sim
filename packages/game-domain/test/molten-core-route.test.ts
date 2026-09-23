@@ -13,11 +13,11 @@ function forceVictory(s:Rules){s.combat.enemies.forEach((e:Rules)=>e.hp=0);retur
 test('MC map is connected, all ten bosses have rewards, and packs use diverse compositions',()=>{
  assert.equal(moltenCoreBosses.length,10);assert.equal(moltenCoreRoute.filter(n=>n.kind==='trash').length,15);
  for(const node of moltenCoreRoute){assert.ok(moltenCorePath('entrance',node.id).length>1);assert.ok(moltenCoreMap.points[node.id].every(Number.isFinite));}
- for(const [x,y] of Object.values(moltenCoreMap.points)){assert.ok(x>=0&&x<=moltenCoreMap.width&&y>=0&&y<=moltenCoreMap.height);}
- for(const boss of moltenCoreBosses){assert.equal(raidLoot[boss.id].length,6);assert.ok(raidLoot[boss.id].every((id:number)=>items[id]));}
+ for(const [x,y] of Object.values(moltenCoreMap.points) as number[][]){assert.ok(x>=0&&x<=moltenCoreMap.width&&y>=0&&y<=moltenCoreMap.height);}
+ for(const boss of moltenCoreBosses){assert.ok(raidLoot[boss.id].length>=12);assert.ok(raidLoot[boss.id].every((id:number)=>items[id]));}
 });
 test('navigation fights approach packs, pause preserves kills, JSON resume continues and wipe does not clear a pack',()=>{
- let s=fixture();assert.throws(()=>guildRaidAction(s,{type:'raidNavigate',destination:'majordomo'}),/符文/);
+ let s=fixture();s.settings.autoLoot=true;assert.throws(()=>guildRaidAction(s,{type:'raidNavigate',destination:'majordomo'}),/符文/);
  assert.throws(()=>guildRaidAction(s,{type:'raidNavigate',destination:'ragnaros'}),/管理者/);
  assert.throws(()=>guildRaidAction(s,{type:'raidNavigate',destination:'bad'}),/未知/);
  guildRaidAction(s,{type:'raidNavigate',destination:'lucifron'});assert.equal(s.combat.raidEncounter.id,'mc-gate');
@@ -30,7 +30,7 @@ test('navigation fights approach packs, pause preserves kills, JSON resume conti
 test('full map traversal settles all encounters once, stops for loot, and practice preserves weekly claims',()=>{
  let s=fixture();
  for(const node of moltenCoreRoute){for(const c of [s,...s.party])restoreRaidMember(c,s);s.pending=[];guildRaidAction(s,{type:'raidNavigate',destination:node.id});assert.equal(s.combat.raidEncounter.id,node.id);s=forceVictory(s);}
- assert.equal(s.guildRaid.cleared.length,10);assert.equal(s.guildRaid.clearedPacks.length,15);assert.equal(s.guildRaid.rewards.length,10);assert.equal(s.guildRaid.locationId,'ragnaros');
+ assert.equal(s.guildRaid.cleared.length,10);assert.equal(s.guildRaid.clearedPacks.length,15);assert.ok(s.guildRaid.rewards.length>25);assert.equal(Object.keys(s.guildRaid.claims).length,25);assert.equal(s.guildRaid.locationId,'ragnaros');
  const claims={...s.guildRaid.claims};guildRaidAction(s,{type:'raidRestart'});assert.deepEqual(s.guildRaid.claims,claims);assert.deepEqual(s.guildRaid.clearedPacks,[]);assert.equal(s.guildRaid.locationId,'entrance');
 });
 test('a completed gold encounter cannot grant guild rewards on later entry',()=>{

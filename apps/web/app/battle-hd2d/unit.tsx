@@ -1,8 +1,8 @@
-import {useEffect,useMemo,useRef} from 'react';
+import {Suspense,useEffect,useMemo,useRef} from 'react';
 import {useFrame} from '@react-three/fiber';
 import {Html,useTexture} from '@react-three/drei';
 import {DoubleSide,Group,Mesh,MeshStandardMaterial,NearestFilter,SRGBColorSpace} from 'three';
-import {spriteAppearance,unitAnimation,unitPoint,actorHeight,CAMERA_TILT} from '@/lib/battle-hd2d.js';
+import {spriteAppearance,unitAnimation,unitPoint,actorHeight} from '@/lib/battle-hd2d.js';
 import {actionProgress,battleTarget,schoolColor,unitCondition} from '@/lib/combat-view.js';
 import type {BattleScene,BattleUnitData,BattleSkill} from '@/lib/battle-hd2d-types';
 import {useBattleFrame} from './frame';
@@ -70,7 +70,7 @@ export function BattleUnit({unit,scene,skills,onSelect}:{unit:BattleUnitData;sce
   <mesh rotation={[-Math.PI/2,0,0]} position={[0,.02,0]} scale={[height*.28,height*.17,1]}><circleGeometry args={[1,32]}/><meshBasicMaterial color="#071017" transparent opacity={.32} depthWrite={false}/></mesh>
   {!dead&&<mesh ref={ring} rotation={[-Math.PI/2,0,0]} position={[0,.04,0]}><ringGeometry args={[height*.26,height*(selected?.3:.275),48]}/><meshBasicMaterial color={selected?'#ffe0a4':unit.foe?'#df896b':'#85d2b0'} transparent opacity={selected?.95:.45} depthWrite={false} toneMapped={false}/></mesh>}
   {!dead&&unit.marker&&<mesh rotation={[-Math.PI/2,0,0]} position={[0,.055,0]}><ringGeometry args={[height*.34,height*.38,48]}/><meshBasicMaterial color={unit.marker==='focus'?'#f48c6a':'#c9a1ff'} transparent opacity={.9} depthWrite={false} toneMapped={false}/></mesh>}
-  {unit.visual?.model?<Creature key={unit.visual.model.src} unit={unit} height={height} model={unit.visual.model}/>:unit.totemUnit?<Totem height={height}/>:<Sprite unit={unit} height={height} clock={scene.clock} school={skill?.school}/>}
+  <Suspense fallback={null}>{unit.visual?.model?<Creature key={`${unit.visual.model.src}:${unit.visual.model.appearanceKey||''}`} unit={unit} height={height} model={unit.visual.model}/>:unit.totemUnit?<Totem height={height}/>:<Sprite unit={unit} height={height} clock={scene.clock} school={skill?.school}/>}</Suspense>
   <Html position={[0,height*1.15,0]} center zIndexRange={[30,0]} style={{pointerEvents:'auto'}}>
    <button type="button" onClick={()=>onSelect(unit.id)} aria-label={`${unit.name}，生命 ${Math.max(0,Math.ceil(unit.hp))}，${dead?'已倒下':condition||'可行动'}`} aria-pressed={selected} className={`hd2d-unit-label ${unit.foe?'enemy':'ally'} ${selected?'selected':''} ${dead?'dead':''}`} data-unit-id={unit.id}>
     <span className="hd2d-unit-name">{unit.name}</span>

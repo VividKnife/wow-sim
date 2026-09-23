@@ -65,7 +65,8 @@ def character(meta,key):
     if creature.get('Texture'):
         maps[1]=texture(file_id(meta['TextureFiles'],creature['Texture'],gender,race))
     equipment=meta.get('Equipment') or {}
-    for slot,display in equipment.items():
+    order={4:0,7:1,8:2,5:3,20:3,19:4,9:5,6:6,10:7}
+    for slot,display in sorted(equipment.items(),key=lambda pair:order.get(int(pair[0]),-1)):
         slot=int(slot)
         if slot not in [4,5,6,7,8,9,10,19,20]:continue
         armor=metadata(f'armor/{slot}/{display}')
@@ -73,7 +74,8 @@ def character(meta,key):
         if slot==10:geos[4]=1+group[0]
         if slot==8:geos[5]=1+group[0]
         if slot in [5,20] and group[0] and geos[4]==1:geos[8]=1+group[0]
-        if slot in [5,20] and group[2]:geos[13]=1+group[2];geos[5]=0
+        if slot in [5,20] and group[2]:geos[13]=1+group[2];geos[5]=0;geos[9]=0;geos[11]=0
+        if slot==7 and group[0]:geos[11]=1+group[0]
         if not creature.get('Texture'):
             for region,res in (armor.get('ComponentTextures') or {}).items():
                 section=sections.get(int(region))
@@ -88,17 +90,33 @@ def character(meta,key):
     return {**meta,'Model':body['Model'],'Textures':textures,'_geosets':{0}|{100*g+n for g,n in geos.items() if n>0}}
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--limit',type=int);parser.add_argument('--display',type=int,nargs='*');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--limit',type=int);parser.add_argument('--display',type=int,nargs='*');parser.add_argument('--world',action='store_true');args=parser.parse_args()
     portraits=json.loads((ROOT/'packages/game-data/data/npc-models-manifest.json').read_text())
     data=json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {'schemaVersion':1,'copyright':'Blizzard Entertainment artwork. Original Classic assets hosted by Wowhead.','models':{},'characters':{}}
     displays=args.display or sorted({a['displayId'] for a in portraits['assets']})
+    # Invisible event/credit/debug markers have no visible mesh or animation.
+    data['invisibleDisplays']=[11686,13069,15294]
+    displays=[d for d in displays if d not in data['invisibleDisplays']]
+    if args.world:
+        displays=json.loads((ROOT/'.cache/world-combat-displays.json').read_text(encoding='utf8'))
     pending=[d for d in displays if str(d) not in data['models']]
     if args.limit:pending=pending[:args.limit]
     failures=[]
     def convert(display):
         meta=metadata(f'npc/{display}')
+        # These mechanical mounts explicitly leave the optional rider body slot
+        # empty. Omit that mesh instead of inventing a driver texture.
+        if display in [5926,6890,6891,6915]:meta['_emptyTextureSlots']=[1]
+        if display==3019:meta['_staticModel']=True # stationary training dummy
         if not meta['Model']:meta=character(meta,display)
-        return m2.convert(display,meta,OUT,'/creatures/classic',CLIPS)
+        elif (meta.get('Creature') or {}).get('Texture'):
+            meta['Textures']={**(meta.get('Textures') or {}),'1':file_id(meta['TextureFiles'],meta['Creature']['Texture'])}
+        result=m2.convert(display,meta,OUT,'/creatures/classic',CLIPS)
+        portrait=ROOT/f'apps/web/public/creatures/portraits/classic-display-{display}.webp'
+        if portrait.exists():
+            result['portrait']=f'/creatures/portraits/classic-display-{display}.webp'
+            result['portraitSha256']=m2.digest(portrait.read_bytes())
+        return result
     with concurrent.futures.ThreadPoolExecutor(6) as pool:
         jobs={pool.submit(convert,d):d for d in pending}
         for job in concurrent.futures.as_completed(jobs):

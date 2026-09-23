@@ -5,6 +5,7 @@ import {recruit,companionSkills} from '../../../packages/game-domain/src/rules/p
 import {arenaView} from '../../../packages/game-domain/src/rules/arena.js';
 import {stats} from '../../../packages/game-domain/src/rules/character.js';
 import {arenaBattleScene} from '../lib/arena-battle-scene.js';
+import {battleModel} from '../../../packages/game-data/battle-models.js';
 import {battleObstacles,worldPoint,worldRadius,spriteAppearance,unitAnimation,groundTexture} from '../lib/battle-hd2d.js';
 
 function fixture(){
@@ -40,6 +41,14 @@ test('arena pillars align with simulation coordinates and radius at every zoom',
   }
  }
  assert.equal(groundTexture('arena'),'/battle/ground/cave.webp');
+});
+
+test('arena retains race, sex and level for the same T1 appearance as PvE',()=>{
+ const state=fixture(),actor=state.arena.teams[0].members[0];
+ actor.raceId=1;actor.gender='female';actor.classId=8;actor.level=60;
+ const scene=arenaBattleScene(arenaView(state).match),unit=scene.units.find(u=>u.id===actor.id);
+ assert.equal(unit.raceId,1);assert.equal(unit.gender,'female');assert.equal(unit.level,60);
+ assert.equal(battleModel(unit).appearanceKey,'1-1-8-t1');
 });
 test('undetected opponents and their retained visual effects never enter the character scene',()=>{
  const s=fixture(),a=s.arena,enemy=a.teams[1].members[0];a.phase='combat';a.clock=4000;enemy.stealthed=true;

@@ -42,6 +42,7 @@ export function enterDungeon(s,id=dungeonIdFor(s)){
  const d={id,runId:id+'-'+(s.dungeonSequence=(s.dungeonSequence||0)+1),cursor:0,locationId:'entrance',destination:'full',path:[],autoAdvance:false,advanceReason:'',spawns:{},phases:{},defeated:{},defeatedBosses:{},cleared:{},skipped:{},interactions:{},position:clone(reference.entrance),startedAt:s.clock};
  const rare=Object.fromEntries(Object.entries(definition.rareEntries).map(([entry,chance])=>[entry,rng(s)<chance]));
  for(const encounter of reference.encounters)for(const row of encounter.sourceSpawns){
+  if(encounter.faction&&encounter.faction!==(s.teamId===67?'Horde':'Alliance')){d.spawns[row.guid]=null;continue;}
   const choices=row.templateChoices.filter(c=>!Object.hasOwn(rare,c.entry)||rare[c.entry]);
   if(!choices.length){d.spawns[row.guid]=null;continue;}
   const chosen=choices.length===1?choices[0]:choices[Math.floor(rng(s)*choices.length)];

@@ -1,5 +1,6 @@
 import {racialModifiers} from './racial-effects.js';
-import {items,nodes,nameOf,creatures} from './catalog.js';
+import {items,nodes,nameOf,creatures,objectTemplates,objectLocations,objectLoot} from './catalog.js';
+import classReference from '../../../game-data/data/classes-reference.json' with {type:'json'};
 import {addItem,clone,log,roll,rng,stats,slotOf,countItem} from './character.js';
 import {professions,recipes,enchants,professionRanks,specializations,specializationKnown,disenchantLoot,bandages,enchantFits,professionReference} from './profession-data.js';
 import {quantity,usableCount,consume,receive,marketPrice,protectedItem} from './inventory.js';
@@ -21,15 +22,29 @@ export function recipeAvailability(s,r){
 }
 export function professionView(s){return{professions:professions.map(p=>({...p,...s.professions?.[p.id],learned:!!s.professions?.[p.id],effectiveSkill:skill(s,p.id),racialBonus:skill(s,p.id)-(s.professions?.[p.id]?.skill||0),nextRank:professionRanks[p.id].find(r=>r.cap>(s.professions?.[p.id]?.cap||0)),specializations:specializations.filter(x=>x.profession===p.id),recipeCount:professionReference.counts[p.id]||0})),professionRecipeCount:recipes.length,canTrainProfession:canTrainProfession(s),resources:resourceView(s),disenchantable:s.bag.filter(i=>canDisenchant(s,i)&&items[i.id].Quality<=3).map(i=>i.uid)};}
 
-// Explicit terrain profiles for the current road graph. Town centers and
-// dungeon interiors do not generate gathering nodes.
+// Authored early-region terrain resources plus original herb/mineral objects.
+// Object locations and skill gates come from ClassicDB and Lock.dbc.
 const terrain={northwood:'forest',vineyard:'farm',echo:'mine',fargodeep:'mine',jasper:'mine',mirror:'lake',crystal:'lake',stonefield:'farm',maclure:'farm',logging:'forest',brackwell:'farm',forestedge:'forest',furlbrow:'farm',saldean:'farm',jansen:'mine',alexton:'farm',moonbrook:'hills',daggerhills:'hills',coastnorth:'coast',coast:'coast',lighthouse:'coast',silverstream:'mine'};
-function resourceDefs(location){const t=terrain[location];if(!t)return[];const west=nodes[location].region==='西部荒野'||location==='silverstream';const defs=[];
+const sourceResources=new Map();
+for(const object of Object.values(objectTemplates)){
+ const lock=classReference.classLocks[object.data0]?.requirements.find(r=>r.type===2&&[2,3].includes(r.index));
+ if(object.type!==3||!lock)continue;
+ const loot=(objectLoot[object.data1]||[]).filter(r=>r.mincountOrRef>0&&r.ChanceOrQuestChance>0&&!r.condition_id&&items[r.item]).sort((a,b)=>b.ChanceOrQuestChance-a.ChanceOrQuestChance)[0];
+ if(!loot)continue;
+ for(const location of objectLocations[object.entry]||[]){
+  if(['city','dungeon'].includes(nodes[location]?.kind))continue;
+  const rows=sourceResources.get(location)||[];
+  if(!rows.some(r=>r.item===loot.item))rows.push({id:`${location}:object-${object.entry}`,name:object.name,profession:lock.index===2?'herbalism':'mining',item:loot.item,required:Math.max(1,lock.skill),sourceObject:object.entry});
+  sourceResources.set(location,rows);
+ }
+}
+function resourceDefs(location){const t=terrain[location];const west=nodes[location]?.region==='西部荒野'||location==='silverstream';const defs=[];
  if(['forest','farm','lake','hills'].includes(t)){defs.push(['bloom','herbalism',2447,1,'宁神花丛'],['silverleaf','herbalism',765,1,'银叶草丛']);if(west)defs.push(['mageroyal','herbalism',785,50,'魔皇草丛'],['briarthorn','herbalism',2450,70,'石南草丛']);}
  if(['mine','hills'].includes(t)){defs.push(['copper','mining',2770,1,'铜矿脉']);if(west)defs.push(['tin','mining',2771,65,'锡矿脉']);}
  if(['lake','coast'].includes(t)){defs.push(['fish','fishing',6291,1,'美味小鱼群']);if(west)defs.push(['kelp','herbalism',3820,75,'荆棘藻']);}
  if(['mine','hills'].includes(t))defs.push(['earthroot','herbalism',2449,15,'地根草丛']);
- return defs.map(([key,profession,item,required,name])=>({id:location+':'+key,profession,item,required,name}));
+ const resources=defs.map(([key,profession,item,required,name])=>({id:location+':'+key,profession,item,required,name}));
+ return [...resources,...(sourceResources.get(location)||[]).filter(r=>!resources.some(existing=>existing.item===r.item))];
 }
 export function resourceView(s){return resourceDefs(s.location).map(r=>{const readyAt=s.resourceCooldowns?.[r.id]||0;return{...r,readyAt,available:readyAt<=s.clock&&skill(s,r.profession)>=r.required,learned:skill(s,r.profession)>0};});}
 function roomForResource(s,r){const copy=clone(s);try{receive(copy,r.item,3);return true;}catch{return false;}}

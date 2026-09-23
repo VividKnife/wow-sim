@@ -34,6 +34,7 @@ import {activeAuras,controlled,rooted,hasAura,movementMultiplier,addMovementSlow
 import {enemyAITick,enemyDesiredRange} from './enemy-ai.js';
 import {tickEnemyAuras,tickEnemySpell,tickEnemyProjectiles} from './enemy-spells.js';
 import {initializeSmite,smiteTick} from './smite.js';
+import {dungeonBossTick,dungeonBossPhaseTick,dungeonCharmTick} from './dungeon-boss-ai.js';
 import {triggerMeleeProcs} from './enemy-procs.js';
 import {enemyMeleeTick} from './enemy-melee.js';
 import {combatMembers} from './combat-members.js';
@@ -265,14 +266,15 @@ function decideConfigured(s,c,e,targets,actors,api,rules=c.rules){
  let approach=null;
  for(const rule of rules){
   if(!rule.enabled)continue;
-  const assigned=s.combat?.pvp&&spells[rule.spell]?.SpellName===c.arenaControlSpell?targets.find(t=>t.id===c.arenaControlTarget):null;
+  const assignedId=s.combat?.pvp?(spells[rule.spell]?.SpellName===c.arenaControlSpell?c.arenaControlTarget:spells[rule.spell]?.SpellName===c.arenaInterruptSpell?c.arenaInterruptTarget:null):null;
+  const assigned=targets.find(t=>t.id===assignedId);
   const ruleTarget=assigned||e;
   // When a higher-priority cast needs movement, only try lower-priority
   // instants already in range. Their usual conditions/cooldowns still apply.
   if(approach){const id=knownRank(c,rule.spell),sp=id&&spellInfo(c,id);if(!sp||sp.castMs||sp.ChannelInterruptFlags&&sp.durationMs||!inSpellRange(c,e,sp))continue;}
   if(decideClass(s,c,ruleTarget,actors,api,[rule]))return true;
   const name=spells[rule.spell]?.SpellName;
-  if(c.classId===8&&!extendedSpellNames.has(name)&&!talentActiveNames.has(name)&&!racialActiveNames.has(name)){const decision=decideMage(s,c,e,[rule]);if(decision?.approach)approach??=decision.approach;else if(decision)return true;}
+  if(c.classId===8&&!extendedSpellNames.has(name)&&!talentActiveNames.has(name)&&!racialActiveNames.has(name)){const decision=decideMage(s,c,ruleTarget,[rule]);if(decision?.approach)approach??=decision.approach;else if(decision)return true;}
   const decision=[1,4,5].includes(c.classId)&&decideCompanion(s,c,targets,actors,recordDamage,spellLands,api,[rule]);
   if(decision==='queued')return false;
   if(decision)return 'core';
@@ -290,6 +292,7 @@ export function combatTick(s,{pvpTeam=false}={}){
  const battle=s.combat;if(!battle)return;
  if(battle.pull&&s.clock<battle.pull.startsAt)return;
  initializeMetrics(s);const actors=combatMembers(s);for(const c of actors){c.time=s.clock;const st=stats(c);c.currentMaxHp=st.maxHp;c.currentMaxMana=st.maxMana;}
+ if(!pvpTeam)dungeonBossPhaseTick(s,actors,hurtPlayer);
  // A room is visible before combat starts. Only the tank opens; enemies wait
  // for a hostile action or melee contact instead of charging during the pull.
  const opener=actors.find(c=>c.hp>0&&!c.petUnit&&!c.totemUnit&&!c.escortNpc&&combatRole(c)==='tank');
@@ -305,6 +308,7 @@ export function combatTick(s,{pvpTeam=false}={}){
  battle.pendingSpawns=(battle.pendingSpawns||[]).filter(p=>p.at>s.clock);
  const enemyPositions=new Map(battle.enemies.map(e=>[e.id,point(e)])),openingLogSequence=s.logSequence;
  for(const c of actors.filter(c=>c.hp>0)){
+  if(!pvpTeam&&dungeonCharmTick(s,c,actors,hurtPlayer))continue;
   if(c.raidEvadingAt===s.clock)continue;
   if(battle.pull&&battle.pull.engagedAt==null&&c!==opener)continue;
   racialTick(s,c,battle.enemies);onTalentEvent(s,c,{type:'tick'},{...classApi});
@@ -374,6 +378,7 @@ export function combatTick(s,{pvpTeam=false}={}){
   const challenger=current&&ordered.find(c=>c.id!==current.id&&threat(c)>threat(current)*(distance(c,e)<=5?1.1:1.3));
   const target=forced||challenger||current||ordered[0];e.target=target.id;
   if(smiteTick(s,e,actors,hurtPlayer))continue;
+  if(dungeonBossTick(s,e,actors,hurtPlayer))continue;
   if(!e.raidScripted)enemyAITick(s,e,actors,hurtPlayer);
   if(e.despawnAt&&s.clock>=e.despawnAt){e.removed=true;e.cast=null;continue;}
   if(e.cast||controlled(e,s.clock))continue;
@@ -384,6 +389,7 @@ export function combatTick(s,{pvpTeam=false}={}){
  }
  recordCombatMotion(s,enemyPositions);
  if(pvpTeam)return;
+ dungeonBossPhaseTick(s,actors,hurtPlayer);
  for(const e of battle.enemies.filter(e=>e.hp<=0&&!e.rewarded)){
   if(e.deathSummon)battle.pendingSpawns.push({at:s.clock+e.deathSummon.delay,profile:e.deathSummon.profile});
   e.rewarded=true;const raw=creatures[e.entry];s.totals.kills++;creditKill(s,e.entry);const gold=roll(s,raw.MinLootGold,raw.MaxLootGold);s.money+=gold;s.totals.money+=gold;battle.lootGold=(battle.lootGold||0)+gold;

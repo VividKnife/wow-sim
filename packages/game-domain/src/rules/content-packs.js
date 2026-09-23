@@ -5,7 +5,12 @@ export function contentPack(catalog, params) {
  const version={contentVersion:catalog.contentVersion,pack};
  if(pack==='core') {
   const {items,market,dungeonJournal,...core}=catalog;
-  return {...core,pack,items:{},market:[],dungeonJournal:(dungeonJournal||[]).map(d=>({...d,bosses:d.bosses.map(({loot,...boss})=>({...boss,contentVersion:catalog.contentVersion,lootPack:`boss:${d.id}:${boss.id}`}))}))};
+  return {...core,pack,items:{},market:[],dungeonJournal:(dungeonJournal||[]).map(({atlas,...d})=>({...d,atlasPack:atlas?`atlas:${d.id}`:null,contentVersion:catalog.contentVersion,bosses:d.bosses.map(({loot,abilities,strategy,...boss})=>({...boss,contentVersion:catalog.contentVersion,lootPack:`boss:${d.id}:${boss.id}`}))}))};
+ }
+ if(pack.startsWith('atlas:')){
+  const dungeon=catalog.dungeonJournal?.find(d=>d.id===pack.slice(6));
+  if(!dungeon?.atlas)throw Object.assign(new Error('未知副本地图'),{status:404});
+  return {...version,atlas:dungeon.atlas};
  }
  if(pack==='items') {
   const raw=params.get('ids')||'';
@@ -18,7 +23,7 @@ export function contentPack(catalog, params) {
  if(pack.startsWith('boss:')) {
   const [,dungeonId,bossId]=pack.split(':');
   const boss=catalog.dungeonJournal?.find(d=>d.id===dungeonId)?.bosses.find(b=>String(b.id)===bossId);
-  if(boss&&pack===`boss:${dungeonId}:${boss.id}`)return {...version,loot:boss.loot};
+  if(boss&&pack===`boss:${dungeonId}:${boss.id}`)return {...version,loot:boss.loot,abilities:boss.abilities,strategy:boss.strategy};
  }
  throw Object.assign(new Error('内容包不存在'),{status:404});
 }

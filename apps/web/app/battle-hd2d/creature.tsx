@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/immutability -- AnimationMixer and cloned skeletons are render-owned mutable objects. */
 import {useEffect,useMemo,useRef} from 'react';
 import {useFrame} from '@react-three/fiber';
-import {useGLTF} from '@react-three/drei';
-import {clone} from 'three/examples/jsm/utils/SkeletonUtils.js';
-import {AnimationMixer,Group,LoopOnce,LoopRepeat,Mesh,SkinnedMesh,type AnimationAction} from 'three';
+import {useGLTF,useTexture} from '@react-three/drei';
+import {Group,LoopOnce,LoopRepeat,type AnimationAction} from 'three';
+import {createCreatureInstance} from '@/lib/creature-instance.js';
 import {battleTarget} from '@/lib/combat-view.js';
 import {unitPoint} from '@/lib/battle-hd2d.js';
 import {creatureAction,creatureClip,creatureOneShot} from '@/lib/creature-animation.js';
@@ -11,20 +10,19 @@ import type {BattleUnitData,CreatureModelData} from '@/lib/battle-hd2d-types';
 import {useBattleFrame} from './frame';
 
 export function Creature({unit,height,model}:{unit:BattleUnitData;height:number;model:CreatureModelData}){
- const assets=useGLTF(model.weapon?[model.src,model.weapon]:[model.src]),asset=assets[0],weapon=assets[1],frame=useBattleFrame(),root=useRef<Group>(null);
+ const asset=useGLTF(model.src),attachments=useGLTF((model.attachments||[]).map(a=>a.src)),frame=useBattleFrame(),root=useRef<Group>(null);
+ const skins=useTexture(Object.values(model.textures||{}));
  // Each actor owns its skeleton and mixer. Geometry and textures stay cached.
- const instance=useMemo(()=>{
-  const object=clone(asset.scene);
-  if(weapon){const hand=object.getObjectByName('attachment_1');if(hand)hand.add(clone(weapon.scene));}
-  object.traverse(child=>{if(child instanceof Mesh){child.castShadow=true;child.receiveShadow=true;child.frustumCulled=false;}});
-  const mixer=new AnimationMixer(object);
-  return {object,mixer,actions:new Map(asset.animations.map(clip=>[clip.name,mixer.clipAction(clip)]))};
- },[asset,weapon]);
- useEffect(()=>()=>{instance.mixer.stopAllAction();instance.mixer.uncacheRoot(instance.object);
-  instance.object.traverse(child=>{if(child instanceof SkinnedMesh)child.skeleton.dispose();});
- },[instance]);
+ const instance=useMemo(()=>createCreatureInstance(asset,model,attachments,skins),
+ // The appearance key identifies immutable, manifest-backed texture/geometry choices.
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ [asset,model.appearanceKey]);
  const state=useRef<{name:string;key:unknown;action:AnimationAction|null;clock:number;until:number;previous:[number,number];lastMove:number}>
   ({name:'',key:null,action:null,clock:NaN,until:0,previous:[NaN,NaN],lastMove:-Infinity});
+ useEffect(()=>{
+  state.current={name:'',key:null,action:null,clock:NaN,until:0,previous:[NaN,NaN],lastMove:-Infinity};
+  return()=>instance.dispose();
+ },[instance]);
  useFrame(()=>{
   const f=frame.current,s=state.current;
   const p=unitPoint(f.layout,unit.id),target=battleTarget(unit,f.scene.units,f.clock),q=target?unitPoint(f.layout,target.id):null;
@@ -34,7 +32,7 @@ export function Creature({unit,height,model}:{unit:BattleUnitData;height:number;
   let desired=creatureAction(unit,f.scene.effects,f.clock,f.wall,f.clock-s.lastMove<150);
   // Let one-shot attacks finish when the short combat event expires.
   if(desired.action==='idle'&&f.clock<s.until&&['attack','cast'].includes(s.name))desired={action:s.name,key:s.key};
-  const clip=desired.action==='attack'&&model.twoHanded&&model.animations.includes(19)?'anim_19':creatureClip(model.animations,desired.action),next=instance.actions.get(clip);
+  const clip=desired.action==='attack'&&model.twoHanded&&model.animations.includes(19)?'anim_19':creatureClip(model.animations,desired.action),next=instance.action(clip);
   if(next&&(desired.action!==s.name||desired.key!==s.key)){
    const previous=s.action;
    next.reset().setEffectiveWeight(1).setEffectiveTimeScale(1);

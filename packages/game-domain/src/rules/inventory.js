@@ -1,3 +1,4 @@
+import {capitals} from '../../../game-data/world-content.js';
 import {items,nameOf} from './catalog.js';
 import {bagCapacity,clone,makeItem,log} from './character.js';
 import {materialIds,marketIds,priceOverrides,recipes} from './profession-data.js';
@@ -22,7 +23,7 @@ export function put(list,instance,capacity){
 }
 export function receive(s,id,count){const data=items[id],max=Math.max(1,data?.stackable||1);if(data?.maxcount>0){const owned=[...s.bag,...s.bank,...s.pending,...Object.values(s.equipment),...s.auctions.map(a=>a.item)].filter(i=>i.id===id).reduce((n,i)=>n+i.count,0);if(owned+count>data.maxcount)throw new Error('超过唯一物品持有上限：'+nameOf('items',id));}while(count>0){const n=Math.min(count,max);put(s.bag,makeItem(s,id,n),bagCapacity(s));count-=n;}}
 export function organize(list){const result=[];for(const i of list)put(result,i,Infinity);result.sort((a,b)=>(items[a.id]?.class||0)-(items[b.id]?.class||0)||(items[b.id]?.Quality||0)-(items[a.id]?.Quality||0)||a.id-b.id||a.uid.localeCompare(b.uid));return result;}
-export const bankHere=s=>['stormwind','ironforge'].includes(s.location);
+export const bankHere=s=>capitals.some(c=>c.id===s.location);
 export const bankCapacity=s=>24+s.bankUpgrades*16;
 const scrollRecipes=Object.fromEntries(recipes.filter(r=>r.item>=900000).map(r=>[r.item,r]));
 export function marketPrice(id){const i=items[id];if(!i)return null;const scrollCost=scrollRecipes[id]?.materials.reduce((n,m)=>n+m.count*marketPrice(m.id).buy,0)||0;const buy=Math.max(4,(i.SellPrice||0)*4,priceOverrides[id]||0,Math.ceil(scrollCost*1.1));return{buy,sell:Math.max(1,Math.floor(buy*.65))};}
@@ -57,7 +58,7 @@ export function storageAction(s,a){
  if(a.type==='auctionSellBatch'){auctionSellBatch(s,a.uids);return;}
  if(a.type==='auctionSellAll'){const selected=s.bag.filter(i=>tradable(i)&&items[i.id]?.Quality>0&&items[i.id]?.Quality<=3);if(!selected.length)throw new Error('没有可快捷上架的物品');auctionSellBatch(s,selected.map(i=>i.uid));return;}
  if(a.type==='auctionCancel'){const listing=s.auctions.find(i=>i.id===a.id);if(!listing)throw new Error('拍卖已成交或不存在');put(s.bag,listing.item,bagCapacity(s));s.auctions=s.auctions.filter(i=>i.id!==a.id);return;}
- if(!bankHere(s))throw new Error('请到暴风城贸易区或铁炉堡银行办理。');
+ if(!bankHere(s))throw new Error('请到本阵营主城的银行办理。');
  if(a.type==='sortBank'){s.bank=organize(s.bank);return;}
  if(a.type==='expandBank'){if(s.bankUpgrades>=3)throw new Error('银行容量已达上限');const cost=1000*(s.bankUpgrades+1);if(s.money<cost)throw new Error('金币不足');s.money-=cost;s.bankUpgrades++;return;}
  if(a.type==='bankDepositMaterials'){const selected=s.bag.filter(i=>materialIds.has(i.id)&&!protectedItem(i));if(!selected.length)throw new Error('没有可存入的未锁定材料');for(const i of selected){put(s.bank,i,bankCapacity(s));s.bag=s.bag.filter(x=>x.uid!==i.uid);}return;}

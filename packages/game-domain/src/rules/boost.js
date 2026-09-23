@@ -1,4 +1,5 @@
-import {items,quests,classAbilities,isSharedRouteQuest} from './catalog.js';
+import {racialHomes} from '../../../game-data/world-content.js';
+import {items,quests,classAbilities} from './catalog.js';
 import {canEquip,makeItem,slotOf,stats,log} from './character.js';
 import {boostMount} from './mounts.js';
 
@@ -11,7 +12,7 @@ export function boostEquipmentCandidates(s){
  for(const q of Object.values(quests)){
   if(q.MinLevel>20||q.QuestLevel>20||q.MaxLevel&&q.MaxLevel<20)continue;
   if(q.RequiredClasses&&!(q.RequiredClasses&(1<<(s.classId-1))))continue;
-  if(q.RequiredRaces&&!(q.RequiredRaces&(1<<(s.raceId-1)))&&!isSharedRouteQuest(q))continue;
+  if(q.RequiredRaces&&!(q.RequiredRaces&(1<<(s.raceId-1))))continue;
   for(const prefix of ['RewItemId','RewChoiceItemId'])for(let n=1;n<=6;n++){
    const item=items[q[prefix+n]];
    if(item&&[2,4].includes(item.class)&&item.InventoryType&&canEquip(s,item))rewards.set(item.entry,{item,questId:q.entry});
@@ -54,7 +55,7 @@ export function applyLevel20Boost(s){
  if(items[s.equipment[16]?.id]?.InventoryType===17)delete s.equipment[17];
  s.bags=Array.from({length:4},()=>makeItem(s,14046));
  s.mounts=[boostMount.id];s.riding.horse=true;
- s.location='goldshire';s.hearth='goldshire';s.visited=['northshire','goldshire'];
+ s.location=racialHomes[s.raceId].capital;s.hearth=s.location;s.visited=[racialHomes[s.raceId].start,s.location];
  const st=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;
  log(s,'测试直升：已到达20级，获得50金币，并配发本职业可用的任务装备、四个符文布背包及旅行棕马，同时学会骑术。队友系统已开通，可在队友页随时招募或更换队友。');
  return s;

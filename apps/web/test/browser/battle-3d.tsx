@@ -10,6 +10,7 @@ import {projectClientSnapshot} from '../../../../packages/game-domain/src/rules/
 import Battle from '../../app/battle';
 import ArenaBattle from '../../app/arena-battle';
 import '../../app/globals.css';
+import '../../app/arena.css';
 
 const content=clientContent();
 function fixture(mode:string):any{
@@ -25,10 +26,10 @@ function fixture(mode:string):any{
 }
 function Preview(){
  const [mode,setMode]=useState('world'),[state,setState]=useState(()=>fixture('world')),[open,setOpen]=useState(false),[paused,setPaused]=useState(true),[run,setRun]=useState(0);
- useEffect(()=>{if(paused||document.hidden)return;const timer=setInterval(()=>{if(!document.hidden)setState((s:any)=>advance(s,s.wallAt+100).state);},100);return()=>clearInterval(timer);},[paused]);
+ useEffect(()=>{if(paused)return;const timer=setInterval(()=>{if(!document.hidden)setState((s:any)=>advance(s,s.wallAt+100).state);},100);return()=>clearInterval(timer);},[paused]);
  const snapshot=useMemo(()=>projectClientSnapshot(state,view(state)),[state]);
  const choose=(next:string)=>{setMode(next);setState(fixture(next));setRun(v=>v+1);setPaused(false);setOpen(next!=='arena');};
- return <main style={{maxWidth:1400,margin:'auto',padding:24}}><h1>全游戏 3D 战斗试玩</h1><p>野外 · 五人本 · 熔火之心 · 竞技场。原版骨骼模型，透视镜头与战斗音效。</p><p>独立试玩，不连接账号或存档。角色使用职业初始服装，暂不随背包装备换装。</p>
+ return <main style={{maxWidth:1400,margin:'auto',padding:24}}><h1>全游戏 3D 战斗试玩</h1><p>野外 · 五人本 · 熔火之心 · 竞技场。原版骨骼模型，透视镜头与战斗音效。</p><p>独立试玩，不连接账号或存档。60 级显示职业 T1 套装，低等级使用初始服装；外观保留种族与性别。</p>
   <div className="action-row" style={{margin:'18px 0'}}>{Object.entries({world:'野外战斗',dungeon:'五人副本',mc:'MC 团队战斗',arena:'5v5 竞技场'}).map(([id,name])=><button key={id} onClick={()=>choose(id)}>{name}</button>)}<button onClick={()=>setPaused(v=>!v)}>{paused?'继续模拟':'暂停模拟'}</button>{mode!=='arena'&&<button onClick={()=>setOpen(true)}>查看当前战斗</button>}</div>
   {mode==='arena'?<ArenaBattle key={run} match={arenaView(state).match}/>:open&&<Battle key={run} state={snapshot.player} data={{...content,...snapshot.view}} busy={false} send={async(action:any)=>{setState((s:any)=>act(s,action,s.wallAt));return true;}} open={open} onOpenChange={setOpen}/>}
  </main>;

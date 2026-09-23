@@ -1,3 +1,4 @@
+import {raidPlan,initRaidCommand} from './raid-command.js';
 import {startCombat} from './combat.js';
 import {combatRole} from './combat-roles.js';
 import {moltenCoreBosses} from './molten-core-encounter.js';
@@ -16,12 +17,14 @@ export function beginMoltenCoreBattle(s,bossId,tactics){
  startCombat(s,[],true,foes,{shape:'rectangle',minX:-20,maxX:50,minY:-25,maxY:25});
  s.combat.ground='cave';
  s.combat.raidMode=s.goldRaid?.active?'gold':s.guildRaid?.active?'guild':'demo';
- const actors=[s,...s.party],tanks=actors.filter(c=>combatRole(c)==='tank');
+ const actors=[s,...s.party],plan=raidPlan(s,bossId),allTanks=actors.filter(c=>combatRole(c)==='tank'),tanks=[allTanks.find(c=>c.id===plan.mainTank),allTanks.find(c=>c.id===plan.offTank)].filter(Boolean);
+ const spread=plan.formation==='spread'?6:2;
  for(const [i,c]of actors.entries()){
   c.raidIndex=i;c.raidSquad=Math.floor(i/5);c.raidMainTank=c.id===tanks[0]?.id;
-  c.position=['tank','melee'].includes(combatRole(c))?22:4+(i%3)*2;c.positionY=(i%5-2)*4+(Math.floor(i/5)%2?2:0);
+  c.position=['tank','melee'].includes(combatRole(c))?22:4+(i%3)*2;c.positionY=(i%5-2)*spread+(Math.floor(i/5)%2?2:0);
  }
  for(const [i,e]of foes.entries()){e.position=30;e.positionY=i===0?0:8;e.target=tanks[i===0?0:1]?.id||s.id;e.threat[e.target]=2500;}
  const at=s.clock;
  s.combat.raidEncounter={id:bossId,enrageAt:at+(def.enrageMs||180000),kind:node?.kind||'boss',bossId:foes[0].id,tactics:{...tactics},nextDoom:at+8000,nextCurse:at+12000,nextShock:at+5000,nextFrenzy:at+12000,nextFear:at+22000,nextBomb:at+7000,nextSpecial:at+8000,nextPulse:at+12000,nextHeal:at+7000,nextSubmerge:at+45000,deadAdds:[],bombs:[],fires:[],events:[],support:{dispels:0,tranquilizes:0,wards:0},failures:{doom:0,fire:0,feared:0}};
+ if(s.goldRaid?.active||s.guildRaid?.active)initRaidCommand(s,bossId);
 }

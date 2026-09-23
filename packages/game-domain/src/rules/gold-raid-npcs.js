@@ -1,3 +1,4 @@
+import {canReceiveRaidLoot,raidItemIsEquipment} from './raid-rewards.js';
 import {createRoster,gearScore} from '../molten-core-roster.ts';
 import {items,talents,nameOf,classTalentTrees} from './catalog.js';
 import {rng,stats,canEquip,slotOf,log} from './character.js';
@@ -76,7 +77,8 @@ export function goldAvoidsFire(s,c,fire){
  const d=p.fireDecisions[fire.id];return d.avoid&&s.clock>=d.at;
 }
 export function npcPriceLimit(c,item,rare,s){
- if(!canEquip(c,item))return 0;
+ if(!canReceiveRaidLoot(c,item))return 0;
+ if(!raidItemIsEquipment(item.entry)){const p=c.goldProfile;return Math.min(p.wallet,Math.max(10*GOLD,item.SellPrice*4)*(rare?20:1));}
  const p=c.goldProfile,profile=personalities[p.personality],role=combatRole(c),old=items[c.equipment[slotOf(item)]?.id];
  const before=old?gearScore(old,role,c.classId):0,after=gearScore(item,role,c.classId),improvement=(after-before)/Math.max(1,before);
  if(improvement<=0&&p.personality!=='impulsive')return 0;

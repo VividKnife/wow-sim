@@ -1,0 +1,2901 @@
+{
+  "revision": "b852b560442b31579e77ef3967b3c2d594832da8",
+  "assets": [
+    {
+      "path": "journal/bosses/10096.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-High%20Justice%20Grimstone.PNG",
+      "gitBlob": "629dbbdb257f4aecf15e686abc4b4b7305a4cf74",
+      "sha256": "40dec7b2fe157f25226d81bf8efd2e5d1418739f18665029ea98038b8f7be1b1",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10220.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Halycon.PNG",
+      "gitBlob": "b74af237a00a6f301907c7bef90f86a4cc9edb6b",
+      "sha256": "a1e5a06ac272373f617e156dd5dc4c8a5895b76cdd754385b2fd930a88c2e5f3",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10268.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Gizrul%20the%20Slavener.PNG",
+      "gitBlob": "9f409e5dbd6307d643c9d6ad7da45ecc43d06fec",
+      "sha256": "abe8f61c242f33c21647cb94de0813341b34a8a2c10f88f5303476630395c8ea",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10339.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Gyth.PNG",
+      "gitBlob": "2f2b707e9f008d06b0723256a16487e17776af66",
+      "sha256": "4973397df5ae29b8f14892a6bdb430468cd75f2adc98db9a47c5adb2a8352034",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10363.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-General%20Drakkisath.PNG",
+      "gitBlob": "70a26370448a4ca516fe9218804e8771a91fa1de",
+      "sha256": "01a7b7f9d40f47a24ef8c87eef6e65ce190ec032b8f5d45405b789e2155c2bce",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10429.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Warchief%20Rend%20Blackhand.PNG",
+      "gitBlob": "37325260d3bee2c2233c4b10e34d6289d2795167",
+      "sha256": "fca19a53af0afa1cf6c0bf7de25e09524f33280d1bf90df0aef1e6b07718e453",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10430.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-The%20Beast.PNG",
+      "gitBlob": "8e9a6b26faa937371a85aeefd19ce3b4be649765",
+      "sha256": "0feaa1bd9eb20ce911c5ba307eaeab755c092725d2348267d58b3aa1e1841056",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10432.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Vectus.PNG",
+      "gitBlob": "52494efcacbfd81541e03f3c7a3c421edf3af32c",
+      "sha256": "4ba8d9fc2cd2e0fbc7f19000e2404b4ace0ff7276f85da4778a17de26a8ab40e",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10433.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Marduk%20Blackpool.PNG",
+      "gitBlob": "2ae92f35beda080c187bb1cdc7a3f578f54ad4fe",
+      "sha256": "71bd3fe0bc2ef72a98363e2e0adaf8b41619894d7a4dc4c4ba2564583ede4689",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10435.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Magistrate%20Barthilas.PNG",
+      "gitBlob": "8d5e87905cb1d777c31557e3ccdef7b1cbf078d5",
+      "sha256": "bdd6a178a1fa41fe35bbd2043ecbe08dfd471773a6f998d7c75cdea7793b0395",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10436.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Baroness%20Anastari.PNG",
+      "gitBlob": "26d37d4a4d7cd1b9de16e04abea3ea4368a9c9da",
+      "sha256": "bd0273cb78a07f77b6c7f6770062e1b5635908aea976daa5d180d76b4b04d03c",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10437.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Nerubenkan.PNG",
+      "gitBlob": "be7ab52540fe899b1af67d9ba9d90586f9a739c8",
+      "sha256": "0e7b594f784a40e44faf15034598bcd1e27ebd22cacc7c66c862fa679ceacde4",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10438.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Maleki%20the%20Pallid.PNG",
+      "gitBlob": "5cae13e42fbcf05a9f561d73125d58452bb5d0b7",
+      "sha256": "71a75d52c955e84464ce1ac877bcb07012d98c37e6d8d44bdb0205de4602589c",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10439.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Ramstein%20the%20Gorger.PNG",
+      "gitBlob": "9ab9cf8072000003bae37e7cd6f141d4251b95f9",
+      "sha256": "d53f498ec34ff009fe213fa25de6d6ea748a67000ef96bb2bd55f81cdc840afa",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10502.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lady%20Illucia%20Barov.PNG",
+      "gitBlob": "808aded0437a033740abf88748516915c73b8a9e",
+      "sha256": "5c8c6d04a8923f4e9ebb196717e75f92b2093a06b3daccaf357b9a3754b1383c",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10503.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Jandice%20Barov.PNG",
+      "gitBlob": "8c5d861bd1a4d977e868b9ca1c2e03cf0c06851e",
+      "sha256": "3480804da049c6bb3bc99348dec056014b4756c8efa83d89b55c465e3519b733",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10504.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lord%20Alexei%20Barov.PNG",
+      "gitBlob": "3ac283be8c3f9efc771786b2c8adc7c5cbb7da92",
+      "sha256": "7513cf72064004c66372292e5491665abc33c1d64f00f079442dae8063fba9e9",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10505.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Instructor%20Malicia.PNG",
+      "gitBlob": "7bafbf7a1fe178e8a42c45983cfda500944e0d74",
+      "sha256": "0c3a7056a393781b5bb821ce70eb98ee459480e8c99bc983aa23c4b171b855bb",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10506.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Kirtonos%20the%20Herald.PNG",
+      "gitBlob": "20beb85217955cbf63fd0097cf7f4c761fdedbd8",
+      "sha256": "ee53bb0c1e23f7a61454218530a57d31619e4506806763ca5236f04ab874f524",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10507.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-The%20Ravenian.PNG",
+      "gitBlob": "bf46f480db114ba82b4de5f6ffae00468753b827",
+      "sha256": "43d269eb1713f717f1f9fbee785ba2ff33d56b9f2b08cfc8878ff11a063b624a",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10508.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Ras%20Frostwhisper.PNG",
+      "gitBlob": "af0db15d464d2122eaa18f9a388af2d6673995b3",
+      "sha256": "5db890965938a86184b8a4a0b7dd263bfea33f14654b74c4c96ac6819bc37da5",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10516.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-The%20Unforgiven.PNG",
+      "gitBlob": "6f442757b263e97be49487fc4e85cb5f48d2ffc7",
+      "sha256": "650809ca7a7c69fe2ea38b101eb10c0b89d3dad76f13d1e25263245e4903c896",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10558.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Hearthsinger%20Forresten.PNG",
+      "gitBlob": "c42a50da515b27f3fcb884ccb86664246bd90e61",
+      "sha256": "02fff9e70063c36bb9ffb9cc560e5d5e582052dcdcc2bac528ef26048bc8f01c",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10584.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Urok%20Doomhowl.PNG",
+      "gitBlob": "6ccbeea837f55a2c3c8686e4f6bcb3f9e4e53c20",
+      "sha256": "adcfd4a1f60a37d571404623cd04debb07b218ac684a6db5678bf89aa5ad8f9a",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10596.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Mother%20Smolderweb.PNG",
+      "gitBlob": "f46c9ba9fa02ee01cbfe4782b1ef1bd753d6079b",
+      "sha256": "540ab19295e8783586d09f85ae13718b6b67eabd5b118008ea44c1381f40afe6",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10808.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Timmy%20the%20Cruel.PNG",
+      "gitBlob": "1854447fd3bb04b44ea347a517f853279b63a329",
+      "sha256": "1eb71d31ead5e0496878cd647d1a2a0c539dcbd51a6eaa34e182e6dfe3e4e02f",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10813.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Balnazzar.PNG",
+      "gitBlob": "34e4e6fbb15065f2ccc1f6db47342f4a3701b4f9",
+      "sha256": "92b79dc1cdb8c7f4e333f003c07ee85d78cfc31c2182cb6f95e23238d6eb1982",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/10901.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lorekeeper%20Polkelt.PNG",
+      "gitBlob": "77e4bc3c4d2246773906b636be0b3f46bbc7df74",
+      "sha256": "3b5b3efc2640b1f59289bc3b6b938c67e82b59a4b9179b6a022836537b0c25b7",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11261.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Doctor%20Theolen%20Krastinov.PNG",
+      "gitBlob": "5f48aaf7e70c4b6376efdeba9cc0e1c1b3d9fc81",
+      "sha256": "1e09c09438e57f8276cce498052c20629ba95d5962a00c49e0b99c170f89cb1c",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11486.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Prince%20Tortheldrin.PNG",
+      "gitBlob": "d684a8de2a1180aad182b3a3d137c813241cf9fc",
+      "sha256": "e69e4197c3aaa2e23f3ea08807f9d513b8c2b2f3adab3e22078361f1c5161856",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11487.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Magister%20Kalendris.PNG",
+      "gitBlob": "30e77e9f0a0565e1b143d28a87ed615ec2591a30",
+      "sha256": "c41df1c45f2d081c37ee036f4ed6a8e8a1cf5a8d5d56848f207289045a5536de",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11488.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Illyanna%20Ravenoak.PNG",
+      "gitBlob": "b519686bbb2563c26b76c7ccea0a83a91b241edb",
+      "sha256": "2e06b9b6d438048685e0c632946a4ca2053af2444aa48b32e3cc5f3f73024069",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11489.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Tendris%20Warpwood.PNG",
+      "gitBlob": "5bcef79e4356d860a31b2423d99dc36ff8aaa2e7",
+      "sha256": "749eadcc4df73cb8184d2c6dd4e9a6a07a2972474b9a3cfef91833b6db143f0a",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11490.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Zevrim%20Thornhoof.PNG",
+      "gitBlob": "935954ea0f5c10726e7b7d5cf159230932a6e47e",
+      "sha256": "0ad34bc0ab17b43398acd32409726ac5cbcf7496ed03a4b1483f793dc49b27c8",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11492.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Alzzin%20the%20Wildshaper.PNG",
+      "gitBlob": "1e880cea298a748497814197d771c1e7eb1b1f9c",
+      "sha256": "81a95254ce81777e59212cfa909b20141f44f48a2dd771bcd6ba149963b6f681",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11496.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Immolthar.PNG",
+      "gitBlob": "1dbe728ba3239f781cf5ced102c91e22b810c2bd",
+      "sha256": "be05763d40dd26d80f26933a38d36370185fe6584003a5dbeb247c5d459efbc9",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11501.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-King%20Gordok.PNG",
+      "gitBlob": "787fe203a9f164cb4210a46db1db2ca109045427",
+      "sha256": "941cd71fd9f5d7dcdd0aad716aedb871e3ff1ba6e8037a469025e7f6278435cb",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11517.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Oggleflint.PNG",
+      "gitBlob": "7a6049ccb0bbe6eee85a5532057cdc511d6897c5",
+      "sha256": "64606223778a30147dbed0d07b2a7f7603db02779068f78b079c8f69d6654d8c",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11518.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Jergosh%20the%20Invoker.PNG",
+      "gitBlob": "dc3798dc847373d98864f076632fe419f488474f",
+      "sha256": "7818fcc9756e12ec2a7eb36cf6c796cf1a8dd7d02d865255babff6445ca3bc48",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11519.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Bazzalan.PNG",
+      "gitBlob": "6bea23beb85201c4978d80ca73120d3fb768f552",
+      "sha256": "2dd75d3c9bff0bf8f6a93c9e43d61d135b8570aeed32a4ba0ea008599803ae71",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11520.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Taragaman%20the%20Hungerer.PNG",
+      "gitBlob": "2782f4ea2952479ed421c6880d7f9c51ddfac0d8",
+      "sha256": "69cd9d4518f16bae16c2ef1df6c0af58c1c858f2408dc7facfda0afed7606b57",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/11622.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Rattlegore.PNG",
+      "gitBlob": "70cfb4bdfcb73b086262d07898deaeb18193dbe0",
+      "sha256": "556c29d86b518bbe5230a9a96fa9a63d503bef55611d5e0357478108fbf2eb87",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/12201.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Princess%20Theradras.PNG",
+      "gitBlob": "2f7c48c46d094a01c642b68f78f35569b1ac1d1a",
+      "sha256": "77dc5e6d691cfdffa4b39d3b559991a62fa1c61c531728c086e2d800633332ad",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/12203.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Landslide.PNG",
+      "gitBlob": "7e9c01a8e67d7b749540d53f8ca84fb259b8bb9d",
+      "sha256": "9aa0f45d2d093f6a7209f3427ccd04d33717b8af358745c5e53060215f71e16e",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/12225.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Celebras%20the%20Cursed.PNG",
+      "gitBlob": "8cb41f7d45caef0fd01b0c22d6c98409310836fa",
+      "sha256": "788c96f7c9043c8b25b62efbe688c54c93ef1c5525d77e6565302af69ae959c4",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/12236.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lord%20Vyletongue.PNG",
+      "gitBlob": "7bab82f938829e92b326c6bb9bb9862879685f6b",
+      "sha256": "f3c336462ab7501c5532358f76344356183b42e3c74ba55feb14659a3ff1196e",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/12258.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Razorlash.PNG",
+      "gitBlob": "3dda5d330403b9486afbefc3c69ded1fb59d33d5",
+      "sha256": "10525622b1127e08b5c4a08be276c98d2ab0d8fd276da0a0be7e93aef110beec",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/12876.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Baron%20Aquanis.PNG",
+      "gitBlob": "0a557eb3482f15b9132b44ec5c768c3bd1fda284",
+      "sha256": "9c704584dd40533127fc63b6f11014a92f678cfe1ef815ecfc586a36c4bc0aa6",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/12902.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lorgus%20Jett.PNG",
+      "gitBlob": "43e4a5b9fa256cc7de14138ac82b41ad051e6c42",
+      "sha256": "73a61bc801c18b86cec35952c302a876ba89d83e3a1827e99a512e6233f8a2af",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/13280.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Hydrospawn.PNG",
+      "gitBlob": "655fa8a7b9fa9d2c647db7178ae28764f33b68da",
+      "sha256": "6fa61358f3a9423b595ac08a1e53e881b04d78c39a1ac036477813f1f249b583",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/13282.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Noxxion.PNG",
+      "gitBlob": "79aad8123ee9a5cb55cd78a10231cae45b31ecb2",
+      "sha256": "b5e24853c5b7917dc2ae8b7fe602fb35d74cafcb1b4d2b1674e91ff0f0b360b3",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/13596.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Rotgrip.PNG",
+      "gitBlob": "d43ba80df187e794b5bbab94cf59d02441624c4f",
+      "sha256": "1af4dd6b7deaae8905b34ca7f7a56049aa0ef08492f58508bed1848a887df898",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/13601.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Tinkerer%20Gizlock.PNG",
+      "gitBlob": "d72162393bd1ca53cb7d6590012af2909b3c5b58",
+      "sha256": "fdae95144dc07bd3aae7f3541ac77d0019fc451443bef09ed5ead786c7f4f1c0",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/14321.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Guard%20Fengus.PNG",
+      "gitBlob": "b586d36b38a1e0a015af044ef8ac054dbb40f97d",
+      "sha256": "5b48adbaa274e8682d750f31591c967e4eca556ee08a512ad1f8c2099a44a615",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/14322.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Stomper%20Kreeg.PNG",
+      "gitBlob": "d31a9182517a01c03b8db85c5ab3c4d4df5517d6",
+      "sha256": "4c78029c6967f9e5950d7256f2e72a2cf53db417a0004bb81b6e09f6f42f2dbe",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/14323.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Guard%20Slipkik.PNG",
+      "gitBlob": "7ba93554b34d2787e31680da40e7257e6e4b1538",
+      "sha256": "23a6ee9606a002322d59cdbcfb73cdc6531cbebe0f034126254454dfb3350022",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/14324.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-ChoRush%20the%20Observer.PNG",
+      "gitBlob": "41c4520d1a10c9a4bae6dc025f0ed4cb7b6b25b2",
+      "sha256": "9177b69a09bc24d52644070014e191d17556a15308b64e2f7af8ee249a5c62f8",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/14325.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Captain%20Kromcrush.PNG",
+      "gitBlob": "e5e4424c7a32579e14860832dfafb5c03283a47e",
+      "sha256": "eb13465756c246150904f6310d496285b3ed9d79f3c98813f0bd40ebb007e613",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/14326.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Guard%20Moldar.PNG",
+      "gitBlob": "51a5a74f0d764f9917ea7c16adb533ba538b5428",
+      "sha256": "156e05cdb299b191e5c2dac0a1a98309db401294a3712e511d618a25ae9294ea",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/14327.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lethtendris.PNG",
+      "gitBlob": "db7b1d99fabae858e1eb6c96aaebcab118f80bf5",
+      "sha256": "d3d4af5c5fedc4c6f137e87e857bbca28a0fc50ec7c188458eb3616b4651d96b",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/16118.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Kormok.PNG",
+      "gitBlob": "20be0dadeb38efd1cb61e19beabaeb9a56666cd4",
+      "sha256": "b468f3e666dca908bcd5976419a13f90afa27a1e597b01981983be07f5b8f83e",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/1853.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Darkmaster%20Gandling.PNG",
+      "gitBlob": "2721d5fd006e3a0bf2c6ca75c90c18889a988006",
+      "sha256": "3eec0f9cd2b16efc6bf628491b2c88105afeb9616044a9c85938b544af8812c5",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/2748.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Archaedas.PNG",
+      "gitBlob": "87daeffeec0ad06983b14af9eb2bfc853a8b8d02",
+      "sha256": "3c2dcf1c40ef32e729e236391baba696faa83a99ae45eda3fd57211badf04358",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3653.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Kresh.PNG",
+      "gitBlob": "5fb7f622c67d37ff9e092fbb36b1264522c3d004",
+      "sha256": "256fb2697420b77aa3c8c18c93e422e37f9351ece24eeb60d6fdcbd53b6122d0",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3654.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Mutanus%20the%20Devourer.PNG",
+      "gitBlob": "e64bb9568b4f0db0501dca13b3bb85eb4b985017",
+      "sha256": "282e06d496bbb2a4c9d269e0cad3491c5583753d1ae9c6112a525f7f832ae19c",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3669.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lord%20Cobrahn.PNG",
+      "gitBlob": "b1c8d17caef72fad1bf35f8063237ca7236fc617",
+      "sha256": "8af2609f4fc16b5e720683e603096632524301c23c27ab719e0e3b44b727fa30",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3670.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lord%20Pythas.PNG",
+      "gitBlob": "90a292eeb15648fd3d90677f1d654440c250e466",
+      "sha256": "1b0d7f9dc56ca8a100e4197397142a7631139d069f4a1d0a9fecf9cccce8ec4e",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3671.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lady%20Anacondra.PNG",
+      "gitBlob": "2ef950415421647d38c439cb5139bd441a580004",
+      "sha256": "3c1974682ea55c41b6eab18bf9135ad6cdfa001895509e315ffac7209af9102a",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3673.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lord%20Serpentis.PNG",
+      "gitBlob": "667daeb9ea5c96a410bd84d9ffc75ec342f0964c",
+      "sha256": "8046aaecad6ab7475653598468a0a2315305171d63269d1c39337a0326c89a5d",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3674.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Skum.PNG",
+      "gitBlob": "8300fb789c367330dac06e3c2fae1e8762a39786",
+      "sha256": "e997b88de6146947cb0be7e74bf4bd7c2eca26a409dcab2230932a25fe09d4aa",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3887.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Baron%20Silverlaine.PNG",
+      "gitBlob": "5f3aab5d68bb66985b516c78e6fcd53adb2ceeae",
+      "sha256": "6614d88c1900ce49c3f04843da563ab763aaf06f39e84f5a801bb8671de6230d",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3974.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Houndmaster%20Loksey.PNG",
+      "gitBlob": "004104e0e10a416658ad2ccf99ad1da2940c622d",
+      "sha256": "00b3a1cec17534324d89c04d7d8bb63c04288d33e773069a82efd4d0dc36ed96",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3975.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Herod.PNG",
+      "gitBlob": "cff23039da5d5794240a7075606165843753bf50",
+      "sha256": "fe36165aa51c46e93f357ace16ea0673417e99e0e1c7b70afa4cd268902eaf0a",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3976.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Scarlet%20Commander%20Mograine.PNG",
+      "gitBlob": "c57d00da65376248d5785c420cdedd246ac4d8a2",
+      "sha256": "7127995e0ca76744d5068915e6f479810b47f202aea2882f957a7fe6fb291f70",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3977.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-High%20Inquisitor%20Whitemane.PNG",
+      "gitBlob": "018ed2260b67c9ee28d2e410efc2f10297187f7a",
+      "sha256": "3deabe51e535250ffb75407307c595a891bd02fb407b5d907c76fca0df37610b",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/3983.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Interrogator%20Vishas.PNG",
+      "gitBlob": "a191ed5cbd52c494de43079b35cde8664d2fa1e8",
+      "sha256": "0cecc1473aa897f69d29c9deac8e1deb1ff7b8a2e8e6e73df6e9cff952ddf376",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4278.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Commander%20Springvale.PNG",
+      "gitBlob": "73b3f997ec4b82108212cf75a2767f95f69b0bce",
+      "sha256": "21eaf9980860ec6c9c6279db2ec18ebc982e42933800cce922f00db777ea4412",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4420.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Overlord%20Ramtusk.PNG",
+      "gitBlob": "b2bc8f3d2cb39188b733d0376a77991013b3afdc",
+      "sha256": "efdf21297688b2907daa7ba9b2819b2f89db64b2b6ce682eb5210d5df6c53b00",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4421.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Charlga%20Razorflank.PNG",
+      "gitBlob": "e3afc78d32dd697c689762690ca663aff452b797",
+      "sha256": "ea18d8abaded58189bd99d139ff8513d18cc63e095fc67e09bf9eaa15df66615",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4422.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Agathelos%20the%20Raging.PNG",
+      "gitBlob": "2049d505e5a7b24dae35644bc466cba351ec1614",
+      "sha256": "f969d84aa3445385d5cffdb13d02853849338deff2a4f5dc6bd674091da078a3",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4424.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Aggem%20Thorncurse.PNG",
+      "gitBlob": "45a1c5d60ea5d2af937a53f1668050210f38e44d",
+      "sha256": "5bfae7d6f53221052237d5b077b6069ffb5137f47cfc289bf7d671fb63e32ca0",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4428.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Death%20Speaker%20Jargba.PNG",
+      "gitBlob": "5574829fa593a45d8f1a61a590417b329cc32222",
+      "sha256": "817cbb3b534c33223331fa069a1b9104dd38215f5993ec40a6d91583aa5ee123",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4542.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-High%20Inquisitor%20Fairbanks.PNG",
+      "gitBlob": "3fd51b182f9455cd4cd237abfbd0c9f519f5dccd",
+      "sha256": "6550c1b0d9657af748190b012ef8fd30f20af59db028f0b8638a21b163fdd26c",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4543.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Bloodmage%20Thalnos.PNG",
+      "gitBlob": "94aa3fc6aed7f0306b9372880903d9b90f7061c8",
+      "sha256": "029172222ab9ee7fc526d484dcba2f8b7faa154ca5d1529c72cbce226bfe4641",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4829.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Akumai.PNG",
+      "gitBlob": "aea1dac49b0c0b038f5b53c9732d002a47ed7e76",
+      "sha256": "fe11284df0be72a3eb3d27aae2a273bfd090e8c0076f9f8ad6afd777bfb3e969",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4830.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Old%20Serrakis.PNG",
+      "gitBlob": "a97d1557d09b38a19f5036fa31594da58714c28b",
+      "sha256": "5c8602ef1c8b1d9b7af4f4e71e46b0ecdacfd7407c7e93fe1e3c6b36f4b44b7d",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4831.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lady%20Sarevess.PNG",
+      "gitBlob": "b1be96bf5612166b3a74e332916762611efc95d2",
+      "sha256": "68e5796d3bd5831993a29dfd0c67692b45f5f42e01f2f4ddaadbf1d21fb828ec",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4832.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Twilight%20Lord%20Kelris.PNG",
+      "gitBlob": "cd1811914ba76246d04d3622c44e0ce72ae2c4de",
+      "sha256": "b90c2d500e7eee6b3cd504ec1599161083a2efa61235a32b1e5cdc441dd63154",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4854.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Grimlok.PNG",
+      "gitBlob": "35c32f6d1e65033a1f3f95a2a66f06fff2820ffb",
+      "sha256": "a4ffb90e2032c4cc1ea148eabc6664d31f50028cce60c9823473f11cd930d47a",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/4887.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Ghamoo-Ra.PNG",
+      "gitBlob": "b918d4d688410701f1c272a4e2277fe509469876",
+      "sha256": "9a1b4aaff00170db4b1bd0e0b2e4aee7e102c143ba57d8b5286ed39108000d7b",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/5709.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Shade%20of%20Eranikus.PNG",
+      "gitBlob": "574f2fcd0c0b83ec528ce1900e7a9b409761ad94",
+      "sha256": "60bf1cf409ae76a454c039bf208835ca6e1d2b9c60a90bb07a598a23b5a64ede",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/5710.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Jammalan%20the%20Prophet.PNG",
+      "gitBlob": "1272a330a4af99b5ba2d2fc47cd96b1ec7cad88e",
+      "sha256": "235d9b65c813b5adc98f40adcaa0691efbe2d267dc89b74f5f1189370d01e814",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/5721.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Dreamscythe.PNG",
+      "gitBlob": "940cb61cb51e5aa2b539db6bd880b21ba53dcf40",
+      "sha256": "25de6dbfb988bf0819a170d2055d13718b581099f21dee24b5c4ea2c545521cd",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/5775.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Verdan%20the%20Everliving.PNG",
+      "gitBlob": "328ca12b56362be3a0dd9541f1d155d6fc5395f9",
+      "sha256": "cc2f486fb9bbc7d0d5fd88ea7dfa65e3b0572a46ed3b0d1bf7d0c6d0e5bae7ae",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/6168.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Roogug.PNG",
+      "gitBlob": "1891a74880c52dcd9c42172d8c10d1b47d04f17d",
+      "sha256": "518f17b37b3891bbe8452c3ff01f9cbf61488918a28295382f97f641da3ed164",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/6229.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Crowd%20Pummeler%209-60.PNG",
+      "gitBlob": "5744cc82f985ca09ba498a1c0699f82e40512cb0",
+      "sha256": "36ed3090cd88cb458c6392344fcfa2a56f5d72c1c8b83470fb364c86d8241abf",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/6231.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Techbot.PNG",
+      "gitBlob": "d5bdc9cf808fd8c9a587c94f0634d3b34f824511",
+      "sha256": "4e7b0cc91a347b72f54d07209b301db2834e3e0d99bb2ce55f38198f89d48e51",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/6235.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Electrocutioner%206000.PNG",
+      "gitBlob": "5f39412101fef5eb4671b0e08e76ad3843bf4b8d",
+      "sha256": "731899bde721a653b689a66a26b6f3731af74c12fac59a5e3b208fe42759d6f3",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/6243.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Gelihast.PNG",
+      "gitBlob": "03959dca5ccf56bb8c88dbbafee6846db5631144",
+      "sha256": "6db4698f932b2d263939c05718d899fe3600baad99707d30c005d58da3b63c62",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/6487.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Arcanist%20Doan.PNG",
+      "gitBlob": "a42e3db99a1c9e42b60ecebbae771f136856330a",
+      "sha256": "e0bf84c666c37c39feec64c5082a1343e1d4e0c828e1421ef8d992bcf528c64e",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/6906.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Baelog.PNG",
+      "gitBlob": "a12ec39ecd89c8c5123175b9b5463980a0b5a38d",
+      "sha256": "06e814684c616affcc98dfe752a7de54c2afbce3183dff2017e3ef39e1c861a6",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/6907.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Eric%20the%20Swift.PNG",
+      "gitBlob": "4db3c6723a2733d75743e86ddd058c8b1ebc4183",
+      "sha256": "3e5ea60db66e9f72462b11b144359b19302a0eaf6e7eeaec509d8e742e5e8c2a",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/6908.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Olaf.PNG",
+      "gitBlob": "b4b227944db82c7bfc1a641bbc55386d90146bd1",
+      "sha256": "834401c5640a6334d1a4da4ff4046f40c700262fda9843a2f5857d3b88f6cfdd",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/6910.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Revelosh.PNG",
+      "gitBlob": "92cd075af566ecd74626d62a924e6ff27bec25f2",
+      "sha256": "63b2f0dc85a087d1b39e370e28cfa9f6ca66a2a0482afb3928d285645c69c81e",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7023.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Obsidian%20Sentinel.PNG",
+      "gitBlob": "50f098da681f7276c0aa35abd3c9cbd821e875ad",
+      "sha256": "56e53ca0f443ba56ba670d911cd78a95f10d31bdf370a143fdd8925e22698834",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7079.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Viscous%20Fallout.PNG",
+      "gitBlob": "18b73b7f4663e93efc2e1e1a048e066376510154",
+      "sha256": "169a1ca0343c0f2b3967ae0022f6c23b14f2664d811977d0a66e9165277952e3",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7206.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Ancient%20Stone%20Keeper.PNG",
+      "gitBlob": "6ec52e84441397bd2cb7abde2626d43f6bc13c39",
+      "sha256": "706c5de493c6302ed63cbb3afa6a110eae5b703c29f7760a7964e7d3d307f683",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7228.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Ironaya.PNG",
+      "gitBlob": "e306a2a3db61be9c71c52b92f5dfd41a90c6adb2",
+      "sha256": "cbcb2e51e07ba2a66f4400d5ae8f099584231f82b57598ec46c4be2c16c8f2c1",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7267.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Chief%20Ukorz%20Sandscalp.PNG",
+      "gitBlob": "7606e68904310bc0b9eb8a7073f99dcd3987ca3d",
+      "sha256": "51c52cf87fdaa62e530841d69c3f835137fd2858d1c741b3b73cec804f6a4fb3",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7271.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Witch%20Doctor%20Zumrah.PNG",
+      "gitBlob": "0867976cd8dbba1e397ed6f633af34796ae06334",
+      "sha256": "9c791b7e20c22eb9b2602e518eeefe52cd6049c0e6fe15f1771fc780acfeadfb",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7272.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Theka%20the%20Martyr.PNG",
+      "gitBlob": "856bd061e1f41db06d96b2d2b4b98e9ee98f32d4",
+      "sha256": "5268d34cb073c9b30fbf6775d9731f40248c6438552824d65d7b9826e0636af5",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7273.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Gahzrilla.PNG",
+      "gitBlob": "ac4dd342a6c2239f4b571f5e0f9c81b281212aba",
+      "sha256": "a4cf8e338d07d86c0b81dafe875c0fa1be914ad4efc5469cad6bb5c94b134b1b",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7291.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Galgann%20Firehammer.PNG",
+      "gitBlob": "22ebe29d1dc035809ef3099511800c6aa9140028",
+      "sha256": "d08cbe1f0b82fda2d2754966f87367fa06c9022f038aa4eb06356fef4db7e658",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7355.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Tutenkash.PNG",
+      "gitBlob": "dae0c2044de90f823630746851f52f9c11a88bae",
+      "sha256": "97f60b0b3b62d135bb3a00b46156f8e6f842f156a9c90312c3d4b39d23be0c2f",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7357.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Mordresh%20Fire%20Eye.PNG",
+      "gitBlob": "9a929d37b07047a7cd2c1cdc48d0f527067bacdf",
+      "sha256": "0a2f4d35cf8625d5162a6d987b2a91f572ea729bd38a6715a72ffe7a7db66fed",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7358.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Amnennar%20the%20Coldbringer.PNG",
+      "gitBlob": "d45d7360f6ef337f0969602b24c332e7415ad9bc",
+      "sha256": "440e5e6a295e016ecdd084d9227914b29ae7a1df4cc951ac5c37650d6e70affe",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7361.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Grubbis.PNG",
+      "gitBlob": "ce00fba28e4acd75e78fe79da6603bb3d6b8962a",
+      "sha256": "8e93ee9aa2514dab1039f7e647ac23210ffd313017fc61db1f2d18e0eec52b81",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7795.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Hydromancer%20Velratha.PNG",
+      "gitBlob": "c10e92eb8ec588ce305736658859cad7e19a02b8",
+      "sha256": "4d3675d6acecf83ffcd5e6e2daee4999d2ca949453bf644df348707640b852c9",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7796.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Nekrum%20Gutchewer.PNG",
+      "gitBlob": "a6e0e783928f92bbad995f601529483130bb41d7",
+      "sha256": "7287d21ead845556468798e8ba5101db03e6ce9936f468ee72d043a9bfc3a72d",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7797.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Ruuzlu.PNG",
+      "gitBlob": "52190daed4de646c6dbf1cef3bdd7c86b46287c6",
+      "sha256": "3daa975648e35852d1eee148d63ff3661221a51378f9ed212e85eb844fc7868a",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/7800.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Mekgineer%20Thermaplugg.PNG",
+      "gitBlob": "c0c44e7c272da8e06b9818b2b71474f9b0dd714f",
+      "sha256": "ad95dc810bc7bae1bc7c2572ce7194f60ff6d1b428ca9ac025c93ca020bef53e",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/8127.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Antusul.PNG",
+      "gitBlob": "0b0f0e66d25dffd00ecef343a947dad00eb52cd3",
+      "sha256": "7e3ca9f31887dc3bc7be8ed10523c4e8408626435210d7bcd0817cb919254ab7",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/8443.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Avatar%20of%20Hakkar.PNG",
+      "gitBlob": "f0e495b986dea480d4160ed9ce72011a7de72446",
+      "sha256": "a7141947de910b7501aa67cd4f04ca9d717a53754366103b0c06f0b337c8dc17",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/8567.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Glutton.PNG",
+      "gitBlob": "17fd10a3e48a2f2e6f31151d0c95280cb6a713e3",
+      "sha256": "7e79210f357d1cf012a361203443f61d0d48fb46519b0659ff6040f63cfed469",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/8929.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Princess%20Moira%20Bronzebeard.PNG",
+      "gitBlob": "bbaebfd6454aba12ada4619512dca2d88b515f71",
+      "sha256": "5c70d6b24bcf49d36ba75aa2f4764ec49434ea912e0f5144ed5714ec6fbb0397",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/8983.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Golem%20Lord%20Argelmach.PNG",
+      "gitBlob": "db50d2ce48eded779abc82e0d7d58111b56e2c8b",
+      "sha256": "e0afe663706ff74b7443a95a9e022a49c71a16081b43125dffc6a8e664a39957",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9016.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-BaelGar.PNG",
+      "gitBlob": "c0f40ab6af929092b6ab49e51ff6e594079c992c",
+      "sha256": "b7530fc9260d22f0e97600e12f564d7732ab35979cc7a770eca9b0af54de5d48",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9017.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lord%20Incendius.PNG",
+      "gitBlob": "6088bddee5341950719215070b78074fafd3d1f5",
+      "sha256": "40eca193f0e5599c4071c1c9124d1970da9ac12b366bb36bebe38a5ad12e9bc2",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9018.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-High%20Interrogator%20Gerstahn.PNG",
+      "gitBlob": "6c076d18e2e9596f23ed8d19a33cd4bfb4fd8069",
+      "sha256": "2798a88577ecd7a7fc3bedfd74bf465d9d9202f6714ff86c5f42aee6319ab01d",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9024.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Pyromancer%20Loregrain.PNG",
+      "gitBlob": "392781ccd1d5b37d31b764d2045da1e00807209b",
+      "sha256": "4113f3d8d4b1bedbe5d84b9cd01aa9514417ea1fd7a990ae2c9e704d75368799",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9025.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Lord%20Roccor.PNG",
+      "gitBlob": "8d10f63f67f804ab62aaa6d248f3c21dfaa308e5",
+      "sha256": "d86642183ab7eeb8fff6ea382f7e95fdb14646130f61d448ee600206cb4554cb",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9027.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Gorosh%20the%20Dervish.PNG",
+      "gitBlob": "46ccda88fe7adaa685db43b892991b969cd0e615",
+      "sha256": "bfff0f94fd761596caa28fdd03d3fc27d399f0f728e992a96ee9b2497cfe9598",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9028.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Grizzle.PNG",
+      "gitBlob": "2abea7f17b986ee1412201268953a64f37fccc53",
+      "sha256": "13f13af48223f718767b5724bef4d672c2aa030477f2b46bdbee534450f357bf",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9029.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Eviscerator.PNG",
+      "gitBlob": "d403327b93fb0effe197e5202427eb848e357d2c",
+      "sha256": "e0c81f45ec3eb0d40a9e8354c360e51801072156ea1b0892455482da012cf9e1",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9030.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Okthor%20the%20Breaker.PNG",
+      "gitBlob": "df3b5b63fd855b56d5eae75520fb1e92e9a53115",
+      "sha256": "a57bc4c54925ab49ac9880fd569350518db0b022f56c61b8e212cdc41b1b66c2",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9031.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Anubshiah.PNG",
+      "gitBlob": "e49eae55fb08541db0d1cae5a7a11dca9316fed3",
+      "sha256": "12d432654dc597e5b838f09c2970c6093d78d3256ff4ea1e237ed14776d567fd",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9032.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Hedrum%20the%20Creeper.PNG",
+      "gitBlob": "78febe114f7675796459f0da365d5463b1be10f0",
+      "sha256": "bdbeb78e2999a3f4619f8b473059c9ca678eecdcefb4a38c1b96b7c0c6f92b43",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9033.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-General%20Angerforge.PNG",
+      "gitBlob": "dd0a6a2be1399f3369de714854b075717e5a53ce",
+      "sha256": "5bbe0607ca44e38fbaf9510312e57deded6e9cc61617c6776dacddaa3971ea62",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9034.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-HateRel.PNG",
+      "gitBlob": "a5eda042dee8b3023268efe4e2b247d06c37a4a8",
+      "sha256": "0d5a3689f45de16924a078aa50f4a6b7d00724ba4c891b7fab8f5fd356fe6fd7",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9035.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-AngerRel.PNG",
+      "gitBlob": "a5e90a94afe84563bc6b57ff6776b493f59ae880",
+      "sha256": "e7017d2e39e59a045ddc9889b0e7a4796313f55dff9038437420bb0ee5833f0f",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9036.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-VileRel.PNG",
+      "gitBlob": "c8a0768791279c662b14b8866289af847102711b",
+      "sha256": "34ba39f157e48cd2815533d0de12b38ca1f6c64380a71e18c8d99cfbc3d75eae",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9037.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-GloomRel.PNG",
+      "gitBlob": "69d640bb3b304122cb86a431dd5ddaca4ff2b34a",
+      "sha256": "dd3561ae2d6a232d6e17ff448d40d0e71c0f4ea6c8e74787969fa2338c8279c1",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9038.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-SeethRel.PNG",
+      "gitBlob": "41fd50e89e9bccf623cfcf21faf6bb5ebf70e358",
+      "sha256": "9966a75353b98d7584a4088eb6e76777322270224c8797f03d5a2fd7b81eb890",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9039.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-DoomRel.PNG",
+      "gitBlob": "bb173a0ef752c7ec92c0f2903dce67da2199f745",
+      "sha256": "ffc5ad3e7e836e178dd75c14491ba680735c7ac5e7953b5c6f92e8ae4875fc56",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9040.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-DopeRel.PNG",
+      "gitBlob": "2a2526a6ca754ec598a9f9e6645d338188ca117a",
+      "sha256": "b2329452a129ff646c2764c53490b67efe93600bcb3c4f18a182637597c35d57",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9041.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Warder%20Stilgiss.PNG",
+      "gitBlob": "584932f42e95f4c26fdf6c5d70783bb9f5f081c3",
+      "sha256": "deac8fe16c1d3eef67b34c7fa0bfca668dfe03cf86bd3e0005dfd5ab6437dcd2",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9056.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Fineous%20Darkvire.PNG",
+      "gitBlob": "15e2970e2817c9fa9c9b8c09f70725f384e3d937",
+      "sha256": "19932e6b6fddbe2f75a46783722e60733da30b3056351d8a270fa91484ed66ea",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9156.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Ambassador%20Flamelash.PNG",
+      "gitBlob": "a7e5fdfe3a0a65b599b09d09bf5ea7920e4ac54c",
+      "sha256": "11ef0d6bf19c12faade228b130926e2f5d83da3a56f22e62f1966e7efc108d20",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9196.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Highlord%20Omokk.PNG",
+      "gitBlob": "6f5995654771e11d7ac0bb7c85e8538583b211ae",
+      "sha256": "4872db63fdda70489940e497f0f398d2c67c0769daa478bf18e23414ff1d72e8",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9236.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Shadow%20Hunter%20Voshgajin.PNG",
+      "gitBlob": "3cfd665481efd7e2bbf93597b877e196cf80441e",
+      "sha256": "494dea56a40a052fc08dd8d4ec83b3e171467ca6bad758c73bcfa70b145efbd2",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9237.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-War%20Master%20Voone.PNG",
+      "gitBlob": "e8879af9c5794911ed714944adba9a6b08f4b72d",
+      "sha256": "09be838dddf9d092aeddf1ca2a7271ce77b7875f8c3abdd033bd41182cfd50fc",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9319.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Houndmaster%20Grebmar.PNG",
+      "gitBlob": "5be03878d9318ff899a75854ff96c0fee013a317",
+      "sha256": "8acf3c55e83f0c2b67c0f92271033eb09cc18567b716804563fe162e97059597",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9437.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Dark%20Keeper%20Vorfalk.PNG",
+      "gitBlob": "3bc40391ffc8ecbb10ec608e6485412f74fc763b",
+      "sha256": "698584fa1105809bc22855dda86867928c76d28e63f1429446e5dd66e5892b9a",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9438.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Dark%20Keeper%20Bethek.PNG",
+      "gitBlob": "0561806f2f8a85f4fe481313ad0b2625982e1889",
+      "sha256": "79a77f1845c0f25cbd874e6c6d8b130dee8557a0ff9718c47b340f8a180576ed",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9439.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Dark%20Keeper%20Uggel.PNG",
+      "gitBlob": "501baf5c7dec8a4e2fe10d9871cd0b7c5515a3bd",
+      "sha256": "f54bf009f5469a9c3e221d0818884c9d269f102dd47f456709098a5a9bbae719",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9441.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Dark%20Keeper%20Zimrel.PNG",
+      "gitBlob": "3c48dd08892ac2bd49a37d8f3114c6e2a1467f5d",
+      "sha256": "60a67ba706f21f8776fbea1902e2e9958ab1af2b1001d27fe0ddb64af6ecd630",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9442.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Dark%20Keeper%20Ofgut.PNG",
+      "gitBlob": "004ce4d51c354cc4af6c8934aa2488fcad52a6c9",
+      "sha256": "2bc52b76f2b9553cacf515b9c9ee577f065e7c9f7a43bb505e05e1f1e9febf4b",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9443.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Dark%20Keeper%20Pelver.PNG",
+      "gitBlob": "aad38b89e4e4f526f9bdbfcbc4880e6304d96d12",
+      "sha256": "156f58b09e8fb8adc8bf78806e8795355d6c6e67c9d3bd3167e4a024dc1f6351",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9499.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Plugger%20Spazzring.PNG",
+      "gitBlob": "29daa674150929c39be19d30d2dbeac408705c25",
+      "sha256": "20aaca94f0f082b589efcfe74787fe2ae7584906b41cb365806ce1a662b1299f",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9502.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Phalanx.PNG",
+      "gitBlob": "0d82fb14f394080d84091dd5f66214f837ed978d",
+      "sha256": "cba484c1f7c3a01d88918c43c3aa25128ca018ea7ed1cafde0ef68caac2a5d70",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9537.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Hurley%20Blackbreath.PNG",
+      "gitBlob": "4a6d173181b209f5b4689bc6717349d99fe08600",
+      "sha256": "de72ae138b742cd36872d4596288b5b2bed73ef5e5d91f4c150dddf03f1f11d3",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9543.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Ribbly%20Screwspigot.PNG",
+      "gitBlob": "aad33f421f429131deea2ae6f7fc6e586b17afc2",
+      "sha256": "87993aa91a4aee83c137f4cbd20c7c0ee48a911b3b27cbd648577231cb95ee12",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9568.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Overlord%20Wyrmthalak.PNG",
+      "gitBlob": "08334bc07126aae77aa96aa1b09f6d9951a857a2",
+      "sha256": "6286fc63e0400fc6419055ba5c2c84f7395aa4222b707ad4ae9d10477c373cfe",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9736.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Quartermaster%20Zigris.PNG",
+      "gitBlob": "5d37c8bc69bd845376a5b16431243e6b6d2b59f7",
+      "sha256": "4d67449aa40bc85bd4bfef4886930156881112cd3acac2a7ecaef00a6433c8fd",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9816.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Pyroguard%20Emberseer.PNG",
+      "gitBlob": "880f2f5273d955cd82a77263e77d770a70852458",
+      "sha256": "50851d96ed5c6b7f7f4f4499e085a0edd1f6adfec2109175531fdd6f9e205ece",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/bosses/9938.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-BOSS-Magmus.PNG",
+      "gitBlob": "b8adc908173ddbaaa6a694b1aaacc49b382ff4b2",
+      "sha256": "7db564ed2510b8d4fafa4396909c1d40c094bec9192bbdb812e8721d08847409",
+      "width": 128,
+      "height": 64
+    },
+    {
+      "path": "journal/dungeons/blackfathom-deeps.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-BlackfathomDeeps.PNG",
+      "gitBlob": "eb90a2b9877a859d049cb816bb1bedd21401f60a",
+      "sha256": "11240c75192b1719ebe264aa46ebe01e494f46dae64dfd90b1914d203b66daa6",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/blackrock-depths.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-BlackrockDepths.PNG",
+      "gitBlob": "4c12be20b08f6e60665c764267c5c3b8e02f4685",
+      "sha256": "6f5da6a085eecf532ba426c1809e20edbbc42af26c22199421d021c673482d32",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/deadmines.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-Deadmines.PNG",
+      "gitBlob": "2e1566df1c33ee6feccbe0bb3442694de82829f6",
+      "sha256": "2785c40f09e74256d5acb65f0d017af1f000c3109c77622eb53c338c27576238",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/dire-maul-east.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-DireMaul.PNG",
+      "gitBlob": "1306760fd4cadcd32380febf1aacb1253cc80b49",
+      "sha256": "3596efff95dfcadb7b2480f228c496050685d66bb52f58b9d0c16b3a6dfa8cce",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/dire-maul-north.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-DireMaul.PNG",
+      "gitBlob": "1306760fd4cadcd32380febf1aacb1253cc80b49",
+      "sha256": "3596efff95dfcadb7b2480f228c496050685d66bb52f58b9d0c16b3a6dfa8cce",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/dire-maul-west.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-DireMaul.PNG",
+      "gitBlob": "1306760fd4cadcd32380febf1aacb1253cc80b49",
+      "sha256": "3596efff95dfcadb7b2480f228c496050685d66bb52f58b9d0c16b3a6dfa8cce",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/gnomeregan.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-Gnomeregan.PNG",
+      "gitBlob": "89cd425da32459a32b68ca16598828d11df56dcf",
+      "sha256": "8c8459101f991de430d1d4391c0e7ac04544554c623864c50d925a2f6fbfff81",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/lower-blackrock-spire.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-BlackrockSpire.PNG",
+      "gitBlob": "e08dff0bc31d32d9051b33818f7985de5aaaf19e",
+      "sha256": "2532a995c4b678546480e656245b79a61bd8d2b9cea51c6028c396c05f02243e",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/maraudon-inner.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-Maraudon.PNG",
+      "gitBlob": "8ae5c654011f8791b60e50cd5e770973603a6c43",
+      "sha256": "10ad794f3abc2630d7ce8c99e943fd9ae8343dcd6751999a59663b1ef3eb24d4",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/maraudon-orange.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-Maraudon.PNG",
+      "gitBlob": "8ae5c654011f8791b60e50cd5e770973603a6c43",
+      "sha256": "10ad794f3abc2630d7ce8c99e943fd9ae8343dcd6751999a59663b1ef3eb24d4",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/maraudon-purple.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-Maraudon.PNG",
+      "gitBlob": "8ae5c654011f8791b60e50cd5e770973603a6c43",
+      "sha256": "10ad794f3abc2630d7ce8c99e943fd9ae8343dcd6751999a59663b1ef3eb24d4",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/ragefire-chasm.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-RagefireChasm.PNG",
+      "gitBlob": "a5297866ffd57828ca02af6c225edef7a14a4d95",
+      "sha256": "dac579ea59a4c5052f1e40c2e3e919767d2659515f09d26d65f56a469ba02273",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/razorfen-downs.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-RazorfenDowns.PNG",
+      "gitBlob": "ca753447bf212097707f0a0cd5104b4f93b67e3b",
+      "sha256": "695df7c98263ddf3c22f8d5108c543ec29698de4ecc5230ca22ad508f13ff499",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/razorfen-kraul.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-RazorfenKraul.PNG",
+      "gitBlob": "6a76d7e098aa41eb29fe15b4b4978a8abb079c01",
+      "sha256": "1a5d31dad8f63fdfdb9f802fe1e2f06e9a41caadd5dffb0824627495f9e9e366",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/scarlet-monastery-armory.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-ScarletMonastery.PNG",
+      "gitBlob": "51a219fa30ecd40e33ad6f674e738a1ef1b30968",
+      "sha256": "e46a8957d345392d09d4580a4261c8b3608b25bb6cfbfd05092b924e8febaeb4",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/scarlet-monastery-cathedral.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-ScarletMonastery.PNG",
+      "gitBlob": "51a219fa30ecd40e33ad6f674e738a1ef1b30968",
+      "sha256": "e46a8957d345392d09d4580a4261c8b3608b25bb6cfbfd05092b924e8febaeb4",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/scarlet-monastery-graveyard.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-ScarletMonastery.PNG",
+      "gitBlob": "51a219fa30ecd40e33ad6f674e738a1ef1b30968",
+      "sha256": "e46a8957d345392d09d4580a4261c8b3608b25bb6cfbfd05092b924e8febaeb4",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/scarlet-monastery-library.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-ScarletMonastery.PNG",
+      "gitBlob": "51a219fa30ecd40e33ad6f674e738a1ef1b30968",
+      "sha256": "e46a8957d345392d09d4580a4261c8b3608b25bb6cfbfd05092b924e8febaeb4",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/scholomance.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-Scholomance.PNG",
+      "gitBlob": "e77ec0067d1812b251cdd03f1114f75f21a94214",
+      "sha256": "110370c5d04c2961d62e32ad20e02a0aee18d1c6bc60b1d016de798f8aea43f7",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/shadowfang-keep.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-ShadowFangKeep.PNG",
+      "gitBlob": "71ebc6cd9fd9cbc7aa343d850d65aae6829fa4a5",
+      "sha256": "7ac597992fcca78421706fd5105d8b45a5c08e1c70a379f51f8dc3823532bec4",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/stockades.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-TheStockade.PNG",
+      "gitBlob": "d89f339eede6f496bf7d532e0f97ec273a7508c0",
+      "sha256": "a8b610abfe173f9125eb4d136a4e06c0bca82d9e78e2964dde470262f0ea981f",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/stratholme-live.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-Stratholme.PNG",
+      "gitBlob": "ae8d00933ef6b3e44db7c8ea4ba9fabe3c6319a4",
+      "sha256": "cfe8613c92ca27d2f2d9806deb7fc8db5c48f76a50e22c549cad46191c202ddc",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/stratholme-undead.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-Stratholme.PNG",
+      "gitBlob": "ae8d00933ef6b3e44db7c8ea4ba9fabe3c6319a4",
+      "sha256": "cfe8613c92ca27d2f2d9806deb7fc8db5c48f76a50e22c549cad46191c202ddc",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/sunken-temple.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-SunkenTemple.PNG",
+      "gitBlob": "f8865f4b118573a2b6bd9a773b97c1ec596938d7",
+      "sha256": "36db44fa932a24d67a625da6432231036ac212d859c68e4c91cc986f1cf4ff58",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/uldaman.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-Uldaman.PNG",
+      "gitBlob": "22bd91ca023c237369c93bf46a1d2fd7cf0a3720",
+      "sha256": "7ec0a81e2da1576fc0cecb6d4d76abfa62600a36a6169f2342b573c40e4a75b9",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/upper-blackrock-spire.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-BlackrockSpire.PNG",
+      "gitBlob": "e08dff0bc31d32d9051b33818f7985de5aaaf19e",
+      "sha256": "2532a995c4b678546480e656245b79a61bd8d2b9cea51c6028c396c05f02243e",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/wailing-caverns.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-WailingCaverns.PNG",
+      "gitBlob": "c8e64d5ec1fd3b42304f24617d632bd9dc7a9973",
+      "sha256": "e4f9a965d3792925db0dbffc198688138ee23398779fcf2b68feccd48d1d46af",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/zul-farrak.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-ZulFarrak.PNG",
+      "gitBlob": "f139e5f5957754e5ed1ab74dc9ce61ce839a1f9e",
+      "sha256": "0e3441d06d8cc671b1f5ac5dccb92433be18eea13bba14cc334154151ccbbee0",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "maps/dungeons/blackfathomdeeps-1.webp",
+      "sha256": "4745a7ce6234872ed6c38568ec204163df419f179bcea7f3424909e064c8baca",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps1_1.PNG",
+          "gitBlob": "2c35e6a3a53f53ea912e65ed33c04f2d5bad16e9"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps1_2.PNG",
+          "gitBlob": "ddc28260181bb95e8735476928cb1f5476fee4da"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps1_3.PNG",
+          "gitBlob": "fba61a976266f9e0119c15a18cf5ed44663d4f9b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps1_4.PNG",
+          "gitBlob": "be37848078df3ebdb2d243e1b07036609b43d327"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps1_5.PNG",
+          "gitBlob": "11a04eff57db03e3704598987fae24d06e6e1bdf"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps1_6.PNG",
+          "gitBlob": "582258fa0049335e178bdb26afca8d7a9c83d056"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps1_7.PNG",
+          "gitBlob": "2c597365cdac61f688a641ea1bd6ed212a940780"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps1_8.PNG",
+          "gitBlob": "192842f032120f876d5097f8ec3ef17e7dbf38e2"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps1_9.PNG",
+          "gitBlob": "38cfae5b2b0ffb73134e1d8dd5c2f4b89e33d499"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps1_10.PNG",
+          "gitBlob": "bb08b262a8adefb30553a10824bbce7561aba46f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps1_11.PNG",
+          "gitBlob": "32a007200ad20fb97885ac1680115631e3453cfb"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps1_12.PNG",
+          "gitBlob": "15327edb496bfd5b271281f9a12206a47d9d5e27"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/blackfathomdeeps-2.webp",
+      "sha256": "cd53b715b023677dade5f42e86660898d78ddc3f5f50fa53436ff0d93c760c30",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps2_1.PNG",
+          "gitBlob": "4972f1943de998d5f25cda8f34cc611f2783afa7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps2_2.PNG",
+          "gitBlob": "1128a0ffbac339fbd731110235f7b912f2dc5402"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps2_3.PNG",
+          "gitBlob": "4fce88144fe2bc08267e616a7d5ff75c82cd0422"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps2_4.PNG",
+          "gitBlob": "c575f0ba19f2c7082594136985a171106f47d5c4"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps2_5.PNG",
+          "gitBlob": "8b9670e36a7bbf3d77a6a1a094150db5455f0bfc"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps2_6.PNG",
+          "gitBlob": "22e740a01e28f16330fe08283682a36b52f5be3e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps2_7.PNG",
+          "gitBlob": "d7c686e392f6cad43b4306aa5620e262074b394f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps2_8.PNG",
+          "gitBlob": "550f12c0754763fd8b10ba89581c6226112c6d8d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps2_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps2_10.PNG",
+          "gitBlob": "2c786282b733b76b72589e3cc3a6508d2f588aff"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps2_11.PNG",
+          "gitBlob": "6c073c5a0a8403e3a5e3bc8a1c9ec95eb03705dd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps2_12.PNG",
+          "gitBlob": "912e659d593f001ab1e182cc29dfbcd8d0b36fe3"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/blackfathomdeeps-3.webp",
+      "sha256": "7544df88f089c23083c583a2aacf18ddf2d97d1ba54aa80b00d75274efe47292",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps3_1.PNG",
+          "gitBlob": "9a5076e5a0857a6f6733a3a672ae4c15e51a8d7c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps3_2.PNG",
+          "gitBlob": "a6ff01fc69a4154b0b97254db22a2c6e085ec647"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps3_3.PNG",
+          "gitBlob": "fb18d9cdce7ef732038c2fe9b9af7503bef222df"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps3_4.PNG",
+          "gitBlob": "a2bc5242daddf21a24c9da1bb89d91358bab6926"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps3_5.PNG",
+          "gitBlob": "1577a63ad105069f0c7083e998363f667482f771"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps3_6.PNG",
+          "gitBlob": "4ec8c431ce7a03d3b7480cc2ea764c4f5c71a668"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps3_7.PNG",
+          "gitBlob": "b73960e1c59c290e76fe3484308c2cbe77d26ac8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps3_8.PNG",
+          "gitBlob": "c6760c7356f1a7d8730ba2fe6602681bdb398d85"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps3_9.PNG",
+          "gitBlob": "7a77794b0bcc717ea19dd36e6042779d53c94e61"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps3_10.PNG",
+          "gitBlob": "704a6eae25b944742107b46e0bd37350603efac8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps3_11.PNG",
+          "gitBlob": "aed757cf5ee89005a364ef0e946eaaca0ae2a7dd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackFathomDeeps/BlackFathomDeeps3_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/gnomeregan-1.webp",
+      "sha256": "9650ed65605c6c43f782153933727bbf68a7770ab834ff6fd7fea1ab3dae463c",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan1_1.PNG",
+          "gitBlob": "c661c7f66a467464d425b9237319d3855e24cc10"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan1_2.PNG",
+          "gitBlob": "77678208af791065dc3291739fb8aa4e58797bec"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan1_3.PNG",
+          "gitBlob": "e9b42dec06004cb22fd7e70b360679255192546e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan1_4.PNG",
+          "gitBlob": "a63033c430def7b23a4e83d7634b32dcef56d59c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan1_5.PNG",
+          "gitBlob": "0fa9a937c4b29ed8241ce0fd94f78116c8167dc8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan1_6.PNG",
+          "gitBlob": "c55fafd5475fa730e7fc46f581fb3bd81e383a1b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan1_7.PNG",
+          "gitBlob": "1d4c844cb063ef8d1fad9d48a56eaa77585739ac"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan1_8.PNG",
+          "gitBlob": "5a7a3ce5e11e291bbc8ef3cfe0b1bc3ecefd6ea7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan1_9.PNG",
+          "gitBlob": "7e2001c4a1ffdef7e539fafb3fc6a97f7b055343"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan1_10.PNG",
+          "gitBlob": "b9b8c7eedc104c67cc0cad72ccaa5d949236eecd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan1_11.PNG",
+          "gitBlob": "c99f10239d9cc988c9099bc2c0da8542a1e56dcf"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan1_12.PNG",
+          "gitBlob": "cd902022a39c2e4f87914c46328cdd97bed96aca"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/gnomeregan-2.webp",
+      "sha256": "603c3d8845cc354980e23b539a642cc5aa00c397e55aaa267f4f748738a8c39a",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan2_1.PNG",
+          "gitBlob": "94fa5717836a7749d9336a288c12d8ac73898480"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan2_2.PNG",
+          "gitBlob": "463a6b01c6a838551d6d20f1e3b7ff7aed8d0e11"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan2_3.PNG",
+          "gitBlob": "00f8ac184db982288271993c09e76fd40d419dac"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan2_4.PNG",
+          "gitBlob": "46e947d5a27ecabe05e84495b7a223c84e096eb4"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan2_5.PNG",
+          "gitBlob": "859ca69e6fbc5c6d2476295d7567e6406b33faa2"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan2_6.PNG",
+          "gitBlob": "98ee140c4703fb8db60d015b20758342a486ffea"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan2_7.PNG",
+          "gitBlob": "6a1fdd25341c93db239ccf8a93728eab8c3d248d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan2_8.PNG",
+          "gitBlob": "cb2dc01d4ce665b636c12b1f85dfa3c60d9f34b0"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan2_9.PNG",
+          "gitBlob": "2c25e78c510d35e0ff36a8ba9999af64afb729be"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan2_10.PNG",
+          "gitBlob": "3d48c80ebaff5cc4073ace6e00e3a99bac9acd39"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan2_11.PNG",
+          "gitBlob": "da716f41b400a43f32b9c85653692fb82f5f247d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan2_12.PNG",
+          "gitBlob": "d71a6b479bc9196f0911b0e67c03e95f51ffdf73"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/gnomeregan-3.webp",
+      "sha256": "2af305fff82ceba1c6f26bd132ee38186ea1f3c3ff6f75c5e40006fe6c419b7a",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan3_1.PNG",
+          "gitBlob": "84df46d67cf5b1e96c41ed203edc4be8fa1537d1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan3_2.PNG",
+          "gitBlob": "f34432448385493d0de9c5926d74d20bb850be8f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan3_3.PNG",
+          "gitBlob": "2fd8712443c4cf05a76261a954f131009318c64b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan3_4.PNG",
+          "gitBlob": "a63033c430def7b23a4e83d7634b32dcef56d59c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan3_5.PNG",
+          "gitBlob": "47789b4c3c6e54bc068e61e58bbe28a90e497463"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan3_6.PNG",
+          "gitBlob": "e012759102cf29bb1fd1cf14456bb6c82d5d8466"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan3_7.PNG",
+          "gitBlob": "fe3d0af293f8cf5f3766662a6d00bcbfd73b04d2"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan3_8.PNG",
+          "gitBlob": "a036e29a48d18b17532dceaf70db2d846ba65744"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan3_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan3_10.PNG",
+          "gitBlob": "a7085fd94ba7200d8a99543978d42073122c4e85"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan3_11.PNG",
+          "gitBlob": "126c9507de3adc5a4e0095ae0ba1440cb28a9c76"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan3_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/gnomeregan-4.webp",
+      "sha256": "6e125784baa8128f1c7f73836bf942406618e1ae04154251e0a88e6c58604086",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_1.PNG",
+          "gitBlob": "3a4445db36e932e83691bd7def9e9a3e60bafdee"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_2.PNG",
+          "gitBlob": "07833232a7f525e16c767d3ea6a23752ed0f0f00"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_3.PNG",
+          "gitBlob": "d1abdeae2a4eff98620ca1a98ebd6eca27104d9c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_4.PNG",
+          "gitBlob": "1e9b410c1172047b3de3d3522344e5fe27f88b35"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_5.PNG",
+          "gitBlob": "80dc2bf8283030d18df961f12ec3dca30d101d73"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_6.PNG",
+          "gitBlob": "d1747940b0f34fcec2b4e41bc93702890c4a355c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_7.PNG",
+          "gitBlob": "d692d41abcc0fc9fa54f40aeacd7a7ac6e8182e5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_8.PNG",
+          "gitBlob": "6bca16ae1e14c4257c6d425527eb46812847f143"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_10.PNG",
+          "gitBlob": "dd785b3cfee3f51b61c85d51b3cded176eab6793"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_11.PNG",
+          "gitBlob": "3ea5251b8aad9e0c1152bf8649d9a5bb7dd10834"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/ragefire-1.webp",
+      "sha256": "e3317669608fe4a5d4535f11cbf8b2a4e6527c71b5ec35e7b70864d8d0e2cf66",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Ragefire/Ragefire1_1.PNG",
+          "gitBlob": "a8d52dfc2c9c63fd6f6242937eca28910f0f25f0"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Ragefire/Ragefire1_2.PNG",
+          "gitBlob": "c4b7677ca066cc0488459348f9c2583db123ea64"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Ragefire/Ragefire1_3.PNG",
+          "gitBlob": "c2522014642d2e1b4fdf13796f7886a94be75a25"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Ragefire/Ragefire1_4.PNG",
+          "gitBlob": "073df3bb6698c6c2c1ce4c3a9aac0b9eb9af98eb"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Ragefire/Ragefire1_5.PNG",
+          "gitBlob": "589f75699b97573cf87f76ca5ad52b0cf3217f3a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Ragefire/Ragefire1_6.PNG",
+          "gitBlob": "c15f8a6fe52065a4d39e7d08d26e5d5df715b76a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Ragefire/Ragefire1_7.PNG",
+          "gitBlob": "3610a350def29d3db56819d91780b0f24f9e6d06"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Ragefire/Ragefire1_8.PNG",
+          "gitBlob": "db8165ddcf1555ed02852d7bac945902079cd10c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Ragefire/Ragefire1_9.PNG",
+          "gitBlob": "9e599240ba7eef569fab0407327837578de42499"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Ragefire/Ragefire1_10.PNG",
+          "gitBlob": "eb88672a4107c02db292cc264383663baa9b760b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Ragefire/Ragefire1_11.PNG",
+          "gitBlob": "a0efc03dde28759c1bcf55fe8d686ccc0309a111"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Ragefire/Ragefire1_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/razorfendowns-1.webp",
+      "sha256": "7601a538be5980306778ff9773f953dc59d1d7d427e73070b4d3147abbc75deb",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenDowns/RazorfenDowns1_1.PNG",
+          "gitBlob": "bc0081a5477a1235e25ae3bcd9c293bf262910c9"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenDowns/RazorfenDowns1_2.PNG",
+          "gitBlob": "b84a1d4b000f9c711d82411fa1a1376258abc63d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenDowns/RazorfenDowns1_3.PNG",
+          "gitBlob": "61485f765c6caec0f30a0c29d193f88a7eb34312"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenDowns/RazorfenDowns1_4.PNG",
+          "gitBlob": "f558a28c8350b872cae9374173475a5281bbbce8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenDowns/RazorfenDowns1_5.PNG",
+          "gitBlob": "08b29a0b42e776226c173a554484bbf3b2c2d519"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenDowns/RazorfenDowns1_6.PNG",
+          "gitBlob": "1e90ce6ddb924839ef8170d5b73e10b522ce1352"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenDowns/RazorfenDowns1_7.PNG",
+          "gitBlob": "902c171e6ee0cb095d9fa3a708f30f4bc3b67f94"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenDowns/RazorfenDowns1_8.PNG",
+          "gitBlob": "1ead891999ed5df17c55ebe7e61102810e5a1534"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenDowns/RazorfenDowns1_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenDowns/RazorfenDowns1_10.PNG",
+          "gitBlob": "f039658053a310a825c9e94c712c7a4edf1d656a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenDowns/RazorfenDowns1_11.PNG",
+          "gitBlob": "424b777db18594ff47c92bc3d8e70691173eafb1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenDowns/RazorfenDowns1_12.PNG",
+          "gitBlob": "f24d7d2f1adf12f83d0c5afac73b7484c8f04567"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/razorfenkraul-1.webp",
+      "sha256": "db2025e99951850508664dd8f866b09ed32d4e90c531e0fd4af7b6421ebfc8f9",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenKraul/RazorfenKraul1_1.PNG",
+          "gitBlob": "34f4a86ed0e1d583736dd3c42e7695c246449518"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenKraul/RazorfenKraul1_2.PNG",
+          "gitBlob": "2542a9015c12281cb8d10e528f8796f2d71f8555"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenKraul/RazorfenKraul1_3.PNG",
+          "gitBlob": "46766bae80a68fa6d9eb0f70109b654f2719258a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenKraul/RazorfenKraul1_4.PNG",
+          "gitBlob": "e03e5cc54c69b49c55e6fe326cf4ec5693c08c37"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenKraul/RazorfenKraul1_5.PNG",
+          "gitBlob": "fe27ffa3105cff67e7df7f63ffd576cb8c355518"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenKraul/RazorfenKraul1_6.PNG",
+          "gitBlob": "fa3c9b7d5d74522327c21bb0735258836bb5c723"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenKraul/RazorfenKraul1_7.PNG",
+          "gitBlob": "94b306a65801339c290d5d6c9201075a48bec460"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenKraul/RazorfenKraul1_8.PNG",
+          "gitBlob": "cca3313664eeca3a82469b0ee68a6149556cbd59"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenKraul/RazorfenKraul1_9.PNG",
+          "gitBlob": "7fa637b96ecdbf2cd7942838b8b7282f263be125"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenKraul/RazorfenKraul1_10.PNG",
+          "gitBlob": "cde26a956702e8c8d08646f75ff50fb2e16956f2"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenKraul/RazorfenKraul1_11.PNG",
+          "gitBlob": "d5f08d596b37c3370b7d38f84efe6b89fdaee1e7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/RazorfenKraul/RazorfenKraul1_12.PNG",
+          "gitBlob": "25faa8d3ec4c6644d9ee39b22ebbde2e73679e66"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/scarletmonastery-1.webp",
+      "sha256": "74e23477390831d69ac736b2cacb4d8b99aff4fef9f065b85f24664f019a7aed",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery1_1.PNG",
+          "gitBlob": "846c5007ccc8b2d5d378233ef9bb4ba4001b1029"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery1_2.PNG",
+          "gitBlob": "81c91f54ef05386178482cb8a8fa91b0c93a4e61"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery1_3.PNG",
+          "gitBlob": "ad6c68d0455fa5e0e78572ed8db8eca1818ecfe7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery1_4.PNG",
+          "gitBlob": "bbfd71f0c920b8c4c7b524d4face83367603fcc6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery1_5.PNG",
+          "gitBlob": "0d8a7a0b3d0133e5bed92a5c4ab5afc6b8c08f54"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery1_6.PNG",
+          "gitBlob": "d752eecaed8eaa624157923f69b9c94d7a717e55"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery1_7.PNG",
+          "gitBlob": "eecb0bc4e977a87b420a84654509cc77798575fb"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery1_8.PNG",
+          "gitBlob": "58a8364a05335c6557a0d29173837121633824f6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery1_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery1_10.PNG",
+          "gitBlob": "c13674b4145b7163e62a288e7fcbc119604de00d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery1_11.PNG",
+          "gitBlob": "9cd7768bcd01f8bf75587ae591a37b1fef50f515"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery1_12.PNG",
+          "gitBlob": "3ebcb0b18bf3ca1f146a3c49d64f3855f1a51c1a"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/scarletmonastery-2.webp",
+      "sha256": "be9b02af0815cfabfd16839c7bc3c84d3e9dc0d1e7660f0f57532b8a90e9400a",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery2_1.PNG",
+          "gitBlob": "8ec3dd3d93dac7c4cdc9cfcbf744ca2260d18311"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery2_2.PNG",
+          "gitBlob": "584263193532290dc3773e1533fcc08e3f41dc4e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery2_3.PNG",
+          "gitBlob": "30d62acae007358a73c9461056ae417b4bff95ac"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery2_4.PNG",
+          "gitBlob": "30977cb064e554b24345d2063d7e5c7e2afaa700"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery2_5.PNG",
+          "gitBlob": "d3fe5b57cade85a9e6a9985cbc9763b5e2390ed5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery2_6.PNG",
+          "gitBlob": "b8fbf39d2baf6ffa1933bd11d5337855d361f6dd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery2_7.PNG",
+          "gitBlob": "5b35f600c7e82955fc545489dfc3da1ce6919620"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery2_8.PNG",
+          "gitBlob": "3f1e9f5fec4305649bdf5a0cf991288a0e6bc5e2"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery2_9.PNG",
+          "gitBlob": "0b43f8ee06841c9982d2257a0a4c17e89a53b972"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery2_10.PNG",
+          "gitBlob": "516b163007c4dd450d32fd70a3ab27e4b85f728d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery2_11.PNG",
+          "gitBlob": "51dd4a7c22540da6815a4778ef629bda45ed4992"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery2_12.PNG",
+          "gitBlob": "53ac01c9fce5f1fb2b4fca2b426ebdd567aeaf69"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/scarletmonastery-3.webp",
+      "sha256": "1fbabe72a3769b79aef3b8c096466d3928abc96a2718a6db76e8b2683ff1f02f",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery3_1.PNG",
+          "gitBlob": "510499105acb7089240500b47796fc84c36f3740"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery3_2.PNG",
+          "gitBlob": "3b624e4f77d74e91d3e27827f471ca2f3ce05d6b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery3_3.PNG",
+          "gitBlob": "4eaf335a78a847c0896c6812f69067e299d4b75e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery3_4.PNG",
+          "gitBlob": "6fd42fd8999caf8bdd889b0498c14a49edb5c954"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery3_5.PNG",
+          "gitBlob": "78b0b5f9d6cb5f5f31819cd1aa1b6035f9089d49"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery3_6.PNG",
+          "gitBlob": "abbf8964908254762b05e559581c46b7d66df873"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery3_7.PNG",
+          "gitBlob": "832ffb7d21749b11f9bca49e889723def76e38f2"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery3_8.PNG",
+          "gitBlob": "1c4d924d392cbb470529a7cf24121a7c03eb84e5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery3_9.PNG",
+          "gitBlob": "f9fb8ed07530cbd35c6abae23ce91b8bc9e57382"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery3_10.PNG",
+          "gitBlob": "c7ff413885e1fc7a3612c46d6d755fae4807a1fa"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery3_11.PNG",
+          "gitBlob": "4494a084f5dfa8496a2de825bf229710f7af3123"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery3_12.PNG",
+          "gitBlob": "62f07e1bb83ec53c9c6411f8ae6c579edb51ba21"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/scarletmonastery-4.webp",
+      "sha256": "abe3b8e6282995adc5a536ad8f41f4dedcd318e28b7c3e7d423d53a5449f51ef",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery4_1.PNG",
+          "gitBlob": "1b350d8dcdb434f3c8c3318f388a521178c128b3"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery4_2.PNG",
+          "gitBlob": "2def62f48e7d15b01c8d2e1a6057d70e8b5d7475"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery4_3.PNG",
+          "gitBlob": "f4f6f1d95bb91b6939be88ddc61cfe51fa7b9f0c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery4_4.PNG",
+          "gitBlob": "3949fbe6d56b52dfb3ace66fa0fca95c22755352"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery4_5.PNG",
+          "gitBlob": "3ad48ddb29ac8d3057cbef7b4a904c89bb76606d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery4_6.PNG",
+          "gitBlob": "7137c0e37b423c1f662f23adefb2a755dd6c72e7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery4_7.PNG",
+          "gitBlob": "466dc8bdbb7326b8ada7d8cf883ec7875dc368ef"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery4_8.PNG",
+          "gitBlob": "c6760c7356f1a7d8730ba2fe6602681bdb398d85"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery4_9.PNG",
+          "gitBlob": "3d5b2271931577bcfe1d7113b43ae65795c4bc89"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery4_10.PNG",
+          "gitBlob": "b47c52e41564515e2eef39ba5a22c3a58b250332"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery4_11.PNG",
+          "gitBlob": "08771b42cd9a869186b11b803e7c8f30b0d9b340"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ScarletMonastery/ScarletMonastery4_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/shadowfangkeep-1.webp",
+      "sha256": "d1154280ac4e522b278f29d4fad93603c19227c56be3bb5d4b8e2108f8f81293",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep1_1.PNG",
+          "gitBlob": "75437761a4390499559d5d649cd1b31cd62df61a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep1_2.PNG",
+          "gitBlob": "a2b1aa1c45b21f1f5da8d1fb16c32675b4622c1f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep1_3.PNG",
+          "gitBlob": "4a8565b85a6245722654297a97eb4d2240d98a02"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep1_4.PNG",
+          "gitBlob": "b5aa4571ccd63353e956b284a98863451095059d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep1_5.PNG",
+          "gitBlob": "4caf1e2058d3d9f56381411bf7c05565a3f4546c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep1_6.PNG",
+          "gitBlob": "10a35d8a7ebab9d17e07b3e19307d74e71fe13c5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep1_7.PNG",
+          "gitBlob": "4b046c98a0b18866a6d50a44dfc21ff3da24639e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep1_8.PNG",
+          "gitBlob": "156ab72a4a8eeca6207fc414a168ba8825dbca02"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep1_9.PNG",
+          "gitBlob": "8c9aae98bbd078ef7e162bbd2b8e56f63510a590"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep1_10.PNG",
+          "gitBlob": "74f3522b2048394db1facd8317feb1e8dfc1cd36"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep1_11.PNG",
+          "gitBlob": "d5726fc0fac60fb55756ecbc106118a6cacbbbcb"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep1_12.PNG",
+          "gitBlob": "14aaa840787a19a9de6d257f0a5a2d8e42583e3d"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/shadowfangkeep-2.webp",
+      "sha256": "92eaf0a9165bc0ce5eb9c47a5e06d91682fe75c6d8ca573640209ecb53d7ed72",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep2_1.PNG",
+          "gitBlob": "94701e81e436ad90bf73ba970974dda46412ada8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep2_2.PNG",
+          "gitBlob": "dd261c2841ac5ce04418067caa0e1f7c077ae17e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep2_3.PNG",
+          "gitBlob": "95fd6a99304d53cf0015e94d8f7e75be58b162ab"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep2_4.PNG",
+          "gitBlob": "abc16bf684ce0e18779eef9d28686fa1aa841571"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep2_5.PNG",
+          "gitBlob": "441191bc554e3427de695a9cbea027a81ad07542"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep2_6.PNG",
+          "gitBlob": "610c6d5443d38f1d660b53b13c2833a606e71346"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep2_7.PNG",
+          "gitBlob": "b50830b38217e3b1b335b5b1fc54b7775c3bd99e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep2_8.PNG",
+          "gitBlob": "cba3574956affce9ba7161fc0b22571bb1770119"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep2_9.PNG",
+          "gitBlob": "18d67eb18180a680d3ca5f0ccab26e5e5ef43247"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep2_10.PNG",
+          "gitBlob": "d71b8246d314e8aaf64a0296b90b2bf6a1925582"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep2_11.PNG",
+          "gitBlob": "cf963625197dd369e7d7be2535973ff362697beb"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep2_12.PNG",
+          "gitBlob": "3d5ed0bc67d418de809de89b3fd282ce3cbfaf98"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/shadowfangkeep-3.webp",
+      "sha256": "1b51f2441d44ddc1f403b564a8b3f4833acf21cc0f71dc8d0d4a666bb2f2c4c2",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep3_1.PNG",
+          "gitBlob": "f9478e5ca5d5c2f2cd5aa79b91a7bb6195072880"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep3_2.PNG",
+          "gitBlob": "51e604020adcebe402efd3170f5b1c8398a3d2ae"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep3_3.PNG",
+          "gitBlob": "a7a0ca9e5169f5c36777ee4c769f6dc359e23404"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep3_4.PNG",
+          "gitBlob": "72095d31bcdb3b6e38255a7647164d8c175cc4f7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep3_5.PNG",
+          "gitBlob": "f22a965f74fb541543a93ac60c638ce01c388a00"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep3_6.PNG",
+          "gitBlob": "a983770cd77f753a4211d0a7325bfcf1da8f73cd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep3_7.PNG",
+          "gitBlob": "d4620b6d21caf55601bb6156a9f4024ec19cfea1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep3_8.PNG",
+          "gitBlob": "ad5f3c084b628b8a74fc75425e78d87c8fb70efb"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep3_9.PNG",
+          "gitBlob": "ac9a9a34f278a76020480587afc3fa8f478e9c1e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep3_10.PNG",
+          "gitBlob": "54547d90dc01a63891317c1409016d12f104592c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep3_11.PNG",
+          "gitBlob": "cc9845a46e996d8b63cb4cf17dd70a914ebc588a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep3_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/shadowfangkeep-4.webp",
+      "sha256": "8eeba0dc7008976e98fcf81b7e7fcecf49461fc18fb258a6c92ae2b560d57e7c",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep4_1.PNG",
+          "gitBlob": "f058afef5aaa0999da81f3127e39bb6d9cb9e943"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep4_2.PNG",
+          "gitBlob": "10f186c248b45685885ff1e3c66df6f19a271777"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep4_3.PNG",
+          "gitBlob": "ef32f55a5013d456dc4ffb699d3fbaed67567567"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep4_4.PNG",
+          "gitBlob": "72095d31bcdb3b6e38255a7647164d8c175cc4f7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep4_5.PNG",
+          "gitBlob": "cdd705915f7969a3f82fb3d1f19d204fb42e3b01"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep4_6.PNG",
+          "gitBlob": "9a8111dbf958c7085608eea526b5353d90878d69"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep4_7.PNG",
+          "gitBlob": "731d1c660ea5d58330e715d0756b3017a73f2965"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep4_8.PNG",
+          "gitBlob": "ad5f3c084b628b8a74fc75425e78d87c8fb70efb"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep4_9.PNG",
+          "gitBlob": "7d6147a864166906030a98f346016cfeee298f14"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep4_10.PNG",
+          "gitBlob": "a762f2eb83c0347cf1d0fd95097dce5019e9a808"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep4_11.PNG",
+          "gitBlob": "534579a7d73da061f48b1e1a2e75ddc08cc5a68c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep4_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/shadowfangkeep-5.webp",
+      "sha256": "014d2ed056f18817b0e1f3bdf1aaf08e830a6026d23dbe27eb5322f01cb33f44",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep5_1.PNG",
+          "gitBlob": "f9478e5ca5d5c2f2cd5aa79b91a7bb6195072880"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep5_2.PNG",
+          "gitBlob": "f83ce97cd8b63e1656b203f6a77a81ac03733c4e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep5_3.PNG",
+          "gitBlob": "69fb284c695d105a8e942003b5af1bb7232f486f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep5_4.PNG",
+          "gitBlob": "9d3f3e5c5cc2735837260f56a12c62fdf9866da7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep5_5.PNG",
+          "gitBlob": "2b07d026801a80539e59445278111166aa365a95"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep5_6.PNG",
+          "gitBlob": "4cb208116c0b758f3efc553d2bb89b15bb95c2a7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep5_7.PNG",
+          "gitBlob": "42998025782373bd44975464315671532406d7db"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep5_8.PNG",
+          "gitBlob": "3f688398a6b7b8906fec67d54863db3d15b8f04b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep5_9.PNG",
+          "gitBlob": "ee6f91e0433c7ab8c2b7b1720f5822103a13ea72"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep5_10.PNG",
+          "gitBlob": "8e12448c687bcd99edd014f40f7d00abd72f3b21"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep5_11.PNG",
+          "gitBlob": "3abde624d1cf026c88cdb83a4e7060384dd7471c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep5_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/shadowfangkeep-6.webp",
+      "sha256": "1cdca349925e3d52e5ee686343bbe2632cf6b661db6169e4dfbd71590faa6874",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep6_1.PNG",
+          "gitBlob": "7b1c07b47fc209b0b66a20394cee25f03c04e5c1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep6_2.PNG",
+          "gitBlob": "f475f5355979dd9702d08fcdbf42ab0c45caf14f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep6_3.PNG",
+          "gitBlob": "c3f20cc93156b78ca4be488d304c3a6b97d91e9a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep6_4.PNG",
+          "gitBlob": "496bbcc47a7917a9994f16029561cf6ebdb61b4b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep6_5.PNG",
+          "gitBlob": "db68f42000a761a43412de75658c904a1cc483f0"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep6_6.PNG",
+          "gitBlob": "0357083d3e333843754bbe8b67fb08d423ebcadc"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep6_7.PNG",
+          "gitBlob": "136fb6172d42e4a444488e4941a1e45a9b5f34d6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep6_8.PNG",
+          "gitBlob": "0b4fbf4cc27b8a20562cc70f7aa332b74415fd51"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep6_9.PNG",
+          "gitBlob": "2ff4c885286a8580ba61471e0c1a9cac22b57ff6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep6_10.PNG",
+          "gitBlob": "c4a30d3a56cbd4d9842e218f146fee3c124af13b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep6_11.PNG",
+          "gitBlob": "e45886e890ce684ce46d42318840fdcf4ab1dcc2"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep6_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/shadowfangkeep-7.webp",
+      "sha256": "c099e04bd18bcefbf4dc4943e0e24ede60fcd9ed71dc54ee4e7259354f5b9e0b",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep7_1.PNG",
+          "gitBlob": "bad37ca8601e37f059974071d11ed8e6829521d8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep7_2.PNG",
+          "gitBlob": "e784c0ad6a0d7c9d43c967077633feebb622921b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep7_3.PNG",
+          "gitBlob": "db88e6bc39afb2997d55b172fbb3229c991cc57f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep7_4.PNG",
+          "gitBlob": "59573fb7e24b4fa85b0383fa0391d4f49e26db92"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep7_5.PNG",
+          "gitBlob": "3338fbc8fe50f1bfc5f18c9b49fa5aafc3f38cc1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep7_6.PNG",
+          "gitBlob": "afbd2dfa999ec780d0d1f2a8b1806c05b134c4e9"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep7_7.PNG",
+          "gitBlob": "a706ceb6c80938310f57963c5ea189ee360a0757"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep7_8.PNG",
+          "gitBlob": "8d4265bf2fc7fa7b2bb122dd5535ca2aa599651a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep7_9.PNG",
+          "gitBlob": "99fbc4f798fb9aa6d8ced9479f415e5840c676ea"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep7_10.PNG",
+          "gitBlob": "95f55e446310314985cbbc22b1dbc6fd1a6703b8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep7_11.PNG",
+          "gitBlob": "9842e63b4a32356a14096999fa261cb75e617eed"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ShadowfangKeep/ShadowfangKeep7_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/uldaman-1.webp",
+      "sha256": "7ab27c4e6824cb5babdf403162619ee160e1dc103704a642777496ee3f5b5a7d",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman1_1.PNG",
+          "gitBlob": "7d07e0142d21493e67cbc97c566711d9fc5c3b30"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman1_2.PNG",
+          "gitBlob": "6e375439207525337a35fbe11a3b2af1f0f3bb35"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman1_3.PNG",
+          "gitBlob": "4ef9129175ec214cd4afba4d7073e9d36e9ddf2a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman1_4.PNG",
+          "gitBlob": "98fe4fd4e22c5876b62a077d4e44570dda024ff1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman1_5.PNG",
+          "gitBlob": "98ce52371e7c54e34d6a0fd83f71f6cf273bfa0b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman1_6.PNG",
+          "gitBlob": "7a73d6a46163e523bcfed1f66c22a25b1bfa5576"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman1_7.PNG",
+          "gitBlob": "56a698b55eb42c03bf5414865b2f2f7e15c61701"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman1_8.PNG",
+          "gitBlob": "41ed48864787cc66bc846e70e19a0a88707108d1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman1_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman1_10.PNG",
+          "gitBlob": "3b28635d63db54874cd9f483a9cacf46c43b0b42"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman1_11.PNG",
+          "gitBlob": "fe1827d2b11647f9926855449d6209fff124a846"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman1_12.PNG",
+          "gitBlob": "03ef9e41dc21afcd0b6181a6d9233bb6cf4e93d5"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/uldaman-2.webp",
+      "sha256": "d7a4919a27755dd3b0b4aec6cfdc1de9fb9e913c62b319a09ef11ecd1fba171d",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman2_1.PNG",
+          "gitBlob": "27ebffb166fd0dfc9ff2f326cd75cc8146b62244"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman2_2.PNG",
+          "gitBlob": "c1c59250eeaa5fb2e93c18af7866b184eb3d4554"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman2_3.PNG",
+          "gitBlob": "1c43bf13b720ba65277e7db2b1752ab0234bbedb"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman2_4.PNG",
+          "gitBlob": "29a763cfb18e0dec738d219326d2fd81532697a8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman2_5.PNG",
+          "gitBlob": "2c8f22f222ac89e2170277440ff3fffaa7591e5e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman2_6.PNG",
+          "gitBlob": "2c1d7e34e291d2c81cdaf3ef20817f730ca60e00"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman2_7.PNG",
+          "gitBlob": "2e1c9e20fab3ae3116f91741716e7002207d9b13"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman2_8.PNG",
+          "gitBlob": "c6760c7356f1a7d8730ba2fe6602681bdb398d85"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman2_9.PNG",
+          "gitBlob": "e362af295e1fa78eb4e7ed60fc9904b6f746be50"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman2_10.PNG",
+          "gitBlob": "0fd4f089b29dab4cbd89bdb9177d478af3570b8d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman2_11.PNG",
+          "gitBlob": "aed757cf5ee89005a364ef0e946eaaca0ae2a7dd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Uldaman/Uldaman2_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/wailingcaverns-1.webp",
+      "sha256": "5cfcea2c1c30f749994da4fe75039d9e4d960d89e7d862ccf22b6fe1eb172d7f",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_1.PNG",
+          "gitBlob": "40e3645d836f5efd30a979b675fad3fd83a9a995"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_2.PNG",
+          "gitBlob": "abdc49d1e48cb0fb3da1574982b1b254a1b66eb4"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_3.PNG",
+          "gitBlob": "4a0d8e81f05af53a8e4c897603eed42a13230b01"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_4.PNG",
+          "gitBlob": "6e582347034f382594a647a90d772dd9e2142b90"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_5.PNG",
+          "gitBlob": "9bdc4db6c172a8f85162903eaee36feeeac963f9"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_6.PNG",
+          "gitBlob": "425fa1f5ccd926afc74a69ca79c92d1d73ffea75"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_7.PNG",
+          "gitBlob": "749d6ec2dd4ca324d401f97f1954cec73654411a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_8.PNG",
+          "gitBlob": "0e3c5510dab60467d088e04b6b75487a9654bc76"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_9.PNG",
+          "gitBlob": "6d928d16b6cb515223473a94a86310f64f881572"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_10.PNG",
+          "gitBlob": "0d0c073e7195b0cfe412f3bebecb97348be91e51"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_11.PNG",
+          "gitBlob": "141278ccbe3e792253da1ba39efe889c5a6c86c8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_12.PNG",
+          "gitBlob": "b26027932267ed745034001119d5e7294ffd5cc0"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    }
+  ]
+}

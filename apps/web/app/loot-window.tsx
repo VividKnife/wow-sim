@@ -5,7 +5,7 @@ import {Icon,money,type GameProps} from './game-ui';
 import './loot-window.css';
 
 export default function LootWindow({state:s,data:d,busy,send}:GameProps){
- const [open,setOpen]=useState(()=>s.pending.length>0||!s.settings.autoLoot),[selected,setSelected]=useState<string[]>([]),[notice,setNotice]=useState('');
+ const [open,setOpen]=useState(()=>s.pending.length>0),[selected,setSelected]=useState<string[]>([]),[notice,setNotice]=useState('');
  const pending=s.pending as {uid:string;id:number;count:number;bound?:boolean;lootBattleId?:string}[],auto=!!s.settings.autoLoot;
  const hadLoot=useRef(pending.length>0);
  const canLoot=!s.combat&&s.hp>0;
@@ -21,7 +21,7 @@ export default function LootWindow({state:s,data:d,busy,send}:GameProps){
  if(s.combat||(!s.lastCombat&&!pending.length))return null;
  const chosen=selected.filter(uid=>pending.some(i=>i.uid===uid));
  return <>
-  {!open&&(pending.length>0||auto)&&<button className="classic-button loot-reopen" onClick={()=>setOpen(true)}>{pending.length?`战利品 · ${pending.length}`:'自动拾取设置'}</button>}
+  {!open&&(pending.length>0||s.lastCombat)&&<button className="classic-button loot-reopen" onClick={()=>setOpen(true)}>{pending.length?`战利品 · ${pending.length}`:'自动拾取设置'}</button>}
   <Dialog open={open} onOpenChange={setOpen}>
    <DialogContent className="loot-window" onPointerDownOutside={e=>e.preventDefault()}>
     <header className="loot-heading"><span className="loot-emblem" aria-hidden="true">✦</span><div><DialogTitle>战利品</DialogTitle><DialogDescription>点击物品拾取，或勾选后批量拾取</DialogDescription></div></header>

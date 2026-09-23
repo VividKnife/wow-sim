@@ -1,0 +1,38 @@
+{
+  "revision": "8ec338a1704e7dcb1c0213eb7ed58f9231ade40f",
+  "scope": "Spell identities, cooldowns and health phases; spatial actions adapted to arena",
+  "files": [
+    {
+      "source": "https://github.com/cmangos/mangos-classic/blob/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/deadmines/boss_mr_smite.cpp",
+      "sha256": "cd39e97d9fdf14ec587fe6bce23af76c4f4be3049a0e511649dc9f2835f79736"
+    },
+    {
+      "source": "https://github.com/cmangos/mangos-classic/blob/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/gnomeregan/boss_thermaplugg.cpp",
+      "sha256": "969cf5accaf199c6ea4536cc4493401a5f1d4448f5ebf8642fca8e7fd0013775"
+    },
+    {
+      "source": "https://github.com/cmangos/mangos-classic/blob/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/scarlet_monastery/boss_arcanist_doan.cpp",
+      "sha256": "908a1f8349c799e3e1924b38ab9d800264630e9d27cbcadb682e7ffd9ce0b242"
+    },
+    {
+      "source": "https://github.com/cmangos/mangos-classic/blob/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/scarlet_monastery/boss_herod.cpp",
+      "sha256": "0c0d5e6f4373c7129294855e31aefaf325747fe8c78efebd4e4caac3a8d74e87"
+    },
+    {
+      "source": "https://github.com/cmangos/mangos-classic/blob/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/scarlet_monastery/boss_mograine_and_whitemane.cpp",
+      "sha256": "1ed08b9640ff09605a96b0a5ec718824dbe281b22955428a4e7c4e2916bf43e4"
+    },
+    {
+      "source": "https://github.com/cmangos/mangos-classic/blob/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/shadowfang_keep/instance_shadowfang_keep.cpp",
+      "sha256": "15ba06c0ef4820b9404c9ce87e82b58853715b0c6dcaff9cf48bc2559cff7b86"
+    },
+    {
+      "source": "https://github.com/cmangos/mangos-classic/blob/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp",
+      "sha256": "bbda01708e8ffa386b3ebcd7cb3c5f7c75f282ce7d9ad3606aa555d246a11e01"
+    },
+    {
+      "source": "https://github.com/cmangos/mangos-classic/blob/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/uldaman/boss_archaedas.cpp",
+      "sha256": "a0a49efed2882a043ac2afd0cd40505901f535657ca76d41d76ae17c0bd0920f"
+    }
+  ]
+}
