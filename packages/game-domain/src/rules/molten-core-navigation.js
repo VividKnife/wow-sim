@@ -1,4 +1,4 @@
-import {moltenCoreRoute,raidRoutePlan,raidRouteLock} from './molten-core-content.js';
+import {raidNodesFor,raidRoutePlan,raidRouteLock} from './molten-core-content.js';
 
 // Purchased gold-raid loot can wait in the delivery queue while the raid moves.
 export function raidLootBlocksNavigation(s){return s.pending.some(item=>!s.goldRaid?.active||!item.raidSource?.startsWith('gold:'));}
@@ -13,6 +13,7 @@ export function navigateRaid(s,r,destination,launch){
  advanceRaid(s,r,launch,true);
 }
 export function advanceRaid(s,r,launch,confirmed=false){
+ const moltenCoreRoute=raidNodesFor(r?.raidId);
  if(!r?.active||!r.autoAdvance||s.combat||r.recoverUntil)return;
  if(raidLootBlocksNavigation(s)||[s,...s.party].some(c=>c.hp<=0)){pauseRaid(s,r,'领取战利品或休整复活后，在地图上继续推进。');return;}
  const next=raidRoutePlan(r,r.destination)[0];
@@ -27,6 +28,7 @@ export function pauseRaid(s,r,reason='已停止路线推进。'){
  if(!s.combat&&!r.recoverUntil)s.activity={type:s.hp>0?'idle':'dead',reason};
 }
 export function settleRaidRoute(s,r,battle,won){
+ const moltenCoreRoute=raidNodesFor(r.raidId);
  const id=battle.raidEncounter.id,node=moltenCoreRoute.find(n=>n.id===id);
  if(won){const cleared=node.kind==='boss'?r.cleared:r.clearedPacks;if(!cleared.includes(id))cleared.push(id);r.locationId=id;}
  if(!won||id===r.destination||raidLootBlocksNavigation(s)||[s,...s.party].some(c=>c.hp<=0)||!raidRoutePlan(r,r.destination||id).length)r.autoAdvance=false;

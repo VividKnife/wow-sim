@@ -13,6 +13,22 @@ function worldEncounters(d){
    encounters.splice(encounters.indexOf(inquisitor),1);
   }
  }
+ if(d.id==='blackrock-depths'){
+  const champions=[9027,9028,9029,9030,9031,9032],announcer=encounters.find(e=>e.creatureTemplateIds.includes(10096));
+  if(announcer){
+   const sourceSpawns=[8925,8925,8925,8926,8926,8926,null].map((entry,i)=>({guid:'brd-arena-'+i,templateChoices:(entry?[entry]:champions).map(entry=>({entry}))}));
+   const arena={...announcer,id:'brd-arena',kind:'event',nameZh:'秩序竞技场',interaction:{label:'报名挑战竞技场'},creatureTemplateIds:[8925,8926,...champions],sourceSpawns,sourceGuids:sourceSpawns.map(r=>r.guid),waves:[sourceSpawns.slice(0,3).map(r=>r.guid),sourceSpawns.slice(3,6).map(r=>r.guid),[sourceSpawns[6].guid]]};
+   encounters.splice(encounters.indexOf(announcer),1,arena);
+   for(let i=encounters.length-1;i>=0;i--)if(encounters[i]!==arena&&encounters[i].creatureTemplateIds.some(id=>champions.includes(id)))encounters.splice(i,1);
+  }
+  const bar=encounters.find(e=>e.creatureTemplateIds.includes(9502));
+  if(bar){bar.interaction={label:'给罗克诺特送六杯黑铁啤酒',inputs:[[11325,6]]};bar.waves=[bar.sourceGuids];bar.nameZh='黑铁酒吧：法拉克斯';}
+ }
+ if(d.id==='dire-maul-north'){
+  for(const e of encounters)if(e.creatureTemplateIds.some(id=>[14326,14322,14321,14323,14325,14324].includes(id)))e.optional=true;
+  const king=encounters.find(e=>e.creatureTemplateIds.includes(11501));
+  if(king)encounters.push({id:'gordok-tribute',nameZh:'戈多克贡品',kind:'event',sourceCentroid:king.sourceCentroid,creatureTemplateIds:[],sourceSpawns:[],sourceGuids:[],interaction:{label:'接受王位并开启贡品'},activation:{afterDeathEntry:11501}});
+ }
  return encounters;
 }
 

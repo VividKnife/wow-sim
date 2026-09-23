@@ -9,7 +9,7 @@ import {battleModel} from '../../../packages/game-data/battle-models.js';
 import {battleObstacles,worldPoint,worldRadius,spriteAppearance,unitAnimation,groundTexture} from '../lib/battle-hd2d.js';
 
 function fixture(){
- const s=createGame('Arena',123,0);s.level=20;s.learned=companionSkills(s);s.hp=stats(s).maxHp;
+ const s=createGame('Arena',123,0);s.level=60;s.learned=companionSkills(s);s.hp=stats(s).maxHp;
  recruit(s,'rogue',{role:'melee'});recruit(s,'priest',{role:'healer'});
  return act(s,{type:'arenaPrepare',size:3,mapId:'four-pillars',opponentId:'rmp',memberIds:[s.id,...s.party.map(c=>c.id)]},0);
 }

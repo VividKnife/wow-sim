@@ -25,3 +25,5 @@
  .strategy-profile-actions>input,.strategy-profile-actions>[data-game-select]{flex:1 0 100%;width:100%}
  .strategy-profile-actions>button{flex:1 0 100%;width:100%;white-space:normal;height:auto}
 }
+
+.strategy-rule-intro{color:#d4cba9;margin:12px 0;font-size:13px}.strategy-help{font-size:12px;border-bottom:1px solid #454b3e;margin-bottom:14px;padding-bottom:8px}.strategy-help>summary{color:#b5b99f;min-height:36px}.strategy-help p{margin:8px 0;font-size:12px}

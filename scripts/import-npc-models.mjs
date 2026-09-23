@@ -1,13 +1,15 @@
 // Extend the archived portrait collection with local template display IDs.
 // Images retain their original Classic CDN bytes; no runtime network dependency.
-import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {creatures,creatureLocations} from '../packages/game-domain/src/rules/catalog.js';
+import {dungeonDefinitions} from '../packages/game-domain/src/rules/dungeon-registry.js';
+import {questItemActions} from '../packages/game-data/world-quest-content.js';
 import portraits from '../packages/game-data/data/creature-portraits-manifest.json' with {type:'json'};
 const root=new URL('../',import.meta.url);
 const assets=new Map(portraits.assets.map(a=>[a.displayId,a]));
 const entries={...portraits.entries};
-const ids=[...new Set([...Object.keys(creatureLocations).map(Number),467,68,197,54,295,332,8670,914,1205,4981,6740,7915,6575])];
+const ids=[...new Set([...Object.keys(creatureLocations).map(Number),...Object.values(dungeonDefinitions).flatMap(d=>d.reference.encounters.flatMap(e=>e.creatureTemplateIds)),...Object.values(questItemActions).map(a=>a.enemy).filter(Boolean),11598,467,68,197,54,295,332,8670,914,1205,4981,6740,7915,6575])];
 const pending=new Map();
 for(const entry of ids){
  if(entries[entry])continue;
@@ -15,7 +17,7 @@ for(const entry of ids){
  // Location links can include templates outside the imported catalogue.
  if(!row)continue;
  const displayId=row.ModelId1;
- if(!displayId)throw new Error(`Missing model: ${entry}`);
+ if(!displayId)continue; // Invisible source helper templates have no portrait.
  entries[entry]={entry,assetId:`classic-display-${displayId}`,displayId,creatureType:row.CreatureType,family:row.Family,evidenceLevel:'local-creature-template-model-id'};
  if(!assets.has(displayId))pending.set(displayId,null);
 }
@@ -39,6 +41,8 @@ await Promise.all(Array.from({length:8},async()=>{
 }));
 if(failures.length){console.error(failures);process.exitCode=1;}else{
  const result={schemaVersion:1,source:'Archived Classic portraits and local creature_template.ModelId1; Classic CDN static renders',copyright:'Blizzard Entertainment artwork; third-party Wowhead hosting. Code license does not relicense artwork.',assets:[...assets.values()].sort((a,b)=>a.displayId-b.displayId),entries};
- await writeFile(new URL('packages/game-data/data/npc-models-manifest.json',root),JSON.stringify(result,null,2)+'\n');
+ const destination=new URL('packages/game-data/data/npc-models-manifest.json',root),temporary=new URL(`packages/game-data/data/npc-models-manifest.${process.pid}.tmp`,root);
+ await writeFile(temporary,JSON.stringify(result,null,2)+'\n');
+ for(let attempt=0;;attempt++){try{await rename(temporary,destination);break;}catch(error){if(attempt>=8)throw error;await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));}}
  console.log(`Registered ${Object.keys(entries).length} creatures, ${assets.size} model textures.`);
 }

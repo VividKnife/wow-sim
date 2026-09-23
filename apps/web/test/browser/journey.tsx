@@ -5,6 +5,8 @@ import Game from '../../app/game';
 import {createGame,act,advance,view} from '../../../../packages/game-domain/src/rules/engine.js';
 import {projectClientSnapshot} from '../../../../packages/game-domain/src/rules/client-snapshot';
 import {clientContent} from '../../../../packages/game-domain/src/rules/client-content.js';
+import {workshopView} from '../../../../packages/game-domain/src/rules/workshop.js';
+import {contentPack} from '../../../../packages/game-domain/src/rules/content-packs.js';
 import '../../app/globals.css';
 import '../../app/journey.css';
 
@@ -15,7 +17,8 @@ let revision=0;
 const originalFetch=window.fetch.bind(window);
 window.fetch=async(input,init)=>{
  const url=String(input);
- if(url.startsWith('/api/game/content'))return Response.json(clientContent());
+ if(url.startsWith('/api/game/content'))return Response.json(contentPack(clientContent(),new URL(url,window.location.origin).searchParams));
+ if(url.startsWith('/api/game/workshop'))return Response.json({...workshopView(state,Object.fromEntries(new URL(url,window.location.origin).searchParams)),revision});
  if(!url.startsWith('/api/game'))return originalFetch(input,init);
  try{
   if(init?.method==='POST'){state=act(state,JSON.parse(String(init.body)),state.wallAt);state=advance(state,state.wallAt+1000).state;revision++;}

@@ -7,6 +7,8 @@ import {startRecovery,stopRecovery,resurrectionFor,beginResurrection} from './re
 import {spellReady} from './spell-timing.js';
 import {dungeonDestinationPath} from './dungeon-map.js';
 import {selectedDungeonMembers,npcRunStarted,syncNpcWorld} from './npc-world.js';
+import {lootRows} from './quests.js';
+import {objectLoot,nameOf} from './catalog.js';
 
 const current=s=>s.dungeon&&dungeonRoute(s)[s.dungeon.cursor];
 const idle=s=>{if(s.combat)throw new Error('请先结束这场战斗。');if(s.activity.type!=='idle')throw new Error('请先结束当前活动。');};
@@ -25,6 +27,7 @@ export function resetDungeon(s,id=dungeonIdFor(s)){const definition=dungeonDefin
 export function dungeonEntryReason(s,id=dungeonIdFor(s)){
  const definition=dungeonDefinition(id),party=selectedDungeonMembers(s);
  if(s.dungeon)return '你已经在副本中。';
+ if(s.guildRaid?.active||s.goldRaid?.active)return '请先离开团队副本。';
  if(s.combat)return '请先结束这场战斗。';
  if(s.activity.type!=='idle')return '请先结束当前活动。';
  if(s.location!==definition.entrance)return '请先前往'+definition.name+'入口。';
@@ -54,7 +57,7 @@ export function enterDungeon(s,id=dungeonIdFor(s)){
  log(s,'进入'+definition.name+'。小队等待你的下一步指令。','dungeon');
 }
 export function leaveDungeon(s){idle(s);if(s.groupLoot?.pending.length)throw new Error('请先分配队伍战利品再离开。');syncNpcWorld(s);if(!s.dungeon)throw new Error('当前不在副本中。');pauseDungeonAdvance(s);const definition=dungeonDefinition(s.dungeon.id);s.dungeonSaves??={};s.dungeonSaves[s.dungeon.id]=s.dungeon;delete s.dungeon;s.groundEffects=[];stopRecovery(s);log(s,'离开'+definition.name+'，保留本次副本进度。','dungeon');}
-export function remainingDungeonEnemies(s,e){const d=s.dungeon,result=e.sourceGuids.map(g=>d.spawns[g]).filter(p=>p&&!d.defeated[p.sourceGuid]);
+export function remainingDungeonEnemies(s,e){const d=s.dungeon,guids=e.waves?(d.interactions[e.id+':started']?e.waves[d.interactions[e.id+':wave']||0]||[]:[]):e.sourceGuids,result=guids.map(g=>d.spawns[g]).filter(p=>p&&!d.defeated[p.sourceGuid]);
  if(e.id==='dm-sneed'&&d.defeated['3600073']&&!d.defeated['3600073:643'])result.push(d.phases['3600073:643']);return result;
 }
 const remaining=remainingDungeonEnemies;
@@ -87,6 +90,7 @@ export function dungeonAdvanceReason(s){
  if(s.pending.length||s.bag.length>=bagCapacity(s))return '请先整理背包与待拾取战利品。';
  const reason=gateReason(s,e);if(reason)return reason;
  if(e.id==='dm-cannon'&&!countItem(s,e.interaction.item))return '需要迪菲亚火药。';
+ if(!s.dungeon.interactions[e.id+':started'])for(const [id,count]of e.interaction?.inputs||[])if(countItem(s,id)<count)return '需要 '+nameOf('items',id)+' ×'+count+'。';
  return '';
 }
 export function pauseDungeonAdvance(s,reason=''){
@@ -179,11 +183,22 @@ export function recordDungeonProgress(s){const d=s.dungeon;if(!d?.spawns)return;
  const b=s.combat||s.lastCombat,e=current(s);if(!e||b?.runId!==d.runId||b.routeId!==e.id)return;
  for(const mob of b.enemies)if(mob.hp<=0&&mob.sourceGuid){d.defeated[mob.sourceGuid]=true;if(mob.rank)d.defeatedBosses[mob.entry]=true;}
  if(s.combat||[s,...s.party].every(c=>c.hp<=0)||remaining(s,e).length)return;
+ if(e.waves&&!d.interactions[e.id]){const wave=(d.interactions[e.id+':wave']||0)+1;d.interactions[e.id+':wave']=wave;if(wave<e.waves.length){log(s,'下一波挑战即将开始。','dungeon');return;}d.interactions[e.id]=true;}
  if(!e.interaction||d.interactions[e.id])advanceRoute(s,e);
 }
 export function interactDungeon(s){idle(s);const e=current(s),d=s.dungeon;if(!e?.interaction)throw new Error('这里没有待完成的交互。');
+ gate(s,e);
  if(remaining(s,e).length)throw new Error('请先击败看守的敌人。');if(d.interactions[e.id])throw new Error('交互已完成。');
- if(e.id==='dm-gunpowder'){
+ if(e.waves){
+  if(d.interactions[e.id+':started'])throw new Error('挑战已经开始。');
+  for(const [id,count]of e.interaction.inputs||[])if(countItem(s,id)<count)throw new Error('需要 '+nameOf('items',id)+' ×'+count+'。');
+  for(const [id,count]of e.interaction.inputs||[])takeItem(s,id,count);
+  d.interactions[e.id+':started']=true;d.interactions[e.id+':wave']=0;log(s,e.nameZh+'已开始。','dungeon');prepareEncounter(s);
+ }else if(e.id==='gordok-tribute'){
+  const guards=[14326,14322,14321,14323,14325,14324];d.tribute=guards.filter(id=>!d.defeatedBosses[id]).length;
+  lootRows(s,objectLoot[16577]);s.classBuffs??=[];s.classBuffs.push({spell:22799,until:s.clock+7200000});
+  d.interactions[e.id]=true;log(s,'接受戈多克王位，保留 '+d.tribute+' 名守卫，领取贡品。','dungeon');advanceRoute(s,e);
+ }else if(e.id==='dm-gunpowder'){
   const before=clone(s.bag);if(!addItem(s,e.interaction.item,1,false)){s.bag=before;throw new Error('背包需要一个空位存放火药。');}
   d.interactions[e.id]=true;log(s,'从火药箱中取出一份迪菲亚火药。','loot');advanceRoute(s,e);
  }else if(e.id==='dm-cannon'){

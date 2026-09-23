@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/immutability -- Three.js line geometry and visibility belong to the imperative render loop. */
-import {useEffect,useMemo,useRef} from 'react';
+import {memo,useEffect,useMemo,useRef} from 'react';
 import {useFrame} from '@react-three/fiber';
 import {BufferGeometry,Float32BufferAttribute,Group,Line as ThreeLine,LineBasicMaterial,Mesh,MeshBasicMaterial,Vector3,AdditiveBlending} from 'three';
 import {actionProgress,battleTarget,schoolColor} from '@/lib/combat-view.js';
@@ -61,7 +61,7 @@ function HunterProjectile({flight}:{flight:BattleProjectile}){
   <mesh ref={flash} position={[0,-1.3,0]}><sphereGeometry args={[.3,10,6]}/><meshBasicMaterial color="#fff0a8" transparent toneMapped={false} blending={AdditiveBlending} depthWrite={false}/></mesh>
  </group>;
 }
-function Impact({effect}:{effect:BattleEffect}){
+const Impact=memo(function Impact({effect}:{effect:BattleEffect}){
  const group=useRef<Group>(null),ring=useRef<Mesh>(null),frame=useBattleFrame(),shot=effect.projectileVisual==='hunter-shot',color=shot?'#f4cf72':schoolColor(effect.school,effect.kind==='heal');
  useFrame(()=>{
   if(!group.current)return;const f=frame.current,age=f.wall-effect.shownAt,t=age/750;group.current.visible=age>=0&&age<750;
@@ -72,7 +72,7 @@ function Impact({effect}:{effect:BattleEffect}){
  return <group ref={group}><mesh ref={ring} rotation={[-Math.PI/2,0,0]} position={[0,.09,0]}><ringGeometry args={[.7,.82,40]}/><meshBasicMaterial color={color} transparent toneMapped={false} depthWrite={false}/></mesh>
   {Array.from({length:shot?12:8},(_,i)=><mesh key={i}><octahedronGeometry args={[effect.critical?.16:shot?.075:.09,0]}/><meshBasicMaterial color={i%3===0&&shot?'#fff7db':color} toneMapped={false} transparent blending={AdditiveBlending} depthWrite={false}/></mesh>)}
  </group>;
-}
+});
 
 function Selection(){
  const ring=useRef<Mesh>(null),frame=useBattleFrame();

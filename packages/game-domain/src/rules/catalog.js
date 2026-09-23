@@ -26,6 +26,7 @@ import dungeonSpellAssets from '../../../game-data/data/dungeon-spell-assets.jso
 import dungeonScripts from '../../../game-data/data/dungeon-script-reference.json' with {type:'json'};
 import worldLocalization from '../../../game-data/data/world-localization.json' with {type:'json'};
 import {worldNodes,worldRoads,worldTransports,worldDungeons,worldFlightNodes,capitals} from '../../../game-data/world-content.js';
+import {questCreaturePlacements,questObjectPlacements} from '../../../game-data/world-quest-content.js';
 
 const cache = new Map();
 const tableKeys={
@@ -154,7 +155,7 @@ for(const n of Object.values(nodes))if(n.region==='暴风城'){n.min=1;n.max=60;
 for(const [id,node] of Object.entries(classTravelNodes))nodes[id]??={...node,region:'主城传送',x:null,y:null,min:node.level?.[0]??1,max:node.level?.[1]??60,transportOnly:true};
 for(const node of Object.values(nodes)){node.map=0;node.faction='Alliance';}
 for(const node of worldNodes)nodes[node.id]={...node};
-for(const d of worldDungeons){const parent=nodes[d.parent];nodes[d.id]={id:d.id,name:world.dungeons[d.id].name+'入口',region:parent.region,map:parent.map,x:parent.x+60,y:parent.y+60,min:d.min,max:d.max,kind:'dungeon',mountAllowed:false};}
+for(const d of worldDungeons){const parent=nodes[d.parent];nodes[d.id]={id:d.id,name:(world.dungeons[d.id]?.name||d.name)+'入口',region:parent.region,map:parent.map,x:parent.x+60,y:parent.y+60,min:d.min,max:d.max,kind:'dungeon',mountAllowed:false};}
 // Coarse map restrictions: mine/interior approaches are walked in this 2D map.
 for(const id of ['echo','fargodeep','jasper','jansen','silverstream','deadmines','stockades','bluerecluse','magetower'])nodes[id].mountAllowed=false;
 const roads=[['magetower','stockades'],['cathedral','stockades'],['tower','darkshire'],['algaz','menethil'],['menethil','dunmodr'],['northshire','northwood'],['northwood','echo'],['northshire','vineyard'],['northshire','goldshire'],['goldshire','fargodeep'],['fargodeep','stonefield'],['fargodeep','maclure'],['goldshire','crystal'],['goldshire','mirror'],['goldshire','stormwind'],['goldshire','westbrook'],['westbrook','forestedge'],['crystal','jasper'],['crystal','tower'],['tower','logging'],['tower','brackwell'],['maclure','brackwell'],['stonefield','forestedge'],['westbrook','furlbrow'],['stormwind','magetower'],['stormwind','oldtown'],['furlbrow','saldean'],['furlbrow','coastnorth'],['saldean','jansen'],['saldean','sentinel'],['jansen','alexton'],['alexton','coast'],['alexton','moonbrook'],['sentinel','moonbrook'],['sentinel','daggerhills'],['coastnorth','coast'],['coast','lighthouse'],['moonbrook','deadmines'],['deadmines','lighthouse'],['tower','lakeshire'],['ironforge','thelsamar']];
@@ -170,8 +171,13 @@ edges.push({a:'dwarven',b:'ironforge',distance:0,duration:fasterTravelDuration(1
 const positionedNodes=Object.values(nodes).filter(n=>Number.isFinite(n.x)&&Number.isFinite(n.y)&&n.kind!=='dungeon');
 export function nearestNode(x,y,map=0){
  if(map===36)return 'deadmines';if(map===34)return 'stockades';
+ if(map===249)return 'onyxias-lair';if(map===409)return 'molten-core';
  const instances=worldDungeons.filter(d=>d.map===map);
- if(instances.length)return instances.reduce((best,d)=>{const p=world.dungeons[d.id].reference.entrance,b=world.dungeons[best.id].reference.entrance;return Math.hypot(x-p.position_x,y-p.position_y)<Math.hypot(x-b.position_x,y-b.position_y)?d:best;}).id;
+ if(instances.length){
+  const positioned=instances.filter(d=>world.dungeons[d.id]?.reference?.entrance);
+  if(!positioned.length)return instances[0].id;
+  return positioned.reduce((best,d)=>{const p=world.dungeons[d.id].reference.entrance,b=world.dungeons[best.id].reference.entrance;return Math.hypot(x-p.position_x,y-p.position_y)<Math.hypot(x-b.position_x,y-b.position_y)?d:best;}).id;
+ }
  const pool=positionedNodes.filter(n=>n.map===map);
  if(!pool.length)return null;
  return pool.reduce((best,n)=>Math.hypot(x-n.x,y-n.y)<Math.hypot(x-best.x,y-best.y)?n:best).id;
@@ -190,14 +196,20 @@ for(const spawn of spawns){const id=spawn.id;const node=nearestNode(spawn.positi
 Object.assign(creatureLocations,{266:['lakeshire'],656:['ironforge'],514:['ironforge'],538:['thelsamar'],6122:['magetower'],5413:['dwarven'],12336:['cathedral']});
 for(const [id,places]of Object.entries(stockades.npcPlacements||{}))creatureLocations[id]=Array.isArray(places)?places:[places];
 for(const [id,places]of Object.entries(world.creaturePlacements))creatureLocations[id]=[...new Set([...(creatureLocations[id]||[]),...places])];
+for(const [id,places]of Object.entries(questCreaturePlacements))creatureLocations[id]=[...places];
 export const objectLocations={};
 export const objectSpawnsByNode={};
 for(const spawn of table('gameobject')){const node=nearestNode(spawn.position_x,spawn.position_y,spawn.map);(objectSpawnsByNode[node+':'+spawn.id]??=[]).push(spawn);(objectLocations[spawn.id]??=[]);if(!objectLocations[spawn.id].includes(node))objectLocations[spawn.id].push(node);}
+for(const [id,places]of Object.entries(questObjectPlacements))objectLocations[id]=[...places];
 export function endpointNodes(endpoint){if(endpoint.type==='item')return [];return(endpoint.type==='creature'?creatureLocations:objectLocations)[endpoint.id]||[];}
 export const outdoorCreatureLocations={};
 for(const spawn of spawns.filter(s=>s.map===0||s.map===1)){const node=nearestNode(spawn.position_x,spawn.position_y,spawn.map);(outdoorCreatureLocations[spawn.id]??=[]);if(!outdoorCreatureLocations[spawn.id].includes(node))outdoorCreatureLocations[spawn.id].push(node);}
 export const instanceSpawns=spawns.filter(s=>s.map===36);
-export const monsterIdsAt=node=>Object.keys(outdoorCreatureLocations).map(Number).filter(id=>id!==6492&&![1754,1755].includes(id)&&outdoorCreatureLocations[id].includes(node)&&creatures[id]?.MinLevel<=Math.min(50,(nodes[node]?.max||50)+2)&&creatures[id]?.NpcFlags===0&&!(creatures[id]?.UnitFlags&0x10102)&&![8,10,12].includes(creatures[id]?.CreatureType)&&!creatures[id]?.Civilian&&!creatures[id]?.Name.includes('Trigger')&&![1,35,12,11,55,80,84,1078].includes(creatures[id]?.Faction));
+export const attackableCreature=id=>{const c=creatures[id];return !!(c&&c.MinLevel>0&&c.MinLevel<=63&&c.ModelId1>0&&![11686,13069,15294].includes(c.ModelId1)&&!c.NpcFlags&&!(c.UnitFlags&0x10102)&&![8,12].includes(c.CreatureType)&&!c.Civilian&&!/Trigger|Doodad|Counter|Marker/i.test(c.Name)&&![1,35,12,11,55,80,84,1078].includes(c.Faction));};
+const questKillTargets=new Set(Object.values(quests).flatMap(q=>[1,2,3,4].filter(n=>!q['ReqSpellCast'+n]).map(n=>q['ReqCreatureOrGOId'+n])).filter(id=>id>0));
+const monstersByNode=new Map();
+for(const [entry,locations]of Object.entries(outdoorCreatureLocations)){const id=Number(entry);if(id===6492||[1754,1755].includes(id)||!attackableCreature(id))continue;for(const node of locations)if(creatures[id].MinLevel<=Math.min(63,(nodes[node]?.max||60)+2)||questKillTargets.has(id)){if(!monstersByNode.has(node))monstersByNode.set(node,[]);monstersByNode.get(node).push(id);}}
+export const monsterIdsAt=node=>[...(monstersByNode.get(node)||[])];
 export const trainerNodes=['northshire','goldshire','magetower',...Object.keys(classTravelNodes),...worldNodes.filter(n=>n.kind==='town'||n.kind==='city').map(n=>n.id)];
 export const flightNodes=['stormwind','sentinel',...worldFlightNodes];
 export const flights=[{a:'stormwind',b:'sentinel',duration:fasterTravelDuration(78000),cost:110,status:'estimated flight time; reference base cost'}];

@@ -41,7 +41,7 @@ export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,
     </div>
    </div>
    <ActivityProgress state={s} data={d} running/>
-   <div className="journey-activity-meta"><span><Moon size={14}/> 离线继续</span><span>背包 {s.bag.length}/{d.bagCapacity}</span></div>
+   <div className="journey-activity-meta"><span><Moon size={14}/>{s.dungeon?'副本战斗':s.activity.type==='hunt'?'野外狩猎 · 离线继续':activityLabel}</span><span>背包 {s.bag.length}/{d.bagCapacity}</span></div>
   </section>
   {s.combat&&<details className="combat-strip journey-combat-details"><summary>实时战斗详情</summary>
    {s.combat.enemies.filter((unit:any)=>!unit.dead).map((unit:any)=><div className="enemy-status" key={unit.id}><strong>{unit.name} <small>Lv.{unit.level}</small></strong><Bar label="生命" value={unit.hp} max={unit.maxHp}/></div>)}

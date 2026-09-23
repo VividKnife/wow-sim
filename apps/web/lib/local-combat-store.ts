@@ -1,5 +1,5 @@
 "use client";
-import {useSyncExternalStore} from 'react';
+import {useMemo,useSyncExternalStore} from 'react';
 import {playbackPerspective} from './combat-playback.js';
 import type {BattlegroundView} from '../../../packages/contracts/src/battleground';
 
@@ -21,6 +21,6 @@ export function useLocalBattleground(fallback:BattlegroundView|undefined):Battle
 export function useLocalCombat(state:any,data:any,enabled:boolean) {
   const sample=useSyncExternalStore(enabled?subscribe:()=>()=>{},enabled?read:empty,empty);
   // The scene may interpolate one tick, but never continue a stale fight forever.
-  return sample?.view?.battleView?.actors?.some((actor:any)=>actor.id===state.id)
-    ? playbackPerspective(state,data,sample,sample.player.clock+100) : {state,data};
+  return useMemo(()=>sample?.view?.battleView?.actors?.some((actor:any)=>actor.id===state.id)
+    ? playbackPerspective(state,data,sample,sample.player.clock+100) : {state,data},[sample,state,data]);
 }

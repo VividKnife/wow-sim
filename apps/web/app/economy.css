@@ -3,3 +3,10 @@
 @media(max-width:560px){.market-grid,.resource-cards{grid-template-columns:1fr}.profession-list{grid-template-columns:repeat(2,minmax(0,1fr))}.economy-toolbar{gap:10px}.economy-main .section-heading{flex-wrap:wrap}.economy-main .section-heading input{width:100%}.recipe-actions>small{width:100%}.inventory-tools{padding:10px}.resource-card{padding:12px}}
 
 .recipe-pagination{justify-content:flex-end}.recipe-pagination small{margin-right:auto}.recipe-source,.recipe-tools{font-size:12px!important;color:#adb8ad}.skill-color{margin-left:8px}.skill-red{color:#e98982}.skill-orange{color:#eea450}.skill-yellow{color:#e6d17e}.skill-green{color:#93c687}.skill-gray{color:#999}.specialization-list{display:flex;flex-wrap:wrap;gap:8px}
+
+/* Shop goods read as a price list, recipes retain their ingredient grouping. */
+.market-grid{column-gap:24px;row-gap:0}.market-card{flex-direction:row;align-items:center;gap:12px;border:0;border-bottom:1px solid #404739;border-radius:0;padding:12px 0;background:transparent;min-width:0}.market-card .item-display{flex:1;min-width:0}.market-card>button{margin:0 0 0 auto;align-self:center;flex-shrink:0}.market-card .item-display-name{font-size:13px}
+.crafting-help{margin:10px 0;font-size:12px;color:#bcb69b}.crafting-help>summary{min-height:36px}.crafting-help p{padding-bottom:12px}
+.recipe-card,.resource-card{border-radius:3px;background:#1b211d}.profession-list button{border-radius:3px}.profession-list button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media(max-width:1050px){.market-grid{grid-template-columns:1fr}}
+@media(max-width:420px){.market-card{gap:8px}.market-card>button{font-size:11px;padding-inline:8px}.market-card .item-display-name{font-size:12px}}

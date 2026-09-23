@@ -1,4 +1,5 @@
 import {raidAttemptReview} from './raid-command.js';
+import {raidAttunementReason} from './raid-attunement.js';
 import {raidRouteState,raidMapView} from './molten-core-content.js';
 import {navigateRaid,advanceRaid,pauseRaid,settleRaidRoute,raidLootBlocksNavigation} from './molten-core-navigation.js';
 import {raidNextMechanics} from './molten-core-mechanics.js';
@@ -21,6 +22,7 @@ const gold=amount=>`${(amount/GOLD).toFixed(1)}金`;
 export function enterGoldRaid(s){
  need(s.level===60&&s.growthPolicy!=='companion'&&!s.combat&&!s.dungeon&&!s.guildRaid?.active&&!s.goldRaid?.active,'需要空闲的60级团长。');
  need(s.party.length===4&&[s,...s.party].every(c=>c.level===60&&c.hp>0),'请带上五名存活的60级核心成员。');
+ need(!raidAttunementReason(s,'molten-core'),raidAttunementReason(s,'molten-core'));
  const serial=(s.goldRaid?.serial||0)+1;
  s.goldRaid={...raidRouteState(),active:true,serial,phase:'draft',rules:{leaderFee:5,dpsBonus:10,supportBonus:10},tactics:{...defaultRaidTactics},applicants:[],applicantSequence:0,refreshes:0,selected:[],coreIds:[s,...s.party].map(c=>c.id),seats:[],contributions:{},cleared:[],attempts:[],lots:[],auction:null,sales:[],pot:0,paidOut:0,chat:[],settlement:null,recoverUntil:0};
  s.activity={type:'idle'};s.lastCombat=null;announce(s,'你创建了熔火之心金团。先公告分金规则，再招募20名玩家。');
@@ -171,7 +173,7 @@ export function emergencyGoldExit(s){const g=s.goldRaid;if(!g?.active)return;if(
 export function leaveGoldRaid(s){const g=active(s);need(g.phase==='settled','请先结束拍卖并结算本团，即使提前散团也需要分金。');g.active=false;s.party=s.party.filter(c=>!c.goldNpc);s.activity={type:'idle'};}
 export function goldRaidView(s){
  const g=s.goldRaid,actors=[s,...s.party],r=s.combat?.raidEncounter;
- if(!g?.active)return {active:false,canEnter:s.level===60&&!s.combat&&!s.dungeon&&!s.guildRaid?.active&&s.party.length===4&&actors.every(c=>c.level===60&&c.hp>0),previous:g?.settlement||null};
+ if(!g?.active)return {active:false,attunementReason:raidAttunementReason(s,'molten-core'),canEnter:!raidAttunementReason(s,'molten-core')&&s.level===60&&!s.combat&&!s.dungeon&&!s.guildRaid?.active&&s.party.length===4&&actors.every(c=>c.level===60&&c.hp>0),previous:g?.settlement||null};
  const a=g.auction;
  return {map:raidMapView(s,g,g.phase==='camp'&&!s.combat&&!g.recoverUntil&&!raidLootBlocksNavigation(s)&&actors.every(c=>c.hp>0)),active:true,phase:g.phase,rules:g.rules,tactics:g.tactics,selected:g.selected,refreshes:g.refreshes,applicants:g.applicants.map(goldNpcView),members:s.party.filter(c=>c.goldNpc).map(goldNpcView),core:actors.filter(c=>g.coreIds.includes(c.id)).map(c=>({id:c.id,name:c.name,role:combatRole(c),canBid:a?canReceiveRaidLoot(c,items[a.itemId]):false})),roles:roleCounts(g.phase==='recruiting'?[...actors,...g.applicants.filter(c=>g.selected.includes(c.id))]:actors),cleared:g.cleared,bosses:moltenCoreBosses.map(b=>({...b,loot:raidLoot[b.id].map(id=>({id,name:nameOf('items',id)}))})),activeBoss:g.activeBoss,pot:g.pot,paidOut:g.paidOut,settlement:g.settlement,sales:g.sales,chat:g.chat,attempts:g.attempts,remaining:Math.max(0,g.recoverUntil-s.clock),recovering:!!g.recoverUntil,
  auction:a?{id:a.id,name:nameOf('items',a.itemId),itemId:a.itemId,count:a.count,rare:a.rare,price:a.price,minimum:a.price?a.price+a.step:a.opening,step:a.step,leader:a.leader,winner:a.leader==='player'?s.name:s.party.find(c=>c.id===a.leader)?.name,quiet:a.quiet,bidNotice:a.bidNotice||null,bids:a.bids,remainingLots:g.lots.length,nextRoundAt:a.nextRoundAt,playerPassed:a.playerPassed}:null,

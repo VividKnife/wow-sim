@@ -4,6 +4,14 @@ const ROOT='/api/model-viewer/';
 const host=document.getElementById('viewer'),controls=document.getElementById('controls');
 let viewer=null,generation=0,currentRevision=null,loadController=null,zoom=-2;
 let dependencies;
+let presentation='portrait',motion={animation:'Stand',paused:false};
+const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+function applyMotion(){
+ if(!viewer)return;
+ viewer.method('setAnimation',[motion.animation,true]);
+ viewer.method('setAnimPaused',[motion.paused||reducedMotion.matches]);
+}
+reducedMotion.addEventListener('change',applyMotion);
 // This dedicated iframe contains only viewer requests. Track both transports:
 // current M2/skin loads use fetch, while metadata/textures still use XHR.
 let pendingAssets=0,assetFailed=false;
@@ -41,9 +49,9 @@ function dispose(){
  if(viewer){const context=viewer.renderer?.context;viewer.destroy();context?.getExtension('WEBGL_lose_context')?.loseContext();viewer=null;}
  host.replaceChildren();controls.hidden=true;
 }
-async function render(items,revision,raceId,classId,gender){
+async function render(items,revision,raceId,classId,gender,view,mountDisplayId){
  const token=++generation;currentRevision=revision;loadController?.abort();loadController=new AbortController();
- const signal=loadController.signal;dispose();notify('loading');
+ const signal=loadController.signal;dispose();assetFailed=false;presentation=view;notify('loading');
  try{
   const ids=[...new Set(items.map(item=>item.id))];
   const [appearance]=await Promise.all([
@@ -55,12 +63,11 @@ async function render(items,revision,raceId,classId,gender){
   const missing=items.some(i=>!displays.has(i.id));
   // Each outfit is initialized from a complete snapshot. This avoids stale
   // asynchronous attachments and upstream clearSlots differences across builds.
-  viewer=new window.ZamModelViewer({type:2,container:window.jQuery(host),aspect:host.clientWidth/host.clientHeight,contentPath:ROOT,models:{id:raceId*2-(gender==='male'?1:0),type:16},items:items.filter(i=>displays.has(i.id)).map(i=>[i.slot,displays.get(i.id)]),dataEnv:'classic',env:'classic',gameDataEnv:'classic',hd:false,cls:classId,transparent:true});
+  viewer=new window.ZamModelViewer({type:2,container:window.jQuery(host),aspect:host.clientWidth/host.clientHeight,contentPath:ROOT,models:{id:raceId*2-(gender==='male'?1:0),type:16},mount:mountDisplayId?{id:mountDisplayId}:undefined,items:items.filter(i=>displays.has(i.id)).map(i=>[i.slot,displays.get(i.id)]),dataEnv:'classic',env:'classic',gameDataEnv:'classic',hd:false,cls:classId,transparent:true});
   if(!viewer.renderer?.context)throw new Error('WebGL unavailable');
   let customized=false,quietSince=0;
   viewer.method('setCustomizationsLoadedCallback',[()=>{customized=true;}]);
-  viewer.method('setAnimation',['Stand']);
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches)viewer.method('setAnimPaused',[true]);
+  applyMotion();
   const deadline=Date.now()+45000;
   await new Promise((resolve,reject)=>{
    const tick=()=>{
@@ -73,7 +80,10 @@ async function render(items,revision,raceId,classId,gender){
    };tick();
   });
   if(token!==generation)return;
-  zoom=-2;viewer.setZoom(zoom);controls.hidden=false;notify(missing?'partial':'loaded');
+  zoom=presentation==='flight'?-3:presentation==='world'?0:-2;viewer.setZoom(zoom);
+  // Viewer uses eye.z = -distance * cos(zenith): 135° gives a 45° downward view.
+  if(presentation!=='portrait'){viewer.renderer.azimuth=Math.PI/2+.18;viewer.renderer.zenith=3*Math.PI/4;}
+  controls.hidden=presentation!=='portrait';applyMotion();notify(missing?'partial':'loaded');
  }catch(error){
   if(token!==generation)return;
   dispose();notify('error');console.warn('Character model could not load:',error.message);
@@ -82,11 +92,17 @@ async function render(items,revision,raceId,classId,gender){
 window.addEventListener('message',event=>{
  if(event.source!==parent||event.origin!==location.origin)return;
  const message=event.data;
+ if(message?.channel==='wow-character-motion'){
+  if(!['Stand','Run','Fly','Death'].includes(message.animation)||typeof message.paused!=='boolean')return;
+  motion={animation:message.animation,paused:message.paused};applyMotion();return;
+ }
  if(message?.channel!=='wow-character-equipment'||typeof message.revision!=='string'||message.revision.length>2000||!Array.isArray(message.items)||message.items.length>19)return;
  if(!Number.isInteger(message.raceId)||message.raceId<1||message.raceId>8||![1,2,3,4,5,7,8,9,11].includes(message.classId)||!['male','female'].includes(message.gender))return;
  if(!message.items.every(i=>Number.isSafeInteger(i.id)&&i.id>0&&i.id<10000000&&[1,3,4,5,6,7,8,9,10,16,19,20,21,22,26].includes(i.slot)))return;
+ if(message.view!==undefined&&!['portrait','world','flight'].includes(message.view))return;
+ if(message.mountDisplayId!==undefined&&(!Number.isInteger(message.mountDisplayId)||message.mountDisplayId<0||message.mountDisplayId>999999))return;
  if(message.revision===currentRevision)return;
- void render(message.items,message.revision,message.raceId,message.classId,message.gender);
+ void render(message.items,message.revision,message.raceId,message.classId,message.gender,message.view||'portrait',message.mountDisplayId||0);
 });
 new ResizeObserver(()=>{if(viewer&&host.clientWidth&&host.clientHeight){viewer.aspect=host.clientWidth/host.clientHeight;viewer.renderer.onResize(host.clientWidth,host.clientHeight,viewer.aspect);}}).observe(host);
 document.getElementById('zoom-in').onclick=()=>{if(viewer)viewer.setZoom(zoom=Math.min(7,zoom+1));};

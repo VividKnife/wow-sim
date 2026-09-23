@@ -102,6 +102,16 @@ test('a stale lag sample no longer blocks commands after the Worker has caught u
  assert.equal(h.requests.find(r=>r.type==='checkpoint').state.wallAt,30000);
 });
 
+test('combat frames clear catch-up status even when the full overview is deferred',async t=>{
+ const h=harness(t,{lag:30000});h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ const worker=h.workers[0];
+ worker.onmessage({data:{type:'frame',generation:worker.generation,behindMs:30000,snapshot:{player:{clock:0},view:{}}}});
+ assert.match(h.statuses.at(-1),/结算离线/);
+ worker.onmessage({data:{type:'frame',generation:worker.generation,behindMs:0,snapshot:{player:{clock:30000},view:{}}}});
+ assert.equal(h.statuses.at(-1),'');
+ assert.equal(h.client.latest,null,'a partial frame must not replace the full overview');
+});
+
 test('a failed Worker reports its real error instead of claiming offline catch-up',async t=>{
  const h=harness(t,{lag:60000});h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
  const worker=h.workers[0];worker.onmessage({data:{type:'error',generation:worker.generation,error:'游戏规则已更新，请刷新页面'}});

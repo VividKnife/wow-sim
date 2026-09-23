@@ -10,7 +10,7 @@ function ready(){let s=createGame('护送测试',283,0);s.level=20;s.hp=stats(s)
 
 test('escort requires the active quest at Sentinel Hill and cannot be replaced by ordinary travel',()=>{
  let s=ready();s.location='moonbrook';assert.throws(()=>act(s,{type:'escortStart'},0));s.location='sentinel';
- s=act(s,{type:'escortStart'},0);assert.equal(s.escort.npc.hp,329);assert.equal(s.escort.npc.level,15);assert.match(creatureVisual(s.escort.npc).label,/人型生物/);
+ s=act(s,{type:'escortStart'},0);assert.equal(s.escort.npc.hp,329);assert.equal(s.escort.npc.level,15);assert.ok(creatureVisual(s.escort.npc).model?.src);
  assert.throws(()=>act(s,{type:'travel',to:'moonbrook'},0),/护送/);assert.equal(s.quests[155].event,false);
 });
 
@@ -59,7 +59,7 @@ test('escort death or cancellation during combat retains the actor until combat 
   for(const e of s.combat.enemies)e.hp=0;s=advance(s,s.wallAt+100).state;
   assert.equal(s.escort,undefined);assert.equal(s.escortLast.outcome,'failed');assert.equal(s.quests[155].event,false);
   assert.ok(s.lastCombat.actorsSnapshot.some(c=>c.id==='escort-467'&&c.escortNpc));
-  assert.match(creatureVisual(s.lastCombat.actorsSnapshot.find(c=>c.id==='escort-467')).label,/人型生物/);
+  assert.ok(creatureVisual(s.lastCombat.actorsSnapshot.find(c=>c.id==='escort-467')).model?.src);
  }
 });
 

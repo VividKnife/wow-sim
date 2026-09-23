@@ -56,13 +56,13 @@ function personalCombatStartRange(s){
  const hostileKinds=new Set([null,'damage','control']);
  return Math.max(10,...strategySpellIds(s).map(id=>spellInfo(s,id)).filter(sp=>sp&&hostileKinds.has(classAbilityKind(sp))).map(sp=>castRange(sp)));
 }
-function personalEnemyPosition(s,index){
- const radius=personalCombatStartRange(s);
+function personalEnemyPosition(s,index,openingRange){
+ const radius=openingRange??personalCombatStartRange(s);
  const lane=index===0?0:(index%2?1:-1)*Math.ceil(index/2);
  const angle=Math.max(-60,Math.min(60,lane*12))*Math.PI/180;
  return{position:(s.position||0)+radius*Math.cos(angle),positionY:(s.positionY||0)+radius*Math.sin(angle)};
 }
-export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombatArea({dungeon,location:s.location})) {
+export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombatArea({dungeon,location:s.location}),openingRange) {
  area=validateCombatArea(area);
  const ground=encounterGround({dungeon,area,location:nodes[s.location],environment:s.environment});
  dismount(s);if(s.activity.type==='mount')s.activity={type:'idle'};
@@ -70,7 +70,7 @@ export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombat
  s.combat={id:'encounter-'+(s.encounterSequence=(s.encounterSequence||0)+1),startedAt:s.clock,dungeon,area,ground,participantIds:combatMembers(s,null).map(c=>c.id),projectiles:[],enemies:prepared||ids.map((id,i)=>enemy(s,id,'enemy-'+i)),damage:{},healing:{},casts:0,pendingSpawns:[]};
  for(const c of combatMembers(s)){c.rest=null;c.cast=null;c.nextAction=s.clock;c.nextSwing=s.clock;c.position=combatRole(c)==='tank'?20:combatRole(c)==='melee'?18:0;c.positionY=c.id===s.id||c.classId===1?0:c.classId===4?2:c.classId===5?-4:4;c.time=s.clock;c.nextPowerRegen=s.clock+2000;c.combo=0;c.comboTarget=null;c.queuedStrike=null;}
  const pullTank=combatMembers(s).find(c=>!c.petUnit&&!c.totemUnit&&!c.escortNpc&&c.hp>0&&combatRole(c)==='tank');
- for(const [i,e] of s.combat.enemies.entries()){if(pullTank&&!e.target&&!e.controlledBy)e.target=pullTank.id;const spawn=dungeon?{position:30+Math.floor(i/3)*2,positionY:i===0?0:(i%2?1:-1)*Math.ceil(i/2)*2}:personalEnemyPosition(s,i);e.position=spawn.position;e.positionY=spawn.positionY;e.nextAttack=s.clock;e.nextSpell=s.clock+6000;}
+ for(const [i,e] of s.combat.enemies.entries()){if(pullTank&&!e.target&&!e.controlledBy)e.target=pullTank.id;const spawn=dungeon?{position:30+Math.floor(i/3)*2,positionY:i===0?0:(i%2?1:-1)*Math.ceil(i/2)*2}:personalEnemyPosition(s,i,openingRange);e.position=spawn.position;e.positionY=spawn.positionY;e.nextAttack=s.clock;e.nextSpell=s.clock+6000;}
  for(const unit of [...combatMembers(s),...s.combat.enemies])setCombatPosition(s,unit,unit);
  initializeMetrics(s);
  for(const e of s.combat.enemies)initializeSmite(s,e,combatMembers(s),hurtPlayer);
@@ -176,7 +176,7 @@ function decideMage(s,c,focus,rules=c.rules||defaultRules){
  }
  return false;
 }
-function melee(s,c,e){if(c.pvp&&!arenaSight(c,e)){moveToward(s,c,e,5,s.clock);return;}if(c.talentProcs?.spiritOfRedemption?.until>s.clock)return;if(!strategyAllows(s,c,e,{SpellName:'Melee'}))return;const weapon=!hasAura(c,67,s.clock)&&c.equipment[16];const data=weapon&&itemsForWeapon(weapon.id);const swing=(c.escortNpc?c.swing:c.form==='cat'?1000:c.form==='bear'?2500:(data?.delay||2000))*attackTimeMultiplier(c,s.clock)/(1+talentModifiers(c).meleeHastePct);if(distance(e,c)>5){moveToward(s,c,e,5,s.clock);return;}if(s.clock<c.nextSwing)return;
+function melee(s,c,e){if(e.airborne)return;if(c.pvp&&!arenaSight(c,e)){moveToward(s,c,e,5,s.clock);return;}if(c.talentProcs?.spiritOfRedemption?.until>s.clock)return;if(!strategyAllows(s,c,e,{SpellName:'Melee'}))return;const weapon=!hasAura(c,67,s.clock)&&c.equipment[16];const data=weapon&&itemsForWeapon(weapon.id);const swing=(c.escortNpc?c.swing:c.form==='cat'?1000:c.form==='bear'?2500:(data?.delay||2000))*attackTimeMultiplier(c,s.clock)/(1+talentModifiers(c).meleeHastePct);if(distance(e,c)>5){moveToward(s,c,e,5,s.clock);return;}if(s.clock<c.nextSwing)return;
  c.nextSwing=s.clock+swing;c.swingStartedAt=s.clock;onTalentEvent(s,c,{type:'swing'},{rng,stats});
  const queued=!hasAura(c,67,s.clock)&&c.queuedStrike&&spellInfo(c,c.queuedStrike),pool=queued?.PowerType===1?'rage':'mana',strike=queued&&(c[pool]||0)>=queued.mana&&spellReady(c,queued,s.clock,{ignoreGcd:true})&&stanceAllows(c,queued)&&strategyAllows(s,c,e,queued)?queued:null;c.queuedStrike=null;
  if(strike){beginSpellTiming(c,{...strike,castMs:0,StartRecoveryTime:0},s.clock,{pool});log(s,`${c.name} 施放 ${nameOf('spells',strike.Id)}`,'cast',{actorId:c.id,targetId:e.id,spellId:strike.Id});}
@@ -381,7 +381,7 @@ export function combatTick(s,{pvpTeam=false}={}){
   if(dungeonBossTick(s,e,actors,hurtPlayer))continue;
   if(!e.raidScripted)enemyAITick(s,e,actors,hurtPlayer);
   if(e.despawnAt&&s.clock>=e.despawnAt){e.removed=true;e.cast=null;continue;}
-  if(e.cast||controlled(e,s.clock))continue;
+  if(e.airborne||e.cast||controlled(e,s.clock))continue;
   const separation=distance(e,target);
   if(e.fleeing){moveAway(s,e,target,s.clock);continue;}
   if(separation>enemyDesiredRange(s,e))moveToward(s,e,target,enemyDesiredRange(s,e),s.clock);
@@ -407,7 +407,7 @@ export function beginHunterTaming(s,targetId){
  if(s.classId!==3||!s.learned.includes(1515))throw new Error('Learn Tame Beast first');if(s.hp<=0||s.pet||s.hunterPet)throw new Error('Dismiss the current pet before taming');
  let target=s.combat?.enemies.find(e=>e.id===targetId&&aliveEnemy(e));const entry=target?.entry||(String(targetId).startsWith('npc:')?Number(String(targetId).slice(4)):Number(targetId));const raw=creatures[entry];
  if(!raw||!(raw.CreatureTypeFlags&1)||raw.CreatureType!==1||!target&&!monsterIdsAt(s.location).includes(entry))throw new Error('Choose a local living beast');if((target?.level||raw.LevelMin||raw.MinLevel||1)>s.level)throw new Error('The beast is above your level');
- const sp=spellInfo(s,1515);if(s.mana<sp.mana)throw new Error('Not enough mana');if(!target){if(s.combat)throw new Error('Choose a beast in the current fight');startCombat(s,[entry]);target=s.combat.enemies[0];}
+ const sp=spellInfo(s,1515);if(s.mana<sp.mana)throw new Error('Not enough mana');if(target&&!inSpellRange(s,target,sp))throw new Error('目标超出驯服射程');if(!target){if(s.combat)throw new Error('Choose a beast in the current fight');startCombat(s,[entry],false,null,undefined,castRange(sp));target=s.combat.enemies[0];}
  const timing=beginSpellTiming(s,sp,s.clock,{channel:true});s.cast={timing,spell:sp.Id,target:target.id,startedAt:s.clock,until:s.clock+sp.durationMs,next:s.clock+1000,interval:1000,channel:true,taming:true};s.nextAction=s.cast.until;s.target=target.id;target.threat[s.id]=(target.threat[s.id]||0)+10;target.target=s.id;log(s,s.name+' 开始驯服 '+target.name,'cast',{actorId:s.id,targetId:target.id,spellId:1515,duration:sp.durationMs});return true;
 }
 

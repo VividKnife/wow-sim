@@ -27,7 +27,7 @@ export const dungeonJournal=reference.dungeons.map(d=>({...d,
  minimumLevel:dungeonDefinitions[d.id]?.minimumLevel??d.minimumLevel,
  background:presentation.dungeons[d.id]?.background,
  atlas:dungeonDefinitions[d.id]?{...dungeonMap(d.id),bossLocations:Object.fromEntries(dungeonDefinitions[d.id].reference.encounters.filter(e=>e.kind==='boss').flatMap(e=>e.creatureTemplateIds.map(entry=>[entry,e.id])))}:null,
- playable:Object.hasOwn(dungeonDefinitions,d.id),groupSize:d.id==='upper-blackrock-spire'?10:5,
+ playable:Object.hasOwn(dungeonDefinitions,d.id),groupSize:5,
  bosses:d.bosses.map(b=>({...b,...bossGuide(b.id),portrait:presentation.bosses[b.id]||creatureVisual({entry:b.id}).src,name:nameOf('npcs',b.id)===String(b.id)?b.name:nameOf('npcs',b.id),loot:b.loot.map(item=>{
   const paths=item.source?.paths||[],shared=lootBosses.get(item.id).size>=4||lootDungeons.get(item.id).size>=4||paths.length>0&&paths.every(path=>path.some(row=>row.mincountOrRef<=-60000));
   const damage=item.damage?.[0],local=items[item.id];

@@ -1,4 +1,4 @@
-"""Import the pinned ClassicDB 1-40 world into the node-based simulation.
+"""Import the pinned ClassicDB 1-60 world into the node-based simulation.
 
 Run node scripts/export-world-geography.mjs, then this script. Source records
 are packed without inventing quest text, enemy stats, or loot probabilities.
@@ -14,7 +14,7 @@ geo = json.loads((ROOT / '.cache/world-geography.json').read_text(encoding='utf8
 nodes = geo['nodes']
 journal = json.loads((OUT / 'dungeon-journal.json').read_text(encoding='utf8'))['dungeons']
 dungeons = {d['id']: d for d in geo['dungeons']}
-maps = {d['map'] for d in dungeons.values()} | {0, 1, 34, 36}
+maps = {d['map'] for d in dungeons.values()} | {0, 1, 34, 36, 249, 409}
 wanted = set('quest_template creature creature_template creature_spawn_entry spawn_group spawn_group_entry spawn_group_spawn gameobject gameobject_spawn_entry gameobject_template creature_questrelation creature_involvedrelation gameobject_questrelation gameobject_involvedrelation item_template creature_loot_template reference_loot_template gameobject_loot_template conditions npc_vendor npc_vendor_template creature_ai_scripts spell_template creature_template_classlevelstats areatrigger_teleport playercreateinfo'.split())
 schemas, t = read_sql(ROOT / '.cache/source-data/ClassicDB_1_12_1_z2815.sql.gz', wanted)
 creatures = {c['Entry']: c for c in t['creature_template']}
@@ -39,7 +39,7 @@ for r in t['creature']:
     choices = {r['id']} if r['id'] else alternatives[r['guid']]
     choices = {i for i in choices if i in creatures}
     node = nearest(r) if r['map'] in (0,1) else None
-    if r['map'] in (0,1) and (not node or not any(creatures[i]['MinLevel'] <= 45 or creatures[i]['NpcFlags'] for i in choices)): continue
+    if r['map'] in (0,1) and (not node or not any(creatures[i]['MinLevel'] <= 63 or creatures[i]['NpcFlags'] for i in choices)): continue
     for entry in sorted(choices):
         spawns.append({**r,'id':entry})
         if node: placements[entry].add(node)
@@ -51,9 +51,9 @@ for r in t['item_template']:
     if r['startquest']: links[r['startquest']]['starts'].append({'type':'item','id':r['entry']})
 # All source quests through level 40, plus prerequisites. Quest levels above 40
 # belonging to in-scope dungeons remain available at their original minimum.
-instance_zones={2437,718,209,719,721,491,796,722,1337,1581,717}
+excluded_zones={2597,3277,3358,2677,2159,3428,3429,3456}
 allq={q['entry']:q for q in t['quest_template']}
-qids={q['entry'] for q in allq.values() if q['MinLevel']<=40 and (0<q['QuestLevel']<=40 or q['QuestLevel']==-1 or q['ZoneOrSort'] in instance_zones and q['QuestLevel']<=50) and links[q['entry']]['starts'] and links[q['entry']]['ends']}
+qids={q['entry'] for q in allq.values() if q['MinLevel']<=60 and (0<q['QuestLevel']<=60 or q['QuestLevel']==-1) and q['ZoneOrSort'] not in excluded_zones and links[q['entry']]['starts'] and links[q['entry']]['ends']}
 while True:
     deps={abs(allq[i]['PrevQuestId']) for i in qids} & allq.keys()
     if deps <= qids: break
@@ -75,15 +75,30 @@ for jid,d in dungeons.items():
     if d['map']==189:
         word=jid.split('-')[-1]
         entrance_candidates=[r for r in entrance_candidates if word in r['name'].lower()]
+    # Shared instance maps have separate wings. Assign source trash to its
+    # nearest journal boss wing; keep each wing's actual source boss spawns.
+    siblings=[other for other in dungeons.values() if other['map']==d['map']]
+    if len(siblings)>1 and d['map']!=189:
+        anchors=[]
+        for other in siblings:
+            ids={b['id'] for b in next(j for j in journal if j['id']==other['id'])['bosses']}
+            anchors.extend((other['id'],r) for r in spawns if r['map']==d['map'] and r['id'] in ids)
+        own=[r for owner,r in anchors if owner==jid]
+        if own:
+            center={k:sum(r[k] for r in own)/len(own) for k in ['position_x','position_y','position_z']}
+            entrance_candidates.sort(key=lambda r:sum((r['target_'+k]-center[k])**2 for k in center))
     entrance=entrance_candidates[0]
     origin={'position_x':entrance['target_position_x'],'position_y':entrance['target_position_y'],'position_z':entrance['target_position_z'],'minimumLevel':d['minimumLevel']}
     raw=[r for r in spawns if r['map']==d['map']]
+    if len(siblings)>1 and d['map']!=189 and anchors:
+        raw=[r for r in raw if r['id'] in bosses or min(anchors,key=lambda a:sum((r[k]-a[1][k])**2 for k in ['position_x','position_y','position_z']))[0]==jid]
     if d['map']==189:
         entrances=[r for r in t['areatrigger_teleport'] if r['target_map']==189]
         raw=[r for r in raw if min(entrances,key=lambda e:(r['position_x']-e['target_position_x'])**2+(r['position_y']-e['target_position_y'])**2)['id']==entrance['id']]
     byguid=defaultdict(list)
     for r in raw:
         c=creatures[r['id']]
+        if not c['ModelId1'] or c['ModelId1']==11686:continue
         if (c['NpcFlags'] or c['Civilian'] or c['CreatureType'] in (8,10,12) or c['Faction'] in (1,35)) and r['id'] not in bosses: continue
         byguid[r['guid']].append(r)
     packs=[]; used=set()
@@ -122,6 +137,9 @@ for jid,d in dungeons.items():
         for entry in e['creatureTemplateIds']: placements[entry].add(jid)
 
 cids={r['id'] for r in spawns}|{i for d in references.values() for e in d['reference']['encounters'] for i in e['creatureTemplateIds']}
+cids.update(a['enemy'] for a in geo.get('questItemActions',{}).values() if a.get('enemy'))
+cids.add(11598) # Gandling's scripted Risen Guardians.
+cids.update([8925,8926]) # Ring of Law's node-adapted preliminary waves.
 for q in quests:
     cids.update(e['id'] for e in links[q['entry']]['starts']+links[q['entry']]['ends'] if e['type']=='creature')
     cids.update(q['ReqCreatureOrGOId'+str(n)] for n in (1,2,3,4) if q['ReqCreatureOrGOId'+str(n)]>0)
@@ -139,6 +157,11 @@ for r in t['gameobject']:
     for entry in ({r['id']} if r['id'] else object_entries[r['guid']]):objects.append({**r,'id':entry})
 objects.append({'guid':-10076,'id':10076,'map':1,'position_x':4580,'position_y':450,'position_z':0,'spawntimesecsmin':30,'spawntimesecsmax':30})
 oids={r['id'] for r in objects}
+oids.add(179564) # Script-created Gordok Tribute chest.
+# Quest endpoints can be script-created objects with no static spawn row.
+for q in quests:
+    oids.update(e['id'] for e in links[q['entry']]['starts']+links[q['entry']]['ends'] if e['type']=='gameobject')
+    oids.update(-q['ReqCreatureOrGOId'+str(n)] for n in (1,2,3,4) if q['ReqCreatureOrGOId'+str(n)]<0)
 go_templates=[r for r in t['gameobject_template'] if r['entry'] in oids]
 lootids={creatures[i]['LootId'] for i in cids if i in creatures}
 loot=[r for r in t['creature_loot_template'] if r['entry'] in lootids]
@@ -161,6 +184,7 @@ iids.update(r['entry'] for r in t['item_template'] if r['startquest'] in qids)
 itemrows=[r for r in t['item_template'] if r['entry'] in iids]
 ai=[r for r in t['creature_ai_scripts'] if r['creature_id'] in cids]
 spellids={r['action'+str(n)+'_param1'] for r in ai for n in (1,2,3) if r['action'+str(n)+'_type']==11}
+spellids.update([18435,18431,18500,19983,15847,19633,18392,18430,17086,22191])
 spellids.update(r['spellid_'+str(n)] for r in itemrows for n in range(1,6))
 spellids.update(q[k] for q in quests for k in ['SrcSpell','RewSpell','RewSpellCast','ReqSpellCast1','ReqSpellCast2','ReqSpellCast3','ReqSpellCast4'])
 allsp={r['Id']:r for r in t['spell_template']}
@@ -178,7 +202,7 @@ def xp(q,level):
     qlevel=q['QuestLevel'] if q['QuestLevel']>0 else level
     factor=1 if level-qlevel<=5 else {6:.8,7:.6,8:.4,9:.2}.get(level-qlevel,.1)
     return math.ceil(q['RewMoneyMaxLevel']/.6*factor-1e-10)
-bundle={'meta':{'source':'CMaNGOS ClassicDB','commit':SOURCE_COMMIT,'sha256':SOURCE_SHA256,'scope':'Classic 1-40 and overlapping dungeon quests','adaptation':'World locations and dungeon routes are a node-based adaptation; scripted events require explicit runtime support.'},'schemas':{k:schemas[k] for k in selected},'tableData':{k:json.dumps([[r.get(c) for c in schemas[k]] for r in rows],ensure_ascii=False,separators=(',',':')) for k,rows in selected.items()},'questLinks':{str(i):links[i] for i in sorted(qids)},'questXpByPlayerLevel':{str(q['entry']):[xp(q,l) for l in range(1,61)] for q in quests},'creaturePlacements':{str(i):sorted(v) for i,v in placements.items()},'dungeons':references}
+bundle={'meta':{'source':'CMaNGOS ClassicDB','commit':SOURCE_COMMIT,'sha256':SOURCE_SHA256,'scope':'Classic 1-60; all classic dungeons including Dire Maul; raids through Molten Core and Onyxia','adaptation':'World locations and dungeon routes are a node-based adaptation; scripted events require explicit runtime support.'},'schemas':{k:schemas[k] for k in selected},'tableData':{k:json.dumps([[r.get(c) for c in schemas[k]] for r in rows],ensure_ascii=False,separators=(',',':')) for k,rows in selected.items()},'questLinks':{str(i):links[i] for i in sorted(qids)},'questXpByPlayerLevel':{str(q['entry']):[xp(q,l) for l in range(1,61)] for q in quests},'creaturePlacements':{str(i):sorted(v) for i,v in placements.items()},'dungeons':references}
 (OUT/'world-reference.json').write_text(json.dumps(bundle,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf8')
 (OUT/'world-visuals.json').write_text(json.dumps({'entries':{str(i):{'displayId':creatures[i]['ModelId1'],'creatureType':creatures[i]['CreatureType']} for i in sorted(cids) if i in creatures}},separators=(',',':'))+'\n',encoding='utf8')
 print(json.dumps({k:len(v) for k,v in selected.items()}))

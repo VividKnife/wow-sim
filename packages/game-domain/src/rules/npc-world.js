@@ -147,11 +147,11 @@ export function syncNpcWorld(s){
  }
 }
 export function selectedDungeonMembers(s){
- if(s.dungeon||!s.npcWorld?.selection)return s.party;
- return s.npcWorld.selection.map(id=>s.party.find(c=>c.id===id)||s.npcWorld.residents.find(p=>p.id===id)?.unit).filter(Boolean);
+ if(s.dungeon||!s.npcWorld?.selection)return s.party.filter(c=>!c.guildUnit&&!c.goldNpc);
+ return s.npcWorld.selection.map(id=>s.party.find(c=>c.id===id)||s.npcWorld.residents.find(p=>p.id===id)?.unit).filter(c=>c&&!c.guildUnit&&!c.goldNpc);
 }
 export function npcAction(s,a){
- if(s.combat||s.dungeon||s.activity.type!=='idle')throw new Error('请结束当前活动并离开副本后再安排冒险者。');
+ if(s.combat||s.dungeon||s.guildRaid?.active||s.goldRaid?.active||s.activity.type!=='idle')throw new Error('请结束当前活动并离开副本后再安排冒险者。');
  const world=ensureNpcWorld(s);progressNpcWorld(s);
  if(a.type==='npcRefresh'){
   if(s.wallAt<world.board.refreshAt)throw new Error(`旅店正在联络下一批冒险者，请在${Math.ceil((world.board.refreshAt-s.wallAt)/1000)}秒后再来。`);
@@ -177,7 +177,7 @@ export function npcAction(s,a){
 }
 export function npcRunStarted(s){
  for(const c of s.party.filter(c=>c.npcPlayer)){
-  const p=s.npcWorld.residents.find(p=>p.id===c.id);p.runs++;note(p,`与你第${p.runs}次组队，前往${s.dungeon.id==='stockades'?'暴风城监狱':'死亡矿井'}。`);
+  const p=s.npcWorld.residents.find(p=>p.id===c.id);p.runs++;note(p,`与你第${p.runs}次组队，前往${dungeonJournal.find(d=>d.id===s.dungeon.id)?.name||s.dungeon.id}。`);
   const training=buildUnit(s,p.index,c.level,false);
   c.talents=training.talents;c.rules=training.rules;c.strategyPolicy=training.strategyPolicy;
   if(c.classId===3)for(const id of [2512,2516]){const missing=Math.max(0,2000-(c.ammunition?.[id]||0)),cost=Math.ceil(missing/200)*10;if(p.wallet>=cost){p.wallet-=cost;c.ammunition??={};c.ammunition[id]=2000;}}
@@ -193,7 +193,7 @@ export function npcAward(s,c,item,need){
 export function npcWorldView(s){
  const w=s.npcWorld,selected=selectedDungeonMembers(s),active=!!s.dungeon;
  const member=c=>({id:c.id,name:c.name,classId:c.classId,level:c.level,role:combatRole(c),npc:!!c.npcPlayer,hp:c.hp});
- return {unlocked:s.level>=18&&s.growthPolicy!=='companion',ready:!!w,locked:!!s.combat||active||s.activity.type!=='idle',custom:w?.selection!==null&&!!w,autoLoot:!!w?.autoLoot,selected:selected.map(member),owned:s.party.filter(c=>!c.npcPlayer).map(member),
+ return {unlocked:s.level>=18&&s.growthPolicy!=='companion',ready:!!w,locked:!!s.combat||active||!!s.guildRaid?.active||s.goldRaid?.active||s.activity.type!=='idle',custom:w?.selection!==null&&!!w,autoLoot:!!w?.autoLoot,selected:selected.map(member),owned:s.party.filter(c=>!c.npcPlayer&&!c.guildUnit&&!c.goldNpc).map(member),
   total:w?.residents.length||names.length,board:w?{ids:w.board.ids,sequence:w.board.sequence,remaining:Math.max(0,w.board.refreshAt-s.wallAt),cooldown:NPC_REFRESH_MS}:null,
   residents:(w?.residents||[]).map(p=>{const c=s.party.find(c=>c.id===p.id)||p.unit;return {...member(c),friend:p.friend,personality:p.personality,runs:p.runs,history:p.history,wallet:p.wallet,status:active&&s.party.some(c=>c.id===p.id)?'与你冒险':p.steps%2?'正在任务历练':'等待组队',equipment:Object.entries(c.equipment).map(([slot,item])=>({slot:Number(slot),...item})),talents:c.talents,stats:stats(c),nextXp:xpTable[c.level]?.xp_for_next_level||0,xp:c.xp};})};
 }

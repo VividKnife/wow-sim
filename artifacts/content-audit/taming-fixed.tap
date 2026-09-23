@@ -1,0 +1,21 @@
+✔ class mounts use learned spells and accelerate travel without purchased horse riding (679.5844ms)
+✔ healthstones consume source item, heal and enforce category cooldown across ranks (1.3917ms)
+✔ soulstone survives serialization and revives with source rank health and mana (0.595ms)
+✔ active Kings aura increases stats once and expires (0.402ms)
+✔ Shaman learned Parry grants the baseline avoidance chance (0.2734ms)
+✔ summoning ritual requires two assistants and moves only a living distant party target (4.3735ms)
+✔ public hunter taming retains real beast identity through dismissal and recall (22.651ms)
+✔ new mage characters begin with source starting proficiencies and retain them on sync (0.76ms)
+✔ public taming rejects busy and global-cooldown states before starting an encounter (0.5495ms)
+✔ public trainer to tame to pet training preserves actual acquired Growl without unlocking wild skills (34.1025ms)
+✔ pet trainer exposes sourced paid teaching wrappers and updates an existing eligible pet (62.9893ms)
+✔ using a tamed beast source skill teaches the hunter and survives abandoning it (72.383ms)
+✔ public paid trainer and pet training change actual health armor and resistance without free healing (127.4026ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4043.0423

@@ -9,6 +9,7 @@ import {canEquip,stats} from '../src/rules/character.js';
 import {goldRaidView,goldRaidAction,goldAuctionStep,finishGoldRun} from '../src/rules/gold-raid.js';
 import {GOLD,goldAvoidsFire,npcWantsConsumables} from '../src/rules/gold-raid-npcs.js';
 import {localEligible} from '../src/local-simulation.ts';
+import {PAUSED_EVENT_AT} from '../src/presence.ts';
 import type {Rules} from '../src/model.ts';
 async function fixture(){
  let now=Date.UTC(2026,8,21),seq=0;const store=new MemoryStore(),options={contentVersion:'test',now:()=>now,seed:()=>60325};let service=new GameService(store,options);
@@ -17,7 +18,7 @@ async function fixture(){
  const snapshot=()=>service.snapshot(save.id);
  const step=async()=>{now+=2000;await service.snapshot(save.id,undefined,true);assert.deepEqual((await service.work()).errors,[]);return snapshot();};
  await command('enterDungeon',{contentId:'molten-core-gold'});
- return {store,save,command,snapshot,step,elapse:(ms:number)=>{now+=ms;},restart:()=>{service=new GameService(store,options);}};
+ return {store,save,command,snapshot,step,work:()=>service.work(),elapse:(ms:number)=>{now+=ms;},restart:()=>{service=new GameService(store,options);}};
 }
 async function recruit(f:Awaited<ReturnType<typeof fixture>>,skipApproach=true){
  await f.command('goldPublish');await f.command('goldRecommend');const snap=await f.command('goldLaunch');
@@ -26,6 +27,18 @@ async function recruit(f:Awaited<ReturnType<typeof fixture>>,skipApproach=true){
  return f.snapshot();
 }
 const assets=(s:Rules)=>s.money+s.party.filter((c:Rules)=>c.goldNpc).reduce((n:number,c:Rules)=>n+c.goldProfile.wallet+c.goldProfile.consumableSpent,0)+s.goldRaid.pot-s.goldRaid.paidOut+(s.goldRaid.auction?.price||0);
+
+test('idle gold camp waits for a command without background instance writes',async()=>{
+ const f=await fixture();let snap=await recruit(f,false);
+ const camp=await f.store.read(tx=>tx.get<any>('instances',snap.instanceId!));
+ assert.equal(camp!.nextEventAt,PAUSED_EVENT_AT);
+ f.elapse(60_000);
+ assert.equal((await f.work()).instances,0);
+ assert.equal((await f.store.read(tx=>tx.get<any>('instances',snap.instanceId!)))!.sequence,camp!.sequence);
+ snap=await f.command('goldNavigate',{destination:'lucifron'});
+ assert.equal(snap.state!.combat.raidEncounter.id,'mc-gate');
+ assert.ok((await f.store.read(tx=>tx.get<any>('instances',snap.instanceId!)))!.nextEventAt<PAUSED_EVENT_AT);
+});
 
 test('bid racing an NPC round refreshes the quote without charging or rolling back progress',async()=>{
  const f=await fixture();let snap=await recruit(f);await f.command('goldStart',{bossId:'lucifron'});

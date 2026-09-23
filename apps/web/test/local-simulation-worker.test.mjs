@@ -7,9 +7,11 @@ import {build} from 'esbuild';
 let source;
 before(async()=>{
  const fixtures={
-  'engine.js':'export const advance=(...args)=>globalThis.advanceFixture(...args);export const view=()=>({});',
+  'engine.js':'export const advance=(...args)=>globalThis.advanceFixture(...args);export const view=state=>globalThis.viewFixture(state);',
   'arena.js':'export const arenaView=()=>({});',
   'battleground.js':'export const battlegroundView=()=>({});',
+  'guild-raid.js':'export const guildRaidView=state=>({clock:state.clock});',
+  'gold-raid.js':'export const goldRaidView=state=>({clock:state.clock});',
   'battle-presentation.js':'export const battlePresentation=()=>({});',
   'client-snapshot.ts':'export const projectClientSnapshot=(player,view)=>({player,view});export const projectCombatPlayback=()=>({view:{}});',
   'manifest.json':'export default {contentVersion:"fixture"};',
@@ -21,19 +23,47 @@ before(async()=>{
  }}]});source=bundle.outputFiles[0].text;
 });
 
-function runtime({now=0,wallAt=0,serverNow=100000,deadline=200000,visible=true}={}){
- const messages=[],timers=new Map(),steps=[];let id=0,time=now;
- const sandbox={performance:{now:()=>time},structuredClone,postMessage:message=>messages.push(structuredClone(message)),setTimeout:fn=>{timers.set(++id,fn);return id;},clearTimeout:key=>timers.delete(key),advanceFixture:(state,target,{maxTicks})=>{
+function runtime({now=0,wallAt=0,serverNow=100000,deadline=200000,visible=true,extra={},computeMs=0}={}){
+ const messages=[],timers=new Map(),steps=[],views=[],delays=[];let id=0,time=now,patch={};
+ const sandbox={performance:{now:()=>time},structuredClone,postMessage:message=>messages.push(structuredClone(message)),setTimeout:(fn,delay)=>{delays.push(delay);timers.set(++id,fn);return id;},clearTimeout:key=>timers.delete(key),viewFixture:state=>{views.push(state.clock);return {clock:state.clock};},advanceFixture:(state,target,{maxTicks})=>{
+  time+=computeMs;
   const next=Math.min(target,state.wallAt+maxTicks*100);steps.push({target,maxTicks,wallAt:next});
-  return {state:{...state,clock:next,wallAt:next},complete:next===target};
+  return {state:{...state,...patch,clock:next,wallAt:next},complete:next===target};
  }};
  runInNewContext(source,sandbox);
  const send=data=>sandbox.onmessage({data});
- const initial={clock:wallAt,wallAt,activity:{type:'battlegroundCombat'}};
+ const initial={clock:wallAt,wallAt,activity:{type:'battlegroundCombat'},...extra};
  send({type:'visibility',visible,watching:true});send({type:'start',contentVersion:'fixture',generation:'session',state:initial,serverNow,deadline});
  const run=()=>{const first=timers.entries().next().value;if(!first)return false;timers.delete(first[0]);first[1]();return true;};
- return {messages,steps,send,run,clock:value=>{time=value;},pending:()=>timers.size};
+ return {messages,steps,views,delays,send,run,clock:value=>{time=value;},change:value=>{patch=value;},pending:()=>timers.size};
 }
+
+test('watching a fight streams frames without rebuilding the full overview every second',()=>{
+ for(const extra of [{combat:{id:'boss'},guildRaid:{}},{arena:{phase:'combat'}},{battleground:{phase:'countdown'}}]){
+  const r=runtime({serverNow:0,extra});
+  for(let ms=100;ms<=3000;ms+=100){r.clock(ms);r.run();}
+  assert.equal(r.views.length,1);
+  assert.equal(r.messages.filter(m=>m.type==='frame').length,30);
+  assert.equal(r.messages.findLast(m=>m.type==='frame').behindMs,0);
+  if(extra.guildRaid)assert.equal(r.messages.findLast(m=>m.type==='frame').snapshot.view.guildRaid.clock,2100);
+  r.send({type:'visibility',visible:true,watching:false});r.clock(3050);r.run();
+  assert.equal(r.views.length,2,'closing the fight refreshes the overview immediately');
+  assert.equal(r.messages.findLast(m=>m.type==='full').snapshot.player.clock,3050);
+ }
+});
+
+test('encounter transitions and idle overviews still publish fresh full snapshots',()=>{
+ const r=runtime({serverNow:0,extra:{combat:{id:'first'}}});
+ r.clock(100);r.change({combat:{id:'second'}});r.run();assert.equal(r.views.length,2);
+ r.clock(200);r.change({combat:null,activity:{type:'idle'}});r.run();assert.equal(r.views.length,3);
+ r.clock(1200);r.run();assert.equal(r.views.length,4);
+ assert.equal(r.messages.filter(m=>m.type==='boundary').length,2);
+});
+
+test('simulation work is included in the visible timer cadence',()=>{
+ const r=runtime({serverNow:0,computeMs:35,extra:{combat:{id:'fight'}}});
+ assert.equal(r.delays.at(-1),15);
+});
 
 test('manual checkpoint catches up in bounded slices to a fixed instant, then pauses',()=>{
  const r=runtime();r.send({type:'checkpoint',generation:'session',pause:true,requestId:'command'});

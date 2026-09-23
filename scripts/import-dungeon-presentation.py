@@ -52,16 +52,20 @@ def card(d):
     for b in d['bosses']:
         art=bossArt.get(normalize(b.get('nameEn') or b['name']))
         if art:portraits[str(b['id'])]=image('EncounterJournal',art,f'journal/bosses/{b["id"]}.webp')
-with concurrent.futures.ThreadPoolExecutor(6)as pool:list(pool.map(card,journal))
+cards.update({'molten-core':'MoltenCore','onyxias-lair':'Onyxia'})
+with concurrent.futures.ThreadPoolExecutor(6)as pool:list(pool.map(card,journal+[{'id':'molten-core','bosses':[]},{'id':'onyxias-lair','bosses':[]}]))
 
 floors={};names=['Ragefire','WailingCaverns','ShadowfangKeep','BlackFathomDeeps','Gnomeregan','RazorfenKraul','RazorfenDowns','ScarletMonastery','Uldaman']
+names+=['ZulFarrak','Maraudon','TheTempleOfAtalHakkar','BlackrockDepths','BlackrockSpire','DireMaul','Scholomance','Stratholme','OnyxiasLair']
 for name in names:
     rows={r['path']:r for r in tree('WorldMap/'+name)}
     indices=sorted({int(m[1])for k in rows if(m:=re.match(re.escape(name)+r'(\d+)_1\.PNG$',k)) and int(m[1])<10})
+    outdoor=not indices and f'{name}1.PNG' in rows
+    if outdoor:indices=[1]
     floors[name]=[]
     for floor in indices:
         def tile(n):
-            r=rows[f'{name}{floor}_{n}.PNG'];path=f'WorldMap/{name}/'+r['path'];raw=fetch(path,BASE+quote(path,safe='/'))
+            r=rows[f'{name}{n}.PNG' if outdoor else f'{name}{floor}_{n}.PNG'];path=f'WorldMap/{name}/'+r['path'];raw=fetch(path,BASE+quote(path,safe='/'))
             assert hashlib.sha1(f'blob {len(raw)}\0'.encode()+raw).hexdigest()==r['sha']
             return n,Image.open(io.BytesIO(raw)).convert('RGB'),{'source':BASE+path,'gitBlob':r['sha']}
         with concurrent.futures.ThreadPoolExecutor(6)as pool:tiles=list(pool.map(tile,range(1,13)))

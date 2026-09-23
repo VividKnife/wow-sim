@@ -4,6 +4,7 @@ import boundsData from '../../../game-data/data/dungeon-map-bounds.json' with {t
 
 const textures={'ragefire-chasm':'Ragefire','wailing-caverns':'WailingCaverns','shadowfang-keep':'ShadowfangKeep','blackfathom-deeps':'BlackFathomDeeps',gnomeregan:'Gnomeregan','razorfen-kraul':'RazorfenKraul','razorfen-downs':'RazorfenDowns',uldaman:'Uldaman'};
 const wings={'scarlet-monastery-graveyard':1,'scarlet-monastery-library':2,'scarlet-monastery-armory':3,'scarlet-monastery-cathedral':4};
+Object.assign(textures,{'zul-farrak':'ZulFarrak','maraudon-purple':'Maraudon','maraudon-orange':'Maraudon','maraudon-inner':'Maraudon','sunken-temple':'TheTempleOfAtalHakkar','blackrock-depths':'BlackrockDepths','lower-blackrock-spire':'BlackrockSpire','upper-blackrock-spire':'BlackrockSpire','dire-maul-east':'DireMaul','dire-maul-west':'DireMaul','dire-maul-north':'DireMaul',scholomance:'Scholomance','stratholme-live':'Stratholme','stratholme-undead':'Stratholme'});
 const floorNames={ShadowfangKeep:['庭院','餐厅','兽穴','观测台','塔楼','阿鲁高的房间','城墙'],BlackFathomDeeps:['阿斯卡之池','月神圣地','遗忘之池'],Gnomeregan:['齿轮大厅','宿舍','发射台','工匠议会'],Uldaman:['守护者大厅','卡兹格罗斯的王座']};
 // Client axes are (-worldY, worldX). Project using client bounds, never a
 // generated grid. Overlapping vertical rooms are separated by spawn elevation.
@@ -18,6 +19,11 @@ function sourceFloor(folder,position,candidates){
  if(folder==='ShadowfangKeep')preferred=z>150?6:z>140?5:z>132?4:z>115?3:y>2210?2:z>88?7:1;
  if(folder==='BlackFathomDeeps')preferred=y<-300?3:x<-600?2:1;
  if(folder==='Uldaman')preferred=x>60&&y<360?2:1;
+ if(folder==='Maraudon')preferred=z<-100?2:1;
+ if(folder==='BlackrockDepths')preferred=z<-220?1:2;
+ if(folder==='Scholomance')preferred=z>90?1:z>75?2:z>65?3:4;
+ if(folder==='BlackrockSpire')preferred=z<0?1:z<40?2:z<80?3:z<110?4:z<135?5:z<150?6:7;
+ if(folder==='Stratholme')preferred=x>3600?2:1;
  const contained=candidates.filter(f=>{const [px,py]=projectDungeonPosition(folder,f.id,position);return px>=0&&px<=1002&&py>=0&&py<=668;});
  return (contained.find(f=>f.id===preferred)||contained[0]||candidates.find(f=>f.id===preferred)||candidates[0]).id;
 }
@@ -64,7 +70,8 @@ function buildMap(id){
  if(!coordinates){
   chain(['entrance',...route.map(e=>e.id)]);
   const folder=textures[id]||'ScarletMonastery';
-  floors=presentation.floors[folder].filter(f=>!wings[id]||f.id===wings[id]).map(f=>({...f,name:floorNames[folder]?.[f.id-1]||dungeonDefinitions[id].name}));
+  const sourceFloors=presentation.floors[folder];
+  floors=(sourceFloors?.length?sourceFloors:[{id:1,image:null}]).filter(f=>!wings[id]||f.id===wings[id]).map(f=>({...f,name:floorNames[folder]?.[f.id-1]||dungeonDefinitions[id].name}));
   const points=Object.fromEntries([]);
   for(const encounter of [{id:'entrance',sourceCentroid:dungeonDefinitions[id].reference.entrance},...route]){
    const position=encounter.sourceCentroid;

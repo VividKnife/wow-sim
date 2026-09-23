@@ -1,5 +1,6 @@
 // Classic geography adapted to the game's location graph. World coordinates
 // locate source spawns; map pins and road durations are deliberately schematic.
+import {endgameRegions,endgameRoads,endgameFlights,endgameDungeons} from './world-endgame.js';
 export const racialHomes={
  1:{start:'northshire',capital:'stormwind',name:'北郡修道院'},
  2:{start:'valley-of-trials',capital:'orgrimmar',name:'试炼谷'},
@@ -57,14 +58,15 @@ const regions=[
  ['dustwallow','尘泥沼泽',1,35,45,'Contested',[
   ['theramore','塞拉摩',-3820,-4510,'town'],['brackenwall','蕨墙村',-3140,-2840,'town'],['shady-rest','树荫旅店',-3720,-2500],['witch-hill','女巫岭',-2800,-3750],['wyrmbog','巨龙沼泽',-4500,-3850]]],
  ['alterac','奥特兰克山脉',0,30,40,'Contested',[
-  ['alterac-ruins','奥特兰克废墟',620,-650],['dalaran-crater','达拉然',270,300],['chillwind','冰风岗',680,-1450],['growless','无草洞',440,-100]]],
+  ['alterac-ruins','奥特兰克废墟',620,-650],['dalaran-crater','达拉然',270,300],['chillwind','冰风岗',680,-1450],['growless','无草洞',440,-100],['soferas-naze','索菲亚高地',-80,-1200]]],
  ['tanaris','塔纳利斯',1,40,50,'Contested',[
   ['gadgetzan','加基森',-7160,-3780,'town'],['waterspring','清泉平原',-7300,-4500],['steamwheedle','热砂港',-6950,-4800,'town']]],
  ['feralas','菲拉斯',1,40,50,'Contested',[
-  ['camp-mojache','莫沙彻营地',-4430,240,'town'],['feathermoon','羽月要塞',-4370,3280,'town'],['lower-wilds','低地荒野',-4450,-500],['dire-maul-road','厄运之槌外道',-4100,1150]]],
+  ['camp-mojache','莫沙彻营地',-4430,240,'town'],['feathermoon','羽月要塞',-4370,3280,'town'],['lower-wilds','低地荒野',-4450,-500],['dire-maul-road','厄运之槌外道',-4100,1150],['northspring','北泉岗哨',-2950,2700]]],
  ['hinterlands','辛特兰',0,40,50,'Contested',[
   ['aerie-peak','鹰巢山',290,-2110,'town'],['revantusk','恶齿村',-630,-4720,'town'],['shadra-alor','沙德拉洛',-300,-2900],['jintha-alor','辛萨罗',-180,-3900]]],
 ];
+regions.push(...endgameRegions);
 export const worldRegions=regions.map(([id,name,map,min,max,faction])=>({id,name,map,min,max,faction}));
 export const worldNodes=regions.flatMap(([,region,map,min,max,faction,places])=>places.map(([id,name,x,y,kind='wild'])=>({id,name,region,map,x,y,min,max,kind,faction})));
 for(const home of Object.values(racialHomes)){const node=worldNodes.find(n=>n.id===home.start);if(node){node.min=1;node.max=5;}}
@@ -87,11 +89,16 @@ for(const c of capitals.filter(c=>c.id!=='stormwind'))for(let i=0;i<3;i++){
  if(i)worldNodes.push({...c,id,name:districtNames[c.id][i],region:c.name,kind:'city',min:1,max:60,x:c.x+i*90,y:c.y+i*100});
 }
 worldNodes.push({id:'moonglade',name:'月光林地',region:'月光林地',map:1,x:7965,y:-2490,min:10,max:60,kind:'town',faction:'Contested'});
+worldNodes.push({id:'onyxias-lair',name:'奥妮克希亚的巢穴',region:'尘泥沼泽',map:1,x:-4708,y:-3727,min:60,max:60,kind:'dungeon',faction:'Contested'});
+worldNodes.push({id:'molten-core',name:'熔火之心',region:'灼热峡谷',map:0,x:-7500,y:-1200,min:60,max:60,kind:'dungeon',faction:'Contested'});
 const allianceTowns=['astranaar','stonetalon-peak','nijels','southshore','refuge-pointe','theramore','feathermoon','aerie-peak','rebel-camp'];
 const hordeTowns=['sun-rock','splintertree','zoram','tarren-mill','hammerfall','shadowprey','gromgol','kargath','stonard','brackenwall','freewind','camp-mojache','revantusk'];
 for(const n of worldNodes){if(allianceTowns.includes(n.id))n.faction='Alliance';if(hordeTowns.includes(n.id))n.faction='Horde';if(n.id==='ratchet')n.faction='Contested';}
 export const worldFlightNodes=['ironforge','thelsamar','lakeshire','darkshire','menethil','southshore','refuge-pointe','aerie-peak','booty-bay','tarren-mill','sepulcher','undercity','hammerfall','kargath','gromgol','stonard','darnassus','auberdine','astranaar','stonetalon-peak','nijels','feathermoon','theramore','orgrimmar','crossroads','ratchet','camp-taurajo','thunderbluff','sun-rock','splintertree','zoram','shadowprey','freewind','brackenwall','camp-mojache','gadgetzan','revantusk'];
 export const worldRoads=regions.flatMap(([, , , , , ,places])=>places.slice(1).map((p,i)=>[places[i][0],p[0]]));
+worldRoads.push(...endgameRoads);
+worldRoads.push(['wyrmbog','onyxias-lair'],['blackrock-mountain','molten-core']);
+worldFlightNodes.push(...endgameFlights);
 worldRoads.push(...capitals.map(c=>[c.id,c.exit]),
  ['coldridge','kharanos'],['kharanos','south-gate'],['amberstill','south-gate'],['stonewrought','algaz'],['lakeshire','darkshire'],['ravenhill','sentinel'],['darkshire','rebel-camp'],['dunmodr','refuge-pointe'],['hammerfall','tarren-mill'],['tarren-mill','alterac-ruins'],['southshore','pyrewood'],['deathknell','brill'],['brill','sepulcher'],['thelsamar','kargath'],['darkshire','splinterspear'],['aerie-peak','tarren-mill'],
  ['shadowglen','dolanaar'],['auberdine','maestras'],['masters-glaive','maestras'],['maestras','astranaar'],['astranaar','stonetalon-peak'],['splintertree','crossroads'],['razor-hill','far-watch'],['red-cloud-mesa','bloodhoof'],['bloodhoof','camp-taurajo'],['crossroads','webwinder'],['charred-vale','nijels'],['camp-taurajo','great-lift'],['camp-taurajo','shady-rest'],['mirage-raceway','gadgetzan'],['highperch','lower-wilds'],['shadowprey','dire-maul-road']);
@@ -104,4 +111,5 @@ export const worldTransports=[
 export const worldDungeons=[
  ['ragefire-chasm',389,'orgrimmar',8,13,18],['wailing-caverns',43,'lushwater',10,17,24],['shadowfang-keep',33,'pyrewood',10,22,30],['blackfathom-deeps',48,'zoram',10,24,32],['gnomeregan',90,'brewnall',15,29,38],['razorfen-kraul',47,'bael-modan',15,29,38],
  ['scarlet-monastery-graveyard',189,'scarlet-watch',20,28,35],['scarlet-monastery-library',189,'scarlet-watch',20,32,39],['scarlet-monastery-armory',189,'scarlet-watch',20,35,42],['scarlet-monastery-cathedral',189,'scarlet-watch',20,38,45],['razorfen-downs',129,'great-lift',25,37,46],['uldaman',70,'hammertoe',30,40,50],
-].map(([id,map,parent,minimumLevel,min,max])=>({id,map,parent,minimumLevel,min,max}));
+ ...endgameDungeons,
+].map(([id,map,parent,minimumLevel,min,max,name])=>({id,map,parent,minimumLevel,min,max,name}));

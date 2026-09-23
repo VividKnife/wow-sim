@@ -1,6 +1,6 @@
 // Fixed upstreams only. Never forward cookies, authorization or an arbitrary URL.
 const ROOT='https://wow.zamimg.com/modelviewer/classic/';
-const assetPattern=/^(?:deployment\/viewer\/c3f890f\/viewer\.min\.js|meta\/(?:character|charactercustomization|item|itemvisual)\/[1-9]\d{0,8}\.json|meta\/armor\/(?:1|3|4|5|6|7|8|9|10|16|19|20)\/[1-9]\d{0,8}\.json|(?:m2\/[1-9]\d{0,9}\.m2|skin\/[1-9]\d{0,9}\.skin|skel\/[1-9]\d{0,9}\.skel|anim\/[1-9]\d{0,9}\.anim|bone\/[1-9]\d{0,9}\.bone)|textures\/[1-9]\d{0,9}\.(?:webp|png))$/;
+const assetPattern=/^(?:deployment\/viewer\/c3f890f\/viewer\.min\.js|meta\/(?:npc|character|charactercustomization|item|itemvisual)\/[1-9]\d{0,8}\.json|meta\/armor\/(?:1|3|4|5|6|7|8|9|10|16|19|20)\/[1-9]\d{0,8}\.json|(?:m2\/[1-9]\d{0,9}\.m2|skin\/[1-9]\d{0,9}\.skin|skel\/[1-9]\d{0,9}\.skel|anim\/[1-9]\d{0,9}\.anim|bone\/[1-9]\d{0,9}\.bone)|textures\/[1-9]\d{0,9}\.(?:webp|png))$/;
 // Version used by the official Classic Dressing Room on 2026-09-16.
 export const assetUrl=path=>assetPattern.test(path)?ROOT+path:null;
 export function parseItemIds(value){

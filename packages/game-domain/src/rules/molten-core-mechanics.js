@@ -76,6 +76,7 @@ export function extendedMoltenCoreTick(s,actors,boss,hurt,targets){
 
 export function raidNextMechanics(enc){
  if(!enc)return [];
+ if(enc.id==='onyxia')return (enc.phase===2?[['火球','nextSpecial'],['深呼吸','nextBreath'],['雏龙','nextWhelps']]:[['烈焰吐息','nextSpecial'],...(enc.phase===3?[['低沉咆哮','nextFear']]:[])]).map(([name,key])=>({name,at:enc[key]}));
  const fields=enc.id==='lucifron'?[['末日','nextDoom'],['诅咒','nextCurse']]:enc.id==='magmadar'?[['狂暴','nextFrenzy'],['恐慌','nextFear'],['熔岩','nextBomb']]:enc.id==='ragnaros'?[['炎魔之怒','nextSpecial'],[enc.submerged?'重新现身':'潜入熔岩',enc.submerged?'emergeAt':'nextSubmerge']]:[['下次机制','nextSpecial']];
  return fields.map(([name,key])=>({name,at:enc[key]}));
 }

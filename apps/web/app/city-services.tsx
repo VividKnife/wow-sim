@@ -1,7 +1,7 @@
 "use client";
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';
-import {GameProps,Icon,money,duration} from './game-ui';
+import {GameProps,Icon,ItemDisplay,money,duration} from './game-ui';
 import {Bank,Auction} from './storage-market';
 import Professions from './professions';
 import BatchTrade from './batch-trade';
@@ -29,8 +29,8 @@ export default function CityServicePanel({service,...props}:GameProps&{service:C
   const supplies=new Set([159,117,2070,4540,1179,1205,3371,4496,4498]);
   const stock=d.shop.filter((i:any)=>i.name.toLowerCase().includes(search.toLowerCase())||String(i.id)===search).sort((a:any,b:any)=>Number(supplies.has(b.id))-Number(supplies.has(a.id)));
   const valid=Number.isInteger(count)&&count>=1&&count<=20;
-  return <section className="city-service-body">{tabs}<div className="city-service-toolbar"><input aria-label="搜索主城商品" placeholder="食物、饮水、背包…" value={search} onChange={e=>setSearch(e.target.value)}/><label>购买份数 <input aria-label="主城购买份数" className="city-quantity" type="number" min={1} max={20} value={count} onChange={e=>setCount(Number(e.target.value))}/></label><Button variant="outline" disabled={locked||!d.city.junkCount||!d.shop.length} onClick={()=>send({type:'sellJunk'})}>出售灰色杂物（{d.city.junkCount} 组）</Button></div><p>每份数量标在商品名旁；装备与已锁定物品不会被一键出售。</p>
-   <div className="city-stock">{stock.map((i:any)=><div className="city-stock-row" key={i.id}><Icon src={i.icon} name={i.name}/><div className="grow"><strong>{i.name}</strong><small>每份 ×{i.count} · {money(i.price)}</small></div><Button variant="outline" disabled={locked||!valid||s.money<i.price*count} onClick={()=>send({type:'buy',id:i.id,count})}>{valid?money(i.price*count):'数量无效'} · 购买</Button></div>)}{!stock.length&&<p className="empty">当前没有符合条件的商品。贸易区有更多日常补给。</p>}</div>
+  return <section className="city-service-body">{tabs}<div className="city-service-toolbar"><input aria-label="搜索主城商品" placeholder="食物、饮水、背包…" value={search} onChange={e=>setSearch(e.target.value)}/><label>购买份数 <input aria-label="主城购买份数" className="city-quantity" type="number" min={1} max={20} value={count} onChange={e=>setCount(Number(e.target.value))}/></label><Button variant="outline" disabled={locked||!d.city.junkCount||!d.shop.length} onClick={()=>send({type:'sellJunk'})}>出售灰色杂物（{d.city.junkCount} 组）</Button></div><p>悬停商品可查看每份数量和属性；装备与已锁定物品不会被一键出售。</p>
+   <div className="city-stock">{stock.map((i:any)=><div className="city-stock-row" key={i.id}><ItemDisplay className="grow" item={d.items[i.id]||i} details={<>每份 ×{i.count} · {money(i.price)}</>}/><Button variant="outline" disabled={locked||!valid||s.money<i.price*count} onClick={()=>send({type:'buy',id:i.id,count})}>{valid?money(i.price*count):'数量无效'} · 购买</Button></div>)}{!stock.length&&<p className="empty">当前没有符合条件的商品。贸易区有更多日常补给。</p>}</div>
   </section>;
  }
  if(service.id==='inn')return <section className="city-service-body city-inn"><div><h3>在这里安家</h3><p>当前炉石绑定：{d.hearthstone.destinationName}。{d.hearthstone.remaining>0?`冷却剩余 ${duration(d.hearthstone.remaining)}。`:'炉石已经就绪。'}重新绑定不会重置冷却。</p><Button disabled={locked||!d.hearthstone.canBind} onClick={()=>send({type:'bindHearth'})}>{s.hearth===s.location&&d.hearthstone.hasItem?'已将这里设为家':'将炉石绑定在这里'}</Button></div><div><h3>在出发前休整</h3><p>按照当前恢复设置使用随身食物与饮水。没有补给时，脱离战斗也会自然恢复生命与法力。</p><Button variant="outline" disabled={locked} onClick={()=>send({type:'rest'})}>使用补给休息</Button></div></section>;

@@ -33,6 +33,18 @@
     {
       "source": "https://github.com/cmangos/mangos-classic/blob/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/uldaman/boss_archaedas.cpp",
       "sha256": "a0a49efed2882a043ac2afd0cd40505901f535657ca76d41d76ae17c0bd0920f"
+    },
+    {
+      "source": "https://github.com/cmangos/mangos-classic/blob/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/AI/ScriptDevAI/scripts/kalimdor/onyxias_lair/boss_onyxia.cpp",
+      "sha256": "80b6ac8ef5086668504aaed3a7a683562913fb171d0d3eb8759bc43ada702cf2"
+    },
+    {
+      "source": "https://github.com/cmangos/mangos-classic/blob/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/scholomance/boss_darkmaster_gandling.cpp",
+      "sha256": "dc70f2b1770b528c860b6047801f6b2b81535d6c03c1b8ae54afbc4e0039a95e"
+    },
+    {
+      "source": "https://github.com/cmangos/mangos-classic/blob/8ec338a1704e7dcb1c0213eb7ed58f9231ade40f/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/blackrock_depths/boss_emperor_dagran_thaurissan.cpp",
+      "sha256": "16d578766011dfd596f610aeabcf5148ee19982a9304b17d672dbd6ef400acb7"
     }
   ]
 }

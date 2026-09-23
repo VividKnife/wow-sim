@@ -1,7 +1,7 @@
 "use client";
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
 import {useState} from 'react';
-import {GameProps,Icon} from './game-ui';
+import {GameProps,ItemDisplay} from './game-ui';
 import './item-transfer.css';
 
 export default function ItemTransfer({state:s,data:d,busy,send,roster=[]}:GameProps){
@@ -29,7 +29,7 @@ export default function ItemTransfer({state:s,data:d,busy,send,roster=[]}:GamePr
    {target&&<p className="transfer-help">剩余 {Math.max(0,target.bagCapacity-target.bagUsed)} 格 · 相同物品自动合并堆叠；空间不足时整批取消。</p>}
    <div className="transfer-toolbar"><input aria-label="搜索可转移物品" placeholder="搜索物品…" value={search} onChange={e=>setSearch(e.target.value)}/><button className="classic-button secondary" disabled={busy} onClick={()=>{setNotice('');setSelected(previous=>({...previous,...Object.fromEntries(filtered.filter((i:any)=>!reason(i)).map((i:any)=>[i.uid,i.count]))}));}}>全选可转移</button><button className="classic-button secondary" disabled={busy||!chosen.length} onClick={()=>setSelected({})}>清空</button></div>
    <div className="transfer-items">{filtered.map((i:any)=>{const item=d.items[i.id],checked=Object.hasOwn(selected,i.uid),why=reason(i);return <div className={'transfer-item'+(checked?' is-selected':'')} key={i.uid}>
-    <label><input type="checkbox" aria-label={`选择 ${item?.name}`} checked={checked} disabled={busy||!!why} onChange={e=>update(i.uid,e.target.checked?i.count:undefined)}/><Icon src={item?.icon} name={item?.name||'物品'} size={32}/><span><strong className={'rarity-'+item?.quality}>{item?.name} ×{i.count}</strong><small>{why||(i.bound?'已绑定 · 可在队伍内转移':'可转移')}</small></span></label>
+    <label><input type="checkbox" aria-label={`选择 ${item?.name}`} checked={checked} disabled={busy||!!why} onChange={e=>update(i.uid,e.target.checked?i.count:undefined)}/><ItemDisplay item={item} instance={{...i,enchantDescription:d.enchants?.[i.enchant||'']?.description}} details={why||'可在队伍内转移'}/></label>
     {checked&&<div className="transfer-quantity"><input type="number" aria-label={`${item?.name} 转移数量`} disabled={busy} min={1} max={i.count} value={selected[i.uid]} onChange={e=>update(i.uid,Number(e.target.value))}/><button className="classic-button secondary" disabled={busy} onClick={()=>update(i.uid,i.count)}>整组</button></div>}
    </div>;})}{!filtered.length&&<p className="transfer-help">没有匹配的背包物品。</p>}</div>
    <div className="transfer-footer"><span>已选 {chosen.length} 组</span><button className="classic-button" disabled={busy||!!blocked||!target||!chosen.length||invalid} onClick={()=>void transfer()}>{busy?'处理中…':'转移给 '+(target?.name||'所选角色')}</button></div>

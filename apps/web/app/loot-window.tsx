@@ -1,7 +1,7 @@
 "use client";
 import {useEffect,useRef,useState} from 'react';
 import {Dialog,DialogContent,DialogTitle,DialogDescription} from '@/components/ui/dialog';
-import {Icon,money,type GameProps} from './game-ui';
+import {ItemDisplay,money,type GameProps} from './game-ui';
 import './loot-window.css';
 
 export default function LootWindow({state:s,data:d,busy,send}:GameProps){
@@ -29,10 +29,7 @@ export default function LootWindow({state:s,data:d,busy,send}:GameProps){
     <div className="loot-list">
      {pending.map(instance=>{const item=d.items[instance.id];return <div key={instance.uid} className={'loot-row quality-'+(item?.quality||0)}>
       <input type="checkbox" aria-label={`选择 ${item?.name||instance.id}`} checked={selected.includes(instance.uid)} onChange={e=>{setSelected(ids=>e.target.checked?[...ids,instance.uid]:ids.filter(id=>id!==instance.uid));}}/>
-      <button disabled={busy||!canLoot} onClick={()=>void pick([instance.uid])} aria-label={`拾取 ${item?.name||instance.id} ×${instance.count}`}>
-       <span className="loot-icon"><Icon src={item?.icon} name={item?.name||'物品'} size={40}/><b>{instance.count>1?instance.count:''}</b></span>
-       <span><strong>{item?.name||`物品 ${instance.id}`}</strong><small>{instance.lootBattleId&&instance.lootBattleId!==s.lastCombat?.id?'此前保留的掉落':'点击拾取'}{instance.bound?' · 已绑定':''}</small></span>
-      </button>
+      <ItemDisplay item={item||{name:`物品 ${instance.id}`}} instance={instance} details={instance.lootBattleId&&instance.lootBattleId!==s.lastCombat?.id?'此前保留的掉落 · 点击拾取':'点击拾取'} trigger={<button disabled={busy||!canLoot} onClick={()=>void pick([instance.uid])} aria-label={`拾取 ${item?.name||instance.id} ×${instance.count}`}/>}/>
      </div>})}
      {!pending.length&&<p className="loot-empty">本次战斗没有可拾取的物品</p>}
     </div>

@@ -1,0 +1,13 @@
+.pvp-page{display:grid;gap:20px;min-width:0}
+.pvp-heading span{font-size:11px;letter-spacing:.2em;color:var(--gold)}
+.pvp-heading h1{font:700 30px Georgia,"SimSun",serif;margin:4px 0}
+.pvp-heading p{font-size:13px;color:var(--muted);margin:0}
+.pvp-modes[data-slot=tabs-list]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));height:auto;padding:5px;gap:5px;background:#171d18;border:1px solid #4d503c;border-radius:3px}
+.pvp-modes [data-slot=tabs-trigger]{height:auto;min-height:56px;justify-content:flex-start;gap:12px;padding:10px 16px;border-radius:2px;text-align:left;color:#a9c2cc}
+.pvp-modes [data-slot=tabs-trigger][data-state=active]{background:#353728;color:#e8dbc0}
+.pvp-modes [data-slot=tabs-trigger] span{display:grid;gap:2px}
+.pvp-modes [data-slot=tabs-trigger] strong{font-size:14px}
+.pvp-modes [data-slot=tabs-trigger] small{font-size:11px;color:#a2b7b9}
+@media(max-width:480px){.pvp-modes [data-slot=tabs-trigger]{gap:7px;padding:9px}.pvp-modes [data-slot=tabs-trigger] small{font-size:10px}}
+
+.pvp-page .arena-banner,.pvp-page .wsg-heading{padding:16px;background:#20241c;border-radius:3px}.pvp-page .arena-banner h1{font-size:25px}.pvp-page .arena-banner p{font-size:12px}

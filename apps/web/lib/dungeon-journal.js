@@ -3,6 +3,12 @@ export function filterJournal(journal,query){
  const needle=query.trim().toLocaleLowerCase();
  return journal.filter(d=>[d.name,d.zone,...d.bosses.map(b=>b.name)].some(value=>value.toLocaleLowerCase().includes(needle)));
 }
+/** Content availability and a character's level eligibility are separate. */
+export function journalLevelStatus(dungeon,level){
+ if(!dungeon.playable)return {label:'尚未开放',eligible:false};
+ if(level<dungeon.minimumLevel)return {label:`${dungeon.minimumLevel} 级可进入`,eligible:false};
+ return {label:'等级符合',eligible:true};
+}
 /** Browsing is local UI state; active runs always come from the server snapshot. */
 export function journalSelection(data,selectedId,bossId){
  const selected=data.dungeonJournal?.find(d=>d.id===selectedId)??null;

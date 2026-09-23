@@ -1,8 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {filterJournal, journalSelection} from '../lib/dungeon-journal.js';
+import {filterJournal, journalSelection, journalLevelStatus} from '../lib/dungeon-journal.js';
 
 const journal=[{id:'deadmines',name:'死亡矿井',zone:'西部荒野',playable:true,bosses:[{id:'vc',name:'范克里夫'}]},{id:'stockades',name:'暴风城监狱',zone:'暴风城',playable:true,bosses:[{id:'bazil',name:'巴基尔'}]},{id:'brd',name:'黑石深渊',zone:'黑石山',playable:false,bosses:[]}];
+test('level eligibility does not advertise locked content or confuse entry level with recommended level',()=>{
+ const dungeon={playable:true,minimumLevel:10,recommendedLevel:18};
+ assert.deepEqual(journalLevelStatus(dungeon,9),{label:'10 级可进入',eligible:false});
+ assert.deepEqual(journalLevelStatus(dungeon,10),{label:'等级符合',eligible:true});
+ assert.equal(journalLevelStatus({...dungeon,playable:false},60).eligible,false);
+ assert.equal(journalLevelStatus({...dungeon,playable:false},60).label,'尚未开放');
+});
 test('journal searches dungeon, zone and boss names and preserves the complete catalog for an empty query',()=>{
  assert.equal(filterJournal(journal,'  ').length,3);
  assert.deepEqual(filterJournal(journal,'范克里夫').map(x=>x.id),['deadmines']);

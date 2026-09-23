@@ -77,7 +77,7 @@ test('level-ten parties can prepare for early Horde dungeons with legal equipmen
 });
 
 test('every expanded dungeon has finite enemy stats, connected encounters and resumable progression',()=>{
- assert.equal(Object.keys(dungeonDefinitions).length,14);
+ assert.equal(Object.keys(dungeonDefinitions).length,28);
  for(const def of Object.values(dungeonDefinitions) as any[]){
   const s:Rules=createGame('副本',27,0);s.level=60;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
   for(const id of ['warrior','priest','rogue','mage'])recruit(s,id);

@@ -6,7 +6,7 @@ import {stanceAllows} from './companion-combat.js';
 import {beginSpellTiming,spellReady,cooldownUntil} from './spell-timing.js';
 import {controlled} from '../../../sim-core/src/combat-auras.js';
 import {distance} from '../../../sim-core/src/geometry.js';
-import {moltenCoreBosses} from './molten-core-content.js';
+import {raidBossesFor} from './molten-core-content.js';
 import {raidNotice} from './molten-core-mechanics.js';
 
 const owner=s=>s.goldRaid?.active?s.goldRaid:s.guildRaid?.active?s.guildRaid:null;
@@ -26,7 +26,7 @@ export function raidCommandAction(s,a){
  const r=owner(s);require(r,'请先集结团本队伍。');
  if(a.type==='raidPlan'){
   require(!s.combat&&!r.recoverUntil&&!r.autoAdvance&&(!s.goldRaid?.active||r.phase==='camp'),'请在停止推进的营地发布指挥。');
-  require(moltenCoreBosses.some(b=>b.id===a.bossId),'未知首领。');
+  require(raidBossesFor(r.raidId).some(b=>b.id===a.bossId),'未知首领。');
   const p=a.plan,actors=members(s),tank=id=>actors.some(c=>c.id===id&&combatRole(c)==='tank');
   require(p&&tank(p.mainTank)&&tank(p.offTank)&&p.mainTank!==p.offTank,'主坦、副坦必须是两名不同的坦克。');
   require(['adds','boss'].includes(p.focus)&&['spread','compact'].includes(p.formation)&&['early','finishCast'].includes(p.movement)&&['assigned','all'].includes(p.dispelPolicy),'作战纪律无效。');
@@ -118,6 +118,7 @@ export function raidAttemptReview(s,b){
 }
 export function raidCommandView(s){
  const r=owner(s);if(!r||members(s).length!==25)return null;
+ const moltenCoreBosses=raidBossesFor(r.raidId);
  const enc=s.combat?.raidEncounter,command=enc?.command;
  return {bosses:moltenCoreBosses.map(b=>({id:b.id,name:b.name,description:b.description})),plans:Object.fromEntries(moltenCoreBosses.map(b=>[b.id,{plan:raidPlan(s,b.id),published:!!r.plans?.[b.id]}])),
   members:members(s).map(c=>({id:c.id,name:c.name,role:combatRole(c),classId:c.classId})),

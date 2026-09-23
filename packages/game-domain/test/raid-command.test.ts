@@ -80,7 +80,7 @@ test('published tank and movement choices change actual initial targets and dang
 });
 
 test('automatic traversal pauses before a boss and wipe review preserves the plan for the next attempt',()=>{
- let s=fixture();guildRaidAction(s,{type:'raidNavigate',destination:'lucifron'});
+ let s=fixture();s.settings.autoLoot=true;guildRaidAction(s,{type:'raidNavigate',destination:'lucifron'});
  for(let i=0;i<4;i++){s.combat.enemies.forEach((e:Rules)=>e.hp=0);s=advance(s,s.wallAt+100).state;s=advance(s,s.wallAt+3000).state;}
  assert.equal(s.combat,null);assert.equal(s.guildRaid.autoAdvance,false);assert.match(s.activity.reason,/首领前/);
  s=act(s,{type:'raidNavigate',destination:'lucifron'},s.wallAt);assert.equal(s.combat.raidEncounter.id,'lucifron');

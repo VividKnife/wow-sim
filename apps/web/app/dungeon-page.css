@@ -33,3 +33,19 @@
 .journal-strategy{padding:14px;border-left:3px solid #947145;background:#bda47740;font-size:13px;line-height:1.8}.journal-abilities{margin:18px 0;border-top:1px solid #967b4f55;border-bottom:1px solid #967b4f55;padding:12px 0}.journal-abilities summary{cursor:pointer;font-weight:600;font-size:13px}.journal-abilities ul{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));list-style:none;padding:0;gap:12px}.journal-abilities li{display:flex;align-items:center;gap:9px;font-size:12px}.journal-abilities small{display:block;margin-top:4px;color:#736044}.journal-loot-toolbar>[data-game-select]{width:140px;flex-shrink:0}
 .journal-boss-profile p{color:#6c573b}
 @media(max-width:520px){.journal-bosses{grid-template-columns:minmax(0,1fr)}.journal-bosses button{min-height:48px;gap:10px}.journal-bosses button>span:nth-last-child(2){white-space:normal}.journal-boss-portrait{width:80px;height:120px}.journal-boss-profile h3{font-size:20px}.journal-boss-profile{gap:12px}.journal-abilities ul{grid-template-columns:minmax(0,1fr)}}
+
+/* The catalog is for choosing an expedition; detailed lore lives in the entry. */
+.dungeon-page-intro{background:transparent;border:0;border-bottom:1px solid #514a38;border-radius:0;padding:0 0 16px}
+.dungeon-page-intro h1{font:600 28px/1.4 Georgia,"SimSun",serif;color:#e5c994;margin:0 0 4px}
+.dungeon-page-intro p{font-size:12px}.dungeon-page-status{padding:0;border:0;color:#acb19e;font-size:12px}
+.dungeon-ready{padding:16px;background:#1c211b;border-color:#484b37;border-radius:3px}
+.dungeon-ready .section-heading{margin-bottom:12px}.dungeon-ready .section-heading h2{font-size:16px}
+.dungeon-preparation{gap:0}.dungeon-preparation>div{padding:0 16px;border:0;border-right:1px solid #424835;border-radius:0;background:none;gap:8px}.dungeon-preparation>div:first-child{padding-left:0}.dungeon-preparation>div:last-child{border:0}
+.journal-filter-row{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:18px 0 14px}.journal-filter-row .filterbar,.journal-filter-row .journal-result-count{margin:0}
+.journal-card,.journal-card.is-playable{min-height:218px}.journal-card-top{margin-bottom:auto}.journal-card>.eyebrow{margin-top:34px}.journal-card h3{margin:6px 0 16px}.journal-grid{gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))}
+@media(max-width:760px){.dungeon-page-intro{gap:8px}.dungeon-preparation{grid-template-columns:1fr;gap:12px}.dungeon-preparation>div,.dungeon-preparation>div:first-child{display:grid;grid-template-columns:1fr auto;align-items:center;border:0;border-bottom:1px solid #424835;padding:0 0 12px;gap:6px}.dungeon-preparation>div>small{grid-column:1}.dungeon-preparation>div>strong{grid-column:1}.dungeon-preparation>div>button{grid-column:2;grid-row:1/3}.journal-card,.journal-card.is-playable{min-height:200px}}
+
+.dungeon-roster{padding:4px 16px;border-color:#454c3b;border-radius:3px;background:#1b211c}
+.dungeon-roster>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;color:#ddc794;font-size:14px;list-style:none}
+.dungeon-roster>summary::after{content:'＋'}.dungeon-roster[open]>summary::after{content:'−'}
+.dungeon-roster>summary small{font-size:11px;margin-left:auto}.dungeon-roster .adventure-hall{margin:10px 0;border:0;padding:0;background:transparent;box-shadow:none}

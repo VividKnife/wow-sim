@@ -1,4 +1,5 @@
 import {raidCommandTick,assignedRaidSupport,raidDispelTargets} from './raid-command.js';
+import {onyxiaTick} from './onyxia-encounter.js';
 // Authored 25-player adaptation. Boss scripts use the existing combat damage,
 // aura, movement, resource and cooldown systems; no parallel combat calculator.
 import {goldNpcTick,goldAvoidsFire} from './gold-raid-npcs.js';
@@ -38,6 +39,7 @@ function supportActor(s,living,job,spell,target){
 }
 export function moltenCoreTick(s,actors,hurt) {
  const raid=s.combat?.raidEncounter;if(!raid)return;
+ if(raid.id==='onyxia'){onyxiaTick(s,actors,hurt);return;}
  const original=s.combat.enemies.find(e=>e.id===raid.bossId);
  if(raid.id==='golemagg'&&original?.hp<=0)for(const e of s.combat.enemies)e.hp=0;
  const boss=raid.kind==='trash'?s.combat.enemies.find(e=>e.hp>0):original,living=actors.filter(c=>c.hp>0);

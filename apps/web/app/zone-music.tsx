@@ -2,6 +2,7 @@
 import {useEffect,useRef,useState,type CSSProperties} from 'react';
 import {Music2,Pause,Play,RotateCcw,Volume1,VolumeX} from 'lucide-react';
 import styles from './zone-music.module.css';
+import {Popover,PopoverContent,PopoverTrigger} from '@/components/ui/popover';
 import {createZoneMusic,zoneMusicForLocation} from '@/lib/zone-music.js';
 
 const preferenceKey='wow-sim:music-enabled';
@@ -43,6 +44,7 @@ export default function ZoneMusic({location,dungeon=false,active=true}:{location
  const hint=!enabled?'已暂停':!source?'暂无区域音乐':status==='error'?'加载失败 · 点击重试':status==='blocked'?'点击播放':percent===0?'已静音':status==='playing'?'正在播放':status==='paused'?'已暂停':'准备播放';
  const action=needsRetry?'播放背景音乐':enabled?'暂停背景音乐':'播放背景音乐';
  return <section className={styles.player} aria-label="区域音乐" data-playing={audible}>
+  <div className={styles.mobileControl}><Popover><PopoverTrigger asChild><button type="button" className={styles.toggle} aria-label="音乐设置" title="音乐设置"><Music2 size={16}/></button></PopoverTrigger><PopoverContent side="top" align="end" className={styles.mobilePanel} aria-label="区域音乐设置"><strong>{region}</strong><p>{hint}</p><button type="button" onClick={needsRetry?()=>player.current?.retry():toggle}>{action}</button><label>音量 {percent}%<input type="range" min="0" max="100" step="1" value={percent} aria-label="背景音乐音量" aria-valuetext={`${percent}%`} onChange={event=>changeVolume(Number(event.target.value))}/></label></PopoverContent></Popover></div>
   <div className={styles.eyebrow}><Music2 size={12} aria-hidden="true"/><span>区域音乐</span><span className={styles.dot}/></div>
   <div className={styles.track}>
    <div className={styles.copy}><strong title={region}>{region}</strong><span className={styles.status} role="status">{hint}</span></div>

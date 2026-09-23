@@ -35,7 +35,11 @@ export class LocalSimulationClient {
     this.worker=new Worker(new URL('./local-simulation.worker.ts',import.meta.url),{type:'module'});
     this.worker.onmessage=({data})=>{
       if (data.generation!==this.session?.session.id || this.suspended) return;
-      if (data.type==='frame') publishLocalCombat(data.snapshot);
+      if (data.type==='frame') {
+        this.behindMs=data.behindMs;
+        publishLocalCombat(data.snapshot);
+        this.options.onStatus(data.behindMs>2000?(this.commandPending?'正在结算离线冒险，完成后自动执行操作…':'正在结算离线冒险…'):'');
+      }
       if (data.type==='full') {
         this.behindMs=data.behindMs;
         this.snapshot=data.snapshot;this.options.onFull(data.snapshot);

@@ -1,4 +1,5 @@
 import {racialModifiers} from './racial-effects.js';
+import {questFishingSources} from '../../../game-data/world-quest-content.js';
 import {items,nodes,nameOf,creatures,objectTemplates,objectLocations,objectLoot} from './catalog.js';
 import classReference from '../../../game-data/data/classes-reference.json' with {type:'json'};
 import {addItem,clone,log,roll,rng,stats,slotOf,countItem} from './character.js';
@@ -44,6 +45,7 @@ function resourceDefs(location){const t=terrain[location];const west=nodes[locat
  if(['lake','coast'].includes(t)){defs.push(['fish','fishing',6291,1,'美味小鱼群']);if(west)defs.push(['kelp','herbalism',3820,75,'荆棘藻']);}
  if(['mine','hills'].includes(t))defs.push(['earthroot','herbalism',2449,15,'地根草丛']);
  const resources=defs.map(([key,profession,item,required,name])=>({id:location+':'+key,profession,item,required,name}));
+ for(const [item,source]of Object.entries(questFishingSources))if(source.locations.includes(location))resources.push({id:location+':quest-fish-'+item,profession:'fishing',item:+item,required:source.required,name:nameOf('items',+item)+'鱼群'});
  return [...resources,...(sourceResources.get(location)||[]).filter(r=>!resources.some(existing=>existing.item===r.item))];
 }
 export function resourceView(s){return resourceDefs(s.location).map(r=>{const readyAt=s.resourceCooldowns?.[r.id]||0;return{...r,readyAt,available:readyAt<=s.clock&&skill(s,r.profession)>=r.required,learned:skill(s,r.profession)>0};});}
@@ -55,7 +57,7 @@ export function finishGather(s){const a=s.activity,r=resourceView(s).find(r=>r.i
  skillUp(s,r.profession,1,r.profession==='fishing'?s.professions.fishing.skill:r.required);log(s,'采集 '+nameOf('items',r.item)+' ×'+count,'loot');
  if(a.auto){const next=resourceView(s).find(r=>r.available&&roomForResource(s,r));if(next)beginGather(s,next.id,true);else s.activity.reason='本区可采集资源已采完或背包空间不足。';}
 }
-export function skinBeast(s,enemy){if(!s.professions?.skinning||enemy.skinned||creatures[enemy.entry]?.CreatureType!==1)return;enemy.skinned=true;const required=Math.max(1,(enemy.level-10)*5);if(skill(s,'skinning')<required){log(s,'剥皮熟练度不足，无法处理 '+enemy.name,'info');return;}const id=enemy.level>=50?8170:enemy.level>=40?4304:enemy.level>=30?4234:enemy.level>=16?2319:2318,count=roll(s,1,2);addItem(s,id,count);skillUp(s,'skinning',1,required);log(s,'自动剥皮：'+nameOf('items',id)+' ×'+count,'loot');}
+export function skinBeast(s,enemy){if(!s.professions?.skinning||enemy.skinned||creatures[enemy.entry]?.CreatureType!==1)return;enemy.skinned=true;const required=enemy.entry===10430?300:Math.max(1,(enemy.level-10)*5);if(skill(s,'skinning')<required){log(s,'剥皮熟练度不足，无法处理 '+enemy.name,'info');return;}if(enemy.entry===10430&&rng(s)*100<1.8957)addItem(s,12731,1);const id=enemy.level>=50?8170:enemy.level>=40?4304:enemy.level>=30?4234:enemy.level>=16?2319:2318,count=roll(s,1,2);addItem(s,id,count);skillUp(s,'skinning',1,required);log(s,'自动剥皮：'+nameOf('items',id)+' ×'+count,'loot');}
 export function canDisenchant(s,i){const data=items[i.id];return skill(s,'enchanting')>0&&!protectedItem(i)&&[2,4].includes(data?.class)&&[2,3,4].includes(data?.Quality)&&!!disenchantLoot[data.DisenchantID];}
 export function professionAction(s,a){
  if(['learnProfession','upgradeProfession'].includes(a.type)){

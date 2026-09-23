@@ -58,7 +58,7 @@ export const selfArea=sp=>['Frost Nova','Arcane Explosion','Thunder Clap','Whirl
 export const groundArea=sp=>['Flamestrike','Blizzard','Rain of Fire','Hurricane','Volley'].includes(sp.SpellName);
 export function spellRadius(sp){return sp.radius||({'Frost Nova':10,'Arcane Explosion':10,'Flamestrike':5,'Blizzard':8,'Thunder Clap':8,'Cleave':5,'Swipe':5}[sp.SpellName]||0);}
 export function castRange(sp){return selfArea(sp)?spellRadius(sp):sp.range||0;}
-export function inSpellRange(c,target,sp){const d=distance(c,target);return d<=castRange(sp)+1e-9&&d>=(sp.minRange||0)&&arenaSight(c,target);}
+export function inSpellRange(c,target,sp){if(target?.airborne&&castRange(sp)<=5)return false;const d=distance(c,target);return d<=castRange(sp)+1e-9&&d>=(sp.minRange||0)&&arenaSight(c,target);}
 export function areaTargets(s,c,e,sp,center,options={}){
  const enemies=(s.combat?.enemies||[]).filter(u=>aliveEnemy(u)&&!u.controlledBy),radius=spellRadius(sp);
  if(['Multi-Shot','Chain Lightning'].includes(sp.SpellName)){

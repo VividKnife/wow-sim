@@ -2,6 +2,8 @@
 // Positions, bomb machinery and awakening are adapted to the simulator arena.
 // See docs/research/import/classic-boss-scripts.json for exact source hashes.
 export const dungeonBossSkills={
+ 9019:[{spell:17492,first:4000,repeat:[5000,10000],target:'other'},{spell:15636,first:25000,repeat:18000,target:'self'}],
+ 1853:[{spell:15790,first:4500,repeat:8000,target:'victim'},{spell:12040,first:12000,repeat:[14000,28000],target:'self'},{spell:18702,first:2000,repeat:[15000,27000],target:'victim'}],
  4275:[{spell:7588,first:1000,repeat:[2900,4800],target:'victim'},{spell:7803,first:1000,repeat:[30000,38000],target:'self',near:5},{spell:7621,first:[20000,30000],repeat:[20000,35000],target:'other'}],
  6487:[{spell:13323,first:15000,repeat:20000,target:'other'},{spell:8988,first:7500,repeat:[15000,22000],target:'self'},{spell:9433,first:[1000,3000],repeat:[2500,8500],target:'self'}],
  3975:[{spell:15496,first:7500,repeat:[7500,17500],target:'victim'},{spell:8989,first:14500,repeat:[15000,25000],target:'self'}],
@@ -11,6 +13,8 @@ export const dungeonBossSkills={
  3977:[{spell:9481,first:2000,repeat:[2000,3000],target:'victim'},{spell:12039,first:13000,repeat:13000,target:'self',below:75},{spell:22187,first:8000,repeat:[22000,45000],target:'self'}],
 };
 export const dungeonBossGuides={
+ 9019:{spells:[17492,15636],text:'索瑞森之手威胁小队成员；注意烈焰化身期间的承伤与魔法免疫。优先维持坦克生命，化身结束后集中输出。'},
+ 1853:{spells:[15790,12040,18702],text:'黑暗院长持续施放奥术飞弹、暗影护盾与诅咒。16 秒后开始传送队员至战场侧翼并清除其首领仇恨，召出 3—4 名守卫；清理后返回。此为侧室的协作战场改编，其他队员可以援助。'},
  4275:{spells:[7588,7803,7621],text:'暗影箭持续攻击主要目标，阿鲁高的诅咒威胁其他队员；靠近时会施放雷霆震击。'},
  6487:{spells:[13323,8988,9433,9438,9435],text:'注意变形术与沉默。生命降至一半时施放奥术气泡，随后引爆；气泡期间停止普通攻击。'},
  3975:{spells:[15496,8989,8269],text:'旋风斩威胁近战范围，生命低于 30% 时狂暴。倒下后还会有血色预备兵加入战斗。'},

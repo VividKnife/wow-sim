@@ -1,11 +1,12 @@
 "use client";
 import {saveFetch} from './save-fetch';
-import {useEffect,useState} from 'react';
+import {useEffect,useMemo,useState} from 'react';
 import {createCombatPlayback,playbackPerspective} from './combat-playback.js';
 
 const recordings=new Map<string,any>();
 export function useCombatPlayback(state:any,data:any,manifest:any,contentVersion:string|undefined,open:boolean){
  const key=manifest&&contentVersion?`${contentVersion}:${state.id}:${manifest.id}`:'';
+ const endClock=manifest?.endClock;
  const [sample,setSample]=useState<any>(null),[status,setStatus]=useState('');
  useEffect(()=>{
   if(!key||!open)return;
@@ -41,6 +42,6 @@ export function useCombatPlayback(state:any,data:any,manifest:any,contentVersion
   const cached=recordings.get(key);if(cached)play(cached);else void load();
   return()=>{stopped=true;controller.abort();cancelAnimationFrame(frame);clearTimeout(timer);};
  },[key,open]);
- if(!key||sample?.key!==key)return {state,data,status:key?status:'',replaying:false};
- return {...playbackPerspective(state,data,sample.snapshot,manifest.endClock),status,replaying:true};
+ return useMemo(()=>!key||sample?.key!==key?{state,data,status:key?status:'',replaying:false}
+  :{...playbackPerspective(state,data,sample.snapshot,endClock),status,replaying:true},[key,sample,state,data,endClock,status]);
 }

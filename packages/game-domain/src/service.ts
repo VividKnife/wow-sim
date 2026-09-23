@@ -177,12 +177,24 @@ export class GameService {
     async command(accountId: string, command: Rules) {
         this.request(command?.requestId);
         requireThat(typeof command.type === 'string', 'INVALID_COMMAND', '缺少操作类型', 400);
-        await this.store.read(async tx => {
+        const selectedLease = await this.store.read(async tx => {
             const a = await account(tx, accountId);
-            await owned(tx, accountId, command.characterId || a.primaryCharacterId);
+            const c = await owned(tx, accountId, command.characterId || a.primaryCharacterId);
+            return tx.get<ActorLease>('actor_leases', c.id);
         });
         // Recovery must not depend on reconnect/catch-up of the broken activity.
+        const presenceCheckedAt = this.now();
         if (command.type !== 'unstuck') await this.refreshPresence(accountId);
+        // Presence heartbeats use a separate short transaction. Keep their rows
+        // out of the long SERIALIZABLE instance command transaction.
+        const observedPresence = selectedLease?.kind === 'instance' && command.type !== 'unstuck'
+            ? await this.store.read(async tx => {
+                const instance = await tx.get<Instance>('instances', selectedLease.ownerId);
+                const observed = new Map<string, number>();
+                for (const id of new Set(instance?.roster.filter(r => r.controller !== 'mercenary').map(r => r.accountId) || []))
+                    observed.set(id, (await presence(tx, id)).lastSeenAt);
+                return observed;
+            }) : undefined;
         try {
             await this.store.transaction(async (tx) => {
                 const a = await account(tx, accountId);
@@ -191,7 +203,17 @@ export class GameService {
                     requireThat(old.fingerprint === JSON.stringify(command), 'REQUEST_REUSED', 'requestId 已被其他命令使用');
                     return;
                 }
-                const c = await owned(tx, accountId, command.characterId || a.primaryCharacterId), now = this.now();
+                const now = this.now();
+                // Polling heartbeats update account_presence frequently. Reading it in
+                // every long command transaction makes raid writes repeatedly fail
+                // SERIALIZABLE with 40001. Only reconnect if the time since the
+                // preflight heartbeat could have crossed the offline cutoff.
+                const commandPresence = observedPresence && new Map(observedPresence);
+                if (command.type !== 'unstuck' && now - presenceCheckedAt >= this.offlineLimitMs - Math.min(1000, this.offlineLimitMs / 4)) {
+                    await this.recordPresence(tx, accountId, now);
+                    commandPresence?.set(accountId, now);
+                }
+                const c = await owned(tx, accountId, command.characterId || a.primaryCharacterId);
                 const lease = await tx.get<ActorLease>('actor_leases', c.id);
                 await guardLocalCommand(this, tx, c.id, command, now);
                 if (command.type === 'unstuck')
@@ -222,7 +244,7 @@ export class GameService {
                 else if (command.type === 'hireMercenary')
                     await this.hireMercenary(tx, c, command, now);
                 else if (lease?.kind === 'instance')
-                    await this.instanceCommand(tx, c, lease.ownerId, command, now);
+                    await this.instanceCommand(tx, c, lease.ownerId, command, now, commandPresence);
                 else if (['startActivity', 'gatherResource', 'gatherAll', 'craft'].includes(command.type))
                     await this.startActivity(tx, c, command, now);
                 else if (command.type === 'stop' && lease?.kind === 'activity') {
@@ -458,7 +480,9 @@ export class GameService {
         }
         a.rngState = s.rngState;
         a.engineActivity = clone(s.activity);
-        a.nextEventAt = now + simulationInterval(s.combat, (await presence(tx, c.accountId)).lastSeenAt, now);
+        // An authenticated command is itself proof of online activity. Avoid
+        // reading the frequently updated presence row in this long transaction.
+        a.nextEventAt = now + simulationInterval(s.combat, now, now);
         if (a.localSimulation) a.nextEventAt = Number.MAX_SAFE_INTEGER;
         await tx.put('activities', a);
     }

@@ -36,6 +36,14 @@ function add(s,e,entry,count=1){
 }
 export function dungeonBossPhaseTick(s,actors,hurt){
  const battle=s.combat;if(!battle?.dungeon)return;
+ for(const room of battle.gandlingRooms||[]){
+  if(room.closed)continue;
+  const target=actors.find(c=>c.id===room.target);
+  if(!target||target.hp<=0||room.guards.every(id=>!battle.enemies.some(e=>e.id===id&&e.hp>0))){
+   room.closed=true;
+   if(target?.hp>0){setCombatPosition(s,target,room.origin);target.cast=null;log(s,target.name+' 清理侧室守卫，返回大厅。','combat',{actorId:target.id});}
+  }
+ }
  const mograine=battle.enemies.find(e=>e.entry===3976),whitemane=battle.enemies.find(e=>e.entry===3977);
  if(mograine&&whitemane){
   const phase=battle.cathedral??={stage:'commander'};
@@ -57,11 +65,24 @@ export function dungeonBossPhaseTick(s,actors,hurt){
 }
 export function dungeonBossTick(s,e,actors,hurt){
  const skills=dungeonBossSkills[e.entry];if(!skills||!s.combat?.dungeon)return false;
- const p=e.dungeonBoss??={timers:skills.map(skill=>s.clock+delay(s,skill.first)),phase:0,nextSpecial:s.clock+10000};
+ const p=e.dungeonBoss??={timers:skills.map(skill=>s.clock+delay(s,skill.first)),phase:0,nextSpecial:s.clock+(e.entry===1853?16000:10000)};
  const cast=(id,target=e,flags=0)=>castEnemySpell(s,e,target,id,actors,hurt,flags);
  const health=e.hp/e.maxHp,victim=actors.find(c=>c.id===e.target&&c.hp>0);
  if(e.entry===3977&&s.combat.cathedral?.stage==='resurrection')return true;
  if(controlled(e,s.clock))return true;
+ if(e.entry===1853&&health>.03&&s.clock>=p.nextSpecial){
+  const candidates=actors.filter(c=>c.hp>0&&!c.petUnit&&!c.totemUnit&&!(s.combat.gandlingRooms||[]).some(r=>!r.closed&&r.target===c.id));
+  if(candidates.length){
+   const target=candidates[roll(s,0,candidates.length-1)],area=s.combat.area,room={target:target.id,origin:{x:target.position,y:target.positionY||0},guards:[],closed:false};
+   const corner={x:area.minX+8,y:roll(s,0,1)?area.maxY-8:area.minY+8};setCombatPosition(s,target,corner);target.cast=null;target.target=null;delete e.threat[target.id];e.target=actors.find(c=>c!==target&&c.hp>0)?.id||target.id;
+   for(let i=0,count=roll(s,3,4);i<count;i++){
+    const sequence=s.combat.summonSequence=(s.combat.summonSequence||0)+1,guard=enemy(s,11598,'gandling-guardian-'+sequence);
+    guard.summonedBy=e.id;guard.rewarded=true;guard.target=target.id;guard.threat[target.id]=1000;guard.nextAttack=s.clock+1000;setCombatPosition(s,guard,{x:corner.x+3+i,y:corner.y});s.combat.enemies.push(guard);room.guards.push(guard.id);
+   }
+   s.combat.gandlingRooms??=[];s.combat.gandlingRooms.push(room);p.nextSpecial=s.clock+roll(s,20000,35000);
+   log(s,'黑暗院长将 '+target.name+' 传送至侧室，亡灵守卫出现！（战场侧翼改编）','combat',{actorId:e.id,targetId:target.id,spellId:17950});
+  }
+ }
  if(e.entry===6487){
   if(!p.phase&&health<=.5&&cast(9438)){p.phase=1;p.detonate=s.clock+1000;}
   if(p.detonate&&s.clock>=p.detonate&&cast(9435))p.detonate=0;

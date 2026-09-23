@@ -12,7 +12,7 @@ import {clientContent} from '../../../packages/game-domain/src/rules/client-cont
 let components,directory,bundle;
 before(async()=>{
  const web=fileURLToPath(new URL('../',import.meta.url));directory=await mkdtemp(join(web,'.npc-ui-test-'));bundle=join(directory,'component.mjs');
- await build({absWorkingDir:web,stdin:{contents:"export {default as Hud} from './app/player-hud'; export {default as World} from './app/world'; export {NpcConversation,NpcPortrait,QuestConversation} from './app/local-npcs';",resolveDir:web,loader:'tsx'},outfile:bundle,bundle:true,platform:'node',format:'esm',packages:'external',jsx:'automatic',loader:{'.css':'empty'},logLevel:'silent'});components=await import(pathToFileURL(bundle).href);
+ await build({absWorkingDir:web,stdin:{contents:"export {default as Hud} from './app/player-hud'; export {default as World} from './app/world'; export {default as LocalNpcs,NpcConversation,NpcPortrait,QuestConversation} from './app/local-npcs';",resolveDir:web,loader:'tsx'},outfile:bundle,bundle:true,platform:'node',format:'esm',packages:'external',jsx:'automatic',loader:{'.css':'empty'},logLevel:'silent'});components=await import(pathToFileURL(bundle).href);
 });
 after(async()=>{if(bundle)await unlink(bundle);if(directory)await rmdir(directory);});
 const props=s=>({state:s,data:{...clientContent(),...view(s)},busy:false,send:async()=>true});
@@ -31,6 +31,18 @@ test('world has clickable NPCs but no accept, purchase or training action before
  assert.match(html,/附近人物/);assert.match(html,/<button[^>]*class="npc-card"/);assert.match(html,/任务日志/);
  assert.doesNotMatch(html,/>接受任务</);assert.doesNotMatch(html,/>[^<]*· 购买</);assert.doesNotMatch(html,/id="local-shop"/);
  assert.match(html,/<details class="panel travel-toolbox">/);
+});
+test('NPC quest exclamation turns green at five levels below the player',()=>{
+ const p=props(createGame('勇士',42,0));p.state.level=10;
+ const npc={key:'test-giver',name:'任务发布者',roles:['quests'],accepts:[1],turnIns:[]};
+ p.data.interactions=[npc];p.data.quests=[{id:1,level:6}];
+ assert.match(render(components.LocalNpcs,p),/class="quest-mark">!<\/span>/);
+ p.data.quests=[{id:1,level:5}];
+ assert.match(render(components.LocalNpcs,p),/class="quest-mark low-level">!<\/span>/);
+ p.data.interactions=[{...npc,accepts:[1,2]}];p.data.quests.push({id:2,level:6});
+ assert.match(render(components.LocalNpcs,p),/class="quest-mark">!<\/span>/);
+ p.data.interactions=[{...npc,turnIns:[3]}];p.data.quests.push({id:3,level:5,complete:false});
+ assert.match(render(components.LocalNpcs,p),/class="quest-mark incomplete">\?<\/span>/);
 });
 test('quest interaction changes from giver to the proper turn-in NPC',()=>{
  let s=createGame('勇士',42,0),p=props(s),npc=p.data.interactions.find(n=>n.entry===823);

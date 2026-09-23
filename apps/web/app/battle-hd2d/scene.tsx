@@ -9,6 +9,7 @@ import {BattleFrames,CameraRig} from './frame';
 import {Environment} from './environment';
 import {BattleObstacles} from './obstacles';
 import {BattleUnit} from './unit';
+import {BattleLabels} from './labels';
 import {BattleEffects} from './effects';
 
 export function clearBattleAssets(scene:BattleScene){
@@ -39,6 +40,7 @@ export default function BattleCanvas({scene,skills,onSelect,visible,onReady,onLo
     <Environment ground={scene.ground||'grass'} low={scene.lowEffects} reduced={scene.reducedMotion}/>
     <BattleObstacles layout={scene.layout}/>
     {scene.units.map(unit=><BattleUnit key={`${scene.encounterId}:${unit.id}`} unit={unit} scene={scene} skills={skills} onSelect={onSelect}/>)}
+    <BattleLabels scene={scene} skills={skills} onSelect={onSelect}/>
     <BattleEffects scene={scene}/>
     {!scene.lowEffects&&<PostEffects/>}
     <Lifecycle low={scene.lowEffects} visible={visible} onReady={onReady} onLost={onLost}/>

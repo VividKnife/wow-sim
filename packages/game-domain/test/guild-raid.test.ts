@@ -33,7 +33,7 @@ test('raid-ready creation is persistent, has five owned level-60 characters and 
  const duplicate=await f.service().createSave('raider',{name:'熔火团长',classId:8,raceId:1,raidReady:true},'raid-save');assert.equal(duplicate.id,f.save.id);
  assert.equal((await f.store.read(tx=>tx.list('characters',{accountId:f.save.id}))).length,5);
  await assert.rejects(f.service().createSave('other',{name:'错误',classId:1,raceId:1,raidReady:true},'bad'),/人类法师/);
- await assert.rejects(f.command('raidStart',{bossId:'lucifron'}),/进入熔火/);
+ await assert.rejects(f.command('raidStart',{bossId:'lucifron'}),/进入团队副本/);
 });
 
 test('guild instance enforces ownership, capacity, tactics locking and retreat recovery',async()=>{

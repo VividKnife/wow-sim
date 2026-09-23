@@ -114,6 +114,34 @@ test('invalid offline durations are rejected', () => {
     assert.throws(() => new GameService(new MemoryStore(), {contentVersion: 'test', offlineLimitMs: duration}), /GAME_OFFLINE_LIMIT_MS/);
 });
 
+test('a command queued past the offline cutoff still proves its own participant is online', async () => {
+  const f = await fixture(5000);
+  await f.service.command('a', {type:'createInstance', requestId:'instance'});
+  const instanceId = (await f.service.snapshot('a')).instanceId;
+  await f.service.command('a', {type:'startInstance', instanceId, requestId:'start'});
+  const refresh = f.service.refreshPresence.bind(f.service);
+  f.service.refreshPresence = async id => {
+    await refresh(id);
+    // Model time spent waiting for the command transaction after its heartbeat.
+    f.time(7001);
+  };
+  await f.service.command('a', {type:'settings', health:70, mana:70, requestId:'queued'});
+  assert.equal((await f.store.read(tx=>tx.get('account_presence','a')))!.lastSeenAt,7001);
+  assert.equal((await f.service.snapshot('a')).state.settings.health,70);
+});
+
+test('a queued command never refreshes a different offline participant', async () => {
+  const f = await fixture(5000);
+  await f.service.createAccount('b', {name:'Guest',classId:8,raceId:1}, 'create-b');
+  await f.service.command('a', {type:'createInstance', requestId:'instance'});
+  const instanceId = (await f.service.snapshot('a')).instanceId;
+  await f.service.command('b', {type:'joinInstance', instanceId, requestId:'join'});
+  await f.service.command('a', {type:'startInstance', instanceId, requestId:'start'});
+  f.time(7001);
+  await assert.rejects(f.service.command('a', {type:'settings',health:70,mana:70,requestId:'blocked'}), {code:'OFFLINE_PARTICIPANT'});
+  assert.equal((await f.store.read(tx=>tx.get('account_presence','b')))!.lastSeenAt,1000);
+});
+
 test('missing persisted presence is rejected without corrupting active simulation clocks', async () => {
   const f = await fixture();
   await travel(f);

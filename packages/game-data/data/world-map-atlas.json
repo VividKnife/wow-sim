@@ -351,6 +351,106 @@
         -8278.851,
         -9175.205
       ]
+    },
+    "灼热峡谷": {
+      "name": "灼热峡谷",
+      "image": "/maps/searing-gorge-classic.jpg",
+      "bounds": [
+        -322.91666,
+        -2554.1665,
+        -6100.0,
+        -7587.4995
+      ]
+    },
+    "燃烧平原": {
+      "name": "燃烧平原",
+      "image": "/maps/burning-steppes-classic.jpg",
+      "bounds": [
+        -266.66666,
+        -3195.8333,
+        -7031.2495,
+        -8983.333
+      ]
+    },
+    "诅咒之地": {
+      "name": "诅咒之地",
+      "image": "/maps/blasted-lands-classic.jpg",
+      "bounds": [
+        -1241.6666,
+        -4591.6665,
+        -10566.666,
+        -12800.0
+      ]
+    },
+    "西瘟疫之地": {
+      "name": "西瘟疫之地",
+      "image": "/maps/western-plaguelands-classic.jpg",
+      "bounds": [
+        416.66666,
+        -3883.3333,
+        3366.6665,
+        499.99997
+      ]
+    },
+    "东瘟疫之地": {
+      "name": "东瘟疫之地",
+      "image": "/maps/eastern-plaguelands-classic.jpg",
+      "bounds": [
+        -2185.4165,
+        -6056.25,
+        3799.9998,
+        1218.75
+      ]
+    },
+    "艾萨拉": {
+      "name": "艾萨拉",
+      "image": "/maps/azshara-classic.jpg",
+      "bounds": [
+        -3277.0833,
+        -8347.916,
+        5341.6665,
+        1960.4166
+      ]
+    },
+    "费伍德森林": {
+      "name": "费伍德森林",
+      "image": "/maps/felwood-classic.jpg",
+      "bounds": [
+        1641.6666,
+        -4108.333,
+        7133.333,
+        3299.9998
+      ]
+    },
+    "冬泉谷": {
+      "name": "冬泉谷",
+      "image": "/maps/winterspring-classic.jpg",
+      "bounds": [
+        -316.66666,
+        -7416.6665,
+        8533.333,
+        3799.9998
+      ]
+    },
+    "安戈洛环形山": {
+      "name": "安戈洛环形山",
+      "image": "/maps/ungoro-crater-classic.jpg",
+      "bounds": [
+        533.3333,
+        -3166.6665,
+        -5966.6665,
+        -8433.333
+      ]
+    },
+    "希利苏斯": {
+      "name": "希利苏斯",
+      "image": "/maps/silithus-classic.jpg",
+      "bounds": [
+        4641.6665,
+        -2308.3333,
+        -5800.0,
+        -10433.333
+      ]
     }
   }
 }

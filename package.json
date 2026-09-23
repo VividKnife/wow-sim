@@ -6,11 +6,12 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "node --test",
+    "test": "node scripts/test.mjs",
     "check": "node scripts/check.mjs",
     "typecheck": "tsc --noEmit",
     "data:compile": "node scripts/compile-game-data.mjs",
     "data:check": "node scripts/compile-game-data.mjs --check",
+    "world:check": "node scripts/audit-world-content.mjs --check && node scripts/validate-world-playability.mjs",
     "content:measure": "node scripts/measure-client-content.mjs",
     "combat:audit": "node scripts/audit-spell-contracts.mjs",
     "combat:audit:check": "node scripts/audit-spell-contracts.mjs --check",

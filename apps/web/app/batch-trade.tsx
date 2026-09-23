@@ -1,7 +1,7 @@
 "use client";
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';
-import {GameProps,Icon,money} from './game-ui';
+import {GameProps,ItemDisplay,money} from './game-ui';
 import type {InventoryItem} from './economy-types';
 import './economy.css';
 
@@ -18,7 +18,7 @@ export default function BatchTrade({state:s,data:d,busy,send,auction=false}:Game
   <p>{auction?'勾选背包物品整组上架，金额已扣除 5% 手续费。绑定、锁定与任务物品不可上架。':'勾选背包物品整组出售。锁定、任务物品和配发装备不会出现在这里。'}{auction&&` 当前还可上架 ${remaining} 组。`}</p>
   <div className="economy-toolbar"><input aria-label={auction?'搜索可上架物品':'搜索可出售物品'} placeholder="搜索背包物品…" value={search} onChange={e=>setSearch(e.target.value)}/><Button variant="outline" disabled={locked||!visible.length} onClick={()=>setSelected(previous=>allVisible?previous.filter(uid=>!visible.some(i=>i.uid===uid)):[...new Set([...previous,...visible.map(i=>i.uid)])])}>{allVisible?'取消当前全选':'全选当前列表'}</Button><Button variant="ghost" disabled={locked||!selected.length} onClick={()=>setSelected([])}>清空选择</Button></div>
   <div className="economy-callout"><p aria-live="polite">已选 {chosen.length} 组 · 共 {chosen.reduce((n,i)=>n+i.count,0)} 件 · {auction?'预计到账':'合计'} {money(total)}</p>{overLimit&&<p role="status">所选组数超过剩余上架额度，请减少选择。</p>}<Button disabled={locked||!chosen.length||overLimit} onClick={submit}>{auction?'批量上架所选':'批量出售所选'}</Button></div>
-  <div className="storage-list">{visible.map(i=><label className="storage-row" key={i.uid}><input type="checkbox" aria-label={`选择 ${d.items[i.id].name} ×${i.count}`} disabled={locked} checked={chosen.some(row=>row.uid===i.uid)} onChange={e=>setSelected(previous=>e.target.checked?[...previous.filter(uid=>uid!==i.uid),i.uid]:previous.filter(uid=>uid!==i.uid))}/><Icon src={d.items[i.id].icon} name={d.items[i.id].name}/><div className="grow"><strong className={'rarity-'+d.items[i.id].quality}>{d.items[i.id].name} ×{i.count}</strong><small>{i.bound?'已绑定 · ':''}{d.enchants?.[i.enchant||'']?.description||''}</small></div><span>{money(value(i))}</span></label>)}</div>
+  <div className="storage-list">{visible.map(i=><label className="storage-row" key={i.uid}><input type="checkbox" aria-label={`选择 ${d.items[i.id].name} ×${i.count}`} disabled={locked} checked={chosen.some(row=>row.uid===i.uid)} onChange={e=>setSelected(previous=>e.target.checked?[...previous.filter(uid=>uid!==i.uid),i.uid]:previous.filter(uid=>uid!==i.uid))}/><ItemDisplay className="grow" item={d.items[i.id]} instance={{...i,enchantDescription:d.enchants?.[i.enchant||'']?.description}}/><span>{money(value(i))}</span></label>)}</div>
   {!visible.length&&<p className="empty">{eligible.length?'没有符合搜索条件的物品。':auction?'没有可上架的物品。':'没有可出售的物品。'}</p>}
  </section>;
 }

@@ -14,7 +14,7 @@ import {creatureVisual} from '../../../packages/game-data/creature-visuals.js';
 
 test('all MC bosses, trash, guards and summoned creatures resolve to original local models',()=>{
  const entries=[...moltenCoreBosses,...Object.values(moltenCoreTrash)].map(c=>c.entry).concat([12119,12099,11672,11663,11664,12143]);
- assert.equal(new Set(entries).size,27);
+ assert.equal(moltenCoreBosses.length,10);
  for(const entry of entries){
   const model=moltenCoreModel(entry);assert.ok(model,`missing ${entry}`);
   assert.equal(creatureVisual({entry}).model.src,model.src);

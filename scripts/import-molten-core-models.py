@@ -326,7 +326,7 @@ def convert(display, meta, out=None, url_root='/creatures/molten-core', animatio
     return {'displayId':display,'modelId':meta['Model'],'path':f'{url_root}/{display}.glb',
             'sha256':sha,'bytes':path.stat().st_size,'vertices':len(positions),'bones':len(bones),
             'height':height,'minY':min(v[1] for v in positions),'animations':clips,
-            'portrait':f'/creatures/molten-core/{display}.webp','portraitSha256':digest(portrait),'sources':evidence}
+            **({'portrait':f'{url_root}/{display}.webp','portraitSha256':digest(portrait)} if portrait else {}),'sources':evidence}
 
 
 def main():

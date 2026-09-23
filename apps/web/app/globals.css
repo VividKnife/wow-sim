@@ -44,6 +44,7 @@
 @media(prefers-reduced-motion:reduce){.npc-card{transition:none}.npc-card:hover{transform:none}}
 
 .quest-mark.incomplete{color:#9ca3af}
+.quest-mark.low-level{color:var(--green)}
 
 /* Full-body Classic models: preserve alpha and silhouette at every size. */
 .creature-portrait{display:inline-flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;width:76px;height:84px;vertical-align:middle}

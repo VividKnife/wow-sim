@@ -4,7 +4,7 @@ import {createGame,stats} from '../../../packages/game-domain/src/rules/engine.j
 import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
 function fixture(spell){const s=createGame('法术测试',19,0);s.level=20;s.learned.push(spell);s.mana=stats(s).maxMana;s.rules=[{spell,condition:'always',value:0,enabled:true}];startCombat(s,[299]);s.combat.enemies[0].hp=s.combat.enemies[0].maxHp=100000;s.combat.enemies[0].low=s.combat.enemies[0].high=0;return s;}
 test('a single Blizzard channel deals exactly eight ticks and leaves no residual damage aura',()=>{
- const s=fixture(10);s.combat.enemies[0].rootUntil=100000;combatTick(s);s.rules=[];
+ const s=fixture(10);s.combat.enemies[0].position=s.position+20;s.combat.enemies[0].rootUntil=100000;combatTick(s);assert.equal(s.cast?.spell,10);s.rules=[];
  for(let t=100;t<=17000;t+=100){s.clock=t;combatTick(s);}
  assert.equal(s.combat.damage['法术测试 · 暴风雪'],200);
  assert.equal(s.combat.enemies[0].dots.filter(d=>d.spell===10).length,0);

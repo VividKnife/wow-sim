@@ -18,11 +18,19 @@ import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
 import type {Rules} from '../src/model.ts';
 
-function roster(size=3,level=20):Rules{
+function roster(size=3,level=60):Rules{
  const s:Rules=createGame('竞技队长',123,0);s.level=level;s.learned=companionSkills(s);s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
  for(const [id,role]of [['rogue','melee'],['priest','healer'],['warrior','melee'],['hunter','ranged']].slice(0,size-1))recruit(s,id,{role});return s;
 }
-function prepare(size=3,mapId='courtyard',opponentId='rmp',level=20){const s=roster(size,level);return act(s,{type:'arenaPrepare',size,mapId,opponentId,memberIds:[s.id,...s.party.map((c:Rules)=>c.id)]},0) as Rules;}
+function prepare(size=3,mapId='courtyard',opponentId='rmp',level=60){const s=roster(size,level);return act(s,{type:'arenaPrepare',size,mapId,opponentId,memberIds:[s.id,...s.party.map((c:Rules)=>c.id)]},0) as Rules;}
+
+test('竞技场在60级开放，低等级无法进入',()=>{
+ const low=roster(3,59),ready=roster(3,60);
+ assert.equal(arenaView(low).unlocked,false);
+ assert.equal(arenaView(ready).unlocked,true);
+ assert.throws(()=>act(low,{type:'arenaPrepare',size:3,mapId:'courtyard',opponentId:'rmp',memberIds:[low.id,...low.party.map((c:Rules)=>c.id)]},0),/60级/);
+ assert.equal(prepare().arena.phase,'preparing');
+});
 function start(s:Rules){return act(s,{type:'arenaStart',matchId:s.arena.id,revision:s.arena.planRevision,plan:s.arena.teams[0].plan},s.wallAt) as Rules;}
 
 test('preparation is unlimited, frozen, serializable and starts only after explicit validated command',()=>{

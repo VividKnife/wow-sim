@@ -1,7 +1,7 @@
 "use client";
 import {useEffect,useRef,useState} from 'react';
 import {Button} from '@/components/ui/button';
-import {GameProps} from './game-ui';
+import {GameProps,Item} from './game-ui';
 import BossLoot,{type JournalBoss} from './boss-loot';
 import './dungeon-map.css';
 
@@ -27,7 +27,7 @@ export default function DungeonMap({state:s,data:d,busy,send,raid}:GameProps&{ra
  const location=dm.route.find(r=>r.id===dm.locationId);
  const navigate=(destination:string)=>send({type:raid==='guild'?'raidNavigate':raid==='gold'?'goldNavigate':'dungeonNavigate',destination});
  return <section className="panel dungeon-atlas" aria-label="完整副本地图">
-  <div className="section-heading"><div><div className="eyebrow">{raid?'团队副本地图 · 10名首领':'地下城地图 · 全部区域'}</div><h2>{dm.name}</h2></div><Button size="sm" variant="outline" onClick={()=>setDetailed(!detailed)}>{detailed?'标准视图':'放大地图'}</Button></div>
+  <div className="section-heading"><div><div className="eyebrow">{raid?`团队副本地图 · ${dm.route.filter((n)=>n.kind==='boss').length}名首领`:'地下城地图 · 全部区域'}</div><h2>{dm.name}</h2></div><Button size="sm" variant="outline" onClick={()=>setDetailed(!detailed)}>{detailed?'标准视图':'放大地图'}</Button></div>
   <div className="dungeon-map-status" role="status"><span>小队位置：<strong>{location?.name||'副本入口'}</strong></span><span>目的地：<strong>{target?.name||(dm.destination==='full'?'全清副本':'尚未选择')}</strong>{dm.autoAdvance?' · 推进中':' · 已停止'}</span></div>
   <p className="footnote">点击首领查看掉落，点击区域规划路线。金色连线为所选路线。{raid?raid==='gold'?'沿途自动清怪，首领前确认挑战。掉落在后台拍卖，可折叠竞拍面板继续战斗。':'沿途自动清理怪物群，首领前停步。检查指挥后再次确认挑战；击败后拾取装备、休整再继续。':'战斗中改道在本场结束后生效。'}</p>
   <div className="atlas-floor-controls" aria-label="地图区域">{map.floors.length>1&&<><Button size="sm" variant={floorId===0?'default':'outline'} aria-pressed={floorId===0} onClick={()=>setFloorId(0)}>完整副本</Button>{map.floors.map(f=><Button key={f.id} size="sm" variant={floorId===f.id?'default':'outline'} aria-pressed={floorId===f.id} onClick={()=>setFloorId(f.id)}>{f.name}{map.floorByNode[dm.locationId]===f.id?' · 小队':''}</Button>)}</>}<Button size="sm" variant="outline" onClick={()=>setFloorId(map.floorByNode[dm.locationId])}>定位小队</Button></div>
@@ -64,7 +64,7 @@ export default function DungeonMap({state:s,data:d,busy,send,raid}:GameProps&{ra
     {selected.enemies.length>0&&<p className="footnote">区域敌人：{selected.enemies.map((e)=>e.name).join('、')}</p>}
     {selected.canNavigate&&<details><summary>查看行进路线 · {selected.path.filter((id:string)=>dm.route.some((r)=>r.id===id&&!['cleared','skipped','absent'].includes(r.status))).length} 场待清理遭遇</summary><ol className="atlas-waypoints">{selected.path.map((id:string)=><li key={id}>{dm.route.find((r)=>r.id===id)?.name||'副本入口'}</li>)}</ol></details>}
    </div>
-   {raid&&selected.kind==='boss'&&<div className="atlas-loot"><h3>首领战利品</h3><p>{raid==='gold'?'按经典旧世掉落表生成战利品，后台拍卖不阻挡继续战斗。':'每周首杀按经典旧世掉落表生成战利品；练习不重复发放。'}</p>{raidView.bosses.find((b:any)=>b.id===selected.id)?.loot?.map((item:any)=><p key={item.id}>{item.name}</p>)}</div>}
+   {raid&&selected.kind==='boss'&&<div className="atlas-loot"><h3>首领战利品</h3><p>{raid==='gold'?'按经典旧世掉落表生成战利品，后台拍卖不阻挡继续战斗。':'每周首杀按经典旧世掉落表生成战利品；练习不重复发放。'}</p>{raidView.bosses.find((b:any)=>b.id===selected.id)?.loot?.map((item:any)=><Item key={item.id} item={d.items[item.id]||item}/>)}</div>}
    {!raid&&selected.bossIds.length>0&&<div className="atlas-loot">{bosses.filter((b)=>selected.bossIds.includes(b.id)).map((b)=><div key={b.id}><BossLoot key={`${dm.id}:${b.id}`} boss={b}/></div>)}</div>}
   </div>:<p className="atlas-hint">选择地图上的首领或怪物群，查看详情与行进路线。</p>}
  </section>;

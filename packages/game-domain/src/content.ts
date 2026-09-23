@@ -10,6 +10,7 @@ export const instanceContents = Object.freeze({
     ...Object.fromEntries(Object.values(dungeonDefinitions).map(d => [d.id, {id:d.id,name:d.name,minimumLevel:d.minimumLevel,start(state:Rules){enterDungeon(state,d.id);}}])),
     'molten-core-gold': {id:'molten-core-gold',name:'熔火之心·金团',minimumLevel:60,start:enterGoldRaid},
     'molten-core': {id:'molten-core',name:'熔火之心',minimumLevel:60,start:enterGuildRaid},
+    'onyxias-lair': {id:'onyxias-lair',name:'奥妮克希亚的巢穴',minimumLevel:60,start(state:Rules){enterGuildRaid(state,'onyxias-lair');}},
     'northshire-skirmish': { id: 'northshire-skirmish', name: '北郡遭遇', minimumLevel: 1, start(state: Rules) { startCombat(state, [6]); } },
 });
 export const mercenaryTemplates = Object.freeze({

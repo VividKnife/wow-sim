@@ -1418,6 +1418,22 @@
       "height": 128
     },
     {
+      "path": "journal/dungeons/molten-core.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-MoltenCore.PNG",
+      "gitBlob": "b8402dd8e23dc140ca69b60845468b1579ebb9b8",
+      "sha256": "e041d7d1b18a7a0369352a9a23b586178008426648f08a55a5f82cf6ff984e67",
+      "width": 256,
+      "height": 128
+    },
+    {
+      "path": "journal/dungeons/onyxias-lair.webp",
+      "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-Onyxia.PNG",
+      "gitBlob": "42b93edcc3273cd37ae1a5ebed1fb24b3fba78c8",
+      "sha256": "6a7c3bbc77a4d5f9c8e9e2dbab9ef34b33b57fa1121a55ae21533711e02ca674",
+      "width": 256,
+      "height": 128
+    },
+    {
       "path": "journal/dungeons/ragefire-chasm.webp",
       "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/EncounterJournal/UI-EJ-DUNGEONBUTTON-RagefireChasm.PNG",
       "gitBlob": "a5297866ffd57828ca02af6c225edef7a14a4d95",
@@ -1722,6 +1738,846 @@
       "height": 668
     },
     {
+      "path": "maps/dungeons/blackrockdepths-1.webp",
+      "sha256": "ebcf1d300f78a443c8128851251f3794364e9ecbe56cf8cb5cbb898112f3d51c",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths1_1.PNG",
+          "gitBlob": "4972f1943de998d5f25cda8f34cc611f2783afa7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths1_2.PNG",
+          "gitBlob": "5fcef10f7ab828f7f3bc4db6526ca22317a2e04e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths1_3.PNG",
+          "gitBlob": "db1abb671ee6e98b3279404e3ea2bd550889cbb1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths1_4.PNG",
+          "gitBlob": "22e08bd43f0e3b173a3f2df4b230910f5316328e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths1_5.PNG",
+          "gitBlob": "be49650b559f9d6341cc6ea14bcf871249ae1c03"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths1_6.PNG",
+          "gitBlob": "e1402120bdb92d4e8cf8facfce0807457eb7ecdf"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths1_7.PNG",
+          "gitBlob": "8fd407ed59aa45e09429593c47738fcf1c595082"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths1_8.PNG",
+          "gitBlob": "33929ddee278e19abee8e78b0e09a509af5e286e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths1_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths1_10.PNG",
+          "gitBlob": "ed5d0a7dab615da967e741d356c74ad8b702dfef"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths1_11.PNG",
+          "gitBlob": "0a126f57f726507cde3ab7e0aa989faea057ac78"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths1_12.PNG",
+          "gitBlob": "498eb7b673f8e865c8b7d7f14e05cf82a8946622"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/blackrockdepths-2.webp",
+      "sha256": "cb6aed1780947c57336b8cb8fec14927e20d824aafc48cdc058bd3224bf85adf",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths2_1.PNG",
+          "gitBlob": "e0a8bde3bda870dfe64a262fec9bd0a0e0846c69"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths2_2.PNG",
+          "gitBlob": "e3958e1fd94ee401d51089cacb69e14de45654b8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths2_3.PNG",
+          "gitBlob": "e8b40858a0e0db8e78db08de37b3fc1984d2a34f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths2_4.PNG",
+          "gitBlob": "4ec9a4a93b5118876f4f217fb675fd209fdcdfce"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths2_5.PNG",
+          "gitBlob": "6878adab96d05dd5409ae4b5c0d930e8fa2039d3"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths2_6.PNG",
+          "gitBlob": "844b144e901639f69f3d352e5e84062ca05c5f64"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths2_7.PNG",
+          "gitBlob": "3bf88884d961e48c58b24b65ddeb13c34932d0a5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths2_8.PNG",
+          "gitBlob": "ad5f3c084b628b8a74fc75425e78d87c8fb70efb"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths2_9.PNG",
+          "gitBlob": "a6b07773268fcc6462c5cbb9e298c67750fa2ad9"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths2_10.PNG",
+          "gitBlob": "e803f6e9d5a47cdba3ec3334b76dfdef42fa8170"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths2_11.PNG",
+          "gitBlob": "cac2a987431c207054dcc6f5b02641fde5d3bc27"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockDepths/BlackrockDepths2_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/blackrockspire-1.webp",
+      "sha256": "3829f08754f33b2b6715363013a3f933debd191b0606a4134d62181e6a13e1f0",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire1_1.PNG",
+          "gitBlob": "4989108c9ab4575815705988fba2872bbb193890"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire1_2.PNG",
+          "gitBlob": "c2d2fce41cad5b07f540683b9dd27db6bfa66d11"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire1_3.PNG",
+          "gitBlob": "9c5cb27c2e17c248bd10971f304eb834ecae3c8e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire1_4.PNG",
+          "gitBlob": "222e42fc690d854e3dab4119d9f7989cc0a70cd6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire1_5.PNG",
+          "gitBlob": "7dfc0eef10b4fe2ab4c81fdffd6edcb7f05ab5de"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire1_6.PNG",
+          "gitBlob": "0c77a57043e3a3e8dee2c089e6715780f0086235"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire1_7.PNG",
+          "gitBlob": "e0b95b1f9031cddac8e6cf03439e6560a1672772"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire1_8.PNG",
+          "gitBlob": "f9b825b91a98b7346e7710befde785c2c59a42df"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire1_9.PNG",
+          "gitBlob": "9e9b1b024aa56a28e3e6a477f548199a274ec570"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire1_10.PNG",
+          "gitBlob": "8321f033d90517f7162e5ebcc65e6627006bc2b6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire1_11.PNG",
+          "gitBlob": "9bed0775a706a652ffb97b4122e5354de84a401e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire1_12.PNG",
+          "gitBlob": "712aa3fe2fd883ee015842afa5d7e5ff51b2071f"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/blackrockspire-2.webp",
+      "sha256": "9b06439eb57bd019bbd878545dde5ebe80d9354a4d95d996f4b402afee10380f",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire2_1.PNG",
+          "gitBlob": "4989108c9ab4575815705988fba2872bbb193890"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire2_2.PNG",
+          "gitBlob": "c2d2fce41cad5b07f540683b9dd27db6bfa66d11"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire2_3.PNG",
+          "gitBlob": "ca2fd65bb90e4a62f6ffa19f969873384fec0070"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire2_4.PNG",
+          "gitBlob": "275bc7944457d78799ddc7aa704ec05df199cce5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire2_5.PNG",
+          "gitBlob": "7dfc0eef10b4fe2ab4c81fdffd6edcb7f05ab5de"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire2_6.PNG",
+          "gitBlob": "8924cbfacd75487237a638c08e850fb7588a08bf"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire2_7.PNG",
+          "gitBlob": "ed1bf494aebc3699b54b85e87d31e5a0876a6fcd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire2_8.PNG",
+          "gitBlob": "2ae54f8317f75da4638a99bf47239089f1956e75"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire2_9.PNG",
+          "gitBlob": "9e9b1b024aa56a28e3e6a477f548199a274ec570"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire2_10.PNG",
+          "gitBlob": "0ea9c5fc3f192a33f36e64f0ffe4a3661566d573"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire2_11.PNG",
+          "gitBlob": "1e042e6d4c2c096867dff5eb269b3445546c6409"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire2_12.PNG",
+          "gitBlob": "ad89b533f4a3d8cfacb93d1c0b73eb2701ea18e0"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/blackrockspire-3.webp",
+      "sha256": "52883f9094d362f6cea8c6cecbcbc0919a32df0284db1d5378ae7208c65e0c4d",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire3_1.PNG",
+          "gitBlob": "4989108c9ab4575815705988fba2872bbb193890"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire3_2.PNG",
+          "gitBlob": "c2d2fce41cad5b07f540683b9dd27db6bfa66d11"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire3_3.PNG",
+          "gitBlob": "622b3eef1618790831669e3eef9a60c0062198a9"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire3_4.PNG",
+          "gitBlob": "275bc7944457d78799ddc7aa704ec05df199cce5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire3_5.PNG",
+          "gitBlob": "7dfc0eef10b4fe2ab4c81fdffd6edcb7f05ab5de"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire3_6.PNG",
+          "gitBlob": "1640280e28e7ac9ae187b622d8d92f138afa34e7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire3_7.PNG",
+          "gitBlob": "fb3810abdeb819057f318c9db2d63d9e9b24a34d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire3_8.PNG",
+          "gitBlob": "2ae54f8317f75da4638a99bf47239089f1956e75"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire3_9.PNG",
+          "gitBlob": "9e9b1b024aa56a28e3e6a477f548199a274ec570"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire3_10.PNG",
+          "gitBlob": "8321f033d90517f7162e5ebcc65e6627006bc2b6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire3_11.PNG",
+          "gitBlob": "a2494e23f2dfd1e7ed924a29648d783fc0f62075"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire3_12.PNG",
+          "gitBlob": "ad89b533f4a3d8cfacb93d1c0b73eb2701ea18e0"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/blackrockspire-4.webp",
+      "sha256": "9306ab64c5c23bc5d411ded30b3329457b9318be4c5fc72618ccaf9e5482483a",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire4_1.PNG",
+          "gitBlob": "157eeadb1b203d714ebedc87c85f0cb4096ad894"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire4_2.PNG",
+          "gitBlob": "b19fba9be3cca1e65fd1b5a9e3aa032bc76ceb34"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire4_3.PNG",
+          "gitBlob": "cb98ce7045ab596670947f5a8270e9b5120f956f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire4_4.PNG",
+          "gitBlob": "c33638a90792589d33ee7b43378cc04a1da1f534"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire4_5.PNG",
+          "gitBlob": "dd355ffe17a4b256c457024ac1c05a8dc12ac608"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire4_6.PNG",
+          "gitBlob": "b0fc15ba1bde4cfbbf2b2bdb5d7ae72c2c978f63"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire4_7.PNG",
+          "gitBlob": "c032d9aef7b3de29cf101768c41e8c388952d1b5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire4_8.PNG",
+          "gitBlob": "9c217b86067e08c4a565626db77eb3d3f85024ef"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire4_9.PNG",
+          "gitBlob": "9e9b1b024aa56a28e3e6a477f548199a274ec570"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire4_10.PNG",
+          "gitBlob": "07c1c513d594f55e05a4295f4973cf83efbf95ca"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire4_11.PNG",
+          "gitBlob": "0d4e2b8a18cf99e1429e0ddc201d832bd19755ec"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire4_12.PNG",
+          "gitBlob": "f374005ece66477ef62bb6ffef88d1a06994c3f9"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/blackrockspire-5.webp",
+      "sha256": "f0d479b2181d69c6483b343c310da1e457d8f92119821f09847dfb6856fb315a",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire5_1.PNG",
+          "gitBlob": "51b0bc0b8552bcb58f04054ba8e217ed44cce8ac"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire5_2.PNG",
+          "gitBlob": "8b3dbffecba56f46cd4148029adf1d8edd05cb57"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire5_3.PNG",
+          "gitBlob": "fb0ff32b5ad04bb7c051817a00c9cbec4aceb3ca"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire5_4.PNG",
+          "gitBlob": "275bc7944457d78799ddc7aa704ec05df199cce5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire5_5.PNG",
+          "gitBlob": "46af34896157f01828da4a86d88c7b2593a8ef94"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire5_6.PNG",
+          "gitBlob": "9abfc5d332018ca92f8bdb355fc4461223f0e0f6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire5_7.PNG",
+          "gitBlob": "d343504f273202004573c43190b40dee4e56b9d9"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire5_8.PNG",
+          "gitBlob": "2ae54f8317f75da4638a99bf47239089f1956e75"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire5_9.PNG",
+          "gitBlob": "dff326840d2b044ac0735f198f4bd980e3b978fc"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire5_10.PNG",
+          "gitBlob": "7be6af77592d56353093742b1bae2c3984e22fb6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire5_11.PNG",
+          "gitBlob": "8fde9b1a2b11033f66858fd4824cfa45c1018894"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire5_12.PNG",
+          "gitBlob": "ad89b533f4a3d8cfacb93d1c0b73eb2701ea18e0"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/blackrockspire-6.webp",
+      "sha256": "d41f539f2591f372cf9a00894ff41d3317ab849957113073fa0f3338f35b1cc1",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire6_1.PNG",
+          "gitBlob": "4989108c9ab4575815705988fba2872bbb193890"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire6_2.PNG",
+          "gitBlob": "0f3ef742e0bba91a1d7927361b0196bfbf5d2190"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire6_3.PNG",
+          "gitBlob": "4962d513e333ae59ea071d35360bac60704f9c59"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire6_4.PNG",
+          "gitBlob": "c870f85c6d13e6133fb0fa2adc00451ea1511f31"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire6_5.PNG",
+          "gitBlob": "7dfc0eef10b4fe2ab4c81fdffd6edcb7f05ab5de"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire6_6.PNG",
+          "gitBlob": "caacf00aaed8a1f6e8bea10bbfccc2ac75c5c73c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire6_7.PNG",
+          "gitBlob": "61d1ff8872eb9fba51c99d417212e7e2e7c745fc"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire6_8.PNG",
+          "gitBlob": "6806b5c86392f49f1f3a57807f6d27e623e732be"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire6_9.PNG",
+          "gitBlob": "9e9b1b024aa56a28e3e6a477f548199a274ec570"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire6_10.PNG",
+          "gitBlob": "42358eefeca41c82f68710d5c7538aa74a4046da"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire6_11.PNG",
+          "gitBlob": "d03eec5be260717174a7290d97b52004b1527e14"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire6_12.PNG",
+          "gitBlob": "6c0226a4ce3226eed350f40e8bb6474f393d9a45"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/blackrockspire-7.webp",
+      "sha256": "78d2cb6cfed16d4b8c528d56a82c016d44210529e316dd01b36e91d845cb7404",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire7_1.PNG",
+          "gitBlob": "464ef5c2fe4d0b178542801a212d34cf82ef2335"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire7_2.PNG",
+          "gitBlob": "7182f30f0bad46122664f01c21c23f7db2abc3ae"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire7_3.PNG",
+          "gitBlob": "591aae33b090b3fb1dca2fa70a2578b53754f8aa"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire7_4.PNG",
+          "gitBlob": "a16e1eff0910311f5098cfce6b351cf04f639c5e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire7_5.PNG",
+          "gitBlob": "a79c6e11273f71721e8476abd5e957ad970dd7ea"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire7_6.PNG",
+          "gitBlob": "5496f110bb9a42c803e25f11f0a9047d63059fc6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire7_7.PNG",
+          "gitBlob": "4fa41870fa69ac62625aa8f46f3a9cce2f8f4ddc"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire7_8.PNG",
+          "gitBlob": "94ce6919e108cd3b132a66e95ba40533058d67dd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire7_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire7_10.PNG",
+          "gitBlob": "7b7706b2cfe4e7af9fc53928d850db699b25b9ab"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire7_11.PNG",
+          "gitBlob": "7a968e8daf2ac1e40b51f920486a5be024fa0142"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/BlackrockSpire/BlackrockSpire7_12.PNG",
+          "gitBlob": "26a538f0e3653d53b07e7fc30e93de31b2297c69"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/diremaul-1.webp",
+      "sha256": "70354652df065f80216491f33ccdbb756d338106edd96a2cd741d2a6719b6bc0",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul1_1.PNG",
+          "gitBlob": "c4476654513151b023178130acbee4ecd178dfde"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul1_2.PNG",
+          "gitBlob": "a1d518c540ab863b8a89daaddc5462c7ff071c61"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul1_3.PNG",
+          "gitBlob": "cf8dda162c24a389fb11c9c26cf74851c7c5eb4e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul1_4.PNG",
+          "gitBlob": "6813406c3e863a118be9b0993b88efa35c446885"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul1_5.PNG",
+          "gitBlob": "b38612a56cb2a6ed75d528e1eb49e9764ffd38fc"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul1_6.PNG",
+          "gitBlob": "01b09218878e5adc166f7e6cdd38ba817d2689d8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul1_7.PNG",
+          "gitBlob": "33a697d81f21bba85308c50f732ec0e86aed6099"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul1_8.PNG",
+          "gitBlob": "cda13bd6c0a9778a425bfd55e9299d325ba1cced"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul1_9.PNG",
+          "gitBlob": "44b6e24ae90d59dc51bebb638ed860a77ba23784"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul1_10.PNG",
+          "gitBlob": "90c83900c35ffdfc95b10c4c7743b3f720dd9a7d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul1_11.PNG",
+          "gitBlob": "f194b75b807da3e0360b9c77b711889859518514"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul1_12.PNG",
+          "gitBlob": "8105d741517cb14a55fe7d8e6243597967afc6c9"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/diremaul-2.webp",
+      "sha256": "6c91897ce4fc6a6e7b6247ead9ea41e134d6a3ca2d3c418878396b40009acb46",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul2_1.PNG",
+          "gitBlob": "5f3930067624e97f384ea8251b648222a183e485"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul2_2.PNG",
+          "gitBlob": "0535185d9fbb5be1f97cd9e170d7b0682d762b0f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul2_3.PNG",
+          "gitBlob": "fe755cff11b61a4d8c58de731887c362911225e1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul2_4.PNG",
+          "gitBlob": "3d0fe97b238f76775b461b45a564cf41281f2f35"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul2_5.PNG",
+          "gitBlob": "23bf8ef1064f4f3c93622b02879d1427e9096078"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul2_6.PNG",
+          "gitBlob": "53fb3560fbaefd248518f1b8acc65ac01f978a3a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul2_7.PNG",
+          "gitBlob": "ab82c0cbe0d93b8b153841803c300328574b6493"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul2_8.PNG",
+          "gitBlob": "db078307d940441a892d116db69793c1d7bd241c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul2_9.PNG",
+          "gitBlob": "492c15f3e2e561570a0c5ceba3ecde655d5067a6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul2_10.PNG",
+          "gitBlob": "95045b84e23a5ccd2aff71a23ca5236312da638b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul2_11.PNG",
+          "gitBlob": "177f3d6900eb4b9f7fd4c039d99a5dcb28a00df7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul2_12.PNG",
+          "gitBlob": "555ba819975477f17af8f3c587a3cc0b5862f11b"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/diremaul-3.webp",
+      "sha256": "e83fcf8bd8e49b4e447e19b8749b7fa69fbb2ec800af6c81c4bd21934b777c37",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul3_1.PNG",
+          "gitBlob": "72484323a4491471347b6c70f122507e5f40fec5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul3_2.PNG",
+          "gitBlob": "c58993eb2cf42742959c9c4d7cb0328d70c5e6aa"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul3_3.PNG",
+          "gitBlob": "f0decdebdc7a15f5316578c7144ab4b750660e2d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul3_4.PNG",
+          "gitBlob": "cc0d23e5a992cdbbb09121b4247050e613e02ce5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul3_5.PNG",
+          "gitBlob": "0fe753353501b072926c4fc19c48ff64c22ba7df"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul3_6.PNG",
+          "gitBlob": "3f3f3583d21b6ed8e30ce6305035bfd3f9e7d277"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul3_7.PNG",
+          "gitBlob": "d6941a0419ff6ab445b39dc49c45709e65a488d3"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul3_8.PNG",
+          "gitBlob": "c6760c7356f1a7d8730ba2fe6602681bdb398d85"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul3_9.PNG",
+          "gitBlob": "d4fd9a6234e9ca32564bbca0e4e2770b85ec003c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul3_10.PNG",
+          "gitBlob": "4ef44e37c4a1968539f4353e504a10e41cabe884"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul3_11.PNG",
+          "gitBlob": "48fd8bb7e61068c0e84e4df5df4b20b01779e8d3"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul3_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/diremaul-4.webp",
+      "sha256": "3ebdaf746755e85bed437e0cdcf0063e5f769d2417b2250ee6efc2516e063732",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul4_1.PNG",
+          "gitBlob": "77b867024e0ba92a785f6f0cd68a43dd7d098640"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul4_2.PNG",
+          "gitBlob": "3d4d598fc9781fd06e7dfa0764916703a6c39662"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul4_3.PNG",
+          "gitBlob": "db21923117c28226055891e9cc9f0fc5a5bc7dd9"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul4_4.PNG",
+          "gitBlob": "57b5c26707ec0c9dbc02794adef045c9c927fbdd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul4_5.PNG",
+          "gitBlob": "32a89b3ccb6b3bb1deed1dac3010e6cd7b98b32f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul4_6.PNG",
+          "gitBlob": "51fdc0f5398321fa2376432a79545e9ce9dea780"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul4_7.PNG",
+          "gitBlob": "df467e2936b7649953ffe2ffb1719f3624eb1d2b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul4_8.PNG",
+          "gitBlob": "04787e8591a4a9b00a418c7ae56c56a2c1672955"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul4_9.PNG",
+          "gitBlob": "87f534f5d3ac30bfab082d7bba6ee3bdaf8afa80"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul4_10.PNG",
+          "gitBlob": "c730828b180e21d02d8b0ab3e7c58ffb1ae1eadf"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul4_11.PNG",
+          "gitBlob": "a33507c83b038770eb85da598d4aca7ec25e3916"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul4_12.PNG",
+          "gitBlob": "c1aff2e332526a6d637368b9c0633dad3d3caa7f"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/diremaul-5.webp",
+      "sha256": "59066d1c276614bfce228a5dff4c523e11ea1b1d6db21429ae903d8ca2c1f70f",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul5_1.PNG",
+          "gitBlob": "faad860f07840a5a86d5ecb2f2b69f6203e9baef"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul5_2.PNG",
+          "gitBlob": "9e53c43b4190ec4fa7f9c02fb4424468af77eb0f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul5_3.PNG",
+          "gitBlob": "12f595108a4360c0e60b393813c83e40742fe191"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul5_4.PNG",
+          "gitBlob": "78542b4bd549fa384397ba3552588f46ba2713cf"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul5_5.PNG",
+          "gitBlob": "82f218c8f92f57d042498918399ae2e73d7bdb41"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul5_6.PNG",
+          "gitBlob": "2f3bf0d3e4bb958a7ff8c10209e7807a86639908"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul5_7.PNG",
+          "gitBlob": "72c8b1d8540b3bc4ce12d7310e496481b7cbf218"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul5_8.PNG",
+          "gitBlob": "ddbc52790de709b01eca938836e407e8fe64d58e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul5_9.PNG",
+          "gitBlob": "52fb7a8f26cc0a6994789a3adbb39a644a6aa0de"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul5_10.PNG",
+          "gitBlob": "417a831b643744fde10a910969c378d56b8a6605"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul5_11.PNG",
+          "gitBlob": "c92e3dc707e21534ebc281b6e0c84787abc9ea6c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul5_12.PNG",
+          "gitBlob": "b08a1d109296db2cd8c2d09d6b115a39f36672ba"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/diremaul-6.webp",
+      "sha256": "18b5f3da72fd386a619ef8393f884d51db4d85103857ffa1d4723446248a95be",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul6_1.PNG",
+          "gitBlob": "33e7eaedd8a4fe2b0394292372d061fd500ea1fa"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul6_2.PNG",
+          "gitBlob": "f27a5dc3ee4c85022023e91e0b2af7fc90f5b7d6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul6_3.PNG",
+          "gitBlob": "4cac59b1c5588f5d7e4a65df0a6b831edd062256"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul6_4.PNG",
+          "gitBlob": "1881e67db501165eb7c2feb15a6c20fe8d89a08c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul6_5.PNG",
+          "gitBlob": "329d95bd316f066da625f311e28afeea191d9ac8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul6_6.PNG",
+          "gitBlob": "dd95ff907ae0b6425e7a8a4659ea51122bbd4a2a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul6_7.PNG",
+          "gitBlob": "4dba692eced7ff2442af7c1e11ad7bdac238a465"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul6_8.PNG",
+          "gitBlob": "c6760c7356f1a7d8730ba2fe6602681bdb398d85"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul6_9.PNG",
+          "gitBlob": "0fcbb271c3615b1bb516ca3a51855d36609046b1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul6_10.PNG",
+          "gitBlob": "5111fdbcecbc55247897cce7a7f00a295be97cb7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul6_11.PNG",
+          "gitBlob": "4cc274145c5f49c73de7bcc9482c244a8a4bf64f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/DireMaul/DireMaul6_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
       "path": "maps/dungeons/gnomeregan-1.webp",
       "sha256": "9650ed65605c6c43f782153933727bbf68a7770ab834ff6fd7fea1ab3dae463c",
       "tiles": [
@@ -1939,6 +2795,174 @@
         },
         {
           "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Gnomeregan/Gnomeregan4_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/maraudon-1.webp",
+      "sha256": "89eea4d64a0d1a9226dbcb339ca0f1be96f2322f54fa0f3caea5335ae9003635",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon1_1.PNG",
+          "gitBlob": "9da3050fd6d70d2374f7f26dca85da444c7b5b52"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon1_2.PNG",
+          "gitBlob": "c1e9de72976960239189fd972d88c144380a9bb6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon1_3.PNG",
+          "gitBlob": "89b9f1246a1629c3a158256e301c6643323ad3f8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon1_4.PNG",
+          "gitBlob": "3d3e9cacae77beb9db2f03fc352a342332404ac6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon1_5.PNG",
+          "gitBlob": "654fab7e3a4d801a5eb03afa3331c786eb734e86"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon1_6.PNG",
+          "gitBlob": "6cecd44211d26843a11808add8ced970c349eaed"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon1_7.PNG",
+          "gitBlob": "4cd00a83d55f52651602ec1a5e2651c0d57db71c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon1_8.PNG",
+          "gitBlob": "03b7b750f6f5b5a53dbe16ea71b2f0c4831ec2c2"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon1_9.PNG",
+          "gitBlob": "3263c2c5ca11c7695a14d5db6be38a283ded289c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon1_10.PNG",
+          "gitBlob": "a55ebed47faddb7372050fa04a7bcca52a4d5cdb"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon1_11.PNG",
+          "gitBlob": "9c5332089dc2de237cb8f4972e4fbf0e17b3ac38"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon1_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/maraudon-2.webp",
+      "sha256": "0fa00a3db977d563d0a00f707353a9d35cfebf802f49bf50607b203265389448",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon2_1.PNG",
+          "gitBlob": "433120c6ccfa5c9e6d011d0f30dd3f03486b4664"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon2_2.PNG",
+          "gitBlob": "db425aa82b8fb87af9cdaf9c3d105c76598d171a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon2_3.PNG",
+          "gitBlob": "3aa1312a01b9cf873a3b84d2f7d60d4c06d9f105"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon2_4.PNG",
+          "gitBlob": "6c07bc3b89c3c54d17a25c59f7b4a575a9adcff4"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon2_5.PNG",
+          "gitBlob": "d383c4683d492f18ec5c319d663786e7a3a2a4ec"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon2_6.PNG",
+          "gitBlob": "b4a342550d4f74ca52f5d5d78cb9669461166860"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon2_7.PNG",
+          "gitBlob": "fc117f11f3bddcf8932e7d338bb959b8ad8ac4fb"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon2_8.PNG",
+          "gitBlob": "4f4bd80a0f79d6064bf20aa7ac8610a4940dfea3"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon2_9.PNG",
+          "gitBlob": "0a3bcb20a7fe200b25a0ce1895fec272f77c415e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon2_10.PNG",
+          "gitBlob": "d5e332b062418ea6d7931256181a9d60aa91f7c4"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon2_11.PNG",
+          "gitBlob": "f807c94813a40ae15453ad2150135dcea2fa9a4d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Maraudon/Maraudon2_12.PNG",
+          "gitBlob": "0a8bd9e695664e8c7ccf40c1e8821543551b7471"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/onyxiaslair-1.webp",
+      "sha256": "e78a44c229cc19a6a830c41efb79e9b74d45e858391a104ec181987cde4e86f3",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/OnyxiasLair/OnyxiasLair1_1.PNG",
+          "gitBlob": "022361c9a292cf3c7d86af846bb06d4c4cd9e6b8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/OnyxiasLair/OnyxiasLair1_2.PNG",
+          "gitBlob": "b4ebc6ab3cf702f28b83f7c1ea2d231fe38010a3"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/OnyxiasLair/OnyxiasLair1_3.PNG",
+          "gitBlob": "080281edb71602d3fa7a9fe0d530f0f246038ac4"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/OnyxiasLair/OnyxiasLair1_4.PNG",
+          "gitBlob": "edbde67c2dc6e897c3dff1ef019ea1f35c5a6965"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/OnyxiasLair/OnyxiasLair1_5.PNG",
+          "gitBlob": "9b6c0ec6edaeb3e8d3fceec0381e489926c3b0da"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/OnyxiasLair/OnyxiasLair1_6.PNG",
+          "gitBlob": "0308d0d867dd2b2464aed8cac906563f72054df1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/OnyxiasLair/OnyxiasLair1_7.PNG",
+          "gitBlob": "3d80581cd16dffa4970799a3a99fcf3b420238cd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/OnyxiasLair/OnyxiasLair1_8.PNG",
+          "gitBlob": "771b19317678c1db16c6ffb622aeb7ea95bbb0b4"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/OnyxiasLair/OnyxiasLair1_9.PNG",
+          "gitBlob": "16d12a9b34e669048221d4d99e4e320c428677aa"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/OnyxiasLair/OnyxiasLair1_10.PNG",
+          "gitBlob": "27c1910269f7654ccf5c8ec1eff3df987634f2cd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/OnyxiasLair/OnyxiasLair1_11.PNG",
+          "gitBlob": "4f1589d8fc303fded87b9a36ab817347b94ec133"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/OnyxiasLair/OnyxiasLair1_12.PNG",
           "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
         }
       ],
@@ -2338,6 +3362,230 @@
       "height": 668
     },
     {
+      "path": "maps/dungeons/scholomance-1.webp",
+      "sha256": "7df3d20e14fe61c84e68c9fd24d884ef11a0668b3fe5186127af7e5308b42d53",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance1_1.PNG",
+          "gitBlob": "2efcdc73a2809dae8d2322a653575861d1c2efe4"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance1_2.PNG",
+          "gitBlob": "1ef99f2d5917fd753537a847211401495daae642"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance1_3.PNG",
+          "gitBlob": "6d4b67dce79153644043ae6f3279d027b4c27803"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance1_4.PNG",
+          "gitBlob": "74572b7db60b3b4a59b9f730edfa109252d725ca"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance1_5.PNG",
+          "gitBlob": "8c22474301abe9a1b1cd9ce7e995b44bb0b94d6a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance1_6.PNG",
+          "gitBlob": "22e148581b0094423fb3fa7338893619fb89b038"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance1_7.PNG",
+          "gitBlob": "7bf01efdf9e6ea5a998d705c2cfaba0f37d2b99d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance1_8.PNG",
+          "gitBlob": "15b1004c0b9e3c185f35e2bc5974d718ec44ba99"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance1_9.PNG",
+          "gitBlob": "b6cf1e68f828e53304b7f1b2e44560279f22b966"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance1_10.PNG",
+          "gitBlob": "3ecccee7f06bab017ac0a5303a243f6948fbc782"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance1_11.PNG",
+          "gitBlob": "91ff7dbd8793c92d9a058ef04a9915b621153631"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance1_12.PNG",
+          "gitBlob": "ec51806be4834fc817989c1afbbb2439b2cc16e2"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/scholomance-2.webp",
+      "sha256": "027fb50efa31a329d22ba12b50b1468b4744e78dcf11a329cc9b1114df356262",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance2_1.PNG",
+          "gitBlob": "15ca67921afb0206e318e9533dce0fa94f0ff2a5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance2_2.PNG",
+          "gitBlob": "23747c61fad57f0e1ddd03863ed99b83f3be7104"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance2_3.PNG",
+          "gitBlob": "3ee61c028f4bde9c9ee86c1d835342a2a2893b0a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance2_4.PNG",
+          "gitBlob": "09f6544ce94308ff88372647b01521fe7e8dafb8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance2_5.PNG",
+          "gitBlob": "1200d8890a4b7daf3056762a60bed3549d64b94a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance2_6.PNG",
+          "gitBlob": "e9ca5d9d3e52d52cec56bd54d846a168138a6f1b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance2_7.PNG",
+          "gitBlob": "2667c2f66e9dc90587274ecbfd638e2aa070dad3"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance2_8.PNG",
+          "gitBlob": "cd1d1389c94035524d85406e3fc1a2da4b01536e"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance2_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance2_10.PNG",
+          "gitBlob": "f11d92b90ccd3b72c3623c44d7c57be6e2014e4a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance2_11.PNG",
+          "gitBlob": "03be4753d3a354742cc66e534266a2d5761f0b0d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance2_12.PNG",
+          "gitBlob": "22eb118d06fe47756aeaae78319ee2e4d8e725a1"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/scholomance-3.webp",
+      "sha256": "78d63b43bd77d2bae1924ee6e9c127c9041f3d69fc2da20947b54e0504817b46",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance3_1.PNG",
+          "gitBlob": "1fa2f01bb75369d3ff70bacd275b0d05114bd0d6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance3_2.PNG",
+          "gitBlob": "a5d71c4060728463b8485e0386eddc578de692de"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance3_3.PNG",
+          "gitBlob": "c3298647b64e276df02be9834636b2c1d7c5af53"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance3_4.PNG",
+          "gitBlob": "022c8644fca8ae8f7c24a2576132919f43a46812"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance3_5.PNG",
+          "gitBlob": "9eb514991e08702a4eae3881b032e1b0ddd033bc"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance3_6.PNG",
+          "gitBlob": "ffff0fcc2bf3ee41756c83299a768a263d1868d6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance3_7.PNG",
+          "gitBlob": "7832fe0c1ed6ec67fbe0c15d8c5cfe4b315c1ca7"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance3_8.PNG",
+          "gitBlob": "017c8052953828f2196743423c5c8fd073975ec6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance3_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance3_10.PNG",
+          "gitBlob": "262666fe7a357b79a457e74c8670ab0e72042f4a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance3_11.PNG",
+          "gitBlob": "625ac530c9eed00a2e1b71d14d8522d2681b35a9"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance3_12.PNG",
+          "gitBlob": "955c8097aaec63f6ef243ecc2f782c9c100efede"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/scholomance-4.webp",
+      "sha256": "62160688ab8ea94c3a40c61cbaae93f04cfb710b5921d2212d8502ea5dc255c0",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance4_1.PNG",
+          "gitBlob": "28706689d29fdf59096562221ab9175e3b15455f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance4_2.PNG",
+          "gitBlob": "e406870d6280dfa2a46a8aff3b5d26a056fcecd3"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance4_3.PNG",
+          "gitBlob": "b5fec9dab156eb5ae59a861ff509248f83379d7a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance4_4.PNG",
+          "gitBlob": "43b342ae7dc581c6da581e341eb3f8ee2b29ea06"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance4_5.PNG",
+          "gitBlob": "85c69363fa8f66c22ff79759fa3ca733069a1ecf"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance4_6.PNG",
+          "gitBlob": "141878a41b3793717d40e88ee58c4827951418fa"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance4_7.PNG",
+          "gitBlob": "234247d0fdf65fa4ce1c7facec5562aae5b29e8c"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance4_8.PNG",
+          "gitBlob": "c0a8a6ae2fca7c7a3654bc0f50491e8a1f451ad1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance4_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance4_10.PNG",
+          "gitBlob": "6dfe24e0ddd4dd82f52baf7acb4f4c22d6437862"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance4_11.PNG",
+          "gitBlob": "7eefca40da94834c1e24a7bf4b180f99c56c3f5d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Scholomance/Scholomance4_12.PNG",
+          "gitBlob": "a30e633d95668c0bfb3df2e1c7393cb1716c84aa"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
       "path": "maps/dungeons/shadowfangkeep-1.webp",
       "sha256": "d1154280ac4e522b278f29d4fad93603c19227c56be3bb5d4b8e2108f8f81293",
       "tiles": [
@@ -2730,6 +3978,174 @@
       "height": 668
     },
     {
+      "path": "maps/dungeons/stratholme-1.webp",
+      "sha256": "7ab47db68217b3af79b316020cef712f4097c54551e1ff78dc2825495ee63c19",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme1_1.PNG",
+          "gitBlob": "b2ad85fb2d517f2017ee9f85b6ff7c6f40f25d36"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme1_2.PNG",
+          "gitBlob": "98c72f33c7b141771a448f50c503f4b75210adf9"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme1_3.PNG",
+          "gitBlob": "825bf9b703d59c4c3b21c49de1a4c99cd6e48e57"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme1_4.PNG",
+          "gitBlob": "6abd3993ba0803be8aab3c260e98bf4e1cb2f585"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme1_5.PNG",
+          "gitBlob": "468833d2d3cda3d52da527485dfe57042e0b18c1"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme1_6.PNG",
+          "gitBlob": "ba5c0e89f33069de11892bbc959161c5862c22bf"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme1_7.PNG",
+          "gitBlob": "0daf3b3f821d96ac292486fc746dbd2df4928486"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme1_8.PNG",
+          "gitBlob": "e3095e4d7bfb85efea3d9dd2d744b40774962d18"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme1_9.PNG",
+          "gitBlob": "75e7a5ce6f41374dd9aab9ece9b5abf7697d20d5"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme1_10.PNG",
+          "gitBlob": "7ffed2930303a996ab69b37e7b9cd2106fb83b28"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme1_11.PNG",
+          "gitBlob": "38a8ff6c044b6eb2257adabe8d8b50f7c77fce55"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme1_12.PNG",
+          "gitBlob": "60f16e14e36069e1a912210e9353208da65e2ac9"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/stratholme-2.webp",
+      "sha256": "440490cdaa650795beb17309dc21039977ea1acbf42905e1f2a5162311648930",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme2_1.PNG",
+          "gitBlob": "b59f14a833f5b7e7f51dff0dbae97ecc62453edd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme2_2.PNG",
+          "gitBlob": "cf0035a0113c3837b737350466acfa41bcec1576"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme2_3.PNG",
+          "gitBlob": "a090f3f216f4a5f191ed889a80e4446f3b4161dd"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme2_4.PNG",
+          "gitBlob": "cff15d6cfff461411590584582ca04155cadf499"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme2_5.PNG",
+          "gitBlob": "e5ec98be211c3740d4022326c0e7591ad85def53"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme2_6.PNG",
+          "gitBlob": "73b07d9cd53432a3e01e8ce7eb294575f0dc2af0"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme2_7.PNG",
+          "gitBlob": "8839fdc3ed10af599f3be80df3b5ea37dc6e2876"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme2_8.PNG",
+          "gitBlob": "dbd4401bde59ab8a3103e66f8c9bd1f7392c697b"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme2_9.PNG",
+          "gitBlob": "a1d60e04ec2e9768c5553d8a9b962b6485ad96ce"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme2_10.PNG",
+          "gitBlob": "88aa51c8dad38f0981582ed57d32a1d19f7bd5eb"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme2_11.PNG",
+          "gitBlob": "6bbecca8cf863f764bab95e673b2a59589a47d64"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/Stratholme/Stratholme2_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/thetempleofatalhakkar-1.webp",
+      "sha256": "4d5ef9b6b174d30256e934b8776636c685f358532626dbf94a12f919614ae7e6",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheTempleOfAtalHakkar/TheTempleOfAtalHakkar1_1.PNG",
+          "gitBlob": "53eecbffadb31f7d34a72bd6757b9a6f9983666f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheTempleOfAtalHakkar/TheTempleOfAtalHakkar1_2.PNG",
+          "gitBlob": "5a4af04a6190e8c3a7b52b0a83262d478dce1305"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheTempleOfAtalHakkar/TheTempleOfAtalHakkar1_3.PNG",
+          "gitBlob": "8b247bf118e9839a74de317b5792061e7bc0c074"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheTempleOfAtalHakkar/TheTempleOfAtalHakkar1_4.PNG",
+          "gitBlob": "f515b43665f0bcf173d15227c437af4cf4911c0f"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheTempleOfAtalHakkar/TheTempleOfAtalHakkar1_5.PNG",
+          "gitBlob": "e300e4a9ec63f14c5f54827508a017636a63134d"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheTempleOfAtalHakkar/TheTempleOfAtalHakkar1_6.PNG",
+          "gitBlob": "20165023e2e10842f14328cf3197ead456cde533"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheTempleOfAtalHakkar/TheTempleOfAtalHakkar1_7.PNG",
+          "gitBlob": "20eb2bdf20b46d6a20c9fa2396f489ccbb0459ad"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheTempleOfAtalHakkar/TheTempleOfAtalHakkar1_8.PNG",
+          "gitBlob": "f65446c3f59c8ada0323b0e247e2c8c19b630bf6"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheTempleOfAtalHakkar/TheTempleOfAtalHakkar1_9.PNG",
+          "gitBlob": "2019d33db6e44400677857810bda398957ca3162"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheTempleOfAtalHakkar/TheTempleOfAtalHakkar1_10.PNG",
+          "gitBlob": "93b0ff177aa5c5e5b89e4a10c9f3f732667d86c0"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheTempleOfAtalHakkar/TheTempleOfAtalHakkar1_11.PNG",
+          "gitBlob": "e18a323742068abab08e571bf5b2ddbf71e44647"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/TheTempleOfAtalHakkar/TheTempleOfAtalHakkar1_12.PNG",
+          "gitBlob": "9a76d8e9084e6cca51c8be61df2cdce862d0d676"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
       "path": "maps/dungeons/uldaman-1.webp",
       "sha256": "7ab27c4e6824cb5babdf403162619ee160e1dc103704a642777496ee3f5b5a7d",
       "tiles": [
@@ -2892,6 +4308,62 @@
         {
           "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/WailingCaverns/WailingCaverns1_12.PNG",
           "gitBlob": "b26027932267ed745034001119d5e7294ffd5cc0"
+        }
+      ],
+      "width": 1002,
+      "height": 668
+    },
+    {
+      "path": "maps/dungeons/zulfarrak-1.webp",
+      "sha256": "6d25a2aff36a099b19a0ffcc951fe43139b43ceacc4d7c43779b935117551b97",
+      "tiles": [
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ZulFarrak/ZulFarrak1.PNG",
+          "gitBlob": "aab71c2b99386a51c2845494e0ca0b73501113cf"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ZulFarrak/ZulFarrak2.PNG",
+          "gitBlob": "7877b5e7bf7ff67428d1ca3502d36719d788cc9a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ZulFarrak/ZulFarrak3.PNG",
+          "gitBlob": "e6cd168bcaaa648d9215a49e015b0c4ff502e120"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ZulFarrak/ZulFarrak4.PNG",
+          "gitBlob": "7e954ab3d8006e096b963fb37a7ca69e67714aae"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ZulFarrak/ZulFarrak5.PNG",
+          "gitBlob": "fcf2d07a3bff4213aeca24f5457f020b42ff9e61"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ZulFarrak/ZulFarrak6.PNG",
+          "gitBlob": "02f7a132bc7d2d8eff097b7156cde3c28b490cb8"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ZulFarrak/ZulFarrak7.PNG",
+          "gitBlob": "83a5f30c630e3d646daf11e3a161a5eb16101aec"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ZulFarrak/ZulFarrak8.PNG",
+          "gitBlob": "05a14905ac27730ce7289fd435115aa0cf828907"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ZulFarrak/ZulFarrak9.PNG",
+          "gitBlob": "b86f1dabad3d9c6f410e20eab406ce25e3e6247a"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ZulFarrak/ZulFarrak10.PNG",
+          "gitBlob": "7e890e30296b83ae2a2282ab0b3faad2e1133882"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ZulFarrak/ZulFarrak11.PNG",
+          "gitBlob": "72f212e50583d057d22ee7b72a292d5d9c0506da"
+        },
+        {
+          "source": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/WorldMap/ZulFarrak/ZulFarrak12.PNG",
+          "gitBlob": "c2334ab205c65f293948bb2a6e37eed52d39097e"
         }
       ],
       "width": 1002,

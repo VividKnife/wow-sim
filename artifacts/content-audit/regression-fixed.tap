@@ -1,0 +1,62 @@
+✔ a single Blizzard channel deals exactly eight ticks and leaves no residual damage aura (20.0711ms)
+✔ repeated Fireball refreshes its own damage aura rather than stacking copies (4.9968ms)
+✔ a resisted Frostbolt applies neither damage nor its slow effect (1.9871ms)
+✔ escort requires the active quest at Sentinel Hill and cannot be replaced by ordinary travel (33.8879ms)
+✔ escort follows all waypoints, fights with a protectable NPC, and only then grants event credit (521.2626ms)
+✔ NPC death fails escort without granting credit and permits a fresh attempt from Sentinel Hill (23.8579ms)
+✔ cancelled escort cannot later award completion and split advances preserve movement (29.4195ms)
+✔ priest heals an injured escort during real combat and the escort deals melee damage (784.8021ms)
+✔ escort death or cancellation during combat retains the actor until combat ends without awarding credit (63.7069ms)
+✔ escort does not take a share of party experience or receive player levels (33.6606ms)
+✔ personal combat opens at ten yards for melee classes (10.1491ms)
+✖ personal combat opens at the available ranged strategy range (9.3275ms)
+✔ dungeon combat keeps its authored opening formation (0.4534ms)
+✔ plans validate actors, lock in combat and survive serialization per boss (533.1626ms)
+✔ manual reserved shield wall applies the actual aura once, and rejects stale encounters or dead casters (19.3807ms)
+✔ automatic emergency skills obey health thresholds and real resource costs (6.7318ms)
+✔ scheduled shield wall covers the fear window and focus commands redirect actual damage targets (12.0721ms)
+✔ assigned dispellers are exclusive and leaving the mechanic unassigned produces observable failures (8.8007ms)
+✔ published tank and movement choices change actual initial targets and danger avoidance (8.656ms)
+✖ automatic traversal pauses before a boss and wipe review preserves the plan for the next attempt (27.9514ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 18
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5371.3047
+
+✖ failing tests:
+
+test at apps\web\test\personal-combat-spawn.test.mjs:21:1
+✖ personal combat opens at the available ranged strategy range (9.3275ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(distances.every(distance=>distance===30))
+  
+      at TestContext.<anonymous> (file:///C:/workspace/wow-sim/apps/web/test/personal-combat-spawn.test.mjs:28:9)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at packages\game-domain\test\raid-command.test.ts:82:1
+✖ automatic traversal pauses before a boss and wipe review preserves the plan for the next attempt (27.9514ms)
+  TypeError: Cannot read properties of null (reading 'enemies')
+      at TestContext.<anonymous> (file:///C:/workspace/wow-sim/packages/game-domain/test/raid-command.test.ts:84:32)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)

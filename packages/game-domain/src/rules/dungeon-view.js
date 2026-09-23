@@ -5,7 +5,7 @@ import {dungeonMap,dungeonDestinationPath} from './dungeon-map.js';
 import {dungeonQuestObjectives,dungeonQuestTargets} from './dungeon-quest-targets.js';
 import {dungeonJournal} from './dungeon-journal.js';
 import {stats,spellInfo,knownRank,countItem,bagCapacity} from './character.js';
-import {items,spells,icon} from './catalog.js';
+import {items,spells,icon,nameOf} from './catalog.js';
 import {resurrectionFor} from './recovery.js';
 
 export function recoveryView(s){
@@ -32,6 +32,7 @@ export function dungeonView(s,id=dungeonIdFor(s)){
  let interactionReason=!free?activityReason||'请先进入副本。':!encounter?.interaction?'这里没有待完成的交互。':remaining.length?'先击败看守的敌人。':'';
  if(!interactionReason&&encounter.id==='dm-cannon'&&!countItem(s,5397))interactionReason='需要迪菲亚火药。';
  if(!interactionReason&&encounter.id==='dm-gunpowder'&&s.bag.length>=bagCapacity(s)&&!countItem(s,5397))interactionReason='背包需要一个空位存放火药。';
+ if(!interactionReason)for(const [item,count]of encounter.interaction?.inputs||[])if(countItem(s,item)<count)interactionReason='需要 '+nameOf('items',item)+' ×'+count+'。';
  const map=dungeonMap(id),objectives=run?dungeonQuestObjectives(s):[],bosses=dungeonJournal.find(d=>d.id===id).bosses;
  const navigateReason=!active?'请先进入副本。':[s,...s.party].some(c=>c.hp<=0)?'先让倒下的成员复活，再继续推进。':!s.combat&&!['idle','dungeonCannon'].includes(s.activity.type)?'请先结束当前活动。':'';
  return {background:dungeonJournal.find(d=>d.id===id)?.background,active,saved:!!s.dungeonSaves?.[id],canReset:!dungeonResetReason(s,id),resetReason:dungeonResetReason(s,id),id,entrance:definition.entrance,zone:definition.zone,description:definition.description,atEntrance:s.location===definition.entrance,name:definition.name,minimumLevel:definition.minimumLevel,recommendedLevel:definition.recommendedLevel,
@@ -44,7 +45,7 @@ export function dungeonView(s,id=dungeonIdFor(s)){
   waitingForLoot:active&&!!run.autoAdvance&&!s.combat&&s.pending.length>0,
   recovering:active&&!!run.autoAdvance&&!s.combat&&!s.pending.length&&s.activity.type==='idle',
   canNext:!nextReason,nextReason,canSkip:!!(free&&encounter?.optional),canLeave:free&&!s.groupLoot?.pending.length,canInteract:!interactionReason,interactionReason,
-  interactionLabel:encounter?.id==='dm-cannon'?'装填火炮':'拾取迪菲亚火药',interactionIcon:icon('items',5397),
+  interactionLabel:encounter?.interaction?.label||(encounter?.id==='dm-cannon'?'装填火炮':'拾取迪菲亚火药'),interactionIcon:icon('items',encounter?.interaction?.inputs?.[0]?.[0]||5397),
   current:encounter?{id:encounter.id,name:encounter.nameZh,kind:encounter.kind,optional:!!encounter.optional,interaction:!!encounter.interaction,enemies}:null,
   route:route.map((e,i)=>{
    const mobs=run?remainingDungeonEnemies(context,e):[],entries=[...new Set(mobs.map(m=>m.entry))];

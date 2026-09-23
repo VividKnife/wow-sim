@@ -1,53 +1,29 @@
 {
   "revision": "b852b560442b31579e77ef3967b3c2d594832da8",
   "spells": {
-    "15584": {
-      "nameZhCN": "顺劈斩",
-      "icon": "assets/ability_warrior_cleave.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15584?locale=4",
-      "tooltipSha256": "306acaf8c53178094dbc7e7761fbb45d7c7a1fd8b0e4722d4e7112ebc961c703"
-    },
-    "20800": {
-      "nameZhCN": "献祭",
+    "184": {
+      "nameZhCN": "火焰之盾 II",
       "icon": "assets/spell_fire_immolation.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/20800?locale=4",
-      "tooltipSha256": "13a697a816ad4d48a3ac10cd7e944baf5524b703dd1c8184061e674b0a7cb248"
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/184?locale=4",
+      "tooltipSha256": "f620f2587a7bc0f4a72f668aa0cac3c6d21a26df3d65ea7c2bda9bccc55cbdea"
     },
-    "18267": {
-      "nameZhCN": "虚弱诅咒",
-      "icon": "assets/spell_shadow_curseofmannoroth.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18267?locale=4",
-      "tooltipSha256": "113d9125f7e990e2bc5b79e3ef2e523cb72ed9993abd5b51e92f3b58a1fda765"
+    "246": {
+      "nameZhCN": "减速术",
+      "icon": "assets/spell_nature_slow.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/246?locale=4",
+      "tooltipSha256": "c3fb3f0dfea7f278e9c2936c3c87f432243d4d996dfcf6a841175b544ac3c86a"
     },
-    "3616": {
-      "nameZhCN": "Poison Proc",
-      "icon": "assets/spell_shadow_requiem.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3616?locale=4",
-      "tooltipSha256": "164832de221879f83395748c762810612c2978d6109265510251255eb8919762"
+    "421": {
+      "nameZhCN": "闪电链",
+      "icon": "assets/spell_nature_chainlightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/421?locale=4",
+      "tooltipSha256": "35a2bc8f5184e575ec118b34414f9556e2dfcf94b46a5732a9daa3793c43b559"
     },
-    "14873": {
-      "nameZhCN": "邪恶攻击",
-      "icon": "assets/spell_shadow_ritualofsacrifice.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14873?locale=4",
-      "tooltipSha256": "6fa3bd93e5f67ca67ce1a53374ba977ca632c954c91371804f6cb4530ac8abc5"
-    },
-    "18072": {
-      "nameZhCN": "上钩拳",
-      "icon": "assets/inv_gauntlets_05.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18072?locale=4",
-      "tooltipSha256": "4da956abec8cd46e4685630586714276c25edccd81ffbf4471b993ff0da9122b"
-    },
-    "11970": {
-      "nameZhCN": "火焰新星",
-      "icon": "assets/spell_fire_sealoffire.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11970?locale=4",
-      "tooltipSha256": "e18a5d851bfb7a8fe5f5b1037b6b40c1625ae82126f2567be649d6108617cf1d"
-    },
-    "5187": {
-      "nameZhCN": "治疗之触",
-      "icon": "assets/spell_nature_healingtouch.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5187?locale=4",
-      "tooltipSha256": "dbaa65d4982f1d65beb4d73403d6b85012a335300fcdab7d5c86cece4582ae37"
+    "674": {
+      "nameZhCN": "双武器",
+      "icon": "assets/ability_dualwield.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/674?locale=4",
+      "tooltipSha256": "c403db4bd65146eade2879e855cca4948ab35b40e1d19729fdb21041670fc23e"
     },
     "700": {
       "nameZhCN": "催眠术",
@@ -55,95 +31,29 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/700?locale=4",
       "tooltipSha256": "070a5584f79160eb055aca86e206809a40b1eb650c74d8dc613fe6b1c519180e"
     },
-    "8148": {
-      "nameZhCN": "荆棘光环",
-      "icon": "assets/spell_nature_thorns.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8148?locale=4",
-      "tooltipSha256": "c8fc0d61f9477ecbf84e702e3a715282ea40d985f7c9e465d55f6e77174d50d1"
+    "865": {
+      "nameZhCN": "冰霜新星",
+      "icon": "assets/spell_frost_frostnova.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/865?locale=4",
+      "tooltipSha256": "4a22fc0498931fcd1dceb19b40da2735ef816708195a7781b50bd2ff0d10f60b"
     },
-    "9532": {
-      "nameZhCN": "闪电箭",
-      "icon": "assets/spell_nature_lightning.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9532?locale=4",
-      "tooltipSha256": "6a34a84fd0e817d75c049873ab08ecdbdcb5ee88d06fb7fcd8ce9fe21877f2f5"
+    "1026": {
+      "nameZhCN": "圣光术",
+      "icon": "assets/spell_holy_holybolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/1026?locale=4",
+      "tooltipSha256": "4ecf7bffcae6b32c667ea3ec6f0e496d1479d6aa2f843f83ccaa23fcb8585e42"
     },
-    "7965": {
-      "nameZhCN": "考布莱恩毒蛇形态",
-      "icon": "assets/spell_nature_guardianward.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7965?locale=4",
-      "tooltipSha256": "57c7e12bc5ae56d1d7595b1a2910f0f3e9f5487855043da7d249b575a2df582f"
+    "2484": {
+      "nameZhCN": "地缚图腾",
+      "icon": "assets/spell_nature_strengthofearthtotem02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2484?locale=4",
+      "tooltipSha256": "7a913ec9f5d5ea0b89d8a8278825b94080080232e4b550fa26d02b06a1d92832"
     },
-    "5188": {
-      "nameZhCN": "治疗之触",
-      "icon": "assets/spell_nature_healingtouch.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5188?locale=4",
-      "tooltipSha256": "6960da0b097637ac057cfef06f78be9e64fbb02e02cf7583d4c2ae1c0676d6a3"
-    },
-    "8040": {
-      "nameZhCN": "德鲁伊的睡眠",
-      "icon": "assets/spell_nature_sleep.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8040?locale=4",
-      "tooltipSha256": "b98e38a96db951f4ad3232a0d9950b94d664fa0fe7a5f17b774953c19ef3616e"
-    },
-    "8147": {
-      "nameZhCN": "雷霆一击",
-      "icon": "assets/spell_nature_thunderclap.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8147?locale=4",
-      "tooltipSha256": "85b7855b4652203ca2a145d32c0f7ddec43350477321ca144e42e0315474299f"
-    },
-    "6778": {
-      "nameZhCN": "治疗之触",
-      "icon": "assets/spell_nature_healingtouch.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6778?locale=4",
-      "tooltipSha256": "4a6297e7ce754d2ffa8b2f03f58b4b602de6488037e2302f9d1b45731d4afb5b"
-    },
-    "8150": {
-      "nameZhCN": "雷霆震裂",
-      "icon": "assets/spell_nature_thunderclap.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8150?locale=4",
-      "tooltipSha256": "3a3b05f298a652650b0fe13e71f8170dc58c3c548676e145d27fb44339b79fcd"
-    },
-    "7967": {
-      "nameZhCN": "纳拉雷克斯的梦魇",
-      "icon": "assets/spell_nature_sleep.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7967?locale=4",
-      "tooltipSha256": "63cf5643f34affc66e33a1da064e37107792313cc91946f7867af67ce091c14e"
-    },
-    "7399": {
-      "nameZhCN": "恐吓",
-      "icon": "assets/ability_physical_taunt.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7399?locale=4",
-      "tooltipSha256": "41ce5adbfe63cf7cc33e3832bcb8206bdcb7c44a6bf8942be1d89bd63ea69773"
-    },
-    "6254": {
-      "nameZhCN": "闪电链",
-      "icon": "assets/spell_nature_chainlightning.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6254?locale=4",
-      "tooltipSha256": "65c2045437868f143374d03dd4577b47a862b9d89a82e2e25cbf297e9dfd00af"
-    },
-    "8142": {
-      "nameZhCN": "缠绕之藤",
-      "icon": "assets/spell_nature_earthquake.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8142?locale=4",
-      "tooltipSha256": "0cbf1cd67a0da6e540558093d89cf78ca32030f1b56ec7c90eaac2222d7d228a"
-    },
-    "7939": {
-      "nameZhCN": "隐秘行动",
-      "icon": "assets/ability_stealth.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7939?locale=4",
-      "tooltipSha256": "9481c37a4e2270ad403d875b9f434147a090a5f05ff075c40ba822022c59f7b6"
-    },
-    "22766": {
-      "nameZhCN": "隐秘行动",
-      "icon": "assets/ability_stealth.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22766?locale=4",
-      "tooltipSha256": "dca4aaba6d8efb3243c81e19dedc3a1ad7cd6435573d078f1436e48c84b27d4b"
-    },
-    "7964": {
-      "nameZhCN": "烟雾弹",
-      "icon": "assets/ability_hibernation.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7964?locale=4",
-      "tooltipSha256": "f19d57a0a8b9ab32c40a43336ec3c5c17e966425c49f610a9f57ee67e1994815"
+    "3356": {
+      "nameZhCN": "烈焰鞭笞",
+      "icon": "assets/spell_fire_fireball.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3356?locale=4",
+      "tooltipSha256": "6c1b9d3c031bab82b69b839e853541573acc769ee428204b74a9c567e9b0cdba"
     },
     "3417": {
       "nameZhCN": "痛击",
@@ -151,29 +61,11 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3417?locale=4",
       "tooltipSha256": "9160c511226a060a89ceef585fa53bbaf3b7473e769a8111dc390ef16b7065d7"
     },
-    "8041": {
-      "nameZhCN": "毒蛇形态",
-      "icon": "assets/ability_racial_bearform.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8041?locale=4",
-      "tooltipSha256": "7b69b68a0088215b138e21b3215fbe5d0d963fee508852a04ac7ce92b95f65d9"
-    },
-    "6304": {
-      "nameZhCN": "拉克佐猛击",
-      "icon": "assets/inv_gauntlets_05.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6304?locale=4",
-      "tooltipSha256": "7b3b0278563ad09779953abab7bcc086ac03c6bccae617fc5532e1c7c06c3deb"
-    },
-    "12097": {
-      "nameZhCN": "刺穿护甲",
-      "icon": "assets/spell_shadow_vampiricaura.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12097?locale=4",
-      "tooltipSha256": "8eb165d8d94c14f39def7e579461354d24f8ce9731c69466f9bff73121430a1a"
-    },
-    "6713": {
-      "nameZhCN": "缴械",
-      "icon": "assets/ability_warrior_disarm.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6713?locale=4",
-      "tooltipSha256": "e9be720985b71d28f6d4efe0de9af76390e695efa62d02ef683f56c6f9a31087"
+    "3490": {
+      "nameZhCN": "狂暴怒气",
+      "icon": "assets/spell_shadow_unholyfrenzy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3490?locale=4",
+      "tooltipSha256": "d5b69e947bcc33069516442e518875e4495585968bc12955aa2b03d2de18ce5c"
     },
     "3603": {
       "nameZhCN": "扰乱之痛",
@@ -181,11 +73,149 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3603?locale=4",
       "tooltipSha256": "02b1d8b2e1e294c0a21db493dff42567e686227d6f853066bd2abb6c6e925666"
     },
+    "3609": {
+      "nameZhCN": "麻痹之毒",
+      "icon": "assets/ability_poisonsting.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3609?locale=4",
+      "tooltipSha256": "88bf7b04dabefe8b782e5468fdcbc60cbbcd8882381bedff6108c8e03f69c49a"
+    },
+    "3616": {
+      "nameZhCN": "Poison Proc",
+      "icon": "assets/spell_shadow_requiem.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3616?locale=4",
+      "tooltipSha256": "164832de221879f83395748c762810612c2978d6109265510251255eb8919762"
+    },
+    "3639": {
+      "nameZhCN": "强化格挡",
+      "icon": "assets/spell_fire_firearmor.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3639?locale=4",
+      "tooltipSha256": "6f2f20c2cb1562493e7f70ada3bb408a3b99613f6b5d432422c9791a8dbb8688"
+    },
+    "3815": {
+      "nameZhCN": "毒云术",
+      "icon": "assets/spell_nature_regenerate.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3815?locale=4",
+      "tooltipSha256": "9c5928c43771be14b370383f9334f18ec6404dc96f95f1ab0c52c6390444c395"
+    },
+    "4962": {
+      "nameZhCN": "覆体之网",
+      "icon": "assets/spell_nature_earthbind.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/4962?locale=4",
+      "tooltipSha256": "c2263bbb7ea37adcb58a84b4a258f0134044d222c6afc440b17774f09dcd32a2"
+    },
+    "5137": {
+      "nameZhCN": "火焰的召唤",
+      "icon": "assets/spell_shadow_chilltouch.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5137?locale=4",
+      "tooltipSha256": "3e14f2efe42e64861b6a1e1177bcb9e6a2fead23ae4f55ea074ab1da9d219aad"
+    },
+    "5174": {
+      "nameZhCN": "烹制甜点",
+      "icon": "assets/spell_holy_heal.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5174?locale=4",
+      "tooltipSha256": "8a3066526a7b427f3073fb700ecd937ec9a04cc9d501ee857e9d2bc1f3cdd412"
+    },
+    "5187": {
+      "nameZhCN": "治疗之触",
+      "icon": "assets/spell_nature_healingtouch.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5187?locale=4",
+      "tooltipSha256": "dbaa65d4982f1d65beb4d73403d6b85012a335300fcdab7d5c86cece4582ae37"
+    },
+    "5188": {
+      "nameZhCN": "治疗之触",
+      "icon": "assets/spell_nature_healingtouch.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5188?locale=4",
+      "tooltipSha256": "6960da0b097637ac057cfef06f78be9e64fbb02e02cf7583d4c2ae1c0676d6a3"
+    },
+    "5200": {
+      "nameZhCN": "范克里夫的盟友",
+      "icon": "assets/temp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5200?locale=4",
+      "tooltipSha256": "e6de7fe1903d53572fa14051c237f375e20700d21b3d68ea17c854bc514edda5"
+    },
+    "5208": {
+      "nameZhCN": "毒性鱼叉",
+      "icon": "assets/ability_poisons.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5208?locale=4",
+      "tooltipSha256": "1b1b12de8095c403d520d1f168a6c12d94801074e6d063c3078ddbf390b084ac"
+    },
     "5213": {
       "nameZhCN": "熔铁之水",
       "icon": "assets/spell_fire_fireball.png",
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5213?locale=4",
       "tooltipSha256": "0f4e7db73c78d5f9d6c9b7391139598c8777e784deb21cb560d7547d83bd2ff0"
+    },
+    "5532": {
+      "nameZhCN": "顺劈斩",
+      "icon": "assets/ability_warrior_cleave.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5532?locale=4",
+      "tooltipSha256": "66bf940d282c3197fb8263d4fafb7628f332f76bd4a283cb21db56025b829aba"
+    },
+    "5568": {
+      "nameZhCN": "践踏",
+      "icon": "assets/spell_nature_natureswrath.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5568?locale=4",
+      "tooltipSha256": "f764918a4b0aa907f519344f527f89e6453bd81e26c1bb27a5375bd92e2f38cb"
+    },
+    "5588": {
+      "nameZhCN": "制裁之锤",
+      "icon": "assets/spell_holy_sealofmight.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5588?locale=4",
+      "tooltipSha256": "696d02ceb48f12e0a8d242a88ea8a7667226be411a74d6ec3e3c1919bf79e12a"
+    },
+    "5589": {
+      "nameZhCN": "制裁之锤",
+      "icon": "assets/spell_holy_sealofmight.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5589?locale=4",
+      "tooltipSha256": "3e9f949140d1bec80b771f0f7515a3fb9c1556f640b9be7c24faee616b725935"
+    },
+    "6016": {
+      "nameZhCN": "刺穿护甲",
+      "icon": "assets/spell_shadow_vampiricaura.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6016?locale=4",
+      "tooltipSha256": "bb75475b85e66caa5d795fd67d1708e69262afed1f4a115d9239a0f7766f3a87"
+    },
+    "6077": {
+      "nameZhCN": "恢复",
+      "icon": "assets/spell_holy_renew.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6077?locale=4",
+      "tooltipSha256": "0f8c2762d18a8b00673ee9aafd6007ae7a67f089f079897d5ac8b48d17bb4cc0"
+    },
+    "6192": {
+      "nameZhCN": "战斗怒吼",
+      "icon": "assets/ability_warrior_battleshout.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6192?locale=4",
+      "tooltipSha256": "5b864a71af591a7706c3dbdc13c41497f8e5a68a50e29c11c4b82dc3961f3bfb"
+    },
+    "6253": {
+      "nameZhCN": "反手一击",
+      "icon": "assets/inv_gauntlets_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6253?locale=4",
+      "tooltipSha256": "eaced062907268f985c566ea210a1539892db234b5c69d0eb4c50740b9e47a68"
+    },
+    "6254": {
+      "nameZhCN": "闪电链",
+      "icon": "assets/spell_nature_chainlightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6254?locale=4",
+      "tooltipSha256": "65c2045437868f143374d03dd4577b47a862b9d89a82e2e25cbf297e9dfd00af"
+    },
+    "6268": {
+      "nameZhCN": "急速冲锋",
+      "icon": "assets/ability_warstomp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6268?locale=4",
+      "tooltipSha256": "40392d23f9d8b3a8616a7f7cd226514dbb625a29bb69bed94cdcf718f10a86db"
+    },
+    "6304": {
+      "nameZhCN": "拉克佐猛击",
+      "icon": "assets/inv_gauntlets_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6304?locale=4",
+      "tooltipSha256": "7b3b0278563ad09779953abab7bcc086ac03c6bccae617fc5532e1c7c06c3deb"
+    },
+    "6306": {
+      "nameZhCN": "酸液溅射",
+      "icon": "assets/inv_drink_06.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6306?locale=4",
+      "tooltipSha256": "547d8aa0f1b79952d4d6b0be6e1d142f1277db913386304fed456e6d63f1aea0"
     },
     "6432": {
       "nameZhCN": "重拳先生践踏",
@@ -199,12 +229,6 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6433?locale=4",
       "tooltipSha256": "198f8f5fd8b51be70f59ffa7a9064928c7031d4daef972a53910c015d495ed3a"
     },
-    "12787": {
-      "nameZhCN": "痛击",
-      "icon": "assets/ability_ghoulfrenzy.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12787?locale=4",
-      "tooltipSha256": "03a34a9775d546fb6d1bf55633a23c64c90407fc40aa03f0cd58ebd37fbae9b6"
-    },
     "6435": {
       "nameZhCN": "重拳猛击",
       "icon": "assets/inv_gauntlets_05.png",
@@ -217,53 +241,47 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6436?locale=4",
       "tooltipSha256": "4f846a427243beabdc5c8c2c9c553f5e377c16b6de21dff1bf199a473496b257"
     },
-    "5208": {
-      "nameZhCN": "毒性鱼叉",
-      "icon": "assets/ability_poisons.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5208?locale=4",
-      "tooltipSha256": "1b1b12de8095c403d520d1f168a6c12d94801074e6d063c3078ddbf390b084ac"
+    "6524": {
+      "nameZhCN": "大地震颤",
+      "icon": "assets/spell_nature_earthquake.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6524?locale=4",
+      "tooltipSha256": "98352eb9b669db8ccde09821eeadc0e949bb28f1094bf63e4b61be1aa6f72bf2"
     },
-    "5532": {
-      "nameZhCN": "顺劈斩",
-      "icon": "assets/ability_warrior_cleave.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5532?locale=4",
-      "tooltipSha256": "66bf940d282c3197fb8263d4fafb7628f332f76bd4a283cb21db56025b829aba"
+    "6533": {
+      "nameZhCN": "投网",
+      "icon": "assets/ability_ensnare.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6533?locale=4",
+      "tooltipSha256": "6d7affbacb698d9c9545b79dd6215033f64db3b8eddf83ad510ba83637a90742"
     },
-    "674": {
-      "nameZhCN": "双武器",
-      "icon": "assets/ability_dualwield.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/674?locale=4",
-      "tooltipSha256": "c403db4bd65146eade2879e855cca4948ab35b40e1d19729fdb21041670fc23e"
+    "6607": {
+      "nameZhCN": "鞭笞",
+      "icon": "assets/ability_criticalstrike.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6607?locale=4",
+      "tooltipSha256": "33d3bd2db850ccadf59ecbbc714f8b6f27f2eb7b666c0dbb0577bd358b48147c"
     },
-    "5200": {
-      "nameZhCN": "范克里夫的盟友",
-      "icon": "assets/temp.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5200?locale=4",
-      "tooltipSha256": "e6de7fe1903d53572fa14051c237f375e20700d21b3d68ea17c854bc514edda5"
+    "6660": {
+      "nameZhCN": "射击",
+      "icon": "assets/ability_marksmanship.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6660?locale=4",
+      "tooltipSha256": "66aaed2123169121e261dff6e64ddfed019d83638d55c3f73b6832420fe1b296"
     },
-    "5174": {
-      "nameZhCN": "烹制甜点",
-      "icon": "assets/spell_holy_heal.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5174?locale=4",
-      "tooltipSha256": "8a3066526a7b427f3073fb700ecd937ec9a04cc9d501ee857e9d2bc1f3cdd412"
+    "6713": {
+      "nameZhCN": "缴械",
+      "icon": "assets/ability_warrior_disarm.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6713?locale=4",
+      "tooltipSha256": "e9be720985b71d28f6d4efe0de9af76390e695efa62d02ef683f56c6f9a31087"
     },
-    "6306": {
-      "nameZhCN": "酸液溅射",
-      "icon": "assets/inv_drink_06.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6306?locale=4",
-      "tooltipSha256": "547d8aa0f1b79952d4d6b0be6e1d142f1277db913386304fed456e6d63f1aea0"
+    "6742": {
+      "nameZhCN": "嗜血术",
+      "icon": "assets/spell_nature_bloodlust.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6742?locale=4",
+      "tooltipSha256": "bd720f3f6bced245904309a1a37a74169990ac94f1bf9740783322d68219de8b"
     },
-    "7295": {
-      "nameZhCN": "灵魂消耗",
-      "icon": "assets/spell_shadow_lifedrain02.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7295?locale=4",
-      "tooltipSha256": "64adf0e3b99f917924b713cd89f921a4ba4150aed66bec9385e25c1bf83bf5e1"
-    },
-    "7485": {
-      "nameZhCN": "屠夫吸取",
-      "icon": "assets/spell_shadow_siphonmana.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7485?locale=4",
-      "tooltipSha256": "559201709dd64c9d1fdaebe80e151c5f369d84a38967bc7055770eed20326a16"
+    "6778": {
+      "nameZhCN": "治疗之触",
+      "icon": "assets/spell_nature_healingtouch.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6778?locale=4",
+      "tooltipSha256": "4a6297e7ce754d2ffa8b2f03f58b4b602de6488037e2302f9d1b45731d4afb5b"
     },
     "7068": {
       "nameZhCN": "暗影迷雾",
@@ -271,17 +289,53 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7068?locale=4",
       "tooltipSha256": "60c362f7a957adcab62a10556e9616540a9a14908267df8663ecd0d84c9c7634"
     },
-    "5588": {
-      "nameZhCN": "制裁之锤",
-      "icon": "assets/spell_holy_sealofmight.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5588?locale=4",
-      "tooltipSha256": "696d02ceb48f12e0a8d242a88ea8a7667226be411a74d6ec3e3c1919bf79e12a"
+    "7121": {
+      "nameZhCN": "反魔法盾",
+      "icon": "assets/spell_shadow_antimagicshell.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7121?locale=4",
+      "tooltipSha256": "2dc67f5c08420c143c40e43ca984136eb535900f772c6e5aedaa02f06a6a789f"
     },
-    "1026": {
-      "nameZhCN": "圣光术",
-      "icon": "assets/spell_holy_holybolt.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/1026?locale=4",
-      "tooltipSha256": "4ecf7bffcae6b32c667ea3ec6f0e496d1479d6aa2f843f83ccaa23fcb8585e42"
+    "7125": {
+      "nameZhCN": "毒性唾液",
+      "icon": "assets/spell_nature_corrosivebreath.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7125?locale=4",
+      "tooltipSha256": "3f2f4b937f597c9356cf126db9d5ffd28233da5d14890616667ef6aefc455ebb"
+    },
+    "7160": {
+      "nameZhCN": "斩杀",
+      "icon": "assets/ability_backstab.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7160?locale=4",
+      "tooltipSha256": "0693f173d939079ee2ec625716a536e006f9422a2aecf654585825823635781f"
+    },
+    "7164": {
+      "nameZhCN": "防御姿态",
+      "icon": "assets/ability_warrior_defensivestance.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7164?locale=4",
+      "tooltipSha256": "b32154a9811364703ba9b14ae4b1866d82d25e64f5899fe00fff10121dc15fb7"
+    },
+    "7165": {
+      "nameZhCN": "战斗姿态",
+      "icon": "assets/ability_warrior_offensivestance.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7165?locale=4",
+      "tooltipSha256": "76fa308b19ece71d5ff8d8b9eb7bf4016c6906fedba8ec0c6763ab5773eee6c7"
+    },
+    "7295": {
+      "nameZhCN": "灵魂消耗",
+      "icon": "assets/spell_shadow_lifedrain02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7295?locale=4",
+      "tooltipSha256": "64adf0e3b99f917924b713cd89f921a4ba4150aed66bec9385e25c1bf83bf5e1"
+    },
+    "7366": {
+      "nameZhCN": "狂暴姿态",
+      "icon": "assets/ability_racial_avatar.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7366?locale=4",
+      "tooltipSha256": "03ecee4848b026942bd3bd1b012ffd57a8091ef84bc388faf1c651ebaf7bf905"
+    },
+    "7399": {
+      "nameZhCN": "恐吓",
+      "icon": "assets/ability_physical_taunt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7399?locale=4",
+      "tooltipSha256": "41ce5adbfe63cf7cc33e3832bcb8206bdcb7c44a6bf8942be1d89bd63ea69773"
     },
     "7481": {
       "nameZhCN": "嚎叫之怒",
@@ -301,23 +355,11 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7484?locale=4",
       "tooltipSha256": "d09cee9741d3469760c70ed47d0dfbfc1ac6d9bc837f3a20a3fd1fb74f1390a5"
     },
-    "7165": {
-      "nameZhCN": "战斗姿态",
-      "icon": "assets/ability_warrior_offensivestance.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7165?locale=4",
-      "tooltipSha256": "76fa308b19ece71d5ff8d8b9eb7bf4016c6906fedba8ec0c6763ab5773eee6c7"
-    },
-    "9080": {
-      "nameZhCN": "断筋",
-      "icon": "assets/ability_shockwave.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9080?locale=4",
-      "tooltipSha256": "568b306daa39c939874f7a8d7d7c76366cf10359f1b6a396a068d14517aa4821"
-    },
-    "7125": {
-      "nameZhCN": "毒性唾液",
-      "icon": "assets/spell_nature_corrosivebreath.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7125?locale=4",
-      "tooltipSha256": "3f2f4b937f597c9356cf126db9d5ffd28233da5d14890616667ef6aefc455ebb"
+    "7485": {
+      "nameZhCN": "屠夫吸取",
+      "icon": "assets/spell_shadow_siphonmana.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7485?locale=4",
+      "tooltipSha256": "559201709dd64c9d1fdaebe80e151c5f369d84a38967bc7055770eed20326a16"
     },
     "7487": {
       "nameZhCN": "召唤灰色座狼",
@@ -343,389 +385,65 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7588?locale=4",
       "tooltipSha256": "2189bab9e962903cce6213f1c07e1f3b0b64d939a5f02ce33f34f4880086fa70"
     },
-    "7803": {
-      "nameZhCN": "雷霆震荡",
-      "icon": "assets/spell_lightning_lightningbolt01.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7803?locale=4",
-      "tooltipSha256": "ecf66f6ef524250bf65d4503da33c8c9843d53de617e6395c291c34bb84b42a7"
-    },
     "7621": {
       "nameZhCN": "阿鲁高的诅咒",
       "icon": "assets/spell_shadow_gathershadows.png",
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7621?locale=4",
       "tooltipSha256": "b0ff170205ba9a5e4c458e919664846b7ea438d1d137faa1d5f3d4daf099a0c3"
     },
-    "28126": {
-      "nameZhCN": "Spirit Particles (purple)",
-      "icon": "assets/spell_frost_wisp.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/28126?locale=4",
-      "tooltipSha256": "20c541a4b279eea55d1c80845bace00f068c3516f4dc2818edb2931111704d02"
-    },
-    "8269": {
-      "nameZhCN": "狂怒",
-      "icon": "assets/spell_shadow_unholyfrenzy.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8269?locale=4",
-      "tooltipSha256": "63c525c274d2f5bd59fc43b9058c7529e99c3db6cf01b79f5335bccf31575818"
-    },
-    "16508": {
-      "nameZhCN": "破胆咆哮",
-      "icon": "assets/ability_golemthunderclap.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16508?locale=4",
-      "tooltipSha256": "93080acbd3d8c6c02252a825c0f4a0fd5faac6af0a35e758c9bc19f40301f401"
-    },
-    "17745": {
-      "nameZhCN": "疾病喷吐",
-      "icon": "assets/spell_shadow_creepingplague.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17745?locale=4",
-      "tooltipSha256": "634f3113ec35518e202fcda32ebe9125afebef4a94acd01ea5bc493ee319a0e1"
-    },
-    "5568": {
-      "nameZhCN": "践踏",
-      "icon": "assets/spell_nature_natureswrath.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5568?locale=4",
-      "tooltipSha256": "f764918a4b0aa907f519344f527f89e6453bd81e26c1bb27a5375bd92e2f38cb"
-    },
-    "246": {
-      "nameZhCN": "减速术",
-      "icon": "assets/spell_nature_slow.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/246?locale=4",
-      "tooltipSha256": "c3fb3f0dfea7f278e9c2936c3c87f432243d4d996dfcf6a841175b544ac3c86a"
-    },
-    "865": {
-      "nameZhCN": "冰霜新星",
-      "icon": "assets/spell_frost_frostnova.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/865?locale=4",
-      "tooltipSha256": "4a22fc0498931fcd1dceb19b40da2735ef816708195a7781b50bd2ff0d10f60b"
-    },
-    "8435": {
-      "nameZhCN": "叉状闪电",
-      "icon": "assets/spell_nature_chainlightning.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8435?locale=4",
-      "tooltipSha256": "dca3db091a02c133fc32be4f2674afbeaa6602cb48c820a22a9afb61e9b31428"
-    },
-    "6660": {
-      "nameZhCN": "射击",
-      "icon": "assets/ability_marksmanship.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6660?locale=4",
-      "tooltipSha256": "66aaed2123169121e261dff6e64ddfed019d83638d55c3f73b6832420fe1b296"
-    },
-    "6533": {
-      "nameZhCN": "投网",
-      "icon": "assets/ability_ensnare.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6533?locale=4",
-      "tooltipSha256": "6d7affbacb698d9c9545b79dd6215033f64db3b8eddf83ad510ba83637a90742"
-    },
-    "12550": {
-      "nameZhCN": "闪电之盾",
-      "icon": "assets/spell_nature_lightningshield.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12550?locale=4",
-      "tooltipSha256": "312aaca246c1a52d68261c86c3beaf934584f58daea517edcf700bcc949eebf7"
-    },
-    "12167": {
-      "nameZhCN": "闪电箭",
-      "icon": "assets/spell_nature_lightning.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12167?locale=4",
-      "tooltipSha256": "09778d36f00aaf0a4946258980ec15cafe67f856f86a5e944d6decb01db031ea"
-    },
-    "14907": {
-      "nameZhCN": "冰霜新星",
-      "icon": "assets/spell_frost_frostnova.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14907?locale=4",
-      "tooltipSha256": "90bbf2d33d13add989414c11ce37968309932847e038b6533a98c2bdfbd2bfeb"
-    },
-    "15043": {
-      "nameZhCN": "寒冰箭",
-      "icon": "assets/spell_frost_frostbolt02.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15043?locale=4",
-      "tooltipSha256": "8825bf0400e3e10cd6b9a494e074a0ff09b912caaf50d846534f1d1a8ee2737c"
-    },
-    "15587": {
-      "nameZhCN": "心灵震爆",
-      "icon": "assets/spell_shadow_unholyfrenzy.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15587?locale=4",
-      "tooltipSha256": "e0b051c29dbb455cd8a2c174b1af7ab96f9e739412f0191df4326bc8d4a22642"
-    },
-    "8399": {
-      "nameZhCN": "催眠术",
-      "icon": "assets/spell_nature_sleep.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8399?locale=4",
-      "tooltipSha256": "633eefc0fb239cea8f58c4fcef4bdf5057332b10329a53ae7d904817b886b0b5"
-    },
-    "3815": {
-      "nameZhCN": "毒云术",
-      "icon": "assets/spell_nature_regenerate.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3815?locale=4",
-      "tooltipSha256": "9c5928c43771be14b370383f9334f18ec6404dc96f95f1ab0c52c6390444c395"
-    },
-    "3490": {
-      "nameZhCN": "狂暴怒气",
-      "icon": "assets/spell_shadow_unholyfrenzy.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3490?locale=4",
-      "tooltipSha256": "d5b69e947bcc33069516442e518875e4495585968bc12955aa2b03d2de18ce5c"
-    },
-    "8876": {
-      "nameZhCN": "痛击",
-      "icon": "assets/ability_ghoulfrenzy.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8876?locale=4",
-      "tooltipSha256": "fc18fe1da5501c65c7c1e51f7996423098b60c0e03064dd61c14032762462dbb"
-    },
-    "8599": {
-      "nameZhCN": "狂怒",
-      "icon": "assets/spell_shadow_unholyfrenzy.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8599?locale=4",
-      "tooltipSha256": "a6af98575d6ba651079ec7fffe9c191739931214a0d2d042eb8d7e1f80b316e6"
-    },
-    "7164": {
-      "nameZhCN": "防御姿态",
-      "icon": "assets/ability_warrior_defensivestance.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7164?locale=4",
-      "tooltipSha256": "b32154a9811364703ba9b14ae4b1866d82d25e64f5899fe00fff10121dc15fb7"
-    },
-    "8242": {
-      "nameZhCN": "盾牌猛击",
-      "icon": "assets/ability_warrior_shieldbash.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8242?locale=4",
-      "tooltipSha256": "2e9d2c9f0b81cb6dd7cd780781f807c6f5535c1e739c88ea690ea9804fedeb68"
-    },
-    "6742": {
-      "nameZhCN": "嗜血术",
-      "icon": "assets/spell_nature_bloodlust.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6742?locale=4",
-      "tooltipSha256": "bd720f3f6bced245904309a1a37a74169990ac94f1bf9740783322d68219de8b"
-    },
-    "421": {
-      "nameZhCN": "闪电链",
-      "icon": "assets/spell_nature_chainlightning.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/421?locale=4",
-      "tooltipSha256": "35a2bc8f5184e575ec118b34414f9556e2dfcf94b46a5732a9daa3793c43b559"
-    },
-    "19134": {
-      "nameZhCN": "破胆怒吼",
-      "icon": "assets/ability_golemthunderclap.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/19134?locale=4",
-      "tooltipSha256": "edd0d490b54e4d1acb90270c4ded4d1d73ca0661bc12db4553c530518078bff5"
-    },
-    "11976": {
-      "nameZhCN": "打击",
-      "icon": "assets/ability_rogue_ambush.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11976?locale=4",
-      "tooltipSha256": "a98ca7abd79c29db8a7d6ff2077f801eae6f93e7358cff8d7e010803038bf2c7"
-    },
-    "9128": {
-      "nameZhCN": "战斗怒吼",
-      "icon": "assets/ability_warrior_battleshout.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9128?locale=4",
-      "tooltipSha256": "9b3c3bf37f3b572e8e4aa69fbc997adf5df4079492dae96cb152d1d4338741d5"
-    },
-    "10860": {
-      "nameZhCN": "修正补丁",
-      "icon": "assets/spell_shadow_sealofkings.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10860?locale=4",
-      "tooltipSha256": "5f24ee8d8475d6de3149ee0cdb3140b3c289136be625f1b631e31641648849a2"
-    },
-    "10858": {
-      "nameZhCN": "召唤复制虫",
-      "icon": "assets/spell_shadow_auraofdarkness.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10858?locale=4",
-      "tooltipSha256": "3caf1f2cf93282f14eaee512605924fb7764702dca8946f0fb0157c2572f6166"
-    },
-    "10855": {
-      "nameZhCN": "延迟",
-      "icon": "assets/inv_gizmo_02.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10855?locale=4",
-      "tooltipSha256": "1ef4ae583121a428b6e9e9fc099441c2989e60e850d1f132096a19b2fdc557e2"
-    },
-    "10852": {
-      "nameZhCN": "战网",
-      "icon": "assets/ability_ensnare.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10852?locale=4",
-      "tooltipSha256": "dfe715d4bb22917d34eb0a6b172bfc02f7186b3416fc35ad3f334c4913db5c6b"
-    },
-    "11082": {
-      "nameZhCN": "百万伏特",
-      "icon": "assets/spell_nature_chainlightning.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11082?locale=4",
-      "tooltipSha256": "376ba968bb4d0695d48c7d3821d058d13e6bd3d02aff525fbf54e31afb257e10"
-    },
-    "15605": {
-      "nameZhCN": "震击",
-      "icon": "assets/spell_nature_wispheal.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15605?locale=4",
-      "tooltipSha256": "fcb5f7b612bc4258e44565391609124af6c8f2f4fd7b91b7895cae011da3505d"
-    },
-    "11085": {
-      "nameZhCN": "闪电链",
-      "icon": "assets/spell_nature_chainlightning.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11085?locale=4",
-      "tooltipSha256": "fb03b8b2c340ff14f21a4efd90654a39c3819bef1df43c79fa58dcd900afc68a"
-    },
-    "10887": {
-      "nameZhCN": "群体打击",
-      "icon": "assets/inv_gauntlets_04.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10887?locale=4",
-      "tooltipSha256": "2ec1ef30997628249aabaade579bd5d86253841afaf68ab6e124d7116408e7ae"
-    },
-    "8374": {
-      "nameZhCN": "圆弧斩",
-      "icon": "assets/ability_warrior_cleave.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8374?locale=4",
-      "tooltipSha256": "161e3b4f1c17384045471a1be05593c182d86eee6ea99bc57937d4615d9259b8"
-    },
-    "10101": {
-      "nameZhCN": "击退",
-      "icon": "assets/inv_gauntlets_05.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10101?locale=4",
-      "tooltipSha256": "cad6060057cb9038ec0155eda5a108ee54617b1ad493ffed439f21b434627e41"
-    },
-    "11130": {
-      "nameZhCN": "击退",
-      "icon": "assets/inv_gauntlets_05.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11130?locale=4",
-      "tooltipSha256": "dae8c75e4dd65d76368745d22cab5f122a825236935275ad9e8b5b3f7606c443"
-    },
-    "11504": {
-      "nameZhCN": "自走炸弹效果",
-      "icon": "assets/spell_fire_selfdestruct.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11504?locale=4",
-      "tooltipSha256": "4a03c83bcb2eb71dbf354770754c0b88e7223f7f0f9852c297a2a9b08eb247ba"
-    },
-    "12544": {
-      "nameZhCN": "霜甲术",
-      "icon": "assets/spell_frost_frostarmor02.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12544?locale=4",
-      "tooltipSha256": "6f017c0f831983a72ab455efe4248133353a859286a21f3d84780bc479403788"
-    },
-    "184": {
-      "nameZhCN": "火焰之盾 II",
-      "icon": "assets/spell_fire_immolation.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/184?locale=4",
-      "tooltipSha256": "f620f2587a7bc0f4a72f668aa0cac3c6d21a26df3d65ea7c2bda9bccc55cbdea"
-    },
-    "10870": {
-      "nameZhCN": "召唤燃烧仆从",
-      "icon": "assets/spell_fire_fire.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10870?locale=4",
-      "tooltipSha256": "800ac9e6431e9410322cb52fbbc9134a1b32d8e759a682658939441e31bde6aa"
-    },
-    "9053": {
-      "nameZhCN": "火球术",
-      "icon": "assets/spell_fire_flamebolt.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9053?locale=4",
-      "tooltipSha256": "77b5e87560d6aa1300fe3dddea04cc510ef17551421d8a1b3ecae576ff84188d"
-    },
-    "8361": {
-      "nameZhCN": "纯净术",
-      "icon": "assets/spell_holy_holybolt.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8361?locale=4",
-      "tooltipSha256": "da3668eede5cb8ed278ab974f165ef32d694f989730e5651c3f688e89f2c364e"
-    },
-    "8358": {
-      "nameZhCN": "法力之矛",
-      "icon": "assets/spell_holy_heal.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8358?locale=4",
-      "tooltipSha256": "055f0ff7543899e1fd83e55da18e1635ca95b80016d525e22ab0c2c6766bd360"
-    },
-    "6077": {
-      "nameZhCN": "恢复",
-      "icon": "assets/spell_holy_renew.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6077?locale=4",
-      "tooltipSha256": "0f8c2762d18a8b00673ee9aafd6007ae7a67f089f079897d5ac8b48d17bb4cc0"
-    },
-    "8292": {
-      "nameZhCN": "闪电链",
-      "icon": "assets/spell_nature_chainlightning.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8292?locale=4",
-      "tooltipSha256": "9a5df7babd3c578bdc6093068f48b98a56f8900e9380a3ea43d7bc6e06059807"
-    },
-    "15548": {
-      "nameZhCN": "雷霆一击",
-      "icon": "assets/spell_nature_thunderclap.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15548?locale=4",
-      "tooltipSha256": "36860820cb24a632e012515a2c2466bc4637f0f2326d4e5e3f1cf3cde954f2c0"
-    },
-    "8260": {
-      "nameZhCN": "急速冲锋",
-      "icon": "assets/ability_warstomp.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8260?locale=4",
-      "tooltipSha256": "8772fafe45915d9bab4332813be24718ee0e59efd40ffa3bfdf405cda47b70a2"
-    },
-    "8285": {
-      "nameZhCN": "暴跳如雷",
-      "icon": "assets/spell_nature_natureswrath.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8285?locale=4",
-      "tooltipSha256": "45f315cc546c955e959643909ec4e75427377b34e4260f14aad7ed8f1d6b3375"
-    },
-    "8555": {
-      "nameZhCN": "击溃",
-      "icon": "assets/spell_shadow_raisedead.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8555?locale=4",
-      "tooltipSha256": "d679b1b433c85ea88676c7cc86c42fba731cafd9b061d47ba5d091618e32bbcb"
-    },
-    "6192": {
-      "nameZhCN": "战斗怒吼",
-      "icon": "assets/ability_warrior_battleshout.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6192?locale=4",
-      "tooltipSha256": "5b864a71af591a7706c3dbdc13c41497f8e5a68a50e29c11c4b82dc3961f3bfb"
-    },
-    "8286": {
-      "nameZhCN": "召唤野猪之魂",
-      "icon": "assets/spell_magic_polymorphpig.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8286?locale=4",
-      "tooltipSha256": "6e02b8b9efebdecef59c35a9134c15d931143c35660e1de00fd2fc9b0e80a80e"
-    },
-    "14900": {
-      "nameZhCN": "治疗链",
-      "icon": "assets/spell_nature_healingwavegreater.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14900?locale=4",
-      "tooltipSha256": "7fda648be5eb60d73c69cb66225b6f5d1e0b8cff64116c13dc88d45fe7b46e41"
-    },
-    "14515": {
+    "7645": {
       "nameZhCN": "统御意志",
       "icon": "assets/spell_shadow_shadowworddominate.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14515?locale=4",
-      "tooltipSha256": "3280d97859a061ae6212d5fb6e596420a62b4094e3474ac6f69c7d28d5cd3cb1"
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7645?locale=4",
+      "tooltipSha256": "baf408b5e0debbe75cc2b58758fd0994acec993934b3bbda9aea33c7ce337694"
     },
-    "9613": {
-      "nameZhCN": "暗影箭",
-      "icon": "assets/spell_shadow_shadowbolt.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9613?locale=4",
-      "tooltipSha256": "db1a96190914bfd8474161873eb55faadb8c5e1717105e4c1c13d2825df9be74"
+    "7803": {
+      "nameZhCN": "雷霆震荡",
+      "icon": "assets/spell_lightning_lightningbolt01.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7803?locale=4",
+      "tooltipSha256": "ecf66f6ef524250bf65d4503da33c8c9843d53de617e6395c291c34bb84b42a7"
     },
-    "8270": {
-      "nameZhCN": "召唤地行者",
-      "icon": "assets/spell_nature_earthquake.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8270?locale=4",
-      "tooltipSha256": "d86cd60e0cfb71e1c7eb6b84a541ae5159c8ae4f33ca9986d54b154e48c65f8b"
+    "7939": {
+      "nameZhCN": "隐秘行动",
+      "icon": "assets/ability_stealth.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7939?locale=4",
+      "tooltipSha256": "9481c37a4e2270ad403d875b9f434147a090a5f05ff075c40ba822022c59f7b6"
     },
-    "2484": {
-      "nameZhCN": "地缚图腾",
-      "icon": "assets/spell_nature_strengthofearthtotem02.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/2484?locale=4",
-      "tooltipSha256": "7a913ec9f5d5ea0b89d8a8278825b94080080232e4b550fa26d02b06a1d92832"
+    "7948": {
+      "nameZhCN": "野性回复",
+      "icon": "assets/spell_nature_rejuvenation.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7948?locale=4",
+      "tooltipSha256": "b5d964166f3b4c07b3cb0715feae6eef3e5ac9a16d83279c3b56df6ee223f494"
     },
-    "8981": {
-      "nameZhCN": "献祭",
-      "icon": "assets/spell_fire_immolation.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8981?locale=4",
-      "tooltipSha256": "9d1cff2b8044dcae9e28972e6fa055a02604b4ce9f4f143e6d84b8d3bab81a77"
+    "7964": {
+      "nameZhCN": "烟雾弹",
+      "icon": "assets/ability_hibernation.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7964?locale=4",
+      "tooltipSha256": "f19d57a0a8b9ab32c40a43336ec3c5c17e966425c49f610a9f57ee67e1994815"
     },
-    "14032": {
-      "nameZhCN": "暗言术：痛",
-      "icon": "assets/spell_shadow_shadowwordpain.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14032?locale=4",
-      "tooltipSha256": "fbc432a0693aca0f7f7364a5f8e19c48768aeb7de00f424fe71bdf9d39be1239"
+    "7965": {
+      "nameZhCN": "考布莱恩毒蛇形态",
+      "icon": "assets/spell_nature_guardianward.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7965?locale=4",
+      "tooltipSha256": "57c7e12bc5ae56d1d7595b1a2910f0f3e9f5487855043da7d249b575a2df582f"
     },
-    "8814": {
-      "nameZhCN": "烈焰尖刺",
-      "icon": "assets/spell_fire_selfdestruct.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8814?locale=4",
-      "tooltipSha256": "afcf4040040a3f610d63af73de12b9881b6ade036a51e8ff2a3bb987d30db1cb"
+    "7967": {
+      "nameZhCN": "纳拉雷克斯的梦魇",
+      "icon": "assets/spell_nature_sleep.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7967?locale=4",
+      "tooltipSha256": "63cf5643f34affc66e33a1da064e37107792313cc91946f7867af67ce091c14e"
     },
-    "12470": {
-      "nameZhCN": "火焰新星",
-      "icon": "assets/spell_fire_sealoffire.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12470?locale=4",
-      "tooltipSha256": "a05e440f3494b0f4471b9e5c49edd52cff4817ff08ad88410340bfdecdcd30a8"
+    "8040": {
+      "nameZhCN": "德鲁伊的睡眠",
+      "icon": "assets/spell_nature_sleep.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8040?locale=4",
+      "tooltipSha256": "b98e38a96db951f4ad3232a0d9950b94d664fa0fe7a5f17b774953c19ef3616e"
+    },
+    "8041": {
+      "nameZhCN": "毒蛇形态",
+      "icon": "assets/ability_racial_bearform.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8041?locale=4",
+      "tooltipSha256": "7b69b68a0088215b138e21b3215fbe5d0d963fee508852a04ac7ce92b95f65d9"
     },
     "8053": {
       "nameZhCN": "烈焰震击",
@@ -733,149 +451,71 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8053?locale=4",
       "tooltipSha256": "70176e77d65302f2c38d9f946dfaee26106fbefbcfd243b3ebad2a12d3063660"
     },
-    "7366": {
-      "nameZhCN": "狂暴姿态",
-      "icon": "assets/ability_racial_avatar.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7366?locale=4",
-      "tooltipSha256": "03ecee4848b026942bd3bd1b012ffd57a8091ef84bc388faf1c651ebaf7bf905"
+    "8142": {
+      "nameZhCN": "缠绕之藤",
+      "icon": "assets/spell_nature_earthquake.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8142?locale=4",
+      "tooltipSha256": "0cbf1cd67a0da6e540558093d89cf78ca32030f1b56ec7c90eaac2222d7d228a"
     },
-    "15496": {
-      "nameZhCN": "顺劈斩",
-      "icon": "assets/ability_warrior_cleave.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15496?locale=4",
-      "tooltipSha256": "a40f8e0b12da1dcf38ebe6be3944edc7e5709710a963029d183a96abefa7c094"
+    "8143": {
+      "nameZhCN": "战栗图腾",
+      "icon": "assets/spell_nature_tremortotem.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8143?locale=4",
+      "tooltipSha256": "94e6dbee729efc0db50af05231383aaebcc3cb90564484dbd646168bc7881b7f"
     },
-    "7160": {
-      "nameZhCN": "斩杀",
-      "icon": "assets/ability_backstab.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7160?locale=4",
-      "tooltipSha256": "0693f173d939079ee2ec625716a536e006f9422a2aecf654585825823635781f"
+    "8147": {
+      "nameZhCN": "雷霆一击",
+      "icon": "assets/spell_nature_thunderclap.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8147?locale=4",
+      "tooltipSha256": "85b7855b4652203ca2a145d32c0f7ddec43350477321ca144e42e0315474299f"
     },
-    "21007": {
-      "nameZhCN": "虚弱诅咒",
-      "icon": "assets/spell_shadow_curseofmannoroth.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21007?locale=4",
-      "tooltipSha256": "29cc28d170a110d60cdf9faa48c32b613b60e4543ee0dcedf69744325bbc9dee"
+    "8148": {
+      "nameZhCN": "荆棘光环",
+      "icon": "assets/spell_nature_thorns.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8148?locale=4",
+      "tooltipSha256": "c8fc0d61f9477ecbf84e702e3a715282ea40d985f7c9e465d55f6e77174d50d1"
     },
-    "5137": {
-      "nameZhCN": "火焰的召唤",
-      "icon": "assets/spell_shadow_chilltouch.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5137?locale=4",
-      "tooltipSha256": "3e14f2efe42e64861b6a1e1177bcb9e6a2fead23ae4f55ea074ab1da9d219aad"
+    "8150": {
+      "nameZhCN": "雷霆震裂",
+      "icon": "assets/spell_nature_thunderclap.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8150?locale=4",
+      "tooltipSha256": "3a3b05f298a652650b0fe13e71f8170dc58c3c548676e145d27fb44339b79fcd"
     },
-    "9373": {
-      "nameZhCN": "灵魂虹吸",
-      "icon": "assets/spell_shadow_lifedrain02.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9373?locale=4",
-      "tooltipSha256": "a1e69ca5a8a8ebcb6f8ef7589c49bb81e23a023553a6c7d781fce847c9097c2d"
+    "8242": {
+      "nameZhCN": "盾牌猛击",
+      "icon": "assets/ability_warrior_shieldbash.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8242?locale=4",
+      "tooltipSha256": "2e9d2c9f0b81cb6dd7cd780781f807c6f5535c1e739c88ea690ea9804fedeb68"
     },
-    "13323": {
-      "nameZhCN": "变形术",
-      "icon": "assets/spell_nature_polymorph.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13323?locale=4",
-      "tooltipSha256": "2bc5267771af75be9bbf135d6012135f4db54b7a8501c133e911f3430e3d8d30"
+    "8245": {
+      "nameZhCN": "腐蚀酸液",
+      "icon": "assets/spell_nature_acid_01.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8245?locale=4",
+      "tooltipSha256": "e47cc4c2811de81b998f630b43cec6f2d2ec9a24db7e34d1475c7839c7e1c4d2"
     },
-    "8988": {
-      "nameZhCN": "沉默",
-      "icon": "assets/spell_holy_silence.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8988?locale=4",
-      "tooltipSha256": "0c92e344652ce2f0d03e5c98dc68785b58a403cdbb18d38f01b4873b6788a431"
+    "8258": {
+      "nameZhCN": "虔诚光环",
+      "icon": "assets/spell_holy_devotionaura.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8258?locale=4",
+      "tooltipSha256": "8759e43b23fe9f5b659ec5cb2de2af7fc70cd7a38fad9ade4f74ff06ce4861af"
     },
-    "9433": {
-      "nameZhCN": "魔爆术",
-      "icon": "assets/spell_nature_wispsplode.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9433?locale=4",
-      "tooltipSha256": "df9e005e41c47f0982486f1f5ecdad3d0d85b8b52a814b6d81bd83dcda5bcc62"
+    "8260": {
+      "nameZhCN": "急速冲锋",
+      "icon": "assets/ability_warstomp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8260?locale=4",
+      "tooltipSha256": "8772fafe45915d9bab4332813be24718ee0e59efd40ffa3bfdf405cda47b70a2"
     },
-    "9438": {
-      "nameZhCN": "奥术气泡",
-      "icon": "assets/spell_holy_divineintervention.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9438?locale=4",
-      "tooltipSha256": "3a1ef9adcf8d2343ef9c2921b52a51b07432f96cb4762330d25d50390c6d1052"
+    "8269": {
+      "nameZhCN": "狂怒",
+      "icon": "assets/spell_shadow_unholyfrenzy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8269?locale=4",
+      "tooltipSha256": "63c525c274d2f5bd59fc43b9058c7529e99c3db6cf01b79f5335bccf31575818"
     },
-    "9435": {
-      "nameZhCN": "自爆",
-      "icon": "assets/spell_fire_selfdestruct.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9435?locale=4",
-      "tooltipSha256": "177bb39c42a53ca63488ff78dd768cb175774572e550c30ba12652fb0d9867ed"
-    },
-    "8989": {
-      "nameZhCN": "旋风斩",
-      "icon": "assets/ability_whirlwind.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8989?locale=4",
-      "tooltipSha256": "b3ee85ae5009db254cd695de01310319c0f73e7664f82c066934d9b313979020"
-    },
-    "14518": {
-      "nameZhCN": "十字军打击",
-      "icon": "assets/spell_holy_holysmite.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14518?locale=4",
-      "tooltipSha256": "d75c6171dadbd74693a021fb5e442a6f948b242a1d23556d1166914d6e2e05d0"
-    },
-    "5589": {
-      "nameZhCN": "制裁之锤",
-      "icon": "assets/spell_holy_sealofmight.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/5589?locale=4",
-      "tooltipSha256": "3e9f949140d1bec80b771f0f7515a3fb9c1556f640b9be7c24faee616b725935"
-    },
-    "8990": {
-      "nameZhCN": "惩罚光环",
-      "icon": "assets/spell_holy_auraoflight.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8990?locale=4",
-      "tooltipSha256": "261a573dad5323e84006266fd8a089fcb02a51a00203bdb36c35ddc2c42fc12b"
-    },
-    "9481": {
-      "nameZhCN": "圣光击",
-      "icon": "assets/spell_holy_holysmite.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9481?locale=4",
-      "tooltipSha256": "381633e19bd5ed7f84d51f060844b7dd06103728ca0babcd565533cbb55320f9"
-    },
-    "12039": {
-      "nameZhCN": "治疗术",
-      "icon": "assets/spell_holy_heal.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12039?locale=4",
-      "tooltipSha256": "e188d09d1e26fe2ef4ae5e08cac0cbfa6ba5f573adbca3b69306ab6a37fdbd2a"
-    },
-    "22187": {
-      "nameZhCN": "真言术：盾",
-      "icon": "assets/spell_holy_powerwordshield.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22187?locale=4",
-      "tooltipSha256": "b35068d3f2a585c7a776e57d4032ebb9212c8f88bef58a246841ed6c77484824"
-    },
-    "9256": {
-      "nameZhCN": "深度睡眠",
-      "icon": "assets/spell_nature_sleep.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9256?locale=4",
-      "tooltipSha256": "90f94b1c653b2bce97e219b23ac69ecda8054bd46f5b15bf4e65dc3353efd035"
-    },
-    "9232": {
-      "nameZhCN": "血色复活",
-      "icon": "assets/spell_holy_resurrection.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9232?locale=4",
-      "tooltipSha256": "e74e15491ca1ca7d98f4e7a8bca62c87c35bd77ea06ff48d14d3e6268d9b01d5"
-    },
-    "8282": {
-      "nameZhCN": "血之诅咒",
-      "icon": "assets/spell_shadow_ritualofsacrifice.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8282?locale=4",
-      "tooltipSha256": "1fc3bc6778c45c6e2ea3831aa3c1b690185a81a07e9b8228e32273dfe73a33d4"
-    },
-    "15090": {
-      "nameZhCN": "驱散魔法",
-      "icon": "assets/spell_holy_dispelmagic.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15090?locale=4",
-      "tooltipSha256": "bb202683300307c91ad27695fcac0728242c03b8a245457e6685fe87e2456229"
-    },
-    "12096": {
-      "nameZhCN": "恐惧术",
-      "icon": "assets/spell_shadow_possession.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12096?locale=4",
-      "tooltipSha256": "b24e3984631f1497a6b51a22cbeeadb02d3155b4f8a08ca6e5129e4d11b99544"
-    },
-    "11647": {
-      "nameZhCN": "真言术：盾",
-      "icon": "assets/spell_holy_powerwordshield.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11647?locale=4",
-      "tooltipSha256": "dd6153926f645683b023aaecacdf2d6ad805de296c1f9841931d417bd3048be4"
+    "8270": {
+      "nameZhCN": "召唤地行者",
+      "icon": "assets/spell_nature_earthquake.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8270?locale=4",
+      "tooltipSha256": "d86cd60e0cfb71e1c7eb6b84a541ae5159c8ae4f33ca9986d54b154e48c65f8b"
     },
     "8278": {
       "nameZhCN": "侦测隐形",
@@ -889,113 +529,239 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8279?locale=4",
       "tooltipSha256": "9af22bd6aa0b2540227d01f3279344d58bdf98ee997820abeb3af81febb963d7"
     },
-    "12252": {
-      "nameZhCN": "撒网",
-      "icon": "assets/ability_ensnare.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12252?locale=4",
-      "tooltipSha256": "b289061c079057ef2fa4b93e5e4d20ac0777e81964fac21dbef82f1166b7e3aa"
+    "8282": {
+      "nameZhCN": "血之诅咒",
+      "icon": "assets/spell_shadow_ritualofsacrifice.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8282?locale=4",
+      "tooltipSha256": "1fc3bc6778c45c6e2ea3831aa3c1b690185a81a07e9b8228e32273dfe73a33d4"
     },
-    "12255": {
-      "nameZhCN": "图特卡什的诅咒",
-      "icon": "assets/spell_nature_drowsy.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12255?locale=4",
-      "tooltipSha256": "f305dc05abaa3c5a7328f76f29aa28930186374a8339db9e7bc91830d88c967b"
+    "8285": {
+      "nameZhCN": "暴跳如雷",
+      "icon": "assets/spell_nature_natureswrath.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8285?locale=4",
+      "tooltipSha256": "45f315cc546c955e959643909ec4e75427377b34e4260f14aad7ed8f1d6b3375"
     },
-    "12946": {
-      "nameZhCN": "腐烂恶臭",
-      "icon": "assets/spell_shadow_callofbone.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12946?locale=4",
-      "tooltipSha256": "74ee3cc9d5616f4d3fecbe139bbcdb57a4af7f40412b2f734ccc43575ab11ffd"
+    "8286": {
+      "nameZhCN": "召唤野猪之魂",
+      "icon": "assets/spell_magic_polymorphpig.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8286?locale=4",
+      "tooltipSha256": "6e02b8b9efebdecef59c35a9134c15d931143c35660e1de00fd2fc9b0e80a80e"
     },
-    "12466": {
-      "nameZhCN": "火球术",
-      "icon": "assets/spell_fire_flamebolt.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12466?locale=4",
-      "tooltipSha256": "601da4c5768efb8408aab097ccf89121879d991cc7812271ae1bc2ea8d75cd99"
-    },
-    "7645": {
-      "nameZhCN": "统御意志",
-      "icon": "assets/spell_shadow_shadowworddominate.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/7645?locale=4",
-      "tooltipSha256": "baf408b5e0debbe75cc2b58758fd0994acec993934b3bbda9aea33c7ce337694"
-    },
-    "11639": {
-      "nameZhCN": "暗言术：痛",
-      "icon": "assets/spell_shadow_shadowwordpain.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11639?locale=4",
-      "tooltipSha256": "8fb41b528f03f695a4d6ba582a564382ef2738358ff4a490a3c3cfab05c4569f"
-    },
-    "12471": {
-      "nameZhCN": "暗影箭",
-      "icon": "assets/spell_shadow_shadowbolt.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12471?locale=4",
-      "tooltipSha256": "47ddddb299059c236e732a550f35da36b755a094d5589291adea7fa44b1631bd"
-    },
-    "12627": {
-      "nameZhCN": "疾病之云",
-      "icon": "assets/spell_nature_abolishmagic.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12627?locale=4",
-      "tooltipSha256": "7d462d8a41d5caa89796c5993030b78e77cfd58c69692f802ca6960e2b10a193"
-    },
-    "12795": {
-      "nameZhCN": "狂怒",
-      "icon": "assets/spell_shadow_unholyfrenzy.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12795?locale=4",
-      "tooltipSha256": "65d4a41db5e7912a57484054ce3f8b438ceacb9175ec87467bc320dbcec769bf"
-    },
-    "12642": {
-      "nameZhCN": "召唤冰霜亡魂",
-      "icon": "assets/spell_shadow_summonvoidwalker.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12642?locale=4",
-      "tooltipSha256": "dc246902513e61534564a2c69f0cf460db2c7d078ef898c0db9ca5ef6c3fb7fe"
-    },
-    "15531": {
-      "nameZhCN": "冰霜新星",
-      "icon": "assets/spell_frost_frostnova.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15531?locale=4",
-      "tooltipSha256": "ac9af333094b66fed2c591579dbf81877da392aced752b8ef7e1411e47383671"
-    },
-    "13009": {
-      "nameZhCN": "亚门纳尔之怒",
-      "icon": "assets/ability_kick.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13009?locale=4",
-      "tooltipSha256": "9b2a4488f601eb8588db2655c93442877baa940d965ed3a2d93112b37eaab5bf"
-    },
-    "15530": {
-      "nameZhCN": "寒冰箭",
-      "icon": "assets/spell_frost_frostbolt02.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15530?locale=4",
-      "tooltipSha256": "95d0b9443008f5282e8f173c6ee7f96d3a4192ed152a4d9c11039403dda8c160"
-    },
-    "16006": {
+    "8292": {
       "nameZhCN": "闪电链",
       "icon": "assets/spell_nature_chainlightning.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16006?locale=4",
-      "tooltipSha256": "6df957808ee2e02a57814b530bd2d2c8e39b96e54cf70b82053d29f117ca99d1"
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8292?locale=4",
+      "tooltipSha256": "9a5df7babd3c578bdc6093068f48b98a56f8900e9380a3ea43d7bc6e06059807"
     },
-    "15801": {
-      "nameZhCN": "闪电箭",
-      "icon": "assets/spell_nature_lightning.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15801?locale=4",
-      "tooltipSha256": "a832a11196ed54e64852955589c36d975b61424ce0d3b7b6a8eb002af9008df3"
+    "8358": {
+      "nameZhCN": "法力之矛",
+      "icon": "assets/spell_holy_heal.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8358?locale=4",
+      "tooltipSha256": "055f0ff7543899e1fd83e55da18e1635ca95b80016d525e22ab0c2c6766bd360"
     },
-    "14516": {
-      "nameZhCN": "打击",
-      "icon": "assets/ability_rogue_ambush.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14516?locale=4",
-      "tooltipSha256": "749741d9cd6d578dead9993d8c3afcfca6fd8fb4e8e8d39c7922e9fc2dddf8af"
+    "8361": {
+      "nameZhCN": "纯净术",
+      "icon": "assets/spell_holy_holybolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8361?locale=4",
+      "tooltipSha256": "da3668eede5cb8ed278ab974f165ef32d694f989730e5651c3f688e89f2c364e"
     },
-    "15620": {
-      "nameZhCN": "射击",
-      "icon": "assets/ability_marksmanship.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15620?locale=4",
-      "tooltipSha256": "16bb800f9d04d5d90889ca5b9d7323eadb87cc805e199290941d1240a4ed3f4c"
+    "8362": {
+      "nameZhCN": "恢复",
+      "icon": "assets/spell_holy_renew.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8362?locale=4",
+      "tooltipSha256": "6880d0b8decba7d494e0052c30c87e33f52ecb12b1915df45305b15a159a289e"
     },
-    "6268": {
-      "nameZhCN": "急速冲锋",
-      "icon": "assets/ability_warstomp.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6268?locale=4",
-      "tooltipSha256": "40392d23f9d8b3a8616a7f7cd226514dbb625a29bb69bed94cdcf718f10a86db"
+    "8365": {
+      "nameZhCN": "巨化术",
+      "icon": "assets/spell_nature_strength.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8365?locale=4",
+      "tooltipSha256": "0a482abcc1a26b8d54a56f274d4cf72f0676294ab58d8b6f2a9a1d17907868ad"
+    },
+    "8374": {
+      "nameZhCN": "圆弧斩",
+      "icon": "assets/ability_warrior_cleave.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8374?locale=4",
+      "tooltipSha256": "161e3b4f1c17384045471a1be05593c182d86eee6ea99bc57937d4615d9259b8"
+    },
+    "8376": {
+      "nameZhCN": "陷地图腾",
+      "icon": "assets/spell_nature_naturetouchdecay.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8376?locale=4",
+      "tooltipSha256": "23b9439f7f9ede1184d1648530051fc138d1b234d172b8a0ffcd0125841543ad"
+    },
+    "8379": {
+      "nameZhCN": "缴械",
+      "icon": "assets/ability_warrior_disarm.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8379?locale=4",
+      "tooltipSha256": "97750a973230f909545c87baa1fdf2c19122d40c20b418dcc6bae4341772caf1"
+    },
+    "8380": {
+      "nameZhCN": "破甲攻击",
+      "icon": "assets/ability_warrior_sunder.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8380?locale=4",
+      "tooltipSha256": "1912cd31b5257dfbb71fd838336959dc809c8f7a9e57e3184959692b1bf77732"
+    },
+    "8398": {
+      "nameZhCN": "连发寒冰箭",
+      "icon": "assets/spell_frost_frostbolt02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8398?locale=4",
+      "tooltipSha256": "c19e1da49b19a66483b1513a56235d8419a63f872c738d638e1dafe58b4d1498"
+    },
+    "8399": {
+      "nameZhCN": "催眠术",
+      "icon": "assets/spell_nature_sleep.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8399?locale=4",
+      "tooltipSha256": "633eefc0fb239cea8f58c4fcef4bdf5057332b10329a53ae7d904817b886b0b5"
+    },
+    "8435": {
+      "nameZhCN": "叉状闪电",
+      "icon": "assets/spell_nature_chainlightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8435?locale=4",
+      "tooltipSha256": "dca3db091a02c133fc32be4f2674afbeaa6602cb48c820a22a9afb61e9b31428"
+    },
+    "8555": {
+      "nameZhCN": "击溃",
+      "icon": "assets/spell_shadow_raisedead.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8555?locale=4",
+      "tooltipSha256": "d679b1b433c85ea88676c7cc86c42fba731cafd9b061d47ba5d091618e32bbcb"
+    },
+    "8599": {
+      "nameZhCN": "狂怒",
+      "icon": "assets/spell_shadow_unholyfrenzy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8599?locale=4",
+      "tooltipSha256": "a6af98575d6ba651079ec7fffe9c191739931214a0d2d042eb8d7e1f80b316e6"
+    },
+    "8600": {
+      "nameZhCN": "热疫",
+      "icon": "assets/spell_nature_nullifydisease.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8600?locale=4",
+      "tooltipSha256": "44f7b134dff792776abf788875f2e91b3d39ed74d962c3f3421a2412594b56d4"
+    },
+    "8814": {
+      "nameZhCN": "烈焰尖刺",
+      "icon": "assets/spell_fire_selfdestruct.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8814?locale=4",
+      "tooltipSha256": "afcf4040040a3f610d63af73de12b9881b6ade036a51e8ff2a3bb987d30db1cb"
+    },
+    "8822": {
+      "nameZhCN": "潜行",
+      "icon": "assets/ability_stealth.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8822?locale=4",
+      "tooltipSha256": "f7e15975ffa3003d5bf3117b04768a687b4e4af401e08edd665adaeedb37fedf"
+    },
+    "8876": {
+      "nameZhCN": "痛击",
+      "icon": "assets/ability_ghoulfrenzy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8876?locale=4",
+      "tooltipSha256": "fc18fe1da5501c65c7c1e51f7996423098b60c0e03064dd61c14032762462dbb"
+    },
+    "8981": {
+      "nameZhCN": "献祭",
+      "icon": "assets/spell_fire_immolation.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8981?locale=4",
+      "tooltipSha256": "9d1cff2b8044dcae9e28972e6fa055a02604b4ce9f4f143e6d84b8d3bab81a77"
+    },
+    "8988": {
+      "nameZhCN": "沉默",
+      "icon": "assets/spell_holy_silence.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8988?locale=4",
+      "tooltipSha256": "0c92e344652ce2f0d03e5c98dc68785b58a403cdbb18d38f01b4873b6788a431"
+    },
+    "8989": {
+      "nameZhCN": "旋风斩",
+      "icon": "assets/ability_whirlwind.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8989?locale=4",
+      "tooltipSha256": "b3ee85ae5009db254cd695de01310319c0f73e7664f82c066934d9b313979020"
+    },
+    "8990": {
+      "nameZhCN": "惩罚光环",
+      "icon": "assets/spell_holy_auraoflight.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8990?locale=4",
+      "tooltipSha256": "261a573dad5323e84006266fd8a089fcb02a51a00203bdb36c35ddc2c42fc12b"
+    },
+    "8994": {
+      "nameZhCN": "放逐术",
+      "icon": "assets/spell_shadow_cripple.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8994?locale=4",
+      "tooltipSha256": "c9059280f81ba74067e387f54800004c13ee8244b2211d4271e87a6c9b353d35"
+    },
+    "9053": {
+      "nameZhCN": "火球术",
+      "icon": "assets/spell_fire_flamebolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9053?locale=4",
+      "tooltipSha256": "77b5e87560d6aa1300fe3dddea04cc510ef17551421d8a1b3ecae576ff84188d"
+    },
+    "9080": {
+      "nameZhCN": "断筋",
+      "icon": "assets/ability_shockwave.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9080?locale=4",
+      "tooltipSha256": "568b306daa39c939874f7a8d7d7c76366cf10359f1b6a396a068d14517aa4821"
+    },
+    "9081": {
+      "nameZhCN": "暗影箭雨",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9081?locale=4",
+      "tooltipSha256": "c61bfb2a19fea8776a38f6c8d2fcb8d828604bd30e1f7e5be720247ccc04bc6b"
+    },
+    "9128": {
+      "nameZhCN": "战斗怒吼",
+      "icon": "assets/ability_warrior_battleshout.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9128?locale=4",
+      "tooltipSha256": "9b3c3bf37f3b572e8e4aa69fbc997adf5df4079492dae96cb152d1d4338741d5"
+    },
+    "9143": {
+      "nameZhCN": "炸弹",
+      "icon": "assets/spell_fire_selfdestruct.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9143?locale=4",
+      "tooltipSha256": "f7409177a15c19b9307929ccc22b4af09016a2722d43b457e8b7311a9e6358b8"
+    },
+    "9205": {
+      "nameZhCN": "仇恨归零",
+      "icon": "assets/spell_shadow_sacrificialshield.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9205?locale=4",
+      "tooltipSha256": "aca7b97f8fae3d0e8cc4affe8e6468351f47f3d4ca3f3b4840395cf941bd9979"
+    },
+    "9232": {
+      "nameZhCN": "血色复活",
+      "icon": "assets/spell_holy_resurrection.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9232?locale=4",
+      "tooltipSha256": "e74e15491ca1ca7d98f4e7a8bca62c87c35bd77ea06ff48d14d3e6268d9b01d5"
+    },
+    "9256": {
+      "nameZhCN": "深度睡眠",
+      "icon": "assets/spell_nature_sleep.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9256?locale=4",
+      "tooltipSha256": "90f94b1c653b2bce97e219b23ac69ecda8054bd46f5b15bf4e65dc3353efd035"
+    },
+    "9373": {
+      "nameZhCN": "灵魂虹吸",
+      "icon": "assets/spell_shadow_lifedrain02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9373?locale=4",
+      "tooltipSha256": "a1e69ca5a8a8ebcb6f8ef7589c49bb81e23a023553a6c7d781fce847c9097c2d"
+    },
+    "9433": {
+      "nameZhCN": "魔爆术",
+      "icon": "assets/spell_nature_wispsplode.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9433?locale=4",
+      "tooltipSha256": "df9e005e41c47f0982486f1f5ecdad3d0d85b8b52a814b6d81bd83dcda5bcc62"
+    },
+    "9435": {
+      "nameZhCN": "自爆",
+      "icon": "assets/spell_fire_selfdestruct.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9435?locale=4",
+      "tooltipSha256": "177bb39c42a53ca63488ff78dd768cb175774572e550c30ba12652fb0d9867ed"
+    },
+    "9438": {
+      "nameZhCN": "奥术气泡",
+      "icon": "assets/spell_holy_divineintervention.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9438?locale=4",
+      "tooltipSha256": "3a1ef9adcf8d2343ef9c2921b52a51b07432f96cb4762330d25d50390c6d1052"
+    },
+    "9481": {
+      "nameZhCN": "圣光击",
+      "icon": "assets/spell_holy_holysmite.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9481?locale=4",
+      "tooltipSha256": "381633e19bd5ed7f84d51f060844b7dd06103728ca0babcd565533cbb55320f9"
     },
     "9482": {
       "nameZhCN": "火焰增效",
@@ -1003,23 +769,17 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9482?locale=4",
       "tooltipSha256": "6ebd08317e924d154fc9f4145c66c182d784fd14ecec7714ecb3d8f84edee300"
     },
-    "3356": {
-      "nameZhCN": "烈焰鞭笞",
-      "icon": "assets/spell_fire_fireball.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/3356?locale=4",
-      "tooltipSha256": "6c1b9d3c031bab82b69b839e853541573acc769ee428204b74a9c567e9b0cdba"
+    "9532": {
+      "nameZhCN": "闪电箭",
+      "icon": "assets/spell_nature_lightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9532?locale=4",
+      "tooltipSha256": "6a34a84fd0e817d75c049873ab08ecdbdcb5ee88d06fb7fcd8ce9fe21877f2f5"
     },
-    "11969": {
-      "nameZhCN": "火焰新星",
-      "icon": "assets/spell_fire_sealoffire.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11969?locale=4",
-      "tooltipSha256": "646c1f29f61c6883e1c67bce75d4ddb0efa6e314833a487be3b58ef78020f85b"
-    },
-    "11876": {
-      "nameZhCN": "战争践踏",
-      "icon": "assets/ability_bullrush.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11876?locale=4",
-      "tooltipSha256": "fa7fb8eddf06e03301ff45ae9361a26bbdff15800ec6c8626665c23d69b9ff73"
+    "9613": {
+      "nameZhCN": "暗影箭",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/9613?locale=4",
+      "tooltipSha256": "db1a96190914bfd8474161873eb55faadb8c5e1717105e4c1c13d2825df9be74"
     },
     "10061": {
       "nameZhCN": "召唤黑曜石碎片",
@@ -1033,17 +793,17 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10072?locale=4",
       "tooltipSha256": "76b37c7cfd277ba662c93eb156fdd11998df4d70a04ef09c22b8d2b669281c2a"
     },
+    "10101": {
+      "nameZhCN": "击退",
+      "icon": "assets/inv_gauntlets_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10101?locale=4",
+      "tooltipSha256": "cad6060057cb9038ec0155eda5a108ee54617b1ad493ffed439f21b434627e41"
+    },
     "10132": {
       "nameZhCN": "沙尘风暴",
       "icon": "assets/spell_nature_earthbind.png",
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10132?locale=4",
       "tooltipSha256": "f73fdef6231af737af25d33c70f689688716b84bea9e62f2d3132efacfdec444"
-    },
-    "6524": {
-      "nameZhCN": "大地震颤",
-      "icon": "assets/spell_nature_earthquake.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/6524?locale=4",
-      "tooltipSha256": "98352eb9b669db8ccde09821eeadc0e949bb28f1094bf63e4b61be1aa6f72bf2"
     },
     "10252": {
       "nameZhCN": "唤醒地灵守护者",
@@ -1063,23 +823,2267 @@
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10259?locale=4",
       "tooltipSha256": "7d0b441568d91ec710db592bbdd20f3b45f9a383ba2cd418cbb583d6ce5a1459"
     },
+    "10310": {
+      "nameZhCN": "圣疗术",
+      "icon": "assets/spell_holy_layonhands.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10310?locale=4",
+      "tooltipSha256": "7554caec0446b67e996832824c4c1545a17094232e2c068dd0aefe0c5bb500d6"
+    },
+    "10852": {
+      "nameZhCN": "战网",
+      "icon": "assets/ability_ensnare.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10852?locale=4",
+      "tooltipSha256": "dfe715d4bb22917d34eb0a6b172bfc02f7186b3416fc35ad3f334c4913db5c6b"
+    },
+    "10855": {
+      "nameZhCN": "延迟",
+      "icon": "assets/inv_gizmo_02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10855?locale=4",
+      "tooltipSha256": "1ef4ae583121a428b6e9e9fc099441c2989e60e850d1f132096a19b2fdc557e2"
+    },
+    "10858": {
+      "nameZhCN": "召唤复制虫",
+      "icon": "assets/spell_shadow_auraofdarkness.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10858?locale=4",
+      "tooltipSha256": "3caf1f2cf93282f14eaee512605924fb7764702dca8946f0fb0157c2572f6166"
+    },
+    "10860": {
+      "nameZhCN": "修正补丁",
+      "icon": "assets/spell_shadow_sealofkings.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10860?locale=4",
+      "tooltipSha256": "5f24ee8d8475d6de3149ee0cdb3140b3c289136be625f1b631e31641648849a2"
+    },
+    "10870": {
+      "nameZhCN": "召唤燃烧仆从",
+      "icon": "assets/spell_fire_fire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10870?locale=4",
+      "tooltipSha256": "800ac9e6431e9410322cb52fbbc9134a1b32d8e759a682658939441e31bde6aa"
+    },
+    "10887": {
+      "nameZhCN": "群体打击",
+      "icon": "assets/inv_gauntlets_04.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10887?locale=4",
+      "tooltipSha256": "2ec1ef30997628249aabaade579bd5d86253841afaf68ab6e124d7116408e7ae"
+    },
+    "10966": {
+      "nameZhCN": "上钩拳",
+      "icon": "assets/inv_gauntlets_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/10966?locale=4",
+      "tooltipSha256": "d819d80fdf644c75733a18382218f32bf54b3543c4a3f95dbd6f47a5c2400a5d"
+    },
+    "11082": {
+      "nameZhCN": "百万伏特",
+      "icon": "assets/spell_nature_chainlightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11082?locale=4",
+      "tooltipSha256": "376ba968bb4d0695d48c7d3821d058d13e6bd3d02aff525fbf54e31afb257e10"
+    },
+    "11085": {
+      "nameZhCN": "闪电链",
+      "icon": "assets/spell_nature_chainlightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11085?locale=4",
+      "tooltipSha256": "fb03b8b2c340ff14f21a4efd90654a39c3819bef1df43c79fa58dcd900afc68a"
+    },
+    "11086": {
+      "nameZhCN": "祖穆拉恩结界",
+      "icon": "assets/spell_totem_wardofdraining.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11086?locale=4",
+      "tooltipSha256": "9da00a87051afc357a51f1c8ecbf451f9f574c38223d7b25828b76cc3dd62c5a"
+    },
+    "11089": {
+      "nameZhCN": "塞卡变形",
+      "icon": "assets/spell_shadow_antishadow.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11089?locale=4",
+      "tooltipSha256": "e4d09296cfd5959eb17e36d3cbfe433ed151fbf96053eb47a2bf0241bee24e0b"
+    },
+    "11130": {
+      "nameZhCN": "击退",
+      "icon": "assets/inv_gauntlets_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11130?locale=4",
+      "tooltipSha256": "dae8c75e4dd65d76368745d22cab5f122a825236935275ad9e8b5b3f7606c443"
+    },
+    "11131": {
+      "nameZhCN": "冰柱",
+      "icon": "assets/spell_frost_frostbolt02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11131?locale=4",
+      "tooltipSha256": "c1e7b26fcac40f65448a1c38bf157e363a79c4b26a7b023f545b7b30158f2e34"
+    },
+    "11504": {
+      "nameZhCN": "自走炸弹效果",
+      "icon": "assets/spell_fire_selfdestruct.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11504?locale=4",
+      "tooltipSha256": "4a03c83bcb2eb71dbf354770754c0b88e7223f7f0f9852c297a2a9b08eb247ba"
+    },
+    "11639": {
+      "nameZhCN": "暗言术：痛",
+      "icon": "assets/spell_shadow_shadowwordpain.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11639?locale=4",
+      "tooltipSha256": "8fb41b528f03f695a4d6ba582a564382ef2738358ff4a490a3c3cfab05c4569f"
+    },
+    "11647": {
+      "nameZhCN": "真言术：盾",
+      "icon": "assets/spell_holy_powerwordshield.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11647?locale=4",
+      "tooltipSha256": "dd6153926f645683b023aaecacdf2d6ad805de296c1f9841931d417bd3048be4"
+    },
+    "11836": {
+      "nameZhCN": "冰霜凝固",
+      "icon": "assets/spell_frost_glacier.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11836?locale=4",
+      "tooltipSha256": "b6db5ef4afa5b7bcdba42ead6e067e33c654df39fac4880ba2090a931f7a6a93"
+    },
+    "11837": {
+      "nameZhCN": "挥砍",
+      "icon": "assets/ability_warrior_cleave.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11837?locale=4",
+      "tooltipSha256": "e4794fdaab82f6035176caa1cca331bd919aa0b80e2c8d6d71ec7e8a8190ba36"
+    },
+    "11838": {
+      "nameZhCN": "仇恨归零",
+      "icon": "assets/spell_shadow_sacrificialshield.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11838?locale=4",
+      "tooltipSha256": "36989db2467af22305b94b8c6aa1d606c0181f9d20d56389bce9618eff9cc2ad"
+    },
+    "11876": {
+      "nameZhCN": "战争践踏",
+      "icon": "assets/ability_bullrush.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11876?locale=4",
+      "tooltipSha256": "fa7fb8eddf06e03301ff45ae9361a26bbdff15800ec6c8626665c23d69b9ff73"
+    },
     "11892": {
       "nameZhCN": "缩小",
       "icon": "assets/spell_shadow_antishadow.png",
       "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11892?locale=4",
       "tooltipSha256": "6c9be62406bd8b07c929bd320824776e52b247ea30607086bae3443ddabe673e"
     },
-    "8143": {
-      "nameZhCN": "战栗图腾",
-      "icon": "assets/spell_nature_tremortotem.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8143?locale=4",
-      "tooltipSha256": "94e6dbee729efc0db50af05231383aaebcc3cb90564484dbd646168bc7881b7f"
+    "11894": {
+      "nameZhCN": "安图苏尔的爪牙",
+      "icon": "assets/temp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11894?locale=4",
+      "tooltipSha256": "4db5bb87246ed92b23ef05679114b5b06a1f4c616f61a2b403c67080f0951012"
     },
-    "8380": {
+    "11895": {
+      "nameZhCN": "安图苏尔的治疗波",
+      "icon": "assets/spell_holy_heal02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11895?locale=4",
+      "tooltipSha256": "b18f73f8089ee678f7c1e35d82c2fc67f16bb516ede7b60689ae15fb5c27a4c7"
+    },
+    "11899": {
+      "nameZhCN": "治疗结界",
+      "icon": "assets/spell_holy_layonhands.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11899?locale=4",
+      "tooltipSha256": "70dbf80974c75835222f6f0016c29ab6eba130800667b138b8088fe06db762fb"
+    },
+    "11902": {
+      "nameZhCN": "加兹瑞拉猛击",
+      "icon": "assets/ability_devour.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11902?locale=4",
+      "tooltipSha256": "0dcac6763a40addd7d23b2b12d1c5f1b7014ec9dbc73d3fb7389ff1c48a8c35a"
+    },
+    "11904": {
+      "nameZhCN": "召唤沙怒奴隶",
+      "icon": "assets/temp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11904?locale=4",
+      "tooltipSha256": "c47166b6ad7734501f9bdb636ad9ec9fc13a06d5e896af78b80477d6bbcfe3be"
+    },
+    "11969": {
+      "nameZhCN": "火焰新星",
+      "icon": "assets/spell_fire_sealoffire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11969?locale=4",
+      "tooltipSha256": "646c1f29f61c6883e1c67bce75d4ddb0efa6e314833a487be3b58ef78020f85b"
+    },
+    "11970": {
+      "nameZhCN": "火焰新星",
+      "icon": "assets/spell_fire_sealoffire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11970?locale=4",
+      "tooltipSha256": "e18a5d851bfb7a8fe5f5b1037b6b40c1625ae82126f2567be649d6108617cf1d"
+    },
+    "11971": {
       "nameZhCN": "破甲攻击",
       "icon": "assets/ability_warrior_sunder.png",
-      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/8380?locale=4",
-      "tooltipSha256": "1912cd31b5257dfbb71fd838336959dc809c8f7a9e57e3184959692b1bf77732"
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11971?locale=4",
+      "tooltipSha256": "e2d554ecfaf972e996b343a21db0cb8df5422a17f49c9746a02e222acef4a3e6"
+    },
+    "11972": {
+      "nameZhCN": "盾击",
+      "icon": "assets/ability_warrior_shieldbash.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11972?locale=4",
+      "tooltipSha256": "374c41b70f62a8f316a8f2477098464d54b18ba265197eaa7695415fd79b596b"
+    },
+    "11974": {
+      "nameZhCN": "真言术：盾",
+      "icon": "assets/spell_holy_powerwordshield.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11974?locale=4",
+      "tooltipSha256": "71a1eb4485a42a7963a301b474adc4beef308b5d61ccdd0b0bbe302e0e8aecb4"
+    },
+    "11976": {
+      "nameZhCN": "打击",
+      "icon": "assets/ability_rogue_ambush.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11976?locale=4",
+      "tooltipSha256": "a98ca7abd79c29db8a7d6ff2077f801eae6f93e7358cff8d7e010803038bf2c7"
+    },
+    "11978": {
+      "nameZhCN": "脚踢",
+      "icon": "assets/ability_kick.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/11978?locale=4",
+      "tooltipSha256": "641da2905dfef521e16a1d2f820f6200bd439789ca6a09426620b806279d7e28"
+    },
+    "12024": {
+      "nameZhCN": "投网",
+      "icon": "assets/ability_ensnare.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12024?locale=4",
+      "tooltipSha256": "1032871a3baef06a8432d600a18a6b74309026f17262460413d1634188d836cc"
+    },
+    "12039": {
+      "nameZhCN": "治疗术",
+      "icon": "assets/spell_holy_heal.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12039?locale=4",
+      "tooltipSha256": "e188d09d1e26fe2ef4ae5e08cac0cbfa6ba5f573adbca3b69306ab6a37fdbd2a"
+    },
+    "12040": {
+      "nameZhCN": "暗影之盾",
+      "icon": "assets/spell_shadow_antishadow.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12040?locale=4",
+      "tooltipSha256": "6684dbde5451707229cc77675aec1eca853648ceb84f5613763620ee4bd7e507"
+    },
+    "12058": {
+      "nameZhCN": "闪电链",
+      "icon": "assets/spell_nature_chainlightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12058?locale=4",
+      "tooltipSha256": "0b5a3a860fb151aea87f2603f48f1ca5a23fac5f952bfa37929a8b7f20630124"
+    },
+    "12096": {
+      "nameZhCN": "恐惧术",
+      "icon": "assets/spell_shadow_possession.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12096?locale=4",
+      "tooltipSha256": "b24e3984631f1497a6b51a22cbeeadb02d3155b4f8a08ca6e5129e4d11b99544"
+    },
+    "12097": {
+      "nameZhCN": "刺穿护甲",
+      "icon": "assets/spell_shadow_vampiricaura.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12097?locale=4",
+      "tooltipSha256": "8eb165d8d94c14f39def7e579461354d24f8ce9731c69466f9bff73121430a1a"
+    },
+    "12167": {
+      "nameZhCN": "闪电箭",
+      "icon": "assets/spell_nature_lightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12167?locale=4",
+      "tooltipSha256": "09778d36f00aaf0a4946258980ec15cafe67f856f86a5e944d6decb01db031ea"
+    },
+    "12169": {
+      "nameZhCN": "盾牌格挡",
+      "icon": "assets/ability_defend.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12169?locale=4",
+      "tooltipSha256": "6b5de2edc9fb3d20c5536a206262fff0e7ea4a39eacbdb87fffb54acf40658a8"
+    },
+    "12252": {
+      "nameZhCN": "撒网",
+      "icon": "assets/ability_ensnare.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12252?locale=4",
+      "tooltipSha256": "b289061c079057ef2fa4b93e5e4d20ac0777e81964fac21dbef82f1166b7e3aa"
+    },
+    "12254": {
+      "nameZhCN": "Virulent Poison Proc",
+      "icon": "assets/spell_shadow_requiem.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12254?locale=4",
+      "tooltipSha256": "0a88d255d060a4f35b3b66303ec1436b047b7160e29c90b7cbc6efef64465c37"
+    },
+    "12255": {
+      "nameZhCN": "图特卡什的诅咒",
+      "icon": "assets/spell_nature_drowsy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12255?locale=4",
+      "tooltipSha256": "f305dc05abaa3c5a7328f76f29aa28930186374a8339db9e7bc91830d88c967b"
+    },
+    "12279": {
+      "nameZhCN": "血之诅咒",
+      "icon": "assets/spell_shadow_ritualofsacrifice.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12279?locale=4",
+      "tooltipSha256": "385de01bb8ce97bdbc586bdced616b52b2c245abc7a627ab39361dfb3a634977"
+    },
+    "12466": {
+      "nameZhCN": "火球术",
+      "icon": "assets/spell_fire_flamebolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12466?locale=4",
+      "tooltipSha256": "601da4c5768efb8408aab097ccf89121879d991cc7812271ae1bc2ea8d75cd99"
+    },
+    "12468": {
+      "nameZhCN": "烈焰风暴",
+      "icon": "assets/spell_fire_selfdestruct.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12468?locale=4",
+      "tooltipSha256": "1ec176a377c111f1cdc74a95ab04fd4c52075b2cef7f977428bb19ffa10c90c3"
+    },
+    "12470": {
+      "nameZhCN": "火焰新星",
+      "icon": "assets/spell_fire_sealoffire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12470?locale=4",
+      "tooltipSha256": "a05e440f3494b0f4471b9e5c49edd52cff4817ff08ad88410340bfdecdcd30a8"
+    },
+    "12471": {
+      "nameZhCN": "暗影箭",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12471?locale=4",
+      "tooltipSha256": "47ddddb299059c236e732a550f35da36b755a094d5589291adea7fa44b1631bd"
+    },
+    "12479": {
+      "nameZhCN": "迦玛兰的妖术",
+      "icon": "assets/spell_totem_wardofdraining.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12479?locale=4",
+      "tooltipSha256": "10aede3769bb613fae57b65072b6c8e4db481c390308718c80aadff9862569a9"
+    },
+    "12491": {
+      "nameZhCN": "治疗波",
+      "icon": "assets/spell_nature_magicimmunity.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12491?locale=4",
+      "tooltipSha256": "fbd81c2573b29c029f49f9b54f591001e2fae272addb8e12be8a741cf72997e3"
+    },
+    "12492": {
+      "nameZhCN": "治疗波",
+      "icon": "assets/spell_nature_magicimmunity.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12492?locale=4",
+      "tooltipSha256": "9e6d4c7e9ccf028c499a5f146c140aaffce5cacf5247e9e67f2dbac7d0d428bb"
+    },
+    "12493": {
+      "nameZhCN": "虚弱诅咒",
+      "icon": "assets/spell_shadow_curseofmannoroth.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12493?locale=4",
+      "tooltipSha256": "689fc665117018eda2fb0d169597dad38e44d0c408a9188fd19dd005e23f3861"
+    },
+    "12506": {
+      "nameZhCN": "阿塔莱骷髅图腾",
+      "icon": "assets/spell_shadow_raisedead.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12506?locale=4",
+      "tooltipSha256": "d0f2c0ea609471dad02d62015cd7a2b0d7136d9ca11faf20b4e2186660812d56"
+    },
+    "12528": {
+      "nameZhCN": "沉默",
+      "icon": "assets/spell_holy_silence.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12528?locale=4",
+      "tooltipSha256": "df606a9f725c88674d7b20eafa5ee5a7c30126e709f7d007c103db433eb831fc"
+    },
+    "12530": {
+      "nameZhCN": "脆弱",
+      "icon": "assets/spell_shadow_animatedead.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12530?locale=4",
+      "tooltipSha256": "18e1f16a7e4317c077d2d2a55d414bfd2a6d0edd6516e4e837fe517ee93ad9d8"
+    },
+    "12535": {
+      "nameZhCN": "Shade of Eranikus Passive Visual",
+      "icon": "assets/spell_shadow_blackplague.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12535?locale=4",
+      "tooltipSha256": "5b34042d6c6c68f905af559d9be964496a0a75fb57cc6740bfaa653acf17873c"
+    },
+    "12540": {
+      "nameZhCN": "凿击",
+      "icon": "assets/ability_gouge.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12540?locale=4",
+      "tooltipSha256": "471de39aecaa8d2e311d72acccbb86d6e9dc6029dea311dc533c5c7fb29c4b48"
+    },
+    "12542": {
+      "nameZhCN": "恐惧术",
+      "icon": "assets/spell_shadow_possession.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12542?locale=4",
+      "tooltipSha256": "e6eb93a955ebc4be65135e08e9273ff7f5253dcc813ded0f17b693f9b8fc3541"
+    },
+    "12544": {
+      "nameZhCN": "霜甲术",
+      "icon": "assets/spell_frost_frostarmor02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12544?locale=4",
+      "tooltipSha256": "6f017c0f831983a72ab455efe4248133353a859286a21f3d84780bc479403788"
+    },
+    "12550": {
+      "nameZhCN": "闪电之盾",
+      "icon": "assets/spell_nature_lightningshield.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12550?locale=4",
+      "tooltipSha256": "312aaca246c1a52d68261c86c3beaf934584f58daea517edcf700bcc949eebf7"
+    },
+    "12551": {
+      "nameZhCN": "冰霜射击",
+      "icon": "assets/spell_ice_magicdamage.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12551?locale=4",
+      "tooltipSha256": "88df70aaa9167984e1c2d2ea1e57fd9157c32830e92f0df6525f04da8f70008f"
+    },
+    "12555": {
+      "nameZhCN": "拳击",
+      "icon": "assets/inv_gauntlets_04.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12555?locale=4",
+      "tooltipSha256": "6f585f07fc5014285066d1f021c460727098a78fffd1be5f02f57201bd817dea"
+    },
+    "12627": {
+      "nameZhCN": "疾病之云",
+      "icon": "assets/spell_nature_abolishmagic.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12627?locale=4",
+      "tooltipSha256": "7d462d8a41d5caa89796c5993030b78e77cfd58c69692f802ca6960e2b10a193"
+    },
+    "12642": {
+      "nameZhCN": "召唤冰霜亡魂",
+      "icon": "assets/spell_shadow_summonvoidwalker.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12642?locale=4",
+      "tooltipSha256": "dc246902513e61534564a2c69f0cf460db2c7d078ef898c0db9ca5ef6c3fb7fe"
+    },
+    "12674": {
+      "nameZhCN": "冰霜新星",
+      "icon": "assets/spell_frost_frostnova.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12674?locale=4",
+      "tooltipSha256": "b6a374e32babb4ed20e53e4cbedd4a27ff50626e755a4044b19c6a70533149e0"
+    },
+    "12675": {
+      "nameZhCN": "寒冰箭",
+      "icon": "assets/spell_frost_frostbolt02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12675?locale=4",
+      "tooltipSha256": "f128ec7d8d884d57c42daca5ca84ed35caa0daf6d42fabc051ff9213c4ff57d8"
+    },
+    "12734": {
+      "nameZhCN": "大地粉碎",
+      "icon": "assets/spell_holy_fistofjustice.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12734?locale=4",
+      "tooltipSha256": "b7b438658f28e36bcf3f02a6b29c95a69ee08f6efdb89f9bffdb8e35b8033acd"
+    },
+    "12738": {
+      "nameZhCN": "伤害增效",
+      "icon": "assets/spell_nature_abolishmagic.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12738?locale=4",
+      "tooltipSha256": "1460d7ce4f73bc5ae8540fc79199ea6bbd738d55e407c728602ae5a234db37f7"
+    },
+    "12739": {
+      "nameZhCN": "暗影箭",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12739?locale=4",
+      "tooltipSha256": "8ea5290385d49d85f64c7c90a09ce728a65434ef63e2c92c18e75fcc9fc82f81"
+    },
+    "12741": {
+      "nameZhCN": "虚弱诅咒",
+      "icon": "assets/spell_shadow_curseofmannoroth.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12741?locale=4",
+      "tooltipSha256": "e16739f154d1090e2f27a3fbdcecac9f8ef3f435b2e367f7bd67b286f06538ef"
+    },
+    "12742": {
+      "nameZhCN": "献祭",
+      "icon": "assets/spell_fire_immolation.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12742?locale=4",
+      "tooltipSha256": "6bf2cd7c5ffd6a1ad566550cd59e5250231a7459e6596175c3731ca7926480f2"
+    },
+    "12747": {
+      "nameZhCN": "纠缠根须",
+      "icon": "assets/spell_nature_stranglevines.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12747?locale=4",
+      "tooltipSha256": "6bcc09082be6e30fe0eb2744916cdd64778dc0536b49666c444f594168f9d868"
+    },
+    "12782": {
+      "nameZhCN": "盾刺",
+      "icon": "assets/inv_ammo_arrow_01.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12782?locale=4",
+      "tooltipSha256": "0570054ab5c73b5592e1cc59d105afb8f649d3273f54b62cd98643de5eff4688"
+    },
+    "12787": {
+      "nameZhCN": "痛击",
+      "icon": "assets/ability_ghoulfrenzy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12787?locale=4",
+      "tooltipSha256": "03a34a9775d546fb6d1bf55633a23c64c90407fc40aa03f0cd58ebd37fbae9b6"
+    },
+    "12790": {
+      "nameZhCN": "胡库的卫士",
+      "icon": "assets/spell_shadow_summonvoidwalker.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12790?locale=4",
+      "tooltipSha256": "703ab8f0b9745157d1b56dd2feba834e451e8a8c83dea1e93705ee2bcda73f9c"
+    },
+    "12795": {
+      "nameZhCN": "狂怒",
+      "icon": "assets/spell_shadow_unholyfrenzy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12795?locale=4",
+      "tooltipSha256": "65d4a41db5e7912a57484054ce3f8b438ceacb9175ec87467bc320dbcec769bf"
+    },
+    "12882": {
+      "nameZhCN": "拍翼",
+      "icon": "assets/spell_nature_earthbind.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12882?locale=4",
+      "tooltipSha256": "5b516d3388c022decbaad714fa4291c7d1494b628cfe0e1b6fabe0b74cec433b"
+    },
+    "12884": {
+      "nameZhCN": "酸息术",
+      "icon": "assets/spell_nature_acid_01.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12884?locale=4",
+      "tooltipSha256": "2cd1684ac9d7573520abd3b5fed6acecd852012e9c91a51b03be8475e49386a8"
+    },
+    "12887": {
+      "nameZhCN": "横扫猛击",
+      "icon": "assets/ability_devour.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12887?locale=4",
+      "tooltipSha256": "4e6d7cffdefdcc834b89e161ab5bd6e87abccab8cd8af856be928b66c4dca9c8"
+    },
+    "12888": {
+      "nameZhCN": "导致疯狂",
+      "icon": "assets/spell_shadow_shadowworddominate.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12888?locale=4",
+      "tooltipSha256": "c6d434b11904ba66195ab5688fe10b4015feaba8853464fdb2973ece5bd3a7a8"
+    },
+    "12889": {
+      "nameZhCN": "语言诅咒",
+      "icon": "assets/spell_shadow_curseoftounges.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12889?locale=4",
+      "tooltipSha256": "eb4871e0f6f2fbb764b143dead133560f9a00075356b37040bd995927e97cb07"
+    },
+    "12890": {
+      "nameZhCN": "深度沉睡",
+      "icon": "assets/spell_shadow_cripple.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12890?locale=4",
+      "tooltipSha256": "69f33c2ec5f8daf70f619c873d67d65573ead737c8444761b751e0109e6b7b41"
+    },
+    "12891": {
+      "nameZhCN": "酸息术",
+      "icon": "assets/spell_nature_acid_01.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12891?locale=4",
+      "tooltipSha256": "5c321992f13cd32e46d3b666bee9f703771a0f24f660abaafef4985555bb2411"
+    },
+    "12946": {
+      "nameZhCN": "腐烂恶臭",
+      "icon": "assets/spell_shadow_callofbone.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/12946?locale=4",
+      "tooltipSha256": "74ee3cc9d5616f4d3fecbe139bbcdb57a4af7f40412b2f734ccc43575ab11ffd"
+    },
+    "13009": {
+      "nameZhCN": "亚门纳尔之怒",
+      "icon": "assets/ability_kick.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13009?locale=4",
+      "tooltipSha256": "9b2a4488f601eb8588db2655c93442877baa940d965ed3a2d93112b37eaab5bf"
+    },
+    "13323": {
+      "nameZhCN": "变形术",
+      "icon": "assets/spell_nature_polymorph.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13323?locale=4",
+      "tooltipSha256": "2bc5267771af75be9bbf135d6012135f4db54b7a8501c133e911f3430e3d8d30"
+    },
+    "13338": {
+      "nameZhCN": "语言诅咒",
+      "icon": "assets/spell_shadow_curseoftounges.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13338?locale=4",
+      "tooltipSha256": "36db65d56ad72f0078b311599c7b9d4497e2166327f72abd7dc92bbec1b02398"
+    },
+    "13341": {
+      "nameZhCN": "火焰冲击",
+      "icon": "assets/spell_fire_fireball.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13341?locale=4",
+      "tooltipSha256": "51694ed46505a836bdcaed9fa2c15a253777e8398c762714ef1beda122c0f102"
+    },
+    "13446": {
+      "nameZhCN": "打击",
+      "icon": "assets/ability_rogue_ambush.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13446?locale=4",
+      "tooltipSha256": "d26b67e7f16d14adf8525a7840bbf879d64c2040aad6e9bc829a93a144a135ed"
+    },
+    "13540": {
+      "nameZhCN": "绿色引导",
+      "icon": "assets/spell_shadow_antimagicshell.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13540?locale=4",
+      "tooltipSha256": "3551df28942fef27e22f8172707ba3764e658280779a6103480d5842bbe91a13"
+    },
+    "13704": {
+      "nameZhCN": "心灵尖啸",
+      "icon": "assets/spell_shadow_psychicscream.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13704?locale=4",
+      "tooltipSha256": "05bca1a55c66c54c1139fe94c8b114b6108e56ce102322fe301d63b194219051"
+    },
+    "13728": {
+      "nameZhCN": "地震术",
+      "icon": "assets/spell_nature_earthshock.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13728?locale=4",
+      "tooltipSha256": "fb062fef073fd01c34923459bf2f428d6695ec963528a8c970808c74cbd34a25"
+    },
+    "13729": {
+      "nameZhCN": "烈焰震击",
+      "icon": "assets/spell_fire_flameshock.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13729?locale=4",
+      "tooltipSha256": "cab7e38ef46bcc030b484d3fa2a07479430b2bc7c07bc24ef0c0d45459474689"
+    },
+    "13730": {
+      "nameZhCN": "挫志怒吼",
+      "icon": "assets/ability_warrior_warcry.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13730?locale=4",
+      "tooltipSha256": "db4ec932645b90fbee7789d638a0c20d37f65c3c0eddbad8e3fc6d50723894ba"
+    },
+    "13736": {
+      "nameZhCN": "旋风斩",
+      "icon": "assets/ability_whirlwind.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13736?locale=4",
+      "tooltipSha256": "c9a5a92d33110b7416f769b171583029e472f3a2e2071a9d6be2dd9cfc48f41d"
+    },
+    "13737": {
+      "nameZhCN": "致死打击",
+      "icon": "assets/ability_warrior_savageblow.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13737?locale=4",
+      "tooltipSha256": "eed8c22606f2b688f340f28adcb8be0f9d93b244d70d0f481565cf4bd2b4cf0f"
+    },
+    "13738": {
+      "nameZhCN": "撕裂",
+      "icon": "assets/ability_gouge.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13738?locale=4",
+      "tooltipSha256": "9a4be432abae9ad23c31f5f6a4f477d5509aefe12477df7d03b4615265828451"
+    },
+    "13745": {
+      "nameZhCN": "魔爆术",
+      "icon": "assets/spell_nature_wispsplode.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13745?locale=4",
+      "tooltipSha256": "f0707a013a54abbf394e5728f59176a770e7e8505b1be5f526f1d47e6d5fd3cc"
+    },
+    "13747": {
+      "nameZhCN": "减速术",
+      "icon": "assets/spell_nature_slow.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13747?locale=4",
+      "tooltipSha256": "e24308077ea8bf86dc3cc95d12849113bad15ca827a93dbc4a3a60786867291f"
+    },
+    "13787": {
+      "nameZhCN": "魔甲术",
+      "icon": "assets/spell_shadow_ragingscream.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13787?locale=4",
+      "tooltipSha256": "0d78a7c3ebf3fd02b02f0f21a5260d4d881268eee0a8b0f6bfc6f8821f3b5dac"
+    },
+    "13895": {
+      "nameZhCN": "召唤贝尔加的产物",
+      "icon": "assets/spell_fire_lavaspawn.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13895?locale=4",
+      "tooltipSha256": "b50d4bb794890d1fa01155c36c37df668bbe2596568163d281b60be053c8e74e"
+    },
+    "13899": {
+      "nameZhCN": "火焰风暴",
+      "icon": "assets/spell_fire_selfdestruct.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13899?locale=4",
+      "tooltipSha256": "84907ef421d181ee3152da9aed9d0853f6499109c3419cd21418e8f1b568dc2d"
+    },
+    "13900": {
+      "nameZhCN": "火焰爆发",
+      "icon": "assets/spell_fire_firebolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13900?locale=4",
+      "tooltipSha256": "b0d837f6a0cbb36cf6652005b515e1239f9dea4bcb4286060ee563a4020790c2"
+    },
+    "13953": {
+      "nameZhCN": "神圣打击",
+      "icon": "assets/ability_thunderbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/13953?locale=4",
+      "tooltipSha256": "866af00d77e0367d32dba53e0c03d039b235e86c7f2317f7b7bc3aeef25d9f1c"
+    },
+    "14032": {
+      "nameZhCN": "暗言术：痛",
+      "icon": "assets/spell_shadow_shadowwordpain.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14032?locale=4",
+      "tooltipSha256": "fbc432a0693aca0f7f7364a5f8e19c48768aeb7de00f424fe71bdf9d39be1239"
+    },
+    "14033": {
+      "nameZhCN": "法力燃烧",
+      "icon": "assets/spell_shadow_manaburn.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14033?locale=4",
+      "tooltipSha256": "7c3d1e666e6591174079a4434fb5c2da667fc112fdc50ca494f150ddb113ad45"
+    },
+    "14099": {
+      "nameZhCN": "全力一击",
+      "icon": "assets/inv_gauntlets_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14099?locale=4",
+      "tooltipSha256": "2ae17e93360f5b420d7307b0328fd37f8d29c85c6edbe4fcd743f047e55db564"
+    },
+    "14100": {
+      "nameZhCN": "恐吓咆哮",
+      "icon": "assets/ability_devour.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14100?locale=4",
+      "tooltipSha256": "63fd8d70d77c75e44ffce0d0cfc50151b876d5dd5607105c4fba85bf168a8bd0"
+    },
+    "14145": {
+      "nameZhCN": "火焰冲击",
+      "icon": "assets/spell_fire_fireball.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14145?locale=4",
+      "tooltipSha256": "4d1d8545fdc03b7f7feab28bb21e63353f0ab7fef2bb7469eda3d3e84ed6e0d4"
+    },
+    "14331": {
+      "nameZhCN": "恶毒撕裂",
+      "icon": "assets/ability_gouge.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14331?locale=4",
+      "tooltipSha256": "2daf4a74bb3301cad90024523aebf046725f680dab383b7c06701ff5f7dda447"
+    },
+    "14443": {
+      "nameZhCN": "多重射击",
+      "icon": "assets/ability_upgrademoonglaive.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14443?locale=4",
+      "tooltipSha256": "7753ef9403794e0fe52282af3c72b57666656c67575ccd43964183e771fa40d9"
+    },
+    "14515": {
+      "nameZhCN": "统御意志",
+      "icon": "assets/spell_shadow_shadowworddominate.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14515?locale=4",
+      "tooltipSha256": "3280d97859a061ae6212d5fb6e596420a62b4094e3474ac6f69c7d28d5cd3cb1"
+    },
+    "14516": {
+      "nameZhCN": "打击",
+      "icon": "assets/ability_rogue_ambush.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14516?locale=4",
+      "tooltipSha256": "749741d9cd6d578dead9993d8c3afcfca6fd8fb4e8e8d39c7922e9fc2dddf8af"
+    },
+    "14518": {
+      "nameZhCN": "十字军打击",
+      "icon": "assets/spell_holy_holysmite.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14518?locale=4",
+      "tooltipSha256": "d75c6171dadbd74693a021fb5e442a6f948b242a1d23556d1166914d6e2e05d0"
+    },
+    "14873": {
+      "nameZhCN": "邪恶攻击",
+      "icon": "assets/spell_shadow_ritualofsacrifice.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14873?locale=4",
+      "tooltipSha256": "6fa3bd93e5f67ca67ce1a53374ba977ca632c954c91371804f6cb4530ac8abc5"
+    },
+    "14875": {
+      "nameZhCN": "痛苦诅咒",
+      "icon": "assets/spell_shadow_curseofsargeras.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14875?locale=4",
+      "tooltipSha256": "d36bd7d0b1917223345a369fb8d7ce69481c501d41aca9739994596e6b54be3c"
+    },
+    "14900": {
+      "nameZhCN": "治疗链",
+      "icon": "assets/spell_nature_healingwavegreater.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14900?locale=4",
+      "tooltipSha256": "7fda648be5eb60d73c69cb66225b6f5d1e0b8cff64116c13dc88d45fe7b46e41"
+    },
+    "14907": {
+      "nameZhCN": "冰霜新星",
+      "icon": "assets/spell_frost_frostnova.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/14907?locale=4",
+      "tooltipSha256": "90bbf2d33d13add989414c11ce37968309932847e038b6533a98c2bdfbd2bfeb"
+    },
+    "15038": {
+      "nameZhCN": "灼烧图腾",
+      "icon": "assets/spell_fire_searingtotem.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15038?locale=4",
+      "tooltipSha256": "d19e382ebec730d4425d859bb7b03a8a67eaeedf02b2200d58b74f0d5e589dff"
+    },
+    "15041": {
+      "nameZhCN": "防护火焰结界",
+      "icon": "assets/spell_fire_firearmor.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15041?locale=4",
+      "tooltipSha256": "79d249d1798da8dc1b29ba587db8dcda59e65b248806f1ddb29c9584eea84eca"
+    },
+    "15042": {
+      "nameZhCN": "血之诅咒",
+      "icon": "assets/spell_shadow_ritualofsacrifice.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15042?locale=4",
+      "tooltipSha256": "3422e73a8f167dc83063a91c878d066f4da32ac1cd338b2890efb2e85a6b6bf4"
+    },
+    "15043": {
+      "nameZhCN": "寒冰箭",
+      "icon": "assets/spell_frost_frostbolt02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15043?locale=4",
+      "tooltipSha256": "8825bf0400e3e10cd6b9a494e074a0ff09b912caaf50d846534f1d1a8ee2737c"
+    },
+    "15044": {
+      "nameZhCN": "防护冰霜结界",
+      "icon": "assets/spell_frost_frostward.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15044?locale=4",
+      "tooltipSha256": "0a8b36b4f3b4e47bb513744177c09f0ee7ec9368184f880e3363a2d3f1d482db"
+    },
+    "15062": {
+      "nameZhCN": "盾墙",
+      "icon": "assets/ability_warrior_shieldwall.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15062?locale=4",
+      "tooltipSha256": "4dfdafb0022433fd35ff7141d94423697846031522b8e97a9d181424a9ce42cb"
+    },
+    "15087": {
+      "nameZhCN": "闪避",
+      "icon": "assets/spell_shadow_shadowward.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15087?locale=4",
+      "tooltipSha256": "c3e99e7731456dfceba02802b93931cf8866a8129691ff53f9c59a202cfffdf1"
+    },
+    "15090": {
+      "nameZhCN": "驱散魔法",
+      "icon": "assets/spell_holy_dispelmagic.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15090?locale=4",
+      "tooltipSha256": "bb202683300307c91ad27695fcac0728242c03b8a245457e6685fe87e2456229"
+    },
+    "15092": {
+      "nameZhCN": "召唤虚空行者",
+      "icon": "assets/spell_shadow_summonvoidwalker.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15092?locale=4",
+      "tooltipSha256": "f84b90a4ad1e84ae321679f01925ed1c81b633c5e962fcb07c54507e703a009b"
+    },
+    "15095": {
+      "nameZhCN": "熔火爆裂",
+      "icon": "assets/spell_fire_fire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15095?locale=4",
+      "tooltipSha256": "992d9a03461b2883a81636e8d3f414101afb32d312b0a459465ad4c99db9490e"
+    },
+    "15228": {
+      "nameZhCN": "火球术",
+      "icon": "assets/spell_fire_flamebolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15228?locale=4",
+      "tooltipSha256": "37e1db0d920a5d579726ca3c63f7696fdf88ef516d4939e65c41943d2e67b68b"
+    },
+    "15230": {
+      "nameZhCN": "奥术箭",
+      "icon": "assets/spell_arcane_starfire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15230?locale=4",
+      "tooltipSha256": "b27911ec4761c550e4b2d09ed2789da137e783b676f6c12871b74f1817a7ca79"
+    },
+    "15232": {
+      "nameZhCN": "暗影箭",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15232?locale=4",
+      "tooltipSha256": "18ddedca3b409a82022bc7c3102001b04fb54d1a4eedd6101ec72e4711fcb725"
+    },
+    "15234": {
+      "nameZhCN": "闪电箭",
+      "icon": "assets/spell_nature_lightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15234?locale=4",
+      "tooltipSha256": "0bb4be65caa6ee5cee995da5f1ea87c5e73fbd36521adfc352bd533b63ec52ed"
+    },
+    "15238": {
+      "nameZhCN": "圣光击",
+      "icon": "assets/spell_holy_holysmite.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15238?locale=4",
+      "tooltipSha256": "c22684c6b3481e74de9e4c7c3b8d130591c970c9421edf989f07146efc16ca9a"
+    },
+    "15242": {
+      "nameZhCN": "火球术",
+      "icon": "assets/spell_fire_flamebolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15242?locale=4",
+      "tooltipSha256": "18a46171474a945437f8289bc7a840b6edd5a54f21c567569a52982333d5b1eb"
+    },
+    "15244": {
+      "nameZhCN": "冰锥术",
+      "icon": "assets/spell_frost_glacier.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15244?locale=4",
+      "tooltipSha256": "ea264e219ed1b1cfa84c63bdc24e6e8d09f39e13d80477c9a69db5656951da6b"
+    },
+    "15245": {
+      "nameZhCN": "暗影箭雨",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15245?locale=4",
+      "tooltipSha256": "dcc35734c97335c73e206e06e90b4d62dfd0d56c5c5d06a3550cf6426ae791be"
+    },
+    "15284": {
+      "nameZhCN": "顺劈斩",
+      "icon": "assets/ability_warrior_cleave.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15284?locale=4",
+      "tooltipSha256": "6b0a7cbdda78cece12f3afad1a7dab237e424f27af4165833cfbcdd63f94c54e"
+    },
+    "15305": {
+      "nameZhCN": "闪电链",
+      "icon": "assets/spell_nature_chainlightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15305?locale=4",
+      "tooltipSha256": "2be2c6314fab4c4c29a72a10799fb341666c96ee4e6f68495cf9850355ba4629"
+    },
+    "15306": {
+      "nameZhCN": "震击",
+      "icon": "assets/spell_nature_wispheal.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15306?locale=4",
+      "tooltipSha256": "57a8d10427e8f867f1a7cd108317cadf5162a6e36fefe443163e1fee44ba26de"
+    },
+    "15346": {
+      "nameZhCN": "清算圣印",
+      "icon": "assets/spell_holy_sealofwrath.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15346?locale=4",
+      "tooltipSha256": "53532b0be5e3a866e5557b3cea920efb4e057499a3cb7832ad6f1f365eaab892"
+    },
+    "15470": {
+      "nameZhCN": "语言诅咒",
+      "icon": "assets/spell_shadow_curseoftounges.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15470?locale=4",
+      "tooltipSha256": "db1347e0679c6ec5a3213c4af5444fd06150929354fcd3af3a7613d31617f847"
+    },
+    "15471": {
+      "nameZhCN": "包围之网",
+      "icon": "assets/spell_nature_earthbind.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15471?locale=4",
+      "tooltipSha256": "c5c6d95acf4d401b545f61185d707f85d647ee886081bab2caf132e684e47a52"
+    },
+    "15472": {
+      "nameZhCN": "暗影箭",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15472?locale=4",
+      "tooltipSha256": "cb32b3c510c77a45d60cda3578d4dacaedee7a21eb7e337618b8ce3b83fabc26"
+    },
+    "15474": {
+      "nameZhCN": "蛛网爆炸",
+      "icon": "assets/ability_ensnare.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15474?locale=4",
+      "tooltipSha256": "635f37dc6cc285e78f3875c7509c129798be795321390ecb2c901e84f230ae83"
+    },
+    "15475": {
+      "nameZhCN": "祸害之毒",
+      "icon": "assets/spell_nature_corrosivebreath.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15475?locale=4",
+      "tooltipSha256": "ec3df71c622c95fc077fa7b32bf6f0212aa4e7b5c57986a4bfb4b7ffa1ed1415"
+    },
+    "15493": {
+      "nameZhCN": "圣光术",
+      "icon": "assets/spell_holy_holybolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15493?locale=4",
+      "tooltipSha256": "c21c94d9108d4371627167a92019b14ecc7cafd6d00ab45f5ddc5c37ad874394"
+    },
+    "15496": {
+      "nameZhCN": "顺劈斩",
+      "icon": "assets/ability_warrior_cleave.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15496?locale=4",
+      "tooltipSha256": "a40f8e0b12da1dcf38ebe6be3944edc7e5709710a963029d183a96abefa7c094"
+    },
+    "15499": {
+      "nameZhCN": "冰霜震击",
+      "icon": "assets/spell_frost_frostshock.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15499?locale=4",
+      "tooltipSha256": "122f3034f2bca5deccef33256fbada41e4108323681967404af28b0a0935f9ce"
+    },
+    "15504": {
+      "nameZhCN": "喝下治疗药水",
+      "icon": "assets/spell_holy_heal.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15504?locale=4",
+      "tooltipSha256": "ac780c7e1f18d324a8c07d84e40676993f53a78214984f175a0c632f842f7c4c"
+    },
+    "15506": {
+      "nameZhCN": "献祭",
+      "icon": "assets/spell_fire_immolation.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15506?locale=4",
+      "tooltipSha256": "c3e8ec2454d36e7769f40ea8cbbb47ca8d9e000aa610b57298b8cf7552302fb9"
+    },
+    "15507": {
+      "nameZhCN": "闪电之盾",
+      "icon": "assets/spell_nature_lightningshield.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15507?locale=4",
+      "tooltipSha256": "76c14b26164cb803a258f48662e05bf4f916c0f2b2a7cb7e49844899c8788e88"
+    },
+    "15530": {
+      "nameZhCN": "寒冰箭",
+      "icon": "assets/spell_frost_frostbolt02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15530?locale=4",
+      "tooltipSha256": "95d0b9443008f5282e8f173c6ee7f96d3a4192ed152a4d9c11039403dda8c160"
+    },
+    "15531": {
+      "nameZhCN": "冰霜新星",
+      "icon": "assets/spell_frost_frostnova.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15531?locale=4",
+      "tooltipSha256": "ac9af333094b66fed2c591579dbf81877da392aced752b8ef7e1411e47383671"
+    },
+    "15537": {
+      "nameZhCN": "暗影箭",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15537?locale=4",
+      "tooltipSha256": "9fead19e0d20346dc9c949010cf5b02a83c168a6fb9ef1cbd5a3460dcfe1752c"
+    },
+    "15547": {
+      "nameZhCN": "射击",
+      "icon": "assets/ability_marksmanship.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15547?locale=4",
+      "tooltipSha256": "f057a2b90ffd1f783389f18d711cab61246cb20cdab57f332f4a0447cca7d38b"
+    },
+    "15548": {
+      "nameZhCN": "雷霆一击",
+      "icon": "assets/spell_nature_thunderclap.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15548?locale=4",
+      "tooltipSha256": "36860820cb24a632e012515a2c2466bc4637f0f2326d4e5e3f1cf3cde954f2c0"
+    },
+    "15550": {
+      "nameZhCN": "践踏",
+      "icon": "assets/spell_nature_natureswrath.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15550?locale=4",
+      "tooltipSha256": "fb29b6de8dd05deee08135c32cdf354cc7f22e38461969e066cecc6a0bce922e"
+    },
+    "15572": {
+      "nameZhCN": "破甲攻击",
+      "icon": "assets/ability_warrior_sunder.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15572?locale=4",
+      "tooltipSha256": "e799e69c1de9a94902d8d27506eb63f837e21f2b80b0ddb699c43c03d6acefc3"
+    },
+    "15577": {
+      "nameZhCN": "旋风斩效果",
+      "icon": "assets/ability_whirlwind.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15577?locale=4",
+      "tooltipSha256": "be7a608e1c661e22251ca2d25ac7e9188b8df14b3b878ea822af611b255a39c4"
+    },
+    "15580": {
+      "nameZhCN": "打击",
+      "icon": "assets/ability_rogue_ambush.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15580?locale=4",
+      "tooltipSha256": "4d74dabfa46d54c5a5338443a92cb9916c6ce08bb9377dbd16b550630ee0b45f"
+    },
+    "15581": {
+      "nameZhCN": "邪恶攻击",
+      "icon": "assets/spell_shadow_ritualofsacrifice.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15581?locale=4",
+      "tooltipSha256": "8876be64706ce2e83072028478feb07a57acae20ac668f46adde0266d0804b16"
+    },
+    "15582": {
+      "nameZhCN": "背刺",
+      "icon": "assets/ability_backstab.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15582?locale=4",
+      "tooltipSha256": "a2959cbeb09597181e992251d6cd3f8f24d5a873cb31084cdbdecfc566ce903d"
+    },
+    "15583": {
+      "nameZhCN": "割裂",
+      "icon": "assets/ability_rogue_rupture.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15583?locale=4",
+      "tooltipSha256": "aa1b89d8c8daf99c4bdbfc8c42d25c70bbd452cfc8820840146d5728f9659228"
+    },
+    "15584": {
+      "nameZhCN": "顺劈斩",
+      "icon": "assets/ability_warrior_cleave.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15584?locale=4",
+      "tooltipSha256": "306acaf8c53178094dbc7e7761fbb45d7c7a1fd8b0e4722d4e7112ebc961c703"
+    },
+    "15585": {
+      "nameZhCN": "治疗祷言",
+      "icon": "assets/spell_holy_prayerofhealing02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15585?locale=4",
+      "tooltipSha256": "5e329be0eb9be01bc2bf3dc942f2d9eec60e1498586c80cac324cb749c315d78"
+    },
+    "15586": {
+      "nameZhCN": "治疗术",
+      "icon": "assets/spell_holy_heal.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15586?locale=4",
+      "tooltipSha256": "07432f6922b0087efe1ce2a60f1082cec52a508a8ab4fc093e8a8123fd03ee59"
+    },
+    "15587": {
+      "nameZhCN": "心灵震爆",
+      "icon": "assets/spell_shadow_unholyfrenzy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15587?locale=4",
+      "tooltipSha256": "e0b051c29dbb455cd8a2c174b1af7ab96f9e739412f0191df4326bc8d4a22642"
+    },
+    "15589": {
+      "nameZhCN": "旋风斩效果",
+      "icon": "assets/ability_whirlwind.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15589?locale=4",
+      "tooltipSha256": "09ff60a0ee827895ed8a3a15b725da536fcfef390d28cc9dac337977f206a599"
+    },
+    "15593": {
+      "nameZhCN": "战争践踏",
+      "icon": "assets/ability_bullrush.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15593?locale=4",
+      "tooltipSha256": "924d4c0b1fd092a2164e188c173fbd11f5faf8deb89449909685eec000cc9dc3"
+    },
+    "15605": {
+      "nameZhCN": "震击",
+      "icon": "assets/spell_nature_wispheal.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15605?locale=4",
+      "tooltipSha256": "fcb5f7b612bc4258e44565391609124af6c8f2f4fd7b91b7895cae011da3505d"
+    },
+    "15609": {
+      "nameZhCN": "钩网",
+      "icon": "assets/ability_ensnare.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15609?locale=4",
+      "tooltipSha256": "2fa587c9ac234698f14bdae557ac4a70feac7d61571a0695f2476896787eb8a6"
+    },
+    "15615": {
+      "nameZhCN": "拳击",
+      "icon": "assets/inv_gauntlets_04.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15615?locale=4",
+      "tooltipSha256": "3cb833552a39a4ce968f03d879b65518b9421d3d3ea1525eb3207abe90e3ecc9"
+    },
+    "15616": {
+      "nameZhCN": "烈焰震击",
+      "icon": "assets/spell_fire_flameshock.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15616?locale=4",
+      "tooltipSha256": "a111520b749ba4726027ccc5cdda00d96d61267a0462b15294e00b97466ef9e1"
+    },
+    "15618": {
+      "nameZhCN": "猛踢",
+      "icon": "assets/ability_kick.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15618?locale=4",
+      "tooltipSha256": "e10c21f0df2f9c6a32d7e2fc2792725dbe9faae115b5fee14d1a445ecf902bcb"
+    },
+    "15620": {
+      "nameZhCN": "射击",
+      "icon": "assets/ability_marksmanship.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15620?locale=4",
+      "tooltipSha256": "16bb800f9d04d5d90889ca5b9d7323eadb87cc805e199290941d1240a4ed3f4c"
+    },
+    "15636": {
+      "nameZhCN": "烈焰化身",
+      "icon": "assets/spell_fire_incinerate.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15636?locale=4",
+      "tooltipSha256": "cf310ca6c80bbd75b53359a5875b32bdd5da3b1643fe3fce3c5c22e645474516"
+    },
+    "15655": {
+      "nameZhCN": "盾牌猛击",
+      "icon": "assets/ability_warrior_shieldbash.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15655?locale=4",
+      "tooltipSha256": "3e0171095708df792e0ce89783b30bab81467a87bf57fb80a1b76de91b3012d6"
+    },
+    "15667": {
+      "nameZhCN": "邪恶攻击",
+      "icon": "assets/spell_shadow_ritualofsacrifice.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15667?locale=4",
+      "tooltipSha256": "2f81cfd276cb6ab72ebd57fe8445ef2cbcaf538c0040ef92e96405b55eeb2821"
+    },
+    "15708": {
+      "nameZhCN": "致死打击",
+      "icon": "assets/ability_warrior_savageblow.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15708?locale=4",
+      "tooltipSha256": "921f774944496e58c6fa3820de67ba6521a760af8b959e6c05deaddb096ac3de"
+    },
+    "15749": {
+      "nameZhCN": "盾牌冲锋",
+      "icon": "assets/ability_warrior_charge.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15749?locale=4",
+      "tooltipSha256": "8c5882f9770566923cedcdd05f45f2ce4faee0acf16c2e7d6301f1792ebc4582"
+    },
+    "15790": {
+      "nameZhCN": "奥术飞弹",
+      "icon": "assets/spell_nature_starfall.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15790?locale=4",
+      "tooltipSha256": "a45e04e9a7cd68e24dfdf2ef6468750580a19342a48ca8a3baa8c3425f66ce3b"
+    },
+    "15801": {
+      "nameZhCN": "闪电箭",
+      "icon": "assets/spell_nature_lightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15801?locale=4",
+      "tooltipSha256": "a832a11196ed54e64852955589c36d975b61424ce0d3b7b6a8eb002af9008df3"
+    },
+    "15847": {
+      "nameZhCN": "龙尾扫击",
+      "icon": "assets/inv_misc_monsterscales_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15847?locale=4",
+      "tooltipSha256": "ab0141e6098a579cbb092873f6bcdfd98b3118d5f207242944d05f70db9cbb67"
+    },
+    "15978": {
+      "nameZhCN": "刺破",
+      "icon": "assets/ability_backstab.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15978?locale=4",
+      "tooltipSha256": "e277f90701c8526f97b28e18003e34e30a7e18d0a5d01bd910e7187de3e37215"
+    },
+    "15982": {
+      "nameZhCN": "治疗波",
+      "icon": "assets/spell_nature_magicimmunity.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/15982?locale=4",
+      "tooltipSha256": "b8f58ba40965050f133de7eb3cef884d2618ec63bd0aaf2d71bbc1442ebd4402"
+    },
+    "16006": {
+      "nameZhCN": "闪电链",
+      "icon": "assets/spell_nature_chainlightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16006?locale=4",
+      "tooltipSha256": "6df957808ee2e02a57814b530bd2d2c8e39b96e54cf70b82053d29f117ca99d1"
+    },
+    "16046": {
+      "nameZhCN": "冲击波",
+      "icon": "assets/spell_holy_excorcism_02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16046?locale=4",
+      "tooltipSha256": "154cd524bf1162c57b0a8f7476fba0371c56a79e0a5d7ccb8dc6384d8bc8e527"
+    },
+    "16074": {
+      "nameZhCN": "Burning Felguard Spawn",
+      "icon": "assets/spell_fire_fire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16074?locale=4",
+      "tooltipSha256": "fb18a7ac289a9c69e4e7ce15b896fba264d597c35a75f0d16083dc7b36429715"
+    },
+    "16075": {
+      "nameZhCN": "掷斧",
+      "icon": "assets/inv_axe_08.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16075?locale=4",
+      "tooltipSha256": "d4f9f54b65af4cbbc1cd13473bc50a9ee77ef8807eb69cb8c8f3649ed515e8e1"
+    },
+    "16098": {
+      "nameZhCN": "血之诅咒",
+      "icon": "assets/spell_shadow_ritualofsacrifice.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16098?locale=4",
+      "tooltipSha256": "e9b1c289d8bbb2a660a160ce0464a2bba1aa3bf78bed2f99fd4e04350e348235"
+    },
+    "16100": {
+      "nameZhCN": "射击",
+      "icon": "assets/ability_marksmanship.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16100?locale=4",
+      "tooltipSha256": "ec9504e50e191fd1437aea5c0c688ee3d55950f951fe712d1890494e408f3d1e"
+    },
+    "16103": {
+      "nameZhCN": "召唤尖塔小蜘蛛",
+      "icon": "assets/spell_frost_frostshock.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16103?locale=4",
+      "tooltipSha256": "6a9a3d76fb45af31dcce0d67d6b01c94ea69ae85fe000dc8d3ed2ad9a1318338"
+    },
+    "16104": {
+      "nameZhCN": "结晶",
+      "icon": "assets/spell_shadow_teleport.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16104?locale=4",
+      "tooltipSha256": "fb43210799664286049feefd9bceb5efb3d7e36b60b39f306ac7416522cf4ae2"
+    },
+    "16128": {
+      "nameZhCN": "感染撕咬",
+      "icon": "assets/spell_shadow_callofbone.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16128?locale=4",
+      "tooltipSha256": "0865f1147a941ef9ce9f82c28a9cfe272ab7abbed92c4e400f04038336f1f25b"
+    },
+    "16170": {
+      "nameZhCN": "嗜血术",
+      "icon": "assets/spell_nature_bloodlust.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16170?locale=4",
+      "tooltipSha256": "ce564db32a59c584119acd1b145bf7b5cdbe53a1e9beca6131c34a89b6c42d88"
+    },
+    "16172": {
+      "nameZhCN": "裂颅",
+      "icon": "assets/ability_thunderbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16172?locale=4",
+      "tooltipSha256": "e303ce2b0581089749cace78655351bfc5574225a6f28c4062e359d6c3b1a78d"
+    },
+    "16244": {
+      "nameZhCN": "挫志怒吼",
+      "icon": "assets/ability_warrior_warcry.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16244?locale=4",
+      "tooltipSha256": "21e1075dc9a605723152637fe755cfa9f36bafdfaf0a27454bad678da91081ef"
+    },
+    "16247": {
+      "nameZhCN": "荆棘诅咒",
+      "icon": "assets/spell_shadow_antishadow.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16247?locale=4",
+      "tooltipSha256": "a27f31b0390266144d185749d979dee08f745488197b05537d849904a4c1105d"
+    },
+    "16331": {
+      "nameZhCN": "灵体防御",
+      "icon": "assets/temp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16331?locale=4",
+      "tooltipSha256": "29631dcff97ae7bac72dcaaee74f0a360b0ef31f4778d1805a7d65415c6d663e"
+    },
+    "16418": {
+      "nameZhCN": "地穴甲虫",
+      "icon": "assets/spell_shadow_carrionswarm.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16418?locale=4",
+      "tooltipSha256": "25d3a105703ff432322e8542939700d99236d97e8168f7a8cabab972ebb77f45"
+    },
+    "16419": {
+      "nameZhCN": "烈焰风暴",
+      "icon": "assets/spell_fire_selfdestruct.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16419?locale=4",
+      "tooltipSha256": "a186ef73f2fde9c42ac7081ff5012b6b60a963f371bc1c8764e618031350f470"
+    },
+    "16467": {
+      "nameZhCN": "基尔图诺斯变形",
+      "icon": "assets/spell_shadow_auraofdarkness.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16467?locale=4",
+      "tooltipSha256": "9d9d78747213c6af408d0a869f8d9cdb065571e0fd354cd8db9533623c31a333"
+    },
+    "16468": {
+      "nameZhCN": "蛛后的乳汁",
+      "icon": "assets/ability_creature_poison_02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16468?locale=4",
+      "tooltipSha256": "f0bcac47ed2c643fb484dcdd2075e3125c9e6fcf4908abc768b13a2cd4a359bd"
+    },
+    "16473": {
+      "nameZhCN": "召唤乌洛克",
+      "icon": "assets/temp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16473?locale=4",
+      "tooltipSha256": "d98d68fd2c379753c59fc78f41e9575e2876d3717460200e240cab9c9c0c4df6"
+    },
+    "16495": {
+      "nameZhCN": "致命刺痛",
+      "icon": "assets/ability_backstab.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16495?locale=4",
+      "tooltipSha256": "0ded2dadddff393d82032b008eba3e166a7f088fb0e9a2c29ecb803a2246866a"
+    },
+    "16496": {
+      "nameZhCN": "射击",
+      "icon": "assets/ability_marksmanship.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16496?locale=4",
+      "tooltipSha256": "da1627491c182067a6a369d2f01371e2e675b4e844095cc717720e96646a1cc7"
+    },
+    "16497": {
+      "nameZhCN": "昏迷炸弹",
+      "icon": "assets/spell_fire_selfdestruct.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16497?locale=4",
+      "tooltipSha256": "779a2337485a0253bbd4878001750857a2dc038f578b638664d8a4b903b71fee"
+    },
+    "16508": {
+      "nameZhCN": "破胆咆哮",
+      "icon": "assets/ability_golemthunderclap.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16508?locale=4",
+      "tooltipSha256": "93080acbd3d8c6c02252a825c0f4a0fd5faac6af0a35e758c9bc19f40301f401"
+    },
+    "16509": {
+      "nameZhCN": "撕裂",
+      "icon": "assets/ability_gouge.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16509?locale=4",
+      "tooltipSha256": "b1eb4e9da6ce41e02354dda4fcfacb8c649c474fbb67eb6c904562aaa8868772"
+    },
+    "16556": {
+      "nameZhCN": "Disturb Rookery Egg (FAST)",
+      "icon": "assets/temp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16556?locale=4",
+      "tooltipSha256": "f76a5d72525bfc77f2471b0ccf9bae0a13cfac3375e93ef9f004294f1e9bdaf4"
+    },
+    "16636": {
+      "nameZhCN": "狂暴冲锋",
+      "icon": "assets/ability_warrior_charge.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16636?locale=4",
+      "tooltipSha256": "19e67642f78ca4d07e17256627f018d42ee57563dd728639e6f10b252dc15767"
+    },
+    "16708": {
+      "nameZhCN": "妖术",
+      "icon": "assets/spell_nature_polymorph.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16708?locale=4",
+      "tooltipSha256": "3491c73eecd578591e2ed574d8c3ef9d1c177bb5e43cbabd4fcbe39cadec56a2"
+    },
+    "16727": {
+      "nameZhCN": "战争践踏",
+      "icon": "assets/ability_bullrush.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16727?locale=4",
+      "tooltipSha256": "a26c167d5183f8f2fc608ac22d749513a140afc0cfd13dcd16e0c86bf02db1dc"
+    },
+    "16740": {
+      "nameZhCN": "战争践踏",
+      "icon": "assets/ability_bullrush.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16740?locale=4",
+      "tooltipSha256": "8f25a94786acef2d9e6206ecbbf0f77ee70ff5df5bf64e39b7c1365cbadec47d"
+    },
+    "16785": {
+      "nameZhCN": "火焰突变",
+      "icon": "assets/spell_holy_excorcism_02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16785?locale=4",
+      "tooltipSha256": "947fd7be4071070c2a6d1c4d5c0219ca9492902c318827d7810df6b840d838c1"
+    },
+    "16788": {
+      "nameZhCN": "火球术",
+      "icon": "assets/spell_fire_flamebolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16788?locale=4",
+      "tooltipSha256": "348ec2ab54493bc36bdc823c30b8a5355c537768fef0bb188c5933e2b9599104"
+    },
+    "16789": {
+      "nameZhCN": "怒气",
+      "icon": "assets/spell_shadow_unholyfrenzy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16789?locale=4",
+      "tooltipSha256": "4e46d65e59fa3b1435333cb880808b093393cfd4862e8ed58693d55ad22971d5"
+    },
+    "16792": {
+      "nameZhCN": "狂暴怒火",
+      "icon": "assets/spell_shadow_unholyfrenzy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16792?locale=4",
+      "tooltipSha256": "e394cc6453ea44efb2c40652ed4a323fedc60abc3a349d01c3fd0b4f39dfb42c"
+    },
+    "16793": {
+      "nameZhCN": "吸血一击",
+      "icon": "assets/spell_shadow_chilltouch.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16793?locale=4",
+      "tooltipSha256": "ab118f3be8ac64f4a93f1d11823b6d00b7b54e2626750f9e64b698a8f6fc2ce9"
+    },
+    "16794": {
+      "nameZhCN": "变形",
+      "icon": "assets/ability_seal.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16794?locale=4",
+      "tooltipSha256": "f41ffd3f8139b66b1c6886747cf085386992c18095d92418700851bac92c85cf"
+    },
+    "16798": {
+      "nameZhCN": "催眠曲",
+      "icon": "assets/spell_shadow_soothingkiss.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16798?locale=4",
+      "tooltipSha256": "f549b0e8fa04cbb24788fcf5cf1e74f9cada394b2aeff4b1aaeaaafbedbb2593"
+    },
+    "16799": {
+      "nameZhCN": "寒冰箭",
+      "icon": "assets/spell_frost_frostbolt02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16799?locale=4",
+      "tooltipSha256": "9e10c24629aabce7daeefd13738e776dbbb6cf8274c64509d79b37ac51218701"
+    },
+    "16805": {
+      "nameZhCN": "燃烧",
+      "icon": "assets/spell_fire_incinerate.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16805?locale=4",
+      "tooltipSha256": "183d21ffdb98b913f0a1177419957c415f73cc1017562955296e8effd748ffca"
+    },
+    "16856": {
+      "nameZhCN": "致死打击",
+      "icon": "assets/ability_warrior_savageblow.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/16856?locale=4",
+      "tooltipSha256": "ce39157336962d88d23e80cb2bc23db8ff8a8f08c393c48aaa0328024bef7231"
+    },
+    "17086": {
+      "nameZhCN": "吐息",
+      "icon": "assets/spell_fire_fire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17086?locale=4",
+      "tooltipSha256": "002400510b804b801e0a3d1f62be4c2e3964bb4f595edf63f94c2253e34dda33"
+    },
+    "17139": {
+      "nameZhCN": "真言术：盾",
+      "icon": "assets/spell_holy_powerwordshield.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17139?locale=4",
+      "tooltipSha256": "8ea6c64bb7c03fd727bd9fbe7769a71b62031e67dc73ef0d36c3b276f92a6baf"
+    },
+    "17145": {
+      "nameZhCN": "冲击波",
+      "icon": "assets/spell_holy_excorcism_02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17145?locale=4",
+      "tooltipSha256": "d1028dbb0e2edfdaa887b44b1d1790c56d99eacaeab05d83f9a20d506b0e63ee"
+    },
+    "17146": {
+      "nameZhCN": "暗言术：痛",
+      "icon": "assets/spell_shadow_shadowwordpain.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17146?locale=4",
+      "tooltipSha256": "0fc5a53e2a10685141a4df12a4a571cc71c420d6cbf4539809989c9f27054a15"
+    },
+    "17194": {
+      "nameZhCN": "心灵震爆",
+      "icon": "assets/spell_shadow_unholyfrenzy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17194?locale=4",
+      "tooltipSha256": "5941f427b2ed15927aa5cd04956bbe2e8daa7b6e8c2d15fe0908e6df0a382ce6"
+    },
+    "17228": {
+      "nameZhCN": "暗影箭雨",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17228?locale=4",
+      "tooltipSha256": "2ee4fa3cd62d4bc38589e4d93af5d0e67b93dcdc5d712eb5086357c90b9c2cc9"
+    },
+    "17235": {
+      "nameZhCN": "复活亡灵甲虫",
+      "icon": "assets/spell_shadow_contagion.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17235?locale=4",
+      "tooltipSha256": "458151fad614db6f60c364d546ae822b70baa6bdddd16470c21d6c4225a6549b"
+    },
+    "17274": {
+      "nameZhCN": "炎爆术",
+      "icon": "assets/spell_fire_fireball02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17274?locale=4",
+      "tooltipSha256": "35a8fba07e25033ea79a5f4edca4f79623b3939b8758c9595beeffadf49bd1a6"
+    },
+    "17287": {
+      "nameZhCN": "心灵震爆",
+      "icon": "assets/spell_shadow_unholyfrenzy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17287?locale=4",
+      "tooltipSha256": "ae21bf998101c4a7f868039dd82d70590a6fd4c3848d3affabc727f25a185a83"
+    },
+    "17289": {
+      "nameZhCN": "暗影震击",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17289?locale=4",
+      "tooltipSha256": "6ca3d73347b863191d8a0a21954ba363b21257e5f5b547546d9c22c868437ce7"
+    },
+    "17290": {
+      "nameZhCN": "火球术",
+      "icon": "assets/spell_fire_flamebolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17290?locale=4",
+      "tooltipSha256": "30ba24960098869f58e420ea07bdf5b1f3662b23e871179c55c66f727ce25972"
+    },
+    "17293": {
+      "nameZhCN": "燃烧之风",
+      "icon": "assets/spell_nature_cyclone.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17293?locale=4",
+      "tooltipSha256": "04f2a99ff10afb9e49c3a4ec65b4486be295f48e8c7c3369b91d42f586412a58"
+    },
+    "17294": {
+      "nameZhCN": "火息术",
+      "icon": "assets/spell_fire_fire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17294?locale=4",
+      "tooltipSha256": "9027699ce62faa8abaabc670e896518296a364fb5980062c8b2cddff74da8bcd"
+    },
+    "17307": {
+      "nameZhCN": "击昏",
+      "icon": "assets/inv_gauntlets_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17307?locale=4",
+      "tooltipSha256": "1afb20344a105bdbefdbbc499a7fc7080c5b727c6cb2a5737c78d50a2639cb2b"
+    },
+    "17366": {
+      "nameZhCN": "火焰新星",
+      "icon": "assets/spell_fire_sealoffire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17366?locale=4",
+      "tooltipSha256": "b62bff5b122de5e9be47cb980fa9ed58b5abcd59b8561654b665d4626e2e6c29"
+    },
+    "17393": {
+      "nameZhCN": "暗影箭",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17393?locale=4",
+      "tooltipSha256": "511d3c52b02474069f7e177ce34cc93408d6929c40a7f671916ff0011cc376b2"
+    },
+    "17467": {
+      "nameZhCN": "邪恶光环",
+      "icon": "assets/spell_shadow_unholystrength.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17467?locale=4",
+      "tooltipSha256": "bd2a2c702d1b06acdd8d08536410e04562d1b90c631adf80014ba49f6eb16144"
+    },
+    "17470": {
+      "nameZhCN": "困兽之爪",
+      "icon": "assets/ability_ghoulfrenzy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17470?locale=4",
+      "tooltipSha256": "60ea1f1356398b750f9b1c50b17d223987403c2cb50b548de25b3b54b0a59a15"
+    },
+    "17473": {
+      "nameZhCN": "复活死者",
+      "icon": "assets/spell_shadow_raisedead.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17473?locale=4",
+      "tooltipSha256": "9b897ab1010d6d6daa5beea95d5ac0a96019987e4d820cfb1ca827628d960570"
+    },
+    "17475": {
+      "nameZhCN": "复活死者",
+      "icon": "assets/spell_shadow_raisedead.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17475?locale=4",
+      "tooltipSha256": "dafced84d0981c56b644efaa8dcaae3223bc8221cbaac0bd834e1c7982fdefa9"
+    },
+    "17476": {
+      "nameZhCN": "复活死者",
+      "icon": "assets/spell_shadow_raisedead.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17476?locale=4",
+      "tooltipSha256": "6b60e2ba1088003390503e74877e5f0e57a5f769f84798d48f034ec83f353019"
+    },
+    "17477": {
+      "nameZhCN": "复活死者",
+      "icon": "assets/spell_shadow_raisedead.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17477?locale=4",
+      "tooltipSha256": "1800fdc159baf2852863892df75c9daa56d09d02b4bdc4412e0922438f76bffa"
+    },
+    "17478": {
+      "nameZhCN": "复活死者",
+      "icon": "assets/spell_shadow_raisedead.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17478?locale=4",
+      "tooltipSha256": "6411a75c771fbf64388b63fc8c6a7672116c553267ee3a729a249ce6c3a22a61"
+    },
+    "17479": {
+      "nameZhCN": "复活死者",
+      "icon": "assets/spell_shadow_raisedead.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17479?locale=4",
+      "tooltipSha256": "3d5f27b50cb947c50483dc0f4d57d21fc06be11d0a4bdc0a2592deb8524976e3"
+    },
+    "17480": {
+      "nameZhCN": "复活死者",
+      "icon": "assets/spell_shadow_raisedead.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17480?locale=4",
+      "tooltipSha256": "5edb4b944f0b6fb23f82999529e704a095fb7cfb68109c1cfe829197be9b7ef7"
+    },
+    "17492": {
+      "nameZhCN": "索瑞森之手",
+      "icon": "assets/spell_fire_fireball.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17492?locale=4",
+      "tooltipSha256": "49dcb8133e4377aaa1229719c5564f4947255bd21a0e9e7bd1f51415e7bdd12e"
+    },
+    "17695": {
+      "nameZhCN": "污染光环",
+      "icon": "assets/spell_shadow_unholystrength.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17695?locale=4",
+      "tooltipSha256": "7658ee5d5824edf24a323bd6857545fae80528c6ea79c3a63970c27c212f3100"
+    },
+    "17745": {
+      "nameZhCN": "疾病喷吐",
+      "icon": "assets/spell_shadow_creepingplague.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17745?locale=4",
+      "tooltipSha256": "634f3113ec35518e202fcda32ebe9125afebef4a94acd01ea5bc493ee319a0e1"
+    },
+    "17820": {
+      "nameZhCN": "暗影迷雾",
+      "icon": "assets/spell_shadow_gathershadows.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17820?locale=4",
+      "tooltipSha256": "bccb3a15f51a227a3a2d4032cb87f270374709b38c3a7cc432970638a5baf9f8"
+    },
+    "17831": {
+      "nameZhCN": "火焰的召唤",
+      "icon": "assets/spell_shadow_chilltouch.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17831?locale=4",
+      "tooltipSha256": "1bc58fb58328bd9e8dd00cd5016668eb847facbf01e0ed5dcb5485dccec25fcb"
+    },
+    "17843": {
+      "nameZhCN": "快速治疗",
+      "icon": "assets/spell_holy_flashheal.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17843?locale=4",
+      "tooltipSha256": "5513c6c442286ac027a8a763bf3bf97e7df48ab3c8cc1f73d806a85c04b1bd6d"
+    },
+    "17963": {
+      "nameZhCN": "破甲顺劈",
+      "icon": "assets/ability_warrior_sunder.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/17963?locale=4",
+      "tooltipSha256": "be9cdbe53dd8721f155e715fdc39abce5d4bc06b6a683369abaddbca1241ec4c"
+    },
+    "18072": {
+      "nameZhCN": "上钩拳",
+      "icon": "assets/inv_gauntlets_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18072?locale=4",
+      "tooltipSha256": "4da956abec8cd46e4685630586714276c25edccd81ffbf4471b993ff0da9122b"
+    },
+    "18099": {
+      "nameZhCN": "冰冻新星",
+      "icon": "assets/spell_frost_frostnova.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18099?locale=4",
+      "tooltipSha256": "6e1259685e8e3594d7f9e08fd16c594813247748c0dfae813bfa3bede00ce87f"
+    },
+    "18100": {
+      "nameZhCN": "霜甲术",
+      "icon": "assets/spell_frost_frostarmor02.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18100?locale=4",
+      "tooltipSha256": "98e3874c5da7ff4d1dfb5fc09c78cb8df84991bf7e569a4631bd092eba0e8195"
+    },
+    "18103": {
+      "nameZhCN": "反手一击",
+      "icon": "assets/inv_gauntlets_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18103?locale=4",
+      "tooltipSha256": "2891778c03c107275b136b86b03c9f1f4e1a4243b4f34de22eaadaa8fcef6e49"
+    },
+    "18144": {
+      "nameZhCN": "飞扑",
+      "icon": "assets/ability_warrior_cleave.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18144?locale=4",
+      "tooltipSha256": "eb3fefae03139c3f149285c78a4d1e7b98fadbb78c1d4c12bc9e18efc20a4579"
+    },
+    "18149": {
+      "nameZhCN": "快速传染",
+      "icon": "assets/spell_holy_harmundeadaura.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18149?locale=4",
+      "tooltipSha256": "93a4b71ff3109e1a66a29822ff4e0ef686f2029823673e8ef5ead98a977def42"
+    },
+    "18151": {
+      "nameZhCN": "毒害之灾",
+      "icon": "assets/spell_holy_harmundeadaura.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18151?locale=4",
+      "tooltipSha256": "219d2a73b2063a2cb86654302446779acee75c0db5fad5d74a0bf2490784036a"
+    },
+    "18267": {
+      "nameZhCN": "虚弱诅咒",
+      "icon": "assets/spell_shadow_curseofmannoroth.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18267?locale=4",
+      "tooltipSha256": "113d9125f7e990e2bc5b79e3ef2e523cb72ed9993abd5b51e92f3b58a1fda765"
+    },
+    "18368": {
+      "nameZhCN": "打击",
+      "icon": "assets/ability_rogue_ambush.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18368?locale=4",
+      "tooltipSha256": "1ca078bb3609c23726c7a82e690bbc98de516dbc09d491955a11b71fa9d2b504"
+    },
+    "18376": {
+      "nameZhCN": "腐蚀术",
+      "icon": "assets/spell_shadow_abominationexplosion.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18376?locale=4",
+      "tooltipSha256": "2d392c97ade33e8dcbd5ecf1ed25b5f13bbe2f3ea8b989f0f8715957a1fdcfa4"
+    },
+    "18392": {
+      "nameZhCN": "火球术",
+      "icon": "assets/spell_fire_flamebolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18392?locale=4",
+      "tooltipSha256": "56c40fa7caac16a9e936fff6dda13dd02c99a3e64e7ca26a5d064dd9d3989cd5"
+    },
+    "18399": {
+      "nameZhCN": "烈焰风暴",
+      "icon": "assets/spell_fire_selfdestruct.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18399?locale=4",
+      "tooltipSha256": "0d286d6219f71e82b56e1d72a82ac0ed5cd0365d4c407e895fb001a982cb5a81"
+    },
+    "18431": {
+      "nameZhCN": "低沉咆哮",
+      "icon": "assets/spell_fire_fire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18431?locale=4",
+      "tooltipSha256": "5992d126d4c9893744f8d4dc0991778151366d5f8d75d03fc4efa5d524103e1e"
+    },
+    "18435": {
+      "nameZhCN": "火息术",
+      "icon": "assets/spell_fire_fire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18435?locale=4",
+      "tooltipSha256": "ec6eb4b90624594656a62d25092d12fa24eff2d1e2e1d45142427e199ff47349"
+    },
+    "18500": {
+      "nameZhCN": "龙翼攻击",
+      "icon": "assets/inv_misc_monsterscales_14.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18500?locale=4",
+      "tooltipSha256": "6c05682921c0c208ce1615dd8221183796b95408324f5c5171c2a771f2cbcbcc"
+    },
+    "18670": {
+      "nameZhCN": "击退",
+      "icon": "assets/inv_gauntlets_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18670?locale=4",
+      "tooltipSha256": "8d899ebcadf952f2ba3d990a7139408b5184c5138676f377225127e50f15e02c"
+    },
+    "18671": {
+      "nameZhCN": "痛苦诅咒",
+      "icon": "assets/spell_shadow_curseofsargeras.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18671?locale=4",
+      "tooltipSha256": "da4735aac29651e906d238fcf452b538c5c827e04e2b7b6519b1d3ef067ac94e"
+    },
+    "18702": {
+      "nameZhCN": "黑暗主宰诅咒",
+      "icon": "assets/spell_shadow_antishadow.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18702?locale=4",
+      "tooltipSha256": "7b472ae8ae4f7987f8c88094383c78c0e61751782828796e64333b2d57837a80"
+    },
+    "18763": {
+      "nameZhCN": "冰冻术",
+      "icon": "assets/spell_frost_glacier.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/18763?locale=4",
+      "tooltipSha256": "9f11d36f4f6d05d8407d25e338e796c7e31e6047ebdcb9b199af2fe46170635b"
+    },
+    "19134": {
+      "nameZhCN": "破胆怒吼",
+      "icon": "assets/ability_golemthunderclap.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/19134?locale=4",
+      "tooltipSha256": "edd0d490b54e4d1acb90270c4ded4d1d73ca0661bc12db4553c530518078bff5"
+    },
+    "19319": {
+      "nameZhCN": "恶毒之咬",
+      "icon": "assets/ability_racial_cannibalize.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/19319?locale=4",
+      "tooltipSha256": "e24d76fdf3fd91db389e3efa0d253aeca425b7c443b8bedc2eb569bc09ccaf40"
+    },
+    "19983": {
+      "nameZhCN": "顺劈斩",
+      "icon": "assets/ability_warrior_cleave.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/19983?locale=4",
+      "tooltipSha256": "311ad5ee73e837f478cc4ed2486885d22066728e997b64ee9afb911a9fc73291"
+    },
+    "20477": {
+      "nameZhCN": "召唤玩家",
+      "icon": "assets/temp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/20477?locale=4",
+      "tooltipSha256": "f37f5da2d34e9c25a9e7c75ae03ce2fcf605d411726f2bda85811f3f3cf68596"
+    },
+    "20537": {
+      "nameZhCN": "法术反制",
+      "icon": "assets/spell_frost_iceshock.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/20537?locale=4",
+      "tooltipSha256": "4007d9a200cadc78e9e5a72b33c0c9333192c4a585b61fb41a8c751c8b3b4263"
+    },
+    "20735": {
+      "nameZhCN": "多重射击",
+      "icon": "assets/ability_upgrademoonglaive.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/20735?locale=4",
+      "tooltipSha256": "5b413dd92b5be3b4717dfd29d5d92e5c21fa00fcff3471a14c9515250af2d140"
+    },
+    "20741": {
+      "nameZhCN": "暗影箭雨",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/20741?locale=4",
+      "tooltipSha256": "7af7aa256359b90c11a4d16b2fde0d380423bd0bd5531625a43c3e5e1d5e74dd"
+    },
+    "20800": {
+      "nameZhCN": "献祭",
+      "icon": "assets/spell_fire_immolation.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/20800?locale=4",
+      "tooltipSha256": "13a697a816ad4d48a3ac10cd7e944baf5524b703dd1c8184061e674b0a7cb248"
+    },
+    "20812": {
+      "nameZhCN": "残废术",
+      "icon": "assets/spell_shadow_cripple.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/20812?locale=4",
+      "tooltipSha256": "6cfd1a79dd66631cf9d45e7aba023862c4887a999168d4e4597f41e3cad08018"
+    },
+    "20989": {
+      "nameZhCN": "催眠术",
+      "icon": "assets/spell_nature_sleep.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/20989?locale=4",
+      "tooltipSha256": "44b82dc1b179d72026132e50d80646c336e05b4e8d99960e231ed0b29e95ef57"
+    },
+    "21007": {
+      "nameZhCN": "虚弱诅咒",
+      "icon": "assets/spell_shadow_curseofmannoroth.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21007?locale=4",
+      "tooltipSha256": "29cc28d170a110d60cdf9faa48c32b613b60e4543ee0dcedf69744325bbc9dee"
+    },
+    "21049": {
+      "nameZhCN": "嗜血术",
+      "icon": "assets/spell_nature_bloodlust.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21049?locale=4",
+      "tooltipSha256": "403181eedcd929392ca544ff0dbcc6853d546930eced0be9f5663e8e2b86c995"
+    },
+    "21060": {
+      "nameZhCN": "致盲",
+      "icon": "assets/spell_shadow_mindsteal.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21060?locale=4",
+      "tooltipSha256": "0aa85dd631072a8e64c400ba98a1f5c88f24939abaf2998ef2f75c1268a41699"
+    },
+    "21390": {
+      "nameZhCN": "多重射击",
+      "icon": "assets/ability_upgrademoonglaive.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21390?locale=4",
+      "tooltipSha256": "b61b0d448ae62b45861e313b9efbfd0dc90eaebfecfc4c32d373de58c71c463b"
+    },
+    "21655": {
+      "nameZhCN": "闪现术",
+      "icon": "assets/spell_arcane_blink.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21655?locale=4",
+      "tooltipSha256": "504e48f7bc598d8eead2257ade922eaf2ede9c42f007442b5d759b63ca418710"
+    },
+    "21793": {
+      "nameZhCN": "扭曲宁静",
+      "icon": "assets/spell_nature_tranquility.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21793?locale=4",
+      "tooltipSha256": "de660d35647ec7ef202d79e6f00e8e0fb40bb0df72b8df01504bd5940c6d8e1c"
+    },
+    "21807": {
+      "nameZhCN": "愤怒",
+      "icon": "assets/spell_nature_lightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21807?locale=4",
+      "tooltipSha256": "762e8b713d2276cefa6f9d9c70153f608a740ba46adbfe0b71cca048f0df0b4a"
+    },
+    "21808": {
+      "nameZhCN": "召唤碎片",
+      "icon": "assets/spell_nature_earthquake.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21808?locale=4",
+      "tooltipSha256": "526d215bfc78dc40a8079aeabf7a35184d657a9528fb781c18084db619936e99"
+    },
+    "21832": {
+      "nameZhCN": "投石",
+      "icon": "assets/ability_throw.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21832?locale=4",
+      "tooltipSha256": "0f5b4a34b3ce08fcd5fb319c62e3b91b93ec0403fbde15d945a166479b4ef5e8"
+    },
+    "21833": {
+      "nameZhCN": "地精龙枪",
+      "icon": "assets/spell_fire_incinerate.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21833?locale=4",
+      "tooltipSha256": "e026f3e3dc7b4ba9bf8f7d311a177a67fc0c5409b1c915c1296f4be34b5133b2"
+    },
+    "21869": {
+      "nameZhCN": "憎恨怒视",
+      "icon": "assets/ability_golemthunderclap.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21869?locale=4",
+      "tooltipSha256": "602ba4b19dbd2b75a49de08106600cc15ca9ce1dc0dc239f54a8d95ebb8db3f2"
+    },
+    "21909": {
+      "nameZhCN": "灰尘力场",
+      "icon": "assets/spell_nature_cyclone.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21909?locale=4",
+      "tooltipSha256": "6ec253511a4483de9fa54f7b60d9e87a79f793b5a7e5f98799baaf68c63b3ae4"
+    },
+    "21968": {
+      "nameZhCN": "堕落自然之力",
+      "icon": "assets/spell_nature_forceofnature.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/21968?locale=4",
+      "tooltipSha256": "4a826011aa97251dcd50ef623469a94be4575359df59b3d6b7bcb75f6e39013d"
+    },
+    "22128": {
+      "nameZhCN": "荆棘术",
+      "icon": "assets/spell_nature_thorns.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22128?locale=4",
+      "tooltipSha256": "12985e9cf0060b839546e0455cd295c4a041aa27c7f972720e2c7777db12a078"
+    },
+    "22187": {
+      "nameZhCN": "真言术：盾",
+      "icon": "assets/spell_holy_powerwordshield.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22187?locale=4",
+      "tooltipSha256": "b35068d3f2a585c7a776e57d4032ebb9212c8f88bef58a246841ed6c77484824"
+    },
+    "22191": {
+      "nameZhCN": "炽热之地",
+      "icon": "assets/spell_fire_fire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22191?locale=4",
+      "tooltipSha256": "4d700e7187c7d3aec843f568236a6b52b4ca73d6c6dd83f94b3d3032b5f6c071"
+    },
+    "22371": {
+      "nameZhCN": "无力诅咒",
+      "icon": "assets/spell_nature_drowsy.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22371?locale=4",
+      "tooltipSha256": "bde95dfb14a29445a1e42fac4f7036af432035edb3d5c2185a4b0caaf3d4babe"
+    },
+    "22419": {
+      "nameZhCN": "激流",
+      "icon": "assets/ability_warrior_disarm.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22419?locale=4",
+      "tooltipSha256": "1a8c9fba9742729c567c98440d7f6a6dce59b30f6a1862ed821502a06553ab4c"
+    },
+    "22420": {
+      "nameZhCN": "淹没",
+      "icon": "assets/spell_shadow_demonbreath.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22420?locale=4",
+      "tooltipSha256": "cdedd6e72fbc3e66bcedb15f330a8fdfe7ce516ac5e2ea4535708021275a859b"
+    },
+    "22421": {
+      "nameZhCN": "巨型喷泉",
+      "icon": "assets/spell_frost_summonwaterelemental.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22421?locale=4",
+      "tooltipSha256": "6c0367e408898c5e6ca0835aafc2ebec8cd3156767ded312fc3ced746de765a6"
+    },
+    "22478": {
+      "nameZhCN": "剧烈痛楚",
+      "icon": "assets/spell_shadow_shadowwordpain.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22478?locale=4",
+      "tooltipSha256": "ae9954a7885b0c5c06a0a4d761f09a3bbfd66aae52bd42d9823efe48dac92bb3"
+    },
+    "22575": {
+      "nameZhCN": "暗影震击",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22575?locale=4",
+      "tooltipSha256": "904fa14e595d732882df9070f23e365eec86ca419390c07052782e9a4d339005"
+    },
+    "22644": {
+      "nameZhCN": "吸血术",
+      "icon": "assets/ability_racial_cannibalize.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22644?locale=4",
+      "tooltipSha256": "38456266fd0258e34651c3cf9d20034580a7711c320d35650cbbd708208a3e95"
+    },
+    "22651": {
+      "nameZhCN": "牺牲",
+      "icon": "assets/spell_shadow_antimagicshell.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22651?locale=4",
+      "tooltipSha256": "f31117c35097e273bfe09cfcc526f079dcd339108845f4f47271a1c954e30f41"
+    },
+    "22660": {
+      "nameZhCN": "暗灰狼形态",
+      "icon": "assets/spell_nature_spiritwolf.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22660?locale=4",
+      "tooltipSha256": "2523793db0c74af02fb1778a4a4bb2333ac3995bf6da32957531d95e11df9ae5"
+    },
+    "22661": {
+      "nameZhCN": "弱化",
+      "icon": "assets/ability_creature_poison_03.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22661?locale=4",
+      "tooltipSha256": "f0eea72cfcef18ac02b1dfa621e2689cd2d91d95d73829db72e960017dc46802"
+    },
+    "22662": {
+      "nameZhCN": "寒冬",
+      "icon": "assets/spell_nature_nullifydisease.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22662?locale=4",
+      "tooltipSha256": "bc253be023fdbecdd8d57287bd0277a2cab07fb748a6f55c5f3e015cb7a61802"
+    },
+    "22688": {
+      "nameZhCN": "树形",
+      "icon": "assets/spell_nature_spiritwolf.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22688?locale=4",
+      "tooltipSha256": "97caa686456d2b8e3413a4e38df1cf00b73d8bde8b190b0c79ec60f2d6698707"
+    },
+    "22689": {
+      "nameZhCN": "割碎",
+      "icon": "assets/ability_druid_disembowel.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22689?locale=4",
+      "tooltipSha256": "9018e968b71cbee41daa41096d86e75ec8bc756f4056688e2b0a0f2678a0ef30"
+    },
+    "22691": {
+      "nameZhCN": "缴械",
+      "icon": "assets/ability_warrior_disarm.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22691?locale=4",
+      "tooltipSha256": "0403a055dbca4091f3470143076df10e95e2f5a51ca0fbcefa5f78b525d6db31"
+    },
+    "22709": {
+      "nameZhCN": "虚空箭",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22709?locale=4",
+      "tooltipSha256": "5ee3b83f9b4e7e6484cc4df869f289ca716aaab2be421cde7c504a133b85705f"
+    },
+    "22710": {
+      "nameZhCN": "巨化术",
+      "icon": "assets/spell_nature_strength.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22710?locale=4",
+      "tooltipSha256": "277ee23bb388378e1b29e9d32a115e261f413549814948c5c03d569acc355026"
+    },
+    "22713": {
+      "nameZhCN": "烈焰打击",
+      "icon": "assets/spell_fire_fireball.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22713?locale=4",
+      "tooltipSha256": "8b1ec2f71f5abcbbbea587f1e93eac5a9ff22cb6eb067b8efc8970b9aad91743"
+    },
+    "22714": {
+      "nameZhCN": "召唤水浪幼崽",
+      "icon": "assets/spell_frost_chillingblast.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22714?locale=4",
+      "tooltipSha256": "9dae7cd2df7fba7579a8d25110941ea70dcd42b46a24b1ec8192c862cbb5ff0b"
+    },
+    "22766": {
+      "nameZhCN": "隐秘行动",
+      "icon": "assets/ability_stealth.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22766?locale=4",
+      "tooltipSha256": "dca4aaba6d8efb3243c81e19dedc3a1ad7cd6435573d078f1436e48c84b27d4b"
+    },
+    "22833": {
+      "nameZhCN": "喷酒",
+      "icon": "assets/inv_drink_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22833?locale=4",
+      "tooltipSha256": "246f85c66c51a4203d44fb4052f727489ba0d9c4cb86299f12a6bb35eb7cb1ee"
+    },
+    "22835": {
+      "nameZhCN": "醉酒怒气",
+      "icon": "assets/spell_shadow_sacrificialshield.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22835?locale=4",
+      "tooltipSha256": "b9a21f2a4f24ea814266f1c4b931bf1ddbed21ad175acedecf55aad20e1ae8b3"
+    },
+    "22857": {
+      "nameZhCN": "反击风暴",
+      "icon": "assets/ability_warrior_challange.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22857?locale=4",
+      "tooltipSha256": "5b8598e2ba775244c9165001af8c1a15ec5dd98271d4d2f18531126fb4d88be5"
+    },
+    "22859": {
+      "nameZhCN": "致死顺劈",
+      "icon": "assets/ability_warrior_savageblow.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22859?locale=4",
+      "tooltipSha256": "4a132f766d72b281871c20dc8421b649b8eb90286b2309ad7e9d8bdc9ee17b91"
+    },
+    "22860": {
+      "nameZhCN": "召唤劫掠者",
+      "icon": "assets/ability_bullrush.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22860?locale=4",
+      "tooltipSha256": "44eb5756970cf280e30051c64d589d847edd65d52cfe861325e3663178aa88d8"
+    },
+    "22884": {
+      "nameZhCN": "心灵尖啸",
+      "icon": "assets/spell_shadow_psychicscream.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22884?locale=4",
+      "tooltipSha256": "43bfed60b92d753b6a7afbe108b51a45a1e5be0a3befe7491b615b2981cdbc4e"
+    },
+    "22886": {
+      "nameZhCN": "狂暴冲锋",
+      "icon": "assets/ability_warrior_charge.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22886?locale=4",
+      "tooltipSha256": "71a802fb818ae364f38559b5528dd1c1e188d165814d723c00ba1db1e4106319"
+    },
+    "22899": {
+      "nameZhCN": "伊莫塔尔之眼",
+      "icon": "assets/spell_shadow_detectinvisibility.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22899?locale=4",
+      "tooltipSha256": "b01e2876a8a31a25d9b65b60316147ef3a7b839ff2d044c57a47d998562794e0"
+    },
+    "22907": {
+      "nameZhCN": "射击",
+      "icon": "assets/ability_marksmanship.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22907?locale=4",
+      "tooltipSha256": "70a98650e2f16cabd1f3c990d2806052fe52bf67cd90324f68cfaa0aba83ad89"
+    },
+    "22908": {
+      "nameZhCN": "乱射",
+      "icon": "assets/ability_marksmanship.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22908?locale=4",
+      "tooltipSha256": "1ac47a743d0a6d266e49cf2fc362a6064b30b806b1adc10368f3d565557f0127"
+    },
+    "22910": {
+      "nameZhCN": "献祭陷阱",
+      "icon": "assets/spell_fire_flameshock.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22910?locale=4",
+      "tooltipSha256": "daee1be90ce6119bd95708a9a3bf5ebd0c9ae9fb9bb24d3578be9320a5589e1a"
+    },
+    "22914": {
+      "nameZhCN": "震荡射击",
+      "icon": "assets/spell_frost_stun.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22914?locale=4",
+      "tooltipSha256": "a514b3ac37a10e8bab6f550324e233b800362ca33e528a91c16c133a80200475"
+    },
+    "22916": {
+      "nameZhCN": "上钩拳",
+      "icon": "assets/inv_gauntlets_05.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22916?locale=4",
+      "tooltipSha256": "d3e6fb8e01a04955864b7e4c1dd8e58265019eaeb38d3df9be6568d7586b3092"
+    },
+    "22917": {
+      "nameZhCN": "暗影形态",
+      "icon": "assets/spell_shadow_summonvoidwalker.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22917?locale=4",
+      "tooltipSha256": "2b65af1bca1252f5a24aea164172083b62ffb33fdd6136a8dceb8fcb8f07195e"
+    },
+    "22919": {
+      "nameZhCN": "精神鞭笞",
+      "icon": "assets/spell_shadow_siphonmana.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22919?locale=4",
+      "tooltipSha256": "3181b7f3650c23bb040652ddae636d6454b6f5b3bb03bd71a03f4aaeab1730d6"
+    },
+    "22920": {
+      "nameZhCN": "奥术冲击",
+      "icon": "assets/spell_shadow_deathpact.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22920?locale=4",
+      "tooltipSha256": "5759e78cfc0141af535d451fa1a9f71e72999fbc3a571cf99a27cc02a6d1fa77"
+    },
+    "22924": {
+      "nameZhCN": "缠绕之藤",
+      "icon": "assets/spell_nature_earthquake.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22924?locale=4",
+      "tooltipSha256": "93a9850acd273269119cac1e585bff7d382ffb8f58b2e7fb3a1223e2f9db4516"
+    },
+    "22950": {
+      "nameZhCN": "伊莫塔尔传送门",
+      "icon": "assets/spell_arcane_portalironforge.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22950?locale=4",
+      "tooltipSha256": "df1bc5bb2d57c87ac42d4f7697e5f03b7eaea4ee27e227af4e494cf5394061e0"
+    },
+    "22994": {
+      "nameZhCN": "纠缠",
+      "icon": "assets/spell_nature_stranglevines.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22994?locale=4",
+      "tooltipSha256": "14d603d6e0a442b41032dc4891a1b15d10ec05845fbb7308a98dd0a641bb79bc"
+    },
+    "22995": {
+      "nameZhCN": "召唤",
+      "icon": "assets/spell_arcane_portalironforge.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/22995?locale=4",
+      "tooltipSha256": "f9b896d447bb15bac0d05725a8af96fa1af8401d64faea19d4cc81bd7c786687"
+    },
+    "23159": {
+      "nameZhCN": "Summon Dreadsteed Spirit (DND)",
+      "icon": "assets/temp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/23159?locale=4",
+      "tooltipSha256": "430e68ae2edb472f521e8612fc2b89494aaaeb0bbb2d7e2af5219512005f56a5"
+    },
+    "23224": {
+      "nameZhCN": "暗影迷雾",
+      "icon": "assets/spell_shadow_gathershadows.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/23224?locale=4",
+      "tooltipSha256": "8f757e15df5da0371dfe972c88e2f1c6034b2d7474d96bb2f0be455d85a8e6eb"
+    },
+    "23261": {
+      "nameZhCN": "召唤达克雷尔的堕落战马",
+      "icon": "assets/temp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/23261?locale=4",
+      "tooltipSha256": "3a203857f7e8f901c0c2ff8e2e32cf1ab7476d5ddd4a56bdc56c45d06a232373"
+    },
+    "23378": {
+      "nameZhCN": "岩浆喷溅",
+      "icon": "assets/spell_fire_immolation.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/23378?locale=4",
+      "tooltipSha256": "d4b6600919026a2a6c389d7256bae0635a7e276f636568ff27b9114820de78d4"
+    },
+    "26977": {
+      "nameZhCN": "元素领主的诅咒",
+      "icon": "assets/spell_fire_lavaspawn.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/26977?locale=4",
+      "tooltipSha256": "c219d3e08a6f1fafe0b71cc8a49cfc3e84fa667fc55ed68083f83e6b8313627a"
+    },
+    "27249": {
+      "nameZhCN": "召唤鬼灵刺客",
+      "icon": "assets/spell_shadow_charm.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27249?locale=4",
+      "tooltipSha256": "099602de7a8154de61cbecd7831cc71b0706e6b4c82dd3ee7bb482ae6506ae27"
+    },
+    "27286": {
+      "nameZhCN": "暗影之怒",
+      "icon": "assets/spell_shadow_siphonmana.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27286?locale=4",
+      "tooltipSha256": "5e2724b7545a0ee7b76362143295c59cb6ea0bd9dc59159579edc97617678340"
+    },
+    "27382": {
+      "nameZhCN": "暗影箭雨",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27382?locale=4",
+      "tooltipSha256": "5e973bcec79f1c75a7f452147a7c5c12f3c4dc8586c742342b363cc3af4fbfc9"
+    },
+    "27527": {
+      "nameZhCN": "治疗之触",
+      "icon": "assets/spell_nature_healingtouch.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27527?locale=4",
+      "tooltipSha256": "f050f2cedde592bb370d050a6517ac1cc747aadc55c8adb21a3e9f9c319b98bf"
+    },
+    "27530": {
+      "nameZhCN": "飓风",
+      "icon": "assets/spell_nature_cyclone.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27530?locale=4",
+      "tooltipSha256": "ce354c9ac4975499628a8df050005b8ef9432332c9e8cef164d58a4e52abef18"
+    },
+    "27532": {
+      "nameZhCN": "回春术",
+      "icon": "assets/spell_nature_rejuvenation.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27532?locale=4",
+      "tooltipSha256": "8e24331b8493568adad481b57ea72e5417f9982ee84b8c23e544dd9ed9c0f505"
+    },
+    "27543": {
+      "nameZhCN": "熊形态",
+      "icon": "assets/ability_racial_bearform.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27543?locale=4",
+      "tooltipSha256": "058dd68c3dbaec913ee960dd08bd44f09286766ffd5689f310946c42e3cebb53"
+    },
+    "27545": {
+      "nameZhCN": "猎豹形态",
+      "icon": "assets/ability_racial_bearform.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27545?locale=4",
+      "tooltipSha256": "fb58256af31ca50dcdd405d4b2d20ff7d28dbd211271d96b94531e8be140daa5"
+    },
+    "27546": {
+      "nameZhCN": "精灵龙形态",
+      "icon": "assets/spell_nature_forceofnature.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27546?locale=4",
+      "tooltipSha256": "4efc27e32e165a81c7a5416cc8aa28a3b7c50483951c802a0e0ecfc6238ecc08"
+    },
+    "27551": {
+      "nameZhCN": "挫志咆哮",
+      "icon": "assets/ability_druid_demoralizingroar.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27551?locale=4",
+      "tooltipSha256": "2562e7545db33b4b9c8c0e0cbe755284e7b2c3766eced1b185339466ef25c3d5"
+    },
+    "27553": {
+      "nameZhCN": "槌击",
+      "icon": "assets/ability_druid_maul.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27553?locale=4",
+      "tooltipSha256": "e1052bcfbb1aed320ac6b8072e4ae1657f67a7a9348efd62b202e6f93b885692"
+    },
+    "27554": {
+      "nameZhCN": "挥击",
+      "icon": "assets/inv_misc_monsterclaw_03.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27554?locale=4",
+      "tooltipSha256": "1e3fcb6a7691581b8d6fc7465095b41ad9ca6958acabf8bb825c3379ed3fd3ae"
+    },
+    "27555": {
+      "nameZhCN": "撕碎",
+      "icon": "assets/ability_druid_disembowel.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27555?locale=4",
+      "tooltipSha256": "eb707a0dd9c08f40dd4f72ee1c3d5c076d0648a86b07fa87915c0872e282eca9"
+    },
+    "27556": {
+      "nameZhCN": "扫击",
+      "icon": "assets/ability_druid_disembowel.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27556?locale=4",
+      "tooltipSha256": "25900ad7ce97a89eaf0d260afa3340b71e3a50cec5f87c94b34308edfd89738a"
+    },
+    "27557": {
+      "nameZhCN": "凶猛撕咬",
+      "icon": "assets/ability_druid_ferociousbite.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27557?locale=4",
+      "tooltipSha256": "c1de7f6c956641797c8a5c15b51215c0029f74aba1136c40b169c5f4b4140e83"
+    },
+    "27564": {
+      "nameZhCN": "反射",
+      "icon": "assets/spell_shadow_teleport.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27564?locale=4",
+      "tooltipSha256": "6ebc7cf0fc42ed9a7fddd56ec882998556eb43dc7dd7f3149dd6d2d89dfebe88"
+    },
+    "27567": {
+      "nameZhCN": "闪电链",
+      "icon": "assets/spell_nature_chainlightning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27567?locale=4",
+      "tooltipSha256": "58b0e794116c8813f470b2c814720b33bf80ad5b6af03e8f16130c5265f8bbf2"
+    },
+    "27636": {
+      "nameZhCN": "星辰碎片",
+      "icon": "assets/spell_arcane_starfire.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27636?locale=4",
+      "tooltipSha256": "60e9941c195cd19b5678d6b6b13abeddb0e4e2c1d4783d13572dc832f72a3063"
+    },
+    "27637": {
+      "nameZhCN": "愈合",
+      "icon": "assets/spell_nature_resistnature.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27637?locale=4",
+      "tooltipSha256": "e84b821c4a7c459d1efac7347ead4e90700dba3b123dee8433dcc57eb2f3e61f"
+    },
+    "27639": {
+      "nameZhCN": "召唤宠物",
+      "icon": "assets/temp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27639?locale=4",
+      "tooltipSha256": "565c3e2ebfae5217fbf55102c655eb0544fb94d68088f4aa8ad688bfff65aac3"
+    },
+    "27641": {
+      "nameZhCN": "恐惧",
+      "icon": "assets/spell_shadow_possession.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27641?locale=4",
+      "tooltipSha256": "d26bbfd1d357e2cc3833c4c12690215c39c8a20b59f9cf68c65985669113dfef"
+    },
+    "27643": {
+      "nameZhCN": "召唤亚雷恩的灵魂",
+      "icon": "assets/temp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27643?locale=4",
+      "tooltipSha256": "1a3625b1274ca6973dc19d90184a448d603472d573c129aa83e02778c078c2f6"
+    },
+    "27644": {
+      "nameZhCN": "召唤索托斯的灵魂",
+      "icon": "assets/temp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27644?locale=4",
+      "tooltipSha256": "ea75b5293a5f025055b080bb16635388fc2c00b31e69b1992a892e477fc2f158"
+    },
+    "27646": {
+      "nameZhCN": "暗影箭雨",
+      "icon": "assets/spell_shadow_shadowbolt.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27646?locale=4",
+      "tooltipSha256": "a941a0ff7d4549e7a52eed94998766018476e3a348f925d17ad18c498a78e5cd"
+    },
+    "27687": {
+      "nameZhCN": "召唤白骨爪牙",
+      "icon": "assets/spell_shadow_raisedead.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27687?locale=4",
+      "tooltipSha256": "25a946ea4f47f4df829e4e720106b2d229060e7a15b44ec9422014657353e21d"
+    },
+    "27688": {
+      "nameZhCN": "白骨之盾",
+      "icon": "assets/spell_shadow_callofbone.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27688?locale=4",
+      "tooltipSha256": "f6d4295e31042960dc99bd43c4b7257a52483db6c43cfa89aada529bb2bd4862"
+    },
+    "27695": {
+      "nameZhCN": "召唤白骨法师",
+      "icon": "assets/spell_shadow_raisedead.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27695?locale=4",
+      "tooltipSha256": "eab5ec396bcffa7e5d05af257e2be8de3e960627894d00ee4cd4aee937475339"
+    },
+    "27737": {
+      "nameZhCN": "月火术",
+      "icon": "assets/spell_nature_starfall.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/27737?locale=4",
+      "tooltipSha256": "cc5ea86354f129d7e4432dc05262670aabaef303ede8d831ae62823725256672"
+    },
+    "28126": {
+      "nameZhCN": "Spirit Particles (purple)",
+      "icon": "assets/spell_frost_wisp.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/28126?locale=4",
+      "tooltipSha256": "20c541a4b279eea55d1c80845bace00f068c3516f4dc2818edb2931111704d02"
+    },
+    "29419": {
+      "nameZhCN": "闪光炸弹",
+      "icon": "assets/spell_shadow_darksummoning.png",
+      "sourceUrl": "https://nether.wowhead.com/classic/tooltip/spell/29419?locale=4",
+      "tooltipSha256": "a6f57f13e73063640a8aa366ccc6e6887805e71efead1031c09ed22990f2ca92"
     }
   }
 }

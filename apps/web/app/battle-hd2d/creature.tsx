@@ -9,7 +9,7 @@ import {creatureAction,creatureClip,creatureOneShot} from '@/lib/creature-animat
 import type {BattleUnitData,CreatureModelData} from '@/lib/battle-hd2d-types';
 import {useBattleFrame} from './frame';
 
-export function Creature({unit,height,model}:{unit:BattleUnitData;height:number;model:CreatureModelData}){
+export function Creature({unit:initialUnit,height,model}:{unit:BattleUnitData;height:number;model:CreatureModelData}){
  const asset=useGLTF(model.src),attachments=useGLTF((model.attachments||[]).map(a=>a.src)),frame=useBattleFrame(),root=useRef<Group>(null);
  const skins=useTexture(Object.values(model.textures||{}));
  // Each actor owns its skeleton and mixer. Geometry and textures stay cached.
@@ -24,7 +24,7 @@ export function Creature({unit,height,model}:{unit:BattleUnitData;height:number;
   return()=>instance.dispose();
  },[instance]);
  useFrame(()=>{
-  const f=frame.current,s=state.current;
+  const f=frame.current,s=state.current,unit=f.scene.units.find(u=>u.id===initialUnit.id)||initialUnit;
   const p=unitPoint(f.layout,unit.id),target=battleTarget(unit,f.scene.units,f.clock),q=target?unitPoint(f.layout,target.id):null;
   const moved=Math.hypot(p[0]-s.previous[0],p[2]-s.previous[1]);
   if(Number.isFinite(moved)&&moved>.001)s.lastMove=f.clock;
@@ -54,7 +54,7 @@ export function Creature({unit,height,model}:{unit:BattleUnitData;height:number;
    root.current.visible=!(s.name==='submerge'&&s.action&&s.action.time>=s.action.getClip().duration-.02);
   }
  });
- return <group ref={root} scale={height/model.height} rotation={[0,unit.foe?Math.PI:0,0]}>
+ return <group ref={root} scale={height/model.height} rotation={[0,initialUnit.foe?Math.PI:0,0]}>
   <primitive object={instance.object} position={[0,-model.minY,0]} dispose={null}/>
  </group>;
 }

@@ -1,4 +1,5 @@
 import {raidNextMechanics} from './rules/molten-core-mechanics.js';
+import {grantRaidReadyAttunements} from './rules/raid-attunement.js';
 import {beginMoltenCoreBattle} from './rules/molten-core-battle.js';
 import {createGame,advance} from './rules/engine.js';
 import {recruit} from './rules/party.js';
@@ -25,6 +26,7 @@ function freshState(seed:number):Rules {
  const members=createRoster(),hero=members.shift()!;
  const s:Rules={...createGame('远征团长',seed,0),...hero,party:members};
  s.settings.autoLoot=false;s.logs=[];s.logSequence=0;s.bag=[];s.pending=[];s.rngState=seed;s.clock=0;s.wallAt=0;
+ grantRaidReadyAttunements(s);
  return s;
 }
 export function createMoltenCoreDemo(seed=60325):MoltenCoreDemo {

@@ -60,7 +60,7 @@ export function arenaAction(s,a){
  }
  if(a.type==='arenaPrepare'){
   need(!s.combat&&!s.dungeon&&!s.guildRaid?.active&&!s.goldRaid?.active&&s.activity.type==='idle'&&s.hp>0,'请先结束当前活动并离开副本。');
-  need(s.level>=18&&s.growthPolicy!=='companion','主角达到18级后可以率领小队参加竞技场。');
+  need(s.level>=60&&s.growthPolicy!=='companion','主角达到60级后可以率领小队参加竞技场。');
   need([2,3,5].includes(a.size),'请选择2v2、3v3或5v5。');const map=arenaMaps.find(m=>m.id===a.mapId),opponent=arenaOpponents.find(o=>o.id===a.opponentId);
   need(map&&opponent,'竞技场或NPC队伍不存在。');need(Array.isArray(a.memberIds)&&a.memberIds.length===a.size&&a.memberIds[0]===s.id&&new Set(a.memberIds).size===a.size,'阵容必须包含主角和对应数量的不重复队友。');
   const roster=[s,...s.party],chosen=a.memberIds.map(id=>roster.find(c=>c.id===id));need(chosen.every(c=>c&&c.hp>0&&c.level===s.level),'请选择同级且存活的小队成员。');
@@ -111,7 +111,7 @@ function memberView(c,clock,own){
 }
 export function arenaView(s){
  const a=s.arena,roster=[s,...s.party].map(c=>({id:c.id,name:c.name,classId:c.classId,role:combatRole(c),level:c.level,alive:c.hp>0}));
- const base={maps:arenaMaps,opponents:arenaOpponents.map(o=>({id:o.id,name:o.name,description:o.description})),roster,unlocked:s.level>=18&&s.growthPolicy!=='companion'};
+ const base={maps:arenaMaps,opponents:arenaOpponents.map(o=>({id:o.id,name:o.name,description:o.description})),roster,unlocked:s.level>=60&&s.growthPolicy!=='companion'};
  if(!a)return{...base,match:null};
  const own=a.teams[0].members,hidden=new Set();
  const teams=a.teams.map((team,index)=>({members:arenaUnits(team,a.map,false).map(c=>{const v=memberView(c,a.clock,index===0);if(index===1&&a.phase==='combat'&&!own.some(observer=>observer.hp>0&&detectsTarget(observer,c,a.clock))){hidden.add(c.id);return{...v,x:null,y:null,hidden:true,cast:null,targetId:null,effects:[],diminishing:{}};}return v;})}));
