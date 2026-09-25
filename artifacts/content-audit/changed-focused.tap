@@ -1,0 +1,136 @@
+TAP version 13
+# Subtest: personal combat opens at ten yards for melee classes
+ok 1 - personal combat opens at ten yards for melee classes
+  ---
+  duration_ms: 14.1319
+  type: 'test'
+  ...
+# Subtest: personal combat opens at the available ranged strategy range
+ok 2 - personal combat opens at the available ranged strategy range
+  ---
+  duration_ms: 6.9442
+  type: 'test'
+  ...
+# Subtest: dungeon combat keeps its authored opening formation
+ok 3 - dungeon combat keeps its authored opening formation
+  ---
+  duration_ms: 0.3975
+  type: 'test'
+  ...
+# Subtest: plans validate actors, lock in combat and survive serialization per boss
+ok 4 - plans validate actors, lock in combat and survive serialization per boss
+  ---
+  duration_ms: 768.9168
+  type: 'test'
+  ...
+# Subtest: manual reserved shield wall applies the actual aura once, and rejects stale encounters or dead casters
+ok 5 - manual reserved shield wall applies the actual aura once, and rejects stale encounters or dead casters
+  ---
+  duration_ms: 24.8113
+  type: 'test'
+  ...
+# Subtest: automatic emergency skills obey health thresholds and real resource costs
+ok 6 - automatic emergency skills obey health thresholds and real resource costs
+  ---
+  duration_ms: 10.6142
+  type: 'test'
+  ...
+# Subtest: scheduled shield wall covers the fear window and focus commands redirect actual damage targets
+ok 7 - scheduled shield wall covers the fear window and focus commands redirect actual damage targets
+  ---
+  duration_ms: 21.1827
+  type: 'test'
+  ...
+# Subtest: assigned dispellers are exclusive and leaving the mechanic unassigned produces observable failures
+ok 8 - assigned dispellers are exclusive and leaving the mechanic unassigned produces observable failures
+  ---
+  duration_ms: 10.7341
+  type: 'test'
+  ...
+# Subtest: published tank and movement choices change actual initial targets and danger avoidance
+ok 9 - published tank and movement choices change actual initial targets and danger avoidance
+  ---
+  duration_ms: 10.5479
+  type: 'test'
+  ...
+# Subtest: automatic traversal pauses before a boss and wipe review preserves the plan for the next attempt
+ok 10 - automatic traversal pauses before a boss and wipe review preserves the plan for the next attempt
+  ---
+  duration_ms: 525.0657
+  type: 'test'
+  ...
+# Subtest: expanded regions expose source herb and ore nodes with their actual skill gates
+ok 11 - expanded regions expose source herb and ore nodes with their actual skill gates
+  ---
+  duration_ms: 8.1366
+  type: 'test'
+  ...
+# Subtest: every legal race/class starts at its source homeland with local quests and low-level enemies
+ok 12 - every legal race/class starts at its source homeland with local quests and low-level enemies
+  ---
+  duration_ms: 2068.5011
+  type: 'test'
+  ...
+# Subtest: all world nodes are connected, and each 1-40 region has visible, finite coordinates
+ok 13 - all world nodes are connected, and each 1-40 region has visible, finite coordinates
+  ---
+  duration_ms: 10.5502
+  type: 'test'
+  ...
+# Subtest: both factions can use bank, inn, training and flight services in all six capitals
+ok 14 - both factions can use bank, inn, training and flight services in all six capitals
+  ---
+  duration_ms: 2685.7692
+  type: 'test'
+  ...
+# Subtest: faction masks, actual quest rewards, and boosted faction capitals replace the shared route
+ok 15 - faction masks, actual quest rewards, and boosted faction capitals replace the shared route
+  ---
+  duration_ms: 465.3562
+  type: 'test'
+  ...
+# Subtest: level-ten parties can prepare for early Horde dungeons with legal equipment
+ok 16 - level-ten parties can prepare for early Horde dungeons with legal equipment
+  ---
+  duration_ms: 38.9176
+  type: 'test'
+  ...
+# Subtest: every expanded dungeon has finite enemy stats, connected encounters and resumable progression
+ok 17 - every expanded dungeon has finite enemy stats, connected encounters and resumable progression
+  ---
+  duration_ms: 1421.1611
+  type: 'test'
+  ...
+# Subtest: adapted task scenes require their active quest and location, take time, and survive save reload
+ok 18 - adapted task scenes require their active quest and location, take time, and survive save reload
+  ---
+  duration_ms: 22.4972
+  type: 'test'
+  ...
+# Subtest: task spells are never credited by ordinary kills
+ok 19 - task spells are never credited by ordinary kills
+  ---
+  duration_ms: 0.7893
+  type: 'test'
+  ...
+# Subtest: turning in a racial class quest grants its source-backed class abilities once
+ok 20 - turning in a racial class quest grants its source-backed class abilities once
+  ---
+  duration_ms: 1.0687
+  type: 'test'
+  ...
+# Subtest: Alliance and Horde can enter each other’s city dungeons
+ok 21 - Alliance and Horde can enter each other’s city dungeons
+  ---
+  duration_ms: 130.6196
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10458.6601

@@ -1,0 +1,45 @@
+{"time":0,"level":1,"location":"northshire","event":"start-or-resume","maxLevel":60,"xpMultiplier":2}
+{"time":23351000,"level":18,"location":"deadmines","event":"dungeon","id":"deadmines","atLevel":18,"resumed":false,"start":20224700,"end":23351000,"duration":3126300,"xp":12630,"kills":106,"deaths":3,"completed":false,"cursor":27}
+{"time":69036700,"level":26,"location":"stockades","event":"dungeon","id":"stockades","atLevel":26,"resumed":false,"start":67498100,"end":69036700,"duration":1538600,"xp":990,"kills":3,"deaths":3,"completed":false,"cursor":1}
+{"time":98426800,"level":28,"location":"windshear","event":"level","from":27,"to":28,"hours":27.34,"kills":853,"quests":154}
+{"time":111511900,"level":29,"location":"raynewood","event":"level","from":28,"to":29,"hours":30.98,"kills":957,"quests":166}
+{"time":132347600,"level":30,"location":"raynewood","event":"level","from":29,"to":30,"hours":36.76,"kills":1282,"quests":166}
+{"time":148289200,"level":30,"location":"raynewood","event":"start-or-resume","maxLevel":60,"xpMultiplier":2}
+{"time":161023800,"level":31,"location":"raynewood","event":"level","from":30,"to":31,"hours":44.73,"kills":1553,"quests":168}
+{"time":183179000,"level":32,"location":"raynewood","event":"level","from":31,"to":32,"hours":50.88,"kills":1957,"quests":168}
+{"time":194994300,"level":33,"location":"fallen-sky","event":"level","from":32,"to":33,"hours":54.17,"kills":2375,"quests":168}
+{"time":232980800,"level":35,"location":"scarlet-monastery-armory","event":"dungeon","id":"scarlet-monastery-armory","atLevel":35,"resumed":false,"start":228541713,"end":232980800,"duration":4439087,"xp":13340,"kills":37,"deaths":3,"completed":false,"cursor":12}
+{"time":267960000,"level":37,"location":"shady-rest","event":"level","from":36,"to":37,"hours":74.43,"kills":2651,"quests":225}
+{"time":290344100,"level":38,"location":"faldirs","event":"level","from":37,"to":38,"hours":80.65,"kills":3134,"quests":228}
+{"time":294762500,"level":38,"location":"scarlet-monastery-armory","event":"dungeon","id":"scarlet-monastery-armory","atLevel":38,"resumed":false,"start":290344100,"end":294762500,"duration":4418400,"xp":8750,"kills":29,"deaths":3,"completed":false,"cursor":22}
+{"time":312514100,"level":39,"location":"faldirs","event":"level","from":38,"to":39,"hours":86.81,"kills":3354,"quests":235}
+{"time":325598300,"level":40,"location":"faldirs","event":"level","from":39,"to":40,"hours":90.44,"kills":3896,"quests":235}
+{"time":335556826,"level":40,"location":"mistvale","event":"error","error":"Error: 请先结束当前活动。","stack":"Error: 请先结束当前活动。\n    at ensureIdle (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/engine.js:164:86)\n    at act (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/engine.js:200:38)\n    at command (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:56:4)\n    at lootAndClear (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:123:152)\n    at workQuest (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:282:7)\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:433:6"}
+{"time":335556826,"level":40,"location":"mistvale","event":"start-or-resume","maxLevel":60,"xpMultiplier":2}
+{"time":408753700,"level":43,"location":"dire-maul-road","event":"level","from":42,"to":43,"hours":113.54,"kills":4175,"quests":300}
+{"time":434912200,"level":44,"location":"splinterspear","event":"level","from":43,"to":44,"hours":120.81,"kills":4437,"quests":310}
+{"time":437361299,"level":44,"location":"zul-farrak","event":"dungeon-error","id":"zul-farrak","error":"Error: 所有成员至少需要达到 35 级。","entrance":"zul-farrak","hp":1777,"activity":{"type":"idle","reason":""}}
+{"time":460386600,"level":45,"location":"wyrmbog","event":"level","from":44,"to":45,"hours":127.89,"kills":4951,"quests":317}
+{"time":460386600,"level":45,"location":"wyrmbog","event":"start-or-resume","maxLevel":60,"xpMultiplier":2}
+{"time":461298666,"level":45,"location":"zul-farrak","event":"dungeon-error","id":"zul-farrak","error":"Error: 所有成员至少需要达到 35 级。","entrance":"zul-farrak","hp":1826,"activity":{"type":"idle","reason":""}}
+{"time":487646000,"level":46,"location":"slag-pit","event":"level","from":45,"to":46,"hours":135.46,"kills":5301,"quests":327}
+{"time":485700892,"level":45,"location":"thorium-point","event":"start-or-resume","maxLevel":60,"xpMultiplier":2}
+{"time":487698600,"level":46,"location":"slag-pit","event":"level","from":45,"to":46,"hours":135.47,"kills":5306,"quests":327}
+{"time":511128900,"level":47,"location":"dire-maul-road","event":"level","from":46,"to":47,"hours":141.98,"kills":5590,"quests":338}
+{"time":535347000,"level":48,"location":"jaedenar","event":"level","from":47,"to":48,"hours":148.71,"kills":6169,"quests":342}
+{"time":558999600,"level":49,"location":"black-char-cave","event":"level","from":48,"to":49,"hours":155.28,"kills":6360,"quests":356}
+{"time":590459000,"level":50,"location":"fire-plume","event":"level","from":49,"to":50,"hours":164.02,"kills":6901,"quests":361}
+{"time":597666300,"level":50,"location":"zul-farrak","event":"dungeon","id":"zul-farrak","atLevel":50,"resumed":false,"start":590459000,"end":597666300,"duration":7207300,"xp":33836,"kills":145,"deaths":0,"completed":false,"cursor":49}
+{"time":635965237,"level":51,"location":"steamwheedle","event":"start-or-resume","maxLevel":60,"xpMultiplier":2}
+{"time":641438000,"level":51,"location":"zul-farrak","event":"dungeon","id":"zul-farrak","atLevel":51,"resumed":false,"start":635965237,"end":641438000,"duration":5472763,"xp":24570,"kills":125,"deaths":2,"completed":true,"cursor":97}
+{"time":661296600,"level":52,"location":"ungoro-east","event":"level","from":51,"to":52,"hours":183.69,"kills":7603,"quests":386}
+{"time":679583000,"level":53,"location":"dreadmaul-rock","event":"level","from":52,"to":53,"hours":188.77,"kills":8229,"quests":392}
+{"time":707142000,"level":54,"location":"dreadmaul-rock","event":"level","from":53,"to":54,"hours":196.43,"kills":8369,"quests":409}
+{"time":749619200,"level":55,"location":"valor-rest","event":"level","from":54,"to":55,"hours":208.23,"kills":8809,"quests":423}
+{"time":756828400,"level":55,"location":"dire-maul-east","event":"dungeon","id":"dire-maul-east","atLevel":55,"resumed":false,"start":749619200,"end":756828400,"duration":7209200,"xp":36290,"kills":138,"deaths":0,"completed":false,"cursor":48}
+{"time":794487000,"level":56,"location":"terror-run","event":"level","from":55,"to":56,"hours":220.69,"kills":9622,"quests":428}
+{"time":833943100,"level":57,"location":"andorhal","event":"level","from":56,"to":57,"hours":231.65,"kills":10693,"quests":428}
+{"time":858497300,"level":58,"location":"frostsaber-rock","event":"level","from":57,"to":58,"hours":238.47,"kills":11119,"quests":440}
+{"time":865702828,"level":58,"location":"dire-maul-east","event":"dungeon","id":"dire-maul-east","atLevel":58,"resumed":false,"start":858497300,"end":865702828,"duration":7205528,"xp":34166,"kills":112,"deaths":0,"completed":false,"cursor":87}
+{"time":876845300,"level":59,"location":"dire-maul-east","event":"dungeon","id":"dire-maul-east","atLevel":59,"resumed":false,"start":872721527,"end":876845300,"duration":4123773,"xp":12094,"kills":41,"deaths":1,"completed":true,"cursor":103}
+{"time":922129691,"level":60,"location":"lights-hope","event":"complete"}

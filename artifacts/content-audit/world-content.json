@@ -1,0 +1,2134 @@
+{
+  "summary": {
+    "nodes": 311,
+    "quests": 3837,
+    "creatures": 8533,
+    "items": 14804,
+    "dungeons": 28,
+    "huntableCreatures": 2587,
+    "issueCounts": {
+      "noLocatedStart": {
+        "total": 32,
+        "notExcluded": 0
+      },
+      "itemWithoutLocatedSource": {
+        "total": 49,
+        "notExcluded": 0
+      },
+      "noLocatedEnd": {
+        "total": 26,
+        "notExcluded": 0
+      },
+      "unlocatedScene": {
+        "total": 9,
+        "notExcluded": 0
+      },
+      "unsupportedQuestCondition": {
+        "total": 60,
+        "notExcluded": 0
+      },
+      "missingQuestDependency": {
+        "total": 3,
+        "notExcluded": 0
+      }
+    },
+    "visualAssetPaths": 9360
+  },
+  "issues": {
+    "noLocatedStart": [
+      {
+        "id": 171,
+        "name": "联盟孤儿的看护者",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 558,
+        "name": "吉安娜的签名",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 910,
+        "name": "降帆靠港",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 911,
+        "name": "前线之门",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 915,
+        "name": "草莓冰激凌",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 925,
+        "name": "凯恩的蹄印",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 1479,
+        "name": "永恒之树",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 1558,
+        "name": "巨石水坝",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 1687,
+        "name": "幽灵灯塔",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 1800,
+        "name": "洛丹伦的王座",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 4822,
+        "name": "草莓冰激凌",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 5502,
+        "name": "部落孤儿的看护者",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 7021,
+        "name": "冬天爷爷来了！",
+        "level": 60,
+        "zone": -22,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8184,
+        "name": "力量的证明",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8185,
+        "name": "调和的徽记",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8186,
+        "name": "死亡的拥抱",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8187,
+        "name": "猎鹰的召唤",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8188,
+        "name": "巫毒的警觉",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8189,
+        "name": "魔法的视域",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8190,
+        "name": "不祥的妖术",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8191,
+        "name": "预言的光环",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8192,
+        "name": "灵魂的安抚",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8508,
+        "name": "战地任务文件",
+        "level": 60,
+        "zone": 1377,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容"
+      },
+      {
+        "id": 8598,
+        "name": "敲诈",
+        "level": 60,
+        "zone": 440,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容"
+      },
+      {
+        "id": 8599,
+        "name": "唱给纳瑞安的情歌",
+        "level": 60,
+        "zone": 440,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容"
+      },
+      {
+        "id": 8733,
+        "name": "伊兰尼库斯，梦境之暴君",
+        "level": 60,
+        "zone": 1417,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容"
+      },
+      {
+        "id": 9165,
+        "name": "通行文书",
+        "level": 60,
+        "zone": 139,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容"
+      },
+      {
+        "id": 9208,
+        "name": "野性戒卫 - 防护秘药",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 9209,
+        "name": "野性戒卫 - 急速秘药",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 9210,
+        "name": "野性戒卫 - 专注秘药",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 9292,
+        "name": "破碎的死灵水晶",
+        "level": 60,
+        "zone": -368,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 9310,
+        "name": "暗淡的死灵水晶",
+        "level": 60,
+        "zone": -368,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      }
+    ],
+    "itemWithoutLocatedSource": [
+      {
+        "id": 171,
+        "name": "联盟孤儿的看护者",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 18598,
+        "itemName": "人类孤儿哨",
+        "itemClass": 15
+      },
+      {
+        "id": 5502,
+        "name": "部落孤儿的看护者",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 18597,
+        "itemName": "兽人孤儿哨",
+        "itemClass": 15
+      },
+      {
+        "id": 7660,
+        "name": "更换冰狼",
+        "level": 1,
+        "zone": 1637,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 12351,
+        "itemName": "冰狼号角",
+        "itemClass": 15
+      },
+      {
+        "id": 7661,
+        "name": "更换赤狼",
+        "level": 1,
+        "zone": 1637,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 12330,
+        "itemName": "赤狼号角",
+        "itemClass": 15
+      },
+      {
+        "id": 7662,
+        "name": "蓝色科多兽",
+        "level": 1,
+        "zone": 1638,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 15293,
+        "itemName": "蓝色科多兽",
+        "itemClass": 15
+      },
+      {
+        "id": 7663,
+        "name": "绿色科多兽",
+        "level": 1,
+        "zone": 1638,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 15292,
+        "itemName": "绿色科多兽",
+        "itemClass": 15
+      },
+      {
+        "id": 7664,
+        "name": "白色迅猛龙",
+        "level": 1,
+        "zone": 14,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 13317,
+        "itemName": "白色迅猛龙之哨",
+        "itemClass": 15
+      },
+      {
+        "id": 7665,
+        "name": "红色迅猛龙",
+        "level": 1,
+        "zone": 14,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 8586,
+        "itemName": "红色迅猛龙之哨",
+        "itemClass": 15
+      },
+      {
+        "id": 7671,
+        "name": "更换霜刃豹",
+        "level": 1,
+        "zone": 1657,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 12302,
+        "itemName": "上古霜刃豹缰绳",
+        "itemClass": 15
+      },
+      {
+        "id": 7672,
+        "name": "更换夜刃豹",
+        "level": 1,
+        "zone": 1657,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 12303,
+        "itemName": "夜刃豹缰绳",
+        "itemClass": 15
+      },
+      {
+        "id": 7673,
+        "name": "更换霜山羊",
+        "level": 1,
+        "zone": 1,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 13329,
+        "itemName": "霜山羊",
+        "itemClass": 15
+      },
+      {
+        "id": 7674,
+        "name": "更换黑山羊",
+        "level": 1,
+        "zone": 1,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 13328,
+        "itemName": "黑山羊",
+        "itemClass": 15
+      },
+      {
+        "id": 7675,
+        "name": "更换冰蓝色机械陆行鸟",
+        "level": 1,
+        "zone": 1,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 13327,
+        "itemName": "冰蓝色机械陆行鸟A型",
+        "itemClass": 15
+      },
+      {
+        "id": 7676,
+        "name": "更换白色机械陆行鸟",
+        "level": 1,
+        "zone": 1,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 13326,
+        "itemName": "白色机械陆行鸟B型",
+        "itemClass": 15
+      },
+      {
+        "id": 7677,
+        "name": "更换白马",
+        "level": 1,
+        "zone": 12,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 12353,
+        "itemName": "白马缰绳",
+        "itemClass": 15
+      },
+      {
+        "id": 7678,
+        "name": "更换褐色马",
+        "level": 1,
+        "zone": 12,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 12354,
+        "itemName": "褐色马缰绳",
+        "itemClass": 15
+      },
+      {
+        "id": 7907,
+        "name": "暗月野兽套牌",
+        "level": 55,
+        "zone": -364,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19228,
+        "itemName": "野兽套牌",
+        "itemClass": 15
+      },
+      {
+        "id": 7927,
+        "name": "暗月入口套牌",
+        "level": 55,
+        "zone": -364,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19277,
+        "itemName": "入口套牌",
+        "itemClass": 15
+      },
+      {
+        "id": 7928,
+        "name": "暗月督军套牌",
+        "level": 55,
+        "zone": -364,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19257,
+        "itemName": "督军套牌",
+        "itemClass": 15
+      },
+      {
+        "id": 7929,
+        "name": "暗月元素套牌",
+        "level": 55,
+        "zone": -364,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19267,
+        "itemName": "元素套牌",
+        "itemClass": 15
+      },
+      {
+        "id": 8184,
+        "name": "力量的证明",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22637,
+        "itemName": "原始哈卡莱神像",
+        "itemClass": 15
+      },
+      {
+        "id": 8184,
+        "name": "力量的证明",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19813,
+        "itemName": "打孔的巫毒人偶",
+        "itemClass": 15
+      },
+      {
+        "id": 8185,
+        "name": "调和的徽记",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22637,
+        "itemName": "原始哈卡莱神像",
+        "itemClass": 15
+      },
+      {
+        "id": 8185,
+        "name": "调和的徽记",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19815,
+        "itemName": "打孔的巫毒人偶",
+        "itemClass": 15
+      },
+      {
+        "id": 8186,
+        "name": "死亡的拥抱",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22637,
+        "itemName": "原始哈卡莱神像",
+        "itemClass": 15
+      },
+      {
+        "id": 8186,
+        "name": "死亡的拥抱",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19814,
+        "itemName": "打孔的巫毒人偶",
+        "itemClass": 15
+      },
+      {
+        "id": 8187,
+        "name": "猎鹰的召唤",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22637,
+        "itemName": "原始哈卡莱神像",
+        "itemClass": 15
+      },
+      {
+        "id": 8187,
+        "name": "猎鹰的召唤",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19816,
+        "itemName": "打孔的巫毒人偶",
+        "itemClass": 15
+      },
+      {
+        "id": 8188,
+        "name": "巫毒的警觉",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22637,
+        "itemName": "原始哈卡莱神像",
+        "itemClass": 15
+      },
+      {
+        "id": 8188,
+        "name": "巫毒的警觉",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19817,
+        "itemName": "打孔的巫毒人偶",
+        "itemClass": 15
+      },
+      {
+        "id": 8189,
+        "name": "魔法的视域",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22637,
+        "itemName": "原始哈卡莱神像",
+        "itemClass": 15
+      },
+      {
+        "id": 8189,
+        "name": "魔法的视域",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19818,
+        "itemName": "打孔的巫毒人偶",
+        "itemClass": 15
+      },
+      {
+        "id": 8190,
+        "name": "不祥的妖术",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22637,
+        "itemName": "原始哈卡莱神像",
+        "itemClass": 15
+      },
+      {
+        "id": 8190,
+        "name": "不祥的妖术",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19819,
+        "itemName": "打孔的巫毒人偶",
+        "itemClass": 15
+      },
+      {
+        "id": 8191,
+        "name": "预言的光环",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22637,
+        "itemName": "原始哈卡莱神像",
+        "itemClass": 15
+      },
+      {
+        "id": 8191,
+        "name": "预言的光环",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19820,
+        "itemName": "打孔的巫毒人偶",
+        "itemClass": 15
+      },
+      {
+        "id": 8192,
+        "name": "灵魂的安抚",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22637,
+        "itemName": "原始哈卡莱神像",
+        "itemClass": 15
+      },
+      {
+        "id": 8192,
+        "name": "灵魂的安抚",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 19821,
+        "itemName": "打孔的巫毒人偶",
+        "itemClass": 15
+      },
+      {
+        "id": 8743,
+        "name": "敲响甲虫之锣！",
+        "level": 60,
+        "zone": 1377,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "item": 21175,
+        "itemName": "流沙节杖",
+        "itemClass": 15
+      },
+      {
+        "id": 8903,
+        "name": "危险的爱情",
+        "level": 60,
+        "zone": -22,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22143,
+        "itemName": "暴风城卫兵的卡片",
+        "itemClass": 0
+      },
+      {
+        "id": 8904,
+        "name": "危险的爱情",
+        "level": 60,
+        "zone": -22,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22145,
+        "itemName": "发臭的卡片",
+        "itemClass": 0
+      },
+      {
+        "id": 8981,
+        "name": "赠送礼品",
+        "level": 60,
+        "zone": -22,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22263,
+        "itemName": "部落礼品包",
+        "itemClass": 15
+      },
+      {
+        "id": 8993,
+        "name": "赠送礼品",
+        "level": 60,
+        "zone": -22,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22262,
+        "itemName": "联盟礼品包",
+        "itemClass": 15
+      },
+      {
+        "id": 9094,
+        "name": "银色黎明手套",
+        "level": 60,
+        "zone": -368,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22484,
+        "itemName": "死灵符文",
+        "itemClass": 15
+      },
+      {
+        "id": 9153,
+        "name": "阴影之下",
+        "level": 60,
+        "zone": -368,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22484,
+        "itemName": "死灵符文",
+        "itemClass": 15
+      },
+      {
+        "id": 9317,
+        "name": "神圣磨刀石",
+        "level": 60,
+        "zone": -368,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22484,
+        "itemName": "死灵符文",
+        "itemClass": 15
+      },
+      {
+        "id": 9320,
+        "name": "超级法力药水",
+        "level": 60,
+        "zone": -368,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22484,
+        "itemName": "死灵符文",
+        "itemClass": 15
+      },
+      {
+        "id": 9321,
+        "name": "超级治疗药水",
+        "level": -1,
+        "zone": 0,
+        "excluded": true,
+        "scopeReason": "前置任务属于未开放内容",
+        "item": 22484,
+        "itemName": "死灵符文",
+        "itemClass": 15
+      },
+      {
+        "id": 9333,
+        "name": "银色黎明手套",
+        "level": 60,
+        "zone": -368,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "item": 22484,
+        "itemName": "死灵符文",
+        "itemClass": 15
+      }
+    ],
+    "noLocatedEnd": [
+      {
+        "id": 172,
+        "name": "儿童周",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 558,
+        "name": "吉安娜的签名",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 910,
+        "name": "降帆靠港",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 911,
+        "name": "前线之门",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 915,
+        "name": "草莓冰激凌",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 925,
+        "name": "凯恩的蹄印",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 1468,
+        "name": "儿童周",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 1479,
+        "name": "永恒之树",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 1558,
+        "name": "巨石水坝",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 1687,
+        "name": "幽灵灯塔",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 1800,
+        "name": "洛丹伦的王座",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 4822,
+        "name": "草莓冰激凌",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8184,
+        "name": "力量的证明",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8185,
+        "name": "调和的徽记",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8186,
+        "name": "死亡的拥抱",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8187,
+        "name": "猎鹰的召唤",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8188,
+        "name": "巫毒的警觉",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8189,
+        "name": "魔法的视域",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8190,
+        "name": "不祥的妖术",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8191,
+        "name": "预言的光环",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8192,
+        "name": "灵魂的安抚",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 8508,
+        "name": "战地任务文件",
+        "level": 60,
+        "zone": 1377,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容"
+      },
+      {
+        "id": 8597,
+        "name": "龙语傻瓜教程",
+        "level": 60,
+        "zone": 440,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容"
+      },
+      {
+        "id": 9208,
+        "name": "野性戒卫 - 防护秘药",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 9209,
+        "name": "野性戒卫 - 急速秘药",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      },
+      {
+        "id": 9210,
+        "name": "野性戒卫 - 专注秘药",
+        "level": 60,
+        "zone": 1977,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段"
+      }
+    ],
+    "unlocatedScene": [
+      {
+        "id": 558,
+        "name": "吉安娜的签名",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "key": "item:1",
+        "locations": []
+      },
+      {
+        "id": 910,
+        "name": "降帆靠港",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "key": "event",
+        "locations": []
+      },
+      {
+        "id": 911,
+        "name": "前线之门",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "key": "event",
+        "locations": []
+      },
+      {
+        "id": 925,
+        "name": "凯恩的蹄印",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "key": "item:1",
+        "locations": []
+      },
+      {
+        "id": 1479,
+        "name": "永恒之树",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "key": "event",
+        "locations": []
+      },
+      {
+        "id": 1558,
+        "name": "巨石水坝",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "key": "event",
+        "locations": []
+      },
+      {
+        "id": 1687,
+        "name": "幽灵灯塔",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "key": "event",
+        "locations": []
+      },
+      {
+        "id": 1800,
+        "name": "洛丹伦的王座",
+        "level": 60,
+        "zone": -284,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "key": "event",
+        "locations": []
+      },
+      {
+        "id": 8508,
+        "name": "战地任务文件",
+        "level": 60,
+        "zone": 1377,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "key": "item:1",
+        "locations": []
+      }
+    ],
+    "unsupportedQuestCondition": [
+      {
+        "id": 8492,
+        "name": "联盟需要铜锭！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2045,
+            "type": 40,
+            "value1": 1997,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8493,
+        "name": "联盟需要更多铜锭！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2045,
+            "type": 40,
+            "value1": 1997,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8494,
+        "name": "联盟需要铁锭！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2048,
+            "type": 40,
+            "value1": 2002,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8495,
+        "name": "联盟需要更多铁锭！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2048,
+            "type": 40,
+            "value1": 2002,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8499,
+        "name": "联盟需要瑟银锭！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2042,
+            "type": 40,
+            "value1": 2011,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8500,
+        "name": "联盟需要更多瑟银锭！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2042,
+            "type": 40,
+            "value1": 2011,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8503,
+        "name": "联盟需要荆棘藻！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2066,
+            "type": 40,
+            "value1": 2047,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8504,
+        "name": "联盟需要更多荆棘藻！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2066,
+            "type": 40,
+            "value1": 2047,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8505,
+        "name": "联盟需要紫莲花！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2060,
+            "type": 40,
+            "value1": 2053,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8506,
+        "name": "联盟需要更多紫莲花！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2060,
+            "type": 40,
+            "value1": 2053,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8509,
+        "name": "联盟需要阿尔萨斯之泪！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2063,
+            "type": 40,
+            "value1": 2057,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8510,
+        "name": "联盟需要更多阿尔萨斯之泪！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2063,
+            "type": 40,
+            "value1": 2057,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8511,
+        "name": "联盟需要轻皮！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2078,
+            "type": 40,
+            "value1": 2060,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8512,
+        "name": "联盟需要更多轻皮！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2078,
+            "type": 40,
+            "value1": 2060,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8513,
+        "name": "联盟需要中皮！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2081,
+            "type": 40,
+            "value1": 2063,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8514,
+        "name": "联盟需要更多中皮！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2081,
+            "type": 40,
+            "value1": 2063,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8515,
+        "name": "联盟需要厚皮！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2084,
+            "type": 40,
+            "value1": 2069,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8516,
+        "name": "联盟需要更多厚皮！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2084,
+            "type": 40,
+            "value1": 2069,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8517,
+        "name": "联盟需要亚麻绷带！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2075,
+            "type": 40,
+            "value1": 2076,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8518,
+        "name": "联盟需要更多亚麻绷带！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2075,
+            "type": 40,
+            "value1": 2076,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8520,
+        "name": "联盟需要丝质绷带！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2072,
+            "type": 40,
+            "value1": 2082,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8521,
+        "name": "联盟需要更多丝质绷带！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2072,
+            "type": 40,
+            "value1": 2082,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8522,
+        "name": "联盟需要符文布绷带！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2069,
+            "type": 40,
+            "value1": 2088,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8523,
+        "name": "联盟需要更多符文布绷带！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2069,
+            "type": 40,
+            "value1": 2088,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8524,
+        "name": "联盟需要彩鳍鱼！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2051,
+            "type": 40,
+            "value1": 2092,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8525,
+        "name": "联盟需要更多彩鳍鱼！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2051,
+            "type": 40,
+            "value1": 2092,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8526,
+        "name": "联盟需要烤迅猛龙肉！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2057,
+            "type": 40,
+            "value1": 2098,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8527,
+        "name": "联盟需要更多烤迅猛龙肉！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2057,
+            "type": 40,
+            "value1": 2098,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8528,
+        "name": "联盟需要斑点黄尾鱼！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2054,
+            "type": 40,
+            "value1": 2101,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8529,
+        "name": "联盟需要更多斑点黄尾鱼！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2054,
+            "type": 40,
+            "value1": 2101,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8532,
+        "name": "部落需要铜锭！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2093,
+            "type": 40,
+            "value1": 2018,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8533,
+        "name": "部落需要更多铜锭！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2093,
+            "type": 40,
+            "value1": 2018,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8542,
+        "name": "部落需要锡锭！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2087,
+            "type": 40,
+            "value1": 2005,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8543,
+        "name": "部落需要更多锡锭！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2087,
+            "type": 40,
+            "value1": 2005,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8545,
+        "name": "部落需要秘银锭！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2090,
+            "type": 40,
+            "value1": 2008,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8546,
+        "name": "部落需要更多秘银锭！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2090,
+            "type": 40,
+            "value1": 2008,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8549,
+        "name": "部落需要宁神花！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2107,
+            "type": 40,
+            "value1": 2021,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8550,
+        "name": "部落需要更多宁神花！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2107,
+            "type": 40,
+            "value1": 2021,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8580,
+        "name": "部落需要火焰花！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2104,
+            "type": 40,
+            "value1": 2050,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8581,
+        "name": "部落需要更多火焰花！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2104,
+            "type": 40,
+            "value1": 2050,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8582,
+        "name": "部落需要紫莲花！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2096,
+            "type": 40,
+            "value1": 2054,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8583,
+        "name": "部落需要更多紫莲花！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2096,
+            "type": 40,
+            "value1": 2054,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8588,
+        "name": "部落需要重皮！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2039,
+            "type": 40,
+            "value1": 2066,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8589,
+        "name": "部落需要更多重皮！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2039,
+            "type": 40,
+            "value1": 2066,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8590,
+        "name": "部落需要厚皮！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2110,
+            "type": 40,
+            "value1": 2070,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8591,
+        "name": "部落需要更多厚皮！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2110,
+            "type": 40,
+            "value1": 2070,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8600,
+        "name": "部落需要硬甲皮！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2113,
+            "type": 40,
+            "value1": 2073,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8601,
+        "name": "部落需要更多硬甲皮！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2113,
+            "type": 40,
+            "value1": 2073,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8604,
+        "name": "部落需要绒线绷带！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2122,
+            "type": 40,
+            "value1": 2079,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8605,
+        "name": "部落需要更多绒线绷带！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2122,
+            "type": 40,
+            "value1": 2079,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8607,
+        "name": "部落需要魔纹布绷带！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2119,
+            "type": 40,
+            "value1": 2085,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8608,
+        "name": "部落需要更多魔纹布绷带！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2119,
+            "type": 40,
+            "value1": 2085,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8609,
+        "name": "部落需要符文布绷带！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2116,
+            "type": 40,
+            "value1": 2089,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8610,
+        "name": "部落需要更多符文布绷带！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2116,
+            "type": 40,
+            "value1": 2089,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8611,
+        "name": "部落需要瘦狼排！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2131,
+            "type": 40,
+            "value1": 2095,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8612,
+        "name": "部落需要更多瘦狼排！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2131,
+            "type": 40,
+            "value1": 2095,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8613,
+        "name": "部落需要斑点黄尾鱼！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2125,
+            "type": 40,
+            "value1": 2102,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8614,
+        "name": "部落需要更多斑点黄尾鱼！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2125,
+            "type": 40,
+            "value1": 2102,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8615,
+        "name": "部落需要烤鲑鱼！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2128,
+            "type": 40,
+            "value1": 2105,
+            "value2": 0
+          }
+        ]
+      },
+      {
+        "id": 8616,
+        "name": "部落需要更多烤鲑鱼！",
+        "level": 60,
+        "zone": -365,
+        "excluded": true,
+        "scopeReason": "未开放的节日、战场或后续团队阶段",
+        "conditions": [
+          {
+            "id": 2128,
+            "type": 40,
+            "value1": 2105,
+            "value2": 0
+          }
+        ]
+      }
+    ],
+    "missingQuestDependency": [
+      {
+        "id": 9121,
+        "name": "恐怖之城，纳克萨玛斯",
+        "level": 60,
+        "zone": 139,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "key": "NextQuestId",
+        "target": 9033
+      },
+      {
+        "id": 9122,
+        "name": "恐怖之城，纳克萨玛斯",
+        "level": 60,
+        "zone": 139,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "key": "NextQuestId",
+        "target": 9033
+      },
+      {
+        "id": 9123,
+        "name": "恐怖之城，纳克萨玛斯",
+        "level": 60,
+        "zone": 139,
+        "excluded": true,
+        "scopeReason": "后续阶段或已废弃内容",
+        "key": "NextQuestId",
+        "target": 9033
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "wow-sim",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "node scripts/test.mjs",
+    "check": "node scripts/check.mjs",
+    "typecheck": "tsc --noEmit",
+    "data:compile": "node scripts/compile-game-data.mjs",
+    "data:check": "node scripts/compile-game-data.mjs --check",
+    "world:check": "node scripts/audit-world-content.mjs --check && node scripts/validate-world-playability.mjs",
+    "content:measure": "node scripts/measure-client-content.mjs",
+    "combat:audit": "node scripts/audit-spell-contracts.mjs",
+    "combat:audit:check": "node scripts/audit-spell-contracts.mjs --check",
+    "game:server": "node --env-file-if-exists=.env apps/game-server/src/main.ts",
+    "game:worker": "node --env-file-if-exists=.env apps/game-worker/src/main.ts",
+    "game:server:dev": "node --watch --env-file-if-exists=.env apps/game-server/src/main.ts",
+    "game:worker:dev": "node --watch --env-file-if-exists=.env apps/game-worker/src/main.ts",
+    "demo:molten-core": "node apps/web/scripts/serve-molten-core-demo.mjs",
+    "demo:classic-ui": "node apps/web/scripts/serve-classic-ui-demo.mjs",
+    "demo:journey-ui": "node apps/web/scripts/serve-journey-ui-demo.mjs"
+  },
+  "engines": {
+    "node": ">=24.11.1"
+  },
+  "dependencies": {
+    "pg": "^8.23.0",
+    "ws": "^8.21.3"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@types/node": "^22.20.3",
+    "@types/pg": "^8.23.1",
+    "@types/ws": "^8.18.1",
+    "typescript": "^7.0.2"
+  }
+}

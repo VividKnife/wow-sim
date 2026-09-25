@@ -1,0 +1,86 @@
+/* Shared adventure chrome. Keep location, current activity and player actions above the fold. */
+.journey-shell{--journey-bg:#141615;--journey-panel:#1c201e;--journey-border:#41483f;--journey-accent:#d9b575;max-width:none;padding:0;background:var(--journey-bg);min-height:100dvh}
+.game-shell.journey-shell:has(.player-hud){padding-bottom:0}
+.journey-shell .adventure-tabs{display:block;margin:0}
+.journey-rail{position:fixed;inset:0 auto 0 0;width:168px;display:flex;flex-direction:column;padding:25px 12px;border-right:1px solid #484536;background:#101311;z-index:25}
+.rail-brand{display:flex;align-items:center;gap:10px;padding:0 5px;margin-bottom:36px}
+.rail-brand strong{font:700 16px Georgia,serif;letter-spacing:1px;white-space:nowrap;color:#e1c991}
+.rail-brand small{display:block;font-size:10px;line-height:1.6;margin-top:5px;color:#a1a595}
+.rail-sigil{display:grid;place-items:center;flex-shrink:0;width:30px;height:36px;border-block:1px solid #8b7851;color:var(--gold)}
+.rail-section{display:block;padding:0 10px;margin-bottom:10px;color:#8f968a;font-size:11px}
+.journey-rail .main-nav[data-slot]{position:static;display:flex;flex-direction:column;align-items:stretch;height:auto;width:100%;border:0;margin:0;padding:0;gap:4px;background:none;backdrop-filter:none}
+.journey-rail .main-nav [data-slot=tabs-trigger]{flex:none;justify-content:flex-start;gap:12px;max-width:none;height:44px;padding:0 12px;border:1px solid transparent;border-radius:2px;color:#a8afa2;font-size:14px;box-shadow:none}
+.journey-rail .main-nav [data-state=active]{background:#2d3025;color:#ecd39c;border-color:#645638;border-left:3px solid #d9b575;padding-left:10px}
+.journey-rail .main-nav [data-slot=tabs-trigger]:hover:not(:disabled){background:#242923;color:#f0e4cb}
+.journey-rail .main-nav svg{width:18px;height:18px;stroke-width:1.6}
+.journey-content{margin-left:168px;padding:20px 28px 32px;min-width:0;max-width:1500px}
+.journey-content>.activity-strip{margin-bottom:16px}
+.journey-content [data-slot=tabs-content]{min-width:0}
+.journey-content>.player-hud{margin-bottom:16px}
+.world-main{gap:16px}
+.player-hud{position:static;inset:auto;display:block;margin:0;padding:14px 16px;border:1px solid #444a3f;border-top-color:#756745;border-radius:3px;background:#1b211e;box-shadow:inset 0 1px #d8be7912;backdrop-filter:none;color:#e7e4d9}
+.player-hud-inner{grid-template-columns:minmax(190px,1fr) minmax(160px,1.2fr) minmax(160px,1fr);gap:24px}
+.hud-identity .identity-crest{width:44px;height:44px;flex-basis:44px;border-color:#887249;border-radius:3px;background:#151a16;color:#d5ba7e;box-shadow:inset 0 0 0 2px #25291e}
+.hud-identity strong{font:600 18px Georgia,"SimSun",serif}
+.hud-identity .level-badge{font:12px "Segoe UI",sans-serif;white-space:nowrap;color:#dbc48f}
+.hud-identity small{font-size:11px;color:#a8afa2}
+.hud-vitals{gap:7px}
+.hud-vitals .resource{height:19px;border:1px solid #3c4838;border-radius:2px;background:#0c130e;overflow:hidden;padding:0}
+.hud-vitals .resource>div{top:0;border-radius:0;background:#386c42}
+.hud-vitals .resource.mana>div{background:#315d89}
+.hud-vitals .resource.rage>div{background:#983e33}
+.hud-vitals .resource.energy>div{background:#97802b}
+.hud-vitals .resource>span{font-size:10px;padding:0 6px;text-shadow:0 1px 2px #000;font-variant-numeric:tabular-nums}
+.hud-experience>div:first-child{font-size:10px;color:#abb1a3}
+.hud-experience .resource.xp{margin-top:5px;height:5px;border-radius:1px}
+.hud-experience .wallet{font-size:11px;margin-top:8px;color:#d5bf8d}
+.location-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:5px 0 17px;border-bottom:1px solid #4c4938}
+.location-identity{display:flex;align-items:center;gap:14px;min-width:0}
+.location-identity>svg{color:#b89e66;flex-shrink:0}
+.location-identity span{color:#a9ad9e;font-size:12px}
+.location-identity h1{font:600 clamp(25px,3vw,32px)/1.4 Georgia,"SimSun",serif;color:#e8d7af;margin-top:3px}
+.location-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.quest-shortcut{display:flex;align-items:center;gap:7px;font-size:12px;color:#c5c8b8;min-height:40px}
+.quest-shortcut b{color:#e2bf72;font-weight:500}
+#quest-list{scroll-margin-top:20px}
+.journey-activity.activity-strip{display:block;padding:16px 18px;border:1px solid #665337;border-left:3px solid #b49357;border-radius:3px;background:#24271e}
+.journey-activity-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:#dfc88f}
+.journey-activity-heading>span{display:flex;align-items:center;gap:7px}
+.journey-activity-heading time{font-variant-numeric:tabular-nums}
+.journey-activity-heading .activity-light{display:inline-block;width:6px;height:6px}
+.journey-activity-body{display:flex;align-items:center;gap:20px;margin-top:9px}
+.journey-activity-body .grow>strong{font-size:17px}
+.journey-activity-body strong small{display:inline;font-size:12px}
+.journey-activity-body p{font-size:12px;color:#b1b6a6;margin-top:4px}
+.journey-activity-actions{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0}
+.journey-activity-actions button{min-height:40px;border-radius:3px;font-size:12px}
+.journey-activity-meta{display:flex;justify-content:space-between;gap:12px;margin-top:12px;padding-top:10px;border-top:1px solid #454b39;color:#aeb49f;font-size:11px}
+.journey-activity-meta>span{display:flex;align-items:center;gap:5px}
+.journey-activity .activity-progress,.journey-activity .travel-progress{position:relative;top:auto;z-index:1;margin-top:14px}
+.journey-combat-details{border-radius:3px;margin:0;font-size:12px}
+.journey-content .local-people{padding:16px;border:1px solid #41483f;border-radius:3px;background:#1c211d}
+.journey-content .local-people .eyebrow{display:none}
+.journey-content .local-people h2{font:600 19px Georgia,"SimSun",serif;color:#e0c998}
+.journey-content .local-people .section-heading>small{font-size:12px;color:#a4ad9c}
+.journey-content .npc-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.journey-content .npc-card{position:relative;min-height:88px;padding:10px;gap:10px;background:#171d18;border-color:#454e3c;border-radius:3px}
+.journey-content .npc-card-copy strong{font-size:13px}
+.journey-content .npc-card-copy small{font-size:11px;color:#aab49f}
+.journey-content .npc-card>.quest-mark{margin-left:auto;flex-shrink:0;font-size:22px}
+.journey-content .npc-portrait{width:48px;height:58px}
+.journey-content .local-filters{margin:0;gap:6px}
+.journey-content .interaction-grid{gap:10px}
+.journey-content .interaction{border-radius:3px;min-height:110px;background:#1b211c;border-color:#46503d}
+.journey-content .interaction small{color:#aab99c}
+.journey-content .travel-toolbox{padding:5px 16px;background:#191e1a;border-color:#384135}
+.journey-content .quest-panel{background:#1c201a;border-color:#514c38;border-radius:3px}
+.journey-content .quest-entry summary{min-height:50px}
+.journey-content .account-drawer{margin-top:28px;background:transparent;border-color:#3b4236;border-radius:3px;padding:7px 16px}
+.journey-content .account-drawer .panel{background:transparent;border:0;padding-inline:0}
+.journey-content .site-footer{font-size:11px;color:#828b7e;gap:12px}
+.journey-shell .toast{bottom:22px}
+@media(max-width:1050px){.player-hud-inner{grid-template-columns:minmax(160px,1fr) minmax(160px,1fr);gap:12px 20px}.hud-experience{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:3px 12px}.hud-experience .resource{grid-column:1;grid-row:2;margin:0}.hud-experience .wallet{grid-column:2;grid-row:1/3;align-self:center;margin:0}.journey-content .npc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.journey-activity-body{align-items:flex-start;flex-direction:column;gap:12px}}
+@media(min-width:701px) and (max-height:680px){.journey-rail{overflow-y:auto}.rail-brand{margin-bottom:20px}}
+@media(max-width:700px){.journey-rail{flex-direction:row;align-items:center}.journey-rail .main-nav[data-slot]{flex:1;min-width:0}.journey-content{margin:0;padding:12px 12px calc(90px + env(safe-area-inset-bottom))}.journey-rail{inset:auto 0 0;width:auto;height:calc(62px + env(safe-area-inset-bottom));padding:3px 4px env(safe-area-inset-bottom);border-right:0;border-top:1px solid #61583b;background:#101610}.rail-brand,.rail-section{display:none}.journey-rail .main-nav[data-slot]{flex-direction:row;height:54px;gap:1px}.journey-rail .main-nav [data-slot=tabs-trigger]{flex:1;min-width:0;height:54px;flex-direction:column;justify-content:center;gap:4px;padding:4px 1px;font-size:11px;border:0;border-top:2px solid transparent}.journey-rail .main-nav [data-state=active]{border-top-color:#d9b575}.player-hud{padding:12px}.player-hud-inner{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.hud-identity{gap:8px}.hud-identity .identity-crest{width:36px;height:36px;flex-basis:36px}.hud-identity strong{font-size:16px}.hud-identity .level-badge{display:block;margin:3px 0 0}.hud-identity small{font-size:10px}.hud-vitals .resource>span{font-size:10px}.hud-experience .wallet{font-size:10px}.location-heading{align-items:flex-start;flex-direction:column;gap:8px;padding:2px 0 12px}.location-identity h1{font-size:27px}.location-actions{width:100%;justify-content:space-between;gap:8px}.journey-activity.activity-strip{padding:14px}.journey-activity-actions{width:100%}.journey-activity-actions button{flex:1}.journey-content .local-people{padding:12px}.journey-content .npc-portrait{width:38px;height:48px}.journey-content .npc-card{gap:8px;padding:9px;min-height:82px}.journey-content .npc-card-copy strong{font-size:12px;overflow-wrap:anywhere}.journey-content .npc-card>.quest-mark{font-size:18px}.journey-content .local-people .section-heading{flex-wrap:wrap}.journey-shell .toast{bottom:calc(75px + env(safe-area-inset-bottom))}}
+@media(max-width:380px){.journey-content .npc-grid{grid-template-columns:1fr}.hud-identity .identity-crest{display:none}}
+@media(prefers-reduced-motion:reduce){.journey-shell *, .journey-shell *::before,.journey-shell *::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}

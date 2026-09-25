@@ -1,0 +1,9 @@
+{
+  "name": "@wow-sim/game-server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --experimental-strip-types src/main.ts",
+    "test": "node --test test/*.test.ts"
+  }
+}

@@ -1,0 +1,65 @@
+"use client";
+import {Button} from '@/components/ui/button';
+import {Bar,Icon,GameProps,duration} from './game-ui';
+import DungeonMap from './dungeon-map';
+import {GroupLoot} from './adventure-hall';
+
+export function RecoveryControls({state:s,data:d,busy,send}:GameProps){
+ const r=d.recovery;if(!r)return null;
+ return <section className="recovery-controls" aria-label="小队恢复">
+  <div className="section-heading"><h3>休整与补给</h3><small>食物 {r.food} · 饮水 {r.water}</small></div>
+  <div className="action-row">
+   <Button variant="outline" disabled={busy||!r.canRest} onClick={()=>send({type:'rest'})}>{s.dungeon?'小队坐下恢复':'坐下恢复'}</Button>
+   <Button variant="outline" disabled={busy||!r.canConjureWater} onClick={()=>send({type:'conjure',water:true})}>制造饮水</Button>
+   <Button variant="outline" disabled={busy||!r.canConjureFood} onClick={()=>send({type:'conjure',water:false})}>制造食物</Button>
+  </div>
+  <p className="footnote">{s.dungeon?'每名成员单独消耗背包中的补给；恢复结束后再继续推进。':'可在法师训练师处学习造餐术与造水术。'}</p>
+  {r.fallen.length>0&&<div className="fallen-members"><h3>倒下的成员</h3>{r.fallen.map((c:any)=><div key={c.id} className="recovery-target"><div className="grow"><strong>{c.name}</strong>{!c.canResurrect&&<small>{c.reason}</small>}</div><Button variant="outline" disabled={busy||!c.canResurrect} onClick={()=>send({type:'resurrect',target:c.id})}>牧师复活</Button></div>)}
+   <Button variant="outline" disabled={busy||!r.canRevive} onClick={()=>send({type:'revive'})}>倒下成员返回尸体</Button>
+  </div>}
+ </section>;
+}
+
+export default function Dungeon(props:GameProps){
+ const {state:s,data:d,busy,send}=props,dm=d.dungeon;if(!dm)return null;
+ if(!dm.active)return <section className="panel dungeon-entry" aria-label={`${dm.name}入口`}>
+  <div className="section-heading"><div><div className="eyebrow">{dm.zone} · 五人地下城</div><h2>{dm.name}</h2></div><span className="dungeon-sigil" aria-hidden="true">⚔</span></div>
+  <p>{dm.description}</p>
+  <div className="dungeon-requirements"><span>最低等级 {dm.minimumLevel}</span><span>建议 {dm.recommendedLevel} 级挑战</span><span>小队 {dm.groupSize??s.party.length+1} / 5 人</span></div>
+  {dm.saved&&<p className="dungeon-notice">已保存路线进度 {dm.progress} / {dm.total}；再次进入会接续本次冒险。</p>}
+  {dm.saved&&<details className="dungeon-notice"><summary>重新挑战副本</summary><p>重置会清除本次路线、怪物和机关进度。已获得的装备及任务进度保留；下次进入从头开始。每小时最多进入五个新副本。</p><Button variant="outline" disabled={busy||!dm.canReset} onClick={()=>send({type:'resetDungeon',contentId:dm.id})}>清除旧路线并重置</Button>{dm.resetReason&&<p>{dm.resetReason}</p>}</details>}
+  <div className="action-row">{dm.atEntrance?<Button disabled={busy||!dm.canEnter} onClick={()=>send({type:'enterDungeon',contentId:dm.id})}>{dm.saved?'重返':'进入'}{dm.name}</Button>:<Button variant="outline" disabled={busy||!!s.combat||!['idle','hunt'].includes(s.activity.type)||s.hp<=0} onClick={()=>send({type:'travel',to:dm.entrance})}>前往{dm.name}入口</Button>}</div>
+  {dm.entryReason&&<p className="footnote">{dm.entryReason}</p>}
+  <p className="footnote">开始推进后，小队会连续迎战、休整并完成机关；牧师存活时战后自动复活队友，牧师倒下、背包已满或拾取受阻时暂停。</p>
+  {dm.atEntrance&&d.recovery.fallen.length>0&&<RecoveryControls {...props}/>}
+ </section>;
+
+ const current=dm.current,progress=Math.min(100,dm.progress/dm.total*100);
+ const activityLabels:Record<string,string>={dungeonCannon:'火炮已经点燃',resurrect:'牧师正在复活队友',revive:'倒下成员正在返回尸体',conjure:'正在制造补给'};
+ return <section className="dungeon-expedition" aria-label={`${dm.name}副本`}>
+  <header className="panel dungeon-header dungeon-loading-card" style={dm.background?{backgroundImage:`linear-gradient(90deg,#161a18ed,#1419179c),url(${dm.background})`,backgroundSize:'cover',backgroundPosition:'center'}:undefined}><div className="section-heading"><div><div className="eyebrow">五人地下城 · 当前冒险</div><h1>{dm.name}</h1></div><Button variant="outline" disabled={busy||!dm.canLeave} onClick={()=>send({type:'leaveDungeon'})}>离开副本</Button></div>
+   <div className="section-heading"><span>{dm.completed?'路线已完成':`路线进度 ${dm.progress} / ${dm.total}`}</span><small>退出保留进度</small></div>
+   <div className="dungeon-progress" role="progressbar" aria-label="副本路线进度" aria-valuemin={0} aria-valuemax={dm.total} aria-valuenow={dm.progress}><i style={{width:progress+'%'}}/></div>
+   <p className="footnote">自动推进保留全部战斗与补给消耗。可随时暂停，战斗中的暂停会在本场结束后停止迎战。</p>
+   {(!dm.completed||dm.autoAdvance)&&<div className="action-row">{dm.autoAdvance?<Button variant="outline" disabled={busy} onClick={()=>send({type:'dungeonPause'})}>暂停推进</Button>:<Button disabled={busy||!dm.canNext} onClick={()=>send({type:'dungeonNext'})}>{dm.destination==='full'?'全清副本 · 自动推进':'继续前往目的地'}</Button>}</div>}
+   {dm.autoAdvance?<p className="dungeon-notice" role="status">{s.combat?'自动推进中 · 小队正在战斗':dm.rescuing?(s.activity.type==='resurrect'?'自动推进中 · 牧师正在复活队友':'自动推进中 · 牧师恢复法力并准备复活队友'):dm.waitingForLoot?'自动推进中 · 等待战利品拾取':dm.recovering?'自动推进中 · 按恢复设置休整后继续':'自动推进中 · 小队正在完成机关'}</p>:!dm.completed&&<p className="dungeon-notice" role="status">{dm.nextReason||dm.advanceReason||'准备好后开始自动推进。'}</p>}
+   {!s.settings.autoLoot&&<p className="footnote">自动拾取尚未开启；出现待拾取战利品时会暂停，拾取后可继续。可在战利品面板开启自动拾取。</p>}
+  </header>
+  <GroupLoot {...props}/>
+  <DungeonMap key={s.dungeon.runId} {...props}/>
+  <div className="dungeon-columns"><section className="panel dungeon-encounter">
+   {current?<><div className="eyebrow">{current.kind==='boss'?'首领遭遇':current.interaction&&!current.enemies.length?'机关交互':'前方路线'}{current.optional?' · 可选':''}</div><h2>{current.name}</h2>
+    <ul className="encounter-enemies">{current.enemies.map((e:any)=><li key={e.entry+'-'+e.level}><strong>{e.name}</strong><span>Lv.{e.level}{e.elite?' 精英':''} × {e.count}</span></li>)}</ul>
+    {s.combat?<p className="dungeon-notice">战斗进行中。可在上方打开战斗界面查看小队行动。</p>:activityLabels[s.activity.type]?<p className="dungeon-notice" role="status">{activityLabels[s.activity.type]} · {duration(s.activity.endsAt-s.clock)}</p>:<>
+     {current.interaction&&!current.enemies.length&&<><div className="dungeon-object"><Icon src={dm.interactionIcon} name="迪菲亚火药"/><div><h3>{dm.interactionLabel}</h3><p>{current.id==='dm-cannon'?'使用一份迪菲亚火药轰开铁门。':'守卫已清除，从火药箱中取出火药。'}</p></div></div>{!dm.autoAdvance&&<><Button disabled={busy||!dm.canInteract} onClick={()=>send({type:'dungeonInteract'})}>{dm.interactionLabel}</Button>{!dm.canInteract&&<p className="footnote">{dm.interactionReason}</p>}</>}</>}
+     {!dm.autoAdvance&&dm.canSkip&&<Button variant="ghost" disabled={busy} onClick={()=>send({type:'dungeonSkip'})}>绕过这段可选路线</Button>}
+    </>}
+   </>:<><div className="eyebrow">地下城旅程</div><h2>路线已完成</h2><p>整理战利品，离开副本后回到任务人物处交付任务。</p></>}
+   {s.activity.reason&&<p className="dungeon-notice" role="status">{s.activity.reason}</p>}
+   {(s.pending.length>0||s.bag.length>=d.bagCapacity)&&<p className="dungeon-notice">背包需要整理。到「角色」装备新物品或拾取待领取战利品；也可离开副本后找商人出售。</p>}
+   <RecoveryControls {...props}/>
+  </section>
+  <section className="panel dungeon-party"><div className="section-heading"><h2>小队状态</h2><small>5 人</small></div>{d.recovery.members.map((c:any)=><article key={c.id} className={'dungeon-member '+(c.hp<=0?'is-fallen':'')}><div className="section-heading"><strong>{c.name} <small>Lv.{c.level}</small></strong><small>{c.hp<=0?'已倒下':c.restUntil>s.clock?'休整 '+duration(c.restUntil-s.clock):c.role}</small></div><Bar label="生命" value={c.hp} max={c.maxHp}/>{c.maxMana>0&&<Bar label="法力" value={c.mana} max={c.maxMana} tone="mana"/>}</article>)}</section></div>
+  <details className="panel dungeon-route"><summary>查看完整路线 · {dm.progress} / {dm.total}</summary><ol>{dm.route.map((r:any)=><li key={r.id} className={'route-'+r.status} aria-current={r.status==='current'?'step':undefined}><span>{r.name}{r.optional?' · 可选':''}{r.quests.length?' · 任务目标':''}</span><small>{{cleared:'已完成',skipped:'已绕过',absent:'本次未出现',current:'当前',ahead:'未探索'}[r.status as string]}</small></li>)}</ol></details>
+ </section>;
+}

@@ -1,0 +1,11 @@
+.raid-command-panel{--command-gold:#d7b575;--command-line:rgba(215,181,117,.25);border-top:2px solid var(--command-gold)}
+.raid-command-panel h2,.raid-debrief h3{color:var(--command-gold)}
+.raid-command-panel>.section-heading{gap:18px;flex-wrap:wrap}.raid-command-panel>.section-heading>.raid-choice{min-width:220px}
+.raid-plan-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:16px 0}
+.raid-choice{display:flex;flex-direction:column;gap:7px;min-width:0}.raid-choice>span{font-size:13px;opacity:.85}
+.raid-plan-grid fieldset{border:1px solid var(--command-line);border-radius:8px;padding:14px;min-width:0}.raid-plan-grid legend{padding:0 6px;color:var(--command-gold)}
+.raid-plan-grid fieldset .raid-choice+.raid-choice{margin-top:12px}.raid-plan-grid fieldset p,.raid-assignment-details>p{font-size:13px;line-height:1.7;opacity:.8}
+.raid-preparation-fold>summary,.raid-assignment-details>summary{cursor:pointer;padding:14px 0;font-weight:600}.raid-assignment-details{border-top:1px solid var(--command-line)}
+.raid-live-orders{padding:12px;border:1px solid rgba(215,181,117,.3);border-radius:8px;background:rgba(67,45,22,.2);margin:10px 0}.raid-live-orders .action-row{flex-wrap:wrap;gap:8px}.raid-live-orders small{display:block;margin-top:8px;opacity:.75}.raid-live-orders p{margin:8px 0 0;font-size:13px}
+.raid-debrief{padding:16px;border-left:3px solid var(--command-gold);background:rgba(215,181,117,.05);margin:18px 0}.raid-debrief li{margin:8px 0;line-height:1.7}.raid-debrief ul{padding-left:20px}.raid-review-metrics{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0}.raid-review-metrics span{display:flex;flex-direction:column;font-size:12px;opacity:.85}.raid-review-metrics b{font-size:18px;font-weight:600}
+@media(max-width:700px){.raid-plan-grid{grid-template-columns:1fr}.raid-command-panel>.section-heading>.raid-choice{width:100%}.raid-live-orders .action-row button{white-space:normal;height:auto;min-height:34px}}

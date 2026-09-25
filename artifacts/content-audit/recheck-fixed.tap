@@ -1,0 +1,266 @@
+TAP version 13
+# Subtest: every journal card has local dungeon-specific artwork and every playable map has original floor images
+ok 1 - every journal card has local dungeon-specific artwork and every playable map has original floor images
+  ---
+  duration_ms: 5.4945
+  type: 'test'
+  ...
+# Subtest: all outdoor regions with world nodes use local original maps
+ok 2 - all outdoor regions with world nodes use local original maps
+  ---
+  duration_ms: 1.6233
+  type: 'test'
+  ...
+# Subtest: dungeon coordinates use the map orientation and the final Uldaman chamber floor
+ok 3 - dungeon coordinates use the map orientation and the final Uldaman chamber floor
+  ---
+  duration_ms: 0.2189
+  type: 'test'
+  ...
+# Subtest: combat enemy models resolve to actual GLBs and local portraits
+not ok 4 - combat enemy models resolve to actual GLBs and local portraits
+  ---
+  duration_ms: 12.0933
+  type: 'test'
+  location: 'C:\\workspace\\wow-sim\\apps\\web\\test\\dungeon-presentation.test.mjs:34:1'
+  failureType: 'testCodeFailure'
+  error: '1031: model'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: ~
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///C:/workspace/wow-sim/apps/web/test/dungeon-presentation.test.mjs:38:130)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+  ...
+# Subtest: map content is loaded independently from bootstrap and invalid map ids fail
+ok 5 - map content is loaded independently from bootstrap and invalid map ids fail
+  ---
+  duration_ms: 0.7533
+  type: 'test'
+  ...
+# Subtest: equipment exposes source binding, DPS and on-equip bonuses consistently
+ok 6 - equipment exposes source binding, DPS and on-equip bonuses consistently
+  ---
+  duration_ms: 1.2397
+  type: 'test'
+  ...
+# Subtest: all MC bosses, trash, guards and summoned creatures resolve to original local models
+ok 7 - all MC bosses, trash, guards and summoned creatures resolve to original local models
+  ---
+  duration_ms: 0.8494
+  type: 'test'
+  ...
+# Subtest: Classic display 5488: hashes, deforming bones, independent clones, all clips finite
+ok 8 - Classic display 5488: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 50.2236
+  type: 'test'
+  ...
+# Subtest: Classic display 5781: hashes, deforming bones, independent clones, all clips finite
+ok 9 - Classic display 5781: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 22.3674
+  type: 'test'
+  ...
+# Subtest: Classic display 8269: hashes, deforming bones, independent clones, all clips finite
+ok 10 - Classic display 8269: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 31.8509
+  type: 'test'
+  ...
+# Subtest: Classic display 10193: hashes, deforming bones, independent clones, all clips finite
+ok 11 - Classic display 10193: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 35.636
+  type: 'test'
+  ...
+# Subtest: Classic display 11121: hashes, deforming bones, independent clones, all clips finite
+ok 12 - Classic display 11121: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 141.6992
+  type: 'test'
+  ...
+# Subtest: Classic display 11986: hashes, deforming bones, independent clones, all clips finite
+ok 13 - Classic display 11986: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 20.4194
+  type: 'test'
+  ...
+# Subtest: Classic display 11997: hashes, deforming bones, independent clones, all clips finite
+ok 14 - Classic display 11997: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 26.3809
+  type: 'test'
+  ...
+# Subtest: Classic display 12002: hashes, deforming bones, independent clones, all clips finite
+ok 15 - Classic display 12002: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 65.1606
+  type: 'test'
+  ...
+# Subtest: Classic display 12029: hashes, deforming bones, independent clones, all clips finite
+ok 16 - Classic display 12029: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 81.0723
+  type: 'test'
+  ...
+# Subtest: Classic display 12030: hashes, deforming bones, independent clones, all clips finite
+ok 17 - Classic display 12030: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 83.4116
+  type: 'test'
+  ...
+# Subtest: Classic display 12110: hashes, deforming bones, independent clones, all clips finite
+ok 18 - Classic display 12110: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 43.0146
+  type: 'test'
+  ...
+# Subtest: Classic display 12129: hashes, deforming bones, independent clones, all clips finite
+ok 19 - Classic display 12129: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 26.3242
+  type: 'test'
+  ...
+# Subtest: Classic display 12162: hashes, deforming bones, independent clones, all clips finite
+ok 20 - Classic display 12162: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 25.4863
+  type: 'test'
+  ...
+# Subtest: Classic display 12164: hashes, deforming bones, independent clones, all clips finite
+ok 21 - Classic display 12164: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 20.237
+  type: 'test'
+  ...
+# Subtest: Classic display 12168: hashes, deforming bones, independent clones, all clips finite
+ok 22 - Classic display 12168: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 42.3669
+  type: 'test'
+  ...
+# Subtest: Classic display 12189: hashes, deforming bones, independent clones, all clips finite
+ok 23 - Classic display 12189: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 29.3354
+  type: 'test'
+  ...
+# Subtest: Classic display 12190: hashes, deforming bones, independent clones, all clips finite
+ok 24 - Classic display 12190: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 29.1873
+  type: 'test'
+  ...
+# Subtest: Classic display 12231: hashes, deforming bones, independent clones, all clips finite
+ok 25 - Classic display 12231: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 48.9308
+  type: 'test'
+  ...
+# Subtest: Classic display 12239: hashes, deforming bones, independent clones, all clips finite
+ok 26 - Classic display 12239: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 19.1898
+  type: 'test'
+  ...
+# Subtest: Classic display 13029: hashes, deforming bones, independent clones, all clips finite
+ok 27 - Classic display 13029: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 74.5159
+  type: 'test'
+  ...
+# Subtest: Classic display 13030: hashes, deforming bones, independent clones, all clips finite
+ok 28 - Classic display 13030: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 122.9707
+  type: 'test'
+  ...
+# Subtest: Classic display 13031: hashes, deforming bones, independent clones, all clips finite
+ok 29 - Classic display 13031: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 60.2783
+  type: 'test'
+  ...
+# Subtest: Classic display 13032: hashes, deforming bones, independent clones, all clips finite
+ok 30 - Classic display 13032: hashes, deforming bones, independent clones, all clips finite
+  ---
+  duration_ms: 103.315
+  type: 'test'
+  ...
+# Subtest: animation state respects authoritative cues, death, control and received damage
+ok 31 - animation state respects authoritative cues, death, control and received damage
+  ---
+  duration_ms: 0.4251
+  type: 'test'
+  ...
+# Subtest: all six Stockades dungeon quests have reachable prerequisites, real objectives and rewards
+ok 32 - all six Stockades dungeon quests have reachable prerequisites, real objectives and rewards
+  ---
+  duration_ms: 977.3691
+  type: 'test'
+  ...
+# Subtest: Unsent Letter through the king consumes source items, gathers apples and grants Seal of Wrynn once
+ok 33 - Unsent Letter through the king consumes source items, gathers apples and grants Seal of Wrynn once
+  ---
+  duration_ms: 446.8559
+  type: 'test'
+  ...
+# Subtest: a level 35 party completes the Attack using autonomous combat without fixture damage
+ok 34 - a level 35 party completes the Attack using autonomous combat without fixture damage
+  ---
+  duration_ms: 707.1084
+  type: 'test'
+  ...
+# Subtest: Attack requires an active quest, the garden, and no competing activity
+ok 35 - Attack requires an active quest, the garden, and no competing activity
+  ---
+  duration_ms: 4.978
+  type: 'test'
+  ...
+# Subtest: Attack persists a staged conversation and starts real combat before credit
+ok 36 - Attack persists a staged conversation and starts real combat before credit
+  ---
+  duration_ms: 9.2751
+  type: 'test'
+  ...
+# Subtest: unrelated kills cannot satisfy the Attack objective
+ok 37 - unrelated kills cannot satisfy the Attack objective
+  ---
+  duration_ms: 0.3148
+  type: 'test'
+  ...
+# Subtest: cancel and death clear partial progress and permit a new attempt
+ok 38 - cancel and death clear partial progress and permit a new attempt
+  ---
+  duration_ms: 4.6313
+  type: 'test'
+  ...
+# Subtest: a fled or unrelated battle cannot grant event completion
+ok 39 - a fled or unrelated battle cannot grant event completion
+  ---
+  duration_ms: 0.5533
+  type: 'test'
+  ...
+# Subtest: engine schedules persisted dialogue identically across split advances and prevents departure
+ok 40 - engine schedules persisted dialogue identically across split advances and prevents departure
+  ---
+  duration_ms: 24.5471
+  type: 'test'
+  ...
+1..40
+# tests 40
+# suites 0
+# pass 39
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5606.1608

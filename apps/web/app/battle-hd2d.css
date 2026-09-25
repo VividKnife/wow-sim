@@ -1,0 +1,49 @@
+.battle-dialog[data-slot]{width:min(1320px,98vw);max-width:1320px;height:min(1060px,96dvh);max-height:96dvh;border-color:#8e7851;border-radius:12px;background:#10191f}
+.battle-dialog .battle-heading{background:linear-gradient(110deg,#192629,#121d25);padding:18px 26px;border-bottom:1px solid #b5995830}
+.battle-heading .eyebrow{letter-spacing:2px;color:#baaa84}
+.battle-heading [data-slot=dialog-title]{letter-spacing:2px}
+.battle-dialog .battle-toolbar{background:#142127;padding:10px 22px;border-bottom:1px solid #a89a6f20}
+.hd2d-field{height:clamp(390px,53vh,610px);position:relative;isolation:isolate;overflow:hidden;background:#14202b;border-bottom:1px solid #b399613b}
+.hd2d-scene{position:absolute;inset:0;overflow:hidden}
+.hd2d-scene canvas{display:block;touch-action:none;outline:none}
+.battle-3d-controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:8px 18px;background:#142127;color:#b9c8c9;font-size:12px;border-bottom:1px solid #a89a6f30}
+.battle-3d-controls button{border:1px solid #9c865e77;border-radius:5px;padding:5px 9px;background:#213135;color:#eee1c7;cursor:pointer}
+.battle-3d-controls button:focus-visible,.battle-3d-controls input:focus-visible{outline:2px solid #efd39a;outline-offset:3px}
+.battle-audio-controls{margin-left:auto;display:flex;align-items:center;gap:12px}
+.battle-audio-controls label{display:flex;align-items:center;gap:6px}
+.battle-audio-controls input{width:90px;accent-color:#dabb82}
+@media(max-width:700px){.battle-3d-controls{padding:8px;font-size:10px;gap:6px}.battle-3d-controls>span{display:none}.battle-audio-controls{gap:6px}.battle-audio-controls input{width:65px}}
+.hd2d-vignette{position:absolute;inset:0;pointer-events:none;z-index:41;box-shadow:inset 0 0 90px 20px #07101788;background:linear-gradient(180deg,#0a162c22,transparent 25%,transparent 80%,#0710156b)}
+.hd2d-scene-title{position:absolute;left:25px;top:23px;display:flex;flex-direction:column;gap:5px;z-index:42;pointer-events:none;text-shadow:0 2px 6px #091217}
+.hd2d-chapter{color:#d4bd8e;font-size:9px;font-weight:600;letter-spacing:3px}
+.hd2d-scene-title strong{font-family:Georgia,'SimSun',serif;font-size:24px;font-weight:500;color:#f2e3c7;letter-spacing:5px}
+.hd2d-scene-title>span:last-child{font-size:10px;color:#b4c6c1;letter-spacing:2px}
+.hd2d-scene-caption{position:absolute;bottom:16px;left:24px;right:24px;display:flex;align-items:center;gap:8px;z-index:42;pointer-events:none;color:#e0d6bb;font-size:10px;text-shadow:0 2px 4px #000}
+.hd2d-scene-caption>span:last-child{margin-left:auto;color:#b7c6c2}
+.hd2d-live-dot{width:5px;height:5px;background:#cdb77d;border-radius:50%;box-shadow:0 0 7px #ffdb6f}
+.hd2d-unit-label{display:flex;flex-direction:column;align-items:stretch;gap:3px;width:44px;position:relative;background:transparent;border:0;padding:4px 2px;color:#edeee1;cursor:pointer;filter:drop-shadow(0 1px 2px #050b0f)}
+.hd2d-unit-label:hover,.hd2d-unit-label.selected{background:#0d1b2240;border-radius:5px}
+.hd2d-unit-label:focus-visible{outline:2px solid #ffe4a6;outline-offset:3px}
+.hd2d-unit-name{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);max-width:130px;pointer-events:none;font-size:10px;line-height:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 3px #000;opacity:0}
+.hd2d-unit-label:hover .hd2d-unit-name,.hd2d-unit-label:focus-visible .hd2d-unit-name,.hd2d-unit-label.selected .hd2d-unit-name{opacity:1}
+.hd2d-unit-label.enemy .hd2d-unit-name{color:#f4cab7}
+.hd2d-unit-label.selected .hd2d-unit-name{color:#ffe6a6;font-weight:600}
+.hd2d-health{display:block;height:4px;background:#121b20dd;border:1px solid #122019;border-radius:2px;overflow:hidden;box-shadow:0 0 0 1px #b0c6b01a}
+.hd2d-health i{display:block;height:100%;background:linear-gradient(90deg,#557d61,#a4cc8e);transition:width .1s linear}
+.enemy .hd2d-health i{background:linear-gradient(90deg,#854e41,#d99476)}
+.hd2d-action{display:block;height:2px;background:#111b1fb3;margin:0 2px}.hd2d-action i{height:100%;display:block;transition:width .1s linear}
+.hd2d-condition{position:absolute;top:100%;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none;font-size:9px;line-height:12px;color:#e8c4f5;text-shadow:0 1px 3px #000}
+.hd2d-skill{display:flex;align-items:center;gap:4px;max-width:150px;position:absolute;bottom:calc(100% + 17px);left:50%;transform:translateX(-50%);pointer-events:none;font-size:10px;white-space:nowrap;line-height:15px;padding:2px 4px;background:#0b1926c9;border-radius:3px}
+.hd2d-unit-label.dead{opacity:.5}
+.hd2d-damage{display:block;white-space:nowrap;pointer-events:none;font:bold 21px Georgia,serif;text-shadow:0 2px 2px #080e16,1px 0 #080e16,-1px 0 #080e16;animation:hd2d-number 1.3s ease-out both}
+.hd2d-damage.critical{font-size:30px}.hd2d-damage.still{animation:none}
+.hd2d-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#12212a;color:#dacaab;font-size:14px;padding:32px;text-align:center}
+.hd2d-loading button{border:1px solid #a19067;border-radius:5px;padding:9px 18px;cursor:pointer}
+@keyframes hd2d-number{0%{opacity:0;transform:translateY(0) scale(.75)}15%{opacity:1;transform:translateY(-14px) scale(1.1)}65%{opacity:1}100%{opacity:0;transform:translateY(-58px) scale(.95)}}
+.reduced-motion .hd2d-health i,.reduced-motion .hd2d-action i{transition:none}
+@media(max-width:700px){.battle-dialog[data-slot]{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;border:0;border-radius:0}.battle-dialog .battle-heading{padding:13px 14px}.battle-dialog .battle-toolbar{padding:8px 12px}.hd2d-field{height:390px;min-height:340px}.hd2d-scene-title{left:16px;top:17px}.hd2d-scene-title strong{font-size:19px}.hd2d-scene-caption{left:14px;right:14px;font-size:9px}.hd2d-scene-caption>span:last-child{display:none}.hd2d-unit-label{width:36px;padding:4px 2px;gap:2px}.hd2d-unit-name{font-size:8px;line-height:12px}.hd2d-damage{font-size:16px}.hd2d-damage.critical{font-size:22px}.hd2d-vignette{box-shadow:inset 0 0 55px #07101777}}
+@media(prefers-reduced-motion:reduce){.hd2d-damage{animation:none}.hd2d-health i,.hd2d-action i{transition:none}}
+
+.hd2d-skill[hidden]{display:none}.hd2d-skill img,.hd2d-skill-placeholder{width:18px;height:18px;flex:none;border:1px solid #b5a070;border-radius:3px;object-fit:cover}.hd2d-skill-placeholder{display:grid;place-items:center;background:#253441;font-size:11px}.hd2d-skill-name{overflow:hidden;text-overflow:ellipsis}
+
+.hd2d-objective{align-self:center;padding:1px 4px;border-radius:3px;font-size:9px;line-height:12px;white-space:nowrap;background:#152028db;color:#ef9b79}.hd2d-objective.control{color:#d1adff}

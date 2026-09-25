@@ -1,0 +1,38 @@
+[
+  {
+    "name": "quest 505: accepted target 2241 has an executable action",
+    "passed": true
+  },
+  {
+    "name": "quest 1147: accepted target 4130 has an executable action",
+    "passed": true
+  },
+  {
+    "name": "quest 3063: accepted target 5362 has an executable action",
+    "passed": true
+  },
+  {
+    "name": "quest 4145: accepted target 6509 has an executable action",
+    "passed": true
+  },
+  {
+    "name": "quest 5097: accepted target 10902 has an executable action",
+    "passed": true
+  },
+  {
+    "name": "quest 2201: completed Uldaman necklace quest can be turned in",
+    "passed": true
+  },
+  {
+    "name": "quest 6625: Alliance Trauma accepts firstaid skill 225",
+    "passed": true
+  },
+  {
+    "name": "quest 1641: unstarted human paladin book quest is available",
+    "passed": true
+  },
+  {
+    "name": "P1 excludes the Naxxramas entry chain offered in Eastern Plaguelands",
+    "passed": true
+  }
+]

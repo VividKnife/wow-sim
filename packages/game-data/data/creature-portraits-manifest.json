@@ -1,0 +1,2985 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "docs/research/import/creature-portraits/manifest.json",
+  "versionCaveat": "Classic service currently reports 1.15.8; not authenticated 2004-2006 client bytes. One page-selected appearance per NPC; alternate local-reference models are retained only as reference, not implicitly mapped. No official-render/retail substitution or ordinary icon is used. Supplemental NPC pages returned HTTP 403; their ModelId1 associations are evidenced by the pinned local reference rows instead. See supplement/page-failures.json.",
+  "assets": [
+    {
+      "id": "classic-display-137",
+      "displayId": 137,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-137.webp",
+      "sha256": "1fec72323468afff95ec9da6b04b47fdd14405ccf3bee61398225b049fd2b18f",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-139",
+      "displayId": 139,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-139.webp",
+      "sha256": "9fa761f16723091b83173bb8be94bfff88fe2cc64c50b3bb9a193bdceab8156b",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-161",
+      "displayId": 161,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-161.webp",
+      "sha256": "8123ffdfa58ff4486bbbfc6188aed51bdfd569fe9ac1e47bfad68f8a5dd309e7",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-163",
+      "displayId": 163,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-163.webp",
+      "sha256": "4e3c185c03e3dd13cd6d8c0f1341131aecd898201f7dd1142db26ac1bc5d2384",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-175",
+      "displayId": 175,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-175.webp",
+      "sha256": "50ee2da518f7b908d94fb4c84aca6207a42b6adfa970ccc1d75575fd6b245b05",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-184",
+      "displayId": 184,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-184.webp",
+      "sha256": "dd713628e33df4f70877e522477d09e1893b7ef9995f9ce4fc22e9fac8bab95a",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-204",
+      "displayId": 204,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-204.webp",
+      "sha256": "2b2b2af32084b47f52c4c83e8e02c3c064c0c7d3a2b3f9b352405434e719efb6",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-246",
+      "displayId": 246,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-246.webp",
+      "sha256": "e8b64d213c6bac418e5f7b0025cd146c5c8a86e6ed223b9f7de81ac6a10c1338",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-308",
+      "displayId": 308,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-308.webp",
+      "sha256": "6f3883e85e3bc84cc779469c0dd455c169e2f14d17af6f45f1b62799e6b7d35d",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-341",
+      "displayId": 341,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-341.webp",
+      "sha256": "a4bba5575756eefd66414d649146290ec158940a7646aa895355a1b513564ff1",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-365",
+      "displayId": 365,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-365.webp",
+      "sha256": "42326c6c7d2d7ae1fd463a97753bfe4aba3e58ea3fbdbac072db04a35cc2bc47",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-367",
+      "displayId": 367,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-367.webp",
+      "sha256": "1c77d1b9faeea2a325fddbf7316cb3853570237d700ac7d22304d1c381d3cf76",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-368",
+      "displayId": 368,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-368.webp",
+      "sha256": "4a75d8eccb8c0149c3213168a6cb409cfbfe7aa685bd9d413c6e655be0b7f975",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-373",
+      "displayId": 373,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-373.webp",
+      "sha256": "4e67aba2cb791de355565e60f5a2272660d406342fbd845d6820b1cefda29e6a",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-374",
+      "displayId": 374,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-374.webp",
+      "sha256": "ea8eb1d7dda59db669754f7da30fb5b2d548961760f51aaa128ac63efa944247",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-376",
+      "displayId": 376,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-376.webp",
+      "sha256": "06e14de5744d81b08b63c3a6bc4d47283dd320be39d372b7296cfa83cba333ed",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-377",
+      "displayId": 377,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-377.webp",
+      "sha256": "b25cf64f0ff0fb8414a181a855f29db1c2f5922af9e042892ee34c8b3a2876d6",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-378",
+      "displayId": 378,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-378.webp",
+      "sha256": "0bc47c170ca5b1b52a0b97a1e65e718eae873e6f8f69fd0e0dcf9fceea252d3f",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-379",
+      "displayId": 379,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-379.webp",
+      "sha256": "08522057f5b140465eb9ea6e33621579381646fdc742196c075837d528add071",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-380",
+      "displayId": 380,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-380.webp",
+      "sha256": "32ad513a4c7a710920d561c88eaf6a524224ea2bc790e20bbf99ae5b5b5ef3f6",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-381",
+      "displayId": 381,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-381.webp",
+      "sha256": "675bfa5b1607efb04187b78e091e662b7562506b513336322c370f9e182bc84e",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-382",
+      "displayId": 382,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-382.webp",
+      "sha256": "1cd55d20fb0773afaf575821bd808d1c8b6486120813bc285b66a8d0add1d3c9",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-383",
+      "displayId": 383,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-383.webp",
+      "sha256": "15233024f1633b73ac013de581517b0f75fd132da21ae3fbf686005dd2462664",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-384",
+      "displayId": 384,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-384.webp",
+      "sha256": "7255ca8123e5a5f66e56a37524e298a27ce26d0646a5d53247f3e237b109164a",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-389",
+      "displayId": 389,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-389.webp",
+      "sha256": "38e9a170ada21449226ef880c14fe4211226719be1670b95912ff2a8a4a87d6d",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-410",
+      "displayId": 410,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-410.webp",
+      "sha256": "f91535b553279b04add8b516040e156573e780b0c055afd6ce4e615b997ea57e",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-413",
+      "displayId": 413,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-413.webp",
+      "sha256": "b6c4a1511fc53516d7bce6acaac366664518d5d788bd257ebc40d978b802415a",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-441",
+      "displayId": 441,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-441.webp",
+      "sha256": "63ec3d7d24009c894c2374b5c04c6ff72f86d9652f735495e89304b164098fd4",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-447",
+      "displayId": 447,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-447.webp",
+      "sha256": "eaa189e36ae3c19b31b6a772662866bd3bc287ed5659b05e5df4d643cc304814",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-486",
+      "displayId": 486,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-486.webp",
+      "sha256": "e9f97495a5340fff9fb1e4dd7e902c226100bd86a9583aa1f85322f16ded3a86",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-502",
+      "displayId": 502,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-502.webp",
+      "sha256": "d709f0c706642078a4e361711b57330e4c35f699fb2c219126bcf490cf5b62ed",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-503",
+      "displayId": 503,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-503.webp",
+      "sha256": "f854d2cd7d5bc990fe6298f4c3e5208932d5bccc91dac4e45d72666d41ef0235",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-512",
+      "displayId": 512,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-512.webp",
+      "sha256": "8bc205a815770924d253014c779cd987e984878f82917a1bfbc60ee71f20a1bb",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-514",
+      "displayId": 514,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-514.webp",
+      "sha256": "74eebdaf763b8d0cc340ce9387fb322885a469ce46d29d1f2a05081e0ac85fe1",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-527",
+      "displayId": 527,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-527.webp",
+      "sha256": "015d3f47df14095ea8341f440d9a630c7fbd8633cde678875a3507e64beb5ca1",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-545",
+      "displayId": 545,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-545.webp",
+      "sha256": "2a0ee5e9717f5027063df51e5a89f74e6b798ac33af31f4c2afa5c6c65b0f4e1",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-548",
+      "displayId": 548,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-548.webp",
+      "sha256": "84fc72479fe6735cd69d3d98c99e86e8526fb2f1c06737d80cd4a9975f711954",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-556",
+      "displayId": 556,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-556.webp",
+      "sha256": "770a048a559f8a1158e9f35c679ce50f0bc4277deea977987a770eb45766d6ea",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-604",
+      "displayId": 604,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-604.webp",
+      "sha256": "46cac2d959800c0bc644583e3d99bab876d4e492a68951cdbfc538cd0b129ab7",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-617",
+      "displayId": 617,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-617.webp",
+      "sha256": "c64d8d048ab1692b551e369e2190cf88b3776f46eaacef3d064e92e8839ee5c2",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-643",
+      "displayId": 643,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-643.webp",
+      "sha256": "59838c86a9763a53b2424c54c285f76eaf785c2af9a3599452e38439f5e127fe",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-646",
+      "displayId": 646,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-646.webp",
+      "sha256": "0b65b882521468ede549316e06733f9ec7751ed050059231f29570c2ad927640",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-652",
+      "displayId": 652,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-652.webp",
+      "sha256": "f3a68e23251560527801ab0fe63d6085c0b2504f464501a0f0483519baaad1d5",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-741",
+      "displayId": 741,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-741.webp",
+      "sha256": "f6e1a9ab3b48f459f8820a9c807013f25c5c0d0d209a86462c0b0a83c1a139cd",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-757",
+      "displayId": 757,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-757.webp",
+      "sha256": "8206d2b2b468cf356650e37f8256e71a6d346f50666f8a138c2609f3ea96b4c0",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-774",
+      "displayId": 774,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-774.webp",
+      "sha256": "b7d137614822ad4eff515fc0c6c337bca1cc04f05d96428778f822ada6869a6f",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-801",
+      "displayId": 801,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-801.webp",
+      "sha256": "4f67472fe082bbe6ad272264a4a8791332d3a6b356944a0297cf4266e066b807",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-802",
+      "displayId": 802,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-802.webp",
+      "sha256": "f142f8a903842af4cc6b3eaf77ae86d0ce205bef53e889eed7cfa5bcd433d87d",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-829",
+      "displayId": 829,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-829.webp",
+      "sha256": "c8c4bbb2ae71b0c53434cf89a7411e752a69d5f27824bc2bc2992fe238c26920",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-903",
+      "displayId": 903,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-903.webp",
+      "sha256": "578a7b5799c6a402f6e50674b4b907601c935b3532c94ac400486623af4b3cef",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-955",
+      "displayId": 955,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-955.webp",
+      "sha256": "4dd0e1b2d762e13fa21a6acd9f6e0c151c2423c9ccc15353167b40984af1f0f4",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-958",
+      "displayId": 958,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-958.webp",
+      "sha256": "4ba855a1c20a4afef2331b25ac4dea2d4eab91e4759450b76617af306facf91d",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-979",
+      "displayId": 979,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-979.webp",
+      "sha256": "15ed94da3509050a9ef3d5e4f5b6e47663e20ac15d402555af9d95b4a4fcc39a",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-983",
+      "displayId": 983,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-983.webp",
+      "sha256": "43c093242d9f1007d8e45523b38bba7a2db5eca6bb6ab967d1b214df7056bd73",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-987",
+      "displayId": 987,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-987.webp",
+      "sha256": "c3ae50b4600a9f6b2d68949df461fddd47f3a91706d033e6cf427021e83653f5",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-1006",
+      "displayId": 1006,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1006.webp",
+      "sha256": "608390a3759299c8b1abe789038a88139205b9211ec7dcb8eb41e1410d92a5ea",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-1065",
+      "displayId": 1065,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1065.webp",
+      "sha256": "406258c47ffac68157ebbb1b691370508314a693be9763c25063d23f5f547940",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-1079",
+      "displayId": 1079,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1079.webp",
+      "sha256": "f90640204ba0230a31a5c893262ee03ccefb8b4e9339f38130de9936760aaa60",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-1105",
+      "displayId": 1105,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1105.webp",
+      "sha256": "d7a21e909fc7c3aa5fc7b817e13cb06fc296144ca004004487feefed8e16fe61",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-1269",
+      "displayId": 1269,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1269.webp",
+      "sha256": "cfd9db2f171fa32f2cf7aad2ef4be74fbf6a0a774fc9f33eba9623f5a8d1f802",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-1305",
+      "displayId": 1305,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1305.webp",
+      "sha256": "d60f43c68ad45bfa714910f0938a58465c479b75312706fee99511a4e1c89c7a",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-1994",
+      "displayId": 1994,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1994.webp",
+      "sha256": "f3cb0758e90f05e713966b978479bf9122efea833250a8e93b3162764d9b0c57",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-1995",
+      "displayId": 1995,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1995.webp",
+      "sha256": "c8ad439ee597903c4fa3c218dd4752f2c41d88c8337942992eda2d836ad4e08f",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2026",
+      "displayId": 2026,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2026.webp",
+      "sha256": "09aa88d6bb9b0a85f8b685417b8d5b032554f3bba15a21e1546110172019c708",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2029",
+      "displayId": 2029,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2029.webp",
+      "sha256": "4159d7e184ed5fb3ae11e1ff2bc97604453ec0682e32b22bf8d11d679dcab4f0",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2073",
+      "displayId": 2073,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2073.webp",
+      "sha256": "97d4f13b98621c12a4c8e01a0109e7aa79e93724a465df0b05b78b0fb0902243",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2074",
+      "displayId": 2074,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2074.webp",
+      "sha256": "8286cb41ed9b3bd49e60f73c580a9551917f1b6aa9fcaf2928992212c54c5376",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2148",
+      "displayId": 2148,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2148.webp",
+      "sha256": "e3d833c1d5fbbaaf028419fc021f5de96f5125bd83a54e9dd8dfd916444852cd",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2153",
+      "displayId": 2153,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2153.webp",
+      "sha256": "6e91c3ddc30e0d7fc64ea3d70c4b82e7f1313a103d5affff2eb094c6a473fe71",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2299",
+      "displayId": 2299,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2299.webp",
+      "sha256": "a81c9953d2fb6072079bff8598d8052597e7e0b6e3d2513bd1bc232b53d65b72",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2305",
+      "displayId": 2305,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2305.webp",
+      "sha256": "f631e928b059091e5619f223fe22e6bce88e0ae94026675a91e3e1211ec5cfc2",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2312",
+      "displayId": 2312,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2312.webp",
+      "sha256": "16f3bdaaa85a6522039f8a914e87df0a73ade251fd8b75b5a41b1e071fb8eab2",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2314",
+      "displayId": 2314,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2314.webp",
+      "sha256": "6537fcbbd864190a37075d983e873c488bdff4ebed26de4911c81f6dddfd15e9",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2316",
+      "displayId": 2316,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2316.webp",
+      "sha256": "1bc52049b8a78c2fa732c6c3354e9b9877be795b78ddc52bee940e26e0c6118c",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2318",
+      "displayId": 2318,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2318.webp",
+      "sha256": "68a70cc9cb8a500e27dffb6852e01df7ae58afe2bb27c3fb0efb9b2665c28603",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2321",
+      "displayId": 2321,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2321.webp",
+      "sha256": "e7f9832f2eb493bab07e081d4bffe261eae7d82bc874b38aec1eb2bb14c1cf89",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2323",
+      "displayId": 2323,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2323.webp",
+      "sha256": "dd5b9b416caef59f9fb652691a20f57b7328f83206364456a17637de235d5932",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2329",
+      "displayId": 2329,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2329.webp",
+      "sha256": "14228530adcbef8e284590f1b43b13224949ec47a5b3c66cb5a14a9d852a6ad6",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2331",
+      "displayId": 2331,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2331.webp",
+      "sha256": "f141571e3f0cd60cc53f82f801f062f70ea4aa2279d984973c9eebea2219aa73",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2333",
+      "displayId": 2333,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2333.webp",
+      "sha256": "5be183dbe25221498e6b56e31599f2c5b912c3683c5100284f7a84ae86452aed",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2336",
+      "displayId": 2336,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2336.webp",
+      "sha256": "ebc023966a5cd236902d341e540c0c50ab3929909606dda4769a99264af9677d",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2338",
+      "displayId": 2338,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2338.webp",
+      "sha256": "ebed491e5db9441ad1e41db86185578232a344fff7c9026d4146576df7f22166",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2340",
+      "displayId": 2340,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2340.webp",
+      "sha256": "4f2b715ba3ee8d92b5e39618fb9170861ce0a66814a2b9b40dd26ca60b3a2c5e",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2342",
+      "displayId": 2342,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2342.webp",
+      "sha256": "f69bdb5263c8da9859bea50eea1bd2e647908084673cfb5927fdcf629cf8beb2",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2344",
+      "displayId": 2344,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2344.webp",
+      "sha256": "c5d2419121b7abc33d7b287fc4fafb22a9afef9181404ec05df5214ba0b565fd",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2347",
+      "displayId": 2347,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2347.webp",
+      "sha256": "c3f6b66ee7e55a89572880229159699fea248f14e65d3c828cebd5fcee9e8e23",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2349",
+      "displayId": 2349,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2349.webp",
+      "sha256": "3d79c002c01246ce320dfb824dbcb050362af0703e0ccbf99798938b473b9b23",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2355",
+      "displayId": 2355,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2355.webp",
+      "sha256": "f1775c3864512207fae5445cd134ad4036a9773b7f6e8bb05c703bb88a551f4c",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2357",
+      "displayId": 2357,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2357.webp",
+      "sha256": "499687db768c48e55ecbf3cfd21aface7cd49b559c628ad0e30f59bd9f8641a7",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2359",
+      "displayId": 2359,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2359.webp",
+      "sha256": "9064eb9c94605a40801104afea8ad8f9da920050f277ab7ee640ed81b9fc45bb",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2361",
+      "displayId": 2361,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2361.webp",
+      "sha256": "0c88aa581d9a2f011028925f1f26e6bcc5d1f67c4c13847acf34ff63686247dc",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2438",
+      "displayId": 2438,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2438.webp",
+      "sha256": "595d572a194a749e2134d717a2aecd2c6feda11ae9ef7013415bed135a7cc4a9",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2440",
+      "displayId": 2440,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2440.webp",
+      "sha256": "920db348c57dfbd7a459e1323e30a0ba2fa0bfe2092e598e2b46db7e743656a4",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2441",
+      "displayId": 2441,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2441.webp",
+      "sha256": "840b4fc2b957e5753e99a4029b8a00939e20b199a42c98abe095639c8b13b7b6",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2447",
+      "displayId": 2447,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2447.webp",
+      "sha256": "b07922f98ba64158e28687639fc9406f4a2b10d34829646288797016fdd74f95",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2541",
+      "displayId": 2541,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2541.webp",
+      "sha256": "29aafb25ad248a4bfa3f4e606b6fb46890da9d63203ba8ae276a28d46b5c2115",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-3027",
+      "displayId": 3027,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-3027.webp",
+      "sha256": "ca05a68017dfbb9b1f201e4a02b127b6c25e8eda0c7cd7c42019cc57750b6708",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-3035",
+      "displayId": 3035,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-3035.webp",
+      "sha256": "94dc35bc85431b76b253a918c32e0bd99833863d4836e9920b99c908c0f55211",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-3267",
+      "displayId": 3267,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-3267.webp",
+      "sha256": "9753c274d6f7d905386664c0e6e3f1ff7ff7ea3e7728942f24fb4bd352cdba84",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-3320",
+      "displayId": 3320,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-3320.webp",
+      "sha256": "e0c4106a835e9a1e87524cb83d7f1d653399884acc40d0b6dca124d58666790a",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-3321",
+      "displayId": 3321,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-3321.webp",
+      "sha256": "1f7ea2c690e30199a74ec021ea5933f82fec2f9c721b8e41d8b0c5a2fb9bc1ad",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-3322",
+      "displayId": 3322,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-3322.webp",
+      "sha256": "038ab0eb7880d5c206c6728c8d84abce59e664a82c657d1cbfce0dd5694adb89",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-3341",
+      "displayId": 3341,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-3341.webp",
+      "sha256": "05ba3a004d9216847cbd3aebda914718e0e99694744bcce31d312ceba7aed793",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-4275",
+      "displayId": 4275,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-4275.webp",
+      "sha256": "b742129a44717645bf06444c6d958b563da05665d19eaf828bbe6436090a1bbf",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-4276",
+      "displayId": 4276,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-4276.webp",
+      "sha256": "5e51517a91894bed2fe5a045bc4c191896c0be16992a7375c8be4a14a0e5c138",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-4279",
+      "displayId": 4279,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-4279.webp",
+      "sha256": "60ed72cbc3d4af3736a025a1c13a2bfdf118946e924a1416b63257e06c81c17e",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-4418",
+      "displayId": 4418,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-4418.webp",
+      "sha256": "2da73b6579803175d8ea32225580e790b6874b0f47adf0094be245b038a3e350",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-4420",
+      "displayId": 4420,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-4420.webp",
+      "sha256": "52775b1a19a2bbc328c653cf7a6168050895345027808798bcbd109690dd5c83",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-4422",
+      "displayId": 4422,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-4422.webp",
+      "sha256": "3426a628abb768a7a181d69dd9c0f11df42e748ccd44326565bcbbfddb1f4ea3",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-4947",
+      "displayId": 4947,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-4947.webp",
+      "sha256": "b035650cbb5aa99509345c6c1c562eb0235e3981e2c418c6d717560fbed596d3",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-5035",
+      "displayId": 5035,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-5035.webp",
+      "sha256": "1561de34458fd0712f1852f5d549bf86ed3638c81d44c3617c5ae52676a60edb",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-5243",
+      "displayId": 5243,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-5243.webp",
+      "sha256": "8e3723248392fe3781c9017301339b3388e1585db4de99892c37a9ce12ec95bb",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-5327",
+      "displayId": 5327,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-5327.webp",
+      "sha256": "2405c2f0f55a6a86e661832a7d3b12f507241d461e6eb913149cc86e3570da17",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-5805",
+      "displayId": 5805,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-5805.webp",
+      "sha256": "fb28788ce146bb40344c05553e93c3d754e415ab2963e8f888cf56c2d873f2d8",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-5806",
+      "displayId": 5806,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-5806.webp",
+      "sha256": "366c4bd7d7872a41a1251666132d581ccf14c3ebe99da1b2dab1a54997bfca6d",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-5811",
+      "displayId": 5811,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-5811.webp",
+      "sha256": "08354c4e5bc092507c315096574f7a41e231f6a975e4c22b3b4f630adc214ab2",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-5812",
+      "displayId": 5812,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-5812.webp",
+      "sha256": "be2bbaec341483a06d52eef5890fadf331a50ec991f6a20668870fd200e27e5a",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-5813",
+      "displayId": 5813,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-5813.webp",
+      "sha256": "8f48d545e195d53d9b010e1c19cd26b46a7fb98eba012c77cce5c901ed7ea4a0",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-5832",
+      "displayId": 5832,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-5832.webp",
+      "sha256": "07ff8cda5e939daa6d4109884b04fb7af9b54b6380a41e19965fa7e70ece36e1",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-7109",
+      "displayId": 7109,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-7109.webp",
+      "sha256": "49168e45ccfbe9baecc643bbabcda0c5d0baee2e36a85e18721a4aa2dffac48f",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-7110",
+      "displayId": 7110,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-7110.webp",
+      "sha256": "ed1b4ec0e2d34a763012c3b23b35cc7fb2804b6513fb15cf8776e04e523d0259",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-7111",
+      "displayId": 7111,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-7111.webp",
+      "sha256": "f098cf53694fbfd11dd4605dcea1edef98ff69979c15dbd24b668dd04ddb177c",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-7112",
+      "displayId": 7112,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-7112.webp",
+      "sha256": "cbfc357715259e44fe59c529d7fa0b5af0d3bef56ae758cfcacbaaf824223b52",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-7113",
+      "displayId": 7113,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-7113.webp",
+      "sha256": "59aff9693b52112692cc20aa0081f4b5e3e228031d0a0f222b4a12476794e158",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-7124",
+      "displayId": 7124,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-7124.webp",
+      "sha256": "ebb8287b5aa88b0b031bc1740a53807681025567848b7716cc0e6e47116c99c3",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-7125",
+      "displayId": 7125,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-7125.webp",
+      "sha256": "585168be097643ce76bb713fa329d8e313690062b8272ebe8bae1e6cdc14accf",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-7550",
+      "displayId": 7550,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-7550.webp",
+      "sha256": "803fe717fa35b844b9c6a33ac1077b116433e2dea84c16067e8d459f8d734667",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-7849",
+      "displayId": 7849,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-7849.webp",
+      "sha256": "ddf1923fe9e5aa247c556304378efaf930dfa4bc5463e955ccf8a18a6a5d41e6",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-8871",
+      "displayId": 8871,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-8871.webp",
+      "sha256": "1cc888a0b6817674be91ca593bb77a673f766d51c322e755a89942870ee53694",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-9570",
+      "displayId": 9570,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-9570.webp",
+      "sha256": "09d7af90b4f7593eb9538a0aa55fbf179c2a667d530b6b48a3fb6dd376bef179",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-9786",
+      "displayId": 9786,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-9786.webp",
+      "sha256": "a66a986b39026406c34c11a148c8784d527e8706f6bcdad412bcb149babc20c0",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-10628",
+      "displayId": 10628,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-10628.webp",
+      "sha256": "73b0961b90a45a6f73b7b29407868641bc1f4be52f9f6e0ada8bd524449221b7",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-10630",
+      "displayId": 10630,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-10630.webp",
+      "sha256": "bb3731d2f1a2c9ee273e2ccfdde9f7741d9027035c1e283c99f940fbeb37ef37",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-10790",
+      "displayId": 10790,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-10790.webp",
+      "sha256": "cdadfac54009adc34a379e26641bb00620ef1105097b9640711f9098f0211496",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-10791",
+      "displayId": 10791,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-10791.webp",
+      "sha256": "cc0b8af28bd88167d6398523c167726b345cf3769d06eb591373830a73861e1d",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-10912",
+      "displayId": 10912,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-10912.webp",
+      "sha256": "b985d2608608041fa8f5474e8724058b350bd80ec2390ad18c090dac6709e1d0",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-10913",
+      "displayId": 10913,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-10913.webp",
+      "sha256": "1cae222c318df6f4e405be38e010039a68b313bcef71a202c69aa7d8d1f9278e",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-11402",
+      "displayId": 11402,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-11402.webp",
+      "sha256": "766f378d50bec941bd5b0ea3e4a75f420fc03d55673f3efc8b135a05ccc1f418",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-11412",
+      "displayId": 11412,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-11412.webp",
+      "sha256": "9fee287a2bd3bb59ff95890ad7dd164ed8f4b892f3c2e53396b35a7dd55e9630",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-11415",
+      "displayId": 11415,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-11415.webp",
+      "sha256": "3a13d2a77376d5928fcdc7b49941766af17258a32a402d71bbc52495a4df5740",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-12074",
+      "displayId": 12074,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-12074.webp",
+      "sha256": "cc0ecdd5f3bf7dcc641eb8d29a55d6244ec435a06273cd2134fe0bc230307c6c",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-12193",
+      "displayId": 12193,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-12193.webp",
+      "sha256": "3475b8d49be49f1c7ab70b95ea5386486639a1ed14e748cb16bb8169c7c4b986",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-13091",
+      "displayId": 13091,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-13091.webp",
+      "sha256": "b6e9d47b25107eb3de8272a27326aef57355e025e26ae361cac5e34f2b95d0ba",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-14403",
+      "displayId": 14403,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-14403.webp",
+      "sha256": "84754feee648cc5eeea8b1a598918e5188069353fae36ad7ee64e8ab7f5914db",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-16169",
+      "displayId": 16169,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-16169.webp",
+      "sha256": "66a71c6bb5d10197685ed73b60fca06409ce762b428fc6187988fb3f9fbab902",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-38",
+      "displayId": 38,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-38.webp",
+      "sha256": "e7d4f6f06e70b37da97739861e1483dad390deccd9655e938e6c103038d38ae5",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-169",
+      "displayId": 169,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-169.webp",
+      "sha256": "8afe469663097e74b546a50475568625b78b03baa931ac10e18ccd8431f532bc",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-304",
+      "displayId": 304,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-304.webp",
+      "sha256": "84f316900bf641de81d7e4a0a89122b9a8ca2062a91056713e2226a51d78cd4d",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-328",
+      "displayId": 328,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-328.webp",
+      "sha256": "7c4bcac0da1353c0fa56da6b2a02f3a2808fd6c9614fc3aa4596429faffa274f",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-360",
+      "displayId": 360,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-360.webp",
+      "sha256": "8a256701e01ee83a90cea4bfcd1af7008792960d596ff9cf01f9461b4c0736f1",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-387",
+      "displayId": 387,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-387.webp",
+      "sha256": "3f60a9e355580afab4053ac2f313867186456c1895a9878f9a3d3732568162d1",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-670",
+      "displayId": 670,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-670.webp",
+      "sha256": "08e0c9f3d8c2ab6c462c92b4808fb0e399bb92ab7d7f7b33f1fa6740804d7871",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-713",
+      "displayId": 713,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-713.webp",
+      "sha256": "5844b17caf92c5e65e92f9d01c17b08f903dd2ad5cd4bab2e15380caf98f8671",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-748",
+      "displayId": 748,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-748.webp",
+      "sha256": "4447bd1babbe5757943845e680a52ac5a64090c915ae28987a4ae52f5d24e202",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-850",
+      "displayId": 850,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-850.webp",
+      "sha256": "4523f977d527778f57314376e134a1257646de1d9fa9d76b0a19518a4f0e227d",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-863",
+      "displayId": 863,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-863.webp",
+      "sha256": "b19d2450261625196e508baade88a9bc74e83c8dcc2b39d19c7251f3d1e625c7",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-1036",
+      "displayId": 1036,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1036.webp",
+      "sha256": "b569bdca26f2d0b0c014fbe8aff747c3b9921937b9053cea51856a7eb6b3d841",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-1132",
+      "displayId": 1132,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1132.webp",
+      "sha256": "05d67de89d5da3f0e28bcd39371266bd02d376377099825ba4143dff9ed9ecc4",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-1742",
+      "displayId": 1742,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1742.webp",
+      "sha256": "66f030271d64ff531161355b88e5f5219e46d360d070c197201b8cabd5036ebc",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-1912",
+      "displayId": 1912,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-1912.webp",
+      "sha256": "9b87a2a88f66b46c3e6a245221993059aa1e3eb0a7e037c69c4cbffe0b889fcf",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2485",
+      "displayId": 2485,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2485.webp",
+      "sha256": "2364c28bfc2920b921409421f9d00cb59914f5767e6eae66a14036e4cdb513b8",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-2710",
+      "displayId": 2710,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-2710.webp",
+      "sha256": "8943c44809ed755003c6835ff44fa8b91fbc8bdec59683cf8af4c50be08ba0e2",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-4162",
+      "displayId": 4162,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-4162.webp",
+      "sha256": "c227001f0b2aa3e34fbcbb6b6bacb3064ac33398fa00ed1cfe8cd8c7ebac569c",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-4449",
+      "displayId": 4449,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-4449.webp",
+      "sha256": "cd19c95f34a31a5f31733d312dd69c4875d45fd4903acf1633d139f0e6b60e3d",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-4732",
+      "displayId": 4732,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-4732.webp",
+      "sha256": "1df5ae28b398a4e5bea36754daea34a20151b39d24734abba107b2d242229968",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-5229",
+      "displayId": 5229,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-5229.webp",
+      "sha256": "9bc211be3a51615fe3fe35435b1bfb8e50821e52c55c71535b3f3a7fcd7f2fbb",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-6368",
+      "displayId": 6368,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-6368.webp",
+      "sha256": "794c2320ff32519b23ef052d46fb176bb192058f95df6d2ce35302eb553ac5db",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "id": "classic-display-10832",
+      "displayId": 10832,
+      "kind": "npc-model-render",
+      "path": "creatures/portraits/classic-display-10832.webp",
+      "sha256": "29ecc0f83bacd116d6c9afb46a16499df46df5224434c99152a0a3d5a3816368",
+      "width": 300,
+      "height": 300
+    }
+  ],
+  "entries": {
+    "3": {
+      "entry": 3,
+      "assetId": "classic-display-987",
+      "displayId": 987,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "6": {
+      "entry": 6,
+      "assetId": "classic-display-10913",
+      "displayId": 10913,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "30": {
+      "entry": 30,
+      "assetId": "classic-display-382",
+      "displayId": 382,
+      "creatureType": 1,
+      "family": 3,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "36": {
+      "entry": 36,
+      "assetId": "classic-display-367",
+      "displayId": 367,
+      "creatureType": 9,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "38": {
+      "entry": 38,
+      "assetId": "classic-display-5035",
+      "displayId": 5035,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "40": {
+      "entry": 40,
+      "assetId": "classic-display-373",
+      "displayId": 373,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "43": {
+      "entry": 43,
+      "assetId": "classic-display-368",
+      "displayId": 368,
+      "creatureType": 1,
+      "family": 3,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "46": {
+      "entry": 46,
+      "assetId": "classic-display-441",
+      "displayId": 441,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "60": {
+      "entry": 60,
+      "assetId": "classic-display-2153",
+      "displayId": 2153,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "61": {
+      "entry": 61,
+      "assetId": "classic-display-3341",
+      "displayId": 3341,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "69": {
+      "entry": 69,
+      "assetId": "classic-display-604",
+      "displayId": 604,
+      "creatureType": 1,
+      "family": 1,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "79": {
+      "entry": 79,
+      "assetId": "classic-display-774",
+      "displayId": 774,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "80": {
+      "entry": 80,
+      "assetId": "classic-display-365",
+      "displayId": 365,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "94": {
+      "entry": 94,
+      "assetId": "classic-display-2361",
+      "displayId": 2361,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "95": {
+      "entry": 95,
+      "assetId": "classic-display-4418",
+      "displayId": 4418,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "97": {
+      "entry": 97,
+      "assetId": "classic-display-10791",
+      "displayId": 10791,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "98": {
+      "entry": 98,
+      "assetId": "classic-display-376",
+      "displayId": 376,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "99": {
+      "entry": 99,
+      "assetId": "classic-display-3320",
+      "displayId": 3320,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "100": {
+      "entry": 100,
+      "assetId": "classic-display-175",
+      "displayId": 175,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "103": {
+      "entry": 103,
+      "assetId": "classic-display-2073",
+      "displayId": 2073,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "113": {
+      "entry": 113,
+      "assetId": "classic-display-503",
+      "displayId": 503,
+      "creatureType": 1,
+      "family": 5,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "114": {
+      "entry": 114,
+      "assetId": "classic-display-378",
+      "displayId": 378,
+      "creatureType": 9,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "115": {
+      "entry": 115,
+      "assetId": "classic-display-379",
+      "displayId": 379,
+      "creatureType": 9,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "116": {
+      "entry": 116,
+      "assetId": "classic-display-2357",
+      "displayId": 2357,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "117": {
+      "entry": 117,
+      "assetId": "classic-display-175",
+      "displayId": 175,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "118": {
+      "entry": 118,
+      "assetId": "classic-display-11415",
+      "displayId": 11415,
+      "creatureType": 1,
+      "family": 1,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "119": {
+      "entry": 119,
+      "assetId": "classic-display-381",
+      "displayId": 381,
+      "creatureType": 1,
+      "family": 5,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "121": {
+      "entry": 121,
+      "assetId": "classic-display-2336",
+      "displayId": 2336,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "122": {
+      "entry": 122,
+      "assetId": "classic-display-2342",
+      "displayId": 2342,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "123": {
+      "entry": 123,
+      "assetId": "classic-display-383",
+      "displayId": 383,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "124": {
+      "entry": 124,
+      "assetId": "classic-display-384",
+      "displayId": 384,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "125": {
+      "entry": 125,
+      "assetId": "classic-display-10790",
+      "displayId": 10790,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "126": {
+      "entry": 126,
+      "assetId": "classic-display-983",
+      "displayId": 983,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "127": {
+      "entry": 127,
+      "assetId": "classic-display-1995",
+      "displayId": 1995,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "154": {
+      "entry": 154,
+      "assetId": "classic-display-1105",
+      "displayId": 1105,
+      "creatureType": 1,
+      "family": 7,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "157": {
+      "entry": 157,
+      "assetId": "classic-display-3027",
+      "displayId": 3027,
+      "creatureType": 1,
+      "family": 5,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "171": {
+      "entry": 171,
+      "assetId": "classic-display-1305",
+      "displayId": 1305,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "199": {
+      "entry": 199,
+      "assetId": "classic-display-410",
+      "displayId": 410,
+      "creatureType": 1,
+      "family": 7,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "202": {
+      "entry": 202,
+      "assetId": "classic-display-9786",
+      "displayId": 9786,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "213": {
+      "entry": 213,
+      "assetId": "classic-display-801",
+      "displayId": 801,
+      "creatureType": 1,
+      "family": 1,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "215": {
+      "entry": 215,
+      "assetId": "classic-display-4276",
+      "displayId": 4276,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "217": {
+      "entry": 217,
+      "assetId": "classic-display-955",
+      "displayId": 955,
+      "creatureType": 1,
+      "family": 3,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "218": {
+      "entry": 218,
+      "assetId": "classic-display-4275",
+      "displayId": 4275,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "257": {
+      "entry": 257,
+      "assetId": "classic-display-10912",
+      "displayId": 10912,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "285": {
+      "entry": 285,
+      "assetId": "classic-display-617",
+      "displayId": 617,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "299": {
+      "entry": 299,
+      "assetId": "classic-display-447",
+      "displayId": 447,
+      "creatureType": 1,
+      "family": 1,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "327": {
+      "entry": 327,
+      "assetId": "classic-display-2299",
+      "displayId": 2299,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "330": {
+      "entry": 330,
+      "assetId": "classic-display-8871",
+      "displayId": 8871,
+      "creatureType": 1,
+      "family": 5,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "390": {
+      "entry": 390,
+      "assetId": "classic-display-377",
+      "displayId": 377,
+      "creatureType": 1,
+      "family": 5,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "391": {
+      "entry": 391,
+      "assetId": "classic-display-5243",
+      "displayId": 5243,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "448": {
+      "entry": 448,
+      "assetId": "classic-display-384",
+      "displayId": 384,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "449": {
+      "entry": 449,
+      "assetId": "classic-display-2344",
+      "displayId": 2344,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "450": {
+      "entry": 450,
+      "assetId": "classic-display-4420",
+      "displayId": 4420,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "452": {
+      "entry": 452,
+      "assetId": "classic-display-383",
+      "displayId": 383,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "453": {
+      "entry": 453,
+      "assetId": "classic-display-502",
+      "displayId": 502,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "454": {
+      "entry": 454,
+      "assetId": "classic-display-8871",
+      "displayId": 8871,
+      "creatureType": 1,
+      "family": 5,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "456": {
+      "entry": 456,
+      "assetId": "classic-display-486",
+      "displayId": 486,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "458": {
+      "entry": 458,
+      "assetId": "classic-display-757",
+      "displayId": 757,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "471": {
+      "entry": 471,
+      "assetId": "classic-display-2541",
+      "displayId": 2541,
+      "creatureType": 1,
+      "family": 3,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "472": {
+      "entry": 472,
+      "assetId": "classic-display-175",
+      "displayId": 175,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "473": {
+      "entry": 473,
+      "assetId": "classic-display-2074",
+      "displayId": 2074,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "474": {
+      "entry": 474,
+      "assetId": "classic-display-2359",
+      "displayId": 2359,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "475": {
+      "entry": 475,
+      "assetId": "classic-display-139",
+      "displayId": 139,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "476": {
+      "entry": 476,
+      "assetId": "classic-display-163",
+      "displayId": 163,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "478": {
+      "entry": 478,
+      "assetId": "classic-display-512",
+      "displayId": 512,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "480": {
+      "entry": 480,
+      "assetId": "classic-display-514",
+      "displayId": 514,
+      "creatureType": 9,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "481": {
+      "entry": 481,
+      "assetId": "classic-display-2333",
+      "displayId": 2333,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "500": {
+      "entry": 500,
+      "assetId": "classic-display-374",
+      "displayId": 374,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "501": {
+      "entry": 501,
+      "assetId": "classic-display-413",
+      "displayId": 413,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "502": {
+      "entry": 502,
+      "assetId": "classic-display-4422",
+      "displayId": 4422,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "504": {
+      "entry": 504,
+      "assetId": "classic-display-2331",
+      "displayId": 2331,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "506": {
+      "entry": 506,
+      "assetId": "classic-display-383",
+      "displayId": 383,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "513": {
+      "entry": 513,
+      "assetId": "classic-display-1994",
+      "displayId": 1994,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "517": {
+      "entry": 517,
+      "assetId": "classic-display-1079",
+      "displayId": 1079,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "520": {
+      "entry": 520,
+      "assetId": "classic-display-652",
+      "displayId": 652,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "521": {
+      "entry": 521,
+      "assetId": "classic-display-11412",
+      "displayId": 11412,
+      "creatureType": 1,
+      "family": 1,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "524": {
+      "entry": 524,
+      "assetId": "classic-display-389",
+      "displayId": 389,
+      "creatureType": 1,
+      "family": 5,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "525": {
+      "entry": 525,
+      "assetId": "classic-display-903",
+      "displayId": 903,
+      "creatureType": 1,
+      "family": 1,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "531": {
+      "entry": 531,
+      "assetId": "classic-display-7550",
+      "displayId": 7550,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "539": {
+      "entry": 539,
+      "assetId": "classic-display-958",
+      "displayId": 958,
+      "creatureType": 1,
+      "family": 3,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "547": {
+      "entry": 547,
+      "assetId": "classic-display-3035",
+      "displayId": 3035,
+      "creatureType": 1,
+      "family": 5,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "550": {
+      "entry": 550,
+      "assetId": "classic-display-2312",
+      "displayId": 2312,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "565": {
+      "entry": 565,
+      "assetId": "classic-display-802",
+      "displayId": 802,
+      "creatureType": 1,
+      "family": 1,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "569": {
+      "entry": 569,
+      "assetId": "classic-display-2541",
+      "displayId": 2541,
+      "creatureType": 1,
+      "family": 3,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "572": {
+      "entry": 572,
+      "assetId": "classic-display-1065",
+      "displayId": 1065,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "573": {
+      "entry": 573,
+      "assetId": "classic-display-548",
+      "displayId": 548,
+      "creatureType": 9,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "589": {
+      "entry": 589,
+      "assetId": "classic-display-2338",
+      "displayId": 2338,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "590": {
+      "entry": 590,
+      "assetId": "classic-display-2340",
+      "displayId": 2340,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "594": {
+      "entry": 594,
+      "assetId": "classic-display-2323",
+      "displayId": 2323,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "596": {
+      "entry": 596,
+      "assetId": "classic-display-3267",
+      "displayId": 3267,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "598": {
+      "entry": 598,
+      "assetId": "classic-display-308",
+      "displayId": 308,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "599": {
+      "entry": 599,
+      "assetId": "classic-display-2355",
+      "displayId": 2355,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "619": {
+      "entry": 619,
+      "assetId": "classic-display-2329",
+      "displayId": 2329,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "622": {
+      "entry": 622,
+      "assetId": "classic-display-7109",
+      "displayId": 7109,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "623": {
+      "entry": 623,
+      "assetId": "classic-display-11402",
+      "displayId": 11402,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "624": {
+      "entry": 624,
+      "assetId": "classic-display-10630",
+      "displayId": 10630,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "625": {
+      "entry": 625,
+      "assetId": "classic-display-829",
+      "displayId": 829,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "626": {
+      "entry": 626,
+      "assetId": "classic-display-10628",
+      "displayId": 10628,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "628": {
+      "entry": 628,
+      "assetId": "classic-display-741",
+      "displayId": 741,
+      "creatureType": 1,
+      "family": 1,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "634": {
+      "entry": 634,
+      "assetId": "classic-display-2316",
+      "displayId": 2316,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "636": {
+      "entry": 636,
+      "assetId": "classic-display-2314",
+      "displayId": 2314,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "639": {
+      "entry": 639,
+      "assetId": "classic-display-2029",
+      "displayId": 2029,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "641": {
+      "entry": 641,
+      "assetId": "classic-display-7111",
+      "displayId": 7111,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "642": {
+      "entry": 642,
+      "assetId": "classic-display-1269",
+      "displayId": 1269,
+      "creatureType": 9,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "643": {
+      "entry": 643,
+      "assetId": "classic-display-7125",
+      "displayId": 7125,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "644": {
+      "entry": 644,
+      "assetId": "classic-display-14403",
+      "displayId": 14403,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "645": {
+      "entry": 645,
+      "assetId": "classic-display-1305",
+      "displayId": 1305,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "646": {
+      "entry": 646,
+      "assetId": "classic-display-2026",
+      "displayId": 2026,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "647": {
+      "entry": 647,
+      "assetId": "classic-display-7113",
+      "displayId": 7113,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "657": {
+      "entry": 657,
+      "assetId": "classic-display-2347",
+      "displayId": 2347,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "732": {
+      "entry": 732,
+      "assetId": "classic-display-983",
+      "displayId": 983,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "735": {
+      "entry": 735,
+      "assetId": "classic-display-527",
+      "displayId": 527,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "822": {
+      "entry": 822,
+      "assetId": "classic-display-1006",
+      "displayId": 1006,
+      "creatureType": 1,
+      "family": 4,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "824": {
+      "entry": 824,
+      "assetId": "classic-display-2441",
+      "displayId": 2441,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "831": {
+      "entry": 831,
+      "assetId": "classic-display-979",
+      "displayId": 979,
+      "creatureType": 1,
+      "family": 8,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "832": {
+      "entry": 832,
+      "assetId": "classic-display-5327",
+      "displayId": 5327,
+      "creatureType": 4,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "833": {
+      "entry": 833,
+      "assetId": "classic-display-161",
+      "displayId": 161,
+      "creatureType": 1,
+      "family": 1,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "834": {
+      "entry": 834,
+      "assetId": "classic-display-643",
+      "displayId": 643,
+      "creatureType": 1,
+      "family": 1,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "846": {
+      "entry": 846,
+      "assetId": "classic-display-646",
+      "displayId": 646,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "880": {
+      "entry": 880,
+      "assetId": "classic-display-3322",
+      "displayId": 3322,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "881": {
+      "entry": 881,
+      "assetId": "classic-display-3321",
+      "displayId": 3321,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "909": {
+      "entry": 909,
+      "assetId": "classic-display-4279",
+      "displayId": 4279,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "923": {
+      "entry": 923,
+      "assetId": "classic-display-246",
+      "displayId": 246,
+      "creatureType": 1,
+      "family": 1,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "930": {
+      "entry": 930,
+      "assetId": "classic-display-368",
+      "displayId": 368,
+      "creatureType": 1,
+      "family": 3,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "948": {
+      "entry": 948,
+      "assetId": "classic-display-137",
+      "displayId": 137,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "949": {
+      "entry": 949,
+      "assetId": "classic-display-545",
+      "displayId": 545,
+      "creatureType": 1,
+      "family": 3,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1065": {
+      "entry": 1065,
+      "assetId": "classic-display-204",
+      "displayId": 204,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1109": {
+      "entry": 1109,
+      "assetId": "classic-display-2305",
+      "displayId": 2305,
+      "creatureType": 1,
+      "family": 7,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1216": {
+      "entry": 1216,
+      "assetId": "classic-display-9570",
+      "displayId": 9570,
+      "creatureType": 1,
+      "family": 8,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1236": {
+      "entry": 1236,
+      "assetId": "classic-display-373",
+      "displayId": 373,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1424": {
+      "entry": 1424,
+      "assetId": "classic-display-774",
+      "displayId": 774,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1426": {
+      "entry": 1426,
+      "assetId": "classic-display-374",
+      "displayId": 374,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1725": {
+      "entry": 1725,
+      "assetId": "classic-display-184",
+      "displayId": 184,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1726": {
+      "entry": 1726,
+      "assetId": "classic-display-2321",
+      "displayId": 2321,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1727": {
+      "entry": 1727,
+      "assetId": "classic-display-341",
+      "displayId": 341,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1729": {
+      "entry": 1729,
+      "assetId": "classic-display-2318",
+      "displayId": 2318,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1731": {
+      "entry": 1731,
+      "assetId": "classic-display-7110",
+      "displayId": 7110,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1732": {
+      "entry": 1732,
+      "assetId": "classic-display-2349",
+      "displayId": 2349,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1763": {
+      "entry": 1763,
+      "assetId": "classic-display-7124",
+      "displayId": 7124,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "1922": {
+      "entry": 1922,
+      "assetId": "classic-display-380",
+      "displayId": 380,
+      "creatureType": 1,
+      "family": 1,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "3586": {
+      "entry": 3586,
+      "assetId": "classic-display-556",
+      "displayId": 556,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "3947": {
+      "entry": 3947,
+      "assetId": "classic-display-7112",
+      "displayId": 7112,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "4416": {
+      "entry": 4416,
+      "assetId": "classic-display-2438",
+      "displayId": 2438,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "4417": {
+      "entry": 4417,
+      "assetId": "classic-display-2440",
+      "displayId": 2440,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "4418": {
+      "entry": 4418,
+      "assetId": "classic-display-2447",
+      "displayId": 2447,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "5043": {
+      "entry": 5043,
+      "assetId": "classic-display-2148",
+      "displayId": 2148,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "6093": {
+      "entry": 6093,
+      "assetId": "classic-display-4947",
+      "displayId": 4947,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "6846": {
+      "entry": 6846,
+      "assetId": "classic-display-7849",
+      "displayId": 7849,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "6927": {
+      "entry": 6927,
+      "assetId": "classic-display-2357",
+      "displayId": 2357,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "7050": {
+      "entry": 7050,
+      "assetId": "classic-display-5812",
+      "displayId": 5812,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "7051": {
+      "entry": 7051,
+      "assetId": "classic-display-5813",
+      "displayId": 5813,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "7052": {
+      "entry": 7052,
+      "assetId": "classic-display-5811",
+      "displayId": 5811,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "7053": {
+      "entry": 7053,
+      "assetId": "classic-display-5805",
+      "displayId": 5805,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "7056": {
+      "entry": 7056,
+      "assetId": "classic-display-5806",
+      "displayId": 5806,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "7067": {
+      "entry": 7067,
+      "assetId": "classic-display-5832",
+      "displayId": 5832,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "12123": {
+      "entry": 12123,
+      "assetId": "classic-display-12193",
+      "displayId": 12193,
+      "creatureType": 1,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "13159": {
+      "entry": 13159,
+      "assetId": "classic-display-13091",
+      "displayId": 13091,
+      "creatureType": 7,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "16422": {
+      "entry": 16422,
+      "assetId": "classic-display-12074",
+      "displayId": 12074,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "16423": {
+      "entry": 16423,
+      "assetId": "classic-display-16169",
+      "displayId": 16169,
+      "creatureType": 6,
+      "family": 0,
+      "evidenceLevel": "classic-npc-page-display-id"
+    },
+    "89": {
+      "entry": 89,
+      "assetId": "classic-display-169",
+      "displayId": 169,
+      "creatureType": 3,
+      "family": 0,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "416": {
+      "entry": 416,
+      "assetId": "classic-display-4449",
+      "displayId": 4449,
+      "creatureType": 3,
+      "family": 23,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "417": {
+      "entry": 417,
+      "assetId": "classic-display-850",
+      "displayId": 850,
+      "creatureType": 3,
+      "family": 15,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "441": {
+      "entry": 441,
+      "assetId": "classic-display-387",
+      "displayId": 387,
+      "creatureType": 2,
+      "family": 0,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "620": {
+      "entry": 620,
+      "assetId": "classic-display-304",
+      "displayId": 304,
+      "creatureType": 8,
+      "family": 0,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "721": {
+      "entry": 721,
+      "assetId": "classic-display-328",
+      "displayId": 328,
+      "creatureType": 8,
+      "family": 0,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "1015": {
+      "entry": 1015,
+      "assetId": "classic-display-670",
+      "displayId": 670,
+      "creatureType": 1,
+      "family": 11,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "1030": {
+      "entry": 1030,
+      "assetId": "classic-display-360",
+      "displayId": 360,
+      "creatureType": 10,
+      "family": 0,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "1039": {
+      "entry": 1039,
+      "assetId": "classic-display-713",
+      "displayId": 713,
+      "creatureType": 4,
+      "family": 0,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "1199": {
+      "entry": 1199,
+      "assetId": "classic-display-748",
+      "displayId": 748,
+      "creatureType": 1,
+      "family": 2,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "1400": {
+      "entry": 1400,
+      "assetId": "classic-display-1036",
+      "displayId": 1036,
+      "creatureType": 1,
+      "family": 6,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "1512": {
+      "entry": 1512,
+      "assetId": "classic-display-4732",
+      "displayId": 4732,
+      "creatureType": 1,
+      "family": 24,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "1860": {
+      "entry": 1860,
+      "assetId": "classic-display-1132",
+      "displayId": 1132,
+      "creatureType": 3,
+      "family": 16,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "1863": {
+      "entry": 1863,
+      "assetId": "classic-display-4162",
+      "displayId": 4162,
+      "creatureType": 3,
+      "family": 17,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "1953": {
+      "entry": 1953,
+      "assetId": "classic-display-863",
+      "displayId": 863,
+      "creatureType": 4,
+      "family": 0,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "1995": {
+      "entry": 1995,
+      "assetId": "classic-display-10832",
+      "displayId": 10832,
+      "creatureType": 1,
+      "family": 26,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "2172": {
+      "entry": 2172,
+      "assetId": "classic-display-38",
+      "displayId": 38,
+      "creatureType": 1,
+      "family": 12,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "3102": {
+      "entry": 3102,
+      "assetId": "classic-display-850",
+      "displayId": 850,
+      "creatureType": 3,
+      "family": 15,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "3124": {
+      "entry": 3124,
+      "assetId": "classic-display-2485",
+      "displayId": 2485,
+      "creatureType": 1,
+      "family": 20,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "3247": {
+      "entry": 3247,
+      "assetId": "classic-display-1742",
+      "displayId": 1742,
+      "creatureType": 1,
+      "family": 27,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "3461": {
+      "entry": 3461,
+      "assetId": "classic-display-6368",
+      "displayId": 6368,
+      "creatureType": 1,
+      "family": 21,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "4127": {
+      "entry": 4127,
+      "assetId": "classic-display-2710",
+      "displayId": 2710,
+      "creatureType": 1,
+      "family": 25,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "11859": {
+      "entry": 11859,
+      "assetId": "classic-display-1912",
+      "displayId": 1912,
+      "creatureType": 3,
+      "family": 0,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    },
+    "14273": {
+      "entry": 14273,
+      "assetId": "classic-display-5229",
+      "displayId": 5229,
+      "creatureType": 5,
+      "family": 0,
+      "evidenceLevel": "pinned-local-model-id; Classic page unconfirmed"
+    }
+  }
+}

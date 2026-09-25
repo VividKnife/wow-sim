@@ -1,0 +1,11 @@
+export type ProfessionRank={cap:number;skill:number;level:number;cost:number;name:string};
+export type Specialization={id:number;name:string;profession:string;skill:number;level:number;parent:number};
+export type Profession={id:string;name:string;kind:string;description:string;cost:number;learned:boolean;skill:number;cap:number;recipeCount:number;nextRank?:ProfessionRank;specialization?:number;specializations:Specialization[]};
+export type Material={id:number;count:number;have:number;bank:number;price:number;missing:number};
+export type Recipe={id:string;spell:number;name:string;nameEn:string;profession:string;skill:number;item:number;output:number;outputMax:number;materials:Material[];known:boolean;missingCost:number;tools:{id:number;have:boolean;price:number}[];source:string;specialization:number;focus:number;facilityReady:boolean;cooldown:number;readyAt:number;color:string;gray:number;yellow:number};
+export type Resource={id:string;profession:string;item:number;required:number;name:string;readyAt:number;available:boolean;learned:boolean};
+export type InventoryItem={uid:string;id:number;count:number;locked?:boolean;bound?:boolean;enchant?:string};
+export type MarketItem={id:number;buy:number;sell:number;enchant:string|null};
+export type AuctionListing={id:string;item:InventoryItem;net:number;endsAt:number};
+export type MarketRecord={id:string;item:number;count:number;net:number;at:number};
+export type PotionOption={id:number;kind:string;name:string;min:number;max:number;level:number};

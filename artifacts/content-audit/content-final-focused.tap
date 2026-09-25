@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: every journal card has local dungeon-specific artwork and every playable map has original floor images
+ok 1 - every journal card has local dungeon-specific artwork and every playable map has original floor images
+  ---
+  duration_ms: 6.2449
+  type: 'test'
+  ...
+# Subtest: all outdoor regions with world nodes use local original maps
+ok 2 - all outdoor regions with world nodes use local original maps
+  ---
+  duration_ms: 1.7413
+  type: 'test'
+  ...
+# Subtest: dungeon coordinates use the map orientation and the final Uldaman chamber floor
+ok 3 - dungeon coordinates use the map orientation and the final Uldaman chamber floor
+  ---
+  duration_ms: 0.2067
+  type: 'test'
+  ...
+# Subtest: combat enemy models resolve to actual GLBs and local portraits
+ok 4 - combat enemy models resolve to actual GLBs and local portraits
+  ---
+  duration_ms: 221.8465
+  type: 'test'
+  ...
+# Subtest: map content is loaded independently from bootstrap and invalid map ids fail
+ok 5 - map content is loaded independently from bootstrap and invalid map ids fail
+  ---
+  duration_ms: 0.988
+  type: 'test'
+  ...
+# Subtest: equipment exposes source binding, DPS and on-equip bonuses consistently
+ok 6 - equipment exposes source binding, DPS and on-equip bonuses consistently
+  ---
+  duration_ms: 1.3703
+  type: 'test'
+  ...
+# Subtest: personal activity worker restores the Attack dialogue and persists real combat completion
+ok 7 - personal activity worker restores the Attack dialogue and persists real combat completion
+  ---
+  duration_ms: 48.4182
+  type: 'test'
+  ...
+# Subtest: worker persists event death failure and restart permits a fresh attempt after recovery
+ok 8 - worker persists event death failure and restart permits a fresh attempt after recovery
+  ---
+  duration_ms: 4.8394
+  type: 'test'
+  ...
+# Subtest: event stage deadline follows the character simulation clock when rebased
+ok 9 - event stage deadline follows the character simulation clock when rebased
+  ---
+  duration_ms: 1.5405
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3450.2158

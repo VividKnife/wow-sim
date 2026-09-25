@@ -1,0 +1,232 @@
+TAP version 13
+# Subtest: all public quests have located endpoints and scripted item inputs have valid templates
+ok 1 - all public quests have located endpoints and scripted item inputs have valid templates
+  ---
+  duration_ms: 4.5605
+  type: 'test'
+  ...
+# Subtest: marking all four towers uses the beacon and completes after timed actions, without killing friendly markers
+ok 2 - marking all four towers uses the beacon and completes after timed actions, without killing friendly markers
+  ---
+  duration_ms: 30.5801
+  type: 'test'
+  ...
+# Subtest: Pamela doll requires all three parts, consumes them, and cannot be repeated for free
+ok 3 - Pamela doll requires all three parts, consumes them, and cannot be repeated for free
+  ---
+  duration_ms: 2.3739
+  type: 'test'
+  ...
+# Subtest: summoned item reward requires winning the quest encounter and is awarded once
+ok 4 - summoned item reward requires winning the quest encounter and is awarded once
+  ---
+  duration_ms: 9.8718
+  type: 'test'
+  ...
+# Subtest: profession names, inventory/bank checks, auras and unknown inverted instance conditions keep their semantics
+ok 5 - profession names, inventory/bank checks, auras and unknown inverted instance conditions keep their semantics
+  ---
+  duration_ms: 0.8052
+  type: 'test'
+  ...
+# Subtest: P1 scope excludes Naxxramas and AQ opening but retains supported dungeon set quests
+ok 6 - P1 scope excludes Naxxramas and AQ opening but retains supported dungeon set quests
+  ---
+  duration_ms: 0.0807
+  type: 'test'
+  ...
+# Subtest: quest fish navigation matches actual fishing pools and skill requirements
+ok 7 - quest fish navigation matches actual fishing pools and skill requirements
+  ---
+  duration_ms: 0.4393
+  type: 'test'
+  ...
+# Subtest: taming a distant enemy already in combat refuses before spending resources or repositioning it
+ok 8 - taming a distant enemy already in combat refuses before spending resources or repositioning it
+  ---
+  duration_ms: 1.0942
+  type: 'test'
+  ...
+# Subtest: guild members never count as owned five-person companions and raids lock dungeon entry
+ok 9 - guild members never count as owned five-person companions and raids lock dungeon entry
+  ---
+  duration_ms: 32.459
+  type: 'test'
+  ...
+# Subtest: both factions require the leader attunement, while raid-ready presets provide it
+ok 10 - both factions require the leader attunement, while raid-ready presets provide it
+  ---
+  duration_ms: 223.8682
+  type: 'test'
+  ...
+# Subtest: Ring of Law starts explicitly, runs three waves, chooses one champion and resumes after reload
+ok 11 - Ring of Law starts explicitly, runs three waves, chooses one champion and resumes after reload
+  ---
+  duration_ms: 97.3158
+  type: 'test'
+  ...
+# Subtest: bar event requires and consumes six beers before Phalanx opens the way
+ok 12 - bar event requires and consumes six beers before Phalanx opens the way
+  ---
+  duration_ms: 71.7339
+  type: 'test'
+  ...
+# Subtest: tribute requires the king, counts spared guards, grants the king aura and cannot be claimed twice
+ok 13 - tribute requires the king, counts spared guards, grants the king aura and cannot be claimed twice
+  ---
+  duration_ms: 34.0212
+  type: 'test'
+  ...
+# Subtest: Gandling teleports after sixteen seconds, clears threat, summons guardians and returns the player after their deaths
+ok 14 - Gandling teleports after sixteen seconds, clears threat, summons guardians and returns the player after their deaths
+  ---
+  duration_ms: 2.0436
+  type: 'test'
+  ...
+# Subtest: all 28 classic dungeon wings and high level regions are reachable with original maps
+ok 15 - all 28 classic dungeon wings and high level regions are reachable with original maps
+  ---
+  duration_ms: 1.5363
+  type: 'test'
+  ...
+# Subtest: Onyxia route has real loot and keeps independent weekly progress from MC
+ok 16 - Onyxia route has real loot and keeps independent weekly progress from MC
+  ---
+  duration_ms: 207.6854
+  type: 'test'
+  ...
+# Subtest: Onyxia phases survive JSON save, summon once per wave and stop flight at 40 percent
+ok 17 - Onyxia phases survive JSON save, summon once per wave and stop flight at 40 percent
+  ---
+  duration_ms: 14.3058
+  type: 'test'
+  ...
+# Subtest: deep breath causes actual damage only inside the telegraphed lane
+ok 18 - deep breath causes actual damage only inside the telegraphed lane
+  ---
+  duration_ms: 8.7087
+  type: 'test'
+  ...
+# Subtest: Onyxia reward settlement is idempotent and the weekly reset is independent
+ok 19 - Onyxia reward settlement is idempotent and the weekly reset is independent
+  ---
+  duration_ms: 26.0237
+  type: 'test'
+  ...
+# Subtest: service can enter, persist and leave an Onyxia instance
+ok 20 - service can enter, persist and leave an Onyxia instance
+  ---
+  duration_ms: 29.3596
+  type: 'test'
+  ...
+# Subtest: configured 25-player raid completes Onyxia through the real combat engine
+ok 21 - configured 25-player raid completes Onyxia through the real combat engine
+  ---
+  duration_ms: 62593.2981
+  type: 'test'
+  ...
+# Subtest: idle gold camp waits for a command without background instance writes
+ok 22 - idle gold camp waits for a command without background instance writes
+  ---
+  duration_ms: 804.5474
+  type: 'test'
+  ...
+# Subtest: bid racing an NPC round refreshes the quote without charging or rolling back progress
+ok 23 - bid racing an NPC round refreshes the quote without charging or rolling back progress
+  ---
+  duration_ms: 646.7916
+  type: 'test'
+  ...
+# Subtest: recruitment creates legal randomized gear/talents and locks announced contract and ownership
+ok 24 - recruitment creates legal randomized gear/talents and locks announced contract and ownership
+  ---
+  duration_ms: 246.6052
+  type: 'test'
+  ...
+# Subtest: player escrow, NPC budgets, loot ownership, payout conservation and repeat requests
+ok 25 - player escrow, NPC budgets, loot ownership, payout conservation and repeat requests
+  ---
+  duration_ms: 330.8925
+  type: 'test'
+  ...
+# Subtest: recommended NPC raid beats both real encounters without replacing the combat engine
+ok 26 - recommended NPC raid beats both real encounters without replacing the combat engine
+  ---
+  duration_ms: 42138.7428
+  type: 'test'
+  ...
+# Subtest: player purchase persists exactly once and emergency exit refunds open escrow and settles sales
+ok 27 - player purchase persists exactly once and emergency exit refunds open escrow and settles sales
+  ---
+  duration_ms: 633.0009
+  type: 'test'
+  ...
+# Subtest: gold map commands roll trash loot without blocking navigation and pause before the next pull
+ok 28 - gold map commands roll trash loot without blocking navigation and pause before the next pull
+  ---
+  duration_ms: 483.7717
+  type: 'test'
+  ...
+# Subtest: background auction keeps its timer during combat and queues the next boss loot
+ok 29 - background auction keeps its timer during combat and queues the next boss loot
+  ---
+  duration_ms: 1474.0186
+  type: 'test'
+  ...
+# Subtest: background inquiry and settlement preserve recovery and its completion
+ok 30 - background inquiry and settlement preserve recovery and its completion
+  ---
+  duration_ms: 487.0805
+  type: 'test'
+  ...
+# Subtest: player can bid in combat; purchased delivery does not block the next encounter
+ok 31 - player can bid in combat; purchased delivery does not block the next encounter
+  ---
+  duration_ms: 610.0809
+  type: 'test'
+  ...
+# Subtest: raid-ready creation is persistent, has five owned level-60 characters and independent assets
+ok 32 - raid-ready creation is persistent, has five owned level-60 characters and independent assets
+  ---
+  duration_ms: 251.2655
+  type: 'test'
+  ...
+# Subtest: guild instance enforces ownership, capacity, tactics locking and retreat recovery
+ok 33 - guild instance enforces ownership, capacity, tactics locking and retreat recovery
+  ---
+  duration_ms: 439.3105
+  type: 'test'
+  ...
+# Subtest: emergency exit clears guild activity and releases the five owned characters
+ok 34 - emergency exit clears guild activity and releases the five owned characters
+  ---
+  duration_ms: 47.9832
+  type: 'test'
+  ...
+# Subtest: weekly reset renews boss rewards on reentry
+ok 35 - weekly reset renews boss rewards on reentry
+  ---
+  duration_ms: 12.8496
+  type: 'test'
+  ...
+# Subtest: two real boss fights persist through service restart, award original loot once, and retain checkpoint after leaving
+ok 36 - two real boss fights persist through service restart, award original loot once, and retain checkpoint after leaving
+  ---
+  duration_ms: 29919.5247
+  type: 'test'
+  ...
+# Subtest: server route commands persist trash checkpoints and continue scheduled travel after restart
+ok 37 - server route commands persist trash checkpoints and continue scheduled travel after restart
+  ---
+  duration_ms: 1530.945
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 66581.6664

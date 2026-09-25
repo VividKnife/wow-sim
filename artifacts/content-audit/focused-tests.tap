@@ -1,0 +1,222 @@
+TAP version 13
+# Subtest: class mounts use learned spells and accelerate travel without purchased horse riding
+ok 1 - class mounts use learned spells and accelerate travel without purchased horse riding
+  ---
+  duration_ms: 645.561
+  type: 'test'
+  ...
+# Subtest: healthstones consume source item, heal and enforce category cooldown across ranks
+ok 2 - healthstones consume source item, heal and enforce category cooldown across ranks
+  ---
+  duration_ms: 1.4035
+  type: 'test'
+  ...
+# Subtest: soulstone survives serialization and revives with source rank health and mana
+ok 3 - soulstone survives serialization and revives with source rank health and mana
+  ---
+  duration_ms: 0.6472
+  type: 'test'
+  ...
+# Subtest: active Kings aura increases stats once and expires
+ok 4 - active Kings aura increases stats once and expires
+  ---
+  duration_ms: 0.414
+  type: 'test'
+  ...
+# Subtest: Shaman learned Parry grants the baseline avoidance chance
+ok 5 - Shaman learned Parry grants the baseline avoidance chance
+  ---
+  duration_ms: 0.2864
+  type: 'test'
+  ...
+# Subtest: summoning ritual requires two assistants and moves only a living distant party target
+ok 6 - summoning ritual requires two assistants and moves only a living distant party target
+  ---
+  duration_ms: 5.2326
+  type: 'test'
+  ...
+# Subtest: public hunter taming retains real beast identity through dismissal and recall
+not ok 7 - public hunter taming retains real beast identity through dismissal and recall
+  ---
+  duration_ms: 15.2712
+  type: 'test'
+  location: 'C:\\workspace\\wow-sim\\apps\\web\\test\\classes60-utility.test.mjs:29:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    undefined !== 299
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 299
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/workspace/wow-sim/apps/web/test/classes60-utility.test.mjs:30:192)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+  ...
+# Subtest: new mage characters begin with source starting proficiencies and retain them on sync
+ok 8 - new mage characters begin with source starting proficiencies and retain them on sync
+  ---
+  duration_ms: 0.7445
+  type: 'test'
+  ...
+# Subtest: public taming rejects busy and global-cooldown states before starting an encounter
+ok 9 - public taming rejects busy and global-cooldown states before starting an encounter
+  ---
+  duration_ms: 1.8611
+  type: 'test'
+  ...
+# Subtest: a single Blizzard channel deals exactly eight ticks and leaves no residual damage aura
+not ok 10 - a single Blizzard channel deals exactly eight ticks and leaves no residual damage aura
+  ---
+  duration_ms: 25.7269
+  type: 'test'
+  location: 'C:\\workspace\\wow-sim\\apps\\web\\test\\combat-effects.test.mjs:6:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    undefined !== 200
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 200
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/workspace/wow-sim/apps/web/test/combat-effects.test.mjs:9:9)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+# Subtest: repeated Fireball refreshes its own damage aura rather than stacking copies
+ok 11 - repeated Fireball refreshes its own damage aura rather than stacking copies
+  ---
+  duration_ms: 8.0598
+  type: 'test'
+  ...
+# Subtest: a resisted Frostbolt applies neither damage nor its slow effect
+ok 12 - a resisted Frostbolt applies neither damage nor its slow effect
+  ---
+  duration_ms: 1.5927
+  type: 'test'
+  ...
+# Subtest: personal combat spawns enemies 5-15 yards from melee classes
+not ok 13 - personal combat spawns enemies 5-15 yards from melee classes
+  ---
+  duration_ms: 14.8902
+  type: 'test'
+  location: 'C:\\workspace\\wow-sim\\apps\\web\\test\\personal-combat-spawn.test.mjs:11:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(new Set(distances.map(distance=>distance.toFixed(6))).size>1)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///C:/workspace/wow-sim/apps/web/test/personal-combat-spawn.test.mjs:19:9)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+# Subtest: personal combat spawns enemies 15-25 yards from ranged classes
+not ok 14 - personal combat spawns enemies 15-25 yards from ranged classes
+  ---
+  duration_ms: 4.751
+  type: 'test'
+  location: 'C:\\workspace\\wow-sim\\apps\\web\\test\\personal-combat-spawn.test.mjs:22:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(distances.every(distance=>distance>=15&&distance<=25))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///C:/workspace/wow-sim/apps/web/test/personal-combat-spawn.test.mjs:29:9)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# Subtest: dungeon combat keeps its authored opening formation
+ok 15 - dungeon combat keeps its authored opening formation
+  ---
+  duration_ms: 0.2859
+  type: 'test'
+  ...
+# Subtest: public trainer to tame to pet training preserves actual acquired Growl without unlocking wild skills
+not ok 16 - public trainer to tame to pet training preserves actual acquired Growl without unlocking wild skills
+  ---
+  duration_ms: 36.1787
+  type: 'test'
+  location: 'C:\\workspace\\wow-sim\\apps\\web\\test\\pet-training-acquisition.test.mjs:8:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'entry')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/workspace/wow-sim/apps/web/test/pet-training-acquisition.test.mjs:10:112)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+# Subtest: pet trainer exposes sourced paid teaching wrappers and updates an existing eligible pet
+ok 17 - pet trainer exposes sourced paid teaching wrappers and updates an existing eligible pet
+  ---
+  duration_ms: 69.3016
+  type: 'test'
+  ...
+# Subtest: using a tamed beast source skill teaches the hunter and survives abandoning it
+not ok 18 - using a tamed beast source skill teaches the hunter and survives abandoning it
+  ---
+  duration_ms: 12.4496
+  type: 'test'
+  location: 'C:\\workspace\\wow-sim\\apps\\web\\test\\pet-training-acquisition.test.mjs:17:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'entry')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/workspace/wow-sim/apps/web/test/pet-training-acquisition.test.mjs:18:218)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+  ...
+# Subtest: public paid trainer and pet training change actual health armor and resistance without free healing
+ok 19 - public paid trainer and pet training change actual health armor and resistance without free healing
+  ---
+  duration_ms: 135.9585
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 13
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4305.1031

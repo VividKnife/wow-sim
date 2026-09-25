@@ -1,0 +1,35 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {once} from 'node:events';
+import {createGameServer} from '../src/server.ts';
+import {signGameToken} from '../src/auth.ts';
+import {MemoryStore} from '../../../packages/persistence/src/memory.ts';
+import {GameService} from '../../../packages/game-domain/src/service.ts';
+import {CONTENT_VERSION} from '../../../packages/game-domain/src/rules/client-content.js';
+
+test('authenticated replay endpoint separates public animation from future authoritative results',async t=>{
+ const secret='playback-test-secret-at-least-32-characters',store=new MemoryStore();let now=1000;
+ const service=new GameService(store,{contentVersion:CONTENT_VERSION,now:()=>now,seed:()=>283});
+ const hero=(await service.createAccount('a',{name:'Hero',classId:8,raceId:1},'create')).state.id;
+ await service.createAccount('b',{name:'Guest',classId:1,raceId:1},'create');
+ await service.command('a',{type:'hunt',id:299,requestId:'hunt'});now=2000;await service.work();
+ const game=createGameServer({secret,service});game.server.listen(0,'127.0.0.1');await once(game.server,'listening');
+ t.after(async()=>{await game.close();await store.close();});
+ const url=`http://127.0.0.1:${(game.server.address() as any).port}`;
+ const headers={authorization:`Bearer ${await signGameToken({sub:'a'},secret)}`};
+ const initial=await fetch(url+'/game',{headers}),body=await initial.json();
+ assert.equal(body.combatMode,'recorded');assert.ok(body.playback);
+ assert.equal(JSON.stringify(body).includes('finalState'),false);
+ const path=`/game/replay?${new URLSearchParams({id:body.playback.id,characterId:hero})}`;
+ assert.equal((await fetch(url+path)).status,401);
+ const denied=await fetch(url+path,{headers:{authorization:`Bearer ${await signGameToken({sub:'b'},secret)}`}});
+ assert.equal(denied.status,403);
+ const response=await fetch(url+path,{headers}),replay=await response.json();
+ assert.equal(response.status,200);assert.equal(replay.id,body.playback.id);assert.equal(replay.serverNow,now);
+ assert.equal(replay.contentVersion,body.contentVersion);assert.ok(replay.frames.length>0);
+ assert.equal(JSON.stringify(replay).includes('rngState'),false);assert.equal('finalState' in replay,false);
+ const unchanged=await fetch(url+'/game',{headers:{...headers,'if-none-match':initial.headers.get('etag')!}});
+ assert.equal(unchanged.status,304);
+ now+=200;await service.command('a',{type:'stop',requestId:'stop'});
+ assert.equal((await fetch(url+path,{headers})).status,409);
+});

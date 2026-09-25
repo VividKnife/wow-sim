@@ -1,0 +1,17 @@
+.git
+.worktrees
+**/node_modules
+**/.next
+**/dist
+**/.env
+**/.env.*
+**/.dev.vars*
+**/.wrangler
+**/.sites-runtime
+**/.vinext
+**/.openai
+**/*.log
+**/*.tsbuildinfo
+docs
+coverage
+.cache

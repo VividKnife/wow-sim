@@ -1,0 +1,102 @@
+TAP version 13
+# Subtest: all public quests have located endpoints and scripted item inputs have valid templates
+ok 1 - all public quests have located endpoints and scripted item inputs have valid templates
+  ---
+  duration_ms: 2.6387
+  type: 'test'
+  ...
+# Subtest: marking all four towers uses the beacon and completes after timed actions, without killing friendly markers
+ok 2 - marking all four towers uses the beacon and completes after timed actions, without killing friendly markers
+  ---
+  duration_ms: 25.2193
+  type: 'test'
+  ...
+# Subtest: Pamela doll requires all three parts, consumes them, and cannot be repeated for free
+ok 3 - Pamela doll requires all three parts, consumes them, and cannot be repeated for free
+  ---
+  duration_ms: 2.8115
+  type: 'test'
+  ...
+# Subtest: summoned item reward requires winning the quest encounter and is awarded once
+ok 4 - summoned item reward requires winning the quest encounter and is awarded once
+  ---
+  duration_ms: 7.7936
+  type: 'test'
+  ...
+# Subtest: profession names, inventory/bank checks, auras and unknown inverted instance conditions keep their semantics
+ok 5 - profession names, inventory/bank checks, auras and unknown inverted instance conditions keep their semantics
+  ---
+  duration_ms: 0.743
+  type: 'test'
+  ...
+# Subtest: P1 scope excludes Naxxramas and AQ opening but retains supported dungeon set quests
+ok 6 - P1 scope excludes Naxxramas and AQ opening but retains supported dungeon set quests
+  ---
+  duration_ms: 0.081
+  type: 'test'
+  ...
+# Subtest: quest fish navigation matches actual fishing pools and skill requirements
+ok 7 - quest fish navigation matches actual fishing pools and skill requirements
+  ---
+  duration_ms: 0.4385
+  type: 'test'
+  ...
+# Subtest: taming a distant enemy already in combat refuses before spending resources or repositioning it
+not ok 8 - taming a distant enemy already in combat refuses before spending resources or repositioning it
+  ---
+  duration_ms: 0.115
+  type: 'test'
+  location: 'C:\\workspace\\wow-sim\\apps\\web\\test\\world-audit-fixes.test.mjs:72:1'
+  failureType: 'testCodeFailure'
+  error: '这个种族与职业组合不可用'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    createGame (file:///C:/workspace/wow-sim/packages/game-domain/src/rules/engine.js:60:117)
+    player (file:///C:/workspace/wow-sim/apps/web/test/world-audit-fixes.test.mjs:15:36)
+    TestContext.<anonymous> (file:///C:/workspace/wow-sim/apps/web/test/world-audit-fixes.test.mjs:73:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+  ...
+# Subtest: guild members never count as owned five-person companions and raids lock dungeon entry
+ok 9 - guild members never count as owned five-person companions and raids lock dungeon entry
+  ---
+  duration_ms: 27.4291
+  type: 'test'
+  ...
+# Subtest: Ring of Law starts explicitly, runs three waves, chooses one champion and resumes after reload
+ok 10 - Ring of Law starts explicitly, runs three waves, chooses one champion and resumes after reload
+  ---
+  duration_ms: 71.272
+  type: 'test'
+  ...
+# Subtest: bar event requires and consumes six beers before Phalanx opens the way
+ok 11 - bar event requires and consumes six beers before Phalanx opens the way
+  ---
+  duration_ms: 91.3655
+  type: 'test'
+  ...
+# Subtest: tribute requires the king, counts spared guards, grants the king aura and cannot be claimed twice
+ok 12 - tribute requires the king, counts spared guards, grants the king aura and cannot be claimed twice
+  ---
+  duration_ms: 43.8305
+  type: 'test'
+  ...
+# Subtest: Gandling teleports after sixteen seconds, clears threat, summons guardians and returns the player after their deaths
+ok 13 - Gandling teleports after sixteen seconds, clears threat, summons guardians and returns the player after their deaths
+  ---
+  duration_ms: 2.7405
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 12
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3261.5653

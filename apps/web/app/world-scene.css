@@ -1,0 +1,48 @@
+.world-scene{--scene-sky:#70928c;--scene-light:#eee0ad;--scene-mountain:#7d9b88;--scene-far:#506f53;--scene-ground:#596b39;--scene-near:#243f32;--scene-trunk:#3d4130;--scene-road:#8b7d4d;position:relative;isolation:isolate;height:440px;min-width:0;overflow:hidden;border:1px solid #766649;border-radius:5px;background:#19251f;box-shadow:0 12px 30px #050c0833}
+.world-scene.scenery-arid{--scene-sky:#8faca3;--scene-light:#f0d3a0;--scene-mountain:#b29874;--scene-far:#a18c53;--scene-ground:#99804c;--scene-near:#66573b;--scene-trunk:#5d4734;--scene-road:#bb9c69}
+.world-scene.scenery-snow{--scene-sky:#6e879c;--scene-light:#e1edf0;--scene-mountain:#a6b9c7;--scene-far:#657f8c;--scene-ground:#c4d0cd;--scene-near:#354d57;--scene-trunk:#3c4b4e;--scene-road:#8c9d9d}
+.world-scene.scenery-dusk{--scene-sky:#333f54;--scene-light:#82959c;--scene-mountain:#526378;--scene-far:#364e51;--scene-ground:#354d3f;--scene-near:#152c2e;--scene-trunk:#283336;--scene-road:#56675b}
+.world-exploration,.world-scene-combat{position:absolute;inset:0}.world-exploration{transition:opacity .55s,transform .8s}.is-combat .world-exploration{opacity:0;transform:scale(1.035);pointer-events:none}
+.world-scene-photography{position:absolute;inset:0;overflow:hidden;isolation:isolate;pointer-events:none;animation:scene-photograph-in .65s ease-out;--scene-pass-duration:24s;--scene-pass-offset:-12s;--scene-travel-y:2%}
+.world-scene[data-travel-mode=ride] .world-scene-photography{--scene-pass-duration:16s;--scene-pass-offset:-8s}
+.world-scene[data-travel-mode=flight] .world-scene-photography{--scene-pass-duration:12s;--scene-pass-offset:-6s;--scene-travel-y:5%}
+.world-scene-photograph,.world-scene-photo-pass{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.world-scene-photo-pass{transform-origin:50% 42%;animation:scene-photo-advance var(--scene-pass-duration) linear infinite;animation-play-state:paused}
+.world-scene-photo-pass-0{z-index:1}
+.world-scene-photo-pass-1{animation-name:scene-photo-drift;animation-delay:var(--scene-pass-offset)}
+.is-moving .world-scene-photo-pass{animation-play-state:running;will-change:transform,opacity}
+@keyframes scene-photo-advance{0%{opacity:0;transform:scale(1.02) translateY(0)}6%,50%{opacity:1}56%{opacity:0}100%{opacity:0;transform:scale(1.18) translateY(var(--scene-travel-y))}}
+@keyframes scene-photo-drift{from{transform:scale(1.02) translateY(0)}to{transform:scale(1.18) translateY(var(--scene-travel-y))}}
+@keyframes scene-photograph-in{from{opacity:.35}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.world-scene-photography{animation:none}.world-scene-photo-pass{display:none}}
+.world-backdrop{position:absolute;inset:0;width:100%;height:100%;transform:scale(1.04);transform-origin:55% 52%;animation:world-travel 8s ease-in-out infinite alternate paused}.is-moving .world-backdrop{animation-play-state:running}
+.world-scene-mist{position:absolute;inset:0;background:radial-gradient(ellipse at 62% 44%,#fff0be29,transparent 55%);pointer-events:none}.world-scene-vignette{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 100px #08171170;background:linear-gradient(#101d2459,transparent 36%,transparent 70%,#07120fd9)}
+.world-scene-heading{position:absolute;top:28px;left:30px;text-shadow:0 2px 12px #10221d}.world-scene-heading>span{font-size:10px;color:#efe0ad;letter-spacing:4px}.world-scene-heading h2{font-family:Georgia,'SimSun',serif;font-size:31px;font-weight:500;letter-spacing:5px;color:#fff1cf;margin:8px 0}.world-scene-heading p{font-size:12px;color:#e1e3cb;margin:0;letter-spacing:2px}
+.world-scene-compass{position:absolute;right:29px;top:27px;color:#f0d8a8;display:grid;justify-items:center;gap:4px;font:10px Georgia,serif;opacity:.8}
+.world-avatar{position:absolute;left:50%;bottom:11px;width:420px;height:395px;transform:translateX(-50%)}.world-avatar.is-mounted{width:510px;height:410px;bottom:0}
+.world-avatar .character-model{position:absolute;inset:0;width:100%;height:100%;max-width:none}.world-avatar .model-frame{position:absolute;inset:0;width:100%;height:100%;border:0;opacity:0;pointer-events:none}.world-avatar .model-ready .model-frame{opacity:1}.world-avatar .model-fallback{position:absolute;inset:0;display:grid;place-items:center}.world-avatar .model-status{position:absolute;bottom:51px;left:0;right:0;text-align:center;color:#e9dec5;font-size:11px;text-shadow:0 1px 3px #000}.world-avatar .model-ready .model-status{display:none}.world-avatar .model-status button{background:#26372c;border:1px solid #ad9463;color:#ffe4ac;padding:4px 9px}.world-model-placeholder{color:#d9c899;font-size:70px;opacity:.5}.world-avatar-shadow{position:absolute;bottom:30px;left:30%;width:40%;height:22px;border-radius:50%;background:#07110ab3;filter:blur(9px)}
+.world-scene-footer{position:absolute;bottom:21px;left:28px;right:65px;display:flex;align-items:center;justify-content:space-between;gap:14px;color:#e4dcc4;font-size:12px;text-shadow:0 2px 4px #000}.world-motion-label{display:flex;gap:8px;align-items:center}.world-avatar-name{color:#e9d49e;letter-spacing:1px}.world-avatar-name small{color:#b8c4b3;font-size:10px;margin-left:6px}
+.world-scene-pause,.world-battle-expand{position:absolute;right:20px;bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px;min-height:34px;min-width:34px;background:#11251bcc;color:#e5d3ab;border:1px solid #c4af744d;border-radius:4px;cursor:pointer}.world-scene button:focus-visible{outline:2px solid #f5d487;outline-offset:3px}
+.world-scene-combat{animation:world-battle-in .65s ease-out}.world-scene-combat .hd2d-field{height:100%;border:0}.world-scene-combat .world-embedded-battle{height:100%}.world-scene-combat .battle-3d-controls{position:absolute;z-index:45;top:12px;right:12px;background:#11202ac9;border:1px solid #87948144;border-radius:4px;padding:5px}.world-scene-combat .battle-3d-controls>span,.world-scene-combat .battle-audio-controls{display:none}.world-battle-expand{z-index:45;padding:4px 10px}.world-scene-combat .hd2d-scene-caption>span:last-child{display:none}
+@keyframes world-travel{to{transform:scale(1.13) translateY(3px)}}@keyframes world-battle-in{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:scale(1)}}
+@media(max-width:700px){.world-scene{height:365px}.world-scene-heading{top:19px;left:18px}.world-scene-heading h2{font-size:24px}.world-scene-heading>span{font-size:9px}.world-scene-compass{right:18px;top:18px}.world-avatar{width:345px;height:325px;bottom:11px}.world-avatar.is-mounted{width:395px;height:345px}.world-scene-footer{left:17px;bottom:22px;font-size:10px;right:58px}.world-avatar-name{display:none}.world-motion-label{flex-wrap:wrap;gap:5px}.world-scene-combat .hd2d-scene-title{left:17px;top:18px}.world-scene-combat .hd2d-scene-title strong{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.world-exploration{transition:none}.world-backdrop,.world-scene-combat{animation:none!important}}
+.world-scene:not(:has([data-renderer=three])) .world-exploration{opacity:1;transform:none}
+.world-scene-combat{opacity:0;transition:opacity .55s;animation:none}
+.world-scene-combat:has([data-renderer=three]),.world-scene-combat:has([role=alert]){opacity:1}
+.world-battle-pending{position:absolute;left:50%;bottom:25px;transform:translateX(-50%);color:#ffe3a6;font-size:12px;z-index:46;text-shadow:0 2px 4px #000}
+.world-scene:has([data-renderer=three]) .world-battle-pending,.world-scene:has(.world-scene-combat [role=alert]) .world-battle-pending{display:none}
+.world-avatar .model-ready[data-status=partial] .model-status{display:block}
+@media(prefers-reduced-motion:reduce){.world-scene-combat{transition:none}}
+/* The aerial layer looks down onto the route; clouds pass below the rider. */
+.is-flying .world-avatar.is-mounted{width:min(760px,100%);height:410px;bottom:0}
+.is-flying .world-avatar-shadow{display:none}
+.world-flight-clouds{position:absolute;left:-20%;top:-100%;width:140%;height:200%;pointer-events:none;background-image:radial-gradient(ellipse at 20% 30%,#e4f2ed99 0%,#e4f2ed44 7%,transparent 17%),radial-gradient(ellipse at 75% 70%,#e4f2ed99 0%,#e4f2ed44 6%,transparent 16%);background-size:100% 50%;animation:world-cloud-pass 12s linear infinite paused}
+.is-moving .world-flight-clouds{animation-play-state:running}
+.is-flying .world-aerial-backdrop{animation:world-aerial-drift 16s ease-in-out infinite alternate paused}
+.is-flying.is-moving .world-aerial-backdrop{animation-play-state:running}
+.world-flight-progress{position:absolute;bottom:0;left:0;width:100%;height:3px;border:0;appearance:none;background:#152f32;color:#d6c28a}.world-flight-progress::-webkit-progress-bar{background:#152f32}.world-flight-progress::-webkit-progress-value{background:#d6c28a}.world-flight-progress::-moz-progress-bar{background:#d6c28a}
+@keyframes world-cloud-pass{to{transform:translateY(50%)}}
+@keyframes world-aerial-drift{from{transform:scale(1.3) translateY(-7%)}to{transform:scale(1.3) translateY(7%)}}
+@media(max-width:700px){.is-flying .world-avatar.is-mounted{height:300px;bottom:25px}}
+@media(prefers-reduced-motion:reduce){.world-flight-clouds,.is-flying .world-aerial-backdrop{animation:none!important}}

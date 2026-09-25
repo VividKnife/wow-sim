@@ -1,0 +1,166 @@
+TAP version 13
+# Subtest: versioned content carries a browsable journal with display-safe loot and playable states
+ok 1 - versioned content carries a browsable journal with display-safe loot and playable states
+  ---
+  duration_ms: 3.4383
+  type: 'test'
+  ...
+# Subtest: live snapshot includes all playable dungeon views but not the static journal
+ok 2 - live snapshot includes all playable dungeon views but not the static journal
+  ---
+  duration_ms: 78.6208
+  type: 'test'
+  ...
+# Subtest: every journal card has local dungeon-specific artwork and every playable map has original floor images
+ok 3 - every journal card has local dungeon-specific artwork and every playable map has original floor images
+  ---
+  duration_ms: 14.2473
+  type: 'test'
+  ...
+# Subtest: all outdoor regions with world nodes use local original maps
+ok 4 - all outdoor regions with world nodes use local original maps
+  ---
+  duration_ms: 4.7593
+  type: 'test'
+  ...
+# Subtest: dungeon coordinates use the map orientation and the final Uldaman chamber floor
+ok 5 - dungeon coordinates use the map orientation and the final Uldaman chamber floor
+  ---
+  duration_ms: 0.2308
+  type: 'test'
+  ...
+# Subtest: combat enemy models resolve to actual GLBs and local portraits
+ok 6 - combat enemy models resolve to actual GLBs and local portraits
+  ---
+  duration_ms: 323.2541
+  type: 'test'
+  ...
+# Subtest: map content is loaded independently from bootstrap and invalid map ids fail
+ok 7 - map content is loaded independently from bootstrap and invalid map ids fail
+  ---
+  duration_ms: 0.8278
+  type: 'test'
+  ...
+# Subtest: equipment exposes source binding, DPS and on-equip bonuses consistently
+ok 8 - equipment exposes source binding, DPS and on-equip bonuses consistently
+  ---
+  duration_ms: 1.0814
+  type: 'test'
+  ...
+# Subtest: all 28 classic dungeon wings and high level regions are reachable with original maps
+ok 9 - all 28 classic dungeon wings and high level regions are reachable with original maps
+  ---
+  duration_ms: 3.074
+  type: 'test'
+  ...
+# Subtest: Onyxia route has real loot and keeps independent weekly progress from MC
+ok 10 - Onyxia route has real loot and keeps independent weekly progress from MC
+  ---
+  duration_ms: 160.927
+  type: 'test'
+  ...
+# Subtest: Onyxia phases survive JSON save, summon once per wave and stop flight at 40 percent
+ok 11 - Onyxia phases survive JSON save, summon once per wave and stop flight at 40 percent
+  ---
+  duration_ms: 10.0711
+  type: 'test'
+  ...
+# Subtest: deep breath causes actual damage only inside the telegraphed lane
+ok 12 - deep breath causes actual damage only inside the telegraphed lane
+  ---
+  duration_ms: 5.6451
+  type: 'test'
+  ...
+# Subtest: Onyxia reward settlement is idempotent and the weekly reset is independent
+ok 13 - Onyxia reward settlement is idempotent and the weekly reset is independent
+  ---
+  duration_ms: 22.6462
+  type: 'test'
+  ...
+# Subtest: service can enter, persist and leave an Onyxia instance
+ok 14 - service can enter, persist and leave an Onyxia instance
+  ---
+  duration_ms: 24.3267
+  type: 'test'
+  ...
+# Subtest: configured 25-player raid completes Onyxia through the real combat engine
+ok 15 - configured 25-player raid completes Onyxia through the real combat engine
+  ---
+  duration_ms: 59598.6908
+  type: 'test'
+  ...
+# Subtest: expanded regions expose source herb and ore nodes with their actual skill gates
+ok 16 - expanded regions expose source herb and ore nodes with their actual skill gates
+  ---
+  duration_ms: 5.8657
+  type: 'test'
+  ...
+# Subtest: every legal race/class starts at its source homeland with local quests and low-level enemies
+ok 17 - every legal race/class starts at its source homeland with local quests and low-level enemies
+  ---
+  duration_ms: 1584.6472
+  type: 'test'
+  ...
+# Subtest: all world nodes are connected, and each 1-40 region has visible, finite coordinates
+ok 18 - all world nodes are connected, and each 1-40 region has visible, finite coordinates
+  ---
+  duration_ms: 7.8723
+  type: 'test'
+  ...
+# Subtest: both factions can use bank, inn, training and flight services in all six capitals
+ok 19 - both factions can use bank, inn, training and flight services in all six capitals
+  ---
+  duration_ms: 2014.6953
+  type: 'test'
+  ...
+# Subtest: faction masks, actual quest rewards, and boosted faction capitals replace the shared route
+ok 20 - faction masks, actual quest rewards, and boosted faction capitals replace the shared route
+  ---
+  duration_ms: 367.2844
+  type: 'test'
+  ...
+# Subtest: level-ten parties can prepare for early Horde dungeons with legal equipment
+ok 21 - level-ten parties can prepare for early Horde dungeons with legal equipment
+  ---
+  duration_ms: 41.5822
+  type: 'test'
+  ...
+# Subtest: every expanded dungeon has finite enemy stats, connected encounters and resumable progression
+ok 22 - every expanded dungeon has finite enemy stats, connected encounters and resumable progression
+  ---
+  duration_ms: 1307.4687
+  type: 'test'
+  ...
+# Subtest: adapted task scenes require their active quest and location, take time, and survive save reload
+ok 23 - adapted task scenes require their active quest and location, take time, and survive save reload
+  ---
+  duration_ms: 10.6654
+  type: 'test'
+  ...
+# Subtest: task spells are never credited by ordinary kills
+ok 24 - task spells are never credited by ordinary kills
+  ---
+  duration_ms: 0.6007
+  type: 'test'
+  ...
+# Subtest: turning in a racial class quest grants its source-backed class abilities once
+ok 25 - turning in a racial class quest grants its source-backed class abilities once
+  ---
+  duration_ms: 1.3606
+  type: 'test'
+  ...
+# Subtest: Alliance and Horde can enter each other’s city dungeons
+ok 26 - Alliance and Horde can enter each other’s city dungeons
+  ---
+  duration_ms: 104.442
+  type: 'test'
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 63252.399

@@ -1,0 +1,361 @@
+/* Production Classic shell, adapted from the preserved V1 preview. */
+.classic-game{--cu-gold:#d3b777;--cu-muted:#a29b89;--cu-line:#70604a;--cu-bg:#191916;min-height:100vh;background:#121411;color:#e6ddc6;font-family:Arial,'PingFang SC','Microsoft YaHei',sans-serif;font-size:13px}
+.classic-game *{box-sizing:border-box}
+.classic-game button,.cu-dialog button{cursor:pointer}
+.classic-game button:disabled,.cu-dialog button:disabled{cursor:default;opacity:.45}
+.classic-game button:focus-visible,.classic-game a:focus-visible,.cu-dialog button:focus-visible,.cu-dialog input:focus-visible{outline:2px solid #ffe19a;outline-offset:4px}
+.cu-viewport{height:calc(100svh - 76px);min-height:640px;max-height:1100px;position:relative;isolation:isolate;overflow:hidden;background:#283529;border:3px solid #3c382c;box-shadow:inset 0 0 0 1px #9b875c}
+.cu-world{position:absolute;inset:0 0 98px}
+.cu-world .world-scene{height:100%;border:0;border-radius:0;box-shadow:none}
+.cu-world .world-scene-heading,.cu-world .world-scene-compass,.cu-world .world-scene-footer,.cu-world .world-scene-pause{display:none}
+.cu-world .world-avatar{bottom:10px;height:70%;width:500px;max-width:75%}
+.cu-world .world-avatar.is-mounted{height:78%;width:630px;max-width:80%;bottom:0}
+.cu-world .world-avatar .model-status{bottom:25%}
+.cu-world .world-scene-vignette{background:linear-gradient(#11190f35,transparent 45%,#10140d10 65%,#10140c99);box-shadow:inset 0 0 120px #06100860}
+.cu-world .world-scene-combat{inset:70px 240px 10px 215px;border:1px solid #72614966;border-radius:5px;overflow:hidden;background:#18231b}
+.cu-world .world-battle-pending{bottom:45%;background:#181c13d9;padding:10px 20px}
+.cu-world .hd2d-scene-title{display:none}
+.cu-world .hd2d-scene-caption{font-size:9px}
+.cu-shade{position:absolute;inset:0;pointer-events:none;z-index:1;background:linear-gradient(90deg,#09100b66,transparent 30%,transparent 72%,#09100b66),linear-gradient(#06110b4d,transparent 25%,transparent 75%,#080c0855)}
+.cu-player{position:absolute;top:42px;left:26px;width:280px;display:flex;align-items:center;z-index:3;background:none;text-align:left;border:0;padding:0;color:#e9d7a3;filter:drop-shadow(0 3px 3px #0009)}
+.cu-portrait{position:relative;flex-shrink:0;width:72px;height:72px;border:4px ridge #aaa18b;border-radius:50%;box-shadow:0 0 0 2px #302b21;background:#1f261d;z-index:1}
+.cu-portrait img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.cu-portrait>b{position:absolute;bottom:-7px;right:0;background:#27281c;border:2px ridge #b5a176;border-radius:50%;width:25px;height:25px;text-align:center;line-height:21px;font-size:11px;color:#ffdf81}
+.cu-player-bars{margin-left:-5px;flex:1;border:3px ridge #8a8374;border-radius:0 4px 4px 0;padding:3px 3px 3px 5px;background:#151915}
+.cu-player-bars strong{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:400;padding:0 2px 3px}
+.cu-player-bars strong small{font-size:8px;color:#bab89d}
+.cu-vital{position:relative;height:19px;background:#171911;border:1px solid #090c08;text-align:center;overflow:hidden}
+.cu-vital>i{display:block;height:100%;background:linear-gradient(#81ac50,#477927 45%,#2e561d 55%,#4f782c);transition:width .2s}
+.cu-vital>span{position:absolute;inset:0;line-height:17px;font-size:10px;color:#ffffdd;text-shadow:1px 1px 2px #000}
+.cu-vital.mana{height:14px;margin-top:2px}
+.cu-vital.mana>i{background:linear-gradient(#519ddd,#245a9b 48%,#173b73 52%,#2762aa)}
+.cu-vital.mana>span{line-height:12px;font-size:9px}
+.cu-zone-title{position:absolute;top:49px;left:50%;transform:translateX(-50%);text-align:center;z-index:2;width:40%;text-shadow:0 2px 10px #172011,1px 2px 3px #172011}
+.cu-zone-title>small{font:10px Georgia,serif;letter-spacing:5px;color:#decfa4}
+.cu-zone-title h1{font:normal 32px Georgia,'Songti SC','SimSun',serif;letter-spacing:7px;margin:7px 0 8px;color:#f4dc9a}
+.cu-zone-title p{font-size:10px;color:#e3dabd;letter-spacing:2px}
+.cu-minimap{position:absolute;right:28px;top:36px;width:151px;padding:0;border:0;background:none;z-index:3;text-align:center;color:#ecd492}
+.cu-map-circle{position:relative;display:block;width:137px;height:137px;margin:auto;border-radius:50%;border:6px ridge #b0a083;background-size:360%;background-position:48% 45%;box-shadow:0 0 0 2px #29271b,0 4px 20px #0008,inset 0 0 16px #262615}
+.cu-map-circle>i{position:absolute;left:47%;top:45%;font-size:20px;color:#fff2a5;font-style:normal;text-shadow:0 0 5px #000}
+.cu-map-circle>b{position:absolute;left:28%;top:64%;font-size:22px;color:#ffe435;text-shadow:0 1px 3px #000}
+.cu-map-circle>small{position:absolute;top:-12px;left:43%;font:12px Georgia;color:#ffe9b7;background:#3f3c2a;border:1px solid #ada077;padding:2px 4px}
+.cu-minimap>span:last-of-type{display:block;border:2px ridge #9f8c64;background:#25251cd9;border-radius:3px;padding:3px 0;margin-top:-3px;position:relative;font-family:'Songti SC',serif}
+.cu-minimap>em{font-size:9px;font-style:normal;color:#c2bba0;display:block;margin-top:5px}
+.cu-left-hud{position:absolute;z-index:3;left:27px;top:156px;width:170px}
+.cu-hud-heading{display:flex;align-items:center;justify-content:space-between;color:#e1c895;font-size:10px;margin-bottom:9px;letter-spacing:1px;text-shadow:0 2px 3px #000}
+.cu-hud-heading button{font-size:9px;border:1px solid #8a784b;background:#181e13bf;color:#d6c188;padding:2px 7px}
+.cu-group{display:grid;gap:9px}
+.cu-member{position:relative;display:flex;gap:8px;align-items:center;background:#101711c9;border:1px solid #81775b;border-radius:3px;color:#ddd5b9;padding:7px 8px;width:100%;text-align:left;box-shadow:inset 0 0 0 1px #121a13}
+.cu-member:hover{border-color:#e1ca8a;background:#253125}
+.cu-member-bars{flex:1;min-width:0;display:block}
+.cu-member-bars>b{display:flex;justify-content:space-between;color:var(--class-color);font-weight:400;font-size:11px;line-height:1.4;margin-bottom:3px}
+.cu-member-bars>b>small{font-size:9px;color:#c5bfa7}
+.cu-member-hp,.cu-member-mp{display:block;background:#060d08;border:1px solid #0c110b;height:7px;margin-top:2px;overflow:hidden}
+.cu-member-hp i{display:block;height:100%;background:linear-gradient(#94a951,#4f7436)}
+.cu-member-mp{height:3px}
+.cu-member-mp i{display:block;height:100%;background:#477ac0}
+.cu-member>em{font-style:normal;font-size:9px;color:#b7b59e}
+.cu-group.compact{gap:7px}
+.compact .cu-member{padding:5px 7px;gap:6px}
+.compact .cu-member>em{display:none}
+.compact .cu-member-bars>b{font-size:10px}
+.cu-raid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;width:205px}
+.cu-raid button{position:relative;height:37px;overflow:hidden;background:#151b15;border:1px solid #7c7962;padding:2px;color:#fff5d8;font-size:8px}
+.cu-raid button span{position:relative;z-index:1;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:1px 1px #000}
+.cu-raid button i{position:absolute;bottom:0;height:50%;background:var(--class-color);opacity:.6;left:0}
+.cu-raid>small{grid-column:1/-1;color:#ded3af;font-size:9px;padding-top:7px;text-shadow:0 1px 3px #000}
+.cu-right-hud{position:absolute;z-index:3;right:27px;top:235px;width:195px;display:grid;gap:27px}
+.cu-quest-tracker{text-align:left;color:#e2d7b3;background:none;border:0;padding:0;text-shadow:0 2px 3px #000}
+.cu-quest-tracker h2{font:13px Georgia,'Songti SC',serif;border-bottom:1px solid #ac995c66;margin:0 0 11px;padding-bottom:7px;display:flex;justify-content:space-between;color:#f3d58c}
+.cu-quest-tracker h2 span{font-size:10px;background:#1a221c99;padding:1px 5px}
+.cu-quest-tracker>b{font-size:11px;color:#ffe693;font-weight:400}
+.cu-quest-tracker p{font-size:11px;color:#ebe9d0;margin:8px 0 5px 16px}
+.cu-quest-tracker>small{font-size:9px;color:#b7be9c;margin-left:16px}
+.cu-scene-caption{position:absolute;left:50%;bottom:180px;transform:translateX(-50%);z-index:2;display:grid;text-align:center;gap:5px;pointer-events:none;text-shadow:0 2px 4px #000}
+.cu-nameplate{font-size:13px;color:#eef1ce}
+.cu-scene-caption>small{font-size:10px;color:#abc88a}
+.cu-lower-left{position:absolute;bottom:125px;left:27px;width:280px;z-index:2;text-shadow:0 2px 3px #000}
+.cu-chat{font-size:11px;line-height:1.7;color:#c2d2ec;padding:8px 10px;border-left:2px solid #a7976080;background:linear-gradient(90deg,#1021118f,transparent)}
+.cu-chat>span{color:#78b5e6}
+.cu-lower-left>small{color:#aeb8a1;font-size:9px;display:block;margin:9px 0 0 10px}
+.cu-actions{position:absolute;left:50%;bottom:117px;transform:translateX(-50%);display:flex;gap:4px;z-index:4;padding:5px;background:#11170fbd;border:1px solid #a08e67;border-radius:4px;box-shadow:0 3px 16px #0005}
+.cu-actions button{height:34px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 11px;background:linear-gradient(#434433,#252c20);border:1px solid #706f50;border-radius:2px;color:#d4ceb1;font-size:11px;white-space:nowrap}
+.cu-actions button img{width:20px;height:20px;object-fit:cover;border:1px solid #948666}
+.cu-actions button.active,.cu-actions button:hover:not(:disabled){color:#ffe3a1;border-color:#d5b773;background:linear-gradient(#696043,#353726)}
+.cu-actions button.cu-fight-button{background:linear-gradient(#60372c,#38251d);border-color:#9e7655;color:#efd5a7}
+.cu-bottom-ui{position:absolute;bottom:0;left:0;right:0;z-index:5;background:repeating-linear-gradient(130deg,#0000 0 3px,#ffffff02 3px 4px),linear-gradient(#4b483d 0%,#20211c 8%,#272923 70%,#121510 100%);border-top:3px ridge #95866b;box-shadow:0 -4px 16px #0008}
+.cu-xp{height:14px;position:relative;background:#14101e;overflow:hidden;border-bottom:2px ridge #8e805e;box-shadow:inset 0 2px 5px #000}
+.cu-xp>i{height:100%;display:block;background:linear-gradient(#8392d5,#514391 48%,#413071 52%,#7962ad);box-shadow:0 0 12px #a294ff}
+.cu-xp:after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0 calc(5% - 1px),#14121c99 calc(5% - 1px) 5%)}
+.cu-xp>span{position:absolute;inset:0;text-align:center;line-height:11px;font-size:8px;color:#ece5ef;text-shadow:1px 1px #000;z-index:1;letter-spacing:1px}
+.cu-xp b{font-weight:400;margin:0 24px}
+.cu-menu{display:flex;gap:13px;align-items:center;justify-content:center;height:82px;padding:5px 22px}
+.cu-menu>button{position:relative;min-width:55px;display:flex;flex-direction:column;gap:4px;align-items:center;padding:0;background:none;border:0;color:#c5bb9e;font-size:10px}
+.cu-icon-frame{position:relative;width:46px;height:46px;border:3px ridge #a79675;border-radius:5px;box-shadow:0 0 0 1px #080b08,0 2px 5px #000,inset 0 0 0 1px #000;background:#10130e;transition:filter .15s,transform .15s}
+.cu-icon-frame>img{width:100%;height:100%;object-fit:cover;border-radius:2px}
+.cu-menu>button:hover{color:#ffe8b5}
+.cu-menu>button:hover .cu-icon-frame{filter:brightness(1.25);transform:translateY(-2px);border-color:#efcf7e}
+.cu-icon-frame>kbd{position:absolute;right:1px;top:0;font:9px Arial;color:#fff9d7;text-shadow:1px 1px #000,0 0 3px #000}
+.cu-icon-frame>i{position:absolute;top:-5px;right:-5px;width:9px;height:9px;border:1px solid #ffe9a2;border-radius:50%;background:#e5b953;box-shadow:0 0 7px #d9a933}
+.cu-meter-empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:38px 18px;gap:13px;color:#8a825e}
+.cu-meter-empty h3{margin:0;font-size:16px}
+.cu-meter-empty p{font-size:10px;color:#8b927f;line-height:1.7;margin:0}
+.cu-gold-button{padding:10px 19px;border:2px ridge #a38955;background:linear-gradient(#6b4728,#402b1b);color:#f5db9c;font-size:12px;border-radius:3px;text-shadow:0 1px 2px #000;box-shadow:inset 0 0 0 1px #231b12}
+.cu-gold-button:hover{filter:brightness(1.2)}
+
+/* Game windows use Radix focus trapping, Escape handling and focus restoration. */
+.cu-dialog-overlay{position:fixed;inset:0;background:#070c0866;backdrop-filter:blur(3px);z-index:90}
+.cu-dialog{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:91;width:min(540px,calc(100vw - 28px));max-height:calc(100dvh - 42px);display:flex;flex-direction:column;background:repeating-linear-gradient(130deg,#0000 0 4px,#ffffff02 4px 5px),#20221b;border:4px ridge #9a8a6c;border-radius:7px;box-shadow:0 22px 90px #000c,0 0 0 2px #22261a;color:#e1d5b5;font:13px Arial,'PingFang SC',sans-serif;outline:none}
+.cu-dialog-header{display:flex;align-items:center;gap:14px;padding:16px 22px;background:linear-gradient(#373a2c,#1e2519);border-bottom:2px ridge #796a48}
+.cu-dialog-medallion{display:block;flex-shrink:0;width:51px;height:51px;border:3px ridge #c0a373;border-radius:50%;overflow:hidden;box-shadow:0 2px 7px #000}
+.cu-dialog-medallion img{width:100%;height:100%;object-fit:cover}
+.cu-dialog-header h2{font:23px Georgia,'Songti SC',serif;color:#ecd298;margin:0 0 5px}
+.cu-dialog-header p{font-size:10px;color:#959f87;margin:0}
+.cu-close{align-self:start;margin-left:auto;display:grid;place-items:center;color:#e5c996;width:27px;height:27px;background:linear-gradient(#672c22,#351e18);border:2px ridge #a4926d;border-radius:3px;padding:0}
+.cu-dialog-body{padding:23px;overflow:auto;min-height:0}
+
+@media(min-width:1600px){.cu-left-hud{width:195px}
+.cu-right-hud{width:225px}
+.cu-world .world-scene-combat{inset:70px 270px 10px 250px}
+.cu-world .world-avatar{height:72%;width:600px}
+}
+
+@media(max-width:1100px){
+.cu-lower-left{width:210px}
+.cu-actions{left:49%;gap:3px}
+.cu-actions button{padding:0 8px}
+.cu-player{width:245px;left:18px}
+.cu-portrait{width:60px;height:60px}
+.cu-left-hud{left:18px;width:150px}
+.cu-right-hud{right:18px;width:170px}
+.cu-zone-title h1{font-size:27px;letter-spacing:4px}
+.cu-zone-title{width:34%}
+.cu-minimap{right:20px;width:125px}
+.cu-map-circle{width:116px;height:116px}
+.cu-world .world-scene-combat{inset:100px 205px 25px 190px}
+.cu-menu{gap:17px}
+}
+
+@media(max-width:800px){
+.cu-viewport{height:calc(100svh - 70px);min-height:650px}
+.cu-player{top:40px;left:13px;width:220px}
+.cu-player-bars strong{font-size:11px}
+.cu-player-bars strong small{display:none}
+.cu-portrait{width:57px;height:57px}
+.cu-zone-title{top:125px;width:70%}
+.cu-zone-title h1{font-size:26px;margin:5px 0}
+.cu-zone-title>small{font-size:8px}
+.cu-zone-title p{font-size:9px;margin-top:8px}
+.cu-minimap{top:37px;right:14px;width:96px}
+.cu-map-circle{width:83px;height:83px;border-width:4px}
+.cu-map-circle>small{font-size:9px;top:-9px}
+.cu-map-circle>b{font-size:15px}
+.cu-map-circle>i{font-size:16px}
+.cu-minimap>span:last-of-type{font-size:10px}
+.cu-minimap>em{display:none}
+.cu-left-hud,.cu-right-hud{display:none}
+.cu-world{bottom:97px}
+.cu-world .world-avatar{width:440px;max-width:100%;height:64%;bottom:8px}
+.cu-world .world-avatar.is-mounted{width:520px;max-width:110%;height:64%}
+.cu-world .world-scene-combat{inset:180px 5px 54px;border:1px solid #918462}
+.cu-lower-left{left:16px;bottom:167px;width:60%}
+.cu-chat{font-size:10px;padding:6px 8px}
+.cu-lower-left>small{display:none}
+.cu-scene-caption{bottom:215px}
+.cu-actions{bottom:109px;left:50%;padding:4px;gap:4px}
+.cu-actions button{padding:0 10px;height:35px;font-size:10px}
+.cu-menu{height:82px;gap:0;padding:7px 8px;justify-content:space-around}
+.cu-menu>button{min-width:0;width:12.5%;font-size:9px;gap:5px}
+.cu-icon-frame{width:39px;height:39px}
+.cu-icon-frame>kbd{font-size:8px}
+.cu-xp>span{font-size:7px}
+.cu-dialog-body{padding:16px}
+.cu-dialog-header{padding:13px 16px}
+}
+
+@media(max-width:380px){.cu-icon-frame{width:34px;height:34px}
+.cu-menu>button{font-size:8px}
+.cu-actions button{padding:0 7px}
+.cu-player{width:204px}
+.cu-minimap{right:9px}
+}
+
+@media(prefers-reduced-motion:reduce){.classic-game *,.cu-dialog *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+
+/* Reset the main application's generic footer layout inside this standalone HUD. */
+.cu-bottom-ui{display:block;padding:0;margin:0}
+
+.cu-viewport:has(.character-model:not(.model-ready)) .cu-scene-caption{display:none}
+
+/* Live integration: retain V1 proportions without demo chrome or fabricated data. */
+.classic-game-root{width:100%;max-width:none;margin:0;padding:0}.classic-game-root .classic-game{font-family:'PingFang SC','Microsoft YaHei',sans-serif}.classic-game .cu-viewport{height:calc(100svh - 86px)}.classic-game .cu-vital{display:block}.classic-game .cu-vital.rage>i{background:linear-gradient(#c84b39,#772a25)}.classic-game .cu-vital.energy>i{background:linear-gradient(#ceaf39,#8e7729)}.cu-class-portrait>span{border-radius:50%!important}.classic-game .cu-player-bars{min-width:0}.classic-game .cu-player-bars strong>span{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.classic-game .cu-member-bars b>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.classic-game .cu-member-bars b>small{padding-left:5px}.classic-game .cu-zone-title h1{font-size:29px;letter-spacing:3px;overflow-wrap:anywhere}.classic-game .cu-menu{gap:23px}.classic-game .cu-quest-tracker{display:block;width:100%}.classic-game .cu-quest-tracker p{overflow-wrap:anywhere}.classic-game .cu-right-hud{top:225px;gap:18px}.classic-game .cu-quest-tracker>b{display:block;max-height:38px;overflow:hidden}.classic-game .cu-quest-tracker p{margin:5px 0 4px;font-size:10px}.classic-game .cu-raid{width:190px;grid-template-columns:repeat(5,minmax(0,1fr))}.cu-status-area{max-width:1380px;margin:auto;padding:0 20px}.cu-status-area:empty{display:none}.cu-status-area>.activity-strip{margin-top:12px}.cu-live-dialog{width:min(1180px,calc(100vw - 32px));max-height:calc(100dvh - 32px)}.cu-live-dialog.cu-panel-nearby,.cu-live-dialog.cu-panel-quests,.cu-live-dialog.cu-panel-account,.cu-live-dialog.cu-panel-activities{width:min(860px,calc(100vw - 32px))}.cu-live-dialog .cu-dialog-header{padding:12px 20px}.cu-live-dialog .cu-dialog-header h2{font-size:22px}.cu-live-dialog .cu-dialog-body{padding:18px;overscroll-behavior:contain}.cu-live-dialog .cu-close{min-width:36px;min-height:36px}.cu-live-dialog .panel,.cu-live-dialog .quest-entry{background:linear-gradient(135deg,#282d21,#1c2218);border-color:#756342;box-shadow:none}.cu-live-dialog h1{font-size:23px;letter-spacing:1px}.cu-live-dialog h2{font-size:19px}.cu-live-dialog .eyebrow,.cu-live-dialog .section-heading .eyebrow{display:none}.cu-live-dialog .world-layout{display:block}.cu-live-dialog .world-main{min-width:0}.cu-live-dialog .quest-panel{margin:0}.cu-live-dialog .quest-entry>summary{flex-wrap:wrap}.cu-live-dialog .quest-entry strong{overflow-wrap:anywhere}.cu-live-dialog .local-people{margin:0}.cu-live-dialog .world-layout>.world-main>.filterbar{margin-top:0}.cu-live-dialog .account-drawer{border:0;padding:0}.cu-live-dialog .account-drawer>summary{display:none}.cu-live-dialog .account-drawer:not([open])>*:not(summary){display:block}.cu-live-dialog .region-map-scroll{max-width:100%}.cu-live-dialog .site-footer{display:none}.cu-live-dialog [data-slot=button]{border-color:#81704c}.cu-live-dialog .npc-grid{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}.classic-game .damage-meter .dm-total{margin:0}.classic-game .cu-chat{max-height:65px;overflow:hidden}.classic-game .cu-world .world-battle-expand{display:none}.classic-game .cu-world .hd2d-scene-caption{display:none}.web-style-switch{display:flex;justify-content:flex-end;margin-bottom:12px}.web-style-switch button{min-height:36px}
+body:has(.classic-game-root) [data-slot=dialog-overlay]{z-index:110}body:has(.classic-game-root) [data-slot=dialog-content]{z-index:111;border:3px ridge #9a8a6c;background:#20251b}body:has(.classic-game-root) [data-radix-popper-content-wrapper]{z-index:130!important}body:has(.classic-game-root) .item-hover-content{z-index:140}body:has(.classic-game-root) .toast{z-index:150}
+@media(max-width:1100px){.classic-game .cu-menu{gap:16px}.classic-game .cu-zone-title h1{font-size:24px}.classic-game .cu-raid{width:155px}}
+@media(max-width:800px){.classic-game .cu-menu{gap:0}.classic-game .cu-menu>button{width:11.1%}.classic-game .cu-viewport{min-height:620px;height:calc(100svh - 112px)}.classic-game .cu-icon-frame{width:34px;height:34px}.classic-game .cu-zone-title{top:132px}.classic-game .cu-actions button{height:40px;padding:0 9px}.cu-live-dialog .cu-dialog-body{padding:12px}.cu-live-dialog .cu-close{min-width:40px;min-height:40px}.cu-live-dialog .npc-grid{grid-template-columns:1fr}.classic-game .cu-player-bars strong>span{max-width:118px}.classic-game .cu-status-area{padding:0 12px}}
+@media(max-width:380px){.classic-game .cu-icon-frame{width:29px;height:29px}.classic-game .cu-menu>button{font-size:8px}.classic-game .cu-player{width:195px}.classic-game .cu-player-bars strong>span{max-width:100px}.classic-game .cu-portrait{width:49px;height:49px}.classic-game .cu-actions{gap:3px}.classic-game .cu-actions button{padding:0 6px;font-size:10px}}
+/* The journey strip belongs to the HUD, directly above experience. */
+.cu-travel-progress .travel-progress{margin:0;padding:5px 14px 9px;border:0;border-radius:0;background:linear-gradient(#20271eeb,#11180feb);box-shadow:none}
+.cu-travel-progress .travel-progress-heading{font-size:10px;line-height:14px;margin:0 0 2px}.cu-travel-progress .travel-progress-heading svg{width:13px;height:13px}.cu-travel-progress .travel-progress-heading strong{font-size:11px}.cu-travel-progress .travel-progress-heading small{font-size:10px}
+.cu-travel-progress .travel-progress-route{font-size:10px;line-height:14px;margin:0 0 5px}.cu-travel-progress .travel-progress-route span{max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cu-travel-progress .travel-progress-track{height:5px}.cu-travel-progress .travel-progress-marker{height:15px;width:15px}.cu-travel-progress .travel-progress-marker svg{width:11px;height:11px}
+.classic-game .cu-is-travelling .cu-world{bottom:156px}.classic-game .cu-is-travelling .cu-actions{bottom:175px}.classic-game .cu-is-travelling .cu-scene-caption{bottom:240px}.classic-game .cu-is-travelling .cu-lower-left{bottom:184px}
+@media(max-width:800px){.classic-game .cu-is-travelling .cu-actions{bottom:168px}.classic-game .cu-is-travelling .cu-scene-caption{bottom:275px}.classic-game .cu-is-travelling .cu-lower-left{bottom:225px}.classic-game .cu-zone-title h1{font-size:25px;line-height:1.3;letter-spacing:2px}}
+.classic-game .cu-zone-title{text-shadow:0 2px 3px #000,0 0 14px #000,0 0 28px #000}.classic-game .cu-zone-title small,.classic-game .cu-zone-title p{color:#eddfb5}
+
+/* Mobile menus use the screen itself as the container, with one compact title. */
+@media(max-width:760px){
+ .cu-dialog.cu-live-dialog{inset:0;transform:none;width:100%;height:100dvh;max-height:100dvh;border:0;border-radius:0;box-shadow:none}
+ .cu-live-dialog .cu-dialog-header{flex-shrink:0;gap:8px;padding:calc(4px + env(safe-area-inset-top)) 10px 4px;border-bottom:1px solid #796a48}
+ .cu-live-dialog .cu-dialog-medallion{width:28px;height:28px;border-width:1px;box-shadow:none}
+ .cu-live-dialog .cu-dialog-header>div{flex:1;min-width:0}
+ .cu-live-dialog .cu-dialog-header h2{font-size:16px;margin:0;overflow-wrap:anywhere}
+ .cu-live-dialog .cu-dialog-header p{display:none}
+ .cu-live-dialog .cu-close{width:44px;height:44px;min-width:44px;flex-shrink:0;margin:0}
+ .cu-live-dialog .cu-dialog-body{flex:1;padding:10px 12px calc(16px + env(safe-area-inset-bottom));scrollbar-gutter:stable}
+ .cu-live-dialog .panel{padding:12px 0;border:0;border-bottom:1px solid #514c39;border-radius:0;background:none;box-shadow:none;min-width:0}
+ .cu-live-dialog .cu-dialog-body>.panel:first-child,.cu-live-dialog .world-main>.panel:first-child{padding-top:0}
+ .cu-live-dialog .world-main,.cu-live-dialog .character-columns{gap:12px}
+ .cu-live-dialog .section-heading{gap:8px;margin-bottom:10px}
+ .cu-live-dialog h1,.cu-live-dialog h2{font-size:17px;letter-spacing:0;overflow-wrap:anywhere}
+ .cu-live-dialog .footnote{margin-top:8px}
+ .cu-live-dialog .quest-panel{padding:0}
+ .cu-live-dialog .quest-entry{background:none;padding:10px 0}
+ .cu-live-dialog .filterbar{gap:3px}
+ .cu-live-dialog .account-drawer{padding:0}
+}
+@media(max-width:760px){
+ .cu-live-dialog .journal-boss-profile{min-height:0;gap:10px;margin:8px 0}
+ .cu-live-dialog .journal-boss-portrait{width:52px;height:72px}
+ .cu-live-dialog .journal-boss-profile h3{font-size:16px;margin:0 0 4px}
+ .cu-live-dialog .journal-boss-profile p{color:#b6b29b;font-size:11px}
+ .cu-live-dialog .journal-abilities{padding:0;margin:8px 0}
+ .cu-live-dialog .journal-loot-toolbar{gap:8px;margin:8px 0}
+ .cu-live-dialog .journal-loot-list{gap:6px}
+}
+@media(max-width:760px){
+ .cu-live-dialog .armory-page-heading h1{font-size:17px;margin:6px 0 2px}
+ .cu-live-dialog .armory-page .armory-page-heading{gap:8px}
+ .cu-live-dialog .spellbook-frame{padding:10px 8px;border:0;box-shadow:none;border-radius:2px;min-height:0}
+ .cu-live-dialog .spellbook-frame:before,.cu-live-dialog .spellbook-title span{display:none}
+ .cu-live-dialog .spellbook-title{padding:0 0 8px}
+ .cu-live-dialog .spellbook-title h2{font-size:17px}
+ .cu-live-dialog .spellbook-toolbar{padding:8px 0;gap:6px}
+ .cu-live-dialog .spellbook-guidance{margin:0;padding:6px 0}
+ .cu-live-dialog .spellbook-shell{margin-top:10px}
+}
+
+/* Damage stays anchored above the bottom action/menu area, independently of quests. */
+.classic-game .cu-corner-meter{position:absolute;z-index:3;right:27px;bottom:117px;width:195px}
+.classic-game .cu-is-travelling .cu-corner-meter{bottom:175px}
+@media(min-width:1600px){.classic-game .cu-corner-meter{width:225px}}
+@media(max-width:1100px){.classic-game .cu-corner-meter{right:18px;width:170px}}
+@media(max-width:800px){.classic-game .cu-corner-meter{display:none}}
+
+.cu-command-toggle{display:flex;align-items:center;gap:6px;padding:6px;color:#dfca97;font-size:12px}.cu-command-toggle input{accent-color:#d8b976}
+
+body:has(.classic-game-root)>.account-menu{display:none!important}
+body:has(.classic-game-root) .battle-audio-controls{display:none}
+.cu-live-dialog.cu-panel-settings{width:min(560px,calc(100vw - 32px))}
+.cu-settings fieldset{min-width:0;margin:0 0 18px;padding:10px 0 16px;border:0;border-bottom:1px solid #756342}
+.cu-settings legend{color:#ecd298;font:18px Georgia,'Songti SC',serif;padding:0}
+.cu-setting-toggle{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:54px;color:#e1d5b5;cursor:pointer}
+.cu-setting-toggle small{display:block;color:#a6ad97;font-size:11px;margin-top:4px;line-height:1.6}
+.cu-setting-toggle input{width:20px;height:20px;flex-shrink:0;accent-color:#c9ad6b;cursor:pointer}
+.cu-setting-volume{display:grid;grid-template-columns:68px minmax(0,1fr) 40px;gap:12px;align-items:center;min-height:44px;font-size:12px;color:#c7bd9f}
+.cu-setting-volume input{width:100%;min-width:0;accent-color:#c9ad6b;padding:0;cursor:pointer}
+.cu-setting-volume output{text-align:right;font-variant-numeric:tabular-nums}
+.cu-settings .panel{border:0;background:none;padding:0;margin:8px 0 0}
+.cu-settings .panel p{font-size:12px;line-height:1.8;margin-top:10px}
+.cu-settings-notice{font-size:11px;color:#d9c18d;min-height:18px}
+.cu-settings .settings-account-actions{padding:6px 0!important;justify-content:flex-start!important;flex-wrap:wrap}
+.cu-settings .settings-account-actions>a,.cu-settings .settings-account-actions>button{display:inline-flex;justify-content:center;align-items:center;min-height:44px;flex:1;border:2px ridge #96794e;border-radius:3px;background:linear-gradient(#60372c,#38251d);color:#efdaad;padding:8px 18px;font-size:13px}
+.cu-settings .settings-account-actions>span:empty{display:none}
+.cu-settings-hint{font-size:11px;margin-top:8px}
+.cu-settings-return{width:100%;min-height:44px}.cu-settings-return kbd{margin-left:8px;font:10px sans-serif;opacity:.7}
+@media(max-width:800px){.classic-game .cu-menu>button{width:10%}.classic-game .cu-menu{gap:0}}
+@media(max-width:760px){.cu-dialog.cu-panel-settings{width:100%}.cu-settings fieldset{margin-bottom:12px;padding-bottom:12px}.cu-settings legend{font-size:16px}}
+body:has(.classic-game-root) .battle-effects-control{display:none}
+
+/* Combat occupies the same full scene surface as travel. The HUD stays on top. */
+.classic-game .cu-in-combat .cu-world{inset:0}
+.classic-game .cu-in-combat .world-scene-combat{inset:0;border:0;border-radius:0;background:#18221e}
+.classic-game .cu-in-combat .world-exploration{display:none}
+.classic-game .cu-in-combat .cu-right-hud,.classic-game .cu-in-combat .cu-zone-title,.classic-game .cu-in-combat .cu-lower-left{display:none}
+.classic-game .cu-in-combat .cu-member[aria-pressed=true]{border-color:#e8c77e;background:#4b432b;box-shadow:0 0 8px #dab76e55}
+.classic-game .cu-in-combat .battle-3d-controls{top:18px;right:180px}
+.classic-game .cu-in-combat .cu-corner-meter{bottom:252px;right:15px}
+@media(max-width:1000px){.classic-game .cu-in-combat .cu-corner-meter{display:none}}
+@media(max-width:800px){.classic-game .cu-in-combat .battle-3d-controls{top:220px;right:10px}.classic-game .cu-in-combat .cu-left-hud{top:112px}.classic-game .cu-in-combat .cu-member{min-height:37px}}
+.classic-game .cu-in-combat .cu-minimap>span:last-of-type,.classic-game .cu-in-combat .cu-minimap>em{display:none}
+
+/* One viewport, with chat channels and the full combat meter docked to its edges. */
+.classic-game .cu-viewport{height:100dvh;min-height:600px;max-height:none}
+.classic-game .cu-chat-window{display:block;width:clamp(290px,30vw,440px);z-index:4;text-shadow:0 1px 2px #000;border:1px solid #82734b80;border-radius:3px;background:linear-gradient(100deg,#0d1310eb,#111611b8);box-shadow:0 2px 10px #0005}
+.cu-chat-toolbar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #75623d;background:linear-gradient(#333326bd,#171b15d9)}
+.cu-chat-toolbar [role=tablist]{display:flex;gap:2px;padding:3px 4px 0}
+.cu-chat-toolbar [role=tab]{border:1px solid transparent;border-bottom:0;border-radius:4px 4px 0 0;background:none;color:#aaa489;font-size:12px;padding:6px 17px;min-height:32px}
+.cu-chat-toolbar [role=tab][data-state=active]{background:linear-gradient(#50452f,#27291d);border-color:#8b744b;color:#ffe0a1}
+.cu-chat-toolbar button:hover{color:#fff0ba}
+.cu-chat-scroll{height:clamp(110px,22dvh,210px);overflow:auto;overscroll-behavior:contain;padding:8px 10px;scrollbar-width:thin;scrollbar-color:#736448 #171b16;font-size:11px;line-height:1.7;overflow-wrap:anywhere}
+.classic-game .cu-chat{padding:0 0 6px;border:0;background:none;max-height:none;overflow:visible;color:#e0d8ba}
+.cu-channel-history p{display:flex;align-items:baseline;gap:8px;margin:4px 0;color:#bdd0a9}.cu-channel-history time{flex:none;font-size:10px;color:#969785}.cu-channel-history span{min-width:0}
+.cu-chat-scroll>.panel{margin:0;padding:0;border:0;background:none;box-shadow:none}
+.cu-chat-scroll .section-heading{display:none}.cu-chat-scroll>.panel>p{font-size:10px;color:#9da58f;margin:0 0 7px}
+.cu-chat-scroll .combat-log{max-height:none;overflow:visible;margin:0;font-size:11px}.cu-chat-scroll .combat-log>div{padding:5px 0;border-color:#5c634338;gap:7px}.cu-chat-scroll .combat-log time{font-size:10px;white-space:nowrap}.cu-chat-scroll .combat-log button{padding:2px 5px;height:auto;min-height:28px;font-size:11px;color:#e8c985;white-space:normal;text-align:left}
+.cu-chat-overview .activity-strip,.cu-chat-overview .combat-strip,.cu-chat-overview .activity-progress{padding:6px 0;margin:0;border:0;border-radius:0;background:none;box-shadow:none;font-size:11px}.cu-chat-overview .journey-activity-body{flex-wrap:wrap;gap:6px}.cu-chat-overview .journey-activity-heading,.cu-chat-overview .journey-activity-meta{font-size:10px}.cu-chat-overview .journey-activity strong{font-size:12px}.cu-chat-overview .journey-activity p{font-size:11px}.cu-chat-overview button{min-height:30px;font-size:11px}
+.classic-game .cu-corner-meter{display:block;right:16px;bottom:172px;width:clamp(330px,30vw,440px);z-index:4;max-height:32dvh;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;border-radius:3px;background:#131613df}
+.cu-corner-meter .damage-meter{background:#111113df}.cu-corner-meter .dm-list{min-height:0;max-height:calc(32dvh - 133px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}.cu-corner-meter .cu-meter-empty{padding:18px 12px;gap:9px}.cu-corner-meter .cu-meter-empty h3{font-size:13px}.cu-corner-meter .cu-gold-button{padding:6px 12px}
+.classic-game .cu-is-travelling .cu-corner-meter{bottom:230px}
+.classic-game .cu-in-combat .cu-chat-window{display:block}.classic-game .cu-in-combat .cu-corner-meter{bottom:252px}
+.cu-mobile-meter{display:none}
+.classic-game .cu-status-area{position:fixed;z-index:20;top:8px;left:50%;transform:translateX(-50%);width:min(550px,95vw);padding:0;pointer-events:none}.cu-status-area .activity-strip{margin:0;padding:6px 12px;font-size:11px}.cu-status-area a,.cu-status-area button{pointer-events:auto}
+.cu-settings-navigation{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.cu-settings-navigation button{display:flex;align-items:center;justify-content:center;gap:6px;flex:1;min-height:42px}
+.cu-live-dialog.cu-panel-meter{width:min(600px,calc(100vw - 24px))}
+@media(min-width:801px) and (max-height:750px){.classic-game .cu-right-hud{top:195px}.classic-game .cu-quest-tracker p,.classic-game .cu-quest-tracker small{display:none}.classic-game .cu-left-hud{max-height:calc(100dvh - 470px);overflow:auto}.classic-game .cu-chat-scroll{height:100px}}
+@media(max-width:1000px){.classic-game .cu-corner-meter{display:none}.cu-mobile-meter{display:block;border:0;background:none;color:#e1c080;padding:6px 12px;min-height:36px;font-size:11px}}
+@media(max-width:800px){
+ .classic-game .cu-viewport{height:100dvh;min-height:560px}
+ .classic-game .cu-chat-window{width:auto}
+ .classic-game .cu-chat-scroll{height:104px}
+ .classic-game .cu-chat-toolbar [role=tab]{min-height:36px;padding:6px 15px}
+  .cu-live-dialog.cu-panel-meter{width:100%}
+}
+
+.cu-chat-toggle{display:none}
+@media(max-width:800px){
+ .classic-game .cu-scene-caption{display:none}
+ .cu-in-combat .cu-chat-toggle{display:block;margin-left:auto;border:0;background:none;color:#cdb077;font-size:11px;padding:6px;min-height:36px}
+ .cu-in-combat .cu-chat-compact .cu-chat-scroll{display:none}
+}
+@media(min-width:801px){
+ .classic-game .cu-left-hud{max-height:max(75px,calc(100dvh - 318px - clamp(110px,22dvh,210px)));overflow:auto;scrollbar-width:thin}
+ .classic-game .cu-is-travelling .cu-left-hud{max-height:max(75px,calc(100dvh - 376px - clamp(110px,22dvh,210px)))}
+ .classic-game .cu-in-combat:has(.command-hotbar) .cu-left-hud{max-height:max(75px,calc(100dvh - 318px - clamp(110px,22dvh,210px)))}
+}
+.cu-corner-meter .damage-meter{display:flex;flex-direction:column;max-height:32dvh}
+.cu-corner-meter .damage-meter>*{flex-shrink:0}
+.cu-corner-meter .damage-meter .dm-list{flex:1 1 auto;min-height:0;max-height:none}
+
+/* Transparent, movable addon windows; scene commands may cover the chat body. */
+.classic-game .cu-viewport .cu-chat-window{left:6px;right:auto;bottom:106px;z-index:2;background:linear-gradient(100deg,#09110d52,#11161118);border-color:#b6a47324;box-shadow:none;text-shadow:0 1px 2px #000,0 0 4px #000}
+.classic-game .cu-is-travelling .cu-chat-window{bottom:164px}
+.cu-chat-toolbar{background:linear-gradient(#252a2038,#171b151a);border-bottom-color:#b7a06c30;gap:2px}
+.cu-chat-toolbar [role=tab][data-state=active]{background:#8a734c24;border-color:#baa16a50;color:#ffe0a1}
+.cu-chat-toolbar [role=tab]{color:#d0c9b1}
+.cu-channel-history p{color:#d2ddbf}.cu-channel-history time{color:#b3b6a2}
+.cu-hud-drag{display:flex;align-items:center;justify-content:center;flex:0 0 28px;height:28px;margin-left:auto;padding:0;border:0;background:transparent;color:#c1b58d;cursor:grab!important;touch-action:none;user-select:none;opacity:.65}
+.cu-hud-drag:hover,.cu-hud-drag:focus-visible{opacity:1;background:#b7a06c18}.cu-hud-drag:active{cursor:grabbing!important}
+.cu-meter-drag{position:absolute;z-index:2;top:0;left:46%;margin:0;width:28px}
+.cu-chat-bubble{display:none}
+@media(max-width:800px){
+ .classic-game .cu-viewport .cu-chat-window{width:min(380px,calc(100% - 12px));bottom:104px}
+ .classic-game .cu-is-travelling .cu-chat-window{bottom:162px}
+ .classic-game .cu-chat-window.cu-chat-compact{width:44px;height:44px;background:none;border:0;z-index:49}
+ .cu-chat-compact .cu-chat-channels{display:none}
+ .cu-chat-compact .cu-chat-bubble{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;border:1px solid #d2b87799;color:#ecd49e;background:#15201770;box-shadow:inset 0 0 0 2px #12191144,0 2px 8px #0004;padding:0}
+ .cu-chat-window .cu-chat-toggle{display:flex;align-items:center;justify-content:center;flex:none;width:32px;min-height:36px;margin:0;border:0;background:none;color:#ddc797;padding:0}
+ .cu-chat-toolbar [role=tab]{padding:6px 11px!important}
+ .cu-chat-toolbar .cu-hud-drag{height:36px;flex-basis:28px}
+ .cu-chat-window:not(.cu-chat-compact) .cu-chat-scroll{display:block}
+ .cu-chat-toolbar .cu-mobile-meter{padding:6px;font-size:10px;white-space:nowrap}
+}

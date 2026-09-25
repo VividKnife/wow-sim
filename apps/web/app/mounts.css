@@ -1,0 +1,30 @@
+.mounts-panel{padding:18px 20px}
+.mounts-heading,.mounts-training{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.mounts-heading .grow{min-width:140px}
+.mounts-heading small{display:block;margin-top:3px;color:var(--muted)}
+.mounts-emblem{display:grid;place-items:center;width:44px;height:44px;font-size:34px;color:#cba260;background:#292722;border:1px solid #5c4a31;border-radius:9px}
+.mounts-emblem.is-riding{color:#e4c88e;border-color:#b48c49}
+.mounts-collection{margin-top:14px;border-top:1px solid var(--line)}
+.mounts-collection>summary{padding:14px 0 0;cursor:pointer;font-size:14px;color:var(--muted)}
+.mounts-collection>summary span{float:right;font-variant-numeric:tabular-nums}
+.mounts-training{margin:18px 0;padding:16px;background:#202a2e;border-radius:8px}
+.mounts-training strong span{font-weight:400;font-size:13px;color:var(--muted);margin-left:6px}
+.mounts-training p{margin:4px 0;font-size:14px}
+.mounts-training small{display:block;color:var(--muted);font-size:13px}
+.mounts-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.mount-card{min-width:0;overflow:hidden;border:1px solid var(--line);border-radius:10px;background:#152025}
+.mount-card.mount-active{border-color:#b48c49}
+.mount-portrait{height:90px;position:relative;display:grid;place-items:center;background:linear-gradient(135deg,#242724,#393328);color:#b88c61}
+.mount-portrait>span{font-size:70px;line-height:1}
+.mount-portrait>b{position:absolute;top:10px;right:10px;font-size:12px;font-weight:500;color:#edddbd;background:#151812b3;padding:2px 6px;border-radius:4px}
+.mount-tone-pinto{color:#dad0bf}.mount-tone-chestnut{color:#cb8e65}.mount-tone-palomino{color:#d3b37c}.mount-tone-white{color:#eee7d8}
+.mount-card-body{padding:12px;display:flex;flex-direction:column;height:calc(100% - 90px);gap:8px}
+.mount-card-title{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px;font-size:15px}
+.mount-card-title>span{font-size:12px;color:#c5a56b}
+.mount-card-body p{margin:0;font-size:13px;color:var(--muted)}
+.mount-requirement{display:block;min-height:38px;font-size:13px;line-height:1.5;color:var(--muted)}
+.mount-card-body button{margin-top:auto;width:100%}
+@media(max-width:760px){.mounts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.mounts-panel{padding:16px}}
+@media(max-width:440px){.mounts-grid{grid-template-columns:1fr}.mount-card{display:flex}.mount-portrait{width:76px;height:auto;flex-shrink:0}.mount-portrait>span{font-size:56px}.mount-portrait>b{top:8px;right:10px}.mount-card-body{flex:1;min-width:0;height:auto}.mounts-training{padding:12px}.mounts-training .grow{flex-basis:100%}}
+
+.mounts-collection>summary:focus-visible{outline:2px solid var(--gold);outline-offset:4px}

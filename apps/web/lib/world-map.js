@@ -1,0 +1,64 @@
+import {worldNodes,worldDungeons} from '../../../packages/game-data/world-content.js';
+import atlas from '../../../packages/game-data/data/world-map-atlas.json' with {type:'json'};
+// Hand-placed locations on the full reference artwork, in percentages.
+// These mark the game's adapted location nodes, not precise NPC coordinates.
+export const mapRegions={
+ '艾尔文':{name:'艾尔文森林 · 北郡',image:'/maps/elwynn-classic.jpg'},
+ '暴风城':{name:'暴风城',image:'/maps/stormwind-classic.jpg'},
+ '西部荒野':{name:'西部荒野',image:'/maps/westfall-classic.jpg'},
+ '主城传送':{name:'主城传送 · 服务节点示意',image:null},
+ '信使路线':{name:'信使路线',image:null},
+ '暮色森林':{name:'暮色森林 · 任务节点示意',image:null},
+ '湿地':{name:'湿地 · 任务节点示意',image:null},
+};
+export const mapRegion=region=>region==='北郡'?'艾尔文':region;
+// Sample the server's timed route; local interpolation never changes game location.
+export function travelMapFrame(state,elapsed=0){
+ const a=state.activity;
+ if(a.type!=='travel')return{journey:{from:state.location,to:state.location,progress:0},legs:[],remaining:0};
+ const total=Math.max(1,a.endsAt-a.startedAt),current=Math.max(0,Math.min(total,state.clock-a.startedAt+Math.max(0,elapsed)));
+ const path=a.flight||!a.path?.length?[{a:a.from,b:a.to,duration:total}]:a.path;
+ const costs=path.map(e=>Math.max(0,e.duration??e.distance/7*1000));
+ let remainingCost=current,from=a.from,journey=null;
+ const legs=path.map((e,index)=>{
+  const to=e.a===from?e.b:e.a,cost=costs[index],startProgress=e.startProgress||0,progress=startProgress+(1-startProgress)*(cost>0?Math.max(0,Math.min(1,remainingCost/cost)):1);
+  const leg={from,to,progress,startProgress};
+  if(!journey&&(progress<1||index===path.length-1))journey={from,to,progress};
+  remainingCost-=cost;from=to;return leg;
+ });
+ return{journey:journey||{from:a.from,to:a.to,progress:current/total},legs,remaining:total-current};
+}
+export const mapPoints={
+ darnassus:[24,16],orgrimmar:[76,58],thunderbluff:[42,70],moonglade:[55,25],undercity:[50,30],northshire:[49,42],northwood:[48,34],echo:[48,25],vineyard:[55,49],
+ goldshire:[42,65],fargodeep:[39,80],stonefield:[33,86],maclure:[48,87],
+ mirror:[29,59],crystal:[54,65],jasper:[61,53],tower:[75,73],logging:[85,65],
+ brackwell:[70,80],westbrook:[24,72],forestedge:[24,83],
+ stormwind:[57,56],magetower:[35,69],bluerecluse:[43,80],oldtown:[70,44],stockades:[41,58],
+ dwarven:[60,23],cathedral:[43,37],park:[21,51],keep:[81,18],
+ furlbrow:[51,21],saldean:[54,32],jansen:[43,28],sentinel:[55,52],
+ alexton:[39,51],moonbrook:[44,68],daggerhills:[56,76],coastnorth:[29,25],
+ coast:[24,63],lighthouse:[30,88],deadmines:[42,83],
+ lakeshire:[22,79],ironforge:[22,22],thelsamar:[57,45],algaz:[78,20],silverstream:[81,65],
+ darkshire:[74,46],menethil:[12,64],dunmodr:[47,17],
+};
+for(const [region,places]of Object.entries(Object.groupBy(worldNodes,n=>n.region))){
+ if(region==='暴风城')continue;
+ const original=atlas.regions[region];
+ mapRegions[region]=original||{name:region+' · 区域路线',image:null};
+ const minX=Math.min(...places.map(n=>n.x)),maxX=Math.max(...places.map(n=>n.x)),minY=Math.min(...places.map(n=>n.y)),maxY=Math.max(...places.map(n=>n.y));
+ for(const n of places){
+  if(original){const [left,right,top,bottom]=original.bounds;mapPoints[n.id]=[(n.y-left)/(right-left)*100,(n.x-top)/(bottom-top)*100];}
+  else mapPoints[n.id]=[15+70*(maxY-n.y)/Math.max(1,maxY-minY),15+70*(maxX-n.x)/Math.max(1,maxX-minX)];
+ }
+}
+for(const d of worldDungeons){const parent=mapPoints[d.parent];if(parent)mapPoints[d.id]=[Math.min(94,parent[0]+7),Math.min(94,parent[1]+6)];}
+delete mapRegions['主城传送'];delete mapRegions['信使路线'];
+
+export function playerMapPoint(journey,map){
+ const from=map.find(n=>n.id===journey.from),to=map.find(n=>n.id===journey.to);
+ if(!from||!to)return null;
+ const a=mapPoints[from.id],b=mapPoints[to.id];if(!a||!b)return null;
+ const region=mapRegion(from.region),crossing=region!==mapRegion(to.region);
+ if(crossing){const arrived=journey.progress>=.5,point=arrived?b:a;return {region:arrived?mapRegion(to.region):region,x:point[0],y:point[1],crossing};}
+ return {region,x:a[0]+(b[0]-a[0])*journey.progress,y:a[1]+(b[1]-a[1])*journey.progress,crossing};
+}
