@@ -5,8 +5,9 @@ const root=new URL('../packages/game-data/',import.meta.url);
 const names=(await readdir(new URL('data/',root))).filter(name=>name.endsWith('.json')).sort();
 const bundles={};
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
+const canonicalBytes=bytes=>Buffer.from(bytes.toString('utf8').replace(/\r\n/g,'\n'));
 for(const name of names){
- const bytes=await readFile(new URL(`data/${name}`,root));
+ const bytes=canonicalBytes(await readFile(new URL(`data/${name}`,root)));
  const data=JSON.parse(bytes);
  if(!data||typeof data!=='object'||Array.isArray(data))throw new Error(`${name}: expected content object`);
  const tables=data.tableData?Object.fromEntries(Object.entries(data.tableData).map(([name,rows])=>[name,JSON.parse(rows)])):data.tables;
@@ -25,7 +26,7 @@ for(const directory of ['../game-domain/src/rules/','../sim-core/src/']){
  for(const name of (await readdir(new URL(directory,root))).filter(name=>/\.(?:js|ts)$/.test(name)).sort())sources.push(directory+name);
 }
 for(const source of sources.sort()){
- const bytes=await readFile(new URL(source,root));rules[source]={sha256:digest(bytes),bytes:bytes.length};
+ const bytes=canonicalBytes(await readFile(new URL(source,root)));rules[source]={sha256:digest(bytes),bytes:bytes.length};
 }
 const contentVersion=digest(JSON.stringify({bundles,rules}));
 const output=JSON.stringify({formatVersion:1,contentVersion,bundles,rules},null,2)+'\n';

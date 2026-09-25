@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "14f307d4a215c75b903fcb1150b941818038e2d917e9910c30e3215b60aaa78a",
+  "contentVersion": "1261b774b950ca3791a848badae8268626ac24380a32e1c0bf36e47d199d2627",
   "bundles": {
     "class-demons-reference.json": {
       "sha256": "cff264f075ba885d340bbd4df0fe06f0b2e1d96179994dea548f37cc417abb81",
@@ -405,12 +405,12 @@
       "bytes": 1145
     },
     "../game-domain/src/rules/enemy-spells.js": {
-      "sha256": "845f9f6b4bc957a1bdc21d3d365a123ba5f987cb950c795da3f7b1bbd77dbbed",
-      "bytes": 12005
+      "sha256": "372574c550892c1a637ce94b54f4ce7a15a6fe309a20e0b70a484a10a9222680",
+      "bytes": 13206
     },
     "../game-domain/src/rules/engine.js": {
-      "sha256": "05880b155a18db0390a27f6253509af0fc0057ce4933871023fccf28144d4390",
-      "bytes": 41464
+      "sha256": "232c24d9b4f505d20bf0cc594f1d08ae8d7266e7470d22851bc6169bdd051e5a",
+      "bytes": 41546
     },
     "../game-domain/src/rules/escort.js": {
       "sha256": "fe83090625db214a05be1cf2120a87e4826904d093f899bb4b77c6e45a1e8e6a",
@@ -445,8 +445,8 @@
       "bytes": 2950
     },
     "../game-domain/src/rules/inventory.js": {
-      "sha256": "2e3a09e5d1a21941b07cebb369e4586eb2d11c31964a7a577228953f8a6ca865",
-      "bytes": 8729
+      "sha256": "b8073806c34e42cf041ca9e1bd2cf4114ee4b44b6be81e29f1133fd7edf9d874",
+      "bytes": 9461
     },
     "../game-domain/src/rules/item-details.js": {
       "sha256": "4f97f726496494f96fc14e72bedf65ed5a85ab8988c8ed52357fc19ffd701d86",
@@ -553,8 +553,8 @@
       "bytes": 2821
     },
     "../game-domain/src/rules/quests.js": {
-      "sha256": "c08c5c68b36cc52a76f1edd9aede2eb2f0d4b571ba2d929b36ef6177359e7432",
-      "bytes": 24459
+      "sha256": "e4cce126a0be6f355720df8e41f6a8199ba7ca27bb1c79fc9f4159cec98e3cf1",
+      "bytes": 24542
     },
     "../game-domain/src/rules/racial-effects.js": {
       "sha256": "a3ebafc059822d28a3fc365b23af3f2517c76adc19241a97d0bef98e08eadbc0",
