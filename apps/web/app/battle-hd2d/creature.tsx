@@ -49,7 +49,10 @@ export function Creature({unit:initialUnit,height,model}:{unit:BattleUnitData;he
   else instance.mixer.update(dt);
   s.clock=f.clock;
   if(root.current){
-   if(q&&unit.hp>0&&s.name!=='submerge')root.current.rotation.y=Math.atan2(-(q[2]-p[2]),q[0]-p[0]);
+   if(unit.hp>0&&s.name!=='submerge'){
+    if(unit.combatFacing!=null)root.current.rotation.y=-unit.combatFacing;
+    else if(q)root.current.rotation.y=Math.atan2(-(q[2]-p[2]),q[0]-p[0]);
+   }
    // Submerge holds below the floor after the native dive clip finishes.
    root.current.visible=!(s.name==='submerge'&&s.action&&s.action.time>=s.action.getClip().duration-.02);
   }

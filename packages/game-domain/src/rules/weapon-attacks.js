@@ -1,3 +1,4 @@
+import {markCombatEngaged} from './combat-engagement.js';
 import {rollAttackTable,weaponMissChance,glanceMultiplier} from '../../../sim-core/src/attack-table.js';
 import {point} from '../../../sim-core/src/geometry.js';
 import {activeAuras,controlled,hasAura} from '../../../sim-core/src/combat-auras.js';
@@ -11,12 +12,14 @@ export function weaponSkill(c,slot=16){
  return slot===18?(st.rangedWeaponSkill||c.level*5):slot===17?(st.offhandWeaponSkill||c.level*5):(st.weaponSkill||c.level*5);
 }
 export function facesAttacker(s,attacker,target){
+ if(!target.pvp&&Number.isFinite(target.combatFacing)){const a=point(attacker),t=point(target);return (a.x-t.x)*Math.cos(target.combatFacing)+(a.y-t.y)*Math.sin(target.combatFacing)>=0;}
  const focus=[s,...(s.party||[]),...(s.combat?.enemies||[])].find(u=>u.id===target.target);
  if(!focus)return true;
  const a=point(attacker),t=point(target),f=point(focus);
  return (a.x-t.x)*(f.x-t.x)+(a.y-t.y)*(f.y-t.y)>=0;
 }
 export function weaponAttack(s,c,target,{special=false,hand='main',ranged=false,spell=null,rollCritical=true}={}){
+ markCombatEngaged(s,c);
  const playerTarget=!!target.classId||!!target.petUnit,st=stats(c),defense=playerTarget?stats(target).defense||target.level*5:target.level*5;
  const skill=weaponSkill(c,ranged?18:hand==='off'?17:16),difference=defense-skill,auras=activeAuras(target,s.clock);
  const front=facesAttacker(s,c,target),canDefend=!controlled(target,s.clock)&&!target.cast;

@@ -5,7 +5,7 @@ import {Tooltip as TooltipPrimitive} from 'radix-ui';
 import './item-details.css';
 export const money=(c:number)=>`${Math.floor(c/10000)?Math.floor(c/10000)+' 金 ':''}${Math.floor(c%10000/100)?Math.floor(c%10000/100)+' 银 ':''}${c%100} 铜`;
 export const duration=(ms:number)=>{const seconds=Math.max(0,Math.ceil(ms/1000));return seconds>=60?`${Math.floor(seconds/60)}分${seconds%60}秒`:`${seconds}秒`};
-export function Icon({src,name,size=40}:{src?:string|null;name:string;size?:number}){return src?<img src={src} alt="" title={name} width={size} height={size} className="game-icon"/>:<span className="game-icon missing-icon" style={{width:size,height:size}} title={`${name} · 图标待收录`}>{name.slice(0,1)}</span>}
+export function Icon({src,name,size=40,showTitle=true}:{src?:string|null;name:string;size?:number;showTitle?:boolean}){return src?<img src={src} alt="" title={showTitle?name:undefined} width={size} height={size} className="game-icon"/>:<span className="game-icon missing-icon" style={{width:size,height:size}} title={showTitle?`${name} · 图标待收录`:undefined}>{name.slice(0,1)}</span>}
 export function Bar({value,max,label,tone='health'}:{value:number;max:number;label:string;tone?:string}){return <div className={'resource '+tone} aria-label={`${label} ${Math.ceil(value)} / ${max}`}><div style={{width:Math.min(100,Math.max(0,value/max*100))+'%'}}/><span>{label} <b>{Math.ceil(value)} / {max}</b></span></div>}
 const itemStatNames:Record<number,string>={0:'法力',1:'生命',3:'敏捷',4:'力量',5:'智力',6:'精神',7:'耐力'};
 const equipmentSlots:Record<number,string>={1:'头部',2:'颈部',3:'肩部',4:'衬衣',5:'胸部',6:'腰部',7:'腿部',8:'脚',9:'手腕',10:'手',11:'手指',12:'饰品',13:'单手',14:'副手',15:'远程',16:'背部',17:'双手',19:'战袍',20:'胸部',21:'主手',22:'副手',23:'副手物品',25:'投掷',26:'远程'};

@@ -4,12 +4,12 @@ import {Eye,Moon} from 'lucide-react';
 import {Bar,duration,type GameProps} from './game-ui';
 import ActivityProgress from './activity-progress';
 
-type Props=GameProps&{hideTravelProgress?:boolean;activityLabel:string;onObserve:()=>void};
-export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,onObserve,hideTravelProgress=false}:Props){
+type Props=GameProps&{hideTravelProgress?:boolean;hideGatherProgress?:boolean;activityLabel:string;onObserve:()=>void};
+export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,onObserve,hideTravelProgress=false,hideGatherProgress=false}:Props){
  if(!s.combat)return <>
-  <ActivityProgress state={s} data={d} running hideTravel={hideTravelProgress}/>
+  {!(hideGatherProgress&&['gather','professionGather'].includes(s.activity.type))&&<ActivityProgress state={s} data={d} running hideTravel={hideTravelProgress}/>}
   {s.hp<=0&&<div className="action-row" aria-label="复活角色">
-   <Button onClick={()=>send({type:'revive'})} disabled={busy}>复活</Button>
+   <Button onClick={()=>send({type:'revive'})} disabled={busy||s.activity.type==='revive'}>{s.activity.type==='revive'?'跑尸中…':'释放灵魂 · 跑尸'}</Button>
    {d.canSoulstoneRevive&&<Button onClick={()=>send({type:'soulstoneRevive'})} disabled={busy}>灵魂石复活</Button>}
    {d.reincarnation&&<Button title={d.reincarnation.reason} onClick={()=>send({type:'reincarnate'})} disabled={busy||!d.reincarnation.canUse}>复生</Button>}
   </div>}
@@ -32,7 +32,7 @@ export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,
     <div className="journey-activity-actions">
      {(s.combat||s.lastCombat)&&<Button onClick={onObserve}>观察战斗 <Eye size={16}/></Button>}
      {s.hp<=0?<>
-      <Button onClick={()=>send({type:'revive'})} disabled={busy||!!s.combat}>复活</Button>
+      <Button onClick={()=>send({type:'revive'})} disabled={busy||!!s.combat}>释放灵魂 · 跑尸</Button>
       {d.canSoulstoneRevive&&<Button onClick={()=>send({type:'soulstoneRevive'})} disabled={busy}>灵魂石复活</Button>}
       {d.reincarnation&&<Button title={d.reincarnation.reason} onClick={()=>send({type:'reincarnate'})} disabled={busy||!d.reincarnation.canUse}>复生</Button>}
      </>:<Button variant="outline" onClick={()=>send({type:'stop'})} disabled={busy||stopped||s.activity.flight&&s.activity.stopAtNext}>

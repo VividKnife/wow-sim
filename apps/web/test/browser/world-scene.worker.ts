@@ -18,6 +18,9 @@ function choose(next:string){
  const current=state,n=fixture();n.clock=current.clock;n.wallAt=current.wallAt;n.equipment=current.equipment;n.bag=current.bag;
  if(next==='fly'){
   n.location='stormwind';n.flightPoints=['stormwind','ironforge'];state=act(n,{type:'fly',to:'ironforge'},n.wallAt);
+ }else if(next==='dead'||next==='ghost'){
+  n.hp=0;n.activity={type:'dead'};
+  state=next==='ghost'?act(n,{type:'revive'},n.wallAt):n;
  }else if(next==='run'||next==='ride'){
   if(next==='run')n.mounts=[];else n.mounted=900020;
   state=act(n,{type:'travel',to:'logging'},n.wallAt);

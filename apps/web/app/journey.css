@@ -62,6 +62,9 @@
 .journey-content .local-people .eyebrow{display:none}
 .journey-content .local-people h2{font:600 19px Georgia,"SimSun",serif;color:#e0c998}
 .journey-content .local-people .section-heading>small{font-size:12px;color:#a4ad9c}
+.npc-category-tabs{gap:6px;margin:0 0 14px}
+.npc-category-tabs button{border-color:#454e3c;background:#171d18;color:#b9c2b1}
+.npc-category-tabs button.active{border-color:#a58b57;background:#374035;color:#f1d798}
 .journey-content .npc-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .journey-content .npc-card{position:relative;min-height:88px;padding:10px;gap:10px;background:#171d18;border-color:#454e3c;border-radius:3px}
 .journey-content .npc-card-copy strong{font-size:13px}

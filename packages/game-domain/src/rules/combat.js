@@ -1,3 +1,4 @@
+import {markCombatEngaged} from './combat-engagement.js';
 import {commandAvailable,commandOrder,commandSkillReason,commandDamageRules} from './combat-command.js';
 import {beginJourneyBattle} from './journey.js';
 import {pvpApplyControl,pvpAbilityAllowed,pvpTriggeredControl} from './pvp-runtime.js';
@@ -73,6 +74,10 @@ export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombat
  const pullTank=combatMembers(s).find(c=>!c.petUnit&&!c.totemUnit&&!c.escortNpc&&c.hp>0&&combatRole(c)==='tank');
  for(const [i,e] of s.combat.enemies.entries()){if(pullTank&&!e.target&&!e.controlledBy)e.target=pullTank.id;const spawn=dungeon?{position:30+Math.floor(i/3)*2,positionY:i===0?0:(i%2?1:-1)*Math.ceil(i/2)*2}:personalEnemyPosition(s,i,openingRange);e.position=spawn.position;e.positionY=spawn.positionY;e.nextAttack=s.clock;e.nextSpell=s.clock+6000;}
  for(const unit of [...combatMembers(s),...s.combat.enemies])setCombatPosition(s,unit,unit);
+ // Solo rogues start on the rear side; normal target tracking resumes on engagement.
+ if(s.classId===4&&combatMembers(s).length===1){
+  const player=point(s);for(const e of s.combat.enemies){const p=point(e);e.combatFacing=Math.atan2(p.y-player.y,p.x-player.x);}
+ }
  if(s.settings.commandCombat&&commandAvailable(s))s.combat.command={paused:true,marks:{},orders:[],focusId:null,holdFire:false};
  initializeMetrics(s);
  for(const e of s.combat.enemies)initializeSmite(s,e,combatMembers(s),hurtPlayer);
@@ -80,7 +85,7 @@ export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombat
  log(s,'遭遇：'+s.combat.enemies.map(e=>e.name).join('、'),'combat');
 }
 function recordDamage(s,c,target,amount,label,threatMultiplier=1,detail={}){
- c.stealthed=false;
+ markCombatEngaged(s,c);c.stealthed=false;
  const sp=spells[detail.spellId],school=detail.school??sp?.School??0;if(school===0&&!detail.periodic)amount+=physicalDamageBonus(c,s.clock);for(const a of activeAuras(target,s.clock))if(a.type===14&&(a.misc&(1<<school))&&(a.charges==null||a.charges>0)){amount+=a.amount;if(a.charges>0)a.charges--;}if(!detail.talentProc)amount*=abilityDamageMultiplier(c,sp,{...target,creatureType:creatures[target.entry]?.CreatureType},!!detail.periodic);
  threatMultiplier*=talentSchoolThreat(c,sp?.School||0);if(sp)threatMultiplier*=talentSpellValue(c,sp,2,1);
  if(c.form==='bear')threatMultiplier*=1+.03*(ranks(c)['Feral Instinct']||0);
@@ -234,6 +239,7 @@ export function abandonCombat(s,encounterId){
 }
 export function hurtPlayer(s,e,c,amount,label='攻击',detail={}){
  if(c.pvp&&(amount<=0||c.hp<=0))return;
+ if(!detail.environmental)markCombatEngaged(s,c);
  if(c===s&&s.activity.type==='mount'&&amount>0){s.activity={type:'idle',reason:'受到伤害，骑乘中断。'};}
  c.rest=null;c.stealthed=false;if(amount>0){c.cannibalize=null;c.shadowmeld=null;}
  if(!detail.environmental){const school=detail.school??spells[detail.spellId]?.School??0;if(school>0){const resist=stats(c).resistances?.[school]??0;amount*=1-Math.min(.75,resist/Math.max(1,(e.level||c.level)*5)*.75);}amount=classIncoming(s,e,c,amount,detail,{damage:recordDamage,healAmount,stats,rng,actors:c.pvp?s.arenaAllActors.filter(a=>a.teamId===c.teamId):combatMembers(s)});amount=onTalentEvent(s,c,{type:'incoming',target:e,spell:spells[detail.spellId],amount,periodic:detail.periodic,melee:!detail.periodic&&!detail.spellId,critical:detail.critical},{damage:recordDamage,healAmount,stats,rng,actors:c.pvp?s.arenaAllActors.filter(a=>a.teamId===c.teamId):combatMembers(s)});if(amount<=0)return;
@@ -333,6 +339,12 @@ export function combatTick(s,{pvpTeam=false}={}){
  }
  for(const summon of battle.pendingSpawns||[])if(summon.at<=s.clock){const e=summon.profile;setCombatPosition(s,e,{x:30,y:0});e.nextAttack=s.clock;e.nextSpell=s.clock+6000;battle.enemies.push(e);log(s,e.name+' 加入了战斗！','combat');}
  battle.pendingSpawns=(battle.pendingSpawns||[]).filter(p=>p.at>s.clock);
+ for(const e of battle.enemies){
+  if(battle.pvp)continue;
+  const focus=actors.find(c=>c.id===e.target&&c.hp>0&&!c.stealthed);
+  const aim=focus||(!Number.isFinite(e.combatFacing)&&actors.find(c=>c.hp>0));
+  if(aim){const p=point(e),q=point(aim);e.combatFacing=Math.atan2(q.y-p.y,q.x-p.x);}
+ }
  const enemyPositions=new Map(battle.enemies.map(e=>[e.id,point(e)])),openingLogSequence=s.logSequence;
  for(const c of actors.filter(c=>c.hp>0)){
   if(c===opener&&battle.pull&&battle.pull.engagedAt==null&&s.clock<battle.pull.startsAt+10000&&battle.command?.orders.some(o=>o.kind==='soft'&&!o.startedAt&&o.memberId!==c.id))continue;
@@ -405,7 +417,7 @@ export function combatTick(s,{pvpTeam=false}={}){
   const alive=actors.filter(c=>c.hp>0&&(!c.stealthed||c.feignResisted?.includes(e.id)||!c.feignUntil&&detectsTarget(e,c,s.clock)));if(!alive.length)continue;
   const threat=c=>Math.max(0,(e.threat[c.id]||0)-(c.fade?.until>s.clock?c.fade.amount:0)),current=alive.find(c=>c.id===e.target),ordered=[...alive].sort((a,b)=>threat(b)-threat(a)),forced=e.tauntUntil>s.clock&&alive.find(c=>c.id===e.tauntedBy);
   const challenger=current&&ordered.find(c=>c.id!==current.id&&threat(c)>threat(current)*(distance(c,e)<=5?1.1:1.3));
-  const target=forced||challenger||current||ordered[0];e.target=target.id;
+  const target=forced||challenger||current||ordered[0];e.target=target.id;markCombatEngaged(s,target);
   if(smiteTick(s,e,actors,hurtPlayer))continue;
   if(dungeonBossTick(s,e,actors,hurtPlayer))continue;
   if(!e.raidScripted)enemyAITick(s,e,actors,hurtPlayer);

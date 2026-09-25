@@ -1,0 +1,16 @@
+.level-up-notification{position:fixed;inset:0;z-index:150;pointer-events:none;display:grid;place-items:center;overflow:hidden}
+.level-up-burst{position:relative;width:min(540px,94vw);text-align:center;color:#ffdf76;font-family:Georgia,'Noto Serif SC','Songti SC',serif;animation:level-up-reveal 4.4s ease-out both;isolation:isolate;transform:translateY(-12vh)}
+.level-up-title{font-size:clamp(32px,6vw,54px);font-weight:700;letter-spacing:.16em;text-indent:.16em;text-shadow:0 2px 3px #000,0 0 12px #bf7200,0 0 32px #ffbe3655}
+.level-up-level{font-size:clamp(18px,3.5vw,25px);text-shadow:0 2px 3px #000,1px 0 3px #000}
+.level-up-level strong{color:#fff2bd;font-size:1.35em}
+.level-up-rule{height:2px;margin:14px auto 10px;width:75%;background:linear-gradient(90deg,transparent,#b77c25,#fff0ae,#b77c25,transparent);box-shadow:0 0 14px #ffcd6255}
+.level-up-magic{position:absolute;inset:-150px 0 -100px;z-index:-1;mask-image:linear-gradient(transparent,#000 20%,#000 85%,transparent)}
+.level-up-column{position:absolute;inset:0 18%;background:linear-gradient(90deg,transparent,#e7ab2822,#ffe9a15c,#e7ab2822,transparent);transform-origin:bottom;animation:level-up-column 2.6s ease-out both}
+.level-up-ring{position:absolute;left:10%;bottom:25px;width:80%;height:90px;border:3px solid #ffe09b;border-radius:50%;box-shadow:0 0 16px #ffc447,inset 0 0 14px #ffb83d;animation:level-up-ring 2s ease-out both}
+.level-up-ring-second{animation-delay:.35s}
+.level-up-mote{position:absolute;left:var(--x);bottom:30px;width:4px;height:12px;background:#fff4bd;border-radius:50%;box-shadow:0 0 8px #ffd568;animation:level-up-mote 2.3s var(--delay) ease-out both}
+@keyframes level-up-reveal{0%{opacity:0;scale:.86}10%,65%{opacity:1;scale:1}100%{opacity:0;scale:1}}
+@keyframes level-up-column{0%{opacity:0;transform:scaleX(.2) scaleY(.1)}20%{opacity:1;transform:scaleX(1) scaleY(1)}100%{opacity:0;transform:scaleX(1.2) scaleY(1)}}
+@keyframes level-up-ring{0%{opacity:0;transform:scale(.15)}15%{opacity:1}100%{opacity:0;transform:translateY(-180px) scale(1.35)}}
+@keyframes level-up-mote{0%{opacity:0;transform:translateY(0)}20%{opacity:1}100%{opacity:0;transform:translate(var(--drift),-300px)}}
+@media(prefers-reduced-motion:reduce){.level-up-magic{display:none}.level-up-burst{animation:level-up-fade 4.4s linear both}@keyframes level-up-fade{0%,75%{opacity:1}100%{opacity:0}}}

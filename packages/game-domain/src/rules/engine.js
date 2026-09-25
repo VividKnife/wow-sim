@@ -104,7 +104,7 @@ function finishActivity(s){const a=s.activity;if(a.type==='travel'){s.location=a
   if(!a.questIds?.length){idle(s);return;}
   const next=a.questIds.map(id=>questGathering(s,id,a.objectId)).find(result=>result.pending);
   if(!next){idle(s,'任务采集目标已完成。');return;}
-  s.activity={type:'gather',target:next.available?.id||null,objectId:a.objectId,questIds:a.questIds,endsAt:s.clock+(next.available?5000:1000)};
+  s.activity={type:'gather',target:next.available?.id||null,objectId:a.objectId,questIds:a.questIds,startedAt:s.clock,endsAt:s.clock+3000};
  }
  else if(a.type==='professionGather')finishGather(s);
  else if(a.type==='questItem'){const encounter=finishQuestTool(s);idle(s);if(encounter){startCombat(s,encounter);s.combat.quest=a.quest;for(const e of s.combat.enemies)e.capturePhase='fighting';}}
@@ -247,11 +247,11 @@ export function act(input,action,now){
  case 'sellBatch':{ensureIdle(s);if(!shop(s).length)throw new Error('附近没有商人');sellBatch(s,action.type==='sell'?[action.uid]:action.uids);break;}
  case 'sellJunk':{ensureIdle(s);if(!shop(s).length)throw new Error('附近没有商人');const selected=s.bag.filter(i=>items[i.id]?.Quality===0&&items[i.id]?.SellPrice>0&&!protectedItem(i));if(!selected.length)throw new Error('没有可出售的灰色垃圾');const uids=new Set(selected.map(i=>i.uid)),amount=selected.reduce((n,i)=>n+items[i.id].SellPrice*i.count,0);s.money+=amount;s.bag=s.bag.filter(i=>!uids.has(i.uid));log(s,'一键售卖垃圾，获得 '+amount+' 铜','trade');break;}
  case 'equip':ensureIdle(s);equipFromBag(s,action.uid,action.target,action.slot);break;
- case 'gather':ensureIdle(s);if(!gatherables(s).some(x=>x.id===action.id))throw new Error('目标不在这里');s.activity={type:'gather',target:action.id,objectId:action.id,questIds:gatherableQuestIds(s,action.id),endsAt:s.clock+5000};break;
+ case 'gather':ensureIdle(s);if(!gatherables(s).some(x=>x.id===action.id))throw new Error('目标不在这里');s.activity={type:'gather',target:action.id,objectId:action.id,questIds:gatherableQuestIds(s,action.id),startedAt:s.clock,endsAt:s.clock+3000};break;
  case 'conjure':{const id=knownRank(s,action.water?5504:587);if(!id)throw new Error('尚未学习造餐术/造水术');beginUtilitySpell(s,id);break;}
  case 'unlockFlight':ensureIdle(s);if(!flightNodes.includes(s.location))throw new Error('这里没有飞行管理员');if(!s.flightPoints.includes(s.location))s.flightPoints.push(s.location);break;
  case 'fly':{ensureIdle(s);const f=flights.find(f=>[f.a,f.b].includes(s.location)&&[f.a,f.b].includes(action.to)&&s.location!==action.to);if(!f||![s.location,action.to].every(n=>s.flightPoints.includes(n)))throw new Error('尚未解锁这条飞行路线');if(s.money<f.cost)throw new Error('飞行费用不足');s.money-=f.cost;s.activity={type:'travel',from:s.location,to:action.to,startedAt:s.clock,endsAt:s.clock+f.duration,flight:true};break;}
- case 'revive':{if(s.combat)throw new Error('小队仍在战斗中，无法返回尸体复活。');if(!['idle','dead'].includes(s.activity.type))throw new Error('请先结束当前活动。');const targets=[s,...s.party].filter(c=>c.hp<=0).map(c=>c.id);if(!targets.length)throw new Error('角色仍然活着');stopRecovery(s);s.activity={type:'revive',targets,endsAt:s.clock+Math.ceil(10000/(1+racialModifiers(s).ghostSpeedPct))};break;}
+ case 'revive':{if(s.combat)throw new Error('小队仍在战斗中，无法返回尸体复活。');if(!['idle','dead'].includes(s.activity.type))throw new Error('请先结束当前活动。');const targets=[s,...s.party].filter(c=>c.hp<=0).map(c=>c.id);if(!targets.length)throw new Error('角色仍然活着');stopRecovery(s);s.activity={type:'revive',targets,startedAt:s.clock,endsAt:s.clock+Math.ceil(10000/(1+racialModifiers(s).ghostSpeedPct))};break;}
  case 'resurrect':beginResurrection(s,action.target);break;
  case 'rest':if(s.combat||!['idle','dead','hunt'].includes(s.activity.type))throw new Error('请先结束当前活动。');s.activity={type:'idle'};startRecovery(s);break;
  case 'sync':break;

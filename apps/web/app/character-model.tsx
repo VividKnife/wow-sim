@@ -4,7 +4,7 @@ import {useEffect,useRef,useState,type ReactNode} from 'react';
 import {modelEquipment} from '@/lib/model-viewer.js';
 
 type Status='loading'|'loaded'|'partial'|'error';
-export default function CharacterModel({equipment,items,raceId,classId,gender='male',fallback,title='角色 3D 换装预览',view='portrait',animation='Stand',mountDisplayId=0,paused=false}:{equipment:Record<string,{id:number}>;items:Record<string,{slot:number}>;raceId:number;classId:number;gender?:'male'|'female';fallback:ReactNode;title?:string;view?:'portrait'|'world'|'flight';animation?:'Stand'|'Run'|'Fly'|'Death';mountDisplayId?:number;paused?:boolean}){
+export default function CharacterModel({equipment,items,raceId,classId,gender='male',fallback,title='角色 3D 换装预览',view='portrait',animation='Stand',mountDisplayId=0,paused=false,ghost=false}:{equipment:Record<string,{id:number}>;items:Record<string,{slot:number}>;raceId:number;classId:number;gender?:'male'|'female';fallback:ReactNode;title?:string;view?:'portrait'|'world'|'flight';animation?:'Stand'|'Run'|'Fly'|'Death';mountDisplayId?:number;paused?:boolean;ghost?:boolean}){
  const container=useRef<HTMLDivElement>(null),frame=useRef<HTMLIFrameElement>(null);
  const [intersecting,setIntersecting]=useState(true),[foreground,setForeground]=useState(true),[attempt,setAttempt]=useState(0);
  const [state,setState]=useState<{revision:string;status:Status}>({revision:'',status:'loading'});
@@ -38,7 +38,7 @@ export default function CharacterModel({equipment,items,raceId,classId,gender='m
  },[revision,visible,attempt]);
  useEffect(()=>{publishMotion();},[animation,paused]);
  const ready=visible&&(status==='loaded'||status==='partial');
- return <div ref={container} data-status={status} className={'character-model '+(ready?'model-ready':'')}>
+ return <div ref={container} data-status={status} data-form={ghost?'ghost':'living'} className={'character-model '+(ready?'model-ready':'')}>
   {!ready&&<div className="model-fallback" aria-hidden="true">{fallback}</div>}
   {visible&&status!=='error'&&<iframe ref={frame} key={attempt} src="/model-viewer/index.html" title={title} className="model-frame" onLoad={()=>{setState({revision,status:'loading'});frame.current?.contentWindow?.postMessage({channel:'wow-character-equipment',revision,...JSON.parse(revision)},window.location.origin);}}/>}
   <div className="model-status" role="status">

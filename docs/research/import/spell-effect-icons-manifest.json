@@ -1,0 +1,252 @@
+{
+  "source": "docs/research/import/item-profession-assets/sources/SpellIcon.dbc",
+  "assets": [
+    {
+      "name": "ability_creature_cursed_03",
+      "file": "apps/web/public/icons/class-assets/ability_creature_cursed_03.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_creature_cursed_03.jpg",
+      "sha256": "f644b213f8ab5caa9a1b587c60f7a37757ec840c9755fc673f2d92fbcc5a78b1"
+    },
+    {
+      "name": "ability_druid_mangle",
+      "file": "apps/web/public/icons/class-assets/ability_druid_mangle.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_druid_mangle.jpg",
+      "sha256": "ab179cdfe037fe3a8ff5ead66ba2566337da9c6de0be8506a3f5d382fc9563fd"
+    },
+    {
+      "name": "ability_druid_swipe",
+      "file": "apps/web/public/icons/class-assets/ability_druid_swipe.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_druid_swipe.jpg",
+      "sha256": "78f06b31ab6838a49a13d4bfb646a562ce6bb840dc513371b1f6eaca0a8dd57a"
+    },
+    {
+      "name": "ability_hunter_pet_crab",
+      "file": "apps/web/public/icons/class-assets/ability_hunter_pet_crab.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_crab.jpg",
+      "sha256": "b2381fc1c74bb4333dc3b0704d2bec038050b1e0e02931bb25a3c2c14ed7a4f2"
+    },
+    {
+      "name": "ability_hunter_pet_crocolisk",
+      "file": "apps/web/public/icons/class-assets/ability_hunter_pet_crocolisk.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_crocolisk.jpg",
+      "sha256": "8bc37febe76311c24fee84770b17cf5f5f14f99a516ef4d572b25aec68e33fdc"
+    },
+    {
+      "name": "ability_hunter_pet_owl",
+      "file": "apps/web/public/icons/class-assets/ability_hunter_pet_owl.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_owl.jpg",
+      "sha256": "635e5761ecfcc9dd1881210529ae2db447b91539c17dea69f9bc154fbcb5f082"
+    },
+    {
+      "name": "ability_hunter_pet_scorpid",
+      "file": "apps/web/public/icons/class-assets/ability_hunter_pet_scorpid.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_scorpid.jpg",
+      "sha256": "a830878da7bc1f02a34416913952038d362eb5cf25c3196aa1953a308767e383"
+    },
+    {
+      "name": "ability_hunter_pet_spider",
+      "file": "apps/web/public/icons/class-assets/ability_hunter_pet_spider.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_spider.jpg",
+      "sha256": "297a49555132a5e621b5ed6de3884243f80798b6c60fbffeab14c171f0038632"
+    },
+    {
+      "name": "ability_hunter_pet_tallstrider",
+      "file": "apps/web/public/icons/class-assets/ability_hunter_pet_tallstrider.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_tallstrider.jpg",
+      "sha256": "15e6f059601bc23f0fa5bfc8b49f63623b943a557144304dbe51fad169b2d7e7"
+    },
+    {
+      "name": "ability_hunter_pet_vulture",
+      "file": "apps/web/public/icons/class-assets/ability_hunter_pet_vulture.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_vulture.jpg",
+      "sha256": "fec4f153006fde63bd6a190bb1f6bb57a2ca253ec12e4cf97e9b305ddd1276b4"
+    },
+    {
+      "name": "ability_hunter_pet_windserpent",
+      "file": "apps/web/public/icons/class-assets/ability_hunter_pet_windserpent.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_hunter_pet_windserpent.jpg",
+      "sha256": "8cc25c37bc3bbeae3a5b11283f253c1d99c8ed68169073a37682b9df77860b98"
+    },
+    {
+      "name": "ability_mount_nightmarehorse",
+      "file": "apps/web/public/icons/class-assets/ability_mount_nightmarehorse.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_mount_nightmarehorse.jpg",
+      "sha256": "a16ab887f1a6bbbe3d4bf8da1e4f40bc9eb5a3096ee6345d2db1fb862b4c40cc"
+    },
+    {
+      "name": "ability_poisonarrow",
+      "file": "apps/web/public/icons/class-assets/ability_poisonarrow.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_poisonarrow.jpg",
+      "sha256": "8b87c7f04ed87370dadc864ff0a12ef1d45b68e99c8e5f435ae20390bca42d37"
+    },
+    {
+      "name": "ability_rogue_disguise",
+      "file": "apps/web/public/icons/class-assets/ability_rogue_disguise.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_rogue_disguise.jpg",
+      "sha256": "a214f38183e1f3fa3a0bfd35f5c672e8e6c2b6a6df9121577e341ce8c871aad1"
+    },
+    {
+      "name": "ability_theblackarrow",
+      "file": "apps/web/public/icons/class-assets/ability_theblackarrow.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/ability_theblackarrow.jpg",
+      "sha256": "59a482b1fb3b231127477bb48b3014e84bc4aac53a428314cf658d8fc6b19e1b"
+    },
+    {
+      "name": "inv_hammer_24",
+      "file": "apps/web/public/icons/class-assets/inv_hammer_24.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/inv_hammer_24.jpg",
+      "sha256": "2ae084aa87213de72ef0e48fed48eaf4a7c283c95ffd9658c3df42b45a2fd66f"
+    },
+    {
+      "name": "inv_misc_ahnqirajtrinket_06",
+      "file": "apps/web/public/icons/class-assets/inv_misc_ahnqirajtrinket_06.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/inv_misc_ahnqirajtrinket_06.jpg",
+      "sha256": "f22834cc55588a4e48b72e7247d65a2038afb0678811e4ee9e0ab0f39cd2d5d5"
+    },
+    {
+      "name": "inv_misc_dust_04",
+      "file": "apps/web/public/icons/class-assets/inv_misc_dust_04.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/inv_misc_dust_04.jpg",
+      "sha256": "d317e6f89641b728ac9c7f43f9b5ebbfca9d14b58dbebff5d075dd039e151251"
+    },
+    {
+      "name": "inv_misc_fork&knife",
+      "file": "apps/web/public/icons/class-assets/inv_misc_fork&knife.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/inv_misc_fork%26knife.jpg",
+      "sha256": "0a43109ee16c68b2814415438d4394af7b3b0c3cb82520aa0f3a7a892995c08d"
+    },
+    {
+      "name": "inv_misc_head_dragon_blue",
+      "file": "apps/web/public/icons/class-assets/inv_misc_head_dragon_blue.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/inv_misc_head_dragon_blue.jpg",
+      "sha256": "a4d985b734a1f30fed9b6dfefc14985336f3c5912d91079bab42cc027e97c022"
+    },
+    {
+      "name": "inv_misc_summerfest_brazierorange",
+      "file": "apps/web/public/icons/class-assets/inv_misc_summerfest_brazierorange.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/inv_misc_summerfest_brazierorange.jpg",
+      "sha256": "022ff1fea737190e98f2ec28432b27419206cc66e125e2f92c80b6ed8733993a"
+    },
+    {
+      "name": "inv_potion_58",
+      "file": "apps/web/public/icons/class-assets/inv_potion_58.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/inv_potion_58.jpg",
+      "sha256": "25af649965ae67ff4d76faf46571bbea834e674ddc31c586a831122ce77c0f61"
+    },
+    {
+      "name": "inv_potion_86",
+      "file": "apps/web/public/icons/class-assets/inv_potion_86.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/inv_potion_86.jpg",
+      "sha256": "9edabce2181b36f31b384d81823f0040b50048e989697ff8f284c9e95223e41a"
+    },
+    {
+      "name": "inv_sword_2h_ashbringercorrupt",
+      "file": "apps/web/public/icons/class-assets/inv_sword_2h_ashbringercorrupt.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/inv_sword_2h_ashbringercorrupt.jpg",
+      "sha256": "26b96ebedbbacec376e358605704b15da59efc3aab658ba974e8312f773229a7"
+    },
+    {
+      "name": "spell_fire_elementaldevastation",
+      "file": "apps/web/public/icons/class-assets/spell_fire_elementaldevastation.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_fire_elementaldevastation.jpg",
+      "sha256": "6c100095c21696de1281f6dd3b57abcea60295184ea8883e439463c7268998bb"
+    },
+    {
+      "name": "spell_fire_firebolt02",
+      "file": "apps/web/public/icons/class-assets/spell_fire_firebolt02.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_fire_firebolt02.jpg",
+      "sha256": "c307fece0e3663bf5374cf59fb17800a30f50478702007ac01a1bfd102e31968"
+    },
+    {
+      "name": "spell_fire_flameblades",
+      "file": "apps/web/public/icons/class-assets/spell_fire_flameblades.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_fire_flameblades.jpg",
+      "sha256": "32144e816e9f6d24e1745e50cc1c38d8c0c957d3273adac9dc0ec14ecfe2046c"
+    },
+    {
+      "name": "spell_frost_iceclaw",
+      "file": "apps/web/public/icons/class-assets/spell_frost_iceclaw.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_frost_iceclaw.jpg",
+      "sha256": "233f2d200a733b46c3ae83439711c9cae8706d3c21f402d540ff8a6c48d60ba9"
+    },
+    {
+      "name": "spell_frost_manaburn",
+      "file": "apps/web/public/icons/class-assets/spell_frost_manaburn.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_frost_manaburn.jpg",
+      "sha256": "743402800c7ec48738ab4d32cb153a69a09f06d0a61fcffb77479c63333a4688"
+    },
+    {
+      "name": "spell_holy_lesserheal02",
+      "file": "apps/web/public/icons/class-assets/spell_holy_lesserheal02.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_holy_lesserheal02.jpg",
+      "sha256": "2a2c54b98cc2f0e07622f4bf2648280291b2a827d86ad179c726b825f4056ba2"
+    },
+    {
+      "name": "spell_misc_conjuremanajewel",
+      "file": "apps/web/public/icons/class-assets/spell_misc_conjuremanajewel.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_misc_conjuremanajewel.jpg",
+      "sha256": "db83e3d3b7bdf9b5d237c7a53692be0ec94a4437322d0fefbf5123f9fdbde16d"
+    },
+    {
+      "name": "spell_misc_drink",
+      "file": "apps/web/public/icons/class-assets/spell_misc_drink.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_misc_drink.jpg",
+      "sha256": "ccf8e121db3ae69b972328a2b6e6855416a4dabfba2e09618ffb2ca1fcc3f11a"
+    },
+    {
+      "name": "spell_misc_food",
+      "file": "apps/web/public/icons/class-assets/spell_misc_food.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_misc_food.jpg",
+      "sha256": "4d4b643659d562c93c57bfbcef403f80b1fe47b6898217303d2745b62548f4ea"
+    },
+    {
+      "name": "spell_nature_agitatingtotem",
+      "file": "apps/web/public/icons/class-assets/spell_nature_agitatingtotem.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_agitatingtotem.jpg",
+      "sha256": "d1021949e1020fee5e3ec7d32547cb0a28761e420515c9821c142b09994a6d21"
+    },
+    {
+      "name": "spell_nature_dryaddispelmagic",
+      "file": "apps/web/public/icons/class-assets/spell_nature_dryaddispelmagic.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_dryaddispelmagic.jpg",
+      "sha256": "a0ec9680a5d624a5c6bcf8ce6fb285f568f0f41fd2ad47618b79292334e151f8"
+    },
+    {
+      "name": "spell_nature_healingway",
+      "file": "apps/web/public/icons/class-assets/spell_nature_healingway.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_healingway.jpg",
+      "sha256": "4966849f10ba75c7fb791211d1692b6c10f6be793781ebc13484cf905437c837"
+    },
+    {
+      "name": "spell_nature_polymorph_cow",
+      "file": "apps/web/public/icons/class-assets/spell_nature_polymorph_cow.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_polymorph_cow.jpg",
+      "sha256": "0c962e3d89fd7d6d1a00558b24f4429eafc4f805ce12ee303af5568740bf74ba"
+    },
+    {
+      "name": "spell_nature_slowpoison",
+      "file": "apps/web/public/icons/class-assets/spell_nature_slowpoison.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_slowpoison.jpg",
+      "sha256": "e9d825516205196bb7b3dbfe6f205c9eacb09cabd8abf8dc8845a090697ff3cd"
+    },
+    {
+      "name": "spell_shadow_deathanddecay",
+      "file": "apps/web/public/icons/class-assets/spell_shadow_deathanddecay.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_deathanddecay.jpg",
+      "sha256": "fb862f5c748dd2ae022eff46751caa5b523c7e6a99b5786de2ead3749b22653e"
+    },
+    {
+      "name": "spell_shadow_spectralsight",
+      "file": "apps/web/public/icons/class-assets/spell_shadow_spectralsight.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_spectralsight.jpg",
+      "sha256": "0d83f97cd770997020687c9afd28733b4f73db0ac4a493ee349eb3c22429cf8b"
+    },
+    {
+      "name": "trade_herbalism",
+      "file": "apps/web/public/icons/class-assets/trade_herbalism.jpg",
+      "sourceUrl": "https://wow.zamimg.com/images/wow/icons/large/trade_herbalism.jpg",
+      "sha256": "5789ee6784e85d49e8259e6ed7a15e67fd1c70f68f1082b2c2a76b6924c8ccf5"
+    }
+  ],
+  "unavailable": []
+}

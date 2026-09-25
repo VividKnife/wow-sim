@@ -32,6 +32,15 @@ test('world has clickable NPCs but no accept, purchase or training action before
  assert.doesNotMatch(html,/>接受任务</);assert.doesNotMatch(html,/>[^<]*· 购买</);assert.doesNotMatch(html,/id="local-shop"/);
  assert.match(html,/<details class="panel travel-toolbox">/);
 });
+test('nearby people shows all five category tabs and city service NPCs',()=>{
+ const s=createGame('旅人',42,0);s.location='stormwind';
+ const p=props(s),merchant=p.data.interactions.find(n=>n.roles.includes('shop'));
+ assert.ok(merchant);
+ const html=render(components.LocalNpcs,p);
+ assert.match(html,/aria-label="人物分类"/);
+ for(const label of ['全部','任务','训练师','商人','旅店'])assert.match(html,new RegExp(`>${label}<\\/button>`));
+ assert.match(html,new RegExp(merchant.name));
+});
 test('NPC quest exclamation turns green at five levels below the player',()=>{
  const p=props(createGame('勇士',42,0));p.state.level=10;
  const npc={key:'test-giver',name:'任务发布者',roles:['quests'],accepts:[1],turnIns:[]};
@@ -94,4 +103,18 @@ test('inn conversation offers hearth binding and recovery only after interaction
 test('traveling locks conversation actions until arrival',()=>{
  const s=act(createGame('旅人',42,0),{type:'travel',to:'goldshire'},0),p=props(s),npc=p.data.interactions.find(n=>n.entry===823);
  const html=render(components.NpcConversation,{...p,npc});assert.match(html,/抵达并脱离战斗/);assert.match(html,/<button[^>]*disabled[^>]*>接受任务</);
+});
+
+test('quest conversation shows full localized narrative, objectives and reward quantities',()=>{
+ for(const [gender,salutation] of [['male','亲爱的先生'],['female','尊贵的女士']]){
+  const s=createGame('旅人',42,0,{gender});s.location='goldshire';s.level=4;
+  const p=props(s),quest=p.data.quests.find(q=>q.id===60);
+  assert.ok(quest);assert.ok(quest.details.includes(salutation));
+  assert.doesNotMatch(quest.details,/\$[gG]/);
+  const html=render(components.QuestConversation,{...p,quest});
+  assert.match(html,/最低接受等级 3/);
+  assert.ok(html.includes(quest.details.split('\n').filter(Boolean)[1]));
+  assert.ok(html.includes(quest.description));
+  assert.match(html,/class="quest-reward-count">×5</);
+ }
 });

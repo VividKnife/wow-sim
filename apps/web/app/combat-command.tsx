@@ -42,18 +42,20 @@ export default function CombatCommand({state:s,data:d,busy,memberId,targetId,onM
   if(!active||!view)return;
   const key=(e:KeyboardEvent)=>{
    const node=e.target as HTMLElement;
-   if(e.defaultPrevented||e.repeat||e.ctrlKey||e.metaKey||e.altKey||node.closest?.('input,textarea,[contenteditable=true],[role=combobox],[role=listbox]'))return;
+   if(e.defaultPrevented||e.repeat||e.isComposing||e.ctrlKey||e.metaKey||node.closest?.('input,textarea,[contenteditable=true],[role=combobox],[role=listbox]'))return;
+   if(e.altKey&&(!embedded||e.shiftKey||!/^Digit[1-8]$/.test(e.code)))return;
    if(embedded&&document.querySelector('[role=dialog][data-state=open]'))return;
    if(e.key==='Escape'&&pending){e.preventDefault();e.stopImmediatePropagation();onCancel();return;}
    if(/^F[1-5]$/.test(e.key)){const m=members[Number(e.key.slice(1))-1];if(m){e.preventDefault();onMemberChange(m.id);}return;}
    if(e.key==='Tab'&&!e.shiftKey&&enemies.length&&!node.closest?.('button,a,[tabindex]')){e.preventDefault();onTargetChange(enemies[(enemies.findIndex((e:any)=>e.id===targetId)+1)%enemies.length].id);return;}
+   if(embedded&&!e.shiftKey&&!e.altKey)return;
    const digit=/^Digit[1-8]$/.test(e.code)?Number(e.code.slice(5)):0,slot=(e.shiftKey?captain:slots)[digit-1];
    if(slot&&!slot.disabled){e.preventDefault();slot.run();}
   };
   window.addEventListener('keydown',key,true);return()=>window.removeEventListener('keydown',key,true);
  });
  if(!battle||!view||!member)return null;
- const button=(slot:Slot,i:number,team=false)=><button type="button" key={slot.key} className="command-slot" aria-label={`${team?'全队':member.name}：${slot.label}`} title={slot.detail} disabled={slot.disabled} aria-pressed={!!slot.pressed} onClick={slot.run} onPointerEnter={()=>setHint(slot.detail)} onFocus={()=>setHint(slot.detail)}>{i<8&&<kbd>{team?'⇧':''}{i+1}</kbd>}<span className="command-slot-icon">{slot.icon}</span>{!!slot.cooldown&&<span className="command-slot-cooldown">{slot.cooldown}</span>}<span className="command-slot-name">{slot.label}</span></button>;
+ const button=(slot:Slot,i:number,team=false)=><button type="button" key={slot.key} className="command-slot" aria-label={`${team?'全队':member.name}：${slot.label}`} title={slot.detail} disabled={slot.disabled} aria-pressed={!!slot.pressed} onClick={slot.run} onPointerEnter={()=>setHint(slot.detail)} onFocus={()=>setHint(slot.detail)}>{i<8&&<kbd>{team?'⇧':embedded?'Alt+':''}{i+1}</kbd>}<span className="command-slot-icon">{slot.icon}</span>{!!slot.cooldown&&<span className="command-slot-cooldown">{slot.cooldown}</span>}<span className="command-slot-name">{slot.label}</span></button>;
  const taskLabel=tasks.map((o:any)=>`${skills.find((x:any)=>x.spellId===o.spellId)?.name||kindNames[o.kind]} → ${enemies.find((e:any)=>e.id===o.targetId)?.name||'目标失效'}`).join(' · ');
  return <>
   <aside className="command-target-hud" aria-label="指挥目标">
@@ -65,7 +67,7 @@ export default function CombatCommand({state:s,data:d,busy,memberId,targetId,onM
    {<div className={`command-member-picker ${embedded?'command-members-mobile':''}`} aria-label="选择受令队员">{members.map((m:any)=><button key={m.id} type="button" aria-pressed={member.id===m.id} onClick={()=>onMemberChange(m.id)}><ClassIcon classId={m.classId} size={20}/>{m.name}</button>)}</div>}
    <header className="command-hotbar-heading"><div><ClassIcon classId={member.classId} size={25}/><strong>{member.name}</strong><span>{taskLabel||(mode==='aoe'?'范围输出':mode==='single'?'单体输出':'按原策略行动')}</span></div><button type="button" className="command-pause" disabled={locked} onClick={()=>request(command?.paused?'resume':'pause')}>{command?.paused?<Play size={13}/>:<Pause size={13}/>}<span>{command?.paused?'继续战斗':'战术暂停'}</span></button></header>
    <div className="command-hotbar-rows"><div className="command-personal" role="group" aria-label={`${member.name}职业快捷栏`}>{(more?slots:slots.slice(0,8)).map((slot,i)=>button(slot,i))}{slots.length>8&&<button type="button" className="command-more" aria-expanded={more} onClick={()=>setMore(!more)}>{more?'收起':'更多'}<ChevronDown size={14}/></button>}</div><div className={`command-captain ${captainOpen?'is-open':''}`}><button type="button" className="command-captain-title" aria-expanded={captainOpen} onClick={()=>setCaptainOpen(!captainOpen)}><Flag size={13}/><span>队长指挥</span></button><div className="command-captain-slots" role="group" aria-label="队长快捷栏">{captain.map((slot,i)=>button(slot,i,true))}</div></div></div>
-   <div className="command-feedback" role="status">{pending?<><span>{pending.label||'下达指令'} → 点击敌人或上方目标列表</span><button type="button" onClick={onCancel}>取消 · Esc</button></>:<span>{!canLead?'由队长发布指令':hint||(command?.paused?'战术暂停 · 时间冻结，布置完成后继续':'实时指挥 · F1–F5 选队员 · 1–8 技能 · Shift+数字 队长命令')}</span>}</div>
+   <div className="command-feedback" role="status">{pending?<><span>{pending.label||'下达指令'} → 点击敌人或上方目标列表</span><button type="button" onClick={onCancel}>取消 · Esc</button></>:<span>{!canLead?'由队长发布指令':hint||(command?.paused?'战术暂停 · 时间冻结，布置完成后继续':`实时指挥 · F1–F5 选队员 · ${embedded?'Alt+':''}1–8 技能 · Shift+数字 队长命令`)}</span>}</div>
   </section>
  </>;
 }

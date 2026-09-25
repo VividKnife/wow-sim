@@ -60,7 +60,7 @@ export function questMonsterIds(s,monsterIds){
  }));
 }
 const hasChinese=text=>/[\u3400-\u9fff]/.test(text||'');
-function questText(text,s,className,raceName){return text.replace(/^Level \d+\s*/,'').replaceAll('Requirements:','任务要求：').replaceAll('Smokywood Pastures','烟林牧场').replaceAll('Ishnu-alah','伊沙努阿拉').replaceAll('$b','\n').replaceAll('$B','\n').replaceAll('$N',s.name).replaceAll('$C',className).replaceAll('$R',raceName);}
+function questText(text,s,className,raceName){return text.replace(/\$[gG]([^:;]*):([^;]*);/g,(_,male,female)=>s.gender==='female'?female:male).replace(/^Level \d+\s*/,'').replaceAll('Requirements:','任务要求：').replaceAll('Smokywood Pastures','烟林牧场').replaceAll('Ishnu-alah','伊沙努阿拉').replaceAll('$b','\n').replaceAll('$B','\n').replaceAll('$N',s.name).replaceAll('$C',className).replaceAll('$R',raceName);}
 const questObjectName=id=>hasChinese(objectTemplates[id]?.name)?objectTemplates[id].name:'任务物件';
 const questNpcName=id=>hasChinese(nameOf('npcs',id))?nameOf('npcs',id):'任务目标';
 function questObjectiveFallback(name,objectives){return objectives.length?`完成任务目标：${objectives.map(o=>`${o.name} ×${o.required}`).join('、')}。`:`与任务人物交谈或前往任务地点，完成「${name}」。`;}

@@ -1,5 +1,6 @@
 "use client";
 import {useLowEffects} from '@/lib/use-low-effects';
+import {useBattleViewZoom} from '@/lib/use-battle-zoom';
 import {useEffect,useMemo,useRef,useState} from 'react';
 import BattleHD2D from './battle-hd2d';
 import {arenaBattleScene} from '@/lib/arena-battle-scene.js';
@@ -7,7 +8,8 @@ import {recentCombatEvents,mergeCombatEffects,unitCondition} from '@/lib/combat-
 import type {BattleScene} from '@/lib/battle-hd2d-types';
 
 export default function ArenaBattle({match}:{match:any}){
- const [selectedId,setSelectedId]=useState(match.teams[0].members[0].id),[zoom,setZoom]=useState(1);
+ const [zoom,setZoom,defaultZoom]=useBattleViewZoom(match.id);
+ const [selectedId,setSelectedId]=useState(match.teams[0].members[0].id);
  const [lowEffects,setLowEffects]=useLowEffects(),[reducedMotion,setReducedMotion]=useState(false),[effects,setEffects]=useState<any[]>([]);
  const cursor=useRef(0);
  useEffect(()=>{
@@ -27,7 +29,7 @@ export default function ArenaBattle({match}:{match:any}){
    <button type="button" aria-label="缩小竞技场视野" disabled={zoom<=.5} onClick={()=>setZoom(z=>Math.max(.5,Math.round((z-.1)*10)/10))}>−</button>
    <output>{Math.round(zoom*100)}%</output>
    <button type="button" aria-label="放大竞技场视野" disabled={zoom>=3} onClick={()=>setZoom(z=>Math.min(3,Math.round((z+.1)*10)/10))}>＋</button>
-   <button type="button" onClick={()=>setZoom(1)}>自动取景</button>
+   <button type="button" onClick={()=>setZoom(defaultZoom)}>默认取景</button>
   </div><label className="battle-effects-control"><input type="checkbox" checked={lowEffects} onChange={e=>setLowEffects(e.target.checked)}/>简化特效</label></div>
   <div className="battle-room"><BattleHD2D scene={scene} skills={match.skills||[]} onSelect={setSelectedId} active/>
    {match.phase==='countdown'&&<div className="battle-pull-countdown" role="status"><span>准备开门</span><strong>{Math.max(0,Math.ceil((3000-match.clock)/1000))}</strong></div>}

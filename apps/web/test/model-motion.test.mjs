@@ -23,3 +23,10 @@ test('duplicate snapshots and pause/resume do not restart death; resurrection an
  update({animation:'Stand',paused:false});update({animation:'Death',paused:false});
  assert.deepEqual(calls.filter(([name])=>name==='setAnimation').map(([,args])=>args[0]),['Death','Stand','Death']);
 });
+
+test('releasing a spirit switches held death to running without restarting strides on pause',()=>{
+ const calls=[],update=createMotionController({method:(...args)=>calls.push(args)});
+ for(const motion of [{animation:'Death',paused:false},{animation:'Run',paused:false},{animation:'Run',paused:true},{animation:'Run',paused:false},{animation:'Stand',paused:false}])update(motion);
+ assert.deepEqual(calls.filter(([name])=>name==='setAnimation').map(([,args])=>args[0]),['Death','Run','Stand']);
+ assert.deepEqual(calls.filter(([name])=>name==='setAnimPaused').map(([,args])=>args[0]),[false,false,true,false,false]);
+});
