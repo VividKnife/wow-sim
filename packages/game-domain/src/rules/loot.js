@@ -3,6 +3,11 @@ import {makeItem,bagCapacity,log} from './character.js';
 import {put} from './inventory.js';
 import {queueGroupLoot} from './group-loot.js';
 
+// Filter only automatic pickup; unknown items remain eligible and manual pickup is unchanged.
+export function autoLootSkips(s,item){return !!(s.settings.autoLoot&&s.settings.autoLootIgnoreGray&&items[item.id]?.Quality===0);}
+export function hasBlockingLoot(s){return s.pending.some(item=>!autoLootSkips(s,item));}
+export function collectAutoLoot(s){collectLoot(s,s.pending.filter(item=>!autoLootSkips(s,item)).map(item=>item.uid));}
+
 // Keep rolled rewards out of the inventory until the player actually loots them.
 export function queueCombatLoot(s,id,count){
  const data=items[id];if(!data)return;

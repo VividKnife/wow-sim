@@ -9,7 +9,7 @@ export const moltenCoreBosses=[
  {id:'sulfuron',entry:12098,name:'萨弗隆先驱者',subtitle:'烈焰祭司',hp:200000,low:1200,high:1550,description:'优先清理四名会治疗首领的烈焰祭司，驱散暗言术：痛。'},
  {id:'golemagg',entry:11988,name:'焚化者古雷曼格',subtitle:'熔火巨人',hp:270000,low:1400,high:1800,description:'副坦牵制两只熔岩犬，输出集中攻击首领；首领倒下后熔岩犬随之消散。'},
  {id:'majordomo',entry:12018,name:'管理者埃克索图斯',subtitle:'烈焰议会',hp:150000,low:900,high:1250,description:'前八名首领符文熄灭后现身。击败四名精英与四名医师，迫使管理者投降。'},
- {id:'ragnaros',enrageMs:240000,entry:11502,name:'拉格纳罗斯',subtitle:'炎魔之王',hp:270000,low:1450,high:1850,description:'躲避熔岩爆发，应对击退。炎魔潜入熔岩时击败六名烈焰之子，迫使其重新现身。'},
+ {id:'ragnaros',enrageMs:240000,entry:11502,name:'拉格纳罗斯',subtitle:'炎魔之王',hp:270000,low:1450,high:1850,description:'沿螺旋岩岸站位，避开熔池与熔岩爆发；击退可能将坦克推入岩浆。炎魔潜入熔岩时击败六名烈焰之子，迫使其重新现身。'},
 ].map(b=>({...b,reward:b.name+'战功'}));
 
 import {onyxiaBoss,onyxiaRoute,onyxiaMap} from './onyxia-content.js';

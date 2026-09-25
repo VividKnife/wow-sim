@@ -4,10 +4,10 @@ import {Eye,Moon} from 'lucide-react';
 import {Bar,duration,type GameProps} from './game-ui';
 import ActivityProgress from './activity-progress';
 
-type Props=GameProps&{activityLabel:string;onObserve:()=>void};
-export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,onObserve}:Props){
+type Props=GameProps&{hideTravelProgress?:boolean;activityLabel:string;onObserve:()=>void};
+export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,onObserve,hideTravelProgress=false}:Props){
  if(!s.combat)return <>
-  <ActivityProgress state={s} data={d} running/>
+  <ActivityProgress state={s} data={d} running hideTravel={hideTravelProgress}/>
   {s.hp<=0&&<div className="action-row" aria-label="复活角色">
    <Button onClick={()=>send({type:'revive'})} disabled={busy}>复活</Button>
    {d.canSoulstoneRevive&&<Button onClick={()=>send({type:'soulstoneRevive'})} disabled={busy}>灵魂石复活</Button>}
@@ -40,7 +40,7 @@ export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,
      </Button>}
     </div>
    </div>
-   <ActivityProgress state={s} data={d} running/>
+   <ActivityProgress state={s} data={d} running hideTravel={hideTravelProgress}/>
    <div className="journey-activity-meta"><span><Moon size={14}/>{s.dungeon?'副本战斗':s.activity.type==='hunt'?'野外狩猎 · 离线继续':activityLabel}</span><span>背包 {s.bag.length}/{d.bagCapacity}</span></div>
   </section>
   {s.combat&&<details className="combat-strip journey-combat-details"><summary>实时战斗详情</summary>

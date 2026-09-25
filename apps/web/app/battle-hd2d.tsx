@@ -35,7 +35,7 @@ export default function BattleHD2D({scene:input,skills,onSelect,active}:{scene:B
    {lost&&<div className="hd2d-loading" role="alert"><strong>战场画面暂时无法显示</strong><span>可继续查看队伍状态与战斗记录。</span><button onClick={retry}>恢复战场画面</button></div>}
   </div>
   <div className="hd2d-vignette"/>
-  <div className="hd2d-scene-title"><span className="hd2d-chapter">{scene.live?'LIVE ENCOUNTER':'BATTLE RECORD'}</span><strong>{theme.name}</strong><span>3D · {scene.lowEffects?'流畅':'精细'}</span></div>
-  <div className="hd2d-scene-caption"><span className="hd2d-live-dot"/>{scene.layout.area?.name||'遭遇战'}<span>选择角色查看目标与技能范围</span></div>
+  <div className="hd2d-scene-title"><span className="hd2d-chapter">{scene.paused?'TACTICAL PAUSE':scene.live?'LIVE ENCOUNTER':'BATTLE RECORD'}</span><strong>{theme.name}</strong><span>3D · {scene.lowEffects?'流畅':'精细'}</span></div>
+  <div className="hd2d-scene-caption"><span className="hd2d-live-dot"/>{scene.layout.area?.name||'遭遇战'}<span>{scene.groundEffects.some(f=>f.terrain)?'岩岸可站立 · 橙色熔岩持续伤害':'选择角色查看目标与技能范围'}</span></div>
  </div></>;
 }

@@ -7,16 +7,19 @@ function value(c,equipment){
  const st=stats({...c,equipment}),role=combatRole(c),caster=role==='healer'||role==='ranged'&&c.classId!==3;
  const weapon=items[equipment[c.classId===3?18:16]?.id];
  const dps=weapon?.class===2?((weapon.dmg_min1||0)+(weapon.dmg_max1||0))*500/Math.max(1,weapon.delay):0;
+ const offhand=items[equipment[17]?.id];
+ const offhandDps=offhand?.class===2&&c.learned?.includes(674)?((offhand.dmg_min1||0)+(offhand.dmg_max1||0))*250/Math.max(1,offhand.delay):0;
  if(role==='tank')return st.maxHp*.12+st.armor*.09+st.defense*2+(st.block||0)*200+st.attackPower*.25+dps*4;
  if(role==='healer')return st.healing*2+st.int*2+st.spi*1.4+st.maxMana*.04+st.maxHp*.025;
  if(caster)return st.spellPower*2+st.int*1.5+st.spi*.35+st.maxMana*.025+st.maxHp*.025;
- return (c.classId===3?st.rangedAttackPower:st.attackPower)*.8+st.agi*.8+dps*8+st.maxHp*.04;
+ return (c.classId===3?st.rangedAttackPower:st.attackPower)*.8+st.agi*.8+(dps+offhandDps)*8+st.maxHp*.04;
 }
 export function equipmentUpgrade(c,item){
  const data=typeof item==='number'?items[item]:item;
  if(!data||![2,4].includes(data.class)||!data.InventoryType||[4,19].includes(data.InventoryType)||!canEquip(c,data)||data.RequiredReputationFaction||data.requiredhonorrank||data.RequiredCityRank)return {need:false,reason:'不符合装备条件'};
  if([...(c.bag||[]),...(c.bank||[]),...(c.pending||[]),...(c.pendingRewards||[])].some(i=>i.id===data.entry))return {need:false,reason:'已经拥有这件装备，先领取或换装'};
  const role=combatRole(c);
+ if(c.npcPlayer&&c.classId===1&&role==='melee'&&data.InventoryType===17)return {need:false,reason:'当前输出职责使用双武器'};
  if(role==='tank'&&c.classId!==11&&(data.InventoryType===17||slotOf(data)===17&&data.InventoryType!==14))return {need:false,reason:'当前坦克职责保留盾牌'};
  const natural=slotOf(data),slots=[natural];
  if([11,13].includes(natural))slots.push(natural+1);

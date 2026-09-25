@@ -1,20 +1,38 @@
 /* eslint-disable react-hooks/immutability -- Three.js line geometry and visibility belong to the imperative render loop. */
 import {memo,useEffect,useMemo,useRef} from 'react';
+import {Html} from '@react-three/drei';
 import {useFrame} from '@react-three/fiber';
-import {BufferGeometry,Float32BufferAttribute,Group,Line as ThreeLine,LineBasicMaterial,Mesh,MeshBasicMaterial,Vector3,AdditiveBlending} from 'three';
+import {Shape,ShapeGeometry,BufferGeometry,Float32BufferAttribute,Group,Line as ThreeLine,LineBasicMaterial,Mesh,MeshBasicMaterial,Vector3,AdditiveBlending} from 'three';
 import {actionProgress,battleTarget,schoolColor} from '@/lib/combat-view.js';
 import {unitPoint,worldPoint,worldRadius,actorHeight,actorScale} from '@/lib/battle-hd2d.js';
 import type {BattleScene,BattleProjectile,BattleEffect,BattleGroundEffect} from '@/lib/battle-hd2d-types';
 import {useBattleFrame} from './frame';
 
-function GroundArea({area,scene}:{area:BattleGroundEffect;scene:BattleScene}){
- const group=useRef<Group>(null),frame=useBattleFrame();
+export function GroundArea({area,scene}:{area:BattleGroundEffect;scene:BattleScene}){
+ const group=useRef<Group>(null),fill=useRef<MeshBasicMaterial>(null),frame=useBattleFrame();
  const r=Math.max(.15,worldRadius(scene.layout,area.radius||5)),color=schoolColor(area.school);
- useFrame(()=>{if(!group.current)return;const f=frame.current;group.current.visible=area.until>f.clock;group.current.rotation.y=f.scene.reducedMotion?0:f.seconds*.18;});
- return <group ref={group} position={worldPoint(scene.layout,area.center) as [number,number,number]}>
-  <mesh rotation={[-Math.PI/2,0,0]} position={[0,.06,0]}><circleGeometry args={[r,48]}/><meshBasicMaterial color={color} transparent opacity={.1} depthWrite={false}/></mesh>
-  <mesh rotation={[-Math.PI/2,0,0]} position={[0,.065,0]}><ringGeometry args={[r*.97,r,64]}/><meshBasicMaterial color={color} transparent opacity={.8} toneMapped={false} depthWrite={false}/></mesh>
-  {Array.from({length:scene.lowEffects?5:12},(_,i)=><AreaMote key={i} index={i} radius={r} color={color} frost={area.school===4} metric={actorScale(scene.layout)}/>)}
+ const geometry=useMemo(()=>{
+  const shape=new Shape(),center=worldPoint(scene.layout,area.center);
+  if(area.points?.length){area.points.forEach((p,i)=>{const q=worldPoint(scene.layout,p);if(i===0)shape.moveTo(q[0]-center[0],center[2]-q[2]);else shape.lineTo(q[0]-center[0],center[2]-q[2]);});shape.closePath();}
+  else shape.absarc(0,0,r,0,Math.PI*2,false);
+  const surface=new ShapeGeometry(shape,48),points=shape.getPoints(64).map(p=>new Vector3(p.x,.075,-p.y));
+  points.push(points[0]);
+  const outline=new ThreeLine(new BufferGeometry().setFromPoints(points),new LineBasicMaterial({color,transparent:true,opacity:.95,depthWrite:false}));
+  return {surface,outline};
+ },[area.points,area.center,scene.layout,r,color]);
+ useEffect(()=>()=>{geometry.surface.dispose();geometry.outline.geometry.dispose();geometry.outline.material.dispose();},[geometry]);
+ useFrame(()=>{
+  if(!group.current)return;const f=frame.current,armed=f.clock>=(area.armedAt??area.startedAt??0);
+  group.current.visible=area.until>f.clock;
+  if(area.followId)group.current.position.fromArray(unitPoint(f.layout,area.followId));
+  if(fill.current)fill.current.opacity=armed?(area.terrain?.72:.38):.12+(f.scene.reducedMotion?0:Math.sin(f.seconds*5)**2*.08);
+ });
+ const warning=area.armedAt!==undefined&&scene.clock<area.armedAt;
+ return <group ref={group} name={`encounter-field-${area.id}`} position={worldPoint(scene.layout,area.center) as [number,number,number]}>
+  <mesh rotation={[-Math.PI/2,0,0]} position={[0,.06,0]} geometry={geometry.surface}><meshBasicMaterial ref={fill} color={color} transparent opacity={.2} toneMapped={false} depthWrite={false}/></mesh>
+  <primitive object={geometry.outline}/>
+  {!area.points&&!scene.lowEffects&&Array.from({length:5},(_,i)=><AreaMote key={i} index={i} radius={r} color={color} frost={area.school===4} metric={actorScale(scene.layout)}/>)}
+  {area.label&&!area.terrain&&<Html position={[0,.15,0]} center style={{pointerEvents:'none',whiteSpace:'nowrap',fontSize:11,color:'#ffe7b5',textShadow:'0 1px 3px #000',background:'#21130ec9',padding:'2px 5px',borderRadius:3}}>{area.label}{warning?` · ${Math.max(0,(area.armedAt!-scene.clock)/1000).toFixed(1)}秒`:' · 危险'}</Html>}
  </group>;
 }
 function AreaMote({index,radius,color,frost,metric}:{index:number;radius:number;color:string;frost:boolean;metric:number}){
@@ -98,8 +116,13 @@ function Boundary({scene}:{scene:BattleScene}){
  useEffect(()=>()=>{line?.geometry.dispose();line?.material.dispose();},[line]);
  return line?<primitive object={line}/>:null;
 }
+// Gameplay telegraphs are never removed by the cosmetic effect budget.
+export function visibleGroundEffects(scene:BattleScene){
+ const active=scene.groundEffects.filter(a=>a.center&&a.until>scene.clock);
+ return [...active.filter(a=>a.mechanic),...active.filter(a=>!a.mechanic).slice(0,scene.lowEffects?5:12)];
+}
 export function BattleEffects({scene}:{scene:BattleScene}){
- return <><Selection/><Boundary scene={scene}/>{scene.groundEffects.filter(a=>a.center&&a.until>scene.clock).slice(0,scene.lowEffects?5:12).map((a,i)=><GroundArea key={a.id||`${a.actorId}:${a.startedAt}:${i}`} area={a} scene={scene}/>)}
+ return <><Selection/><Boundary scene={scene}/>{visibleGroundEffects(scene).map((a,i)=><GroundArea key={a.id||`${a.actorId}:${a.startedAt}:${i}`} area={a} scene={scene}/>)}
  {scene.projectiles.slice(0,scene.lowEffects?12:32).map(p=><Projectile key={p.id} flight={p}/>)}
  {scene.effects.filter(e=>e.amount||e.kind==='miss'||e.center).slice(-(scene.lowEffects?8:20)).map(e=><Impact key={e.id} effect={e}/>)}</>;
 }

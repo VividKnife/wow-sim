@@ -113,6 +113,27 @@ test('task spells are never credited by ordinary kills',()=>{
  assert.equal(questProgress(s,q.entry)!.objectives!.find(o=>o.id===q.ReqCreatureOrGOId1)!.count,0);
 });
 
+test('outdoor monsters show a quest marker only while their kill or loot is needed',()=>{
+ const s:Rules=createGame('任务怪物',23,0);
+ const marked=(id:number)=>view(s).monsters.find((monster:any)=>monster.id===id)?.quest;
+ s.location='northwood';
+ assert.equal(marked(6),false);
+ s.quests[7]={kills:{},event:false};
+ assert.equal(marked(6),true);
+ s.quests[7].kills[6]=quests[7].ReqCreatureOrGOCount1;
+ assert.equal(marked(6),false);
+
+ delete s.quests[7];s.location='vineyard';s.quests[6]={kills:{},event:false};
+ assert.equal(marked(103),true); // Garrick drops the required head.
+ addItem(s,182,1);
+ assert.equal(marked(103),false);
+
+ delete s.quests[6];s.location='durnholde';s.quests[498]={kills:{},event:false};
+ assert.equal(marked(2427),true); // Required source item, not a turn-in item.
+ addItem(s,3467,quests[498].ReqSourceCount1);
+ assert.equal(marked(2427),false);
+});
+
 test('turning in a racial class quest grants its source-backed class abilities once',()=>{
  let s:Rules=createGame('战士任务',24,0,{raceId:1,classId:1});s.level=10;
  const q=quests[1665];s.quests[q.entry]={kills:{},event:true};

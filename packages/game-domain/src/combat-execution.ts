@@ -9,7 +9,7 @@ export function combatExecutionMode(owner: Activity | Instance, state: Rules): '
     if (owner.localSimulation) return 'local';
     // Content may declare manual control before an encounter starts. A browser
     // cannot change this flag through a command.
-    if (state.combat?.requiresManualControl) return 'realtime';
+    if (state.combat?.command || state.combat?.requiresManualControl) return 'realtime';
     if ('roster' in owner && new Set(owner.roster.filter(row => row.controller !== 'mercenary').map(row => row.accountId)).size > 1) return 'realtime';
     return 'recorded';
 }

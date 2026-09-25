@@ -1,5 +1,5 @@
 import {capitals} from '../../../game-data/world-content.js';
-import {items,nameOf} from './catalog.js';
+import {items,nameOf,quests} from './catalog.js';
 import {bagCapacity,clone,makeItem,log} from './character.js';
 import {materialIds,marketIds,priceOverrides,recipes} from './profession-data.js';
 
@@ -7,6 +7,7 @@ export const quantity=(n,max=100)=>{if(!Number.isInteger(n)||n<1||n>max)throw ne
 // A quest can request ordinary trade goods (linen, meat, oil). That does not
 // change their source item category or permanently prohibit selling/storage.
 export const protectedItem=i=>!!(i.locked||i.issued||items[i.id]?.class===12||items[i.id]?.bonding===4||i.id===6948);
+export const discardBlockedReason=(s,i)=>i.locked?'请先解锁物品':i.issued?'配发物品不能丢弃':i.id===6948?'炉石不能丢弃':Object.keys(s.quests).some(id=>quests[id]?.SrcItemId===i.id||[1,2,3,4].some(n=>quests[id]?.['ReqItemId'+n]===i.id||quests[id]?.['ReqSourceId'+n]===i.id))?'正在进行的任务需要这件物品':null;
 export const bankable=i=>!i.issued&&i.id!==6948&&items[i.id]?.class!==12&&items[i.id]?.bonding!==4;
 export const tradable=i=>!protectedItem(i)&&!i.bound&&!i.ownerId&&items[i.id]?.bonding!==1&&items[i.id]?.bonding!==4;
 export const transferBlockedReason=i=>i.locked?'请先解锁物品':i.issued?'配发物品不能转移':i.id===6948?'炉石不能转移':items[i.id]?.class===12||items[i.id]?.bonding===4?'任务物品不能转移':null;
@@ -51,7 +52,8 @@ export function auctionSell(s,uid){auctionSellBatch(s,[uid]);}
 export function settleAuctions(s){for(const a of s.auctions.filter(a=>a.endsAt<=s.clock)){s.money+=a.net;s.marketHistory.unshift({id:a.id,item:a.item.id,count:a.item.count,net:a.net,at:a.endsAt});log(s,'拍卖行已收购 '+nameOf('items',a.item.id)+' ×'+a.item.count+'，到账 '+a.net+' 铜','trade');}s.auctions=s.auctions.filter(a=>a.endsAt>s.clock);s.marketHistory=s.marketHistory.slice(0,30);}
 export function storageAction(s,a){
  if(a.type==='sortBag'){s.bag=organize(s.bag);return;}
- if(a.type==='discardJunk'){const selected=s.bag.filter(i=>items[i.id]?.Quality===0&&!protectedItem(i));if(!selected.length)throw new Error('没有可丢弃的灰色物品');const uids=new Set(selected.map(i=>i.uid)),count=selected.reduce((n,i)=>n+i.count,0);s.bag=s.bag.filter(i=>!uids.has(i.uid));log(s,'一键丢弃灰色物品，共 '+count+' 件','trade');return;}
+ if(a.type==='discardJunk'){const selected=[...s.bag,...s.pending].filter(i=>items[i.id]?.Quality===0&&!protectedItem(i));if(!selected.length)throw new Error('没有可丢弃的灰色物品');const uids=new Set(selected.map(i=>i.uid)),count=selected.reduce((n,i)=>n+i.count,0);s.bag=s.bag.filter(i=>!uids.has(i.uid));s.pending=s.pending.filter(i=>!uids.has(i.uid));log(s,'一键丢弃灰色物品，共 '+count+' 件','trade');return;}
+ if(a.type==='discardItem'){const i=s.bag.find(i=>i.uid===a.uid);if(!i)throw new Error('背包中没有这件物品');const reason=discardBlockedReason(s,i);if(reason)throw new Error(reason);s.bag=s.bag.filter(item=>item.uid!==i.uid);log(s,'丢弃 '+nameOf('items',i.id)+' ×'+i.count,'trade');return;}
  if(a.type==='lockItem'){const i=s.bag.find(i=>i.uid===a.uid)||s.bank.find(i=>i.uid===a.uid);if(!i)throw new Error('找不到这件物品');i.locked=!i.locked;return;}
  if(a.type==='auctionBuy'){buyMarket(s,a.id,a.count);return;}
  if(a.type==='auctionSell'){auctionSell(s,a.uid);return;}
@@ -66,4 +68,4 @@ export function storageAction(s,a){
  const i=source.find(i=>i.uid===a.uid);if(!i)throw new Error('找不到这件物品');const count=quantity(a.count,Math.max(1,i.count));if(!bankable(i))throw new Error('任务物品、炉石或配发装备不能存入银行');
  const moved={...i,count,uid:count===i.count?i.uid:'i'+(++s.itemSequence)};put(target,moved,capacity);i.count-=count;if(!i.count)source.splice(source.indexOf(i),1);
 }
-export const storageActions=new Set(['sortBag','discardJunk','lockItem','auctionBuy','auctionSell','auctionSellBatch','auctionSellAll','auctionCancel','sortBank','expandBank','bankDepositMaterials','bankDeposit','bankWithdraw']);
+export const storageActions=new Set(['sortBag','discardJunk','discardItem','lockItem','auctionBuy','auctionSell','auctionSellBatch','auctionSellAll','auctionCancel','sortBank','expandBank','bankDepositMaterials','bankDeposit','bankWithdraw']);

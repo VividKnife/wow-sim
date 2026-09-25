@@ -44,7 +44,7 @@ export function BattleLabels({scene,skills,onSelect}:{scene:BattleScene;skills:B
   return <div key={unit.id}>
    <Anchor id={unit.id} registry={registry}>
     <button type="button" style={{pointerEvents:'auto'}} onClick={()=>onSelect(unit.id)} aria-label={`${unit.name}，生命 ${Math.max(0,Math.ceil(unit.hp))}，${dead?'已倒下':condition||'可行动'}`} aria-pressed={selected} className={`hd2d-unit-label ${unit.foe?'enemy':'ally'} ${selected?'selected':''} ${dead?'dead':''}`} data-unit-id={unit.id}>
-     <span className="hd2d-unit-name">{unit.name}</span>
+     {unit.commandMark&&!dead&&<span className="hd2d-command-mark">{unit.commandMark}</span>}<span className="hd2d-unit-name">{unit.name}</span>
      {unit.marker&&!dead&&<small className={`hd2d-objective ${unit.marker}`}>{unit.marker==='focus'?'集火':'控场'}</small>}
      {!dead&&<><span className="hd2d-health"><i style={{width:`${Math.max(0,Math.min(100,unit.hp/Math.max(1,unit.maxHp)*100))}%`}}/></span><span className="hd2d-action"><i style={{width:`${(unit.cast?actionProgress(unit.cast.startedAt,unit.cast.until,scene.clock):unit.swing||0)*100}%`,background:unit.cast?'#a9ceec':'#c7ad71'}}/></span></>}
      {condition&&<small className="hd2d-condition">{condition}</small>}

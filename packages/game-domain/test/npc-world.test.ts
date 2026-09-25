@@ -13,6 +13,15 @@ import {localEligible} from '../src/local-simulation.ts';
 import type {Rules} from '../src/model.ts';
 
 function world(){let s:Rules=createGame('旅人',1729,0);s.level=24;s.location='deadmines';const st=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;s=act(s,{type:'npcVisit'},0);return act(s,{type:'npcRecommend'},0);}
+test('level-60 damage warriors and rogues start with two usable weapons while tanks keep shields',()=>{
+ let s:Rules=createGame('旅人',1729,0);s.level=60;s=act(s,{type:'npcVisit'},0);
+ const fighters=s.npcWorld.residents.map((p:Rules)=>p.unit).filter((c:Rules)=>[1,4].includes(c.classId));
+ for(const c of fighters){
+  assert.ok(c.equipment[16],c.name);
+  if(c.classId===1&&c.strategyPolicy.role==='tank')assert.equal(items[c.equipment[17]?.id]?.InventoryType,14,c.name);
+  else {assert.equal(items[c.equipment[17]?.id]?.class,2,c.name);assert.ok(c.learned.includes(674),c.name);assert.notEqual(items[c.equipment[16].id].InventoryType,17,c.name);}
+ }
+});
 function run(){let s=world();s=act(s,{type:'npcGroup',memberIds:[0,4,2,3].map(i=>s.npcWorld.residents[i].id)},0);return act(s,{type:'enterDungeon',contentId:'deadmines'},0);}
 async function fixture(){
  let now=100000,sequence=0;const store=new MemoryStore();const options={contentVersion:'npc-test',now:()=>now,seed:()=>1729};let service=new GameService(store,options);

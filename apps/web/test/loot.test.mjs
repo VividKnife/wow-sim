@@ -1,8 +1,10 @@
+import {items} from '../../../packages/game-domain/src/rules/catalog.js';
+import {raidLootBlocksNavigation} from '../../../packages/game-domain/src/rules/molten-core-navigation.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance} from '../../../packages/game-domain/src/rules/engine.js';
 import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
-import {queueCombatLoot,collectLoot} from '../../../packages/game-domain/src/rules/loot.js';
+import {queueCombatLoot,collectLoot,collectAutoLoot,hasBlockingLoot} from '../../../packages/game-domain/src/rules/loot.js';
 import {lootRows} from '../../../packages/game-domain/src/rules/quests.js';
 import {bagCapacity,makeItem} from '../../../packages/game-domain/src/rules/character.js';
 import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
@@ -82,4 +84,34 @@ test('automatic loot waits for resurrection and is deterministic across persiste
  const whole=advance(dead,4000).state;
  const chunk=advance(JSON.parse(JSON.stringify(advance(dead,1500).state)),4000).state;
  assert.deepEqual(chunk,whole);assert.equal(whole.pending.length,0);
+});
+
+test('automatic gray filter keeps manual loot and does not block the next hunt',()=>{
+ let s=fixture();s.settings.autoLoot=true;s.settings.autoLootIgnoreGray=true;s.activity={type:'hunt',target:299};
+ const gray=Object.values(items).find(item=>item.Quality===0&&item.stackable===1);
+ assert.ok(gray);queueCombatLoot(s,gray.entry,1);queueCombatLoot(s,2589,2);
+ const uid=s.pending.find(item=>item.id===gray.entry).uid;
+ s.combat.enemies.forEach(e=>{e.hp=0;e.rewarded=true;});
+ s=advance(s,100).state;
+ assert.ok(s.bag.some(item=>item.id===2589));assert.equal(s.bag.some(item=>item.uid===uid),false);
+ assert.equal(s.pending.some(item=>item.uid===uid),true);assert.equal(hasBlockingLoot(s),false);
+ s.nextPull=0;s=advance(s,s.wallAt+100).state;assert.ok(s.combat,'filtered gray loot must not stop automatic hunting');
+ s.combat=null;collectLoot(s,[uid]);assert.ok(s.bag.some(item=>item.uid===uid));
+});
+test('gray filtering is opt-in, validated and disabling it makes retained loot collectible',()=>{
+ let s=createGame('过滤设置',283,0);assert.equal(s.settings.autoLootIgnoreGray,false);
+ s=act(s,{type:'settings',autoLoot:true,autoLootIgnoreGray:true},0);
+ assert.equal(s.settings.autoLootIgnoreGray,true);assert.equal(s.settings.health,70);
+ assert.throws(()=>act(s,{type:'settings',autoLootIgnoreGray:'true'},0),/过滤设置/);
+ const gray=Object.values(items).find(item=>item.Quality===0&&item.stackable===1);
+ s.pending=[makeItem(s,gray.entry)];collectAutoLoot(s);assert.equal(s.pending.length,1);
+ s.settings.autoLoot=false;assert.equal(hasBlockingLoot(s),true);
+ s.settings.autoLoot=true;s.settings.autoLootIgnoreGray=false;collectAutoLoot(s);assert.equal(s.pending.length,0);
+});
+test('normal loot still blocks when bags are full, while only filtered gray loot does not block raid routes',()=>{
+ const s=createGame('过滤满包',283,0);s.settings.autoLoot=true;s.settings.autoLootIgnoreGray=true;
+ const gray=Object.values(items).find(item=>item.Quality===0&&item.stackable===1);
+ s.pending=[makeItem(s,gray.entry)];assert.equal(raidLootBlocksNavigation(s),false);
+ s.pending.push(makeItem(s,2589,1));while(s.bag.length<bagCapacity(s))s.bag.push(makeItem(s,25));
+ collectAutoLoot(s);assert.equal(s.pending.length,2);assert.equal(hasBlockingLoot(s),true);assert.equal(raidLootBlocksNavigation(s),true);
 });

@@ -1,3 +1,4 @@
+import {initializeRaidBattlefield} from './raid-battlefield.js';
 import {raidPlan,initRaidCommand} from './raid-command.js';
 import {startCombat} from './combat.js';
 import {combatRole} from './combat-roles.js';
@@ -14,8 +15,9 @@ export function beginMoltenCoreBattle(s,bossId,tactics){
  const group=addGroups[bossId];
  if(group)for(let i=0;i<group[0];i++)foes.push({...profile('mc-add-'+i,bossId==='majordomo'?(i<4?'烈焰行者精英':'烈焰行者医师'):group[1],bossId==='majordomo'?(i<4?11664:11663):group[2],group[3],330,480),raidHealer:bossId==='sulfuron'||bossId==='majordomo'&&i>=4});
  if(bossId==='majordomo')foes[0].auras.push({spell:20620,type:39,misc:127,until:s.clock+240000,positive:true});
- startCombat(s,[],true,foes,{shape:'rectangle',minX:-20,maxX:50,minY:-25,maxY:25});
- s.combat.ground='cave';
+ startCombat(s,[],true,foes,{shape:'rectangle',minX:-20,maxX:bossId==='ragnaros'?58:50,minY:-28,maxY:28});
+ s.combat.ground=bossId==='onyxia'?'onyxia':'molten';
+ s.combat.area.name=def.name+' · '+(bossId==='ragnaros'?'螺旋熔岩祭坛':bossId==='onyxia'?'龙巢':'熔火战场');
  s.combat.raidMode=s.goldRaid?.active?'gold':s.guildRaid?.active?'guild':'demo';
  const actors=[s,...s.party],plan=raidPlan(s,bossId),allTanks=actors.filter(c=>combatRole(c)==='tank'),tanks=[allTanks.find(c=>c.id===plan.mainTank),allTanks.find(c=>c.id===plan.offTank)].filter(Boolean);
  const spread=plan.formation==='spread'?6:2;
@@ -26,6 +28,7 @@ export function beginMoltenCoreBattle(s,bossId,tactics){
  for(const [i,e]of foes.entries()){e.position=30;e.positionY=i===0?0:8;e.target=tanks[i===0?0:1]?.id||s.id;e.threat[e.target]=2500;}
  if(bossId==='onyxia')for(const [i,c]of actors.entries()){c.position=c.raidMainTank?25:combatRole(c)==='melee'?30:20;c.positionY=c.raidMainTank?0:(i%2?1:-1)*(combatRole(c)==='melee'?5:16+(i%3)*3);}
  const at=s.clock;
- s.combat.raidEncounter={id:bossId,enrageAt:at+(def.enrageMs||180000),kind:node?.kind||'boss',bossId:foes[0].id,tactics:{...tactics},nextDoom:at+8000,nextCurse:at+12000,nextShock:at+5000,nextFrenzy:at+12000,nextFear:at+22000,nextBomb:at+7000,nextSpecial:at+8000,nextPulse:at+12000,nextHeal:at+7000,nextSubmerge:at+45000,deadAdds:[],bombs:[],fires:[],events:[],support:{dispels:0,tranquilizes:0,wards:0},failures:{doom:0,fire:0,feared:0}};
+ s.combat.raidEncounter={id:bossId,enrageAt:at+(def.enrageMs||180000),kind:node?.kind||'boss',bossId:foes[0].id,tactics:{...tactics},nextDoom:at+8000,nextCurse:at+12000,nextShock:at+5000,nextFrenzy:at+12000,nextFear:at+22000,nextBomb:at+7000,nextSpecial:at+8000,nextPulse:at+12000,nextHeal:at+7000,nextSubmerge:at+45000,deadAdds:[],bombs:[],fieldSequence:0,fires:[],events:[],support:{dispels:0,tranquilizes:0,wards:0},failures:{doom:0,fire:0,feared:0}};
+ initializeRaidBattlefield(s,foes[0]);
  if(s.goldRaid?.active||s.guildRaid?.active)initRaidCommand(s,bossId);
 }

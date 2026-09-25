@@ -1,3 +1,4 @@
+import {combatCommandView} from '../../../packages/game-domain/src/rules/combat-command.js';
 import {advance, view} from '../../../packages/game-domain/src/rules/engine.js';
 import {arenaView} from '../../../packages/game-domain/src/rules/arena.js';
 import {battlegroundView} from '../../../packages/game-domain/src/rules/battleground.js';
@@ -37,7 +38,7 @@ function publish(force=false) {
     if(state.arena)snapshot.view.arena=arenaView(state);
     if(state.battleground)snapshot.view.battleground=battlegroundView(state);
     if(force||!raidView||now-lastRaid>=1000){
-      lastRaid=now;raidView={};
+      lastRaid=now;raidView={combatCommand:combatCommandView(state)};
       if(state.guildRaid)raidView.guildRaid=guildRaidView(state);
       if(state.goldRaid)raidView.goldRaid=goldRaidView(state);
     }

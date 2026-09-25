@@ -1,3 +1,4 @@
+import {hasBlockingLoot} from './loot.js';
 import {selectedDungeonMembers} from './npc-world.js';
 import {dungeonDefinitions,dungeonDefinition,dungeonIdFor} from './dungeon-registry.js';
 import {dungeonRoute,dungeonEntryReason,dungeonResetReason,remainingDungeonEnemies,dungeonAdvanceReason,dungeonDestinationReason} from './dungeon.js';
@@ -42,8 +43,8 @@ export function dungeonView(s,id=dungeonIdFor(s)){
   canFullClear:!navigateReason&&active&&!dungeonDestinationReason(s,'full'),
   autoAdvance:active&&!!run.autoAdvance,advanceReason:active?run.advanceReason:'',
   rescuing:active&&!!run.autoAdvance&&!s.combat&&[s,...s.party].some(c=>c.hp<=0),
-  waitingForLoot:active&&!!run.autoAdvance&&!s.combat&&s.pending.length>0,
-  recovering:active&&!!run.autoAdvance&&!s.combat&&!s.pending.length&&s.activity.type==='idle',
+  waitingForLoot:active&&!!run.autoAdvance&&!s.combat&&hasBlockingLoot(s),
+  recovering:active&&!!run.autoAdvance&&!s.combat&&!hasBlockingLoot(s)&&s.activity.type==='idle',
   canNext:!nextReason,nextReason,canSkip:!!(free&&encounter?.optional),canLeave:free&&!s.groupLoot?.pending.length,canInteract:!interactionReason,interactionReason,
   interactionLabel:encounter?.interaction?.label||(encounter?.id==='dm-cannon'?'装填火炮':'拾取迪菲亚火药'),interactionIcon:icon('items',encounter?.interaction?.inputs?.[0]?.[0]||5397),
   current:encounter?{id:encounter.id,name:encounter.nameZh,kind:encounter.kind,optional:!!encounter.optional,interaction:!!encounter.interaction,enemies}:null,

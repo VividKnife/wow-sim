@@ -1,3 +1,4 @@
+import {commandOrder,commandProtected} from './combat-command.js';
 import {weaponAttack} from './weapon-attacks.js';
 import {spellPowerBonus} from './spell-scaling.js';
 import {beginSpellTiming,spellReady,gcdUntil} from './spell-timing.js';
@@ -100,10 +101,14 @@ function decidePriest(s,c,enemies,actors,api,rules){
 export function companionTarget(s,c,enemies){enemies=enemies.filter(e=>!e.controlledBy&&detectsTarget(c,e,s.clock));
  if(s.combat?.pvp)return enemies.find(e=>e.id===c.arenaTargetId)||enemies.find(e=>!protectCombatTarget(s,e));
  const assigned=s.combat?.raidEncounter&&enemies.find(e=>e.id===c.raidTargetId);if(assigned)return assigned;
+ const order=commandOrder(s,c),kite=order?.kind==='kite'&&enemies.find(e=>e.id===order.targetId);if(kite)return kite;
+ enemies=enemies.filter(e=>!commandProtected(s,e));
+ const unassigned=enemies.filter(e=>!s.combat?.command?.orders.some(o=>o.kind==='kite'&&o.targetId===e.id&&[s,...s.party].some(a=>a.id===o.memberId&&a.hp>0)));if(unassigned.length)enemies=unassigned;
+ const focus=enemies.find(e=>e.id===s.combat?.command?.focusId);
  const uncontrolled=enemies.filter(e=>!(e.polyUntil>s.clock));if(uncontrolled.length)enemies=uncontrolled;
  // Movement, weapon swings and abilities must agree on the rescue target.
  // Stay on a recently taunted enemy while building threat during its forced focus.
- return rescueTarget(s,c,enemies)||enemies[0];
+ return rescueTarget(s,c,enemies)||focus||enemies[0];
 }
 export function decideCompanion(s,c,enemies,actors,damage,spellLands,api,rules){
  if(c.strategyPolicy?.protectCC!==false)enemies=enemies.filter(e=>!protectCombatTarget(s,e));

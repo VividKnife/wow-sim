@@ -1,0 +1,68 @@
+{"time":0,"level":1,"location":"northshire","event":"start-or-resume","maxLevel":60}
+{"time":41198700,"level":18,"location":"deadmines","event":"dungeon","id":"deadmines","atLevel":18,"start":39187900,"end":41198700,"duration":2010800,"xp":2638,"kills":57,"deaths":1,"completed":false,"cursor":13}
+{"time":145601600,"level":26,"location":"highperch","event":"level","from":25,"to":26,"hours":40.44,"kills":1817,"quests":214}
+{"time":147669700,"level":26,"location":"stockades","event":"dungeon","id":"stockades","atLevel":26,"start":145601600,"end":147669700,"duration":2068100,"xp":394,"kills":6,"deaths":1,"completed":false,"cursor":2}
+{"time":167590100,"level":27,"location":"ravenhill-cemetery","event":"error","error":"Error: 缺少角色等级属性数据","stack":"Error: 缺少角色等级属性数据\n    at stats (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/character.js:107:29)\n    at hurtPlayer (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/combat.js:239:116)\n    at tickEnemyAuras (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/enemy-spells.js:148:52)\n    at combatTick (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/combat.js:331:103)\n    at tick (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/engine.js:76:15)\n    at advance (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/engine.js:157:41)\n    at tickTo (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:55:10)\n    at workQuest (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:232:3)\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:344:6"}
+{"time":167590100,"level":27,"location":"ravenhill-cemetery","event":"start-or-resume","maxLevel":60}
+{"time":217595200,"level":30,"location":"dragonmaw","event":"error","error":"Error: 角色已死亡，请先复活。","stack":"Error: 角色已死亡，请先复活。\n    at act (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/engine.js:196:351)\n    at command (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:48:4)\n    at workQuest (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:237:3)\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:344:6"}
+{"time":217595200,"level":30,"location":"dragonmaw","event":"start-or-resume","maxLevel":60}
+{"time":236027200,"level":31,"location":"nijels","event":"level","from":30,"to":31,"hours":65.56,"kills":2365,"quests":337}
+{"time":241298500,"level":31,"location":"thunder-axe","event":"error","error":"Error: inventory blocked while grinding","stack":"Error: inventory blocked while grinding\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:369:56"}
+{"time":241298500,"level":31,"location":"thunder-axe","event":"start-or-resume","maxLevel":60}
+{"time":241934325,"level":31,"location":"shadowprey","event":"error","error":"Error: inventory blocked at shadowprey","stack":"Error: inventory blocked at shadowprey\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:375:28"}
+{"time":241934325,"level":31,"location":"shadowprey","event":"start-or-resume","maxLevel":60}
+{"time":244524800,"level":31,"location":"shadowprey","event":"error","error":"Error: inventory blocked while grinding","stack":"Error: inventory blocked while grinding\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:399:56"}
+{"time":244524800,"level":31,"location":"shadowprey","event":"start-or-resume","maxLevel":60}
+{"time":256422700,"level":32,"location":"shadowprey","event":"level","from":31,"to":32,"hours":71.23,"kills":3021,"quests":341}
+{"time":271672100,"level":33,"location":"kodo-graveyard","event":"level","from":32,"to":33,"hours":75.46,"kills":3856,"quests":342}
+{"time":277624500,"level":33,"location":"thunder-axe","event":"start-or-resume","maxLevel":60}
+{"time":292470800,"level":34,"location":"thunder-axe","event":"level","from":33,"to":34,"hours":81.24,"kills":4640,"quests":345}
+{"time":305344500,"level":35,"location":"thunder-axe","event":"level","from":34,"to":35,"hours":84.82,"kills":5538,"quests":346}
+{"time":310733200,"level":35,"location":"scarlet-monastery-armory","event":"dungeon","id":"scarlet-monastery-armory","atLevel":35,"start":305344500,"end":310733200,"duration":5388700,"xp":6871,"kills":37,"deaths":1,"completed":false,"cursor":12}
+{"time":395049000,"level":38,"location":"thunder-axe","event":"level","from":37,"to":38,"hours":109.74,"kills":6452,"quests":423}
+{"time":408451900,"level":38,"location":"faldirs","event":"start-or-resume","maxLevel":60}
+{"time":412142100,"level":38,"location":"scarlet-monastery-armory","event":"dungeon","id":"scarlet-monastery-armory","atLevel":38,"start":408451900,"end":412142100,"duration":3690200,"xp":4506,"kills":29,"deaths":3,"completed":false,"cursor":22}
+{"time":435214500,"level":39,"location":"theramore","event":"level","from":38,"to":39,"hours":120.89,"kills":6705,"quests":451}
+{"time":460770000,"level":40,"location":"splinterspear","event":"level","from":39,"to":40,"hours":127.99,"kills":7822,"quests":459}
+{"time":485995200,"level":41,"location":"shadowprey","event":"level","from":40,"to":41,"hours":135,"kills":9080,"quests":462}
+{"time":518966100,"level":42,"location":"feathermoon","event":"level","from":41,"to":42,"hours":144.16,"kills":10243,"quests":468}
+{"time":548963600,"level":43,"location":"steamwheedle","event":"level","from":42,"to":43,"hours":152.49,"kills":11585,"quests":470}
+{"time":587229600,"level":44,"location":"gadgetzan","event":"level","from":43,"to":44,"hours":163.12,"kills":13027,"quests":471}
+{"time":588411941,"level":44,"location":"zul-farrak","event":"dungeon-error","id":"zul-farrak","error":"Error: 怪物数据不存在"}
+{"time":588411941,"level":44,"location":"zul-farrak","event":"error","error":"Error: 请先结束这场战斗。","stack":"Error: 请先结束这场战斗。\n    at idle (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/dungeon.js:15:34)\n    at leaveDungeon (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/dungeon.js:60:33)\n    at act (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/engine.js:227:22)\n    at command (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:48:4)\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:382:17"}
+{"time":588411941,"level":44,"location":"zul-farrak","event":"start-or-resume","maxLevel":60}
+{"time":595639100,"level":44,"location":"zul-farrak","event":"dungeon","id":"zul-farrak","atLevel":44,"resumed":true,"start":588411941,"end":595639100,"duration":7227159,"xp":22679,"kills":139,"deaths":0,"completed":false,"cursor":56}
+{"time":609113300,"level":44,"location":"wyrmbog","event":"start-or-resume","maxLevel":60}
+{"time":622638200,"level":45,"location":"wyrmbog","event":"level","from":44,"to":45,"hours":172.96,"kills":14263,"quests":474}
+{"time":625170266,"level":45,"location":"zul-farrak","event":"dungeon-error","id":"zul-farrak","error":"Error: 召唤目标 7787 的怪物数据不存在（法术 11904）"}
+{"time":625190266,"level":45,"location":"zul-farrak","event":"error","error":"Error: 召唤目标 7787 的怪物数据不存在（法术 11904）","stack":"Error: 召唤目标 7787 的怪物数据不存在（法术 11904）\n    at summon (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/enemy-spells.js:55:60)\n    at applySpell (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/enemy-spells.js:69:32)\n    at castEnemySpell (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/enemy-spells.js:122:62)\n    at action (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/enemy-ai.js:32:22)\n    at execute (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/enemy-ai.js:42:131)\n    at enemyAITick (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/enemy-ai.js:77:3)\n    at combatTick (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/combat.js:411:22)\n    at tick (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/engine.js:76:15)\n    at advance (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/engine.js:157:41)\n    at tickTo (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:55:10)"}
+{"time":625190266,"level":45,"location":"zul-farrak","event":"start-or-resume","maxLevel":60}
+{"time":625536200,"level":45,"location":"zul-farrak","event":"dungeon","id":"zul-farrak","atLevel":45,"resumed":true,"start":625190266,"end":625536200,"duration":345934,"xp":0,"kills":0,"deaths":3,"completed":false,"cursor":71}
+{"time":638621600,"level":45,"location":"venture-stranglethorn","event":"error","error":"Error: travel stopped before destination: rebel-camp","stack":"Error: travel stopped before destination: rebel-camp\n    at travel (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:102:54)\n    at finishQuests (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:207:2)\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:394:6"}
+{"time":638621600,"level":45,"location":"venture-stranglethorn","event":"start-or-resume","maxLevel":60}
+{"time":648772378,"level":45,"location":"daggerhills","event":"start-or-resume","maxLevel":60}
+{"time":673949800,"level":46,"location":"booty-bay","event":"level","from":45,"to":46,"hours":187.21,"kills":14485,"quests":505}
+{"time":725354000,"level":47,"location":"gadgetzan","event":"level","from":46,"to":47,"hours":201.49,"kills":15875,"quests":509}
+{"time":771036400,"level":48,"location":"northspring","event":"level","from":47,"to":48,"hours":214.18,"kills":17070,"quests":520}
+{"time":822928000,"level":49,"location":"waterspring","event":"level","from":48,"to":49,"hours":228.59,"kills":18709,"quests":521}
+{"time":827958800,"level":49,"location":"marshals-refuge","event":"start-or-resume","maxLevel":60}
+{"time":843747000,"level":49,"location":"marshals-refuge","event":"start-or-resume","maxLevel":60}
+{"time":884232000,"level":50,"location":"zul-farrak","event":"dungeon","id":"zul-farrak","atLevel":50,"resumed":false,"start":880668307,"end":884232000,"duration":3563693,"xp":7809,"kills":66,"deaths":2,"completed":true,"cursor":97}
+{"time":950019700,"level":51,"location":"writhing-haunt","event":"level","from":50,"to":51,"hours":263.89,"kills":20129,"quests":568}
+{"time":1015205000,"level":52,"location":"ungoro-east","event":"level","from":51,"to":52,"hours":282,"kills":21642,"quests":575}
+{"time":1042722700,"level":53,"location":"morgans-vigil","event":"level","from":52,"to":53,"hours":289.65,"kills":23128,"quests":582}
+{"time":1094781200,"level":53,"location":"ironforge","event":"start-or-resume","maxLevel":60}
+{"time":1103783000,"level":54,"location":"dreadmaul-rock","event":"level","from":53,"to":54,"hours":306.61,"kills":24113,"quests":600}
+{"time":1167863000,"level":55,"location":"valor-rest","event":"level","from":54,"to":55,"hours":324.41,"kills":25440,"quests":615}
+{"time":1173821800,"level":55,"location":"dire-maul-east","event":"dungeon","id":"dire-maul-east","atLevel":55,"resumed":false,"start":1167863000,"end":1173821800,"duration":5958800,"xp":13778,"kills":92,"deaths":3,"completed":false,"cursor":32}
+{"time":1234957800,"level":56,"location":"terror-run","event":"level","from":55,"to":56,"hours":343.04,"kills":27201,"quests":621}
+{"time":1249639100,"level":56,"location":"andorhal","event":"start-or-resume","maxLevel":60}
+{"time":1286471700,"level":56,"location":"andorhal","event":"error","error":"Error: inventory blocked while grinding","stack":"Error: inventory blocked while grinding\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:423:56"}
+{"time":1286471700,"level":56,"location":"andorhal","event":"start-or-resume","maxLevel":60}
+{"time":1287066200,"level":57,"location":"andorhal","event":"level","from":56,"to":57,"hours":357.52,"kills":29231,"quests":622}
+{"time":1337519000,"level":58,"location":"frostsaber-rock","event":"level","from":57,"to":58,"hours":371.53,"kills":30660,"quests":634}
+{"time":1344725100,"level":58,"location":"dire-maul-east","event":"dungeon","id":"dire-maul-east","atLevel":58,"resumed":false,"start":1337519000,"end":1344725100,"duration":7206100,"xp":18128,"kills":134,"deaths":0,"completed":false,"cursor":78}
+{"time":1377673500,"level":58,"location":"dreadmaul-rock","event":"start-or-resume","maxLevel":60}
+{"time":1416909800,"level":59,"location":"dire-maul-east","event":"dungeon","id":"dire-maul-east","atLevel":59,"resumed":false,"start":1411044259,"end":1416909800,"duration":5865541,"xp":10441,"kills":71,"deaths":0,"completed":true,"cursor":103}
+{"time":1477635000,"level":60,"location":"andorhal","event":"level","from":59,"to":60,"hours":410.45,"kills":32639,"quests":668}
+{"time":1477635000,"level":60,"location":"andorhal","event":"complete"}

@@ -5,8 +5,45 @@
 
 .atlas-pin{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;display:grid;place-items:center;background:#212c2a;border:2px solid #78816c;border-radius:50%;color:#e1dece;cursor:pointer;padding:0;z-index:2;font-size:12px;box-shadow:0 2px 8px #0008}.atlas-pin:hover,.atlas-pin:focus-visible,.atlas-pin.is-selected{outline:3px solid var(--atlas-gold);outline-offset:4px;z-index:5}.atlas-pin.is-boss{width:34px;height:34px;border-color:#b99358;background:#44312b;color:#f1d69f;font-size:23px}.atlas-pin.status-cleared{border-color:#688a69;color:#a9d3aa;background:#243b31}.atlas-pin.status-absent,.atlas-pin.status-skipped{border-style:dashed;color:#a0a399;background:#303634}.atlas-pin.is-player{box-shadow:0 0 0 5px var(--atlas-player),0 0 20px #4ac8dc88}.atlas-pin.is-target .atlas-pin-symbol{color:#fff4bc}.atlas-pin-name{position:absolute;top:calc(100% + 5px);font-size:11px;line-height:1.4;width:max-content;max-width:100px;background:#141c1eee;border:1px solid #5c5743;border-radius:4px;padding:2px 5px;color:#f0d8a5;pointer-events:none}.atlas-pin-name,.atlas-player-label{white-space:normal}.atlas-player-label{position:absolute;bottom:calc(100% + 4px);font-size:10px;color:var(--atlas-player);background:#152124;padding:1px 5px;border-radius:4px;white-space:nowrap}.atlas-quest{position:absolute;top:-12px;right:-9px;width:20px;height:23px;display:grid;place-items:center;background:#e8c455;color:#242013;border-radius:5px;font-size:17px}.atlas-entrance{position:absolute;transform:translate(-50%,-50%);font-size:11px;color:#d7cfb7;background:#1e2926;padding:2px 6px;z-index:1}.quest-color{color:#e8c455}.atlas-legend{font-size:11px;gap:8px 20px}.atlas-actions{flex-wrap:wrap}.atlas-hint{font-size:13px;margin:18px 0 0;color:var(--muted)}
 .atlas-selection{border-top:1px solid var(--line);margin-top:24px;padding-top:24px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:26px}.atlas-destination p{font-size:13px;line-height:1.8}.atlas-destination h3{margin-top:6px}.atlas-destination>.section-heading{align-items:flex-start;gap:12px}.atlas-destination>button{margin:12px 0;min-height:44px}.atlas-destination details{margin-top:20px;font-size:12px}.atlas-waypoints{max-height:240px;overflow:auto;padding-left:24px;line-height:2}.atlas-quests{list-style:none;padding:0;font-size:12px;display:grid;gap:12px;margin:20px 0}.atlas-quests strong{display:block;color:#e8c455}.atlas-quests span{display:block;margin-top:5px;color:var(--muted)}.atlas-loot{min-width:0;max-height:640px;overflow:auto;padding:0 8px}.atlas-loot>div+div{border-top:1px solid var(--line);margin-top:20px;padding-top:20px}.atlas-loot h3{margin:8px 0}.atlas-loot p{font-size:12px;line-height:1.7}.atlas-loot .journal-loot-list{grid-template-columns:1fr}.atlas-loot .journal-loot-toolbar{flex-wrap:wrap}.atlas-loot .journal-search{min-width:0;width:100%}
-@media(max-width:760px){.atlas-selection{grid-template-columns:1fr}.atlas-loot{max-height:none;padding:0}.dungeon-atlas>.section-heading{gap:10px}.dungeon-atlas h2{font-size:20px}.dungeon-map-canvas{min-width:1200px}.atlas-pin.is-boss{width:38px;height:38px}.atlas-actions button{min-height:44px}.dungeon-map-status{display:grid;gap:8px}}
+@media(max-width:760px){.atlas-selection{grid-template-columns:1fr}.atlas-loot{max-height:none;padding:0}.dungeon-atlas>.section-heading{gap:10px}.dungeon-atlas h2{font-size:20px}.atlas-pin.is-boss{width:38px;height:38px}.atlas-actions button{min-height:44px}.dungeon-map-status{display:grid;gap:8px}}
 
 .atlas-entrance.is-player{color:var(--atlas-player);outline:2px solid var(--atlas-player);outline-offset:3px}
 
 .atlas-floor-controls{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.atlas-floor-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px}.atlas-floor-heading h3{font-size:14px;color:var(--atlas-gold)}.atlas-floor-heading small{font-size:11px;color:var(--muted)}.atlas-floor .dungeon-map-scroll{margin-top:10px}.atlas-pin:before{content:"";position:absolute;inset:-5px;border-radius:50%}.atlas-pin.is-boss{z-index:3}.atlas-quest{width:14px;height:18px;right:-7px;top:-10px;font-size:13px}.atlas-pin-name{font-size:10px;max-width:95px}.atlas-pin.is-selected{z-index:6}
+
+.atlas-title{margin-bottom:8px}.atlas-run-state{font-size:12px;color:var(--muted);white-space:nowrap}
+.atlas-floor-controls>[data-game-select]{flex:1;max-width:400px}.atlas-floor-controls>button{flex-shrink:0}
+.atlas-node-picker>[data-game-select]{width:100%}.atlas-help{margin-top:8px;font-size:12px;color:var(--muted)}.atlas-help>summary{display:flex;align-items:center;gap:6px;width:fit-content}.atlas-help>summary:before{content:'▸';color:var(--atlas-gold)}.atlas-help[open]>summary:before{content:'▾'}.atlas-help .footnote{margin:0}.atlas-help .atlas-legend{margin:8px 0}
+.atlas-selection{scroll-margin-top:8px}.atlas-selection:focus{outline:none}.atlas-floor-controls:focus{outline:none}
+@media(max-width:760px){
+ .dungeon-atlas.panel{padding:0;border:0;background:none}
+ .dungeon-atlas .atlas-title{display:flex;flex-wrap:nowrap;align-items:center;margin-bottom:6px}
+ .dungeon-atlas .atlas-title h2{font-size:17px;overflow-wrap:anywhere}
+ .dungeon-map-status{display:flex;gap:4px 14px;margin:0 0 8px;font-size:11px;line-height:1.6;overflow-wrap:anywhere}
+ .atlas-floor-controls{flex-wrap:nowrap;gap:6px;margin:8px 0}
+ .atlas-floor-controls>[data-game-select]{max-width:none;width:0;min-height:44px;padding:7px 8px}
+ .atlas-floor-controls>button[data-slot]{min-height:44px;padding:0 9px;font-size:12px}
+ .atlas-floor-heading{margin:10px 0 4px}.atlas-floor-heading.is-single-floor{display:none}
+ .atlas-floor .dungeon-map-scroll{margin:0 0 8px;border-radius:3px;max-height:48dvh;overscroll-behavior:contain}
+ .dungeon-map-canvas{min-width:0}.dungeon-map-canvas.is-zoomed{min-width:1002px}
+ .dungeon-map-canvas:not(.is-zoomed) .atlas-pin{width:15px;height:15px;border-width:1px;font-size:8px;box-shadow:none}
+ .dungeon-map-canvas:not(.is-zoomed) .atlas-pin.is-boss{width:25px;height:25px;font-size:17px}
+ .dungeon-map-canvas:not(.is-zoomed) .atlas-pin.is-player{box-shadow:0 0 0 3px var(--atlas-player);z-index:4}
+ .dungeon-map-canvas:not(.is-zoomed) .atlas-pin-name{display:none}
+ .dungeon-map-canvas:not(.is-zoomed) .atlas-quest{width:10px;height:13px;font-size:10px;right:-5px;top:-7px}
+ .atlas-pin.is-boss{width:34px;height:34px}
+ .atlas-node-picker>[data-game-select]{min-height:44px}
+ .atlas-actions{gap:8px;margin:8px 0}.atlas-actions button{flex:1;white-space:normal}
+ .atlas-selection{margin-top:12px;padding-top:12px;gap:14px}
+ .atlas-destination>.section-heading{flex-wrap:nowrap;align-items:center}
+ .atlas-destination>.section-heading h3{overflow-wrap:anywhere;margin:0;font-size:15px}
+ .atlas-destination>.section-heading button{flex-shrink:0;min-height:44px}
+ .atlas-destination>button{width:100%;margin:8px 0}
+ .atlas-destination p{font-size:12px;line-height:1.7}
+ .atlas-destination details{margin-top:10px}.atlas-hint{margin-top:8px;font-size:12px}
+}
+@media(max-width:760px){
+ /* A selected encounter becomes a focused detail view; Back restores the same map. */
+ .dungeon-atlas.has-selection>.atlas-floor-controls,.dungeon-atlas.has-selection>.atlas-floor,.dungeon-atlas.has-selection>.atlas-node-picker,.dungeon-atlas.has-selection>.atlas-help,.dungeon-atlas.has-selection>.atlas-actions,.dungeon-atlas.has-selection>.footnote{display:none}
+ .dungeon-atlas.has-selection>.atlas-selection{margin-top:8px;padding-top:8px}
+}

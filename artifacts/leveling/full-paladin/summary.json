@@ -1,0 +1,300 @@
+{
+  "character": {
+    "name": "长程探针",
+    "raceId": 1,
+    "classId": 2,
+    "seed": 20260924,
+    "xpRate": 1
+  },
+  "result": {
+    "level": 60,
+    "hours": 410.45,
+    "totalXp": 4084735,
+    "questTurnIns": 668,
+    "questXp": 1477317,
+    "questXpPercent": 36.17,
+    "recordedDungeonXp": 87244,
+    "recordedDungeonXpPercent": 2.14,
+    "kills": 32639,
+    "deaths": 22,
+    "commands": 35124,
+    "blockedQuestIds": 198,
+    "companionReplacements": 14
+  },
+  "levelTimesHours": {
+    "1": 0,
+    "2": 0.02,
+    "3": 0.07,
+    "4": 0.15,
+    "5": 0.29,
+    "6": 0.44,
+    "7": 0.64,
+    "8": 0.94,
+    "9": 1.43,
+    "10": 1.97,
+    "11": 2.5,
+    "12": 3.31,
+    "13": 4.11,
+    "14": 5.02,
+    "15": 6.27,
+    "16": 7.63,
+    "17": 9.13,
+    "18": 10.88,
+    "19": 13.19,
+    "20": 15.9,
+    "21": 19.21,
+    "22": 22.05,
+    "23": 24.65,
+    "24": 30.35,
+    "25": 35.05,
+    "26": 40.44,
+    "27": 44.13,
+    "28": 46.96,
+    "29": 53.14,
+    "30": 58.99,
+    "31": 65.56,
+    "32": 71.23,
+    "33": 75.46,
+    "34": 81.24,
+    "35": 84.82,
+    "36": 93.23,
+    "37": 100.18,
+    "38": 109.74,
+    "39": 120.89,
+    "40": 127.99,
+    "41": 135,
+    "42": 144.16,
+    "43": 152.49,
+    "44": 163.12,
+    "45": 172.96,
+    "46": 187.21,
+    "47": 201.49,
+    "48": 214.18,
+    "49": 228.59,
+    "50": 244.63,
+    "51": 263.89,
+    "52": 282,
+    "53": 289.65,
+    "54": 306.61,
+    "55": 324.41,
+    "56": 343.04,
+    "57": 357.52,
+    "58": 371.53,
+    "59": 391.96,
+    "60": 410.45
+  },
+  "stages": [
+    {
+      "from": 1,
+      "to": 20,
+      "hours": 15.9
+    },
+    {
+      "from": 20,
+      "to": 30,
+      "hours": 43.1
+    },
+    {
+      "from": 30,
+      "to": 40,
+      "hours": 69
+    },
+    {
+      "from": 40,
+      "to": 50,
+      "hours": 116.64
+    },
+    {
+      "from": 50,
+      "to": 60,
+      "hours": 165.82
+    }
+  ],
+  "dungeons": [
+    {
+      "id": "deadmines",
+      "attempts": 1,
+      "hours": 0.56,
+      "recordedXp": 2638,
+      "deaths": 1,
+      "completed": false,
+      "lastCursor": 13
+    },
+    {
+      "id": "stockades",
+      "attempts": 1,
+      "hours": 0.57,
+      "recordedXp": 394,
+      "deaths": 1,
+      "completed": false,
+      "lastCursor": 2
+    },
+    {
+      "id": "scarlet-monastery-armory",
+      "attempts": 2,
+      "hours": 2.52,
+      "recordedXp": 11377,
+      "deaths": 4,
+      "completed": false,
+      "lastCursor": 22
+    },
+    {
+      "id": "zul-farrak",
+      "attempts": 5,
+      "hours": 4.13,
+      "recordedXp": 30488,
+      "deaths": 5,
+      "completed": true,
+      "lastCursor": 97
+    },
+    {
+      "id": "dire-maul-east",
+      "attempts": 3,
+      "hours": 5.29,
+      "recordedXp": 42347,
+      "deaths": 3,
+      "completed": true,
+      "lastCursor": 103
+    }
+  ],
+  "attempts": [
+    {
+      "id": "deadmines",
+      "atLevel": 18,
+      "start": 39187900,
+      "end": 41198700,
+      "duration": 2010800,
+      "xp": 2638,
+      "kills": 57,
+      "deaths": 1,
+      "completed": false,
+      "cursor": 13
+    },
+    {
+      "id": "stockades",
+      "atLevel": 26,
+      "start": 145601600,
+      "end": 147669700,
+      "duration": 2068100,
+      "xp": 394,
+      "kills": 6,
+      "deaths": 1,
+      "completed": false,
+      "cursor": 2
+    },
+    {
+      "id": "scarlet-monastery-armory",
+      "atLevel": 35,
+      "start": 305344500,
+      "end": 310733200,
+      "duration": 5388700,
+      "xp": 6871,
+      "kills": 37,
+      "deaths": 1,
+      "completed": false,
+      "cursor": 12
+    },
+    {
+      "id": "scarlet-monastery-armory",
+      "atLevel": 38,
+      "start": 408451900,
+      "end": 412142100,
+      "duration": 3690200,
+      "xp": 4506,
+      "kills": 29,
+      "deaths": 3,
+      "completed": false,
+      "cursor": 22
+    },
+    {
+      "id": "zul-farrak",
+      "atLevel": 44,
+      "error": "Error: 怪物数据不存在",
+      "duration": 1182341
+    },
+    {
+      "id": "zul-farrak",
+      "atLevel": 44,
+      "resumed": true,
+      "start": 588411941,
+      "end": 595639100,
+      "duration": 7227159,
+      "xp": 22679,
+      "kills": 139,
+      "deaths": 0,
+      "completed": false,
+      "cursor": 56
+    },
+    {
+      "id": "zul-farrak",
+      "atLevel": 45,
+      "error": "Error: 召唤目标 7787 的怪物数据不存在（法术 11904）",
+      "duration": 2532066
+    },
+    {
+      "id": "zul-farrak",
+      "atLevel": 45,
+      "resumed": true,
+      "start": 625190266,
+      "end": 625536200,
+      "duration": 345934,
+      "xp": 0,
+      "kills": 0,
+      "deaths": 3,
+      "completed": false,
+      "cursor": 71
+    },
+    {
+      "id": "zul-farrak",
+      "atLevel": 50,
+      "resumed": false,
+      "start": 880668307,
+      "end": 884232000,
+      "duration": 3563693,
+      "xp": 7809,
+      "kills": 66,
+      "deaths": 2,
+      "completed": true,
+      "cursor": 97
+    },
+    {
+      "id": "dire-maul-east",
+      "atLevel": 55,
+      "resumed": false,
+      "start": 1167863000,
+      "end": 1173821800,
+      "duration": 5958800,
+      "xp": 13778,
+      "kills": 92,
+      "deaths": 3,
+      "completed": false,
+      "cursor": 32
+    },
+    {
+      "id": "dire-maul-east",
+      "atLevel": 58,
+      "resumed": false,
+      "start": 1337519000,
+      "end": 1344725100,
+      "duration": 7206100,
+      "xp": 18128,
+      "kills": 134,
+      "deaths": 0,
+      "completed": false,
+      "cursor": 78
+    },
+    {
+      "id": "dire-maul-east",
+      "atLevel": 59,
+      "resumed": false,
+      "start": 1411044259,
+      "end": 1416909800,
+      "duration": 5865541,
+      "xp": 10441,
+      "kills": 71,
+      "deaths": 0,
+      "completed": true,
+      "cursor": 103
+    }
+  ]
+}

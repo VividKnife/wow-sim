@@ -150,8 +150,9 @@ function validateCheckpoint(previous:Rules, next:Rules, until:number) {
     requireThat(next && typeof next === 'object' && !Array.isArray(next), 'LOCAL_STATE', '检查点状态无效', 400);
     requireThat(next.id === previous.id && Array.isArray(next.party) && next.party.length === previous.party.length &&
         next.party.every((p:Rules,i:number) => p?.id === previous.party[i].id), 'LOCAL_ROSTER', '检查点参战者不一致', 400);
+    requireThat([next,...next.party].every((actor:Rules,i:number) => JSON.stringify(actor.serverBuffs || []) === JSON.stringify([previous,...previous.party][i].serverBuffs || [])), 'LOCAL_STATE', '经验增益由服务器配置，请重新同步', 400);
     requireThat(Number.isSafeInteger(next.wallAt) && next.wallAt >= previous.wallAt && next.wallAt <= until &&
-        Number.isSafeInteger(next.clock) && next.clock-previous.clock === next.wallAt-previous.wallAt, 'LOCAL_TIME', '检查点时间无效，请重新同步');
+        Number.isSafeInteger(next.clock) && next.clock>=previous.clock && Number.isSafeInteger(next.commandPausedMs||0) && (next.commandPausedMs||0)>=(previous.commandPausedMs||0) && next.clock-previous.clock+(next.commandPausedMs||0)-(previous.commandPausedMs||0) === next.wallAt-previous.wallAt, 'LOCAL_TIME', '检查点时间无效，请重新同步');
     requireThat(Number.isInteger(next.rngState) && next.rngState > 0 && next.rngState <= 0xffffffff &&
         Number.isFinite(next.nextTick) && next.nextTick > next.clock && Number.isFinite(next.nextRegen) &&
         next.activity && typeof next.activity.type === 'string' && Array.isArray(next.logs) &&

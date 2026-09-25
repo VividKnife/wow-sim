@@ -1,3 +1,4 @@
+import {experienceMultiplier, applyExperienceBuff} from './rules/experience.js';
 import {localSimulation, localManifest, guardLocalCommand, resetLocalSession} from './local-simulation.ts';
 import {advancePersonal, advanceInstance} from './background-simulation.ts';
 import {talentSummary} from './rules/talent-summary.js';
@@ -31,6 +32,7 @@ type Options = {
     id?: () => string;
     seed?: () => number;
     offlineLimitMs?: number;
+    xpMultiplier?: number;
 };
 export class GameService {
     localSimulation = localSimulation;
@@ -46,11 +48,12 @@ export class GameService {
     id: () => string;
     seed: () => number;
     offlineLimitMs: number;
+    readonly xpMultiplier: number;
     recordPresence = recordPresence;
     refreshPresence = refreshPresence;
     activityDeadline = activityDeadline;
     instanceDeadline = instanceDeadline;
-    constructor(store: Store, options: Options) { this.offlineLimitMs = offlineLimit(options.offlineLimitMs); this.store = store; this.contentVersion = options.contentVersion; this.now = options.now || Date.now; this.id = options.id || randomUUID; this.seed = options.seed || (() => randomBytes(4).readUInt32LE(0) || 1); }
+    constructor(store: Store, options: Options) { this.xpMultiplier = experienceMultiplier(options.xpMultiplier); this.offlineLimitMs = offlineLimit(options.offlineLimitMs); this.store = store; this.contentVersion = options.contentVersion; this.now = options.now || Date.now; this.id = options.id || randomUUID; this.seed = options.seed || (() => randomBytes(4).readUInt32LE(0) || 1); }
     async createAccount(accountId: string, input: {
         name: string;
         classId: number;
@@ -138,6 +141,8 @@ export class GameService {
         let s = await context(tx, c, now);
         const ownLease = await tx.get<ActorLease>('actor_leases', c.id);
         const activity = ownLease?.kind === 'activity' ? await tx.get<Activity>('activities', ownLease.ownerId) : null;
+        const xpRate = activity?.xpMultiplier ?? this.xpMultiplier;
+        applyExperienceBuff(s, xpRate);
         const a = await account(tx, c.accountId), p = await tx.get<Party>('parties', a.partyId);
         const participants = activity?.type === 'personal' ? activity.participantIds || [activity.actorId] : !ownLease && p?.characterIds.includes(c.id) ? p.characterIds : [];
         if (settleFree && !ownLease) {
@@ -154,7 +159,7 @@ export class GameService {
             else if (lease)
                 continue;
             const other = await owned(tx, c.accountId, id);
-            let member = await context(tx, other, now, false);
+            let member = applyExperienceBuff(await context(tx, other, now, false), xpRate);
             if (!activity && member.location !== s.location)
                 continue;
             if (settleFree && !ownLease) {
@@ -473,7 +478,7 @@ export class GameService {
             return;
         }
         if (!a || a.status !== 'running') {
-            a = { id: this.id(), accountId: c.accountId, actorId: c.id, type: 'personal', status: 'running', location: s.location, startedAt: now, settledUntil: now, nextEventAt: now + 1000, contentVersion: this.contentVersion, rngState: s.rngState, engineActivity: clone(s.activity), participantIds: [c.id, ...s.party.map((p: Rules) => p.id)] };
+            a = { id: this.id(), accountId: c.accountId, actorId: c.id, type: 'personal', xpMultiplier: this.xpMultiplier, status: 'running', location: s.location, startedAt: now, settledUntil: now, nextEventAt: now + 1000, contentVersion: this.contentVersion, rngState: s.rngState, engineActivity: clone(s.activity), participantIds: [c.id, ...s.party.map((p: Rules) => p.id)] };
             for (const id of a.participantIds!) {
                 await this.lock(tx, await owned(tx, c.accountId, id), 'activity', a.id);
             }

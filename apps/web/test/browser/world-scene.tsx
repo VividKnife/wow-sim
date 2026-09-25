@@ -56,7 +56,7 @@ function Demo(){
    <Button variant="outline" disabled={!s} onClick={()=>command('region')}>切换地区</Button>
    <Button variant="outline" aria-pressed={mobile} onClick={()=>setMobile(value=>!value)}>{mobile?'桌面布局':'手机布局'}</Button>
   </nav>
-  <p style={{fontSize:11,color:'#a9b29e'}}>探索外观：Wowhead Classic · 地区背景：地图风格示意 · 练习战斗自动补充生命与法力，使用现有职业外观</p>
+  <p style={{fontSize:11,color:'#a9b29e'}}>探索外观：Wowhead Classic · 地区背景：本地游戏截图与循环运动 · 练习战斗自动补充生命与法力，使用现有职业外观</p>
   <PerformanceReadout/>
   {error&&<p role="alert">{error}</p>}
   {s&&data?<><div style={{maxWidth:mobile?390:undefined,margin:'auto'}}><World state={s} data={data} busy={false} send={send} sceneActive={!open} onObserve={()=>setOpen(true)}/></div>{open&&<Battle state={s} data={data} busy={false} send={send} open={open} onOpenChange={setOpen}/>}</>:<p role="status">正在准备旅途…</p>}

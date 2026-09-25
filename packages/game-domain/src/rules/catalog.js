@@ -25,6 +25,10 @@ import world from '../../../game-data/data/world-reference.json' with {type:'jso
 import dungeonSpellAssets from '../../../game-data/data/dungeon-spell-assets.json' with {type:'json'};
 import dungeonScripts from '../../../game-data/data/dungeon-script-reference.json' with {type:'json'};
 import worldLocalization from '../../../game-data/data/world-localization.json' with {type:'json'};
+import questSupplement from '../../../game-data/data/quest-localization-supplement.json' with {type:'json'};
+import questTooltip from '../../../game-data/data/quest-tooltip-localization.json' with {type:'json'};
+import itemSupplement from '../../../game-data/data/item-localization-supplement.json' with {type:'json'};
+import itemFlavor from '../../../game-data/data/item-flavor-localization.json' with {type:'json'};
 import {worldNodes,worldRoads,worldTransports,worldDungeons,worldFlightNodes,capitals} from '../../../game-data/world-content.js';
 import {questCreaturePlacements,questObjectPlacements} from '../../../game-data/world-quest-content.js';
 
@@ -82,8 +86,26 @@ export const startingItems=classStartingItems['1:8'];
 export const lookup=Object.fromEntries(Object.entries(clientRules.lookupTables).map(([k,rows])=>[k,Object.fromEntries(rows.map(r=>[r.id,r]))]));
 export const itemSets=moltenCoreLoot.sets;
 export const raidItemAssets=moltenCoreLoot.assets;
-export const localize=(kind,id)=>(kind==='items'?moltenCoreLoot.assets[id]:undefined)||(kind==='items'?stockadesAssets.items[id]:undefined)||stockades.localization?.[kind]?.[id]||localization[kind]?.[id]||(kind==='items'?journeyAssets.items[id]:undefined)||worldLocalization[kind]?.[id];
-export function nameOf(kind,id){return localize(kind,id)?.nameZhCN||(kind==='items'?professionNames[id]||utilityItemNames[id]||items[id]?.name:kind==='spells'?dungeonSpellAssets.spells[id]?.nameZhCN||classReference.translations?.spellNamesByEnglish?.[spells[id]?.SpellName]||talentsBySpell[id]?.nameZhCN||spells[id]?.SpellName:kind==='quests'?quests[id]?.Title:creatures[id]?.Name)||String(id);}
+const localizedCache=new Map();
+export function localize(kind,id){
+ const key=`${kind}:${id}`;
+ if(localizedCache.has(key))return localizedCache.get(key);
+ const sources=[kind==='quests'?questSupplement.quests[id]:kind==='items'?itemSupplement.items[id]:undefined,kind==='quests'?questTooltip.quests[id]:undefined,worldLocalization[kind]?.[id],kind==='items'?itemFlavor.items[id]:undefined,kind==='items'?journeyAssets.items[id]:undefined,localization[kind]?.[id],stockades.localization?.[kind]?.[id],kind==='items'?stockadesAssets.items[id]:undefined,kind==='items'?moltenCoreLoot.assets[id]:undefined];
+ const merged=Object.assign({},...sources.filter(Boolean).map(source=>Object.fromEntries(Object.entries(source).filter(([field,value])=>value!==null&&value!==undefined&&value!==''&&(!field.endsWith('ZhCN')||typeof value!=='string'||/[\u3400-\u9fff]/.test(value))))));
+ const result=Object.keys(merged).length?merged:undefined;
+ localizedCache.set(key,result);
+ return result;
+}
+const questNpcNames={4073:'伐木机 XT:4',4074:'伐木机 XT:9',9623:'机器人 A-Me 01',15221:'弗兰卡尔的踪迹',15222:'鲁特加的踪迹'};
+export function nameOf(kind,id){
+ const localized=(kind==='npcs'?questNpcNames[id]:undefined)||localize(kind,id)?.nameZhCN;
+ if(localized)return localized;
+ if(kind==='items'){
+  const raw=professionNames[id]||utilityItemNames[id]||items[id]?.name;
+  return /[\u3400-\u9fff]/.test(raw||'')?raw:`物品 ${id}`;
+ }
+ return(kind==='spells'?dungeonSpellAssets.spells[id]?.nameZhCN||classReference.translations?.spellNamesByEnglish?.[spells[id]?.SpellName]||talentsBySpell[id]?.nameZhCN||spells[id]?.SpellName:kind==='quests'?quests[id]?.Title:creatures[id]?.Name)||String(id);
+}
 export const quests=index('quest_template','entry');
 export const questLinks={...world.questLinks,...source.links.quests,...stockades.questLinks};
 export const xpTable=index('player_xp_for_level','lvl');

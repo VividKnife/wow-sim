@@ -23,20 +23,30 @@ const note=(p,text)=>{p.history.unshift({sequence:++p.events,text});p.history=p.
 const startingLoadouts=new Map();
 function initialEquipment(c,index){
  const key=`${c.classId}:${c.raceId}:${c.level}:${combatRole(c)}`;
+ const dualWield=c.learned.includes(674)&&(c.classId===4||c.classId===1&&combatRole(c)==='melee');
  if(!startingLoadouts.has(key)){
-  const naked={...c,equipment:{}},bySlot={};
+  const naked={...c,equipment:{}},bySlot={},offhand=[];
   for(const item of Object.values(items)){
    if(![2,3].includes(item.Quality)||item.ItemLevel>c.level+3||item.ItemLevel<Math.max(10,c.level-8)||item.companionKit||item.raidReward||item.RequiredSkill||item.startquest||!canEquip(c,item))continue;
+   if(dualWield&&item.InventoryType===17)continue;
    const plan=equipmentUpgrade(naked,item);if(!plan.need)continue;
    const slot=slotOf(item);(bySlot[slot]??=[]).push({id:item.entry,value:plan.improvement});
+   if(dualWield&&item.class===2&&[13,22].includes(item.InventoryType))offhand.push({id:item.entry,value:plan.improvement});
   }
-  startingLoadouts.set(key,Object.entries(bySlot).map(([slot,pool])=>({slot:Number(slot),ids:pool.sort((a,b)=>b.value-a.value||a.id-b.id).slice(0,5).map(x=>x.id)})).sort((a,b)=>a.slot-b.slot));
+  const pools=Object.entries(bySlot).map(([slot,pool])=>({slot:Number(slot),ids:pool.sort((a,b)=>b.value-a.value||a.id-b.id).slice(0,5).map(x=>x.id)})).sort((a,b)=>a.slot-b.slot);
+  if(offhand.length)pools.push({slot:17,ids:offhand.sort((a,b)=>b.value-a.value||a.id-b.id).slice(0,5).map(x=>x.id)});
+  startingLoadouts.set(key,pools);
  }
  c.equipment={};const random={rngState:seedOf(c.id)};
  for(const pool of startingLoadouts.get(key)){
   const ids=[...pool.ids],offset=Math.floor(rng(random)*ids.length);
   for(let i=0;i<ids.length;i++){
    const id=ids[(offset+i)%ids.length],plan=equipmentUpgrade(c,items[id]);
+   if(pool.slot===17){
+    if(!c.equipment[16]||items[c.equipment[16].id].InventoryType===17||items[id].maxcount>0&&Object.values(c.equipment).filter(e=>e.id===id).length>=items[id].maxcount)continue;
+    c.equipment[17]={id,uid:`${c.id}:initial:17`,count:1,durability:items[id].MaxDurability,bound:true,ownerId:c.id};
+    break;
+   }
    if(!plan.need)continue;
    equipNpcItem(c,{id,uid:`${c.id}:initial:${pool.slot}`,count:1,durability:items[id].MaxDurability},plan);
    if([11,13].includes(pool.slot)){

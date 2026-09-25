@@ -1,3 +1,4 @@
+import {combatCommandAction,combatCommandView} from './combat-command.js';
 import {raidCommandAction,raidCommandView} from './raid-command.js';
 import {pvpConfiguration} from './pvp-profiles.js';
 import {beginQuestScene,finishQuestScene} from './quests.js';
@@ -10,7 +11,7 @@ import {beginStockadesQuestEvent,cancelStockadesQuestEvent,stockadesQuestTick,st
 import {partyUnlocked} from './party-unlock.js';
 import {characterAttributes} from './character-attributes.js';
 import {spellbookDetails} from './spellbook-details.js';
-import {collectLoot} from './loot.js';
+import {collectLoot,collectAutoLoot,hasBlockingLoot} from './loot.js';
 import {npcCommands,npcAction,npcWorldView,progressNpcWorld} from './npc-world.js';
 import {resolveGroupLoot,tickGroupLoot,groupLootView} from './group-loot.js';
 import {strategyPresets} from './strategy-presets.js';
@@ -18,14 +19,14 @@ import {strategyAction,strategyProfiles} from './strategy-profiles.js';
 import {combatRole} from './combat-roles.js';
 import {cityView,canTrainAt} from './city.js';
 import {localInteractions} from './interactions.js';
-import {battlePresentation} from './battle-presentation.js';
+import {battlePresentation,playerBuffs} from './battle-presentation.js';
 import {petTrainerAbilities,grantHunterTrainingLinks} from './pet-knowledge.js';
 import {environmentTick,environmentAction} from './class-environment.js';
 import {tickRacialEffects,racialModifiers} from './racial-effects.js';
 import {classSupplyShop,trainingBookReason,consumeTrainingBook} from './class-acquisition.js';
 import {nodes,monsterIdsAt,creatures,items,spells,spellChain,talents,classDefinitions,raceDefinitions,classAbilities,classTalentTrees,xpTable,quests,questLinks,trainerNodes,flightNodes,flights,icon,nameOf,table,creatureLocations} from './catalog.js';
 import {LEVEL_CAP,refreshPetStats,clone,newCharacter,equipStarter,stats,killXp,log,countItem,takeItem,addItem,bagCapacity,canEquip,equipmentBlockedReason,equipFromBag,spellInfo,knownRank} from './character.js';
-import {acceptQuest,abandonQuest,turnIn,questProgress,gather,gatherables,gatherableQuestIds,questGathering,eventNodes,creditExploration} from './quests.js';
+import {acceptQuest,abandonQuest,turnIn,questProgress,questMonsterIds,gather,gatherables,gatherableQuestIds,questGathering,eventNodes,creditExploration} from './quests.js';
 import {questTools,beginQuestTool,finishQuestTool} from './quest-tools.js';
 import {startCombat,combatTick,expireCapture,hurtPlayer,abandonCombat} from './combat.js';
 import {tickEnemyAuras} from './enemy-spells.js';
@@ -38,8 +39,8 @@ import {strategySpellIds,currentStrategyRules,companionRules,defaultPolicy} from
 import {prepareAutoBuffs,defaultAutoBuffs,applyLongBuff} from './auto-buffs.js';
 import {hearthstoneView,bindHearth,beginHearth,finishHearth} from './hearthstone.js';
 import {beginEscort,cancelEscort,escortTick,finishEscortMove,escortView} from './escort.js';
-import {storageActions,storageAction,sellBatch,settleAuctions,marketView,marketPrice,bankHere,bankCapacity,protectedItem,tradable,bankable,transferBlockedReason} from './inventory.js';
-import {professionActions,professionAction,professionView,finishGather} from './professions.js';
+import {storageActions,storageAction,sellBatch,settleAuctions,marketView,marketPrice,bankHere,bankCapacity,protectedItem,discardBlockedReason,tradable,bankable,transferBlockedReason} from './inventory.js';
+import {professionActions,professionAction,professionView,finishGather,canTrainProfession} from './professions.js';
 import {defaultPotions} from './consumables.js';
 import {beginUtilitySpell,finishUtilitySpell,useBagItem,utilityView} from './utility-actions.js';
 import {supportedSpellNames,supportedTalentNames,defaultClassRules,racialTraits} from './class-support.js';
@@ -58,22 +59,22 @@ export function createGame(name,seed,now,{classId=8,raceId=1,gender='male'}={}){
  if(!Number.isInteger(seed)||seed<=0||seed>4294967295)throw new Error('无效的随机种子');
  const classDef=classDefinitions.find(c=>c.id===classId),raceDef=raceDefinitions.find(r=>r.id===raceId);
  if(!classDef)throw new Error('未知职业');if(!raceDef)throw new Error('未知种族');if(!classDef.races.includes(raceId))throw new Error('这个种族与职业组合不可用');if(!['male','female'].includes(gender))throw new Error('未知性别');
- const s={...newCharacter(name.trim(),classId,1,raceId,gender),version:3,rngState:seed,clock:0,wallAt:now,createdAt:now,nextTick:100,nextRegen:2000,itemSequence:0,logSequence:0,logs:[],journeySequence:0,journey:[],battleHistory:[],bag:[],bags:[],pending:[],party:[],quests:{},completed:{},reputation:{},money:0,teamId:raceDef.faction==='Horde'?67:469,location:racialHomes[raceId].start,visited:[racialHomes[raceId].start],flightPoints:[],activity:{type:'idle'},combat:null,lastCombat:null,rules:clone(defaultClassRules(classId)),settings:{health:70,mana:60,autoFood:true,autoWater:true,autoLoot:false},totals:{kills:0,xp:0,money:0,items:0,deaths:0,food:0,water:0},nextPull:0,receipts:[],hearth:racialHomes[raceId].start,hearthReady:0};
+ const s={...newCharacter(name.trim(),classId,1,raceId,gender),version:3,rngState:seed,clock:0,wallAt:now,createdAt:now,nextTick:100,nextRegen:2000,itemSequence:0,logSequence:0,logs:[],journeySequence:0,journey:[],battleHistory:[],bag:[],bags:[],pending:[],party:[],quests:{},completed:{},reputation:{},money:0,teamId:raceDef.faction==='Horde'?67:469,location:racialHomes[raceId].start,visited:[racialHomes[raceId].start],flightPoints:[],activity:{type:'idle'},combat:null,lastCombat:null,rules:clone(defaultClassRules(classId)),settings:{health:70,mana:60,autoFood:true,autoWater:true,autoLoot:false,autoLootIgnoreGray:false},totals:{kills:0,xp:0,money:0,items:0,deaths:0,food:0,water:0},nextPull:0,receipts:[],hearth:racialHomes[raceId].start,hearthReady:0};
  Object.assign(s,{mounts:[],riding:{},mounted:null,professions:{},professionCooldowns:{},bank:[],bankUpgrades:0,auctions:[],marketHistory:[],resourceCooldowns:{},potions:{...defaultPotions}});
  equipStarter(s);log(s,'欢迎来到'+nodes[s.location].name+'。与当地任务人物交谈，开始你的旅程。');return s;
 }
 function idle(s,reason=''){cancelClassChannel(s);if(s.activity.type==='resurrect'){const c=[s,...s.party].find(c=>c.id===s.activity.caster);if(c)c.cast=null;}s.activity={type:'idle',reason};stopRecovery(s);}
 function huntInventoryBlockedReason(s){
  if(s.bag.length>=bagCapacity(s))return s.pending.length?'背包已满且有待拾取战利品，请先整理背包并领取战利品。':'背包已满，请先整理背包后再开始战斗。';
- if(s.pending.length)return'还有待拾取战利品，请先领取后再开始战斗。';
+ if(hasBlockingLoot(s))return'还有待拾取战利品，请先领取后再开始战斗。';
  return'';
 }
 function tick(s){if(['countdown','combat'].includes(s.battleground?.phase)){battlegroundTick(s);return;}if(['countdown','combat'].includes(s.arena?.phase)){arenaTick(s);return;}s.time=s.clock;tickGroupLoot(s);const st=stats(s),wasAlive=s.hp>0;environmentTick(s,{stats,hurtPlayer});
  if(!s.combat){tickEnemyAuras(s,[s,...s.party],hurtPlayer);if(wasAlive&&s.hp<=0){s.totals.deaths++;idle(s);s.activity={type:'dead',reason:'角色已死亡，请选择复活。'};}tickClassChannel(s);tickClassEffects(s,combatMembers(s));for(const c of [s,...s.party])tickRacialEffects(s,c,{stats,healAmount});}
  const regenTick=s.clock>=s.nextRegen;if(regenTick)s.nextRegen+=2000;recoveryTick(s,regenTick);
  for(const[id,q]of Object.entries(s.quests))if(q.expiresAt&&q.expiresAt<=s.clock){delete s.quests[id];log(s,'任务超时：'+nameOf('quests',id),'quest');}
- if(s.combat){combatTick(s);settleGuildRaid(s);settleGoldRaid(s);tickGroupLoot(s);if(!s.combat&&s.hp>0&&s.settings.autoLoot)collectLoot(s);recordDungeonProgress(s);advanceDungeon(s);escortTick(s);stockadesQuestTick(s);return;}
- if(s.hp>0&&s.settings.autoLoot&&s.pending.length)collectLoot(s);
+ if(s.combat){combatTick(s);settleGuildRaid(s);settleGoldRaid(s);tickGroupLoot(s);if(!s.combat&&s.hp>0&&s.settings.autoLoot)collectAutoLoot(s);recordDungeonProgress(s);advanceDungeon(s);escortTick(s);stockadesQuestTick(s);return;}
+ if(s.hp>0&&s.settings.autoLoot&&hasBlockingLoot(s))collectAutoLoot(s);
  if(s.escort){escortTick(s);return;}
  if(s.stockadesQuestEvent){stockadesQuestTick(s);return;}
  if(s.dungeon){recordDungeonProgress(s);advanceDungeon(s);}
@@ -117,7 +118,7 @@ function finishActivity(s){const a=s.activity;if(a.type==='travel'){s.location=a
 // quest deadlines and incomplete regeneration retain the ordinary bounded path.
 export function quietIdle(s){
  if(s.goldRaid?.active&&s.goldRaid.auction)return false;
- if(s.settings.autoLoot&&s.pending.length)return false;
+ if(s.settings.autoLoot&&hasBlockingLoot(s))return false;
  if(s.activity.type!=='idle'||s.activity.endsAt!=null||s.combat||s.dungeon||s.escort||s.stockadesQuestEvent||s.rest||s.groundEffects?.length||s.flares?.length)return false;
  if(Object.values(s.quests).some(q=>q.expiresAt))return false;
  if(!(s.nextTick>s.clock&&s.nextTick<=s.clock+100&&s.nextRegen>s.clock&&s.nextRegen<=s.clock+2000))return false;
@@ -141,7 +142,7 @@ export function advance(input,now,options={}){
  const {maxTicks=20000,idleFastForward=true,onStep=null,stopWhen=null}=options;
  if(!Number.isSafeInteger(now)||now<input.wallAt)throw new Error('无效的结算时间');const s=clone(input),origin=s.clock,target=s.clock+now-s.wallAt;let ticks=0;
  if(s.arena?.phase==='preparing'||s.battleground?.phase==='preparing'){s.clock=target;s.wallAt=now;s.nextTick=target+100;s.nextRegen=target+2000;return{state:s,complete:true};}
- while(s.clock<target){if(ticks>=maxTicks){s.wallAt+=s.clock-origin;return{state:s,complete:false};}
+ while(s.clock<target){if(s.combat?.command?.paused){s.commandPausedMs=(s.commandPausedMs||0)+target-s.clock;s.wallAt=now;return{state:s,complete:true};}if(ticks>=maxTicks){s.wallAt+=s.clock-origin;return{state:s,complete:false};}
   if(idleFastForward&&target>=s.nextTick&&quietIdle(s)){
    const last=s.nextTick+Math.floor((target-s.nextTick)/100)*100;
    // Advance counters through strictly earlier ticks, then execute the last real
@@ -192,13 +193,14 @@ export function act(input,action,now){
  if(arenaCommands.includes(action.type)){arenaAction(s,action);return s;}
  if(s.stockadesQuestEvent&&!['stockadesQuestCancel','abandonCombat','stop','strategy','settings','sync','loot','cast','petCommand','useItem'].includes(action.type))throw new Error('正在进行袭击事件，请先完成或停止事件。');
  if(s.escort&&!['abandonCombat','escortCancel','stop','strategy','settings','sync','loot'].includes(action.type))throw new Error('正在护送，请先完成或停止护送。');
- if(s.hp<=0&&action.type!=='groupLoot'&&!goldCommands.includes(action.type)&&!['raidPlan','raidOrder','raidPause','raidStart','raidRecover','raidTactics','stockadesQuestCancel','abandonCombat','dungeonPause','revive','resurrect','rest','escortCancel','soulstoneRevive','reincarnate','strategy','settings'].includes(action.type))throw new Error('角色已死亡，请先复活。');
- if(s.dungeon&&!['questScene','turnin','gather','groupLoot','abandonCombat','petCommand','reincarnate','soulstoneRevive','usePortal','useItem','useHearth','accept','abandon','dungeonNext','dungeonNavigate','dungeonPause','dungeonInteract','dungeonSkip','leaveDungeon','stop','strategy','settings','equip','equipBag','sortBag','discardJunk','lockItem','applyEnchant','useBandage','disenchant','disenchantAll','loot','conjure','cast','revive','resurrect','rest','sync','talent'].includes(action.type))throw new Error('请先离开副本再进行这项操作。');
+ if(s.hp<=0&&action.type!=='groupLoot'&&!goldCommands.includes(action.type)&&!['combatCommand','raidPlan','raidOrder','raidPause','raidStart','raidRecover','raidTactics','stockadesQuestCancel','abandonCombat','dungeonPause','revive','resurrect','rest','escortCancel','soulstoneRevive','reincarnate','strategy','settings'].includes(action.type))throw new Error('角色已死亡，请先复活。');
+ if(s.dungeon&&!['combatCommand','questScene','turnin','gather','groupLoot','abandonCombat','petCommand','reincarnate','soulstoneRevive','usePortal','useItem','useHearth','accept','abandon','dungeonNext','dungeonNavigate','dungeonPause','dungeonInteract','dungeonSkip','leaveDungeon','stop','strategy','settings','equip','equipBag','sortBag','discardJunk','discardItem','lockItem','applyEnchant','useBandage','disenchant','disenchantAll','loot','conjure','cast','revive','resurrect','rest','sync','talent'].includes(action.type))throw new Error('请先离开副本再进行这项操作。');
  if(action.target&&s.party.some(c=>c.npcPlayer&&c.id===action.target)&&['equip','strategy','talent'].includes(action.type))throw new Error('NPC 玩家自行管理装备、天赋和策略。');
  if(npcCommands.includes(action.type)){npcAction(s,action);return s;}
  if(storageActions.has(action.type)){ensureIdle(s);storageAction(s,action);return s;}
  if(professionActions.has(action.type)){ensureIdle(s);professionAction(s,action);if(['gatherResource','gatherAll','craft','useBandage','disenchant','disenchantAll'].includes(action.type))dismount(s);return s;}
  switch(action.type){
+ case 'combatCommand':combatCommandAction(s,action);break;
  case 'questScene':beginQuestScene(s,action.id,action.key);break;
  case 'groupLoot':resolveGroupLoot(s,action.id,action.choice);break;
  case 'trainRiding':trainRiding(s);break;
@@ -254,7 +256,7 @@ export function act(input,action,now){
  case 'rest':if(s.combat||!['idle','dead','hunt'].includes(s.activity.type))throw new Error('请先结束当前活动。');s.activity={type:'idle'};startRecovery(s);break;
  case 'sync':break;
  case 'strategy':{const c=!action.target||action.target===s.id?s:s.party.find(c=>c.id===action.target);if(!c)throw new Error('找不到这个小队成员');strategyAction(c,action);break;}
- case 'settings':{if(action.autoLoot!==undefined){if(typeof action.autoLoot!=='boolean')throw new Error('自动拾取设置无效');s.settings.autoLoot=action.autoLoot;}if(action.health===undefined&&action.mana===undefined)break;if(!Number.isInteger(action.health)||!Number.isInteger(action.mana)||action.health<1||action.health>100||action.mana<1||action.mana>100)throw new Error('恢复阈值必须为 1—100 的整数');s.settings.health=action.health;s.settings.mana=action.mana;break;}
+ case 'settings':{if(action.autoLootIgnoreGray!==undefined){if(typeof action.autoLootIgnoreGray!=='boolean')throw new Error('灰色物品过滤设置无效');s.settings.autoLootIgnoreGray=action.autoLootIgnoreGray;}if(action.autoLoot!==undefined){if(typeof action.autoLoot!=='boolean')throw new Error('自动拾取设置无效');s.settings.autoLoot=action.autoLoot;}if(action.health===undefined&&action.mana===undefined)break;if(!Number.isInteger(action.health)||!Number.isInteger(action.mana)||action.health<1||action.health>100||action.mana<1||action.mana>100)throw new Error('恢复阈值必须为 1—100 的整数');s.settings.health=action.health;s.settings.mana=action.mana;break;}
  case 'ammoRestock':ensureIdle(s);resolveAmmoPrompt(s,action);break;
  case 'ammoSettings':ensureIdle(s);configureAmmo(s,action);break;
  case 'loadAmmo':ensureIdle(s);loadAmmo(s,action);break;
@@ -273,10 +275,11 @@ export function combatView(s){
  const battleView=battlePresentation(s);
  const ids=[...new Set([...(battleView?.spellIds||[]),...s.learned,...s.party.flatMap(c=>c.learned),...s.logs.map(l=>l.spellId).filter(Boolean)])];
  const combatSkills=ids.filter(id=>spells[id]).map(id=>{const info=spellInfo(s,id);return{spellId:id,name:nameOf('spells',id),icon:icon('spells',id),range:info?.range||0,radius:info?.radius||0,school:spells[id]?.School,nameEn:spells[id]?.SpellName};});
- return{battleground:battlegroundView(s),arena:arenaView(s),groupLoot:groupLootView(s),raidCommand:raidCommandView(s),goldRaid:goldRaidView(s),guildRaid:guildRaidView(s),battleView,combatSkills,stats:stats(s),characterAttributes:characterAttributes(s),resource:battleView?.units[s.id]?.resource,nextXp:s.level>=LEVEL_CAP?0:xpTable[s.level]?.xp_for_next_level||0,location:nodes[s.location],reincarnation:s.classId===7?reincarnationUse(s):null,canSoulstoneRevive:s.hp<=0&&!s.combat&&s.soulstone?.until>s.clock,questTools:questTools(s)};
+ return{playerBuffs:playerBuffs(s),battleground:battlegroundView(s),arena:arenaView(s),groupLoot:groupLootView(s),combatCommand:combatCommandView(s),raidCommand:raidCommandView(s),goldRaid:goldRaidView(s),guildRaid:guildRaidView(s),battleView,combatSkills,stats:stats(s),characterAttributes:characterAttributes(s),resource:battleView?.units[s.id]?.resource,nextXp:s.level>=LEVEL_CAP?0:xpTable[s.level]?.xp_for_next_level||0,location:nodes[s.location],reincarnation:s.classId===7?reincarnationUse(s):null,canSoulstoneRevive:s.hp<=0&&!s.combat&&s.soulstone?.until>s.clock,questTools:questTools(s)};
 }
 export function view(s){
  const questViews=Object.values(quests).map(q=>{const p=questProgress(s,q.entry);return{...p,navigation:questNavigation(s,p)}});
+ const localMonsterIds=monsterIdsAt(s.location),questMonsters=questMonsterIds(s,localMonsterIds);
  const classId=s.classId||8,raceId=s.raceId||1,classDef=classDefinitions.find(c=>c.id===classId),raceDef=raceDefinitions.find(r=>r.id===raceId),st=stats(s);
  const skillViews=[...new Map(trainingAbilities(classId).filter(a=>!(a.raceIds||a.startingRaces)?.length||(a.raceIds||a.startingRaces).includes(s.raceId||1)).map(a=>[a.spellId,a])).values()].map(a=>{const blocked=trainingBlocked(s,a),info=spellInfo(s,a.spellId),powerType=spells[a.spellId]?.PowerType;return{...a,details:spellbookDetails(s,a.petSpellId?spellInfo(s,a.petSpellId):info),name:nameOf('spells',a.petSpellId||a.spellId),nameEn:spells[a.petSpellId||a.spellId]?.SpellName,icon:icon('spells',a.petSpellId||a.spellId),known:abilityKnown(s,a),cast:info?.castMs,channelMs:(info?.AttributesEx&68)?info.durationMs:0,powerName:powerType===1?'怒气':powerType===3?'能量':'法力',powerCost:powerType===1?(info?.mana||0)/10:info?.mana||0,supported:!!a.petSpellId||supportedSpellNames.has(spells[a.spellId]?.SpellName||a.name),canTrain:!blocked,blockedReason:blocked,acquisitionLabel:({petTrainer:'宠物训练师',classQuest:'训练师职业解锁',book:'技能书',talent:'天赋',racial:'种族能力',starting:'初始技能'})[a.acquisition]||'训练师'}});
  const talentView=t=>{const blocked=talentBlocked(s,t);return{...t,icon:icon('talents',t.id),rank:s.talents?.[t.id]||0,supported:supportedTalentNames.has(t.name),canLearn:!blocked,blockedReason:blocked}};
@@ -285,5 +288,5 @@ export function view(s){
  const resetCost=talentResetCost(s);
  const battleView=battlePresentation(s);
  const flight=flightNodes.includes(s.location)?{discovered:s.flightPoints.includes(s.location),routes:flights.filter(f=>(f.a===s.location||f.b===s.location)).map(f=>{const to=f.a===s.location?f.b:f.a;return{to,name:nodes[to].name,duration:f.duration,cost:f.cost,unlocked:s.flightPoints.includes(s.location)&&s.flightPoints.includes(to)};})}:null;
- return{battleground:battlegroundView(s),pvp:pvpConfiguration(s),arena:arenaView(s),npcWorld:npcWorldView(s),groupLoot:groupLootView(s),raidCommand:raidCommandView(s),goldRaid:goldRaidView(s),guildRaid:guildRaidView(s),partyUnlocked:partyUnlocked(s),interactions:localInteractions(s,questViews),city:cityView(s),flight,battleView,reincarnation:s.classId===7?reincarnationUse(s):null,canSoulstoneRevive:s.hp<=0&&!s.combat&&s.soulstone?.until>s.clock,...utilityView(s),...professionView(s),ammo:ammoView(s),ammoPrompt:ammoPromptView(s),className:classDef?.name||'',raceName:raceDef?.name||'',faction:raceDef?.faction||'',resource,raceTraits:racialTraits(s),talentTrees:treeViews,talentResetCost:resetCost,canResetTalents:!talentResetBlocked(s),talentResetBlockedReason:talentResetBlocked(s),bankCapacity:bankCapacity(s),bankHere:bankHere(s),bankUpgradeCost:s.bankUpgrades<3?1000*(s.bankUpgrades+1):null,inventoryActions:Object.fromEntries(s.bag.map(i=>[i.uid,{transferBlockedReason:transferBlockedReason(i),protected:protectedItem(i),bankable:bankable(i),tradable:tradable(i)&&items[i.id]?.Quality>0,quote:marketPrice(i.id),equippable:!equipmentBlockedReason(s,i),equipBlockedReason:equipmentBlockedReason(s,i)}])),escort:escortView(s),escortNpc:s.escort?{...s.escort.npc,stats:stats(s.escort.npc)}:null,hearthstone:hearthstoneView(s),mounts:mountView(s),strategyMembers:[s,...s.party].filter(c=>!c.npcPlayer).map(c=>({id:c.id,name:c.name,classId:c.classId,rules:currentStrategyRules(c,c.rules||companionRules(c)||defaultClassRules(c.classId)),presets:strategyPresets(c),strategyProfiles:strategyProfiles(c),role:combatRole(c),policy:{...defaultPolicy,...c.strategyPolicy},autoBuffs:{...defaultAutoBuffs,...c.autoBuffs},potions:{...defaultPotions,...c.potions},skills:strategySpellIds(c).map(id=>({spellId:id,name:nameOf('spells',id),nameEn:spells[id]?.SpellName,icon:icon('spells',id),known:c.learned.includes(id),rank:spellChain[id]?.rank?`等级 ${spellChain[id].rank}`:''}))})),journey:journeyPosition(s),dungeon:dungeonView(s),dungeons:dungeonViews(s),stockadesQuestEvent:stockadesQuestEventView(s),recovery:recoveryView(s),combatSkills:[...new Set([...(classAbilities[classId]||[]).map(a=>a.spellId),...(battleView?.spellIds||[]),...s.learned,...s.party.flatMap(c=>c.learned),...s.logs.map(l=>l.spellId).filter(Boolean)])].filter(id=>spells[id]).map(id=>({spellId:id,name:nameOf('spells',id),icon:icon('spells',id),range:spellInfo(s,id)?.range||0,radius:spellInfo(s,id)?.radius||0,school:spells[id]?.School,nameEn:spells[id]?.SpellName})),candidates:candidates(s),party:s.party.map(c=>({...c,stats:stats(c),equippable:s.bag.filter(i=>!equipmentBlockedReason(c,i,undefined,s)).map(i=>i.uid)})),nextXp:s.level>=LEVEL_CAP?0:xpTable[s.level]?.xp_for_next_level||0,stats:st,characterAttributes:characterAttributes(s,st),location:nodes[s.location],map:Object.values(nodes).map(n=>({...n,hasFlight:flightNodes.includes(n.id),flightUnlocked:s.flightPoints.includes(n.id),travel:n.id===s.location&&s.activity.type!=='travel'?0:reachableTravelTime(s,n.id)})),monsters:monsterIdsAt(s.location).map(id=>({id,name:nameOf('npcs',id),min:creatures[id].MinLevel,max:creatures[id].MaxLevel,elite:!!creatures[id].Rank})),quests:questViews,questTools:questTools(s),shop:shop(s),gatherables:gatherables(s),bagCapacity:bagCapacity(s),skills:skillViews,talents:talentViews,canTrain:canTrainAt(s),hasFlight:flightNodes.includes(s.location)};
+ return{playerBuffs:playerBuffs(s),battleground:battlegroundView(s),pvp:pvpConfiguration(s),arena:arenaView(s),npcWorld:npcWorldView(s),groupLoot:groupLootView(s),combatCommand:combatCommandView(s),raidCommand:raidCommandView(s),goldRaid:goldRaidView(s),guildRaid:guildRaidView(s),partyUnlocked:partyUnlocked(s),interactions:localInteractions(s,questViews),city:cityView(s),flight,battleView,reincarnation:s.classId===7?reincarnationUse(s):null,canSoulstoneRevive:s.hp<=0&&!s.combat&&s.soulstone?.until>s.clock,...utilityView(s),...professionView(s),ammo:ammoView(s),ammoPrompt:ammoPromptView(s),className:classDef?.name||'',raceName:raceDef?.name||'',faction:raceDef?.faction||'',resource,raceTraits:racialTraits(s),talentTrees:treeViews,talentResetCost:resetCost,canResetTalents:!talentResetBlocked(s),talentResetBlockedReason:talentResetBlocked(s),bankCapacity:bankCapacity(s),bankHere:bankHere(s),bankUpgradeCost:s.bankUpgrades<3?1000*(s.bankUpgrades+1):null,inventoryActions:Object.fromEntries(s.bag.map(i=>[i.uid,{transferBlockedReason:transferBlockedReason(i),discardBlockedReason:discardBlockedReason(s,i),protected:protectedItem(i),bankable:bankable(i),tradable:tradable(i)&&items[i.id]?.Quality>0,quote:marketPrice(i.id),equippable:!equipmentBlockedReason(s,i),equipBlockedReason:equipmentBlockedReason(s,i)}])),escort:escortView(s),escortNpc:s.escort?{...s.escort.npc,stats:stats(s.escort.npc)}:null,hearthstone:hearthstoneView(s),mounts:mountView(s),strategyMembers:[s,...s.party].filter(c=>!c.npcPlayer).map(c=>({id:c.id,name:c.name,classId:c.classId,rules:currentStrategyRules(c,c.rules||companionRules(c)||defaultClassRules(c.classId)),presets:strategyPresets(c),strategyProfiles:strategyProfiles(c),role:combatRole(c),policy:{...defaultPolicy,...c.strategyPolicy},autoBuffs:{...defaultAutoBuffs,...c.autoBuffs},potions:{...defaultPotions,...c.potions},skills:strategySpellIds(c).map(id=>({spellId:id,name:nameOf('spells',id),nameEn:spells[id]?.SpellName,icon:icon('spells',id),known:c.learned.includes(id),rank:spellChain[id]?.rank?`等级 ${spellChain[id].rank}`:''}))})),journey:journeyPosition(s),dungeon:dungeonView(s),dungeons:dungeonViews(s),stockadesQuestEvent:stockadesQuestEventView(s),recovery:recoveryView(s),combatSkills:[...new Set([...(classAbilities[classId]||[]).map(a=>a.spellId),...(battleView?.spellIds||[]),...s.learned,...s.party.flatMap(c=>c.learned),...s.logs.map(l=>l.spellId).filter(Boolean)])].filter(id=>spells[id]).map(id=>({spellId:id,name:nameOf('spells',id),icon:icon('spells',id),range:spellInfo(s,id)?.range||0,radius:spellInfo(s,id)?.radius||0,school:spells[id]?.School,nameEn:spells[id]?.SpellName})),candidates:candidates(s),party:s.party.map(c=>({...c,stats:stats(c),equippable:s.bag.filter(i=>!equipmentBlockedReason(c,i,undefined,s)).map(i=>i.uid)})),nextXp:s.level>=LEVEL_CAP?0:xpTable[s.level]?.xp_for_next_level||0,stats:st,characterAttributes:characterAttributes(s,st),location:nodes[s.location],map:Object.values(nodes).map(n=>({...n,canTrain:canTrainAt({...s,location:n.id}),canTrainProfession:canTrainProfession({...s,location:n.id}),hasFlight:flightNodes.includes(n.id),flightUnlocked:s.flightPoints.includes(n.id),travel:n.id===s.location&&s.activity.type!=='travel'?0:reachableTravelTime(s,n.id)})),monsters:localMonsterIds.map(id=>({id,name:nameOf('npcs',id),min:creatures[id].MinLevel,max:creatures[id].MaxLevel,elite:!!creatures[id].Rank,quest:questMonsters.has(id)})),quests:questViews,questTools:questTools(s),shop:shop(s),gatherables:gatherables(s),bagCapacity:bagCapacity(s),skills:skillViews,talents:talentViews,canTrain:canTrainAt(s),hasFlight:flightNodes.includes(s.location)};
 }

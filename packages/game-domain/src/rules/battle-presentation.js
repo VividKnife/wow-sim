@@ -1,3 +1,4 @@
+import {raidFieldPresentation} from './raid-battlefield.js';
 import {cooldownUntil,globalCooldownRemaining} from './spell-timing.js';
 import {classCombatMeta,classResource} from '../../../sim-core/src/class-combat.js';
 import {combatMembers} from './combat-members.js';
@@ -14,7 +15,7 @@ const elements={earth:'大地',fire:'火焰',water:'水流',air:'空气'};
 const spellDetail=id=>({spellId:Number(id),name:Number(id)===992100?'金团战斗药剂':nameOf('spells',Number(id)),icon:icon('spells',Number(id))});
 const effectEnd=a=>a?.until??(a?.remaining>0&&a?.interval>0?a.next+(a.remaining-1)*a.interval:0);
 function effectsFor(actor,clock){
- const result=new Map();
+ const result=new Map((actor.serverBuffs||[]).map(buff=>[buff.id,{spellId:null,name:buff.name,icon:buff.icon,detail:buff.description,until:null}]));
  const add=(a,detail='',fallback='')=>{
   const id=a?.spell??a?.spellId,until=effectEnd(a);if(!(until>clock))return;
   const key=`${id||fallback}:${a?.caster||''}:${detail}`,prior=result.get(key)||{};
@@ -33,6 +34,13 @@ function effectsFor(actor,clock){
  // One spell can store a numerical buff and several aura effects. Show it once.
  const grouped=new Map();for(const effect of result.values()){const key=effect.spellId?`${effect.spellId}:${effect.caster||''}:${/^[主副]手/.test(effect.detail)?effect.detail:''}`:effect.name;const old=grouped.get(key);grouped.set(key,old?{...old,...effect,until:Math.max(old.until||0,effect.until||0),detail:[...new Set([old.detail,effect.detail].filter(Boolean))].join(' · ')}:effect);}
  return [...grouped.values()];
+}
+
+// Main HUD only lists positive effects, independent of combat history.
+export function playerBuffs(actor) {
+ const positive={};
+ for(const key of ['serverBuffs','buffs','classBuffs','talentBuffs','hots','absorb','manaShield','seal','soulstone','weaponEnchants','weaponEnchant','equipment','talentProcs','learned','racialBuff','totemWeaponEnchant','lightwell','stealthed','form'])positive[key]=actor[key];
+ return effectsFor(positive,actor.clock);
 }
 
 export function battlePresentation(s){
@@ -56,6 +64,6 @@ export function battlePresentation(s){
  }
  const spellIds=[...new Set(Object.values(units).flatMap(u=>[u.spellId,...u.effects.map(e=>e.spellId),...u.cooldowns.map(c=>c.spellId),...u.totems.map(t=>t.spellId),u.cast?.spellId]).filter(Boolean))];
  const groundEffects=live?(s.groundEffects||[]).filter(a=>a.until>clock).map(a=>({...a,center:a.center||{x:a.position||0,y:a.positionY||0}})):[];
- if(live)for(const f of s.combat?.raidEncounter?.fires||[])groundEffects.push({...f,school:2,actorId:'mc-boss',spellId:19411,startedAt:f.armedAt-2500,center:{x:f.position,y:f.positionY}});
+ groundEffects.push(...raidFieldPresentation(battle,actors,clock).filter(f=>live||f.terrain));
  return{live,clock,units,spellIds,groundEffects,playerId:s.id};
 }

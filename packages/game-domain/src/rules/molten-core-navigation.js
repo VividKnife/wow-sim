@@ -1,7 +1,8 @@
+import {autoLootSkips} from './loot.js';
 import {raidNodesFor,raidRoutePlan,raidRouteLock} from './molten-core-content.js';
 
 // Purchased gold-raid loot can wait in the delivery queue while the raid moves.
-export function raidLootBlocksNavigation(s){return s.pending.some(item=>!s.goldRaid?.active||!item.raidSource?.startsWith('gold:'));}
+export function raidLootBlocksNavigation(s){return s.pending.some(item=>!autoLootSkips(s,item)&&(!s.goldRaid?.active||!item.raidSource?.startsWith('gold:')));}
 
 export function navigateRaid(s,r,destination,launch){
  const path=raidRoutePlan(r,destination),lock=raidRouteLock(r,destination);

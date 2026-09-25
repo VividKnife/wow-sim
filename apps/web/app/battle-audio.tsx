@@ -1,13 +1,15 @@
 "use client";
 import {useEffect,useRef,useState} from 'react';
 import {combatSoundForEvent,createCombatAudio} from '@/lib/combat-audio.js';
+import {useAudioPreference} from '@/lib/use-audio-preference';
 import type {BattleScene,BattleSkill} from '@/lib/battle-hd2d-types';
 
 export function BattleAudio({scene,skills,active}:{scene:BattleScene;skills:BattleSkill[];active:boolean}){
- const [player]=useState(()=>createCombatAudio()),[enabled,setEnabled]=useState(false),[volume,setVolume]=useState(.7);
+ const [player]=useState(()=>createCombatAudio());
+ const [enabled,setEnabled]=useAudioPreference('effectsEnabled'),[volume,setVolume]=useAudioPreference('effectsVolume');
  const heard=useRef(new Set<string|number>());
- useEffect(()=>{try{const saved=Number(localStorage.getItem('battle-volume'));if(localStorage.getItem('battle-volume')!==null&&Number.isFinite(saved))setVolume(Math.max(0,Math.min(1,saved)));}catch{}},[]);
- useEffect(()=>{player.setVolume(volume);try{localStorage.setItem('battle-volume',String(volume));}catch{}},[player,volume]);
+ useEffect(()=>{player.setEnabled(enabled);},[player,enabled]);
+ useEffect(()=>{player.setVolume(volume);},[player,volume]);
  useEffect(()=>{const update=()=>player.setActive(active&&!!scene.live&&!document.hidden);update();document.addEventListener('visibilitychange',update);return()=>{document.removeEventListener('visibilitychange',update);player.setActive(false);};},[player,active,scene.live]);
  useEffect(()=>()=>player.dispose(),[player]);
  useEffect(()=>{heard.current.clear();},[scene.encounterId]);

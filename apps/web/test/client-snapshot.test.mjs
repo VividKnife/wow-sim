@@ -27,10 +27,13 @@ test('client snapshot exposes only the player and view allowlists',()=>{
 
 test('client snapshot retains the fields needed for active play and battle rendering',()=>{
  const state=createGame('可玩',19,1000);
- state.activity={type:'travel',to:'goldshire',startedAt:0,endsAt:5000};
+ state.activity={type:'travel',to:'goldshire',startedAt:0,endsAt:5000,path:[{a:'northshire',b:'goldshire',distance:35,duration:5000,startProgress:.2}]};
  state.pet={id:'pet',name:'伙伴',hp:20,equipment:{},learned:[]};
  const projected=projectClientSnapshot(state,view(state));
  assert.equal(projected.player.activity.to,'goldshire');
+ assert.deepEqual(projected.player.activity.path,state.activity.path);
+ projected.player.activity.path[0].duration=1;
+ assert.equal(state.activity.path[0].duration,5000);
  assert.ok(projected.player.bag.length>0);
  assert.equal(projected.player.pet.name,'伙伴');
  assert.ok(projected.view.stats.maxHp>0);

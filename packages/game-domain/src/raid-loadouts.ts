@@ -71,7 +71,7 @@ export const raidLoadouts:Record<string,number[]>= {
     1973,
     13122,
     5267,
-    18762,
+    15806,
     13023
   ],
   "3:ranged": [
@@ -124,7 +124,8 @@ export const raidLoadouts:Record<string,number[]>= {
     18466,
     1973,
     16342,
-    12782,
+    13006,
+    15806,
     13023
   ]
 };

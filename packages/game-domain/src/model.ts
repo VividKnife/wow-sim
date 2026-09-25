@@ -43,6 +43,7 @@ export interface Wallet {
     balance: number;
 }
 export interface Activity {
+    xpMultiplier?: number;
     localSimulation?: import('./local-simulation.ts').LocalSession;
     playback?: PlaybackManifest;
     simulationVersion?: number;

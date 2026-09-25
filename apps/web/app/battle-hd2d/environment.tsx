@@ -1,7 +1,7 @@
 import {memo,useEffect,useMemo,useRef} from 'react';
 import {useFrame} from '@react-three/fiber';
 import {useTexture} from '@react-three/drei';
-import {BufferGeometry,Float32BufferAttribute,Mesh,NearestFilter,Points,RepeatWrapping,SRGBColorSpace} from 'three';
+import {BufferGeometry,Float32BufferAttribute,Fog,Mesh,NearestFilter,Points,RepeatWrapping,SRGBColorSpace,Vector3} from 'three';
 import {groundTheme,groundTexture,sceneryLayout} from '@/lib/battle-hd2d.js';
 import {useBattleFrame} from './frame';
 
@@ -53,10 +53,15 @@ export const Environment=memo(function Environment({ground,low,reduced}:{ground:
  const texture=useMemo(()=>{const t=original.clone();t.wrapS=t.wrapT=RepeatWrapping;t.repeat.set(5,4);t.colorSpace=SRGBColorSpace;t.magFilter=NearestFilter;t.needsUpdate=true;return t;},[original]);
  useEffect(()=>()=>texture.dispose(),[texture]);
  const frame=useBattleFrame();
- useFrame(()=>{if(ground==='water'&&!reduced)texture.offset.set(Math.sin(frame.current.seconds*.08)*.015,frame.current.seconds*.003);});
+ const fog=useRef<Fog>(null),direction=useMemo(()=>new Vector3(),[]);
+ useFrame(({camera})=>{
+  if(ground==='water'&&!reduced)texture.offset.set(Math.sin(frame.current.seconds*.08)*.015,frame.current.seconds*.003);
+  // Portrait framing pulls the camera back; fog must not swallow the playfield.
+  if(fog.current){camera.getWorldDirection(direction);const offset=Math.max(0,camera.position.y/Math.max(.2,-direction.y)-45);fog.current.near=34+offset;fog.current.far=theme.fog+offset;}
+ });
  const props=useMemo(()=>ground==='arena'?[]:sceneryLayout(theme.id),[ground,theme.id]);
  return <>
-  <color attach="background" args={[theme.sky]}/><fog attach="fog" args={[theme.sky,34,theme.fog]}/>
+  <color attach="background" args={[theme.sky]}/><fog ref={fog} attach="fog" args={[theme.sky,34,theme.fog]}/>
   <ambientLight intensity={.6} color={theme.ambient}/><hemisphereLight args={[theme.ambient,'#292b31',1.35]}/>
   <directionalLight position={[-14,24,6]} intensity={2.3} color={theme.light} castShadow={!low} shadow-mapSize={[1024,1024]} shadow-camera-left={-30} shadow-camera-right={30} shadow-camera-top={25} shadow-camera-bottom={-25} shadow-camera-far={80} shadow-bias={-.0005} shadow-normalBias={.07}/>
   <mesh rotation={[-Math.PI/2,0,0]} position={[0,-.025,0]} receiveShadow><planeGeometry args={[90,70]}/><meshStandardMaterial map={texture} color={ground==='molten'?'#a5704b':'#c2c6be'} roughness={ground==='water'?.36:1} metalness={ground==='water'?.22:0}/></mesh>

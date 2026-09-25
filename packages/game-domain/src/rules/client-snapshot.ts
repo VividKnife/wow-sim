@@ -2,7 +2,7 @@ import {combatMembers} from './combat-members.js';
 import {characterAttributes} from './character-attributes.js';
 
 const playerKeys = [
-  'id','name','classId','raceId','gender','growthPolicy','level','xp','hp','mana','rage','energy','power','form','stance','money','clock','wallAt',
+  'serverBuffs','id','name','classId','raceId','gender','growthPolicy','level','xp','hp','mana','rage','energy','power','form','stance','money','clock','wallAt',
   'activity','rest','location','visited','flightPoints','hearth','hearthReady','equipment','bag','bags','pending','bank','bankUpgrades',
   'auctions','marketHistory','party','pet','escort','combat','lastCombat','dungeon','cast','groundEffects','learned','talents','quests',
   'completed','reputation','rules','settings','potions','mounts','riding','mounted','professions','professionCooldowns','resourceCooldowns',
@@ -10,9 +10,10 @@ const playerKeys = [
 ] as const;
 
 const viewKeys = [
+  'playerBuffs',
   'npcWorld','groupLoot',
   'arena','pvp','battleground',
-  'raidCommand','goldRaid','guildRaid','partyUnlocked','battleView','reincarnation','canSoulstoneRevive','skillUsesByTarget','environment','trackingKind','trackedTreasures','lockpicking',
+  'combatCommand','raidCommand','goldRaid','guildRaid','partyUnlocked','battleView','reincarnation','canSoulstoneRevive','skillUsesByTarget','environment','trackingKind','trackedTreasures','lockpicking',
   'trackedTargets','scouting','lockTargets','petControls','classPortals','skillUses','itemUses','itemBuffs','professions','professionRecipeCount','canTrainProfession',
   'resources','disenchantable','className','raceName','faction','resource','raceTraits','talentTrees','talentResetCost','canResetTalents',
   'talentResetBlockedReason','bankCapacity','bankHere','bankUpgradeCost','inventoryActions','escort','escortNpc','hearthstone','mounts',
@@ -20,9 +21,9 @@ const viewKeys = [
   'questTools','shop','gatherables','bagCapacity','skills','talents','canTrain','hasFlight','city','flight','interactions','ammo','ammoPrompt'
 ] as const;
 
-const actorKeys=['npcPlayer','growthPolicy','id','name','classId','raceId','gender','level','role','hp','mana','rage','energy','power','form','stance','position','positionY','maxHp','maxMana','spell','kind','petUnit','totemUnit','ownerId','controlledBy','controlUntil','removed','dead','fleeing','stealthed','happiness','loyalty','target','combo','comboTarget','nextSwing','swingStartedAt','nextAttack','nextRanged','rangedStartedAt','nextOffhand','offhandStartedAt','swing','moveSpeed','speed','rootUntil','stunUntil','fearUntil','polyUntil','slowUntil','slow','movementSlows','cast','cooldowns','categoryCooldowns','globalCooldowns','equipment','learned','rules','strategyPolicy','autoBuffs','potions','ammunition','ammoPolicy','buffs','classBuffs','talentBuffs','auras','dots','hots','periodicClass','absorb','manaShield','seal','judgement','reactiveClass','weaponEnchants','weaponEnchant','talentProcs','racialEffects','racialBuff','cannibalize','bloodrage','totemWeaponEnchant','lightwell','totems','stats','soulShardCount','creatureType','entry','rank','visual','sourceGuid','attackPower','armor','resistances','equippable'];
+const actorKeys=['serverBuffs','npcPlayer','growthPolicy','serverBuffs','id','name','classId','raceId','gender','level','role','hp','mana','rage','energy','power','form','stance','position','positionY','maxHp','maxMana','spell','kind','petUnit','totemUnit','ownerId','controlledBy','controlUntil','removed','dead','fleeing','stealthed','happiness','loyalty','target','combo','comboTarget','nextSwing','swingStartedAt','nextAttack','nextRanged','rangedStartedAt','nextOffhand','offhandStartedAt','swing','moveSpeed','speed','rootUntil','stunUntil','fearUntil','polyUntil','slowUntil','slow','movementSlows','cast','cooldowns','categoryCooldowns','globalCooldowns','equipment','learned','rules','strategyPolicy','autoBuffs','potions','ammunition','ammoPolicy','buffs','classBuffs','talentBuffs','auras','dots','hots','periodicClass','absorb','manaShield','seal','judgement','reactiveClass','weaponEnchants','weaponEnchant','talentProcs','racialEffects','racialBuff','cannibalize','bloodrage','totemWeaponEnchant','lightwell','totems','stats','soulShardCount','creatureType','entry','rank','visual','sourceGuid','attackPower','armor','resistances','equippable'];
 const enemyKeys=['modelAnimation',...actorKeys,'minDamage','maxDamage','attackTime','spells','threat','smite','capturePhase','captureUntil'];
-const combatKeys=['lootGold','area','ground','id','runId','routeId','encounterId','startedAt','endedAt','dungeon','pull','participantIds','metrics','projectiles','actorsSnapshot'];
+const combatKeys=['lootGold','area','ground','id','runId','routeId','encounterId','startedAt','endedAt','dungeon','pull','command','participantIds','metrics','projectiles','actorsSnapshot'];
 const dungeonKeys=['id','runId','cursor','position','startedAt','completedAt','metrics'];
 const activityKeys=['type','reason','to','from','startedAt','endsAt','target','quest','spell','mount','caster','targets','routeId','journeySession','auto','flight','stopAtNext'];
 
@@ -46,7 +47,7 @@ const actorView=(actor:any)=>{const result=pick(actor||{},actorKeys);if(Array.is
 const enemyView=(enemy:any)=>pick(enemy||{},enemyKeys);
 function combatView(combat:any){if(!combat)return combat;const result=pick(combat,combatKeys);result.enemies=Array.isArray(combat.enemies)?combat.enemies.map(enemyView):[];if(Array.isArray(combat.actorsSnapshot))result.actorsSnapshot=combat.actorsSnapshot.map(actorView);return result;}
 const dungeonView=(dungeon:any)=>dungeon?pick(dungeon,dungeonKeys):dungeon;
-const candidateView=(candidate:any)=>pick(candidate||{},['id','name','classId','role','roles','level','gearCap','canRecruit']);
+const candidateView=(candidate:any)=>pick(candidate||{},['serverBuffs','id','name','classId','role','roles','level','gearCap','canRecruit']);
 const battleUnitKeys=['id','spellId','className','color','portrait','mode','resource','secondaryResource','hp','maxHp','level','combo','effects','cooldowns','totems','cast','globalCooldown','canCommand','petMode','happiness','loyalty','controlled','ownerName','controlUntil','shards','attack','offhand','movement'];
 function battlePresentationView(battle:any){
  if(!battle)return battle;

@@ -1,4 +1,4 @@
-import {items,spells,nameOf,itemSets,raidItemAssets,classDefinitions,raceDefinitions} from './catalog.js';
+import {items,spells,nameOf,itemSets,raidItemAssets,classDefinitions,raceDefinitions,localize} from './catalog.js';
 
 const schools=['物理','神圣','火焰','自然','冰霜','暗影','奥术'];
 const statNames={0:'法力',1:'生命',3:'敏捷',4:'力量',5:'智力',6:'精神',7:'耐力'};
@@ -23,7 +23,7 @@ export function itemDetails(id){
  const i=items[id];if(!i)return {};
  const set=itemSets[i.itemset];
  return {set:set?{...set,pieces:set.pieces.map(id=>({id,name:nameOf('items',id)}))}:null,itemLevel:i.ItemLevel,binding:({1:'拾取后绑定',2:'装备后绑定',3:'使用后绑定',4:'任务物品'})[i.bonding]||null,
-  unique:i.maxcount>0?i.maxcount:0,flavor:i.description||null,block:i.block||0,
+  unique:i.maxcount>0?i.maxcount:0,flavor:localize('items',id)?.descriptionZhCN||(/[\u3400-\u9fff]/.test(i.description||'')?i.description:null),block:i.block||0,
   requiredSkill:i.RequiredSkill?{id:i.RequiredSkill,name:skillNames[i.RequiredSkill]||'对应专业技能',rank:i.RequiredSkillRank}:null,
   allowedClasses:i.AllowableClass>0?classDefinitions.filter(c=>i.AllowableClass&(1<<(c.id-1))).map(c=>c.name):[],
   allowedRaces:i.AllowableRace>0?raceDefinitions.filter(r=>i.AllowableRace&(1<<(r.id-1))).map(r=>r.name):[],

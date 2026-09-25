@@ -73,7 +73,7 @@ export function goldNpcTick(s,actors){
 export function goldAvoidsFire(s,c,fire){
  if(!c.goldNpc)return true;const p=c.goldProfile;
  p.fireDecisions??={};
- if(!Object.hasOwn(p.fireDecisions,fire.id))p.fireDecisions[fire.id]={avoid:rng(s)<({novice:.3,regular:.84,expert:.99}[p.skill]),at:fire.armedAt-2500+({novice:2100,regular:900,expert:150}[p.skill])};
+ if(!Object.hasOwn(p.fireDecisions,fire.id))p.fireDecisions[fire.id]={avoid:rng(s)<({novice:.3,regular:.84,expert:.99}[p.skill]),at:fire.startedAt+({novice:2100,regular:900,expert:150}[p.skill])};
  const d=p.fireDecisions[fire.id];return d.avoid&&s.clock>=d.at;
 }
 export function npcPriceLimit(c,item,rare,s){

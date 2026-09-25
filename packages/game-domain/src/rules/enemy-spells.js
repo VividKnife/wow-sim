@@ -3,7 +3,7 @@ import {onTalentEvent} from './talent-runtime.js';
 import {talentControlResistance,talentCombatDefense} from './talent-effects.js';
 import {launchProjectile,takeImpacts} from './combat-projectiles.js';
 import {distance,point} from '../../../sim-core/src/geometry.js';
-import {spells,lookup,nameOf} from './catalog.js';
+import {spells,creatures,lookup,nameOf} from './catalog.js';
 import {effectRange,roll,rng,log,stats,armorReduction,enemy} from './character.js';
 import {addCombatAura,hasAura,controlled,castTimeMultiplier,schoolImmune,physicalDamageBonus} from '../../../sim-core/src/combat-auras.js';
 import {beginSpellTiming,finishSpellTiming,spellReady} from './spell-timing.js';
@@ -22,6 +22,10 @@ export function enemySpellInfo(e,id){
   mana:npcTimerResource?0:Math.floor(sp.ManaCost+sp.ManaCostPerlevel*Math.max(0,e.level-sp.SpellLevel)+(e.maxMana??e.mana)*sp.ManaCostPercentage/100)};
 }
 const living=units=>units.filter(u=>u.hp>0&&!u.removed);
+// Some imported NPC scripts summon creature entries absent from the imported
+// creature table. Use related, targetable profiles for these known summons.
+const summonProfileFallbacks={6066:2630,8156:8130,7787:5645,14350:5461,16098:417};
+const summonNames={6066:'Earthgrab Totem',8156:"Antu'sul's Minion",7787:'Sandfury Slave',14350:'Hydroling',16098:"Isalien's Pet"};
 export function enemySpellMissChance(e,target,sp){
  const difference=target.level-e.level,defense=talentCombatDefense(target);
  if(sp.DmgClass===1)return Math.min(1,Math.max(.01,(4+(difference>2?2+(difference-2)*7:difference))/100+defense.spellAvoidance));
@@ -48,9 +52,10 @@ function effectTargets(s,e,target,sp,n,actors){
 }
 function summon(s,e,sp,n){
  const entry=sp['EffectMiscValue'+n],count=effectRange(e,sp,n)[0];
+ if(!creatures[summonProfileFallbacks[entry]||entry])throw new Error(`召唤目标 ${entry} 的怪物数据不存在（法术 ${sp.Id}）`);
  for(let i=0;i<count;i++){
   const sequence=s.combat.summonSequence=(s.combat.summonSequence||0)+1;
-  const child=enemy(s,entry,`summon-${sequence}`);setCombatPosition(s,child,e);child.target=e.target;child.summonedBy=e.id;child.pet=sp['Effect'+n]===56;
+  const child=enemy(s,summonProfileFallbacks[entry]||entry,`summon-${sequence}`);if(summonNames[entry])child.name=summonNames[entry];setCombatPosition(s,child,e);child.target=e.target;child.summonedBy=e.id;child.pet=sp['Effect'+n]===56;
   child.nextAttack=s.clock+child.swing;child.despawnAt=sp.durationMs<Number.MAX_SAFE_INTEGER?s.clock+sp.durationMs:null;
   // Summoned units are additional enemies, never a replacement for a static GUID.
   s.combat.enemies.push(child);log(s,`${e.name} 召唤了 ${child.name}`,'combat',{actorId:e.id,targetId:child.id,spellId:sp.Id});
@@ -125,6 +130,15 @@ export function tickEnemySpell(s,e,actors,hurt){
  const sp=enemySpellInfo(e,cast.spell),aim=cast.center?{id:cast.target,hp:target?.hp||1,position:cast.center.x,positionY:cast.center.y}:target;if(aim&&(target===e||distance(e,aim)<=sp.range&&distance(e,aim)>=sp.minRange)&&finishSpellTiming(e,cast.timing,s.clock)){if(!launchProjectile(s,e,aim,sp,'enemy'))applySpell(s,e,aim,sp,actors,hurt);}else log(s,'施法取消：目标失效、资源不足或超出距离','cancel',{actorId:e.id,spellId:cast.spell});
 }
 export function tickEnemyAuras(s,actors,hurt){
+ const hurtAuraTarget=(state,caster,target,amount,label,detail)=>{
+  if(actors.includes(target))return hurt(state,caster,target,amount,label,detail);
+  // Some NPC spells put a damaging aura on their own caster. Hostile units do
+  // not have player race/class stat rows, so use their combat health directly.
+  const damage=Math.min(target.hp,Math.max(0,Math.round(amount)));
+  target.hp-=damage;
+  log(state,`${caster.name} 的${label}对 ${target.name} 造成 ${damage} 点伤害`,'damage',
+   {actorId:caster.id,targetId:target.id,amount:damage,action:label,...detail});
+ };
  for(const area of s.groundEffects||[])if(area.interval&&area.side!=='friendly'){
   while(area.next<=s.clock&&area.next<=area.until){
    for(const unit of actors.filter(u=>u.hp>0&&distance(u,area)<=area.radius))if(!schoolImmune(unit,area.school,area.next-1))hurt(s,{id:area.caster,name:area.casterName},unit,area.amount,nameOf('spells',area.spell),{spellId:area.spell,periodic:true});
@@ -140,12 +154,12 @@ export function tickEnemyAuras(s,actors,hurt){
    const caster=s.combat?.enemies.find(e=>e.id===aura.caster&&e.hp>0&&!e.removed);
    if(!caster)continue;
    const spell=enemySpellInfo(caster,aura.trigger);if(!spell)continue;
-   while(aura.next<=s.clock&&aura.next<=aura.until&&unit.hp>0){applySpell(s,caster,unit,spell,actors,hurt,[aura.spell]);aura.next+=aura.interval;}
+   while(aura.next<=s.clock&&aura.next<=aura.until&&unit.hp>0){applySpell(s,caster,unit,spell,actors,hurtAuraTarget,[aura.spell]);aura.next+=aura.interval;}
   }
   for(const aura of unit.auras||[])if(aura.type===3&&aura.interval){
    while(aura.next<=s.clock&&aura.next<=aura.until&&unit.hp>0){
     const caster=s.combat?.enemies.find(e=>e.id===aura.caster)||{id:aura.caster,name:aura.casterName};
-    if(!schoolImmune(unit,aura.school,aura.next-1))hurt(s,caster,unit,aura.amount,nameOf('spells',aura.spell),{spellId:aura.spell,periodic:true});
+    if(!schoolImmune(unit,aura.school,aura.next-1))hurtAuraTarget(s,caster,unit,aura.amount,nameOf('spells',aura.spell),{spellId:aura.spell,periodic:true});
     aura.next+=aura.interval;
    }
   }

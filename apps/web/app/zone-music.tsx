@@ -5,22 +5,14 @@ import styles from './zone-music.module.css';
 import {Popover,PopoverContent,PopoverTrigger} from '@/components/ui/popover';
 import {createZoneMusic,zoneMusicForLocation} from '@/lib/zone-music.js';
 
-const preferenceKey='wow-sim:music-enabled';
-const volumeKey='wow-sim:music-volume';
-export default function ZoneMusic({location,dungeon=false,active=true}:{location:{id:string;region:string};dungeon?:boolean;active?:boolean}){
+import {useAudioPreference} from '@/lib/use-audio-preference';
+export default function ZoneMusic({location,dungeon=false,active=true,controls=true}:{location:{id:string;region:string};dungeon?:boolean;active?:boolean;controls?:boolean}){
  const player=useRef<ReturnType<typeof createZoneMusic>|null>(null);
- const [enabled,setEnabled]=useState(true),[status,setStatus]=useState('ready');
- const [volume,setVolume]=useState(.25);
+ const [enabled,setEnabled]=useAudioPreference('musicEnabled'),[status,setStatus]=useState('ready');
+ const [volume,setVolume]=useAudioPreference('musicVolume');
  const source=zoneMusicForLocation(location,dungeon);
  useEffect(()=>{
   const controller=createZoneMusic({onStatus:setStatus});player.current=controller;
-  let saved=true;try{saved=localStorage.getItem(preferenceKey)!=='false';}catch{}
-  // Read the browser-only preference after hydration.
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  setEnabled(saved);controller.setEnabled(saved);
-  let savedVolume=.25;
-  try{const stored=localStorage.getItem(volumeKey);if(stored!==null&&stored.trim()!==''&&Number.isFinite(Number(stored)))savedVolume=Math.max(0,Math.min(1,Number(stored)));}catch{}
-  setVolume(savedVolume);controller.setVolume(savedVolume);
   const unlock=()=>controller.retry();
   const visibility=()=>controller.setActive(document.visibilityState==='visible');
   visibility();
@@ -29,20 +21,17 @@ export default function ZoneMusic({location,dungeon=false,active=true}:{location
   return()=>{document.removeEventListener('pointerdown',unlock);document.removeEventListener('keydown',unlock);document.removeEventListener('visibilitychange',visibility);controller.dispose();player.current=null;};
  },[]);
  useEffect(()=>{player.current?.setSource(active?source:null);},[source,active]);
- const toggle=()=>{
-  const next=!enabled;setEnabled(next);player.current?.setEnabled(next);
-  try{localStorage.setItem(preferenceKey,String(next));}catch{}
- };
- const changeVolume=(percent:number)=>{
-  const next=percent/100;setVolume(next);player.current?.setVolume(next);
-  try{localStorage.setItem(volumeKey,String(next));}catch{}
- };
+ useEffect(()=>{player.current?.setEnabled(enabled);},[enabled]);
+ useEffect(()=>{player.current?.setVolume(volume);},[volume]);
+ const toggle=()=>setEnabled(!enabled);
+ const changeVolume=(percent:number)=>setVolume(percent/100);
  const percent=Math.round(volume*100);
  const needsRetry=enabled&&(status==='blocked'||status==='error');
  const audible=enabled&&status==='playing'&&percent>0;
  const region=dungeon?'死亡矿井':({ironforge:'铁炉堡',darnassus:'达纳苏斯',orgrimmar:'奥格瑞玛',undercity:'幽暗城',thunderbluff:'雷霆崖',moonglade:'月光林地',lakeshire:'赤脊山',thelsamar:'洛克莫丹',algaz:'洛克莫丹',silverstream:'洛克莫丹'} as Record<string,string>)[location.id]||(['北郡','艾尔文'].includes(location.region)?'艾尔文森林':location.region);
  const hint=!enabled?'已暂停':!source?'暂无区域音乐':status==='error'?'加载失败 · 点击重试':status==='blocked'?'点击播放':percent===0?'已静音':status==='playing'?'正在播放':status==='paused'?'已暂停':'准备播放';
  const action=needsRetry?'播放背景音乐':enabled?'暂停背景音乐':'播放背景音乐';
+ if(!controls)return null;
  return <section className={styles.player} aria-label="区域音乐" data-playing={audible}>
   <div className={styles.mobileControl}><Popover><PopoverTrigger asChild><button type="button" className={styles.toggle} aria-label="音乐设置" title="音乐设置"><Music2 size={16}/></button></PopoverTrigger><PopoverContent side="top" align="end" className={styles.mobilePanel} aria-label="区域音乐设置"><strong>{region}</strong><p>{hint}</p><button type="button" onClick={needsRetry?()=>player.current?.retry():toggle}>{action}</button><label>音量 {percent}%<input type="range" min="0" max="100" step="1" value={percent} aria-label="背景音乐音量" aria-valuetext={`${percent}%`} onChange={event=>changeVolume(Number(event.target.value))}/></label></PopoverContent></Popover></div>
   <div className={styles.eyebrow}><Music2 size={12} aria-hidden="true"/><span>区域音乐</span><span className={styles.dot}/></div>

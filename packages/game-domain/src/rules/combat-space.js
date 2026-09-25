@@ -1,3 +1,4 @@
+import {fieldContains} from '../../../sim-core/src/encounter-geometry.js';
 import {environmentModifiers} from './class-environment.js';
 import {rooted,controlled,movementMultiplier} from '../../../sim-core/src/combat-auras.js';
 import {ranks,talentModifiers,talentCombatDefense} from './talent-effects.js';
@@ -27,6 +28,24 @@ function walkingEndpoint(s,unit,p,desired){
  return best;
 }
 
+// Walk along lava edges instead of immediately walking back into a cleared hazard.
+// Forced displacement still uses setCombatPosition and can land in lava.
+function terrainStep(s,unit,from,desired){
+ const raid=s?.combat?.raidEncounter;
+ if(!raid?.tactics.avoidFire||!combatMembers(s).some(c=>c.id===unit.id))return desired;
+ const fields=raid.fires.filter(f=>f.terrain&&f.until>s.clock);
+ if(!fields.length||fields.some(f=>fieldContains(f,from,.2)))return desired;
+ const safe=p=>!fields.some(f=>fieldContains(f,p,.2));
+ if(safe(desired))return desired;
+ const dx=desired.x-from.x,dy=desired.y-from.y;
+ for(const angle of [.4,-.4,.8,-.8,1.2,-1.2,1.6,-1.6]){
+  const p={x:from.x+dx*Math.cos(angle)-dy*Math.sin(angle),y:from.y+dx*Math.sin(angle)+dy*Math.cos(angle)};
+  const a=s.combat.area;if(p.x<a.minX||p.x>a.maxX||p.y<a.minY||p.y>a.maxY)continue;
+  if(safe(p))return p;
+ }
+ return from;
+}
+
 export function effectiveSpeed(unit,clock){
  if(unit.cast?.controlChannel||unit.talentProcs?.spiritOfRedemption?.until>clock)return 0;
  if(rooted(unit,clock)||controlled(unit,clock)&&!(unit.auras||[]).some(a=>a.type===7&&a.until>clock))return 0;
@@ -47,11 +66,11 @@ export function moveToward(s,unit,target,range,clock,dtMs=100){
  const stopRange=Math.max(0,range-1e-10);
  const p=point(unit),q=point(target),length=distance(unit,target),step=Math.min(Math.max(0,length-stopRange),effectiveSpeed(unit,clock)*Math.max(0,dtMs)/1000);
  if(!length||!step)return false;
- return setCombatPosition(s,unit,walkingEndpoint(s,unit,p,{x:p.x+(q.x-p.x)/length*step,y:p.y+(q.y-p.y)/length*step}));
+ return setCombatPosition(s,unit,terrainStep(s,unit,p,walkingEndpoint(s,unit,p,{x:p.x+(q.x-p.x)/length*step,y:p.y+(q.y-p.y)/length*step})));
 }
 export function moveAway(s,unit,target,clock,dtMs=100){
  const p=point(unit),q=point(target),length=distance(unit,target)||1,step=effectiveSpeed(unit,clock)*Math.max(0,dtMs)/1000;
- return setCombatPosition(s,unit,walkingEndpoint(s,unit,p,{x:p.x+((p.x-q.x)||(!distance(unit,target)?1:0))/length*step,y:p.y+(p.y-q.y)/length*step}));
+ return setCombatPosition(s,unit,terrainStep(s,unit,p,walkingEndpoint(s,unit,p,{x:p.x+((p.x-q.x)||(!distance(unit,target)?1:0))/length*step,y:p.y+(p.y-q.y)/length*step})));
 }
 export const aliveEnemy=e=>e.hp>0&&!e.removed&&!['weakened','captured'].includes(e.capturePhase);
 export const selfArea=sp=>['Frost Nova','Arcane Explosion','Thunder Clap','Whirlwind','Demoralizing Shout','Demoralizing Roar','Intimidating Shout','Psychic Scream','Howl of Terror','Holy Wrath','Consecration','Holy Nova','Hellfire','Blast Wave','Cone of Cold','Swipe'].includes(sp.SpellName);

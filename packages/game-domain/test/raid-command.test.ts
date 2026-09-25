@@ -1,3 +1,4 @@
+import {addRaidField} from '../src/rules/raid-battlefield.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createMoltenCoreDemo} from '../src/molten-core-demo.ts';
@@ -74,7 +75,7 @@ test('published tank and movement choices change actual initial targets and dang
  raidCommandAction(s,{type:'raidPlan',bossId:'magmadar',plan});start(s);
  assert.equal(s.combat.enemies[0].target,plan.mainTank);
  const r=s.combat.raidEncounter,c=s;r.nextBomb=Infinity;r.nextFear=Infinity;r.nextFrenzy=Infinity;
- const fire={id:'test',position:c.position,positionY:c.positionY,radius:6,armedAt:s.clock+2500,next:s.clock+2500,until:s.clock+10000};r.fires=[fire];c.cast={spell:133};
+ addRaidField(s,{center:{x:c.position,y:c.positionY},radius:6});c.cast={spell:133};
  moltenCoreTick(s,[s,...s.party],()=>{});assert.ok(c.cast,'greedy policy keeps casting before impact');
  r.command.plan.movement='early';moltenCoreTick(s,[s,...s.party],()=>{});assert.equal(c.cast,null,'early policy sacrifices the cast to move');
 });

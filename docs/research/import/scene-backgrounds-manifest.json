@@ -1,0 +1,984 @@
+{
+  "copyright": "World of Warcraft imagery © Blizzard Entertainment. Screenshots sourced from the linked Warcraft Wiki file pages; see each file page for contributor and licensing details.",
+  "assets": {
+    "alterac-mountains": {
+      "image": "/scenes/alterac-mountains.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Alterac_Mountains_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Ruins_of_Alterac.jpg",
+      "title": "Ruins of Alterac.jpg",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "sha256": "2f397860cb270bffb8ce7d8ade4fe99f1dcd7010b4179d1afab03c5d5c96bfb7",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Ruins_of_Alterac.jpg"
+    },
+    "arathi-highlands": {
+      "image": "/scenes/arathi-highlands.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Arathi_Highlands_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/The_Tower_of_Arathor.jpg",
+      "title": "The Tower of Arathor.jpg",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "sha256": "89481a62825995e9d312f3846a02e73e51e434bf7bde14c89aff0ca6a6427d4d",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:The_Tower_of_Arathor.jpg"
+    },
+    "ashenvale": {
+      "image": "/scenes/ashenvale.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Ashenvale_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Bough_Shadow.jpg",
+      "title": "Bough Shadow.jpg",
+      "originalSize": [
+        3431,
+        2160
+      ],
+      "sha256": "02790f1dcd0cc455ca2b7917004a4fd7bd56f49dbdc09a5f73931d70d24fef72",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Bough_Shadow.jpg"
+    },
+    "azshara": {
+      "image": "/scenes/azshara.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Azshara_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/AzsharaGeneralView.jpg",
+      "title": "AzsharaGeneralView.jpg",
+      "originalSize": [
+        1920,
+        1200
+      ],
+      "sha256": "6f938ca63ce25ddcc76f416991463aa15ce1c4dade90c7eacba6bd16314419f1",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:AzsharaGeneralView.jpg"
+    },
+    "badlands": {
+      "image": "/scenes/badlands.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Badlands_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Dustbowl.jpg",
+      "title": "Dustbowl.jpg",
+      "originalSize": [
+        1920,
+        1200
+      ],
+      "sha256": "5f94dddf07a0c30fa9e95d3a13eefacd1373e49d4addfe246dc48ae44a6aee0c",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Dustbowl.jpg"
+    },
+    "barrens": {
+      "image": "/scenes/barrens.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Barrens_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/The_Barrens1.jpg",
+      "title": "The Barrens1.jpg",
+      "originalSize": [
+        666,
+        499
+      ],
+      "sha256": "775f495d2650e4f131a1b8d79d0ec3897799d660fee7ec745bf318da65a56658",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:The_Barrens1.jpg"
+    },
+    "blackfathom-deeps": {
+      "image": "/scenes/blackfathom-deeps.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Blackfathom_Deeps",
+      "source": "https://warcraft.wiki.gg/images/Moonshrine_Sanctum_1.jpg",
+      "title": "Moonshrine Sanctum 1.jpg",
+      "originalSize": [
+        800,
+        600
+      ],
+      "sha256": "1c23910395ed072255e3f65410c44d601cd7de89537420fb5b3ff276b8a73854",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Moonshrine_Sanctum_1.jpg"
+    },
+    "blackrock-depths": {
+      "image": "/scenes/blackrock-depths.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Shadowforge_City",
+      "source": "https://warcraft.wiki.gg/images/Shadowforge_City.jpg",
+      "title": "Shadowforge City.jpg",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "sha256": "1ea64a5256600d7a92d61df24148e6c6a12113530c25fd4e513cdf654b5928ba",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Shadowforge_City.jpg"
+    },
+    "blasted-lands": {
+      "image": "/scenes/blasted-lands.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Blasted_Lands_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Serpent%27s_Coil_Blasted_Lands.jpg",
+      "title": "Serpent's Coil Blasted Lands.jpg",
+      "originalSize": [
+        1440,
+        900
+      ],
+      "sha256": "4c998615ef7cec93b0be0649e5e0fe31af556655593d10cf686b265ea32f2c3d",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Serpent%27s_Coil_Blasted_Lands.jpg"
+    },
+    "burning-steppes": {
+      "image": "/scenes/burning-steppes.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Burning_Steppes_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Altar_of_Storms_%28Burning_Steppes%29.jpg",
+      "title": "Altar of Storms (Burning Steppes).jpg",
+      "originalSize": [
+        1792,
+        1120
+      ],
+      "sha256": "836a234e35ca2a59330ee6036b8fa39a1ed6347f9c9dc212b77455d80f30481a",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Altar_of_Storms_%28Burning_Steppes%29.jpg"
+    },
+    "darkshore": {
+      "image": "/scenes/darkshore.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Darkshore_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/DarkshoreBeach.jpg",
+      "title": "DarkshoreBeach.jpg",
+      "originalSize": [
+        1280,
+        800
+      ],
+      "sha256": "ef5896b502904afd744a431cc309568961fd7c5eb923da2272fd1e2ceb915be8",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:DarkshoreBeach.jpg"
+    },
+    "darnassus": {
+      "image": "/scenes/darnassus.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Darnassus",
+      "source": "https://warcraft.wiki.gg/images/DarnSkyPic.jpg",
+      "title": "DarnSkyPic.jpg",
+      "originalSize": [
+        1819,
+        1023
+      ],
+      "sha256": "b97bb7e2e2a7c682d7945c2fb031278c39617cdbeb5bd90473689c9ad56d9c8a",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:DarnSkyPic.jpg"
+    },
+    "deadmines": {
+      "image": "/scenes/deadmines-ironclad.webp",
+      "page": "https://warcraft.wiki.gg/wiki/The_Deadmines",
+      "source": "https://warcraft.wiki.gg/images/Ironclad_Cove.jpg",
+      "title": "Ironclad Cove.",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "sha256": "1d3468544851b1785d5cba18cd874a8afbc8c52d1bfced5581a1ba5714bd2c0c",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Ironclad_Cove.jpg"
+    },
+    "desolace": {
+      "image": "/scenes/desolace.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Desolace_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Thunder_Axe_Fortress.jpg",
+      "title": "Thunder Axe Fortress.jpg",
+      "originalSize": [
+        1024,
+        768
+      ],
+      "sha256": "04401acf6a379b8289005332212e9cde8f4b45ad96ca468a2a086201a43cc236",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Thunder_Axe_Fortress.jpg"
+    },
+    "dire-maul-east": {
+      "image": "/scenes/dire-maul-east.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Warpwood_Quarter",
+      "source": "https://warcraft.wiki.gg/images/Warpwood_Quarter.jpg",
+      "title": "Warpwood Quarter.jpg",
+      "originalSize": [
+        800,
+        600
+      ],
+      "sha256": "6663e044d8a7715bd498bca938ddc9510f76c3be321335331f266a585717f3e2",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Warpwood_Quarter.jpg"
+    },
+    "dire-maul-north": {
+      "image": "/scenes/dire-maul-north.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Gordok_Commons",
+      "source": "https://warcraft.wiki.gg/images/Gordok%27s_Seat.jpg",
+      "title": "Gordok's Seat.jpg",
+      "originalSize": [
+        800,
+        600
+      ],
+      "sha256": "e8da803c787c62e2dccbf435ac3c4d536de970351dbbb17050a8497b2c3247f0",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Gordok%27s_Seat.jpg"
+    },
+    "dire-maul-west": {
+      "image": "/scenes/dire-maul-west.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Capital_Gardens",
+      "source": "https://warcraft.wiki.gg/images/Capital_Gardens.jpg",
+      "title": "Capital Gardens.jpg",
+      "originalSize": [
+        800,
+        600
+      ],
+      "sha256": "a789d772b12ec14b2f3ab13e72bb76e207ecf12002dc521c8ea6ed85c88570ac",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Capital_Gardens.jpg"
+    },
+    "dun-morogh": {
+      "image": "/scenes/dun-morogh.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Dun_Morogh_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Dun_Morogh.jpg",
+      "title": "Dun Morogh.jpg",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "sha256": "c3e132125c54d687226db059e2d7d7ff65a6a703dd6fde9bbf31dff08b302252",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Dun_Morogh.jpg"
+    },
+    "durotar": {
+      "image": "/scenes/durotar.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Durotar_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Durotar.jpg",
+      "title": "Durotar.jpg",
+      "originalSize": [
+        1200,
+        750
+      ],
+      "sha256": "5a4e8fe6738d823b41767af56f5cb5aa82552f5e89b30e98bd3b17cfa196b8a6",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Durotar.jpg"
+    },
+    "duskwood": {
+      "image": "/scenes/duskwood.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Duskwood_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Duskwood.jpg",
+      "title": "Duskwood.jpg",
+      "originalSize": [
+        1327,
+        861
+      ],
+      "sha256": "8a8599b6b9d54dfa4080d965c1a85f8eda5c02917b4658edeee35cc582b1e67b",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Duskwood.jpg"
+    },
+    "dustwallow-marsh": {
+      "image": "/scenes/dustwallow-marsh.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Dustwallow_Marsh_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Stonemaul_Ruins.jpg",
+      "title": "Stonemaul Ruins.jpg",
+      "originalSize": [
+        1919,
+        987
+      ],
+      "sha256": "983e60fab91a60248e9d3977779a3ab0e8f57f9cf531cefd1c8feeb02cb8511b",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Stonemaul_Ruins.jpg"
+    },
+    "eastern-plaguelands": {
+      "image": "/scenes/eastern-plaguelands.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Eastern_Plaguelands_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/EasternPlaguelandsScenery.jpg",
+      "title": "EasternPlaguelandsScenery.jpg",
+      "originalSize": [
+        1280,
+        800
+      ],
+      "sha256": "9f6058775ea8bdd5f60521ceb3b4c7c54fd39604c3045d8ad5900debca60cd76",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:EasternPlaguelandsScenery.jpg"
+    },
+    "elwynn": {
+      "image": "/scenes/elwynn.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Elwynn_Forest_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Elwynn_Forest.jpg",
+      "title": "Elwynn Forest.jpg",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "sha256": "982c4ce200acc5258900b553639ee983b99ab4573aeb2f71b001e3cc15503856",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Elwynn_Forest.jpg"
+    },
+    "felwood": {
+      "image": "/scenes/felwood.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Felwood_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Bloodvenom_River.jpg",
+      "title": "Bloodvenom River.jpg",
+      "originalSize": [
+        1437,
+        1079
+      ],
+      "sha256": "52fb12440a27fc4c7b910cdc838b8a721336ce7535bab91662048c8c7ec6f401",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Bloodvenom_River.jpg"
+    },
+    "feralas": {
+      "image": "/scenes/feralas.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Feralas_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Thalanaar.jpg",
+      "title": "Thalanaar.jpg",
+      "originalSize": [
+        1440,
+        900
+      ],
+      "sha256": "b4a8dd63e7f66420b2099d429cac17771d00590547a0b93ab2cf327738761544",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Thalanaar.jpg"
+    },
+    "gnomeregan": {
+      "image": "/scenes/gnomeregan.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Gnomeregan",
+      "source": "https://warcraft.wiki.gg/images/GnomereganHalls.jpg",
+      "title": "Gnomeregan Halls.",
+      "originalSize": [
+        1280,
+        800
+      ],
+      "sha256": "9e245415dda91ec138ed6b82eb8143854928174412947f280288f8b0d1716fe8",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:GnomereganHalls.jpg"
+    },
+    "hillsbrad-foothills": {
+      "image": "/scenes/hillsbrad-foothills.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Hillsbrad_Foothills_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Hillsbrad.jpg",
+      "title": "Hillsbrad.jpg",
+      "originalSize": [
+        1920,
+        1200
+      ],
+      "sha256": "d3989763447eae0c59d55472a70cb2d666f34fe140b2deedc29154c36814395d",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Hillsbrad.jpg"
+    },
+    "hinterlands": {
+      "image": "/scenes/hinterlands.webp",
+      "page": "https://warcraft.wiki.gg/wiki/The_Hinterlands",
+      "source": "https://warcraft.wiki.gg/images/Hinterlands_landscape.jpg",
+      "title": "Hinterlands landscape.jpg",
+      "originalSize": [
+        1680,
+        1050
+      ],
+      "sha256": "e59c92a8fd5e3f1fe5f12bacdc4c059824cf23439f95bda487c46f082531b7ee",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Hinterlands_landscape.jpg"
+    },
+    "ironforge": {
+      "image": "/scenes/ironforge.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Ironforge",
+      "source": "https://warcraft.wiki.gg/images/Great_Forge_-_Pearl_of_Pandaria.jpg",
+      "title": "Great Forge - Pearl of Pandaria.jpg",
+      "originalSize": [
+        1171,
+        670
+      ],
+      "sha256": "9d47327d27f69a19a7b82feffb123785bfd97a2273031e00cf64456ba02987f6",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Great_Forge_-_Pearl_of_Pandaria.jpg"
+    },
+    "loch-modan": {
+      "image": "/scenes/loch-modan.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Loch_Modan_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Thelsamar.jpg",
+      "title": "Thelsamar.jpg",
+      "originalSize": [
+        1847,
+        1077
+      ],
+      "sha256": "aaaa3bb40a3eb86688548e94e20499720d008005085611935880013595d9c4a3",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Thelsamar.jpg"
+    },
+    "lower-blackrock-spire": {
+      "image": "/scenes/lower-blackrock-spire.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Hordemar_City",
+      "source": "https://warcraft.wiki.gg/images/Hordemar_City.jpg",
+      "title": "Hordemar City.jpg",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "sha256": "ecacb0d8359ee4e14df19b267e2e6e2f01276065b9de55a39ef88af829186e6f",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Hordemar_City.jpg"
+    },
+    "maraudon-inner": {
+      "image": "/scenes/maraudon-inner.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Maraudon",
+      "source": "https://warcraft.wiki.gg/images/Zaetar%27s_Grave.jpg",
+      "title": "Zaetar's Grave.jpg",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "sha256": "1d1bc5947cffa728feff442872a47c96c64ea6bd68c87489c93ce9e3ec6d4770",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Zaetar%27s_Grave.jpg"
+    },
+    "maraudon-orange": {
+      "image": "/scenes/maraudon-orange.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Maraudon",
+      "source": "https://warcraft.wiki.gg/images/Noxious_Hollow.jpg",
+      "title": "Noxious Hollow.jpg",
+      "originalSize": [
+        800,
+        600
+      ],
+      "sha256": "9d5e76b3c372f25f5c643172caa0038cc59c4ebfe48f4828ade32de07dbdff8e",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Noxious_Hollow.jpg"
+    },
+    "maraudon-purple": {
+      "image": "/scenes/maraudon-purple.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Maraudon",
+      "source": "https://warcraft.wiki.gg/images/Vyletongue_Seat.jpg",
+      "title": "Vyletongue Seat.jpg",
+      "originalSize": [
+        800,
+        600
+      ],
+      "sha256": "9e1228f586d872c48f5d66ce9c4aeb7e9ce2f077ea0a15be3829c901bc390ff9",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Vyletongue_Seat.jpg"
+    },
+    "molten-core": {
+      "image": "/scenes/molten-core.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Molten_Core",
+      "source": "https://warcraft.wiki.gg/images/MoltenCore.JPG",
+      "title": "MoltenCore.JPG",
+      "originalSize": [
+        750,
+        603
+      ],
+      "sha256": "5f0bcf3bd9282d6e94c332fa8eec0f17f771cbe369e38efdfcda0b543be3e338",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:MoltenCore.JPG"
+    },
+    "moonglade": {
+      "image": "/scenes/moonglade.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Moonglade",
+      "source": "https://warcraft.wiki.gg/images/Moonglade.jpg",
+      "title": "Moonglade.jpg",
+      "originalSize": [
+        1859,
+        1061
+      ],
+      "sha256": "04e1c9320c600e08f8faa0844a44c51d7657b3b19bdeabfac0576f93656fad8e",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Moonglade.jpg"
+    },
+    "mulgore": {
+      "image": "/scenes/mulgore.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Mulgore_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Mulgore.jpg",
+      "title": "Mulgore.jpg",
+      "originalSize": [
+        840,
+        525
+      ],
+      "sha256": "8c7b34377af46defca519e776273f627c4a99238427eb087b1c81f73dabbbc9d",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Mulgore.jpg"
+    },
+    "onyxias-lair": {
+      "image": "/scenes/onyxias-lair.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Onyxia_(tactics)",
+      "source": "https://warcraft.wiki.gg/images/Lady_Onyxia.jpg",
+      "title": "Image of Onyxia",
+      "originalSize": [
+        3840,
+        2160
+      ],
+      "sha256": "f99977f25575d4f4dcd001d04a8bfa4f2e7e1ac5a9c8d760ab704a30f005c068",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Lady_Onyxia.jpg"
+    },
+    "orgrimmar": {
+      "image": "/scenes/orgrimmar.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Orgrimmar",
+      "source": "https://warcraft.wiki.gg/images/Orgrimmar_Gates_Classic_2.jpg",
+      "title": "Orgrimmar before Cataclysm.",
+      "originalSize": [
+        3840,
+        2160
+      ],
+      "sha256": "1ba44ffafdce494294d6d770a8a76c22e7776af5f8386f191dfaad6003ce7c5b",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Orgrimmar_Gates_Classic_2.jpg"
+    },
+    "ragefire-chasm": {
+      "image": "/scenes/ragefire-chasm.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Ragefire_Chasm_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Searing_Blade1.jpg",
+      "title": "Searing Blade1.jpg",
+      "originalSize": [
+        512,
+        384
+      ],
+      "sha256": "36f8e27dac7a79bf42961a39958fb0ce0faee4b05556858787f5903455658f09",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Searing_Blade1.jpg"
+    },
+    "razorfen-downs": {
+      "image": "/scenes/razorfen-downs.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Spiral_of_Thorns",
+      "source": "https://warcraft.wiki.gg/images/Spiral_of_Thorns.jpg",
+      "title": "Spiral of Thorns.jpg",
+      "originalSize": [
+        800,
+        600
+      ],
+      "sha256": "b3fc59494a19340a55217f8d803f18e934959d6a131e432cace379bedbef7862",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Spiral_of_Thorns.jpg"
+    },
+    "razorfen-kraul": {
+      "image": "/scenes/razorfen-kraul.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Razorfen_Kraul_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Razorfen_Kraul.jpg",
+      "title": "Razorfen Kraul.jpg",
+      "originalSize": [
+        600,
+        450
+      ],
+      "sha256": "006d12ebd91e3ef492e48c4e583b6dbd8301771b9d7b2d150eddeee49f3e747b",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Razorfen_Kraul.jpg"
+    },
+    "redridge-mountains": {
+      "image": "/scenes/redridge-mountains.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Redridge_Mountains_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Redridge_Mountains-old.jpg",
+      "title": "Redridge Mountains-old.jpg",
+      "originalSize": [
+        600,
+        450
+      ],
+      "sha256": "70dc15003a46b0726bb3d63d50f9b512be0849759a54ef4e3a6a59f9a41d0325",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Redridge_Mountains-old.jpg"
+    },
+    "scarlet-monastery-armory": {
+      "image": "/scenes/scarlet-monastery-armory.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Crusader's_Armory",
+      "source": "https://warcraft.wiki.gg/images/Crusader%27s_Armory.jpg",
+      "title": "Crusader's Armory.jpg",
+      "originalSize": [
+        800,
+        600
+      ],
+      "sha256": "59b826a14a3a39f6da00d3ab72876659528432cebe4057ed811243755ba0218e",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Crusader%27s_Armory.jpg"
+    },
+    "scarlet-monastery-cathedral": {
+      "image": "/scenes/scarlet-monastery-cathedral.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Crusader's_Chapel",
+      "source": "https://warcraft.wiki.gg/images/Crusader%27s_Chapel.jpg",
+      "title": "Crusader's Chapel.jpg",
+      "originalSize": [
+        1024,
+        768
+      ],
+      "sha256": "f2bd4b04381227c046e78bc8cad01c1e32aab14edeb866a962105fd90069ea28",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Crusader%27s_Chapel.jpg"
+    },
+    "scarlet-monastery-graveyard": {
+      "image": "/scenes/scarlet-monastery-graveyard.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Scarlet_Monastery_Graveyard",
+      "source": "https://warcraft.wiki.gg/images/Forlorn_Cloister.jpg",
+      "title": "Forlorn Cloister.jpg",
+      "originalSize": [
+        800,
+        600
+      ],
+      "sha256": "91c950f4bf391755afdd1169620fc958f1e014b2bb3b9246995cb2b688f2d68c",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Forlorn_Cloister.jpg"
+    },
+    "scarlet-monastery-library": {
+      "image": "/scenes/scarlet-monastery-library.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Athenaeum_(Scarlet_Monastery)",
+      "source": "https://warcraft.wiki.gg/images/Athenaeum.jpg",
+      "title": "Athenaeum.jpg",
+      "originalSize": [
+        1300,
+        975
+      ],
+      "sha256": "c2084c1c1eac4b5fc909de71a44a8b8a2a9ae2ab9688c665711bc0a56c3abb11",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Athenaeum.jpg"
+    },
+    "scholomance": {
+      "image": "/scenes/scholomance.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Scholomance",
+      "source": "https://warcraft.wiki.gg/images/Viewing_Room_5.0.jpg",
+      "title": "Viewing Room 5.0.jpg",
+      "originalSize": [
+        1440,
+        900
+      ],
+      "sha256": "37decfa675045287dbcfc8cc33d8a239e9cafda066fe515edf2358f6c379a535",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Viewing_Room_5.0.jpg"
+    },
+    "searing-gorge": {
+      "image": "/scenes/searing-gorge.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Searing_Gorge_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Firewatch_Ridge.jpg",
+      "title": "Firewatch Ridge.jpg",
+      "originalSize": [
+        600,
+        450
+      ],
+      "sha256": "5e655478ef3d14fb7814417f42187158243b4627ba03e90caa8c1bc42eeeaffd",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Firewatch_Ridge.jpg"
+    },
+    "shadowfang-keep": {
+      "image": "/scenes/shadowfang-keep.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Shadowfang_Keep_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Shadowfang_Keep2.jpg",
+      "title": "Shadowfang Keep2.jpg",
+      "originalSize": [
+        1440,
+        900
+      ],
+      "sha256": "44ba6a23e84cdcc6e19b1ef948d82de1f9f85ee751f0db605b770f63df482bdd",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Shadowfang_Keep2.jpg"
+    },
+    "silithus": {
+      "image": "/scenes/silithus.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Silithus_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Silithus.jpg",
+      "title": "Silithus.jpg",
+      "originalSize": [
+        1920,
+        1200
+      ],
+      "sha256": "58e280c0c113219883c17006e68fc6c321fecc2860b466dae0d9ce08fa08babc",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Silithus.jpg"
+    },
+    "silverpine-forest": {
+      "image": "/scenes/silverpine-forest.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Silverpine_Forest_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Silverpine_Forest_-night.jpg",
+      "title": "Silverpine Forest -night.jpg",
+      "originalSize": [
+        650,
+        446
+      ],
+      "sha256": "435ef5b9db804615f5cc74355c95698a16d632ac56f22a23cd8489dccc3bafa5",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Silverpine_Forest_-night.jpg"
+    },
+    "stockades": {
+      "image": "/scenes/stockades.webp",
+      "page": "https://warcraft.wiki.gg/wiki/The_Stockade",
+      "source": "https://warcraft.wiki.gg/images/Stockade_entrance.jpg",
+      "title": "Stockade entrance.jpg",
+      "originalSize": [
+        1919,
+        958
+      ],
+      "sha256": "7ca93aace9beae748a05f57d3120b0e3650830bfd8ceb5641e5543210fad470b",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Stockade_entrance.jpg"
+    },
+    "stonetalon-mountains": {
+      "image": "/scenes/stonetalon-mountains.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Stonetalon_Mountains_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Greatwood_Vale.jpg",
+      "title": "Greatwood Vale.jpg",
+      "originalSize": [
+        600,
+        450
+      ],
+      "sha256": "786026f8b5314561ad84432cffe485bda8807ee4fd0f8db1e79f9869baa6ca69",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Greatwood_Vale.jpg"
+    },
+    "stormwind": {
+      "image": "/scenes/stormwind.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Stormwind_City",
+      "source": "https://warcraft.wiki.gg/images/Stormwind_City_Classic.jpg",
+      "title": "Stormwind City Classic.jpg",
+      "originalSize": [
+        2400,
+        1350
+      ],
+      "sha256": "9f12d02fdb55b0e6292079898f4a134b610158ab6a2ae5a78ba3e91c74355595",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Stormwind_City_Classic.jpg"
+    },
+    "stranglethorn-vale": {
+      "image": "/scenes/stranglethorn-vale.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Stranglethorn_Vale_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Stranglethorn_Vale.jpg",
+      "title": "Stranglethorn Vale.jpg",
+      "originalSize": [
+        600,
+        450
+      ],
+      "sha256": "4190739d2ec3d4e682b4a494bc25a0fcf344980a2a1d6abf7dbd0cbf3582de5b",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Stranglethorn_Vale.jpg"
+    },
+    "stratholme-live": {
+      "image": "/scenes/stratholme-live.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Stratholme_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Scarlet.jpg",
+      "title": "Scarlet.jpg",
+      "originalSize": [
+        768,
+        576
+      ],
+      "sha256": "d51d831efd464c2011f6ece3f8cc8c93cba0674e81bb304bc1bf2c472de1c5ca",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Scarlet.jpg"
+    },
+    "stratholme-undead": {
+      "image": "/scenes/stratholme-undead.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Stratholme_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/The_slaughterhouse.jpg",
+      "title": "The slaughterhouse.jpg",
+      "originalSize": [
+        480,
+        360
+      ],
+      "sha256": "e9da2e00b3a9c26fa03ece6f477bd03432978ccde70ebe1be283b1e3ce817eb1",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:The_slaughterhouse.jpg"
+    },
+    "sunken-temple": {
+      "image": "/scenes/sunken-temple.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Temple_of_Atal'Hakkar_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Sunken_Temple_-_Official_Site.jpg",
+      "title": "Sunken Temple - Official Site.jpg",
+      "originalSize": [
+        800,
+        600
+      ],
+      "sha256": "e6563a2c9df9c6ecef8325ca8886e985cf24ad6a5920afca04061a1398dd6ede",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Sunken_Temple_-_Official_Site.jpg"
+    },
+    "swamp-of-sorrows": {
+      "image": "/scenes/swamp-of-sorrows.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Swamp_of_Sorrows_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Swamp_of_Sorrows.jpg",
+      "title": "Swamp of Sorrows.jpg",
+      "originalSize": [
+        1792,
+        1120
+      ],
+      "sha256": "195dc67ca25c7c190a685001d12b23512e44aecc401f262fb118f158cde627ee",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Swamp_of_Sorrows.jpg"
+    },
+    "tanaris": {
+      "image": "/scenes/tanaris.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Tanaris_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Tanaris.jpg",
+      "title": "Tanaris.jpg",
+      "originalSize": [
+        1920,
+        1200
+      ],
+      "sha256": "524a0544d122a058d0fef1529be0644e453151c6356e1896bd8d79d3ab92ef87",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Tanaris.jpg"
+    },
+    "teldrassil": {
+      "image": "/scenes/teldrassil.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Teldrassil_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Teldrassil.jpg",
+      "title": "Teldrassil.jpg",
+      "originalSize": [
+        1024,
+        768
+      ],
+      "sha256": "e0cb62f86c3ef4ae96adfe61557cc451fbd2ebfa3305f95d10928df0ecc5c917",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Teldrassil.jpg"
+    },
+    "thousand-needles": {
+      "image": "/scenes/thousand-needles.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Thousand_Needles_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/The_Great_Lift.jpg",
+      "title": "The Great Lift.jpg",
+      "originalSize": [
+        600,
+        450
+      ],
+      "sha256": "33128638f2629c33f815cc90aa1e1079fdfeaacb5f1860d4e7020a3fca6ed46b",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:The_Great_Lift.jpg"
+    },
+    "thunder-bluff": {
+      "image": "/scenes/thunder-bluff.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Thunder_Bluff",
+      "source": "https://warcraft.wiki.gg/images/Thunder_Bluff_Cataclysm.jpg",
+      "title": "Thunder Bluff Cataclysm.jpg",
+      "originalSize": [
+        1792,
+        1120
+      ],
+      "sha256": "e9d3a693ecd5bf5013e7a7ca1380b5425c1fcb4419eb65786cc9d290db63e5ff",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Thunder_Bluff_Cataclysm.jpg"
+    },
+    "tirisfal-glades": {
+      "image": "/scenes/tirisfal-glades.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Tirisfal_Glades_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Tirisfal_Glades.jpg",
+      "title": "Tirisfal Glades.jpg",
+      "originalSize": [
+        1871,
+        1011
+      ],
+      "sha256": "54d63f4e70f8871fb39f93c01f365c14d6927603678402c5fefbe1cec285b743",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Tirisfal_Glades.jpg"
+    },
+    "uldaman": {
+      "image": "/scenes/uldaman.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Uldaman",
+      "source": "https://warcraft.wiki.gg/images/Uldaman_entrance.jpg",
+      "title": "Uldaman entrance.jpg",
+      "originalSize": [
+        1919,
+        1079
+      ],
+      "sha256": "c6d61a8b94847f313900226fe9aebace36d8392160e1afe87952e057eaae56d8",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Uldaman_entrance.jpg"
+    },
+    "undercity": {
+      "image": "/scenes/undercity.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Undercity",
+      "source": "https://warcraft.wiki.gg/images/Undercity.jpg",
+      "title": "Undercity.jpg",
+      "originalSize": [
+        681,
+        524
+      ],
+      "sha256": "0174d907e23379a0135d92378961146deb1c963ce4fac87e01058e6ee4ded665",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Undercity.jpg"
+    },
+    "ungoro-crater": {
+      "image": "/scenes/ungoro-crater.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Un'Goro_Crater_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Un%27Goro_Crater.jpg",
+      "title": "Un'Goro Crater.jpg",
+      "originalSize": [
+        600,
+        450
+      ],
+      "sha256": "1093c9bd87dbe0ff42ad8bcf5627be90c403aab01711cacce5e323816230d458",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Un%27Goro_Crater.jpg"
+    },
+    "upper-blackrock-spire": {
+      "image": "/scenes/upper-blackrock-spire.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Blackrock_Stadium",
+      "source": "https://warcraft.wiki.gg/images/Blackrock_Stadium.jpg",
+      "title": "Blackrock Stadium.jpg",
+      "originalSize": [
+        800,
+        600
+      ],
+      "sha256": "7f8201a3cf0d857be9b43cb0d748e55944e74b85cfcb4c9a2c344ea345785527",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Blackrock_Stadium.jpg"
+    },
+    "wailing-caverns": {
+      "image": "/scenes/wailing-caverns.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Wailing_Caverns",
+      "source": "https://warcraft.wiki.gg/images/Cavern_of_Mists.jpg",
+      "title": "Cavern of Mists.jpg",
+      "originalSize": [
+        1920,
+        1080
+      ],
+      "sha256": "4457d6a475b7792413e96cdc4e895aa2cab64c6dc73ee33c088ee1b6bb24082b",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Cavern_of_Mists.jpg"
+    },
+    "western-plaguelands": {
+      "image": "/scenes/western-plaguelands.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Western_Plaguelands_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Western_Plaguelands_woods.jpg",
+      "title": "Western Plaguelands woods.jpg",
+      "originalSize": [
+        717,
+        538
+      ],
+      "sha256": "ad6c40b1cd33012f9e64ae58dc97e5b67a3770c2740e4e71f9c68b2abf31f2bd",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Western_Plaguelands_woods.jpg"
+    },
+    "westfall": {
+      "image": "/scenes/westfall.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Westfall_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/BlizzCon_2018_-_Classic_Westfall.jpg",
+      "title": "BlizzCon 2018 - Classic Westfall.jpg",
+      "originalSize": [
+        3840,
+        2160
+      ],
+      "sha256": "c0c67b9826f9d1a514de44cd472acecba6ac8d6b4a1188ce485afd7ab04c345f",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:BlizzCon_2018_-_Classic_Westfall.jpg"
+    },
+    "wetlands": {
+      "image": "/scenes/wetlands.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Wetlands_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/The_Green_Belt.jpg",
+      "title": "The Green Belt.jpg",
+      "originalSize": [
+        1792,
+        1120
+      ],
+      "sha256": "edfc38f69f96f48912c15af4a91af28548dbf0375ac53f303cddaff10f7165bb",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:The_Green_Belt.jpg"
+    },
+    "winterspring": {
+      "image": "/scenes/winterspring.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Winterspring_(Classic)",
+      "source": "https://warcraft.wiki.gg/images/Winterspring.jpg",
+      "title": "Winterspring.jpg",
+      "originalSize": [
+        1607,
+        1061
+      ],
+      "sha256": "1b7e8b9d8833c6bce3e537cc444c6d0603992f33ac07d25e0cee2919cbd31015",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Winterspring.jpg"
+    },
+    "zul-farrak": {
+      "image": "/scenes/zul-farrak.webp",
+      "page": "https://warcraft.wiki.gg/wiki/Zul'Farrak",
+      "source": "https://warcraft.wiki.gg/images/Zul%27Farrak.jpg",
+      "title": "Zul'Farrak.jpg",
+      "originalSize": [
+        640,
+        512
+      ],
+      "sha256": "3a6000bec4f5da8ed6118e894de1adae66bba04ec59bde6aa0157b35a23766f5",
+      "filePage": "https://warcraft.wiki.gg/wiki/File:Zul%27Farrak.jpg"
+    }
+  },
+  "regions": {
+    "艾尔文": "elwynn",
+    "西部荒野": "westfall",
+    "丹莫罗": "dun-morogh",
+    "洛克莫丹": "loch-modan",
+    "赤脊山": "redridge-mountains",
+    "暮色森林": "duskwood",
+    "湿地": "wetlands",
+    "泰达希尔": "teldrassil",
+    "黑海岸": "darkshore",
+    "杜隆塔尔": "durotar",
+    "莫高雷": "mulgore",
+    "提瑞斯法林地": "tirisfal-glades",
+    "银松森林": "silverpine-forest",
+    "贫瘠之地": "barrens",
+    "石爪山脉": "stonetalon-mountains",
+    "灰谷": "ashenvale",
+    "希尔斯布莱德丘陵": "hillsbrad-foothills",
+    "千针石林": "thousand-needles",
+    "阿拉希高地": "arathi-highlands",
+    "凄凉之地": "desolace",
+    "荆棘谷": "stranglethorn-vale",
+    "荒芜之地": "badlands",
+    "悲伤沼泽": "swamp-of-sorrows",
+    "尘泥沼泽": "dustwallow-marsh",
+    "奥特兰克山脉": "alterac-mountains",
+    "塔纳利斯": "tanaris",
+    "菲拉斯": "feralas",
+    "辛特兰": "hinterlands",
+    "月光林地": "moonglade",
+    "铁炉堡": "ironforge",
+    "达纳苏斯": "darnassus",
+    "奥格瑞玛": "orgrimmar",
+    "雷霆崖": "thunder-bluff",
+    "幽暗城": "undercity",
+    "暴风城": "stormwind",
+    "灼热峡谷": "searing-gorge",
+    "燃烧平原": "burning-steppes",
+    "诅咒之地": "blasted-lands",
+    "西瘟疫之地": "western-plaguelands",
+    "东瘟疫之地": "eastern-plaguelands",
+    "艾萨拉": "azshara",
+    "费伍德森林": "felwood",
+    "冬泉谷": "winterspring",
+    "安戈洛环形山": "ungoro-crater",
+    "希利苏斯": "silithus"
+  },
+  "dungeons": {
+    "deadmines": "deadmines",
+    "shadowfang-keep": "shadowfang-keep",
+    "stockades": "stockades",
+    "wailing-caverns": "wailing-caverns",
+    "blackfathom-deeps": "blackfathom-deeps",
+    "ragefire-chasm": "ragefire-chasm",
+    "gnomeregan": "gnomeregan",
+    "razorfen-kraul": "razorfen-kraul",
+    "scarlet-monastery-graveyard": "scarlet-monastery-graveyard",
+    "scarlet-monastery-library": "scarlet-monastery-library",
+    "scarlet-monastery-armory": "scarlet-monastery-armory",
+    "scarlet-monastery-cathedral": "scarlet-monastery-cathedral",
+    "razorfen-downs": "razorfen-downs",
+    "uldaman": "uldaman",
+    "zul-farrak": "zul-farrak",
+    "maraudon-purple": "maraudon-purple",
+    "maraudon-orange": "maraudon-orange",
+    "maraudon-inner": "maraudon-inner",
+    "sunken-temple": "sunken-temple",
+    "blackrock-depths": "blackrock-depths",
+    "lower-blackrock-spire": "lower-blackrock-spire",
+    "upper-blackrock-spire": "upper-blackrock-spire",
+    "dire-maul-west": "dire-maul-west",
+    "dire-maul-east": "dire-maul-east",
+    "dire-maul-north": "dire-maul-north",
+    "scholomance": "scholomance",
+    "stratholme-undead": "stratholme-undead",
+    "stratholme-live": "stratholme-live",
+    "molten-core": "molten-core",
+    "onyxias-lair": "onyxias-lair"
+  }
+}

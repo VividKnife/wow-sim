@@ -3,7 +3,7 @@ import {syncNpcWorld} from './rules/npc-world.js';
 import type { ReadView, Transaction } from '../../persistence/src/store.ts';
 import { DomainError, requireThat } from './model.ts';
 import type { Account, AccountPresence, Character, Item, Wallet, Rules, Activity } from './model.ts';
-const separated = ['id', 'money', 'bag', 'bags', 'bank', 'equipment', 'pending', 'auctions', 'party', 'activity', 'dungeon', 'receipts'];
+const separated = ['serverBuffs', 'id', 'money', 'bag', 'bags', 'bank', 'equipment', 'pending', 'auctions', 'party', 'activity', 'dungeon', 'receipts'];
 export const clone = <T>(value: T): T => structuredClone(value);
 // Explicit simulation timestamp projection when a character joins another clock.
 // Wall timestamps and numeric values such as XP, durations and charges never move.

@@ -17,7 +17,9 @@
     "combat:audit:check": "node scripts/audit-spell-contracts.mjs --check",
     "game:server": "node --env-file-if-exists=.env apps/game-server/src/main.ts",
     "game:worker": "node --env-file-if-exists=.env apps/game-worker/src/main.ts",
-    "demo:molten-core": "node apps/web/scripts/serve-molten-core-demo.mjs"
+    "demo:molten-core": "node apps/web/scripts/serve-molten-core-demo.mjs",
+    "demo:classic-ui": "node apps/web/scripts/serve-classic-ui-demo.mjs",
+    "demo:journey-ui": "node apps/web/scripts/serve-journey-ui-demo.mjs"
   },
   "engines": {
     "node": ">=24.11.1"

@@ -15,9 +15,9 @@ test('quest commands map to the original accept and completion cues',()=>{
 test('quest audio uses the public assets and does not interrupt commands when playback is blocked',async()=>{
  const voices=[];
  const createAudio=src=>{const voice={src,volume:0,play(){return Promise.reject(new Error('blocked'));}};voices.push(voice);return voice;};
- assert.equal(playQuestSound({type:'accept'},{createAudio}),true);
- assert.equal(playQuestSound({type:'turnin'},{createAudio}),true);
- assert.equal(playQuestSound({type:'travel'},{createAudio}),false);
+ assert.equal(playQuestSound({type:'accept'},{createAudio,enabled:true,volume:.7}),true);
+ assert.equal(playQuestSound({type:'turnin'},{createAudio,enabled:true,volume:.7}),true);
+ assert.equal(playQuestSound({type:'travel'},{createAudio,enabled:true,volume:.7}),false);
  assert.deepEqual(voices.map(({src,volume})=>({src,volume})),[
   {src:'/sounds/quest-accept.ogg',volume:.35},
   {src:'/sounds/quest-complete.ogg',volume:.35},
@@ -37,3 +37,11 @@ test('quest cues retain their catalogued original Classic interface assets',()=>
   assert.equal(bytes.subarray(0,4).toString(),'OggS');assert.equal(bytes.length,record.bytes);assert.equal(hash(bytes),record.sha256);
  }
 });
+
+ test('global effects mute suppresses quest cues and volume scales them',()=>{
+ const voices=[];const createAudio=src=>{const voice={src,volume:0,play(){}};voices.push(voice);return voice;};
+ assert.equal(playQuestSound({type:'accept'},{createAudio,enabled:false,volume:1}),false);
+ assert.equal(voices.length,0);
+ assert.equal(playQuestSound({type:'accept'},{createAudio,enabled:true,volume:.4}),true);
+ assert.equal(voices[0].volume,.2);
+ });

@@ -1,13 +1,13 @@
+import {raidFieldsTick,addRaidField} from './raid-battlefield.js';
 import {raidCommandTick,assignedRaidSupport,raidDispelTargets} from './raid-command.js';
 import {onyxiaTick} from './onyxia-encounter.js';
 // Authored 25-player adaptation. Boss scripts use the existing combat damage,
 // aura, movement, resource and cooldown systems; no parallel combat calculator.
-import {goldNpcTick,goldAvoidsFire} from './gold-raid-npcs.js';
+import {goldNpcTick} from './gold-raid-npcs.js';
 import {rng,spellInfo,knownRank} from './character.js';
 import {combatRole} from './combat-roles.js';
 import {distance} from '../../../sim-core/src/geometry.js';
 import {controlled,addCombatAura} from '../../../sim-core/src/combat-auras.js';
-import {moveToward} from './combat-space.js';
 import {beginSpellTiming,spellReady} from './spell-timing.js';
 import {dispelSpellAuras,applySpellAura} from './spell-aura-lifecycle.js';
 import {consumeHunterAmmo} from './ammunition.js';
@@ -89,21 +89,11 @@ export function moltenCoreTick(s,actors,hurt) {
   if(s.clock>=raid.nextBomb){raid.nextBomb+=14000;
    raidAnimation(s,boss);
    const targets=randomTargets(s,living.filter(c=>combatRole(c)!=='tank'),2);
-   for(const c of targets)raid.fires.push({id:`fire-${s.clock}-${c.id}`,position:c.position,positionY:c.positionY,radius:6,armedAt:s.clock+2500,until:s.clock+11500,next:s.clock+2500});
+   for(const c of targets)addRaidField(s,{center:{x:c.position,y:c.positionY},radius:6},{label:'熔岩炸弹',duration:9000});
    raidNotice(s,'熔岩炸弹：2.5秒后落地，撤出红色区域。');
   }
  }
- {
-  for(const fire of raid.fires){
-   if(s.clock>=fire.next&&s.clock<fire.until){fire.next+=1000;for(const c of living.filter(c=>distance(c,fire)<=fire.radius)){raid.failures.fire++;if(c.goldNpc)c.goldProfile.fireHits++;hurt(s,boss,c,750,'熔岩灼烧',{spellId:19411,school:2,periodic:true});}}
-   if(raid.tactics.avoidFire)for(const c of living.filter(c=>distance(c,fire)<=fire.radius+1&&!controlled(c,s.clock)&&goldAvoidsFire(s,c,fire))){
-    const dx=c.position-fire.position,dy=c.positionY-fire.positionY,angle=Math.hypot(dx,dy)<.1?(Number(c.raidIndex)%2?1:-1)*Math.PI/2:Math.atan2(dy,dx);
-    if(raid.command?.plan.movement==='finishCast'&&c.cast&&s.clock<fire.armedAt)continue;
-    c.cast=null;moveToward(s,c,{position:fire.position+Math.cos(angle)*(fire.radius+4),positionY:fire.positionY+Math.sin(angle)*(fire.radius+4)},0,s.clock);c.raidEvadingAt=s.clock;
-   }
-  }
-  raid.fires=raid.fires.filter(f=>f.until>s.clock);
- }
+ raidFieldsTick(s,actors,boss,hurt);
  for(const c of living){
   if(c.raidEvadingAt===s.clock)continue;
   if(raid.tactics.dispel&&[5,8].includes(c.classId)&&assignedRaidSupport(s,c,c.classId===5?'magic':'curse')){

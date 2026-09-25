@@ -1,0 +1,37 @@
+{"time":0,"level":1,"location":"northshire","event":"start-or-resume","maxLevel":10}
+{"time":1188300,"level":5,"location":"northshire","event":"level","from":4,"to":5,"hours":0.33,"kills":59,"quests":6}
+{"time":1382300,"level":5,"location":"northshire","event":"error","error":"Error: inventory blocked while grinding","stack":"Error: inventory blocked while grinding\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:266:56"}
+{"time":1382300,"level":5,"location":"northshire","event":"start-or-resume","maxLevel":10}
+{"time":1382300,"level":5,"location":"northshire","event":"error","error":"Error: 仅可上架未绑定、未锁定的非任务物品；灰色垃圾请售予商人","stack":"Error: 仅可上架未绑定、未锁定的非任务物品；灰色垃圾请售予商人\n    at auctionSellBatch (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/inventory.js:44:69)\n    at storageAction (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/inventory.js:58:34)\n    at act (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/engine.js:200:52)\n    at command (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:35:4)\n    at lootAndClear (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:76:3)\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:252:7"}
+{"time":1382300,"level":5,"location":"northshire","event":"start-or-resume","maxLevel":10}
+{"time":1803200,"level":6,"location":"northshire","event":"level","from":5,"to":6,"hours":0.5,"kills":98,"quests":6}
+{"time":2537300,"level":7,"location":"northshire","event":"level","from":6,"to":7,"hours":0.7,"kills":152,"quests":6}
+{"time":3570900,"level":8,"location":"northshire","event":"level","from":7,"to":8,"hours":0.99,"kills":231,"quests":6}
+{"time":4714200,"level":9,"location":"logging","event":"level","from":8,"to":9,"hours":1.31,"kills":272,"quests":11}
+{"time":7017800,"level":10,"location":"sentinel","event":"level","from":9,"to":10,"hours":1.95,"kills":333,"quests":12}
+{"time":7017800,"level":10,"location":"sentinel","event":"complete"}
+{"time":7017800,"level":10,"location":"sentinel","event":"start-or-resume","maxLevel":20}
+{"time":9480100,"level":11,"location":"sentinel","event":"level","from":10,"to":11,"hours":2.63,"kills":400,"quests":13}
+{"time":12050100,"level":12,"location":"sentinel","event":"level","from":11,"to":12,"hours":3.35,"kills":494,"quests":13}
+{"time":15876700,"level":13,"location":"sentinel","event":"level","from":12,"to":13,"hours":4.41,"kills":581,"quests":14}
+{"time":19494100,"level":14,"location":"saldean","event":"level","from":13,"to":14,"hours":5.42,"kills":679,"quests":15}
+{"time":24646300,"level":15,"location":"saldean","event":"level","from":14,"to":15,"hours":6.85,"kills":788,"quests":15}
+{"time":31084500,"level":16,"location":"sentinel","event":"level","from":15,"to":16,"hours":8.63,"kills":897,"quests":16}
+{"time":36286400,"level":17,"location":"lakeshire","event":"level","from":16,"to":17,"hours":10.08,"kills":1011,"quests":19}
+{"time":41514100,"level":18,"location":"lakeshire","event":"level","from":17,"to":18,"hours":11.53,"kills":1144,"quests":19}
+{"time":44431100,"level":18,"location":"deadmines","event":"dungeon-error","id":"deadmines","error":"Error: 角色已死亡，请先复活。"}
+{"time":44431100,"level":18,"location":"deadmines","event":"error","error":"Error: 角色已死亡，请先复活。","stack":"Error: 角色已死亡，请先复活。\n    at act (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/engine.js:196:351)\n    at command (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:36:4)\n    at revive (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:209:15)\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:252:41"}
+{"time":44431100,"level":18,"location":"deadmines","event":"start-or-resume","maxLevel":20}
+{"time":44460000,"level":18,"location":"deadmines","event":"error","error":"Error: 请先离开副本再进行这项操作。","stack":"Error: 请先离开副本再进行这项操作。\n    at act (file:///Users/shufan/workspace/wow-sim/packages/game-domain/src/rules/engine.js:197:522)\n    at command (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:36:4)\n    at travel (file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:54:2)\n    at file:///Users/shufan/workspace/wow-sim/scripts/full-leveling-probe.mjs:272:4"}
+{"time":44460000,"level":18,"location":"deadmines","event":"start-or-resume","maxLevel":20}
+{"time":48948500,"level":19,"location":"lighthouse","event":"level","from":18,"to":19,"hours":13.6,"kills":1580,"quests":20}
+{"time":55977500,"level":20,"location":"lighthouse","event":"level","from":19,"to":20,"hours":15.55,"kills":2163,"quests":20}
+{"time":55977500,"level":20,"location":"lighthouse","event":"complete"}
+{"time":55977500,"level":20,"location":"lighthouse","event":"start-or-resume","maxLevel":25}
+{"time":60811200,"level":20,"location":"lakeshire","event":"start-or-resume","maxLevel":25}
+{"time":118301893,"level":25,"location":"ratchet","event":"complete"}
+{"time":118301893,"level":25,"location":"ratchet","event":"start-or-resume","maxLevel":30}
+{"time":136544800,"level":26,"location":"astranaar","event":"level","from":25,"to":26,"hours":37.93,"kills":3081,"quests":121}
+{"time":138341700,"level":26,"location":"stockades","event":"dungeon","id":"stockades","atLevel":26,"start":136544800,"end":138341700,"duration":1796900,"xp":1065,"kills":9,"deaths":1,"completed":false,"cursor":3}
+{"time":169653600,"level":28,"location":"sludge-fen","event":"level","from":27,"to":28,"hours":47.13,"kills":3500,"quests":157}
+{"time":189042800,"level":29,"location":"southshore","event":"level","from":28,"to":29,"hours":52.51,"kills":4093,"quests":159}

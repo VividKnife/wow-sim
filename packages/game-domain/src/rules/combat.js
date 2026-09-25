@@ -1,3 +1,4 @@
+import {commandAvailable,commandOrder,commandSkillReason,commandDamageRules} from './combat-command.js';
 import {beginJourneyBattle} from './journey.js';
 import {pvpApplyControl,pvpAbilityAllowed,pvpTriggeredControl} from './pvp-runtime.js';
 import {breakPvpControls,syncPvpDiminishing} from '../../../sim-core/src/pvp-control.js';
@@ -72,6 +73,7 @@ export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombat
  const pullTank=combatMembers(s).find(c=>!c.petUnit&&!c.totemUnit&&!c.escortNpc&&c.hp>0&&combatRole(c)==='tank');
  for(const [i,e] of s.combat.enemies.entries()){if(pullTank&&!e.target&&!e.controlledBy)e.target=pullTank.id;const spawn=dungeon?{position:30+Math.floor(i/3)*2,positionY:i===0?0:(i%2?1:-1)*Math.ceil(i/2)*2}:personalEnemyPosition(s,i,openingRange);e.position=spawn.position;e.positionY=spawn.positionY;e.nextAttack=s.clock;e.nextSpell=s.clock+6000;}
  for(const unit of [...combatMembers(s),...s.combat.enemies])setCombatPosition(s,unit,unit);
+ if(s.settings.commandCombat&&commandAvailable(s))s.combat.command={paused:true,marks:{},orders:[],focusId:null,holdFire:false};
  initializeMetrics(s);
  for(const e of s.combat.enemies)initializeSmite(s,e,combatMembers(s),hurtPlayer);
  beginJourneyBattle(s);
@@ -282,6 +284,30 @@ function decideConfigured(s,c,e,targets,actors,api,rules=c.rules){
  if(approach){moveToward(s,c,approach.target,approach.range,s.clock);return true;}
  return false;
 }
+function executeCombatOrder(s,c,actors,api){
+ const order=commandOrder(s,c);if(!order||order.kind==='kite')return false;
+ const target=s.combat.enemies.find(e=>e.id===order.targetId&&aliveEnemy(e));
+ if(!target)return false;
+ if(order.executed){s.combat.command.orders=s.combat.command.orders.filter(o=>o!==order);return false;}
+ const sp=spellInfo(c,order.spellId);
+ if(commandSkillReason(s,c,target,sp))return false;
+ if(order.kind==='interrupt'&&!target.cast)return false;
+ if(order.kind==='soft'&&(target.dots||[]).some(dot=>dot.remaining>0))return false;
+ if(order.kind==='soft'&&(target.polyUntil>s.clock||(target.auras||[]).some(a=>a.until>s.clock&&[5,7,12,18].includes(a.type))))return false;
+ if(c.nextAction>s.clock)return false;
+ if(['Sap','Cheap Shot'].includes(sp.SpellName)&&!c.stealthed){
+  const stealth=knownRank(c,1784);if(stealth)return !!decideClass(s,c,target,actors,api,[{spell:stealth,condition:'always',value:0,enabled:true}]);return false;
+ }
+ if(sp.SpellName==='Freezing Trap'){
+  if(c.trap){c.trap.commandTargetId=target.id;return false;}
+  if(s.combat.pull?.engagedAt!=null&&!(c.feignUntil>s.clock))return false;
+  if(distance(c,target)>3){moveToward(s,c,target,3,s.clock);return true;}
+ }
+ const before=s.combat.casts;
+ const result=decideConfigured(s,c,target,[target],actors,api,[{spell:order.spellId,condition:'always',value:0,enabled:true}]);
+ if(s.combat.casts>before){order.startedAt=s.clock;if(order.kind!=='soft')order.executed=true;if(c.trap)c.trap.commandTargetId=target.id;}
+ return !!result;
+}
 function cancelInvalidCast(s,c,cast,reason){
  c.cast=null;c.nextAction=s.clock;
  if(reason==='range')c.castRangeFailure={target:cast.target,until:s.clock+10000};
@@ -289,7 +315,8 @@ function cancelInvalidCast(s,c,cast,reason){
  log(s,`${cast.channel?'引导中止':'施法取消'}：${labels[reason]}`,'cancel',{actorId:c.id,targetId:cast.target,spellId:cast.spell,reason});
 }
 export function combatTick(s,{pvpTeam=false}={}){
- const battle=s.combat;if(!battle)return;
+ const battle=s.combat;if(!battle||battle.command?.paused)return;
+ if(battle.command){battle.command.orders=battle.command.orders.filter(o=>battle.enemies.some(e=>e.id===o.targetId&&aliveEnemy(e))&&combatMembers(s).some(c=>c.id===o.memberId&&c.hp>0));if(battle.enemies.filter(aliveEnemy).length===1)battle.command.orders=battle.command.orders.filter(o=>o.kind!=='soft');}
  if(battle.pull&&s.clock<battle.pull.startsAt)return;
  initializeMetrics(s);const actors=combatMembers(s);for(const c of actors){c.time=s.clock;const st=stats(c);c.currentMaxHp=st.maxHp;c.currentMaxMana=st.maxMana;}
  if(!pvpTeam)dungeonBossPhaseTick(s,actors,hurtPlayer);
@@ -308,9 +335,10 @@ export function combatTick(s,{pvpTeam=false}={}){
  battle.pendingSpawns=(battle.pendingSpawns||[]).filter(p=>p.at>s.clock);
  const enemyPositions=new Map(battle.enemies.map(e=>[e.id,point(e)])),openingLogSequence=s.logSequence;
  for(const c of actors.filter(c=>c.hp>0)){
+  if(c===opener&&battle.pull&&battle.pull.engagedAt==null&&s.clock<battle.pull.startsAt+10000&&battle.command?.orders.some(o=>o.kind==='soft'&&!o.startedAt&&o.memberId!==c.id))continue;
   if(!pvpTeam&&dungeonCharmTick(s,c,actors,hurtPlayer))continue;
   if(c.raidEvadingAt===s.clock)continue;
-  if(battle.pull&&battle.pull.engagedAt==null&&c!==opener)continue;
+  if(battle.pull&&battle.pull.engagedAt==null&&c!==opener&&!commandOrder(s,c))continue;
   racialTick(s,c,battle.enemies);onTalentEvent(s,c,{type:'tick'},{...classApi});
   if(c.pvp){syncPvpDiminishing(c,s.clock);if(s.clock-(c.lastHostileAt??-Infinity)>5000)c.inCombat=false;}
   if(c.totemUnit)continue;
@@ -337,6 +365,7 @@ export function combatTick(s,{pvpTeam=false}={}){
     if(cast.taming){if(target?.hp>0&&inSpellRange(c,target,sp))tameClassPet(s,c,target,sp);}else if(cast.classSpecial){const recipient=actors.find(a=>a.id===cast.target)||target;if(recipient&&(recipient.hp>0||sp.SpellName==='Rebirth')&&(recipient===c||inSpellRange(c,recipient,sp)))classEffect(s,c,recipient,sp,actors,classApi);}else if(cast.friendly){resolveHeal(s,c,actors.find(a=>a.id===cast.target),sp);endTalentCast(s,c,sp,cast.talentCast,classApi,{target});}else if(!cast.channel)releaseSpell(s,c,target,sp,cast.center);if(c.cast===cast)c.cast=null;
    }else continue;
   }
+  if(executeCombatOrder(s,c,actors,classApi))continue;
   const targets=battle.enemies.filter(aliveEnemy);const e=companionTarget(s,c,targets);if(!e)continue;c.target=e.id;
   if(c.pvp&&c.arenaRetreatTarget&&!c.cast){const ally=actors.find(a=>a.id===c.arenaRetreatTarget&&a.hp>0);if(ally&&(distance(c,ally)>8||!arenaSight(c,ally))&&moveToward(s,c,ally,8,s.clock))continue;}
   if(s.clock>=c.nextAction){
@@ -356,7 +385,7 @@ export function combatTick(s,{pvpTeam=false}={}){
    }
   }
   if(positionPartyMember(s,c,e))continue;
-  if(s.clock>=c.nextAction){if(decidePriestDefense(s,c,actors,classApi))continue;if(decideConfigured(s,c,e,targets,actors,classApi)===true)continue;}
+  if(s.clock>=c.nextAction){if(decidePriestDefense(s,c,actors,classApi))continue;const areaRules=commandDamageRules(s,c);if(areaRules.length&&decideConfigured(s,c,e,targets,actors,classApi,areaRules)===true)continue;if(decideConfigured(s,c,e,targets,actors,classApi)===true)continue;}
   if(!c.cast&&!c.stealthed)offhand(s,c,e);
   if(c.classId===3&&!c.cast)hunterShot(s,c,e);
   else if(!holdsBackline(s,c)&&!c.cast&&!c.stealthed&&(c.classId!==5||c===s)&&!(c.classId===8&&s.clock<c.nextAction)&&(![7,9,11].includes(c.classId)||c.form||s.clock>=c.nextAction))melee(s,c,e);

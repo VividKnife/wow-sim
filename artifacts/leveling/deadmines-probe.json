@@ -1,0 +1,110 @@
+[
+  {
+    "class": "战士",
+    "classId": 1,
+    "raceId": 1,
+    "minutes": 12,
+    "kills": 36,
+    "xp": 1543,
+    "routeCursor": 8,
+    "completed": false,
+    "reason": "",
+    "dead": []
+  },
+  {
+    "class": "圣骑士",
+    "classId": 2,
+    "raceId": 1,
+    "minutes": 12,
+    "kills": 39,
+    "xp": 1799,
+    "routeCursor": 9,
+    "completed": false,
+    "reason": "",
+    "dead": []
+  },
+  {
+    "class": "猎人",
+    "classId": 3,
+    "raceId": 2,
+    "minutes": 12,
+    "kills": 41,
+    "xp": 1967,
+    "routeCursor": 10,
+    "completed": false,
+    "reason": "",
+    "dead": []
+  },
+  {
+    "class": "潜行者",
+    "classId": 4,
+    "raceId": 1,
+    "minutes": 12,
+    "kills": 40,
+    "xp": 1883,
+    "routeCursor": 9,
+    "completed": false,
+    "reason": "",
+    "dead": []
+  },
+  {
+    "class": "牧师",
+    "classId": 5,
+    "raceId": 1,
+    "minutes": 12,
+    "kills": 38,
+    "xp": 1726,
+    "routeCursor": 8,
+    "completed": false,
+    "reason": "",
+    "dead": []
+  },
+  {
+    "class": "萨满祭司",
+    "classId": 7,
+    "raceId": 2,
+    "minutes": 12,
+    "kills": 38,
+    "xp": 1726,
+    "routeCursor": 8,
+    "completed": false,
+    "reason": "",
+    "dead": []
+  },
+  {
+    "class": "法师",
+    "classId": 8,
+    "raceId": 1,
+    "minutes": 10.73,
+    "kills": 39,
+    "xp": 1799,
+    "routeCursor": 9,
+    "completed": false,
+    "reason": "请先整理背包与待拾取战利品。",
+    "dead": []
+  },
+  {
+    "class": "术士",
+    "classId": 9,
+    "raceId": 1,
+    "minutes": 9.33,
+    "kills": 31,
+    "xp": 1370,
+    "routeCursor": 7,
+    "completed": false,
+    "reason": "请先整理背包与待拾取战利品。",
+    "dead": []
+  },
+  {
+    "class": "德鲁伊",
+    "classId": 11,
+    "raceId": 4,
+    "minutes": 8.91,
+    "kills": 36,
+    "xp": 1543,
+    "routeCursor": 8,
+    "completed": false,
+    "reason": "请先整理背包与待拾取战利品。",
+    "dead": []
+  }
+]

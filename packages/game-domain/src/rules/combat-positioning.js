@@ -1,3 +1,4 @@
+import {commandOrder,commandProtected} from './combat-command.js';
 import {distance,point} from '../../../sim-core/src/geometry.js';
 import {combatMembers} from './combat-members.js';
 import {isBackline,combatRole} from './combat-roles.js';
@@ -11,7 +12,7 @@ export function holdsBackline(s,c){return usesPartyPositioning(s,c)&&isBackline(
 // Short-range reactions may fire when an enemy gets close, but must not drag
 // a backline caster into melee. Longer-range spells keep their actual range.
 export function mayApproachForSpell(s,c,target,sp){
- return !holdsBackline(s,c)||sp.range>20||distance(c,target)<=sp.range;
+ return commandOrder(s,c)?.spellId===sp.Id||!holdsBackline(s,c)||sp.range>20||distance(c,target)<=sp.range;
 }
 // A moving target needs room to travel while the caster stands still. Only
 // recent observed motion counts; stationary, incoming and ground targets keep
@@ -51,6 +52,8 @@ export function recordCombatMotion(s,before){
  for(const e of s.combat.enemies){const previous=before.get(e.id);if(!previous)continue;const p=point(e);e.combatMotion={at:s.clock,x:(p.x-previous.x)*10,y:(p.y-previous.y)*10};}
 }
 export function positionPartyMember(s,c){
+ const order=commandOrder(s,c),pursuer=order?.kind==='kite'&&s.combat.enemies.find(e=>e.id===order.targetId&&aliveEnemy(e));
+ if(pursuer&&!c.cast){if(pursuer.target===c.id&&distance(c,pursuer)<16)return retreatWithSupport(s,c,pursuer);return false;}
  if(!holdsBackline(s,c)||c.cast)return false;
  const enemies=s.combat.enemies.filter(e=>aliveEnemy(e)&&!e.controlledBy&&!(e.polyUntil>s.clock));
  if(!enemies.length)return false;
@@ -67,6 +70,7 @@ export function positionPartyMember(s,c){
 }
 export function rescueTarget(s,c,enemies){
  if(combatRole(c)!=='tank')return null;
+ enemies=enemies.filter(e=>!commandProtected(s,e)&&!s.combat?.command?.orders.some(o=>o.kind==='kite'&&o.targetId===e.id&&combatMembers(s).some(a=>a.id===o.memberId&&a.hp>0)));
  const allies=combatMembers(s).filter(a=>a.hp>0&&a.id!==c.id);
  const endangered=enemies.filter(e=>allies.some(a=>a.id===e.target));
  endangered.sort((a,b)=>{

@@ -9,7 +9,7 @@ import {beginMoltenCoreBattle} from './molten-core-battle.js';
 import {stats,clone,log,makeItem} from './character.js';
 import {items,nameOf} from './catalog.js';
 import {combatRole} from './combat-roles.js';
-import {collectLoot} from './loot.js';
+import {collectAutoLoot,hasBlockingLoot} from './loot.js';
 import {raidAttunementReason} from './raid-attunement.js';
 
 export const MOLTEN_CORE_ID='molten-core';
@@ -92,7 +92,7 @@ export function settleGuildRaid(s){
    r.claims[claimKey]=true;
   }else if(b.raidEncounter.kind==='boss')log(s,'练习战完成：本周该首领奖励已领取。','raid');
   s.activity={type:s.hp>0?'idle':'dead',reason:b.raidEncounter.kind==='boss'?'首领已击败，领取战利品并休整后继续。':'怪物群已清理，可以继续推进。'};
-  if(s.hp>0&&s.settings.autoLoot)collectLoot(s);
+  if(s.hp>0&&s.settings.autoLoot)collectAutoLoot(s);
  }else s.activity={type:s.hp>0?'idle':'dead',reason:b.abandoned?'已放弃挑战，营地休整后可重试。':'挑战失败，已通关首领进度保留。'};
  settleRaidRoute(s,r,b,won);
 }
@@ -101,7 +101,7 @@ export function guildRaidView(s){
  const battle=s.combat||s.lastCombat,enc=live?battle?.raidEncounter:null;
  const week=weekAt(s.wallAt),current=live||r?.week===week;
  return {id:r?.raidId||MOLTEN_CORE_ID,name:raidNameFor(r?.raidId),raids:['molten-core','onyxias-lair'].map(id=>({id,name:raidNameFor(id),bossCount:raidBossesFor(id).length,attunementReason:raidAttunementReason(s,id)})),active:live,minimumLevel:60,capacity:25,canEnter:s.level===60&&s.growthPolicy!=='companion'&&!live&&!s.combat&&!s.dungeon&&s.party.length===4&&[s,...s.party].every(c=>c.level===60&&c.hp>0),
-  map:live?raidMapView(s,r,!s.combat&&!r.recoverUntil&&!s.pending.length&&actors.every(c=>c.hp>0)):null,weekResetAt:(week+1)*WEEK+345600000,cleared:current?r?.cleared||[]:[],claims:current?r?.claims||{}:{},tactics:r?.tactics||defaultRaidTactics,
+  map:live?raidMapView(s,r,!s.combat&&!r.recoverUntil&&!hasBlockingLoot(s)&&actors.every(c=>c.hp>0)):null,weekResetAt:(week+1)*WEEK+345600000,cleared:current?r?.cleared||[]:[],claims:current?r?.claims||{}:{},tactics:r?.tactics||defaultRaidTactics,
   recovering:!!r?.recoverUntil,remaining:Math.max(0,(r?.recoverUntil||0)-s.clock),activeBoss:r?.activeBoss,bosses:raidBossesFor(r?.raidId).map(b=>({...b,loot:(raidLoot[b.id]||[]).filter(id=>items[id]).map(id=>({id,name:nameOf('items',id)}))})),squadNames:guildSquadNames,
   attempts:r?.attempts||[],rewards:r?.rewards||[],roles:{tank:actors.filter(c=>combatRole(c)==='tank').length,healer:actors.filter(c=>combatRole(c)==='healer').length,damage:actors.filter(c=>!['tank','healer'].includes(combatRole(c))).length},
   members:actors.map((c,i)=>({id:c.id,name:c.name,classId:c.classId,role:combatRole(c),squad:Math.floor(i/5),guild:!!c.guildUnit,hp:c.hp,maxHp:stats(c).maxHp,mana:c.mana,maxMana:stats(c).maxMana})),events:enc?.events?.slice(-8)||[],fires:enc?.fires||[],nextMechanics:raidNextMechanics(s.combat?.raidEncounter)};

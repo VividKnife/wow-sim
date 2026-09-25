@@ -1,3 +1,4 @@
+import {commandOrder,commandProtected,commandDamageMode,commandDamageSpell} from './combat-command.js';
 import {classResource} from '../../../sim-core/src/class-combat.js';
 import {spells,spellChain} from './catalog.js';
 import {stats} from './character.js';
@@ -29,11 +30,12 @@ export const areaSpell=sp=>selfArea(sp)||groundArea(sp)||['Cleave','Multi-Shot',
 export const protectedTarget=(e,clock)=>!!e&&(e.polyUntil>clock||(e.auras||[]).some(a=>a.until>clock&&([5,7].includes(a.type)||a.type===12&&((spells[a.spell]?.AuraInterruptFlags||0)&2))));
 // The final hostile sheep is the kill target; keep CC intact until damage lands.
 export function protectCombatTarget(s,e){
- if(e?.polyUntil>s.clock){
+ if(s.combat?.command?.focusId===e?.id)return false;
+ if(e?.polyUntil>s.clock||s.combat?.command&&protectedTarget(e,s.clock)){
   const remaining=(s.combat?.enemies||[]).filter(x=>aliveEnemy(x)&&!x.controlledBy);
   if(remaining.length===1&&remaining[0].id===e.id)return false;
  }
- return protectedTarget(e,s.clock);
+ return commandProtected(s,e)||protectedTarget(e,s.clock);
 }
 const preparationSpells=new Set(['Frost Armor','Arcane Intellect','Power Word: Fortitude','Resurrection','Redemption','Ancestral Spirit']);
 export function strategySpellIds(c){
@@ -83,14 +85,19 @@ export function strategyAllows(s,c,e,sp,rule,center){
   const damaging=!sp.Id||[1,2,3].some(n=>[2,9,17,31,58,121].includes(sp['Effect'+n])||sp['EffectApplyAuraName'+n]===3);
   if(e?.id===s.combat.controlTargetId&&damaging)return false;
  }
+ const order=commandOrder(s,c);
+ const orderedControl=order&&order.kind!=='kite'&&order.targetId===e?.id&&order.spellId===sp.Id;
+ if(orderedControl)return !rule||ruleMatches(s,c,e,rule,sp);
+ if(s.combat?.command?.holdFire)return false;
+ if(commandDamageMode(s,c)==='single'&&areaSpell(sp)&&commandDamageSpell(sp))return false;
  const policy={...defaultPolicy,...c.strategyPolicy};
  if(rule&&!ruleMatches(s,c,e,rule,sp))return false;
  const targets=areaSpell(sp)?areaTargets(s,c,e,sp,center,{uncapped:true}):e?[e]:[];
  if(s.combat?.pvp&&targets.some(t=>t.id===s.combat.controlTargetId)&&(!sp.Id||[1,2,3].some(n=>[2,9,17,31,58,121].includes(sp['Effect'+n])||sp['EffectApplyAuraName'+n]===3)))return false;
- if(policy.protectCC&&targets.some(x=>protectCombatTarget(s,x)))return false;
+ if(targets.some(x=>commandProtected(s,x))||policy.protectCC&&targets.some(x=>protectCombatTarget(s,x)))return false;
  if(sp.SpellName!=='Polymorph'){
   const tank=waitingTank(s,c);
-  if(tank&&(waitingForPull(s,c)||targets.some(x=>x.target!==tank.id||!(x.threat?.[tank.id]>0))))return false;
+  if(tank&&!(order?.kind==='kite'&&order.targetId===e?.id)&&(waitingForPull(s,c)||targets.some(x=>x.target!==tank.id||!(x.threat?.[tank.id]>0))))return false;
  }
  return true;
 }

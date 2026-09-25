@@ -119,7 +119,7 @@ export function decideClass(s,c,e,actors,api,rules=c.rules||defaultClassRules(c.
   if(name==='Maul'||name==='Growl'){if(c.form!=='bear'||name==='Growl'&&e.target===c.id)continue;}
   if(name==='Claw'||name==='Rip'){if(c.form!=='cat'||name==='Rip'&&(!c.combo||c.comboTarget!==e.id))continue;}
   if(name==='Kick'&&!e.cast)continue;
-  if(name==='Stealth'){target=c;if(c.stealthed||s.clock>s.combat.startedAt+100)continue;}
+  if(name==='Stealth'){target=c;if(c.stealthed||s.clock>s.combat.startedAt+100&&s.combat.pull?.engagedAt!=null)continue;}
   if(name==='Backstab'||name==='Ambush'){if(items[c.equipment[16]?.id]?.subclass!==15||name==='Ambush'&&!c.stealthed||name==='Backstab'&&e.target===c.id&&!c.stealthed)continue;}
   if(name==='Fear'&&e.auras?.some(a=>a.type===7&&a.until>s.clock))continue;
   if(name==='Gouge'&&e.stunUntil>s.clock)continue;
@@ -150,7 +150,7 @@ export function tickClassEffects(s,actors,api){
   for(const hot of c.hots||[]){const source=actors.find(a=>a.id===hot.caster);while(source&&hot.next<=s.clock&&hot.next<=hot.until){healAmount(s,source,c,hot.amount,hot.spell);hot.next+=hot.interval;}}c.hots=(c.hots||[]).filter(h=>h.until>s.clock);
   if(c.bloodrage&&c.bloodrage.next<=s.clock&&c.bloodrage.next<=c.bloodrage.until){c.rage=Math.min(1000,(c.rage||0)+10);c.bloodrage.next+=1000;}
   for(const [element,t]of Object.entries(c.totems||{})){if(extendedSpellNames.has(t.name))continue;if(t.until<=s.clock){delete c.totems[element];continue;}if(t.next>s.clock)continue;t.next+=2000;const sp=spellInfo(c,t.spell),r=ranks(c);
-   if(t.name==='Searing Totem'){const target=s.combat?.enemies.find(e=>e.hp>0&&!e.removed&&!protectCombatTarget(s,e)&&distance(t,e)<=20);if(target)api.damage(s,c,target,roll(s,...effectRange(c,spells[sp.Id===3599?3606:6350])),nameOf('spells',sp.Id),1,{spellId:sp.Id,school:2});}
+   if(t.name==='Searing Totem'){const target=s.combat?.enemies.find(e=>e.hp>0&&!e.removed&&!protectCombatTarget(s,e)&&distance(t,e)<=20&&strategyAllows(s,c,e,{SpellName:'Totem Attack'}));if(target)api.damage(s,c,target,roll(s,...effectRange(c,spells[sp.Id===3599?3606:6350])),nameOf('spells',sp.Id),1,{spellId:sp.Id,school:2});}
    else for(const a of actors.filter(a=>a.hp>0&&distance(t,a)<=20)){if(t.name==='Healing Stream Totem')healAmount(s,c,a,effectRange(c,spells[5672])[0],sp.Id);else if(t.name==='Strength of Earth Totem')putBuff(s,a,{...sp,durationMs:2500},{str:effectRange(c,spells[sp.Id===8160?8162:8076])[0]});else a.stoneskin={amount:Math.abs(effectRange(c,spells[sp.Id===8071?8072:8156])[0]),until:s.clock+2500};}
   }
  }
@@ -158,7 +158,7 @@ export function tickClassEffects(s,actors,api){
 
 export function petTick(s,pet,actors,damage){
  const owner=actors.find(c=>c.id===pet.ownerId);if(pet.mode==='passive'||pet.mode==='stay'||pet.mode==='follow'){if(pet.mode!=='stay'&&owner)moveToward(s,pet,owner,3,s.clock);return;}if(!owner||owner.hp<=0||pet.hp<=0||controlled(pet,s.clock))return;
- const e=s.combat.enemies.find(e=>e.id===(pet.targetId||owner.arenaTargetId)&&e.hp>0&&!protectCombatTarget(s,e))||s.combat.enemies.find(e=>e.hp>0&&!e.removed&&!protectCombatTarget(s,e));if(!e)return;
+ const e=s.combat.enemies.find(e=>e.id===(s.combat.command?.focusId||pet.targetId||owner.arenaTargetId)&&e.hp>0&&!protectCombatTarget(s,e))||s.combat.enemies.find(e=>e.hp>0&&!e.removed&&!protectCombatTarget(s,e));if(!e)return;
  if(!strategyAllows(s,owner,e,{SpellName:'Pet Attack'})){pet.cast=null;return;}
  pet.ownerMasterDemonologist=ranks(owner)['Master Demonologist']||0;
  if(!arenaSight(pet,e)){moveToward(s,pet,e,pet.kind==='imp'?25:5,s.clock);return;}

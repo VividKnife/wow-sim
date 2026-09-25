@@ -1,3 +1,4 @@
+import {hasBlockingLoot} from './loot.js';
 import {dungeonDefinition,dungeonIdFor,dungeonRoute} from './dungeon-registry.js';
 export {dungeonRoute} from './dungeon-registry.js';
 import {clone,enemy,rng,log,countItem,takeItem,addItem,bagCapacity,stats,knownRank} from './character.js';
@@ -87,7 +88,7 @@ export function dungeonAdvanceReason(s){
  if(!e)return '这条路线已经完成。';
  if([s,...s.party].some(c=>c.hp<=0))return '先让倒下的成员复活，再继续推进。';
  if(s.party.length!==4)return '需要五名小队成员才能继续推进。';
- if(s.pending.length||s.bag.length>=bagCapacity(s))return '请先整理背包与待拾取战利品。';
+ if(hasBlockingLoot(s)||s.bag.length>=bagCapacity(s))return '请先整理背包与待拾取战利品。';
  const reason=gateReason(s,e);if(reason)return reason;
  if(e.id==='dm-cannon'&&!countItem(s,e.interaction.item))return '需要迪菲亚火药。';
  if(!s.dungeon.interactions[e.id+':started'])for(const [id,count]of e.interaction?.inputs||[])if(countItem(s,id)<count)return '需要 '+nameOf('items',id)+' ×'+count+'。';
@@ -164,7 +165,7 @@ export function prepareEncounter(s){idle(s);const d=s.dungeon;if(!d?.spawns)thro
  while(e&&e.optional&&!e.interaction&&!remaining(s,e).length){log(s,'本次冒险未发现'+e.nameZh+'。','dungeon');advanceRoute(s,e,true);e=current(s);}
  if(!e){pauseDungeonAdvance(s);return;}gate(s,e);
  if([s,...s.party].some(c=>c.hp<=0))throw new Error('先让倒下的成员复活，再继续推进。');
- if(s.pending.length||s.bag.length>=bagCapacity(s))throw new Error('请先整理背包与待拾取战利品。');
+ if(hasBlockingLoot(s)||s.bag.length>=bagCapacity(s))throw new Error('请先整理背包与待拾取战利品。');
  if(!remaining(s,e).length&&e.interaction)throw new Error('这里有待完成的交互。');
  stopRecovery(s);s.groundEffects=[];
  d.locationId=e.id;

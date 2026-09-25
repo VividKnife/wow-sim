@@ -37,7 +37,7 @@ test('Onyxia phases survive JSON save, summon once per wave and stop flight at 4
  s=JSON.parse(JSON.stringify(s));boss=s.combat.enemies[0];boss.hp=boss.maxHp*.39;onyxiaTick(s,[s,...s.party],hurt);assert.equal(s.combat.raidEncounter.phase,3);assert.equal(boss.airborne,false);assert.ok(s.combat.raidEncounter.events.some((e:Rules)=>e.text.includes('落地')));
 });
 test('deep breath causes actual damage only inside the telegraphed lane',()=>{
- const s=start(),r=s.combat.raidEncounter,b=s.combat.enemies[0];r.phase=2;r.nextWhelps=s.clock+999999;r.nextSpecial=s.clock+999999;r.nextBreath=s.clock+999999;r.tactics.avoidFire=false;r.breath={lane:0,at:s.clock};b.airborne=true;s.positionY=0;s.party[0].positionY=15;
+ const s=start(),r=s.combat.raidEncounter,b=s.combat.enemies[0];r.phase=2;r.nextWhelps=s.clock+999999;r.nextSpecial=s.clock+999999;r.nextBreath=s.clock;r.tactics.avoidFire=false;b.airborne=true;onyxiaTick(s,[s,...s.party],()=>{});s.positionY=r.breath.lane;s.party[0].positionY=r.breath.lane+8;s.clock=r.breath.at;
  const hits:string[]=[];onyxiaTick(s,[s,...s.party],(_s:Rules,_b:Rules,c:Rules,amount:number,label:string)=>{if(label==='深呼吸'){c.hp-=amount;hits.push(c.id);}});assert.ok(hits.includes(s.id));assert.ok(!hits.includes(s.party[0].id));assert.equal(r.breath,null);
 });
 test('Onyxia reward settlement is idempotent and the weekly reset is independent',()=>{

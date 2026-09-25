@@ -71,6 +71,11 @@ test('bid racing an NPC round refreshes the quote without charging or rolling ba
 test('recruitment creates legal randomized gear/talents and locks announced contract and ownership',async()=>{
  const f=await fixture();await f.command('goldRules',{rules:{leaderFee:5,dpsBonus:20,supportBonus:15}});let snap=await f.command('goldPublish'),g=snap.state!.goldRaid;
  assert.equal(g.applicants.length,32);assert.ok(new Set(g.applicants.map((c:Rules)=>c.goldProfile.personality)).size>=4);
+ for(const c of g.applicants.filter((c:Rules)=>c.classId===4||c.classId===1&&c.strategyPolicy.role==='melee')){
+  assert.equal(items[c.equipment[17]?.id]?.class,2,c.name);
+  assert.notEqual(items[c.equipment[16]?.id]?.InventoryType,17,c.name);
+  assert.ok(c.learned.includes(674),c.name);
+ }
  for(const c of g.applicants){assert.equal(Object.values(c.talents).reduce((n:number,v:any)=>n+v,0),51);for(const e of Object.values(c.equipment) as Rules[])assert.ok(canEquip(c,items[e.id]));for(const[id,rank]of Object.entries(c.talents)){const t:any=talents[id];assert.ok(Number(rank)<=t.maxRank);for(const p of t.prerequisites)assert.ok(c.talents[p.talentId]>=p.requiredRank);}}
  await assert.rejects(f.command('goldRules',{rules:{leaderFee:0,dpsBonus:0,supportBonus:0}}),/当前阶段/);
  await f.command('goldRecommend');snap=await f.command('goldLaunch');assert.equal(snap.state!.party.length,24);

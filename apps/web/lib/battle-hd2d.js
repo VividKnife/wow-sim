@@ -19,11 +19,13 @@ export function cameraFit(layout,units,size){
  const metric=actorScale(layout),manual=layout.zoom||1;
  const positions=units.filter(u=>!u.removed).map(u=>unitPoint(layout,u.id));
  if(!positions.length)return{x:0,z:0,zoom:manual*Math.min(size.width/(44*metric),size.height/(24*metric))};
+ if(layout.area?.name){const a=layout.area;positions.push(worldPoint(layout,{x:a.minX,y:a.minY}),worldPoint(layout,{x:a.maxX,y:a.maxY}));}
  const xs=positions.map(p=>p[0]),zs=positions.map(p=>p[2]);
  const headroom=Math.max(...units.filter(u=>!u.removed).map(u=>actorHeight(layout,u)))*1.5+4*metric;
  return{x:(Math.min(...xs)+Math.max(...xs))/2,z:(Math.min(...zs)+Math.max(...zs))/2,zoom:manual*Math.min(size.width/Math.max(44*metric,Math.max(...xs)-Math.min(...xs)+10*metric),size.height/Math.max(24*metric,(Math.max(...zs)-Math.min(...zs))*CAMERA_TILT+headroom))};
 }
 const themes={
+ onyxia:{id:'onyxia',name:'奥妮克希亚的巢穴',texture:'cave',sky:'#211a23',floor:'#68514c',rock:'#392e35',leaf:'#735636',light:'#ffc295',ambient:'#b59aab',accent:'#ff924b',fog:78},
  arena:{id:'arena',name:'竞技场',texture:'cave',sky:'#202a30',floor:'#827861',rock:'#625b4c',leaf:'#617363',light:'#ffe0ad',ambient:'#bbc9ca',accent:'#dec492',fog:78},
  molten:{id:'molten',name:'熔火之心',sky:'#291510',floor:'#57463c',rock:'#382b29',leaf:'#735636',light:'#ffb470',ambient:'#dd9270',accent:'#ff7438',fog:64},
  grass:{id:'grass',name:'林间旷野',sky:'#182d31',floor:'#71856b',rock:'#71817d',leaf:'#48795d',light:'#ffe0a3',ambient:'#adcbd3',accent:'#e5c67c',fog:72},

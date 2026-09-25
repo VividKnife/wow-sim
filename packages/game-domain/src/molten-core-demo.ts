@@ -1,3 +1,4 @@
+import {raidFieldPresentation} from './rules/raid-battlefield.js';
 import {raidNextMechanics} from './rules/molten-core-mechanics.js';
 import {grantRaidReadyAttunements} from './rules/raid-attunement.js';
 import {beginMoltenCoreBattle} from './rules/molten-core-battle.js';
@@ -78,7 +79,7 @@ export function moltenCoreView(run:MoltenCoreDemo) {
   equipment:Object.values(c.equipment).map((e:any)=>({id:e.id,name:nameOf('items',e.id)}))};});
  return {revision:run.revision,status:run.status,activeBoss:run.activeBoss,clock:s.clock,tactics:run.tactics,cleared:run.cleared,rewards:run.rewards,attempts:run.attempts,members,
   enemies:(battle?.enemies||[]).map((e:Rules)=>({id:e.id,name:e.name,hp:e.hp,maxHp:e.maxHp,position:e.position,positionY:e.positionY,enraged:e.enraged,target:e.target})),
-  fires:raid?.fires||[],events:raid?.events||[],support:raid?.support||{},failures:raid?.failures||{},meter:meterRows(battle,s.clock),
+  area:battle?.area,fires:battle?raidFieldPresentation(battle,[s,...s.party],s.clock):[],events:raid?.events||[],support:raid?.support||{},failures:raid?.failures||{},meter:meterRows(battle,s.clock),
   logs:s.logs.slice(-12).map((l:Rules)=>({id:l.id,text:l.text,kind:l.kind,at:l.at})),
   nextMechanics:raidNextMechanics(s.combat?.raidEncounter)};
 }

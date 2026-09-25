@@ -59,5 +59,6 @@ export function playerMapPoint(journey,map){
  if(!from||!to)return null;
  const a=mapPoints[from.id],b=mapPoints[to.id];if(!a||!b)return null;
  const region=mapRegion(from.region),crossing=region!==mapRegion(to.region);
- return {region,x:crossing?a[0]:a[0]+(b[0]-a[0])*journey.progress,y:crossing?a[1]:a[1]+(b[1]-a[1])*journey.progress,crossing};
+ if(crossing){const arrived=journey.progress>=.5,point=arrived?b:a;return {region:arrived?mapRegion(to.region):region,x:point[0],y:point[1],crossing};}
+ return {region,x:a[0]+(b[0]-a[0])*journey.progress,y:a[1]+(b[1]-a[1])*journey.progress,crossing};
 }

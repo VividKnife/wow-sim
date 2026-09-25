@@ -1,6 +1,7 @@
 // The renderer runs in its own iframe. Messages contain only equipment IDs,
 // viewer slots and a revision; the asset relay never forwards credentials.
 import {worldCamera} from './world-camera.js';
+import {holdDeathPose,createMotionController} from './motion.js';
 const ROOT='/api/model-viewer/';
 // Narrow scope: only viewer iframe requests are intercepted, never game saves.
 const assetCacheReady=(async()=>{
@@ -22,7 +23,7 @@ function recordCacheHit(headers){if(headers.get('X-Model-Expires'))host.dataset.
 let viewer=null,generation=0,currentRevision=null,loadController=null,zoom=-2;
 let dependencies;
 let presentation='portrait',motion={animation:'Stand',paused:false};
-let modelReady=false;
+let modelReady=false,updateMotion=null;
 function frameWorld(){
  if(!viewer||presentation==='portrait')return;
  const bounds=viewer.method('getBounds');
@@ -35,9 +36,9 @@ function frameWorld(){
 }
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 function applyMotion(){
- if(!viewer)return;
- viewer.method('setAnimation',[motion.animation,true]);
- viewer.method('setAnimPaused',[motion.paused||reducedMotion.matches]);
+ // Motion messages can arrive while a new character or mount is still loading.
+ if(!viewer||!modelReady)return;
+ updateMotion?.(motion,reducedMotion.matches);
 }
 reducedMotion.addEventListener('change',applyMotion);
 // This dedicated iframe contains only viewer requests. Track both transports:
@@ -78,7 +79,7 @@ function loadDependencies(){return dependencies??=(async()=>{
  if(!window.ZamModelViewer)throw new Error('Renderer unavailable');
 })();}
 function dispose(){
- modelReady=false;
+ modelReady=false;updateMotion=null;
  if(viewer){const context=viewer.renderer?.context;viewer.destroy();context?.getExtension('WEBGL_lose_context')?.loseContext();viewer=null;}
  host.replaceChildren();controls.hidden=true;
 }
@@ -116,6 +117,8 @@ async function render(items,revision,raceId,classId,gender,view,mountDisplayId){
    };tick();
   });
   if(token!==generation)return;
+  holdDeathPose(viewer.renderer.actors[0].b);
+  updateMotion=createMotionController(viewer);
   modelReady=true;zoom=-2;viewer.setZoom(zoom);frameWorld();
   controls.hidden=presentation!=='portrait';applyMotion();notify(missing?'partial':'loaded');
  }catch(error){

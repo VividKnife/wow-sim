@@ -26,6 +26,7 @@ function equipDemo(c:Rules) {
  for(const item of pool){
   if(![2,4].includes(item.class)||[4,19].includes(item.InventoryType))continue;
   let slot=slotOf(item);if(slot===11&&c.equipment[11])slot=12;if(slot===13&&c.equipment[13])slot=14;
+  if(slot===16&&c.equipment[16]&&[13,22].includes(item.InventoryType)&&c.learned.includes(674))slot=17;
   if(c.equipment[slot]||Object.values(c.equipment).some((e:any)=>e.id===item.entry&&item.maxcount===1))continue;
   if(role==='tank'&&(item.InventoryType===17||slot===17&&item.InventoryType!==14))continue;
   if(slot===17&&(items[c.equipment[16]?.id]?.InventoryType===17||item.class===2&&!c.learned.includes(674)))continue;

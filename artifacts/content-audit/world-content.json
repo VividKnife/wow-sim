@@ -134,7 +134,7 @@
       },
       {
         "id": 7021,
-        "name": "Great-father Winter is Here!",
+        "name": "冬天爷爷来了！",
         "level": 60,
         "zone": -22,
         "excluded": true,
@@ -238,7 +238,7 @@
       },
       {
         "id": 8733,
-        "name": "Eranikus, Tyrant of the Dream",
+        "name": "伊兰尼库斯，梦境之暴君",
         "level": 60,
         "zone": 1417,
         "excluded": true,
@@ -286,7 +286,7 @@
       },
       {
         "id": 9310,
-        "name": "Faint Necrotic Crystal",
+        "name": "暗淡的死灵水晶",
         "level": 60,
         "zone": -368,
         "excluded": true,
@@ -318,7 +318,7 @@
       },
       {
         "id": 7660,
-        "name": "Wolf Swapping - Arctic Wolf",
+        "name": "更换冰狼",
         "level": 1,
         "zone": 1637,
         "excluded": true,
@@ -329,7 +329,7 @@
       },
       {
         "id": 7661,
-        "name": "Wolf Swapping - Red Wolf",
+        "name": "更换赤狼",
         "level": 1,
         "zone": 1637,
         "excluded": true,
@@ -340,7 +340,7 @@
       },
       {
         "id": 7662,
-        "name": "New Kodo - Teal",
+        "name": "蓝色科多兽",
         "level": 1,
         "zone": 1638,
         "excluded": true,
@@ -351,7 +351,7 @@
       },
       {
         "id": 7663,
-        "name": "New Kodo - Green",
+        "name": "绿色科多兽",
         "level": 1,
         "zone": 1638,
         "excluded": true,
@@ -362,7 +362,7 @@
       },
       {
         "id": 7664,
-        "name": "Ivory Raptor Replacement",
+        "name": "白色迅猛龙",
         "level": 1,
         "zone": 14,
         "excluded": true,
@@ -373,7 +373,7 @@
       },
       {
         "id": 7665,
-        "name": "Red Raptor Replacement",
+        "name": "红色迅猛龙",
         "level": 1,
         "zone": 14,
         "excluded": true,
@@ -384,7 +384,7 @@
       },
       {
         "id": 7671,
-        "name": "Frostsaber Replacement",
+        "name": "更换霜刃豹",
         "level": 1,
         "zone": 1657,
         "excluded": true,
@@ -395,7 +395,7 @@
       },
       {
         "id": 7672,
-        "name": "Nightsaber Replacement",
+        "name": "更换夜刃豹",
         "level": 1,
         "zone": 1657,
         "excluded": true,
@@ -406,7 +406,7 @@
       },
       {
         "id": 7673,
-        "name": "Frost Ram Exchange",
+        "name": "更换霜山羊",
         "level": 1,
         "zone": 1,
         "excluded": true,
@@ -417,7 +417,7 @@
       },
       {
         "id": 7674,
-        "name": "Black Ram Exchange",
+        "name": "更换黑山羊",
         "level": 1,
         "zone": 1,
         "excluded": true,
@@ -428,7 +428,7 @@
       },
       {
         "id": 7675,
-        "name": "Icy Blue Mechanostrider Replacement",
+        "name": "更换冰蓝色机械陆行鸟",
         "level": 1,
         "zone": 1,
         "excluded": true,
@@ -439,7 +439,7 @@
       },
       {
         "id": 7676,
-        "name": "White Mechanostrider Replacement",
+        "name": "更换白色机械陆行鸟",
         "level": 1,
         "zone": 1,
         "excluded": true,
@@ -450,7 +450,7 @@
       },
       {
         "id": 7677,
-        "name": "White Stallion Exchange",
+        "name": "更换白马",
         "level": 1,
         "zone": 12,
         "excluded": true,
@@ -461,7 +461,7 @@
       },
       {
         "id": 7678,
-        "name": "Palomino Exchange",
+        "name": "更换褐色马",
         "level": 1,
         "zone": 12,
         "excluded": true,
@@ -747,7 +747,7 @@
       },
       {
         "id": 8981,
-        "name": "Gift Giving",
+        "name": "赠送礼品",
         "level": 60,
         "zone": -22,
         "excluded": true,
@@ -758,7 +758,7 @@
       },
       {
         "id": 8993,
-        "name": "Gift Giving",
+        "name": "赠送礼品",
         "level": 60,
         "zone": -22,
         "excluded": true,
@@ -769,7 +769,7 @@
       },
       {
         "id": 9094,
-        "name": "Argent Dawn Gloves",
+        "name": "银色黎明手套",
         "level": 60,
         "zone": -368,
         "excluded": true,
@@ -791,7 +791,7 @@
       },
       {
         "id": 9317,
-        "name": "Consecrated Sharpening Stones",
+        "name": "神圣磨刀石",
         "level": 60,
         "zone": -368,
         "excluded": true,
@@ -802,7 +802,7 @@
       },
       {
         "id": 9320,
-        "name": "Major Mana Potion",
+        "name": "超级法力药水",
         "level": 60,
         "zone": -368,
         "excluded": true,
@@ -813,7 +813,7 @@
       },
       {
         "id": 9321,
-        "name": "Major Healing Potion",
+        "name": "超级治疗药水",
         "level": -1,
         "zone": 0,
         "excluded": true,
@@ -824,7 +824,7 @@
       },
       {
         "id": 9333,
-        "name": "Argent Dawn Gloves",
+        "name": "银色黎明手套",
         "level": 60,
         "zone": -368,
         "excluded": true,
@@ -837,7 +837,7 @@
     "noLocatedEnd": [
       {
         "id": 172,
-        "name": "Children's Week",
+        "name": "儿童周",
         "level": 60,
         "zone": -284,
         "excluded": true,
@@ -885,7 +885,7 @@
       },
       {
         "id": 1468,
-        "name": "Children's Week",
+        "name": "儿童周",
         "level": 60,
         "zone": -284,
         "excluded": true,
@@ -1013,7 +1013,7 @@
       },
       {
         "id": 8597,
-        "name": "Draconic for Dummies",
+        "name": "龙语傻瓜教程",
         "level": 60,
         "zone": 440,
         "excluded": true,
@@ -1251,7 +1251,7 @@
       },
       {
         "id": 8504,
-        "name": "The Alliance Needs More Stranglekelp!",
+        "name": "联盟需要更多荆棘藻！",
         "level": 60,
         "zone": -365,
         "excluded": true,
@@ -1283,7 +1283,7 @@
       },
       {
         "id": 8506,
-        "name": "The Alliance Needs More Purple Lotus!",
+        "name": "联盟需要更多紫莲花！",
         "level": 60,
         "zone": -365,
         "excluded": true,
@@ -1315,7 +1315,7 @@
       },
       {
         "id": 8510,
-        "name": "The Alliance Needs More Arthas' Tears!",
+        "name": "联盟需要更多阿尔萨斯之泪！",
         "level": 60,
         "zone": -365,
         "excluded": true,
@@ -1571,7 +1571,7 @@
       },
       {
         "id": 8527,
-        "name": "The Alliance Needs More Roast Raptor!",
+        "name": "联盟需要更多烤迅猛龙肉！",
         "level": 60,
         "zone": -365,
         "excluded": true,
@@ -1731,7 +1731,7 @@
       },
       {
         "id": 8550,
-        "name": "The Horde Needs Peacebloom!",
+        "name": "部落需要更多宁神花！",
         "level": 60,
         "zone": -365,
         "excluded": true,
@@ -1763,7 +1763,7 @@
       },
       {
         "id": 8581,
-        "name": "The Horde Needs More Firebloom!",
+        "name": "部落需要更多火焰花！",
         "level": 60,
         "zone": -365,
         "excluded": true,
@@ -1891,7 +1891,7 @@
       },
       {
         "id": 8601,
-        "name": "The Horde Needs More Rugged Leather!",
+        "name": "部落需要更多硬甲皮！",
         "level": 60,
         "zone": -365,
         "excluded": true,
@@ -1923,7 +1923,7 @@
       },
       {
         "id": 8605,
-        "name": "The Horde Needs More Wool Bandages!",
+        "name": "部落需要更多绒线绷带！",
         "level": 60,
         "zone": -365,
         "excluded": true,
@@ -1955,7 +1955,7 @@
       },
       {
         "id": 8608,
-        "name": "The Horde Needs More Mageweave Bandages!",
+        "name": "部落需要更多魔纹布绷带！",
         "level": 60,
         "zone": -365,
         "excluded": true,
@@ -1987,7 +1987,7 @@
       },
       {
         "id": 8610,
-        "name": "The Horde Needs More Runecloth Bandages!",
+        "name": "部落需要更多符文布绷带！",
         "level": 60,
         "zone": -365,
         "excluded": true,
@@ -2019,7 +2019,7 @@
       },
       {
         "id": 8612,
-        "name": "The Horde Needs More Lean Wolf Steaks!",
+        "name": "部落需要更多瘦狼排！",
         "level": 60,
         "zone": -365,
         "excluded": true,
@@ -2051,7 +2051,7 @@
       },
       {
         "id": 8614,
-        "name": "The Horde Needs More Spotted Yellowtail!",
+        "name": "部落需要更多斑点黄尾鱼！",
         "level": 60,
         "zone": -365,
         "excluded": true,
@@ -2083,7 +2083,7 @@
       },
       {
         "id": 8616,
-        "name": "The Horde Needs More Baked Salmon!",
+        "name": "部落需要更多烤鲑鱼！",
         "level": 60,
         "zone": -365,
         "excluded": true,

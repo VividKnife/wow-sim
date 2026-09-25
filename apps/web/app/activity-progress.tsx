@@ -1,7 +1,7 @@
 "use client";
 import {useEffect,useState} from 'react';
 import {Footprints,Navigation} from 'lucide-react';
-import {duration,Icon} from './game-ui';
+import {duration} from './game-ui';
 import './activity-progress.css';
 
 type Skill={spellId:number;name:string;cast?:number};
@@ -31,7 +31,7 @@ function Progress({label,start,end,clock,running,journey}:{label:string;start:nu
  </div>;
 }
 
-export default function ActivityProgress({state:s,data:d,running=true}:{state:ProgressState;data:ProgressData;running?:boolean}){
+export default function ActivityProgress({state:s,data:d,running=true,hideTravel=false}:{state:ProgressState;data:ProgressData;running?:boolean;hideTravel?:boolean}){
  const a=s.activity,cast=s.cast;
  let start=a.startedAt,end=a.endsAt,label=a.spell?d.skills?.find(skill=>skill.spellId===a.spell)?.name:undefined;
  if(a.type==='travel')label=a.flight?'飞行中':'行进中';
@@ -44,5 +44,5 @@ export default function ActivityProgress({state:s,data:d,running=true}:{state:Pr
  else if(!s.combat&&s.rest){start=s.rest.startedAt;end=s.rest.until;label=s.rest.foodUntil>s.clock&&s.rest.waterUntil>s.clock?'进食与饮水':s.rest.foodUntil>s.clock?'进食':'饮水';}
  else if(!['resurrect','questItem'].includes(a.type))end=undefined;
  const journey=a.type==='travel'?{from:d.map?.find(n=>n.id===a.from)?.name||a.from||'出发地',to:d.map?.find(n=>n.id===a.to)?.name||a.to||'目的地',flight:!!a.flight}:undefined;
- return <>{start!==undefined&&end!==undefined&&Number.isFinite(start)&&Number.isFinite(end)&&end>start&&<Progress key={`${s.clock}:${start}:${end}:${running}`} label={label||'施法'} start={start} end={end} clock={s.clock} running={running&&!s.presence?.paused} journey={journey}/>} {!!d.itemBuffs?.length&&<div className="utility-buffs" aria-label="物品增益">{d.itemBuffs.map(buff=><span key={buff.spell}><Icon src={buff.icon} name={buff.name} size={24}/>{buff.name}<small>{duration(buff.until-s.clock)}</small></span>)}</div>}</>;
+ return <>{!(hideTravel&&a.type==='travel')&&start!==undefined&&end!==undefined&&Number.isFinite(start)&&Number.isFinite(end)&&end>start&&<Progress key={`${s.clock}:${start}:${end}:${running}`} label={label||'施法'} start={start} end={end} clock={s.clock} running={running&&!s.presence?.paused} journey={journey}/>}</>;
 }

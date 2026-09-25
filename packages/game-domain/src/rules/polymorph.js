@@ -1,3 +1,4 @@
+import {commandOrder} from './combat-command.js';
 import {creatures} from './catalog.js';
 import {log} from './character.js';
 import {aliveEnemy} from './combat-space.js';
@@ -15,6 +16,8 @@ export function canPolymorph(enemy,spell){
 }
 export function polymorphTarget(s,c,focus,spell,rule){
  if(s.combat.pvp){const e=s.combat.enemies.find(e=>e.id===c.arenaControlTarget);return e&&canPolymorph(e,spell)&&!protectedTarget(e,s.clock)&&!(e.dots||[]).some(d=>d.remaining>0)&&pvpControlRemaining(e,spell.Id,s.clock,spell.durationMs)>0?e:null;}
+ const order=commandOrder(s,c);
+ if(order?.spellId===spell.Id){const target=s.combat.enemies.find(e=>e.id===order.targetId);return target&&canPolymorph(target,spell)&&!protectedTarget(target,s.clock)?target:null;}
  const enemies=s.combat.enemies.filter(aliveEnemy);
  if(enemies.some(e=>e.polyCaster===c.id&&e.polyUntil>s.clock))return null;
  // Keep the damage target available; other mages reserve their current casts.
