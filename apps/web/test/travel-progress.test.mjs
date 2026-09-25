@@ -54,3 +54,18 @@ test('public map traveler switches from walking to the riding sprite while mount
  assert.match(html,/玩家位置：骑马中/);
  assert.match(html,/class="horse-body"/);
 });
+
+test('corpse recovery exposes its actual duration and clears progress after resurrection',async()=>{
+ const {advance}=await import('../../../packages/game-domain/src/rules/engine.js');
+ for(const raceId of [1,4]){
+  const fallen=createGame('灵魂',13,0,{raceId,classId:1});fallen.hp=0;fallen.activity={type:'dead'};
+  const recovering=act(fallen,{type:'revive'},0),a=recovering.activity;
+  assert.equal(a.startedAt,recovering.clock);assert.ok(a.endsAt>a.startedAt);
+  const snapshot=projectClientSnapshot(recovering,view(recovering));
+  const html=render({...snapshot.player,clock:a.startedAt+(a.endsAt-a.startedAt)/2});
+  assert.match(html,/跑尸中 · 返回尸体/);assert.match(html,/aria-valuenow="50"/);
+  const alive=advance(recovering,recovering.wallAt+a.endsAt-recovering.clock).state;
+  assert.ok(alive.hp>0);assert.equal(alive.activity.type,'idle');
+  assert.doesNotMatch(render(alive),/跑尸中/);
+ }
+});

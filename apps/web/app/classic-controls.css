@@ -1,0 +1,76 @@
+/* Shared Classic material palette. Keep semantic item-quality and resource colors. */
+body{
+ --wow-gold:#efd081;--wow-text:#e2d8bd;--wow-muted:#aba18b;--wow-edge:#8d7c5e;
+ --wow-panel:#1c1a16;--wow-inset:#11110f;--wow-red:linear-gradient(#a72119 0%,#7e0c07 47%,#650703 52%,#8e110a 100%);
+ --wow-metal:linear-gradient(#514a3d,#302c24 48%,#211e19 52%,#373126);
+ --wow-frame:inset 0 0 0 1px #080706,inset 0 0 0 2px #b9a17b26,0 3px 7px #0008;
+ --wow-heading:Georgia,'Kaiti SC','STKaiti','KaiTi','Songti SC',serif;
+ --gold:var(--wow-gold);--muted:var(--wow-muted);--line:#4e4738;
+ --color-primary:#e2c174;--color-primary-foreground:#20180c;--color-border:#5d5140;
+ --color-background:#191713;--color-foreground:var(--wow-text);--color-muted:#29251e;--color-muted-foreground:var(--wow-muted);
+ --color-accent:#443721;--color-accent-foreground:#ffe4a4;--color-input:#66573f;--color-ring:#e2c174;
+}
+/* Intent-aware shared buttons, plus the existing plain action buttons. */
+body [data-slot=button],body .classic-button,body .cu-gold-button,body .action-row>button:not([data-slot]),body .cu-actions>button,body .settings-account-actions>a,body .settings-account-actions>button{
+ border:2px ridge var(--wow-edge);border-radius:3px;background:var(--wow-red);color:#ffe3a1;
+ box-shadow:var(--wow-frame);text-shadow:0 1px 2px #000;font-family:var(--wow-heading);font-weight:600;
+ transition:filter .12s,border-color .12s,box-shadow .12s;
+}
+body .classic-button.secondary,body [data-slot=button][data-variant=outline],body [data-slot=button][data-variant=secondary],body .cu-actions>button:not(.cu-fight-button){background:var(--wow-metal);color:var(--wow-text)}
+body [data-slot=button][data-variant=destructive]{background:linear-gradient(#701711,#360907);color:#ffd0b3;border-color:#a1654d}
+body [data-slot=button][data-variant=ghost],body [data-slot=button][data-variant=link]{background:transparent;box-shadow:none;border-color:transparent;color:var(--wow-gold);text-shadow:0 1px 2px #000}
+body :is([data-slot=button],.classic-button,.cu-gold-button,.action-row>button,.cu-actions>button,.settings-account-actions>a,.settings-account-actions>button):hover:not(:disabled){filter:brightness(1.18);border-color:#d5b775}
+body :is([data-slot=button],.classic-button,.cu-gold-button,.action-row>button,.cu-actions>button):active:not(:disabled){box-shadow:inset 0 2px 6px #000b;border-style:inset;filter:brightness(.92)}
+body :is([data-slot=button],.classic-button,.cu-gold-button,.action-row>button,.cu-actions>button):disabled{filter:grayscale(.85);opacity:.45;text-shadow:none;cursor:not-allowed}
+body :is(button,a,input,[role=tab],[role=combobox]):focus-visible{outline:2px solid #ffe19a;outline-offset:3px}
+/* Framed windows and inset content surfaces. NPC dialogue has its own parchment palette. */
+body .cu-dialog.cu-live-dialog,body [data-slot=dialog-content]:not(.classic-npc-dialog){
+ background:repeating-linear-gradient(125deg,#ffffff02 0 1px,transparent 1px 5px),var(--wow-panel);
+ border:4px ridge #a09075;border-radius:5px;color:var(--wow-text);
+ box-shadow:0 0 0 1px #080706,inset 0 0 0 1px #080706,0 20px 80px #000c;
+}
+body .cu-live-dialog .cu-dialog-header{background:linear-gradient(#39352c,#25221c 45%,#191713);border-bottom:2px ridge #8d7c5e;box-shadow:inset 0 1px #c5ad7726}
+body .cu-live-dialog .cu-dialog-header h2,body [data-slot=dialog-title]{font-family:var(--wow-heading);color:var(--wow-gold);text-shadow:0 2px 2px #000}
+body .cu-live-dialog .cu-dialog-header p{color:var(--wow-muted)}
+body .cu-close,body [data-slot=dialog-close]:not(.npc-dialog-close){display:grid;place-items:center;min-width:30px;min-height:30px;padding:3px;border:2px ridge #a28d68;border-radius:3px;background:var(--wow-red);color:#ffdfa0;box-shadow:var(--wow-frame);opacity:1}
+body .cu-close:hover,body [data-slot=dialog-close]:hover{filter:brightness(1.2)}
+body .panel,body .cu-live-dialog .panel,body .cu-live-dialog .quest-entry,body .journey-content .panel{border:1px solid #645741;border-radius:3px;background:linear-gradient(115deg,#25221c,#191713);box-shadow:inset 0 0 0 1px #0e0d0a,0 2px 6px #0004}
+body .panel h2,body .section-heading h2{font-family:var(--wow-heading);color:var(--wow-gold)}
+body .npc-card{border:1px solid #695c43;border-radius:3px;background:linear-gradient(120deg,#302c22,#1b1914);box-shadow:inset 0 0 0 1px #100e0b}
+body .npc-card:hover{background:linear-gradient(120deg,#413824,#272218);border-color:#c4a462;transform:none}
+/* Carved tabs and category controls instead of rounded pills. */
+body .filterbar button,body [data-slot=tabs-trigger],body .journey-rail .main-nav [data-slot=tabs-trigger]{border:1px solid #6e5c3e;border-radius:3px 3px 0 0;background:linear-gradient(#393226,#201c16);color:#bfb298;box-shadow:inset 0 1px #ac95632e;text-shadow:0 1px 2px #000}
+body .filterbar button.active,body .filterbar button[aria-pressed=true],body [data-slot=tabs-trigger][data-state=active],body .journey-rail .main-nav [data-slot=tabs-trigger][data-state=active]{background:linear-gradient(#65502b,#362916);color:#ffe2a0;border-color:#b39758;box-shadow:inset 0 1px #efd58b55,0 1px 0 #241c11}
+body .filterbar button:hover:not(:disabled),body [data-slot=tabs-trigger]:hover:not(:disabled){color:#ffe7b0;border-color:#c6a96a}
+body [data-slot=tabs-list]{background:#14120f;border-radius:2px}
+/* Input fields, dropdowns and portalled menus share the same inset frame. */
+body input:not([type=checkbox]):not([type=radio]):not([type=range]),body textarea,body [data-slot=select-trigger],body [data-game-select][data-slot]{background:#10100e;color:var(--wow-text);border:2px ridge #78674b;border-radius:3px;box-shadow:inset 0 2px 5px #000a}
+body [data-slot=select-content],body [data-game-select-menu][data-slot],body [data-slot=dropdown-menu-content],body [data-slot=popover-content]{background:#191610;color:var(--wow-text);border:2px ridge #9b855d;border-radius:3px;box-shadow:0 5px 18px #000b}
+body [data-slot=select-item][data-highlighted],body [data-slot=dropdown-menu-item]:focus{background:linear-gradient(90deg,#76603288,#46351e);color:#ffe2a0}
+body input[type=checkbox]:not(.reward-option-control){appearance:none;position:relative;width:22px;height:22px;flex-shrink:0;padding:0;margin:0;border:2px ridge #988461;border-radius:2px;background:linear-gradient(#11100c,#292319);box-shadow:inset 0 1px 4px #000;cursor:pointer;vertical-align:middle}
+body input[type=checkbox]:not(.reward-option-control):checked:after{content:'';position:absolute;left:5px;top:1px;width:7px;height:12px;border:solid #ffdb5f;border-width:0 3px 3px 0;transform:rotate(42deg);filter:drop-shadow(0 0 2px #c28e18)}
+body input[type=checkbox]:disabled{opacity:.4;cursor:not-allowed}
+body input[type=range]{appearance:none;height:8px;padding:0;border:1px solid #746044;border-radius:2px;background:#090907;box-shadow:inset 0 1px 3px #000;cursor:pointer}
+body input[type=range]::-webkit-slider-thumb{appearance:none;width:14px;height:24px;border:2px ridge #c4ad77;border-radius:2px;background:linear-gradient(90deg,#5d4825,#d5b56a 45%,#896c36 55%,#51401f);box-shadow:0 1px 4px #000}
+body input[type=range]::-moz-range-thumb{width:10px;height:20px;border:2px ridge #c4ad77;border-radius:2px;background:linear-gradient(90deg,#5d4825,#d5b56a,#51401f);box-shadow:0 1px 4px #000}
+body input[type=range]:disabled{opacity:.35;cursor:not-allowed}
+body :is(.cu-dialog-body,[data-slot=dialog-content],.npc-dialog-scroll,.settings-content,[data-slot=select-content]){scrollbar-width:thin;scrollbar-color:#8e7745 #18140e}
+body .item-hover-content{background:#080b17f5;border:2px solid #8e8b7c;border-radius:4px;box-shadow:0 4px 14px #000b}
+@media(pointer:coarse){body [data-slot=button]:not([data-size=icon-xs]):not([data-size=xs]),body .filterbar button{min-height:40px}}
+@media(prefers-reduced-motion:reduce){body [data-slot=button],body .classic-button,body .cu-gold-button,body .npc-card{transition:none}}
+
+/* Secondary game windows use the same frame, while maps and item slots keep their artwork. */
+body :is(.city,.dungeon-journal,.dungeon-preparation>div,.recipe-card,.resource-card){border-color:#66573f;border-radius:3px;background:linear-gradient(120deg,#25221b,#161410);box-shadow:inset 0 0 0 1px #0b0a08}
+body .city-header,body .dungeon-page-intro{background:linear-gradient(110deg,#3a3223,#1c1913);border-color:#75603e}
+body :is(.city-header,.dungeon-page-intro) h1{font-family:var(--wow-heading);color:var(--wow-gold)}
+body .journal-card{border-radius:3px;border-color:#60513a;background:radial-gradient(ellipse at top right,#383021,#191611);box-shadow:inset 0 0 0 1px #0a0907}
+body .journal-card.is-playable{border-color:#a08246;background:radial-gradient(ellipse at top right,#4a3b20,#1c1811)}
+body .journal-card:hover{background:#352b1c;border-color:#d5b775;transform:none}
+body .journal-card h3{font-family:var(--wow-heading);color:#e9cf94}
+body .profession-list button{background:linear-gradient(#352e23,#1b1813);border-color:#6c5b3e;color:var(--wow-text);border-radius:2px}
+body .profession-list button.active{background:linear-gradient(#644b26,#352717);border-color:#b39151;color:#ffdb8c}
+body [data-slot=checkbox]{width:22px;height:22px;border:2px ridge #988461;border-radius:2px;background:linear-gradient(#11100c,#292319);color:#ffdb5f;box-shadow:inset 0 1px 4px #000}
+body [data-slot=checkbox][data-state=checked]{background:linear-gradient(#211c11,#312719);color:#ffdb5f}
+body [data-slot=checkbox] svg{stroke-width:3}
+
+body [data-game-select][data-slot]:hover{background:#282216;border-color:#b99a5e}

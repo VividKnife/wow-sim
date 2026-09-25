@@ -4,7 +4,7 @@ import {arenaSight} from '../../../sim-core/src/arena-space.js';
 import {weaponAttack} from './weapon-attacks.js';
 import {weaponDamage,effectiveArmor} from './companion-combat.js';
 import {spellPowerBonus} from './spell-scaling.js';
-import {mayApproachForSpell} from './combat-positioning.js';
+import {mayApproachForSpell,approachRear} from './combat-positioning.js';
 import {beginSpellTiming,spellReady,cooldownUntil,resetSpellCooldowns} from './spell-timing.js';
 import {petHappinessMultiplier} from './pet-progression.js';
 import {usableCount,consume} from './inventory.js';
@@ -17,7 +17,7 @@ import {defaultClassRules,supportedSpellNames} from './class-support.js';
 import {ranks,healingMultiplier,talentPetModifiers,talentSpellValue} from './talent-effects.js';
 import {strategyAllows,ruleMatches,protectCombatTarget} from './combat-strategy.js';
 import {distance} from '../../../sim-core/src/geometry.js';
-import {moveToward,moveAway,inSpellRange,effectiveSpeed} from './combat-space.js';
+import {moveToward,moveAway,inSpellRange,effectiveSpeed,behindTarget} from './combat-space.js';
 import {controlled,hasAura,addCombatAura} from '../../../sim-core/src/combat-auras.js';
 import {recordMetric} from './combat-metrics.js';
 import {ammoCount,consumeHunterAmmo,consumesHunterAmmo} from './ammunition.js';
@@ -70,7 +70,7 @@ function applyClassEffect(s,c,target,sp,actors,api){
  if(name==='Judgement'){const seal=spells[c.seal?.spell],judgement=seal&&spells[seal.EffectBasePoints3>0?seal.EffectBasePoints3+1:20187];c.seal=null;if(judgement&&api.lands(s,c,target,sp))api.damage(s,c,target,roll(s,...effectRange(c,judgement)),nameOf('spells',sp.Id),1,{spellId:sp.Id,school:1});return;}
  if(name==='Bear Form'||name==='Cat Form'){c.form=name==='Bear Form'?'bear':'cat';c.rage=0;c.energy=0;if(rng(s)<.2*(r.Furor||0)){if(c.form==='bear')c.rage=100;else c.energy=40;}return;}
  if(name==='Battle Stance'||name==='Defensive Stance'){c.stance=name==='Battle Stance'?'battle':'defensive';c.rage=Math.min(c.rage||0,50*(r['Tactical Mastery']||0));return;}
- if(name==='Stealth'){c.stealthed=true;return;}
+ if(name==='Stealth'){c.stealthed=true;(s.combat.stealthUsers??=[]).push(c.id);return;}
  if(['Backstab','Ambush','Claw'].includes(name)){
   if(name!=='Claw')c.stealthed=false;
   const attack=weaponAttack(s,c,target,{special:true,spell:sp});if(!attack.landed)return;
@@ -119,7 +119,10 @@ export function decideClass(s,c,e,actors,api,rules=c.rules||defaultClassRules(c.
   if(name==='Maul'||name==='Growl'){if(c.form!=='bear'||name==='Growl'&&e.target===c.id)continue;}
   if(name==='Claw'||name==='Rip'){if(c.form!=='cat'||name==='Rip'&&(!c.combo||c.comboTarget!==e.id))continue;}
   if(name==='Kick'&&!e.cast)continue;
-  if(name==='Stealth'){target=c;if(c.stealthed||s.clock>s.combat.startedAt+100&&s.combat.pull?.engagedAt!=null)continue;}
+  if(name==='Stealth'){
+   target=c;const unavailable=s.combat.pvp?s.clock>s.combat.startedAt+100&&s.combat.pull?.engagedAt!=null:s.combat.stealthUsers?.includes(c.id)||s.combat.engagedMemberIds?.includes(c.id)||s.combat.enemies.some(enemy=>enemy.threat?.[c.id]>0);
+   if(c.stealthed||unavailable)continue;
+  }
   if(name==='Backstab'||name==='Ambush'){if(items[c.equipment[16]?.id]?.subclass!==15||name==='Ambush'&&!c.stealthed||name==='Backstab'&&e.target===c.id&&!c.stealthed)continue;}
   if(name==='Fear'&&e.auras?.some(a=>a.type===7&&a.until>s.clock))continue;
   if(name==='Gouge'&&e.stunUntil>s.clock)continue;
@@ -130,6 +133,7 @@ export function decideClass(s,c,e,actors,api,rules=c.rules||defaultClassRules(c.
   const pool=sp.PowerType===1?'rage':sp.PowerType===3?'energy':[4294967294,-2].includes(sp.PowerType)?'hp':'mana';if((c[pool]||0)<sp.mana||pool==='hp'&&c.hp<=sp.mana)continue;const reagents=Array.from({length:8},(_,i)=>({id:sp['Reagent'+(i+1)],count:sp['ReagentCount'+(i+1)]})).filter(r=>r.id>0&&r.count>0);if(c===s&&reagents.some(r=>usableCount(s,r.id)<r.count))continue;
   if(!pvpAbilityAllowed(c,target,sp,s.clock))continue;
   if(target===e&&!strategyAllows(s,c,e,sp,rule))continue;
+  if(!s.combat.pvp&&['Backstab','Ambush'].includes(name)&&(!behindTarget(c,target)||!inSpellRange(c,target,sp))){approachRear(s,c,target,sp.range||5);return true;}
   if(target!==c&&!inSpellRange(c,target,sp)){if(target===e&&!mayApproachForSpell(s,c,target,sp))continue;if(distance(c,target)<sp.minRange){if(effectiveSpeed(c,s.clock)<=effectiveSpeed(target,s.clock))continue;moveAway(s,c,target,s.clock);}else moveToward(s,c,target,sp.range||5,s.clock);return true;}
   if(['Maul','Raptor Strike'].includes(name)){c.queuedStrike=id;return false;}
   if(c.form&&sp.PowerType===0&&!['Bear Form','Cat Form'].includes(name))c.form=null;

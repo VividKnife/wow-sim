@@ -62,3 +62,18 @@ test('45 degree mounted camera fits every bounding-box corner on desktop and mob
   }
  }
 });
+
+test('corpse recovery animates the dead leader as an unmounted spirit, then restores life',()=>{
+ const fallen={...player,id:'leader',hp:0,mounted:900020};
+ const activity={type:'revive',targets:['leader'],flight:true};
+ const ghost=worldSceneState({...fallen,activity},data);
+ assert.equal(ghost.ghost,true);assert.equal(ghost.animation,'Run');assert.equal(ghost.moving,true);
+ assert.equal(ghost.mountDisplayId,0);assert.equal(ghost.flying,false);assert.match(ghost.label,/跑尸/);
+ const alive=worldSceneState({...fallen,hp:50,mounted:null,activity:{type:'idle'}},data);
+ assert.equal(alive.ghost,false);assert.equal(alive.animation,'Stand');assert.equal(alive.moving,false);
+ for(const state of [{...fallen,activity:{type:'dead'}},{...fallen,activity,combat:{}},{...fallen,activity:{type:'revive',targets:['companion']}}]){
+  const scene=worldSceneState(state,data);assert.equal(scene.ghost,false);assert.equal(scene.animation,'Death');assert.equal(scene.moving,false);
+ }
+ const leader=worldSceneState({...player,id:'leader',activity:{type:'revive',targets:['companion']}},data);
+ assert.equal(leader.ghost,false);assert.equal(leader.moving,false);assert.equal(leader.animation,'Stand');
+});

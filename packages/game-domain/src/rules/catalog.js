@@ -6,6 +6,7 @@ import source from '../../../game-data/data/classic-reference.json' with { type:
 import helpers from '../../../game-data/data/gameplay-reference.json' with { type: 'json' };
 import icons from '../../../game-data/data/icon-map.json' with { type: 'json' };
 import classIcons from '../../../game-data/data/class-icon-map.json' with { type: 'json' };
+import spellIcons from '../../../game-data/data/spell-icon-map.json' with {type:'json'};
 import talentSource from '../../../game-data/data/mage-talents-2019.json' with { type: 'json' };
 import clientRules from '../../../game-data/data/client-rules-reference.json' with { type: 'json' };
 import localization from '../../../game-data/data/localization.json' with { type: 'json' };
@@ -115,7 +116,7 @@ export const classTalentTrees=classReference.classTalentTrees.map(tree=>({...tre
 export const talentTrees=classTalentTrees.filter(tree=>tree.classId===8);
 export const talents=Object.fromEntries(classTalentTrees.flatMap(tree=>tree.talents.map(t=>[t.id,{...t,tree:tree.id,classId:tree.classId,rankEffects:t.rankEffects.map(effect=>({...effect,descriptionZhCN:talentDescriptionsZhCN.descriptions[effect.spellId]}))}])));
 const talentsBySpell=Object.fromEntries(Object.values(talents).flatMap(t=>t.ranks.map(id=>[id,t])));
-export const icon=(kind,id)=>kind==='items'&&moltenCoreLoot.assets[id]?.icon?'/icons/assets/'+moltenCoreLoot.assets[id].icon+'.png':kind==='items'&&items[id]?.appearanceItemId?icon('items',items[id].appearanceItemId):icons[kind]?.[id]?'/icons/'+icons[kind][id]:classIcons[kind]?.[id]?'/icons/'+classIcons[kind][id]:kind==='items'&&stockadesAssets.items[id]?.icon?'/icons/'+stockadesAssets.items[id].icon:kind==='items'&&journeyAssets.items[id]?.icon?'/icons/'+journeyAssets.items[id].icon:kind==='items'&&worldItemAssets.items[id]?.icon?'/icons/'+worldItemAssets.items[id].icon:kind==='spells'&&dungeonSpellAssets.spells[id]?.icon?'/icons/'+dungeonSpellAssets.spells[id].icon:kind==='spells'&&talentsBySpell[id]?icon('talents',talentsBySpell[id].id):null;
+export const icon=(kind,id)=>kind==='items'&&moltenCoreLoot.assets[id]?.icon?'/icons/assets/'+moltenCoreLoot.assets[id].icon+'.png':kind==='items'&&items[id]?.appearanceItemId?icon('items',items[id].appearanceItemId):icons[kind]?.[id]?'/icons/'+icons[kind][id]:classIcons[kind]?.[id]?'/icons/'+classIcons[kind][id]:kind==='items'&&stockadesAssets.items[id]?.icon?'/icons/'+stockadesAssets.items[id].icon:kind==='items'&&journeyAssets.items[id]?.icon?'/icons/'+journeyAssets.items[id].icon:kind==='items'&&worldItemAssets.items[id]?.icon?'/icons/'+worldItemAssets.items[id].icon:kind==='spells'&&dungeonSpellAssets.spells[id]?.icon?'/icons/'+dungeonSpellAssets.spells[id].icon:kind==='spells'?((talentsBySpell[id]?icon('talents',talentsBySpell[id].id):null)||(spellIcons.icons[spells[id]?.SpellIconID]?'/icons/'+spellIcons.icons[spells[id].SpellIconID]:null)):null;
 export const provenance={database:source.meta,core:helpers.core,talents:talentSource.source,classes:classReference.meta};
 export const spellChain=index('spell_chain','spell_id');
 export const abilities=classAbilities[8];

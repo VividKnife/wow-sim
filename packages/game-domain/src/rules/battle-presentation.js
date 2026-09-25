@@ -12,7 +12,7 @@ const petModes={passive:'被动',defensive:'防御',aggressive:'主动',follow:'
 const spellKey=name=>name.toLowerCase().replace(/[^a-z0-9]/g,'');
 const namedSpells=new Map(Object.values(spells).map(sp=>[spellKey(sp.SpellName),sp.Id]));
 const elements={earth:'大地',fire:'火焰',water:'水流',air:'空气'};
-const spellDetail=id=>({spellId:Number(id),name:Number(id)===992100?'金团战斗药剂':nameOf('spells',Number(id)),icon:icon('spells',Number(id))});
+const spellDetail=id=>({spellId:Number(id),name:Number(id)===992100?'金团战斗药剂':nameOf('spells',Number(id)),icon:Number(id)===992100?'/icons/assets/inv_potion_25.png':icon('spells',Number(id))});
 const effectEnd=a=>a?.until??(a?.remaining>0&&a?.interval>0?a.next+(a.remaining-1)*a.interval:0);
 function effectsFor(actor,clock){
  const result=new Map((actor.serverBuffs||[]).map(buff=>[buff.id,{spellId:null,name:buff.name,icon:buff.icon,detail:buff.description,until:null}]));
@@ -30,7 +30,7 @@ function effectsFor(actor,clock){
  if(actor.racialBuff)add({...actor.racialBuff,spell:namedSpells.get(actor.racialBuff.kind)},'种族能力');
  add(actor.cannibalize,'种族能力');add({...actor.bloodrage,spell:2687},'怒气回复');
  if(actor.totemWeaponEnchant?.weaponUid===actor.equipment?.[16]?.uid)add(actor.totemWeaponEnchant,'图腾武器强化');add(actor.lightwell,'光明之泉');
- if(actor.stealthed)result.set('stealth',{spellId:null,name:actor.form==='cat'?'潜伏':'潜行',icon:null,until:null,detail:''});
+ if(actor.stealthed)result.set('stealth',{...spellDetail(actor.form==='cat'?5215:1784),until:null,detail:''});
  // One spell can store a numerical buff and several aura effects. Show it once.
  const grouped=new Map();for(const effect of result.values()){const key=effect.spellId?`${effect.spellId}:${effect.caster||''}:${/^[主副]手/.test(effect.detail)?effect.detail:''}`:effect.name;const old=grouped.get(key);grouped.set(key,old?{...old,...effect,until:Math.max(old.until||0,effect.until||0),detail:[...new Set([old.detail,effect.detail].filter(Boolean))].join(' · ')}:effect);}
  return [...grouped.values()];

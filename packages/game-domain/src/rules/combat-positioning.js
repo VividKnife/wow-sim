@@ -2,7 +2,7 @@ import {commandOrder,commandProtected} from './combat-command.js';
 import {distance,point} from '../../../sim-core/src/geometry.js';
 import {combatMembers} from './combat-members.js';
 import {isBackline,combatRole} from './combat-roles.js';
-import {moveToward,moveAway,aliveEnemy,castRange,groundArea,selfArea} from './combat-space.js';
+import {moveToward,moveAway,aliveEnemy,castRange,groundArea,selfArea,behindTarget} from './combat-space.js';
 import {waitingTank,waitingForPull} from './combat-strategy.js';
 
 export function usesPartyPositioning(s,c){
@@ -78,4 +78,17 @@ export function rescueTarget(s,c,enemies){
   return Number(isBackline(targetB))-Number(isBackline(targetA))||distance(a,targetA)-distance(b,targetB);
  });
  return endangered[0]||enemies.find(e=>e.tauntedBy===c.id&&e.tauntUntil>s.clock)||enemies.find(e=>!(e.threat?.[c.id]>0))||null;
+}
+
+// Circle outside the frontal detection radius before closing on the rear.
+// Use ordinary movement so roots, slows, terrain and replay all still apply.
+export function approachRear(s,c,target,range){
+ const p=point(c),q=point(target),gap=distance(c,target);
+ const radius=Math.max(8,7+(target.level-c.level));
+ if(behindTarget(c,target))return moveToward(s,c,target,Math.min(4,range),s.clock);
+ const angle=gap?Math.atan2(p.y-q.y,p.x-q.x):target.combatFacing;
+ if(gap>radius+.5)return moveToward(s,c,{x:q.x+radius*Math.cos(angle),y:q.y+radius*Math.sin(angle)},0,s.clock);
+ const rear=target.combatFacing+Math.PI,delta=Math.atan2(Math.sin(rear-angle),Math.cos(rear-angle));
+ const next=angle+(delta<0?-.25:.25);
+ return moveToward(s,c,{x:q.x+radius*Math.cos(next),y:q.y+radius*Math.sin(next)},0,s.clock);
 }

@@ -5,6 +5,7 @@
 @import "./battle-hd2d.css";
 @import "./dungeon.css";
 @import "./world-map.css";
+@import "./classic-controls.css";
 /* Scan interface source, never the binary model library in public/. */
 @source "./";
 @source "../components";

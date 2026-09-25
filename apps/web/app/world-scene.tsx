@@ -21,13 +21,14 @@ export default function WorldScene(props:GameProps&{onObserve?:()=>void;animatio
   return()=>{observer.disconnect();document.removeEventListener('visibilitychange',visibility);};
  },[]);
  const animationPaused=paused||!!props.animationPaused||!visible||!foreground||!!s.presence?.paused;
- return <section ref={container} className={`world-scene scenery-${worldScenery(presentation.location)} ${scene.flying?'is-flying':''} ${scene.moving&&!animationPaused?'is-moving':''} ${scene.combat?'is-combat':''}`} aria-label="世界沉浸场景" data-motion={scene.animation} data-travel-mode={scene.flying?'flight':scene.mountDisplayId?'ride':'foot'}>
+ return <section ref={container} className={`world-scene scenery-${worldScenery(presentation.location)} ${scene.ghost?'is-ghost':''} ${scene.flying?'is-flying':''} ${scene.moving&&!animationPaused?'is-moving':''} ${scene.combat?'is-combat':''}`} aria-label="世界沉浸场景" data-motion={scene.animation} data-travel-mode={scene.flying?'flight':scene.mountDisplayId?'ride':'foot'}>
   <div className="world-exploration" aria-hidden={scene.combat} inert={scene.combat}>
    <SceneBackdrop image={presentation.image} city={!!d.city&&!presentation.instance} flying={scene.flying}/><div className="world-scene-mist"/>
    {scene.flying&&<div className="world-flight-clouds" aria-hidden="true"/>}
    <div className={'world-avatar '+(scene.mountDisplayId?'is-mounted':'')}>
     <div className="world-avatar-shadow"/>
-    <CharacterModel equipment={s.equipment} items={d.items} raceId={s.raceId||1} classId={s.classId||8} gender={s.gender||'male'} view={scene.flying?'flight':'world'} animation={scene.animation as 'Stand'|'Run'|'Fly'|'Death'} mountDisplayId={scene.mountDisplayId} paused={animationPaused||scene.combat} fallback={<span className="world-model-placeholder">✦</span>} title="第三人称角色与当前装备"/>
+    {scene.ghost&&<div className="world-spirit-aura" aria-hidden="true"><i/><i/><i/></div>}
+    <CharacterModel ghost={scene.ghost} equipment={s.equipment} items={d.items} raceId={s.raceId||1} classId={s.classId||8} gender={s.gender||'male'} view={scene.flying?'flight':'world'} animation={scene.animation as 'Stand'|'Run'|'Fly'|'Death'} mountDisplayId={scene.mountDisplayId} paused={animationPaused||scene.combat} fallback={<span className="world-model-placeholder">✦</span>} title={scene.ghost?'灵魂形态 · 返回尸体':'第三人称角色与当前装备'}/>
    </div>
    <div className="world-scene-vignette"/>
    <header className="world-scene-heading"><span>艾泽拉斯 · {presentation.instance?'副本':scene.flying?'天空航线':'旅途'}</span><h2>{presentation.name}{scene.flying?'上空':''}</h2><p>{presentation.region} · {presentation.instance?'副本内部':scene.flying?'飞行途中':d.city?'城镇':'野外'}</p></header>

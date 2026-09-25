@@ -7,3 +7,5 @@ coverage/
 *.log
 .worktrees/
 __pycache__/
+.tmp/compose.port.yaml
+.tmp/server-logs/

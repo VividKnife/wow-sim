@@ -23,7 +23,7 @@ function Sprite({unit:initialUnit,height,clock,school}:{unit:BattleUnitData;heig
   if(Number.isFinite(moved)&&moved>.001)lastMove.current=f.wall;
   previous.current=[p[0],p[2]];
   const action=unitAnimation(unit,f.scene.effects,f.clock,f.wall,f.wall-lastMove.current<120),reduced=f.scene.reducedMotion;
-  const facing=q?(q[0]<p[0]?-1:1):(unit.foe?-1:1);
+  const facing=unit.combatFacing!=null?(Math.cos(unit.combatFacing)<0?-1:1):q?(q[0]<p[0]?-1:1):(unit.foe?-1:1);
   const phase=f.seconds*10,walk=action==='walk',dead=action==='dead';
   body.current.quaternion.copy(camera.quaternion);
   body.current.rotateZ(dead?facing*1.35:reduced?0:action==='attack'?-facing*.16:action==='hurt'?Math.sin(phase*3)*.08:walk?Math.sin(phase)*.025:0);

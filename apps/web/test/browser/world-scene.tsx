@@ -50,7 +50,7 @@ function Demo(){
  return <main className="journey-content" style={{margin:'auto',maxWidth:1260,padding:'24px 20px 60px'}}>
   <div style={{marginBottom:22}}><span style={{color:'#d8b775',fontSize:11,letterSpacing:3}}>WORLD SCENE / 02</span><h1 style={{fontSize:27,margin:'8px 0'}}>走进艾泽拉斯</h1><p style={{color:'#a4b0a2',fontSize:13}}>45° 俯视第三人称 · 独立角色，不连接玩家存档。切换动作、换装，或乘鸟点航班。</p></div>
   <nav className="action-row" aria-label="演示控制" style={{marginBottom:18,flexWrap:'wrap'}}>
-   {Object.entries({idle:'驻足 · 待机',run:'步行 · 奔跑',ride:'上马 · 赶路',fly:'鸟点 · 飞行',combat:'遭遇 · 战斗'}).map(([key,label])=><Button key={key} disabled={!s} variant={mode===key?'default':'outline'} type="button" aria-pressed={mode===key} onClick={()=>command('mode',{mode:key})}>{label}</Button>)}
+   {Object.entries({idle:'驻足 · 待机',run:'步行 · 奔跑',ride:'上马 · 赶路',fly:'鸟点 · 飞行',combat:'遭遇 · 战斗',dead:'死亡 · 倒地',ghost:'灵魂 · 跑尸'}).map(([key,label])=><Button key={key} disabled={!s} variant={mode===key?'default':'outline'} type="button" aria-pressed={mode===key} onClick={()=>command('mode',{mode:key})}>{label}</Button>)}
    {s?.activity.flight&&<Button variant="outline" onClick={()=>command('arrive')}>抵达鸟点</Button>}
    <Button variant="outline" onClick={()=>command('equip')} disabled={!s||!!s.combat||!['idle','hunt'].includes(s.activity.type)}>更换长袍</Button>
    <Button variant="outline" disabled={!s} onClick={()=>command('region')}>切换地区</Button>

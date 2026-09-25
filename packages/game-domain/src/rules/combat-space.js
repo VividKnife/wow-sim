@@ -91,4 +91,5 @@ export function areaTargets(s,c,e,sp,center,options={}){
  return !options.uncapped&&sp.MaxAffectedTargets>0?targets.slice(0,sp.MaxAffectedTargets):targets;
 }
 
-export function detectsTarget(c,e,clock){if(!e.stealthed&&!e.invisible)return true;if(!arenaSight(c,e))return false;const detection=talentCombatDefense(c).stealthDetection+(c.classDetection?.until>clock?30:0),conceal=talentCombatDefense(e).stealthLevel;return distance(c,e)+1e-6<Math.max(1,5+(c.level-e.level)+(detection-conceal)/5);}
+export function behindTarget(c,e){const p=point(c),q=point(e);return Number.isFinite(e.combatFacing)&&(p.x-q.x)*Math.cos(e.combatFacing)+(p.y-q.y)*Math.sin(e.combatFacing)<-1e-6;}
+export function detectsTarget(c,e,clock){if(!e.stealthed&&!e.invisible)return true;if(!arenaSight(c,e))return false;const detection=talentCombatDefense(c).stealthDetection+(c.classDetection?.until>clock?30:0),conceal=talentCombatDefense(e).stealthLevel;return distance(c,e)+1e-6<Math.max(1,(!c.pvp&&behindTarget(e,c)?1:5)+(c.level-e.level)+(detection-conceal)/5);}

@@ -9,12 +9,14 @@ export function worldFlightMount(state,data){
 }
 export function worldSceneState(state,data){
  const activity=state.activity||{},combat=!!state.combat,dead=state.hp<=0;
- const moving=!combat&&!dead&&['travel','escortMove','revive'].includes(activity.type);
- const flying=moving&&!!activity.flight;
+ // Recovery targets may contain only fallen companions; the living leader stays put.
+ const ghost=!combat&&dead&&activity.type==='revive'&&(activity.targets||[state.id]).includes(state.id);
+ const moving=ghost||!combat&&!dead&&['travel','escortMove'].includes(activity.type);
+ const flying=moving&&!ghost&&activity.type==='travel'&&!!activity.flight;
  const flightMount=flying?worldFlightMount(state,data):null;
  const mountDisplayId=!combat&&!dead?(flightMount?.displayId||worldMountDisplays[state.mounted]||0):0;
  const flightProgress=flying?Math.min(1,Math.max(0,(state.clock-activity.startedAt)/Math.max(1,activity.endsAt-activity.startedAt))):0;
- return {combat,moving,flying,mountDisplayId,flightProgress,animation:dead?'Death':flying?'Fly':moving?'Run':'Stand',label:combat?'战斗中':dead?'已倒下':flying?flightMount.name+'飞行':moving?(mountDisplayId?'骑乘赶路':'奔跑赶路'):mountDisplayId?'骑乘待命':activity.type==='mount'?'召唤坐骑':state.rest?'休息恢复':'驻足休息',destination:activity.to?data.map?.find(node=>node.id===activity.to)?.name:null};
+ return {combat,ghost,moving,flying,mountDisplayId,flightProgress,animation:ghost?'Run':dead?'Death':flying?'Fly':moving?'Run':'Stand',label:combat?'战斗中':ghost?'灵魂形态 · 跑尸中':dead?'已倒下':flying?flightMount.name+'飞行':moving?(mountDisplayId?'骑乘赶路':'奔跑赶路'):mountDisplayId?'骑乘待命':activity.type==='mount'?'召唤坐骑':state.rest?'休息恢复':'驻足休息',destination:activity.to?data.map?.find(node=>node.id===activity.to)?.name:null};
 }
 export function worldScenery(location){
  const region=location?.region||'';

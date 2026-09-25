@@ -1,0 +1,14 @@
+.cu-action-tooltip{z-index:200;box-sizing:border-box;width:320px;max-width:calc(100vw - 24px);max-height:var(--radix-tooltip-content-available-height);overflow:auto;padding:11px 13px;border:2px solid #a49fae;border-radius:5px;background:linear-gradient(135deg,#111126fa,#080812fc);box-shadow:inset 0 0 0 1px #302b41,0 0 0 1px #08080c,0 4px 16px #000b;color:#fff;font:13px/1.5 Arial,'Microsoft YaHei',sans-serif;text-shadow:1px 1px 1px #000;overflow-wrap:anywhere}
+.cu-action-tooltip header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:5px}
+.cu-action-tooltip header strong{color:#ffd100;font-size:16px;font-weight:600}
+.cu-action-tooltip header small{color:#b9b6c3;font-size:12px;flex-shrink:0}
+.cu-tooltip-facts{display:flex;justify-content:space-between;gap:12px;margin-bottom:3px}
+.cu-action-tooltip p{margin:0}.cu-tooltip-effects,.cu-tooltip-restrictions{margin-top:8px}
+.cu-tooltip-effects,.cu-action-tooltip .cu-tooltip-description{color:#ffd100}
+.cu-action-tooltip .cu-tooltip-description{margin-top:8px}
+.cu-tooltip-restrictions{color:#e4e0d7}
+.cu-action-tooltip .cu-tooltip-error{margin-top:8px;color:#ff6262}
+.cu-action-tooltip .cu-tooltip-cooldown{margin-top:8px;color:#ffbd70;font-variant-numeric:tabular-nums}
+.cu-action-tooltip .cu-tooltip-note{margin-top:8px;color:#aeb8c7}
+.cu-action-tooltip footer{display:flex;justify-content:space-between;gap:12px;margin-top:10px;padding-top:7px;border-top:1px solid #77708755;color:#9291a2;font-size:11px}
+.cu-action-tooltip .classic-item-tooltip{width:auto;max-width:none;padding:0;border:0;border-radius:0;background:none;box-shadow:none}

@@ -1,0 +1,46 @@
+/* Utility actions sit below the character, above scene controls and the menu. */
+.classic-game .cu-quickbar{position:absolute;z-index:5;left:50%;bottom:163px;transform:translateX(-50%);max-width:calc(100% - 20px)}
+.cu-quickbar-frame{display:flex;align-items:center;gap:6px;padding:4px;border:1px solid #99815c66;border-radius:3px;background:#17181399;box-shadow:0 2px 8px #0004}
+.cu-quickbar-slots{display:grid;grid-template-columns:repeat(12,42px);gap:4px}
+.classic-game .cu-quick-slot{position:relative;width:42px;height:42px;padding:0;border:1px solid #9a876355;border-radius:2px;background:radial-gradient(#33352b,#0c0d0b);color:#ffe3a7;box-shadow:none}
+.cu-quick-slot .game-icon{display:block;width:100%;height:100%;border:0;border-radius:0;box-shadow:none;object-fit:cover}
+.cu-quick-slot.unavailable .game-icon{filter:grayscale(.8) brightness(.45)}
+.classic-game .cu-quick-slot:hover{border-color:#f6d784;box-shadow:0 0 4px #e5c06b40}
+.cu-quick-slot kbd{position:absolute;top:0;left:3px;font:11px Arial;color:#fff;text-shadow:0 1px 2px #000,1px 0 2px #000;z-index:2}
+.cu-quick-slot small{position:absolute;bottom:0;right:3px;color:white;font-size:11px;text-shadow:0 1px 2px #000}
+.cu-quick-empty{font-size:20px;color:#99845b66}
+.cu-quick-cooldown{position:absolute;inset:0;display:grid;place-items:center;background:#0005;color:#fff;font-size:16px;text-shadow:0 1px 2px #000}
+.cu-quick-config{background:#1c1b17;border:1px solid #796647;color:#d8bf85;min-height:36px;width:28px;display:grid;place-items:center;padding:0}
+.classic-game .cu-viewport .cu-scene-caption{bottom:238px}
+.classic-game .cu-is-travelling .cu-quickbar{bottom:221px}
+.classic-game .cu-is-travelling .cu-scene-caption{bottom:296px}
+.cu-quickbar-cast{position:absolute;left:50%;bottom:calc(100% + 12px);transform:translateX(-50%);width:min(360px,calc(100vw - 24px))}
+.cu-dialog.cu-quick-dialog{width:min(640px,calc(100vw - 24px));max-height:85dvh;display:flex;flex-direction:column}
+.cu-quick-editor{padding:16px;overflow:auto;min-height:0}
+.cu-quick-tabs{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-bottom:14px}
+.cu-quick-tabs button{height:34px;border:1px solid #786846;background:#24231d;color:#e3d4b4}
+.cu-quick-tabs button[aria-pressed=true]{background:#6d5527;border-color:#ffdc88}
+.cu-quick-search{display:flex;gap:8px;margin-bottom:14px}
+.cu-quick-search input{min-width:0;flex:1;padding:8px;background:#121610;border:1px solid #6f6248;color:#eee0c7}
+.cu-quick-choices{display:grid;gap:6px;max-height:42dvh;overflow:auto}
+.cu-quick-choices button{display:flex;align-items:center;text-align:left;gap:10px;padding:8px;background:#25261f;border:1px solid #655a43;color:#e8d5a9}
+.cu-quick-choices button:hover,.cu-quick-choices button[aria-pressed=true]{border-color:#dfbf75;background:#393524}
+.cu-quick-choices span{display:grid;gap:3px}.cu-quick-choices small{color:#bcb6a6}.cu-quick-choices em{font-size:11px;color:#ce967a;font-style:normal}.cu-quick-hint{font-size:11px;color:#b4a88c;margin:12px 0 0}
+@media(max-width:800px){
+ .classic-game .cu-quickbar{bottom:156px}.classic-game .cu-is-travelling .cu-quickbar{bottom:214px}
+ .cu-quickbar-frame{padding:3px;gap:4px}.cu-quickbar-slots{grid-template-columns:repeat(6,36px);gap:3px}
+ .classic-game .cu-quick-slot{width:36px;height:36px}.cu-quick-config{width:24px;height:75px}
+ .cu-quick-tabs{grid-template-columns:repeat(6,1fr)}
+}
+/* Keep both the configurable bar and encounter commands available. */
+.cu-quick-mode{position:absolute;right:2px;top:-16px;color:#c8b58f;font-size:10px;text-shadow:0 1px 3px #000;pointer-events:none}
+.cu-quickbar[data-mode=combat] .cu-quick-mode{color:#f0b18c}
+.cu-quick-profiles{display:flex;gap:8px;margin-bottom:14px}
+.cu-quick-profiles button{flex:1;padding:8px;border:1px solid #786846;background:#24231d;color:#c4baa2}
+.cu-quick-profiles button[aria-pressed=true]{border-color:#d9b466;background:#534324;color:#ffe1a1}
+.classic-game .cu-in-combat:has(.command-hotbar) .cu-quickbar{bottom:106px}
+@media(max-width:800px){.classic-game .cu-in-combat:has(.command-hotbar) .cu-quickbar{bottom:106px}}
+
+.cu-quick-auto{position:absolute;bottom:1px;right:2px;font-size:9px;color:#d5cbad;font-style:normal;text-shadow:0 1px 2px #000;background:#0007;line-height:12px;padding:0 2px}
+.classic-game .cu-in-combat .world-embedded-battle>.command-hotbar{bottom:160px}
+@media(max-width:800px){.classic-game .cu-in-combat .world-embedded-battle>.command-hotbar{bottom:185px}}
