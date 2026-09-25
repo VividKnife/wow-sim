@@ -24,6 +24,7 @@ jobs:
       - run: npm ci
       - run: npm --prefix apps/web ci
       - run: npm run data:check
+      - run: node --test scripts/publish-zeabur.test.mjs
       - run: npm run content:measure
       - run: node --test apps/web/test/content-packs.test.mjs apps/web/test/client-snapshot.test.mjs
       - run: npm run typecheck
@@ -32,3 +33,22 @@ jobs:
       - run: node scripts/verify-production.mjs
       - run: docker build -f Dockerfile.runtime -t wow-sim-runtime:ci .
       - run: docker build -t wow-sim-web:ci .
+  publish-deployment:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    concurrency:
+      group: zeabur-production-source
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.1'
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          node scripts/publish-zeabur.mjs --publish
