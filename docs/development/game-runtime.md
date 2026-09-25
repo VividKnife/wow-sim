@@ -20,10 +20,12 @@ docker compose up -d postgres
 将根 `.env.example` 复制为 `.env`，生成至少 32 字符的随机 `GAME_SERVER_SECRET`。示例数据库账号仅用于本地开发。三个进程分别运行：
 
 ```sh
-npm run game:server
-npm run game:worker
+npm run game:server:dev
+npm run game:worker:dev
 npm --prefix apps/web run dev
 ```
+
+本地开发命令会在导入的规则或内容文件变化时重启 API 和 worker。已经开始的旧版本活动不会自动迁移；如果页面提示活动规则版本过期，可使用「脱离卡死」结束该活动，再重新开始。此操作保留已保存的角色、金币和物品，但不补发尚未结算的收益。
 
 API 与 worker 使用根 `.env`。Web 从忽略提交的 `apps/web/.env.local` 读取数据库连接及相同的 `GAME_SERVER_SECRET` 和 `GAME_SERVER_URL`：
 

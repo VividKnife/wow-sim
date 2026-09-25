@@ -65,7 +65,7 @@ export async function localSimulation(this: GameService, accountId:string, input
         }
         const now = this.now();
         const {owner, table} = await ownerFor(this, tx, accountId, input.characterId);
-        requireThat(owner.contentVersion === this.contentVersion, 'CONTENT_VERSION', '此活动的规则版本已过期，请重新创建开发存档');
+        requireThat(owner.contentVersion === this.contentVersion, 'CONTENT_VERSION', '此活动的规则版本已过期，请使用“脱离卡死”结束旧活动');
         requireThat(input.ownerId === owner.id, 'LOCAL_STALE', '活动已更新，请重新同步');
         const local = owner.localSimulation;
         if (input.type === 'release') {

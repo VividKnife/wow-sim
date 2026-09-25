@@ -50,8 +50,8 @@ docker compose up -d postgres
 复制 `.env.example` 为 `.env`，把 `GAME_SERVER_SECRET` 设置为至少 32 字节的随机值。复制 `apps/web/.env.example` 为 `apps/web/.env.local`，填写数据库 URL、相同的游戏服务 URL/密钥与 Web 的 `APP_ORIGIN`，再分别启动三个进程：
 
 ```sh
-npm run game:server
-npm run game:worker
+npm run game:server:dev
+npm run game:worker:dev
 npm --prefix apps/web run dev
 ```
 
