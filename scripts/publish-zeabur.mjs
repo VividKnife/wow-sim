@@ -28,7 +28,8 @@ try {
     for (const required of ['COPY apps/web ./apps/web', 'COPY apps/web/public ./apps/web/public']) {
       if (original.split(required).length !== 2) throw new Error(`Unexpected Dockerfile: ${required}`);
     }
-    const metadata = JSON.stringify({ commit: source, source: 'VividKnife/wow-sim' });
+    const publicAssetVersion = git(['rev-parse', `${source}:apps/web/public`]);
+    const metadata = JSON.stringify({ commit: source, source: 'VividKnife/wow-sim', publicAssetVersion });
     const assets = `FROM node:24.11.1-bookworm-slim AS deployment-assets
 ADD https://codeload.github.com/VividKnife/wow-sim/tar.gz/${source} /tmp/source.tar.gz
 RUN mkdir /assets && tar -xzf /tmp/source.tar.gz -C /assets --strip-components=4 wow-sim-${source}/apps/web/public && rm /tmp/source.tar.gz

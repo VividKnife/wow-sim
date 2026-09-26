@@ -44,6 +44,7 @@ test('publishes a small, pinned deployment tree without changing main', () => {
     assert.ok(!paths.includes('apps/web/public/'));
     assert.ok(!paths.includes('.github/'));
     assert.equal(JSON.parse(git('show', `${first}:packages/DEPLOYMENT.json`)).commit, source);
+    assert.equal(JSON.parse(git('show', `${first}:packages/DEPLOYMENT.json`)).publicAssetVersion, git('rev-parse', `${source}:apps/web/public`));
     assert.ok(git('show', `${first}:Dockerfile`).includes(`/tar.gz/${source}`));
     assert.equal(git('rev-parse', 'HEAD'), source);
     assert.equal(git('status', '--porcelain'), '');

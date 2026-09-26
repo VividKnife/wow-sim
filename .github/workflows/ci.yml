@@ -24,7 +24,7 @@ jobs:
       - run: npm ci
       - run: npm --prefix apps/web ci
       - run: npm run data:check
-      - run: node --test scripts/publish-zeabur.test.mjs
+      - run: node --test scripts/publish-zeabur.test.mjs scripts/publish-r2-assets.test.mjs apps/web/test/static-assets.test.mjs
       - run: npm run content:measure
       - run: node --test apps/web/test/content-packs.test.mjs apps/web/test/client-snapshot.test.mjs
       - run: npm run typecheck
@@ -33,9 +33,30 @@ jobs:
       - run: node scripts/verify-production.mjs
       - run: docker build -f Dockerfile.runtime -t wow-sim-runtime:ci .
       - run: docker build -t wow-sim-web:ci .
-  publish-deployment:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  publish-r2-assets:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.R2_ASSETS_ENABLED == 'true'
     needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    concurrency:
+      group: r2-production-assets
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.1'
+          cache: npm
+      - run: npm ci
+      - run: node scripts/publish-r2-assets.mjs --upload
+        env:
+          R2_ACCOUNT_ID: d4516749783eedab5aabf13adf1d9527
+          R2_BUCKET: wow-sim
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+  publish-deployment:
+    if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.validate.result == 'success' && (needs.publish-r2-assets.result == 'success' || needs.publish-r2-assets.result == 'skipped')
+    needs: [validate, publish-r2-assets]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
