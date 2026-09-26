@@ -21,9 +21,9 @@ Web、API、worker 都连接同一 repo 的 `codex/zeabur-deploy`，Root Directo
 
 2026-09-25 排查时，main 文件总量已达 3.12 GB，Zeabur GitHub 重部署返回 `504 Gateway Timeout`，未创建构建记录。官方上传接口可以正常部署后端，但完整 Web ZIP 为 1.38 GB，超过当前方案的 50 MiB 上传上限。精简 Web 源码包约 15.2 MiB。
 
-CI 的 `validate` 成功后，`publish-deployment` 使用 `scripts/publish-zeabur.mjs` 将当前 main 导出到 `codex/zeabur-deploy`。该分支不含 `apps/web/public`、文档、临时资料和 GitHub workflows；不要直接修改它。发布使用独立临时 Git index，不改动 main 的工作区，也不需要 Zeabur 密钥。GitHub Actions 仅发布 job 具有仓库内容写入权限。
+CI 的 `validate` 成功后，`publish-deployment` 使用 `scripts/publish-zeabur.mjs` 将当前 main 导出到 `codex/zeabur-deploy`。该分支不含大型 public 资源、文档、临时资料和 GitHub workflows；R2 模式仅保留同源 model-viewer 运行文件和部署元数据；不要直接修改它。发布使用独立临时 Git index，不改动 main 的工作区，也不需要 Zeabur 密钥。GitHub Actions 仅发布 job 具有仓库内容写入权限。
 
-部署分支的 Dockerfile 在构建阶段从固定 main SHA 下载 GitHub 源码归档，只提取 public 静态资源。开发分支仍完整保留全部资源。Web 的 `/__deployment.json` 和三个容器的 `/app/packages/DEPLOYMENT.json` 记录原始 main SHA；Zeabur 部署列表显示的是生成分支的提交 SHA，两者不同。
+常规 `WEB_ASSET_MODE=r2` 部署不下载完整源码归档，资源由 R2 提供。需要完整资源部署到 Zeabur 时，将 GitHub 仓库变量改为 `bundled` 并手动运行工作流；该模式构建时从固定 main SHA 下载源码归档并提取 public。详见 [R2 部署与切换](r2-assets.md)。开发分支仍完整保留全部资源。Web 的 `/__deployment.json` 和三个容器的 `/app/packages/DEPLOYMENT.json` 记录原始 main SHA；Zeabur 部署列表显示的是生成分支的提交 SHA，两者不同。
 
 本地可运行 `node scripts/publish-zeabur.mjs` 检查生成结果；明确需要发布时运行 `node scripts/publish-zeabur.mjs --publish`。脚本只发布远端 main 的当前提交，重复执行同一版本不会再产生部署提交，推送以正常 fast-forward 完成。
 
@@ -62,7 +62,7 @@ Web 只访问 `web_users`、`web_sessions`、`web_auth_limits`；游戏存档仍
 4. 核对部署分支提交、三个服务的构建/启动日志，以及 `/__deployment.json` 中的原始 main SHA。
 5. 打开 HTTPS 网站，注册、创建角色、执行操作、刷新恢复；退出后 `/api/game` 返回 401；重新登录恢复角色，另一账号不能访问该角色。
 
-CI 在 push/PR 运行验证，只在 main push 验证成功后发布部署分支。跨服务发布不是原子操作；内容版本更新前应结束旧版本活动，否则旧活动会停止结算。
+CI 在 push/PR 运行验证，在 main push 或 main 手动工作流验证成功后发布部署分支。跨服务发布不是原子操作；内容版本更新前应结束旧版本活动，否则旧活动会停止结算。
 
 ```sh
 npm ci

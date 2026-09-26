@@ -2,8 +2,8 @@
 // pages, deployment metadata, the model-viewer iframe/service worker and Next's
 // worker/runtime always stay on Zeabur.
 const publicPath = /^\/(?:battle|characters|creatures|demo|icons|interface|journal|maps|music|scenes|sounds)\/.+|^\/(?:favicon|file|globe|window)\.svg$/;
-export function assetRedirect({url,method,origin,version}) {
-  if(!origin || !/^[a-f0-9]{40}$/.test(version || '') || !['GET','HEAD'].includes(method)) return null;
+export function assetRedirect({url,method,origin,version,assetMode='bundled'}) {
+  if(assetMode !== 'r2' || !origin || !/^[a-f0-9]{40}$/.test(version || '') || !['GET','HEAD'].includes(method)) return null;
   const request=new URL(url);
   if(!publicPath.test(request.pathname) || /%2f|%5c|%2e|\\/i.test(request.pathname)) return null;
   let target;
