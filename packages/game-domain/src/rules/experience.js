@@ -1,6 +1,6 @@
 // Shared by server settlement and browser simulation.
 /** @param {number | string | undefined} value */
-export function experienceMultiplier(value = 1) {
+export function experienceMultiplier(value = 2) {
  const multiplier = typeof value === 'string' && value.trim() === '' ? NaN : Number(value);
  if (!Number.isFinite(multiplier) || multiplier < 0 || multiplier > 1000)
   throw new Error('GAME_XP_MULTIPLIER must be a number from 0 to 1000');

@@ -8,7 +8,7 @@ import {gainXp} from '../src/rules/character.js';
 import {questProgress} from '../src/rules/quests.js';
 
 test('server rate validates input; buff scales XP once, rounds down and can be removed',()=>{
- assert.equal(experienceMultiplier(),1);
+ assert.equal(experienceMultiplier(),2);
  assert.equal(experienceMultiplier('2.5'),2.5);
  for(const bad of ['', ' ', 'abc', '-1', 'Infinity', '1001'])assert.throws(()=>experienceMultiplier(bad));
  const s=applyExperienceBuff(createGame('Hero',123,0),2.5);
@@ -25,6 +25,13 @@ async function fixture(rate:number){
  const initial=await service.createAccount('a',{name:'Hero',classId:8,raceId:1},'create');
  return {store,service,initial,time:(t:number)=>{now=t;}};
 }
+test('new characters receive the default double XP buff in both account creation paths',async()=>{
+ const service=new GameService(new MemoryStore(),{contentVersion:'test',now:()=>1000,seed:()=>283});
+ const account=await service.createAccount('account',{name:'Account Hero',classId:8,raceId:1},'create');
+ assert.equal(account.state.serverBuffs[0].xpMultiplier,2);
+ const save=await service.createSave('user',{name:'Save Hero',classId:8,raceId:1},'create');
+ assert.equal((await service.snapshot(save.id)).state.serverBuffs[0].xpMultiplier,2);
+});
 test('quest displays base XP while server buff increases awarded XP without duplicate rewards',async()=>{
  const base=await fixture(1), boosted=await fixture(3);
  for(const f of [base,boosted])await f.service.command('a',{type:'accept',id:783,requestId:'accept'});
