@@ -10,7 +10,7 @@ test('R2 only receives versioned public assets; API, cookies and worker paths st
     assert.equal(redirect(path,{method:'HEAD'}),`${origin}/public/${version}${path}`);
   }
   assert.equal(redirect('/maps/world.webp?v=2'),`${origin}/public/${version}/maps/world.webp?v=2`);
-  for(const path of ['/','/login','/api/auth/login','/api/game','/_next/static/worker.js','/__deployment.json','/.env','/maps/../api/game','/maps/%2e%2e%2fapi/game'])assert.equal(redirect(path),null,path);
+  for(const path of ['/','/login','/api/auth/login','/api/game','/_next/static/worker.js','/model-viewer/index.html','/model-viewer/bridge.js','/model-viewer/asset-cache-sw.js','/__deployment.json','/.env','/maps/../api/game','/maps/%2e%2e%2fapi/game'])assert.equal(redirect(path),null,path);
   assert.equal(redirect('/maps/a.webp',{method:'POST'}),null);
 });
 test('disabled, invalid or looping configuration restores bundled assets',()=>{

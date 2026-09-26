@@ -19,5 +19,5 @@ export async function proxy(request: NextRequest) {
   return NextResponse.redirect(target,{status:307,headers:{'Cache-Control':'no-store'}});
 }
 export const config = {
-  matcher: ['/battle/:path*','/characters/:path*','/creatures/:path*','/demo/:path*','/icons/:path*','/interface/:path*','/journal/:path*','/maps/:path*','/model-viewer/:path*','/music/:path*','/scenes/:path*','/sounds/:path*','/favicon.svg','/file.svg','/globe.svg','/window.svg'],
+  matcher: ['/battle/:path*','/characters/:path*','/creatures/:path*','/demo/:path*','/icons/:path*','/interface/:path*','/journal/:path*','/maps/:path*','/music/:path*','/scenes/:path*','/sounds/:path*','/favicon.svg','/file.svg','/globe.svg','/window.svg'],
 };

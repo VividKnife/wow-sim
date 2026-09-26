@@ -16,7 +16,8 @@
 - `apps/web/proxy.ts` 在运行时读取 `R2_ASSET_ORIGIN` 和部署版本，确认 R2 完成标记后，
   将 public 资源 GET/HEAD 临时 307 跳转到该版本目录。跳转响应 `no-store`。
   初次就绪检查最多等待 2 秒；检查结果按进程缓存 60 秒，失败使用本地文件。
-- Next.js `/_next/*` 的 JS/CSS 和本地战斗 Web Worker 保留同源。它们与 public 的
+- Next.js `/_next/*` 的 JS/CSS、本地战斗 Web Worker，以及 `/model-viewer/*`
+  查看器 HTML/脚本/Service Worker 保留同源（查看器依赖同源 postMessage、API 与 SW scope）。它们与 public 的
   图片、GLB、音效、音乐不同；跨域 Worker 需要额外构建处理，本次不迁移。
 - Zeabur 镜像仍包含 public，作为完整回退副本。因此本次减少资源下载流量，
   不减少镜像尺寸或构建阶段的资源下载。每个资源首次仍需经过 Zeabur 的重定向。
