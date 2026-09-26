@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "9bcd40761290ae8d2769d269de8984d1d8444e067e1a7b852819153e54144b4e",
+  "contentVersion": "87f66c07cac0ef24dabe9f915c13b627d8e3a83e6531b123c4b9e635679135fd",
   "bundles": {
     "class-demons-reference.json": {
       "sha256": "cff264f075ba885d340bbd4df0fe06f0b2e1d96179994dea548f37cc417abb81",
@@ -425,7 +425,7 @@
       "bytes": 4238
     },
     "../game-domain/src/rules/experience.js": {
-      "sha256": "d537ed571c43dfd8296b2ad516d381f0f9f61837a051ca21204978afdf38990a",
+      "sha256": "8ec735a50450a9ef00d5e75e62c0aed4f9d0d0cc5d5814c39cb7376bcdc0496b",
       "bytes": 1106
     },
     "../game-domain/src/rules/gold-raid-npcs.js": {
