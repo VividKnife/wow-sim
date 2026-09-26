@@ -33,5 +33,5 @@ export function settleRaidRoute(s,r,battle,won){
  const id=battle.raidEncounter.id,node=moltenCoreRoute.find(n=>n.id===id);
  if(won){const cleared=node.kind==='boss'?r.cleared:r.clearedPacks;if(!cleared.includes(id))cleared.push(id);r.locationId=id;}
  if(!won||id===r.destination||raidLootBlocksNavigation(s)||[s,...s.party].some(c=>c.hp<=0)||!raidRoutePlan(r,r.destination||id).length)r.autoAdvance=false;
- if(r.autoAdvance)s.activity={type:s.goldRaid?.active?'goldTravel':'raidTravel',endsAt:s.clock+3000,reason:'清理完成，团队正前往下一区域。'};
+ if(r.autoAdvance)s.activity={type:'goldTravel',endsAt:s.clock+3000,reason:'清理完成，团队正前往下一区域。'};
 }

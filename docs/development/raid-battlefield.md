@@ -30,7 +30,7 @@
 
 ```sh
 node --test packages/game-domain/test/raid-battlefield.test.ts packages/game-domain/test/endgame-p1.test.ts
-node --test packages/game-domain/test/raid-command.test.ts packages/game-domain/test/guild-raid.test.ts packages/game-domain/test/gold-raid.test.ts
+node --test packages/game-domain/test/raid-command.test.ts packages/game-domain/test/gold-world.test.ts packages/game-domain/test/gold-raid.test.ts
 node apps/web/scripts/serve-raid-battlefield-preview.mjs
 ```
 

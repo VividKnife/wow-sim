@@ -95,7 +95,7 @@ console.log(result.state.world.location); // camp
 ## 资料与规划
 
 - [战场与实时指挥](docs/development/battlegrounds.md)：20级开放战歌峡谷，10v10夺旗、护旗、追旗、守家与分组调度。
-- [60级公会团本正式玩法](docs/development/guild-raid.md)：主游戏创建60级远征角色，在地下城集结25人公会，挑战双首领、拾取装备并保存周进度。
+- [60级金团副本](docs/development/gold-raid.md)：由主角邀请24名持久NPC，挑战熔火之心与奥妮克希亚，公开竞拍并保存周进度。
 - [熔火之心25人试玩](docs/development/molten-core-demo.md)：运行 `npm run demo:molten-core`，打开 `http://127.0.0.1:5189/molten-core-demo.html`，单人率领公会挑战鲁西弗隆和玛格曼达。
 - [60级团本设计与编队原型](docs/design/level-60-raids.md)：25人、2坦5疗18输出基线、公会补位与可选合作；附独立沙盘，尚未接入正式团本。
 - [重构后架构复核](docs/superpowers/specs/2026-09-16-post-refactor-architecture-review.md)：最终目标对照、新复现问题与下一轮收口门槛。
@@ -112,10 +112,10 @@ console.log(result.state.world.location); // camp
 
 ## 后续开发
 
-18级新增「冒险者大厅」：在队伍或地下城页面选择自有队友、NPC玩家或混编五人小队。50位固定NPC覆盖九种职业，每批展示6人、换批冷却5分钟，支持好友与曾经同行名单、持久装备、自动成长与需求/贪婪分装，野外队伍和现有队友培养保留。当前接入死亡矿井、暴风城监狱；说明与独立试玩见 [NPC玩家与副本组队](docs/development/npc-world.md)。
+18级开放「冒险者大厅」：从50位持久 NPC 玩家中选择四人组成副本小队，支持好友、装备成长与需求/贪婪分装。60级金团邀请同一居民池中的24名冒险者，装备、钱包与参团经历持续保存；旧队友招募和公会团已移除。见 [NPC 玩家与副本组队](docs/development/npc-world.md) 与 [金团设计](docs/design/gold-raids.md)。
 
 后续世界内容可沿用当前职业系统，逐步扩展区域、原版任务链与副本。职业清单保留来源和执行路径，便于增加内容时检查依赖。
 
 2026-09-16 坐骑更新：按最新玩法要求，普通马与骑术在 20 级解锁。世界页「坐骑 → 马匹收藏与骑术」可前往东谷伐木场学习、购买和骑乘；普通马使可骑乘的户外路段移速提高 60%。迅捷马保持 60 级门槛。详见 [坐骑实现与资料边界](docs/research/import/mounts-reference.md)。
 
-- [金团模式](docs/design/gold-raids.md)：带自己的五人队招募20名NPC，公布分金规则、检查装备天赋、公开竞拍并按贡献分金。
+- [金团模式](docs/design/gold-raids.md)：与冒险者大厅共享NPC身份、装备和钱包，公布规则，按偏好组团，公开竞拍并各自分金。

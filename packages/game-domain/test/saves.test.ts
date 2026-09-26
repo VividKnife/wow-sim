@@ -3,10 +3,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
-import {classDefinitions,items,quests} from '../src/rules/catalog.js';
+import {classDefinitions,classAbilities,items,quests} from '../src/rules/catalog.js';
 import {canEquip,bagCapacity,stats} from '../src/rules/character.js';
 import {partyUnlocked} from '../src/rules/party-unlock.js';
 import {boostEquipmentCandidates,LEVEL_20_BOOST_MONEY} from '../src/rules/boost.js';
+import {ammoCount,ammoOptions,selectedAmmo,DEFAULT_AMMO_TARGET} from '../src/rules/ammunition.js';
 import {tables} from '../../persistence/src/store.ts';
 import {boostMount,mountView,beginMount,finishMount,travelRoute,buyMount} from '../src/rules/mounts.js';
 
@@ -45,7 +46,7 @@ test('multiple saves are isolated, owner checked and creation retries do not dup
   for(const table of tables)assert.equal((await tx.list(table,{accountId:a.id})).length,0,table);
  });
 });
-test('boost grants 50 gold, legal quest equipment, four runecloth bags, full resources and opens recruitment for every race/class',async()=>{
+test('boost grants 50 gold, legal quest equipment, four runecloth bags, full resources and opens the adventure hall for every race/class',async()=>{
  const service=setup();
  for(const c of classDefinitions)for(const raceId of c.races){
   const {id}=await service.createSave(`user-${c.id}-${raceId}`,{...input,classId:c.id,raceId,boost:true},'boost-save');
@@ -61,6 +62,12 @@ test('boost grants 50 gold, legal quest equipment, four runecloth bags, full res
   assert.equal(s.hp,stats(s).maxHp);assert.equal(s.mana,stats(s).maxMana);
   assert.equal(partyUnlocked(s),true);assert.equal(s.quests[900001],undefined);assert.equal(s.party.length,0);assert.equal(snapshot.roster.length,1);
   assert.deepEqual(s.talents,{});
+  for(const ability of (classAbilities as Record<number,any[]>)[c.id].filter(a=>a.requiredLevel<=20&&['trainer','weapon','classQuest'].includes(a.acquisition)&&!a.requiredTalentSpellId&&(!(a.raceIds||a.startingRaces)?.length||(a.raceIds||a.startingRaces).includes(raceId))))assert.ok(s.learned.includes(ability.spellId),`${c.id}/${raceId} missing ${ability.name}`);
+  if(c.id===3){
+   assert.equal(ammoCount(s),DEFAULT_AMMO_TARGET);
+   assert.equal(selectedAmmo(s)?.entry,ammoOptions(s)[0].entry);
+   assert.equal(s.hunterPet.level,20);assert.equal(s.hunterPet.entry,299);
+  }
   for(const slot of [1,2,3,5,6,7,8,9,10,11,12,13,14,15,16])assert.ok(s.equipment[slot],`${c.id}/${raceId} slot ${slot}`);
   for(const e of Object.values(s.equipment) as any[]){
    if(e.boostCompanionKit){assert.ok(items[e.id].companionKit);assert.equal(items[e.id].RequiredLevel,18);assert.ok(canEquip(s,items[e.id]));continue;}
@@ -71,7 +78,7 @@ test('boost grants 50 gold, legal quest equipment, four runecloth bags, full res
   }
   assert.ok(boostEquipmentCandidates(s).length);
   if(items[s.equipment[16].id].InventoryType===17)assert.equal(s.equipment[17],undefined);
-  const recruited=await service.command(id,{type:'recruit',id:'mage',requestId:'recruit'});assert.equal(recruited.state.party.length,1);
+  await service.command(id,{type:'npcVisit',requestId:'visit'});const grouped=await service.command(id,{type:'npcRecommend',requestId:'group'});assert.equal(grouped.state.npcWorld.selection.length,4);assert.equal(grouped.state.party.length,0);
  }
 });
 test('gift mount survives service reload and respects normal riding restrictions without being purchasable',async()=>{
@@ -108,4 +115,20 @@ test('character gender is validated, persisted and returned in save summaries',a
  assert.equal((await service.listSaves('alice'))[0].gender,'female');
  await assert.rejects(service.createSave('bob',{...input,gender:'unknown' as any},'bad-gender'),/性别/);
  assert.deepEqual(await service.listSaves('bob'),[]);
+});
+
+test('raid-ready hero has clean identity, rebased resources and a usable travel mount',async()=>{
+ const service=setup();
+ const {id}=await service.createSave('raid-initial',{...input,gender:'female',raidReady:true},'initial');
+ const s=(await service.snapshot(id)).state;
+ assert.equal(s.level,60);assert.equal(s.xp,0);assert.equal(s.money,1000000);
+ assert.equal(s.gender,'female');assert.equal(s.name,input.name);
+ assert.deepEqual(s.professions,{});assert.equal(s.growthPolicy,undefined);
+ assert.equal(s.roleId,undefined);assert.equal(s.joinedAt,undefined);
+ assert.equal(s.time,s.clock);assert.equal(s.lastManaUse,s.clock-5000);
+ assert.equal(s.hp,stats(s).maxHp);assert.equal(s.mana,stats(s).maxMana);
+ assert.equal(bagCapacity(s),72);
+ assert.equal(mountView(s).collection.find(m=>m.id===boostMount.id)!.canMount,true);
+ for(const item of Object.values(s.equipment) as any[])assert.ok(canEquip(s,items[item.id]));
+ assert.equal(s.completed[7848],1);assert.ok(s.bag.some((item:any)=>item.id===16309));
 });

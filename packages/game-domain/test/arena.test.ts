@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance} from '../src/rules/engine.js';
 import {arenaView} from '../src/rules/arena.js';
-import {recruit,companionSkills} from '../src/rules/party.js';
+import {createNpcMember,companionSkills} from '../src/rules/party.js';
 import {stats,spellInfo,clone} from '../src/rules/character.js';
 import {spells} from '../src/rules/catalog.js';
 import {pvpApplyControl,pvpAbilityAllowed,unitCreatureType,pvpTriggeredControl} from '../src/rules/pvp-runtime.js';
@@ -20,7 +20,7 @@ import type {Rules} from '../src/model.ts';
 
 function roster(size=3,level=60):Rules{
  const s:Rules=createGame('竞技队长',123,0);s.level=level;s.learned=companionSkills(s);s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
- for(const [id,role]of [['rogue','melee'],['priest','healer'],['warrior','melee'],['hunter','ranged']].slice(0,size-1))recruit(s,id,{role});return s;
+ for(const [id,role]of [['rogue','melee'],['priest','healer'],['warrior','melee'],['hunter','ranged']].slice(0,size-1))createNpcMember(s,id,{role});return s;
 }
 function prepare(size=3,mapId='courtyard',opponentId='rmp',level=60){const s=roster(size,level);return act(s,{type:'arenaPrepare',size,mapId,opponentId,memberIds:[s.id,...s.party.map((c:Rules)=>c.id)]},0) as Rules;}
 
@@ -85,7 +85,7 @@ test('pillars block both line of sight and swept movement; paths go around infla
  assert.equal(arenaSight({pvp:true,arenaArea:map,...from},to),false);
 });
 test('a warrior pinned at a pillar corner reaches melee range and resumes attacks',()=>{
- const s=roster(1,60);recruit(s,'warrior',{role:'tank'});recruit(s,'priest',{role:'healer'});
+ const s=roster(1,60);createNpcMember(s,'warrior',{role:'tank'});createNpcMember(s,'priest',{role:'healer'});
  const ready=act(s,{type:'arenaPrepare',size:3,mapId:'courtyard',opponentId:'rmp',memberIds:[s.id,...s.party.map((c:Rules)=>c.id)]},0);
  const started=start(ready),[captain,warrior,healer]=started.arena.teams[0].members,[rogue,mage,priest]=started.arena.teams[1].members;
  // Coordinates captured from the stalled preview battle. The nearest graph
@@ -163,8 +163,8 @@ test('service persists preparation, survives restart, accepts local checkpoints 
  const store=new MemoryStore();let now=1000;
  let service=new GameService(store,{contentVersion:'test',now:()=>now,seed:()=>283});
  const save=await service.createSave('arena-user',{name:'Arena captain',classId:8,raceId:1,raidReady:true},'arena');
- const original=await service.snapshot(save.id);
- const prepared=await service.command(save.id,{type:'arenaPrepare',size:5,mapId:'four-pillars',opponentId:'casters',memberIds:[original.state.id,...original.state.party.map((c:Rules)=>c.id)],requestId:'prepare'});
+ const original=await service.command(save.id,{type:'npcRecommend',requestId:'group'});
+ const prepared=await service.command(save.id,{type:'arenaPrepare',size:5,mapId:'four-pillars',opponentId:'casters',memberIds:[original.state.id,...original.state.npcWorld.selection],requestId:'prepare'});
  const frozen=clone(prepared.state.arena);
  now+=86400000;service=new GameService(store,{contentVersion:'test',now:()=>now,seed:()=>283});
  const restored=await service.snapshot(save.id);assert.deepEqual(restored.state.arena,frozen);

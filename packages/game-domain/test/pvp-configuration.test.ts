@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,view} from '../src/rules/engine.js';
 import {newCharacter,stats,clone,knownRank} from '../src/rules/character.js';
-import {recruit,companionSkills} from '../src/rules/party.js';
+import {createNpcMember,companionSkills} from '../src/rules/party.js';
 import {talents,spells} from '../src/rules/catalog.js';
 import {pvpPresets} from '../src/rules/pvp-presets.js';
 import {recommendedPvpProfile,applyPvpProfile,validatePvpTalents,pvpConfiguration} from '../src/rules/pvp-profiles.js';
@@ -14,7 +14,7 @@ import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
 import type {Rules} from '../src/model.ts';
 
-function roster(){const s:Rules=createGame('PvP captain',123,0);s.level=60;s.learned=companionSkills(s);s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;recruit(s,'warrior',{role:'tank'});recruit(s,'priest',{role:'healer'});return s;}
+function roster(){const s:Rules=createGame('PvP captain',123,0);s.level=60;s.learned=companionSkills(s);s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;createNpcMember(s,'warrior',{role:'tank'});createNpcMember(s,'priest',{role:'healer'});return s;}
 function prepared(){const s=roster();return act(s,{type:'arenaPrepare',size:3,mapId:'courtyard',opponentId:'rmp',memberIds:[s.id,...s.party.map((c:Rules)=>c.id)]},0) as Rules;}
 function tactical(){
  const s=prepared(),team=s.arena.teams[0],enemy=s.arena.teams[1].members;
@@ -122,13 +122,16 @@ test('protection directs a configured CC to the attacker threatening the assigne
  const {root,team,enemy,mage}=tactical();team.plan.assignments[0].task='protect';mage.baseRules=[rule(mage,'Polymorph')];enemy[0].target=team.members[2].id;
  arenaTacticalTick(root,team,enemy);assert.equal(mage.arenaControlTarget,enemy[0].id);assert.match(mage.arenaIntent,/援护/);
 });
-test('service persists all members PvP profiles across restart and preparation without changing their PvE builds',async()=>{
+test('service persists the player PvP profile while persistent NPCs prepare their own builds',async()=>{
  const store=new MemoryStore(),service=new GameService(store,{contentVersion:'pvp-test',now:()=>1000,seed:()=>123});
- const save=await service.createSave('pvp',{name:'leader',classId:8,raceId:1,raidReady:true},'profiles');const original=await service.snapshot(save.id);
- for(const c of [original.state,...original.state.party])await service.command(save.id,{type:'pvpConfigure',target:c.id,revision:0,profile:recommendedPvpProfile(c),requestId:'config-'+c.id});
+ const save=await service.createSave('pvp',{name:'leader',classId:8,raceId:1,raidReady:true},'profiles');
+ const original=await service.command(save.id,{type:'npcRecommend',requestId:'group'});
+ await service.command(save.id,{type:'pvpConfigure',target:original.state.id,revision:0,profile:recommendedPvpProfile(original.state),requestId:'config'});
  const restarted=new GameService(store,{contentVersion:'pvp-test',now:()=>1000}),restored=await restarted.snapshot(save.id);
- for(const c of [restored.state,...restored.state.party])assert.equal(c.pvpProfile.revision,1);
- assert.deepEqual(restored.state.party[0].talents,original.state.party[0].talents);
- const p=await restarted.command(save.id,{type:'arenaPrepare',size:5,mapId:'four-pillars',opponentId:'rmp',memberIds:[restored.state.id,...restored.state.party.map((c:Rules)=>c.id)],requestId:'prepare'});
- assert.ok(p.state.arena.teams[0].members.every((c:Rules)=>c.pvpProfileRevision===1));
+ assert.equal(restored.state.pvpProfile.revision,1);assert.deepEqual(restored.state.talents,original.state.talents);
+ assert.deepEqual(restored.state.npcWorld.residents,original.state.npcWorld.residents);
+ const p=await restarted.command(save.id,{type:'arenaPrepare',size:5,mapId:'four-pillars',opponentId:'rmp',memberIds:[restored.state.id,...restored.state.npcWorld.selection],requestId:'prepare'});
+ assert.equal(p.state.arena.teams[0].members.length,5);
+ assert.equal(p.state.arena.teams[0].members.find((c:Rules)=>c.sourceId===restored.state.id).pvpProfileRevision,1);
+ const after=await restarted.snapshot(save.id);assert.deepEqual(after.state.npcWorld.residents,original.state.npcWorld.residents);
 });

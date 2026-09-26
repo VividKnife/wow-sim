@@ -7,7 +7,7 @@ export interface RaidMember { id: string; level: number; role: RaidRole; dispel:
 export interface RaidSquad {
   id: string;
   name: string;
-  controller: { kind: 'account'; accountId: string } | { kind: 'guild' };
+  controller: { kind: 'account'; accountId: string } | { kind: 'npc' };
   templateId: SquadTemplateId;
   order: RaidOrder;
   members: RaidMember[];
@@ -58,7 +58,7 @@ export function createPreviewRaid(humanCount = 1, size: RaidSize = 25): RaidPlan
   return { size, commanderAccountId: 'preview-account-1', squads: templates.map((id, i) => {
     const human = i === 0 || i > squadCount - humanCount;
     const squad = makePreviewSquad(`squad-${i + 1}`, human ? 'core' : id,
-      human ? { kind: 'account', accountId: `preview-account-${i + 1}` } : { kind: 'guild' }, orders[i]);
+      human ? { kind: 'account', accountId: `preview-account-${i + 1}` } : { kind: 'npc' }, orders[i]);
     if (human) squad.name = i === 0 ? '我的核心小队' : `好友核心小队 ${i + 1}`;
     return squad;
   }) };
@@ -85,7 +85,7 @@ export function validateRaidPlan(plan: RaidPlan): string[] {
     if (squad.controller.kind === 'account') {
       if (!squad.controller.accountId || accounts.has(squad.controller.accountId)) errors.push('一个账号只能派出一支核心小队。');
       accounts.add(squad.controller.accountId);
-    } else if (squad.controller.kind !== 'guild') errors.push('未知的小队控制方。');
+    } else if (squad.controller.kind !== 'npc') errors.push('未知的小队控制方。');
     if (squad.members.length !== 5) errors.push(`${squad.name}需要5名成员。`);
     for (const member of squad.members) {
       if (!member.id || memberIds.has(member.id)) errors.push('角色不可重复占用团队席位。');
@@ -129,6 +129,6 @@ export function inspectRaidPlan(plan: RaidPlan, encounterId: RehearsalId) {
   check('ranged', '远程覆盖', roles.ranged, requirements.ranged, '换入秘法研究团或鹰眼游侠队。');
   const warnings = roles.tank > (compact ? 3 : 5) ? ['坦克偏多：五人副本配置直接拼团会挤占输出，请给部分坦克切换团本输出配置。'] : [];
   return { encounter, roles, humanCount: plan.squads.filter(squad => squad.controller.kind === 'account').length,
-    guildCount: plan.squads.filter(squad => squad.controller.kind === 'guild').length, members: members.length,
+    npcCount: plan.squads.filter(squad => squad.controller.kind === 'npc').length, members: members.length,
     checks, warnings, ready: checks.every(row => row.met) };
 }

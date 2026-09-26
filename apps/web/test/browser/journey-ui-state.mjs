@@ -1,5 +1,5 @@
 import {createGame,act,view,stats} from '../../../../packages/game-domain/src/rules/engine.js';
-import {companionSkills,recruit} from '../../../../packages/game-domain/src/rules/party.js';
+import {companionSkills,createNpcMember} from '../../../../packages/game-domain/src/rules/party.js';
 import {projectClientSnapshot} from '../../../../packages/game-domain/src/rules/client-snapshot.ts';
 
 export function createJourneyState(){
@@ -9,7 +9,7 @@ export function createJourneyState(){
  state=act(state,{type:'accept',id:783},state.wallAt);
  state=act(state,{type:'turnin',id:783},state.wallAt);
  state=act(state,{type:'settings',autoLoot:true},state.wallAt);
- for(const [id,role] of [['warrior','tank'],['priest','healer'],['rogue','melee'],['warlock','ranged']])recruit(state,id,{role});
+ for(const [id,role] of [['warrior','tank'],['priest','healer'],['rogue','melee'],['warlock','ranged']])createNpcMember(state,id,{role});
  return state;
 }
 export function journeySnapshot(state){

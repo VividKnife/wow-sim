@@ -1,10 +1,11 @@
+import {selectedDungeonMembers} from './npc-world.js';
 import {arenaTacticalTick} from './arena-tactics.js';
 import {arenaMaps,arenaSight,arenaPointAllowed} from '../../../sim-core/src/arena-space.js';
 import {activeAuras} from '../../../sim-core/src/combat-auras.js';
 import {unitCreatureType} from './pvp-runtime.js';
 import {stats,clone,spellInfo,log} from './character.js';
 import {spells,nameOf,classDefinitions,icon} from './catalog.js';
-import {recruit} from './party.js';
+import {createNpcMember} from './party.js';
 import {combatRole} from './combat-roles.js';
 import {combatTick} from './combat.js';
 import {recoveryTick} from './recovery.js';
@@ -21,7 +22,7 @@ const tasks=['focus','pressure','protect','control'];
 const need=(condition,message)=>{if(!condition)throw new Error(message);};
 const living=team=>team.members.filter(c=>c.hp>0);
 function prepareActor(source,id,side,index,map){
- const c=applyPvpProfile(clone(source));for(const key of ['arena','party','combat','lastCombat','battleHistory','journey','quests','completed','logs','receipts','bank','auctions','pending','guildRaid','goldRaid','activity','dungeon','mounted','rest','cast','pet','totems','talentProcs','racialBuff','racialEffects','soulstone','bloodrage','classBuffs','classBuff','flares','trap','sunder','absorb','manaShield','groundEffects','stealthed','invisible','queuedStrike'])delete c[key];
+ const c=applyPvpProfile(clone(source));for(const key of ['arena','party','combat','lastCombat','battleHistory','journey','quests','completed','logs','receipts','bank','auctions','pending','goldRaid','goldRaidSaves','npcWorld','activity','dungeon','mounted','rest','cast','pet','totems','talentProcs','racialBuff','racialEffects','soulstone','bloodrage','classBuffs','classBuff','flares','trap','sunder','absorb','manaShield','groundEffects','stealthed','invisible','queuedStrike'])delete c[key];
  c.sourceId=source.id;c.id=id;c.teamId=side;c.pvp=true;c.arenaArea=map;c.arenaBag=clone(source.bag||[]);delete c.bag;
  Object.assign(c,{time:0,cooldowns:{},categoryCooldowns:{},globalCooldowns:{},schoolLockouts:{},buffs:{},auras:[],dots:[],hots:[],periodicClass:[],movementSlows:[],diminishing:{},threat:{},form:null,stunUntil:0,rootUntil:0,polyUntil:0,slowUntil:0,frozenUntil:0,silenceUntil:0,weakenedSoulUntil:0,combo:0,comboTarget:null,rage:0,energy:100,inCombat:false,lastManaUse:-5000,nextAction:3000,nextSwing:3000,nextRanged:3000,nextOffhand:3000,nextPowerRegen:5000,position:side===0?map.minX+5:map.maxX-5,positionY:index*3-3,moveSpeed:7,dead:false});
  c.strategyPolicy={...c.strategyPolicy,waitForTank:false,protectCC:true};c.potions={...c.potions,enabled:false};
@@ -29,7 +30,7 @@ function prepareActor(source,id,side,index,map){
 }
 function npcMembers(s,opponent,size,map){
  const staging={...clone(s),arena:null,party:[],logs:[],journey:[],money:0,itemSequence:0,clock:0,growthPolicy:undefined};
- return opponent.members.slice(0,size).map(([id,role],index)=>{staging.party=[];const c=recruit(staging,id,{role});c.name=['A','B','C','D','E'][index]+' · '+c.name;return prepareActor(c,`arena:1:${index}`,1,index,map);});
+ return opponent.members.slice(0,size).map(([id,role],index)=>{staging.party=[];const c=createNpcMember(staging,id,{role});c.name=['A','B','C','D','E'][index]+' · '+c.name;return prepareActor(c,`arena:1:${index}`,1,index,map);});
 }
 function defaults(members,enemies){
  const healer=enemies.find(c=>combatRole(c)==='healer')||enemies.at(-1),focus=enemies.find(c=>c.id!==healer?.id)||enemies[0],ownHealer=members.find(c=>combatRole(c)==='healer')||members[0];
@@ -59,11 +60,11 @@ export function arenaAction(s,a){
   return;
  }
  if(a.type==='arenaPrepare'){
-  need(!s.combat&&!s.dungeon&&!s.guildRaid?.active&&!s.goldRaid?.active&&s.activity.type==='idle'&&s.hp>0,'请先结束当前活动并离开副本。');
+  need(!s.combat&&!s.dungeon&&!s.goldRaid?.active&&s.activity.type==='idle'&&s.hp>0,'请先结束当前活动并离开副本。');
   need(s.level>=60&&s.growthPolicy!=='companion','主角达到60级后可以率领小队参加竞技场。');
   need([2,3,5].includes(a.size),'请选择2v2、3v3或5v5。');const map=arenaMaps.find(m=>m.id===a.mapId),opponent=arenaOpponents.find(o=>o.id===a.opponentId);
   need(map&&opponent,'竞技场或NPC队伍不存在。');need(Array.isArray(a.memberIds)&&a.memberIds.length===a.size&&a.memberIds[0]===s.id&&new Set(a.memberIds).size===a.size,'阵容必须包含主角和对应数量的不重复队友。');
-  const roster=[s,...s.party],chosen=a.memberIds.map(id=>roster.find(c=>c.id===id));need(chosen.every(c=>c&&c.hp>0&&c.level===s.level),'请选择同级且存活的小队成员。');
+  const roster=[s,...selectedDungeonMembers(s)],chosen=a.memberIds.map(id=>roster.find(c=>c.id===id));need(chosen.every(c=>c&&c.hp>0&&c.level===s.level),'请选择同级且存活的小队成员。');
   const serial=(s.arena?.serial||0)+1,teams=[{members:chosen.map((c,i)=>prepareActor(c,`arena:0:${i}`,0,i,map))},{members:npcMembers(s,opponent,a.size,map)}];
   s.arena={id:`arena:${s.id}:${serial}`,serial,phase:'preparing',size:a.size,map:clone(map),opponentId:opponent.id,opponentName:opponent.name,clock:0,rngState:s.rngState,logs:[],logSequence:0,metrics:{version:1,actors:{},startedAt:3000,partial:false},teams,result:null,planRevision:0};
   for(let i=0;i<2;i++){teams[i].plan=defaults(teams[i].members,teams[1-i].members);teams[i].projectiles=[];teams[i].groundEffects=[];}
@@ -110,7 +111,7 @@ function memberView(c,clock,own){
  return{id:c.id,sourceId:c.sourceId,name:c.name,classId:c.classId,raceId:c.raceId,gender:c.gender,entry:c.entry,pvpProfileName:c.pvpProfileName,className:definition?.name,level:c.level,role:combatRole(c),hp:c.hp,maxHp:st.maxHp,mana:c.mana,maxMana:st.maxMana,energy:c.energy,rage:c.rage,power:c.power,x:c.position,y:c.positionY,teamId:c.teamId,petUnit:!!c.petUnit,totemUnit:!!c.totemUnit,kind:c.kind,form:c.form,creatureType:unitCreatureType(c),hidden:false,stealthed:!!c.stealthed,targetId:c.target,intent:own?c.arenaIntent:undefined,cast:cast?{spellId:cast.spell,school:spells[cast.spell]?.School,range:castInfo.range,radius:castInfo.radius,channel:!!cast.channel,center:cast.center,name:nameOf('spells',cast.spell),startedAt:cast.startedAt,until:cast.until,targetId:cast.target}:null,effects:activeAuras(c,clock).filter(a=>[5,7,12,26,27,67].includes(a.type)).map(a=>({spellId:a.spell,name:nameOf('spells',a.spell),type:a.type,until:a.until})),diminishing:clone(c.diminishing||{})};
 }
 export function arenaView(s){
- const a=s.arena,roster=[s,...s.party].map(c=>({id:c.id,name:c.name,classId:c.classId,role:combatRole(c),level:c.level,alive:c.hp>0}));
+ const a=s.arena,roster=[s,...selectedDungeonMembers(s)].map(c=>({id:c.id,name:c.name,classId:c.classId,role:combatRole(c),level:c.level,alive:c.hp>0}));
  const base={maps:arenaMaps,opponents:arenaOpponents.map(o=>({id:o.id,name:o.name,description:o.description})),roster,unlocked:s.level>=60&&s.growthPolicy!=='companion'};
  if(!a)return{...base,match:null};
  const own=a.teams[0].members,hidden=new Set();

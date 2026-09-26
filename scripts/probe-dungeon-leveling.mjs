@@ -1,3 +1,4 @@
+import {createNpcMember} from '../packages/game-domain/src/rules/party.js';
 // Bounded level-18 Deadmines probe by class. Uses real dungeon/combat ticks.
 // The leader receives the standard level-18 companion loadout for its class.
 // This isolates combat pace; it does not validate trainer cost, class quests,
@@ -14,7 +15,7 @@ for(const cls of classDefinitions){
  const template=cls.id===1?['warrior','tank']:cls.id===2?['paladin','melee']:cls.id===3?['hunter','ranged']:
   cls.id===4?['rogue','melee']:cls.id===5?['priest','healer']:cls.id===7?['shaman','melee']:
   cls.id===8?['mage','ranged']:cls.id===9?['warlock','ranged']:['druid','melee'];
- s=act(s,{type:'recruit',id:template[0],role:template[1]},0);
+ createNpcMember(s,template[0],{role:template[1]});
  const kit=s.party.pop();
  s.learned=companionSkills(s);
  s.equipment=structuredClone(kit.equipment);
@@ -27,7 +28,7 @@ for(const cls of classDefinitions){
  s.location='deadmines';
  s=act(s,{type:'settings',autoLoot:true,autoLootIgnoreGray:true},0);
  for(const [id,role] of [['warrior','tank'],['priest','healer'],['rogue','melee'],['mage','ranged']])
-  s=act(s,{type:'recruit',id,role},0);
+  createNpcMember(s,id,{role});
  s=act(s,{type:'enterDungeon',contentId:'deadmines'},0);
  s=act(s,{type:'dungeonNext'},0);
  for(let i=0;i<12;i++){

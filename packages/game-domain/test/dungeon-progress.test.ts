@@ -20,7 +20,7 @@ async function setup(contentId='deadmines') {
   await tx.put('characters',leader);
  });
  const send = (command:Record<string, unknown>) => service.command('a', {...command, requestId:`command-${++request}`});
- for (const classId of [5, 4, 8, 2]) await send({type:'createCompanion', name:`队员${classId}`, classId, raceId:1});
+ await send({type:'npcVisit'});await send({type:'npcRecommend'});
  const ids = await store.transaction(async tx => {
   const characters = await tx.list<Character>('characters', {accountId:'a'});
   for (const c of characters) {

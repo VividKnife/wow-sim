@@ -3,7 +3,6 @@ import {mapRegion,travelMapFrame} from './world-map.js';
 
 export function activeInstance(state,data){
  if(data.goldRaid?.active)return {kind:'gold',view:data.goldRaid.map,raid:data.goldRaid};
- if(data.guildRaid?.active)return {kind:'guild',view:data.guildRaid.map,raid:data.guildRaid};
  return state.dungeon?{kind:'dungeon',view:data.dungeon,raid:null}:null;
 }
 
@@ -27,7 +26,7 @@ export function instanceActions(state,data){
  const instance=activeInstance(state,data);
  if(!instance)return null;
  const {kind,view:dm,raid}=instance,regular=kind==='dungeon',recovering=regular?!!state.rest||state.activity.type==='revive'||data.recovery?.members?.some(member=>member.restUntil>state.clock):!!raid.recovering;
- const recoverType=kind==='gold'?'goldRecover':kind==='guild'?'raidRecover':'rest';
+ const recoverType=kind==='gold'?'goldRecover':'rest';
  const canRecover=regular?data.recovery?.canRest&&!recovering:!state.combat&&!recovering&&(kind!=='gold'||raid.phase==='camp');
  const revive=regular?{type:'revive'}:{type:recoverType};
  const dead=regular?(data.recovery?.fallen?.length||state.hp<=0):state.hp<=0||(state.party||[]).some(member=>member.hp<=0)||raid.members?.some(member=>member.hp<=0);

@@ -31,7 +31,7 @@ function Preparation({bossId,info,props}:{bossId:string;info:any;props:GameProps
  <div className="action-row"><Button disabled={locked} onClick={async()=>{if(await send({type:'raidPlan',bossId,plan}))setSaved(true);}}>发布战前指挥</Button>{last&&<Button variant="outline" disabled={locked} onClick={()=>{setPlan((p:any)=>({...p,movement:last.review.failures.fire?'early':p.movement,formation:last.review.failures.fire?'spread':p.formation,dispelPolicy:last.review.failures.doom?'all':p.dispelPolicy,cooldowns:Object.fromEntries(Object.entries(p.cooldowns).map(([k,v]:any)=>[k,{...v,trigger:'automatic'}]))}));setSaved(false);}}>根据上次复盘调整草案</Button>}<span role="status">{r.locked?'战斗、推进或休整期间不能修改战前安排。':dirty?'草案有修改，发布后生效。':saved||info.published?'已发布，下一次挑战执行此安排。':'尚未发布，当前展示建议安排。'}</span></div><p className="footnote">指挥按首领分别保存。发布后下次开战生效；未发布时使用建议安排。自动推进在首领前停步，留出检查与调整时间。</p></div>;
 }
 export default function RaidCommandPanel(props:GameProps){
- const {data:d}=props,r=d.raidCommand,g=d.goldRaid?.active?d.goldRaid:d.guildRaid;
+ const {data:d}=props,r=d.raidCommand,g=d.goldRaid;
  const [selected,setSelected]=useState('');if(!r)return null;
  const bossId=selected||r.live?.bossId||(r.bosses.some((b:any)=>b.id===g.activeBoss)?g.activeBoss:'')||r.bosses.find((b:any)=>!g.cleared.includes(b.id))?.id||r.bosses[0].id;
  const boss=r.bosses.find((b:any)=>b.id===bossId)||r.bosses[0],info=r.plans[boss.id],attempts=r.attempts.filter((a:any)=>a.bossId===boss.id),last=attempts.at(-1),previous=attempts.at(-2);

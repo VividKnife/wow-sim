@@ -12,7 +12,6 @@ export const classicMenus=[
 export function webTabForClassic(panel){return ['character','bag','mounts'].includes(panel)?'character':['party','dungeon','raid','pvp','log'].includes(panel)?panel:'world';}
 export function classicStopAction(state,data){
  if(data.goldRaid?.active)return {command:{type:'goldPause'},label:'暂停金团推进',disabled:!data.goldRaid?.map?.autoAdvance};
- if(data.guildRaid?.active)return {command:{type:'raidPause'},label:'暂停团本推进',disabled:!data.guildRaid?.map?.autoAdvance};
  if(state.dungeon)return {command:{type:'dungeonPause'},label:'暂停副本推进',disabled:!data.dungeon?.autoAdvance};
  const travel=state.activity.type==='travel';
  return {command:{type:'stop'},label:state.combat?'本场结束后停止':state.activity.flight?'下一站停靠':'停止活动',disabled:state.hp<=0||travel&&!state.activity.flight||!!state.activity.stopAtNext||['idle','dungeonCannon'].includes(state.activity.type)};

@@ -1,3 +1,4 @@
+import {createNpcMember} from '../src/rules/party.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,advance,act,stats} from '../src/rules/engine.js';
@@ -14,7 +15,7 @@ test('recorded outcomes and every presentation frame match the realtime rule eng
  let state:any=createGame('Recorder',283,1000);state.level=20;state.hp=stats(state).maxHp;state.mana=stats(state).maxMana;
  state.completed[900001]=true;state.location='stormwind';
  state.completed[900001]=1;state.location='stormwind';
- for(const id of ['warrior','priest','rogue','mage'])state=act(state,{type:'recruit',id},1000);
+ for(const id of ['warrior','priest','rogue','mage'])createNpcMember(state,id);
  startCombat(state,[636,636,1729],true);
  const original=structuredClone(state);
  const result=simulateCombatRecording(state,{id:'recording',contentVersion:'test',until:4000});

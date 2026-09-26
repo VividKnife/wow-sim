@@ -3,7 +3,6 @@ import {advance, view} from '../../../packages/game-domain/src/rules/engine.js';
 import {arenaView} from '../../../packages/game-domain/src/rules/arena.js';
 import {battlegroundView} from '../../../packages/game-domain/src/rules/battleground.js';
 import {battlePresentation} from '../../../packages/game-domain/src/rules/battle-presentation.js';
-import {guildRaidView} from '../../../packages/game-domain/src/rules/guild-raid.js';
 import {goldRaidView} from '../../../packages/game-domain/src/rules/gold-raid.js';
 import {projectClientSnapshot, projectCombatPlayback} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
 import manifest from '../../../packages/game-data/manifest.json';
@@ -39,7 +38,6 @@ function publish(force=false) {
     if(state.battleground)snapshot.view.battleground=battlegroundView(state);
     if(force||!raidView||now-lastRaid>=1000){
       lastRaid=now;raidView={combatCommand:combatCommandView(state)};
-      if(state.guildRaid)raidView.guildRaid=guildRaidView(state);
       if(state.goldRaid)raidView.goldRaid=goldRaidView(state);
     }
     Object.assign(snapshot.view,raidView);

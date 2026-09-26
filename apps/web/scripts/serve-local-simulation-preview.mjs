@@ -13,8 +13,9 @@ const commandFixture=await commandServiceFixture({now:()=>Date.now(),contentVers
 const app=fileURLToPath(new URL('../',import.meta.url));
 const store=new MemoryStore(),service=new GameService(store,{contentVersion:CONTENT_VERSION,xpMultiplier:Number(process.env.GAME_XP_MULTIPLIER||1),seed:()=>60325});
 const raid=await service.createSave('preview',{name:'本地远征',classId:8,raceId:1,raidReady:true},'raid');
-await service.command(raid.id,{type:'enterDungeon',contentId:'molten-core',requestId:'enter'});
-if(!process.env.PREVIEW_COMMAND_ONLY)await service.command(raid.id,{type:'raidStart',bossId:'lucifron',requestId:'start'});
+await service.command(raid.id,{type:'enterDungeon',contentId:'molten-core-gold',requestId:'enter'});
+for(const type of ['goldPublish','goldRecommend','goldLaunch'])await service.command(raid.id,{type,requestId:type});
+if(!process.env.PREVIEW_COMMAND_ONLY)await service.command(raid.id,{type:'goldNavigate',destination:'lucifron',requestId:'start'});
 const solo=await service.createSave('preview',{name:'本地法师',classId:8,raceId:1},'solo');
 if(!process.env.PREVIEW_COMMAND_ONLY)await service.command(solo.id,{type:'hunt',id:299,requestId:'hunt'});
 await service.createSave('preview',{name:'竞技队长',classId:8,raceId:1,raidReady:true},'arena');

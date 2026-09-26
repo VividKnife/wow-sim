@@ -22,7 +22,7 @@ export async function activityDeadline(this: GameService, tx: ReadView, a: Activ
 }
 
 export async function instanceDeadline(this: GameService, tx: ReadView, instance: Instance, observedPresence?: ReadonlyMap<string, number>) {
-    const accounts = new Set(instance.roster.filter(r => r.controller !== 'mercenary').map(r => r.accountId));
+    const accounts = new Set(instance.roster.filter(r => r.controller !== 'npc').map(r => r.accountId));
     let deadline = Infinity;
     for (const id of accounts) deadline = Math.min(deadline, (observedPresence?.get(id) ?? (await presence(tx, id)).lastSeenAt) + this.offlineLimitMs);
     return deadline;

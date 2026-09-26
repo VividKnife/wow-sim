@@ -1,3 +1,4 @@
+import {seedCompanion} from '../../../packages/game-domain/test/support/characters.ts';
 import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -120,7 +121,7 @@ test('templates and role settings round-trip through service persistence and ins
  const ids=[snap.account.primaryCharacterId];
  await store.transaction(async tx=>{const c=await tx.get('characters',ids[0]);c.rules.level=20;c.rules.location='stormwind';c.rules.completed[900001]=1;await tx.put('characters',c);});
  for(const classId of [1,5,4,8]){
-  snap=await service.command('preset-account',{type:'createCompanion',name:`队友${classId}`,classId,raceId:1,requestId:randomUUID()});
+  snap=await seedCompanion(service,'preset-account',{name:`队友${classId}`,classId,raceId:1,requestId:randomUUID()});
   ids.push(snap.roster.find(c=>!ids.includes(c.id)).id);
  }
  await store.transaction(async tx=>{

@@ -1,5 +1,5 @@
 import {createGame} from './rules/engine.js';
-import {recruit} from './rules/party.js';
+import {createNpcMember} from './rules/party.js';
 import {items} from './rules/catalog.js';
 import {canEquip,slotOf,stats,clone} from './rules/character.js';
 import {combatRole} from './rules/combat-roles.js';
@@ -13,7 +13,7 @@ const roster: [string,string,string][] = [
  ['寒川','mage','ranged'],['银霜','mage','ranged'],['奥兰','mage','ranged'],['鹰眼','hunter','ranged'],['林歌','hunter','ranged'],
  ['疾风','rogue','melee'],['夜行','rogue','melee'],['赤刃','rogue','melee'],['铁锋','warrior','melee'],['雷恩','warrior','melee'],
 ];
-export const guildSquadNames=['核心小队','磐石卫队','晨光医护队','霜弓支援队','锋刃突击队'];
+export const raidSquadNames=['核心小队','磐石卫队','晨光医护队','霜弓支援队','锋刃突击队'];
 export function gearScore(item:Rules,role:string,classId:number) {
  let score=(item.ItemLevel||0)*.1+(item.armor||0)*(role==='tank'?.04:.001);
  for(let n=1;n<=10;n++)score+=(item['stat_value'+n]||0)*({7:role==='tank'?3:1,5:['healer','ranged'].includes(role)&&classId!==3?3:0,6:role==='healer'?2:0,3:classId===3||classId===4?3:.2,4:classId===1?2:.1}[item['stat_type'+n] as number]||0);
@@ -40,8 +40,8 @@ let preparedRoster:Rules[]|undefined;
 export function createRoster():Rules[] {
  if(preparedRoster)return clone(preparedRoster);
  preparedRoster=roster.map(([name,job,role],index)=>{
-  const parent:Rules=createGame('公会招募',71,0);parent.level=60;
-  const c:Rules=recruit(parent,job,{name,role,raceId:job==='priest'?3:job==='hunter'?4:1});
+  const parent:Rules=createGame('团队演示',71,0);parent.level=60;
+  const c:Rules=createNpcMember(parent,job,{name,role,raceId:job==='priest'?3:job==='hunter'?4:1});
   c.id=`mc-member-${index+1}`;c.raidIndex=index;c.raidSquad=Math.floor(index/5);c.raidMainTank=index===1;
   c.strategyPolicy={...c.strategyPolicy,waitForTank:false,protectCC:false,role};
   const rule=(spell:number,condition='always',value=0)=>({spell,condition,value,enabled:true});

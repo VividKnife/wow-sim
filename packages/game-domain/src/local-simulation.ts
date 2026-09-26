@@ -12,7 +12,7 @@ type Owner = Activity | Instance;
 export function localEligible(owner: Owner | null | undefined) {
     if(owner && 'roster' in owner && owner.roster.some(r=>r.controller==='npc'))return false;
     return !!owner && !('simulation' in owner && owner.simulation?.goldRaid?.active) && owner.status === 'running' && ('roster' in owner
-        ? new Set(owner.roster.filter(r => r.controller !== 'mercenary').map(r => r.accountId)).size === 1
+        ? new Set(owner.roster.filter(r => r.controller !== 'npc').map(r => r.accountId)).size === 1
         : owner.type === 'personal');
 }
 export function localManifest(owner: Owner | null | undefined) {

@@ -28,7 +28,7 @@ export function resetDungeon(s,id=dungeonIdFor(s)){const definition=dungeonDefin
 export function dungeonEntryReason(s,id=dungeonIdFor(s)){
  const definition=dungeonDefinition(id),party=selectedDungeonMembers(s);
  if(s.dungeon)return '你已经在副本中。';
- if(s.guildRaid?.active||s.goldRaid?.active)return '请先离开团队副本。';
+ if(s.goldRaid?.active)return '请先离开团队副本。';
  if(s.combat)return '请先结束这场战斗。';
  if(s.activity.type!=='idle')return '请先结束当前活动。';
  if(s.location!==definition.entrance)return '请先前往'+definition.name+'入口。';
