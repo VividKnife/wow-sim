@@ -1,6 +1,7 @@
 // Only public asset namespaces may leave the application origin. API routes,
-// pages, deployment metadata and Next's worker/runtime always stay on Zeabur.
-const publicPath = /^\/(?:battle|characters|creatures|demo|icons|interface|journal|maps|model-viewer|music|scenes|sounds)\/.+|^\/(?:favicon|file|globe|window)\.svg$/;
+// pages, deployment metadata, the model-viewer iframe/service worker and Next's
+// worker/runtime always stay on Zeabur.
+const publicPath = /^\/(?:battle|characters|creatures|demo|icons|interface|journal|maps|music|scenes|sounds)\/.+|^\/(?:favicon|file|globe|window)\.svg$/;
 export function assetRedirect({url,method,origin,version}) {
   if(!origin || !/^[a-f0-9]{40}$/.test(version || '') || !['GET','HEAD'].includes(method)) return null;
   const request=new URL(url);
