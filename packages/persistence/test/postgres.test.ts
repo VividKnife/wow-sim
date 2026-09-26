@@ -33,9 +33,11 @@ test('local checkpoints survive SQL serialization, restart and duplicate result 
   assert.deepEqual(JSON.parse(JSON.stringify(await restarted.localSimulation('local',input))),JSON.parse(JSON.stringify(saved)));
   assert.equal((await restarted.snapshot('local')).state.wallAt,state.wallAt);
   now+=10000;assert.deepEqual(await restarted.work(),{activities:0,instances:0,errors:[]});
-  const bad={...input,sequence:2,requestId:'bad',state:{...saved.state,money:-1}};
+  const persisted=(await restarted.snapshot('local')).state;
+  assert.equal(saved.state,undefined);
+  const bad={...input,sequence:2,requestId:'bad',state:{...persisted,money:-1}};
   await assert.rejects(restarted.localSimulation('local',bad),{code:'BALANCE'});
-  assert.equal((await restarted.snapshot('local')).state.money,saved.state.money);
+  assert.equal((await restarted.snapshot('local')).state.money,persisted.money);
  }finally{await store.close();}
 });
 

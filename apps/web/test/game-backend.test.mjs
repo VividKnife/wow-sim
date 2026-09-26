@@ -2,11 +2,59 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {isSameOriginMutation, proxyGameRequest} from '../lib/game-backend.ts';
 import {verifyGameToken} from '../../game-server/src/auth.ts';
+import {gunzipSync} from 'node:zlib';
 
 const environment = {
   GAME_SERVER_URL: 'https://game.internal.example/base',
   GAME_SERVER_SECRET: 'test-secret-that-is-at-least-32-characters-long',
 };
+
+test('large streamed snapshots are compressed losslessly at the web boundary',async()=>{
+ const body=JSON.stringify({snapshot:{party:Array.from({length:25},(_,id)=>({id,history:'战斗记录'.repeat(5000)}))}});
+ const response=await proxyGameRequest(new Request('https://app.example/api/game',{headers:{'accept-encoding':'br, gzip, deflate'}}),{
+  accountId:'account-a',path:'/game',environment,fetchImpl:async()=>new Response(body,{headers:{'content-type':'application/json','etag':'"raid-1"','content-length':String(Buffer.byteLength(body))}}),
+ });
+ const compressed=Buffer.from(await response.arrayBuffer());
+ assert.equal(response.headers.get('content-encoding'),'gzip');
+ assert.equal(response.headers.get('vary'),'Accept-Encoding');
+ assert.equal(response.headers.get('etag'),'W/"raid-1"');
+ assert.equal(response.headers.get('content-length'),null);
+ assert.equal(gunzipSync(compressed).toString(),body);
+ assert.ok(compressed.length<Buffer.byteLength(body)/10);
+});
+
+test('compressed validators round trip to upstream and 304 stays bodyless',async()=>{
+ const response=await proxyGameRequest(new Request('https://app.example/api/game',{headers:{'accept-encoding':'gzip','if-none-match':'W/"raid-1"'}}),{
+  accountId:'account-a',path:'/game',environment,fetchImpl:async request=>{
+   assert.equal(request.headers.get('if-none-match'),'"raid-1"');
+   return new Response(null,{status:304,headers:{etag:'"raid-1"'}});
+  },
+ });
+ assert.equal(response.status,304);assert.equal(await response.text(),'');
+ assert.equal(response.headers.get('etag'),'W/"raid-1"');
+ assert.equal(response.headers.get('content-encoding'),null);
+ assert.equal(response.headers.get('vary'),'Accept-Encoding');
+});
+
+test('compression respects explicit gzip refusal and preserves identity clients',async()=>{
+ for(const encoding of ['', 'identity', 'br', 'gzip;q=0', '*;q=1, gzip;q=0']){
+  const response=await proxyGameRequest(new Request('https://app.example/api/game',{headers:{'accept-encoding':encoding}}),{
+   accountId:'account-a',path:'/game',environment,fetchImpl:async()=>Response.json({ok:true},{headers:{etag:'"raid-1"'}}),
+  });
+  assert.equal(response.headers.get('content-encoding'),null,encoding);
+  assert.deepEqual(await response.json(),{ok:true});
+  assert.equal(response.headers.get('vary'),'Accept-Encoding');
+ }
+});
+
+test('cancelling a compressed response also cancels the upstream stream',async()=>{
+ let cancelled;
+ const closed=new Promise(resolve=>{cancelled=resolve;});
+ const response=await proxyGameRequest(new Request('https://app.example/api/game',{headers:{'accept-encoding':'gzip'}}),{
+  accountId:'account-a',path:'/game',environment,fetchImpl:async()=>new Response(new ReadableStream({cancel(){cancelled();}}),{headers:{'content-type':'application/json'}}),
+ });
+ await response.body.cancel();await closed;
+});
 
 test('aborting a browser poll cancels its upstream request too',async()=>{
  const controller=new AbortController();let upstreamSignal;

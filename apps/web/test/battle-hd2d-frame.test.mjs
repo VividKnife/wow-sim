@@ -17,7 +17,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT=true;
 before(async()=>{
  const web=fileURLToPath(new URL('../',import.meta.url));directory=await mkdtemp(join(web,'.hd2d-frame-test-'));
  const outfile=join(directory,'frame.mjs');
- await build({absWorkingDir:web,stdin:{contents:"export * from './app/battle-hd2d/frame';export {BattleUnit} from './app/battle-hd2d/unit';export {useLocalCombat,publishLocalCombat} from './lib/local-combat-store';export {useCombatPlayback} from './lib/use-combat-playback';",resolveDir:web,loader:'tsx'},outfile,bundle:true,platform:'node',format:'esm',packages:'external',jsx:'automatic',logLevel:'silent',plugins:[{
+ await build({absWorkingDir:web,stdin:{contents:"export * from './app/battle-hd2d/frame';export {BattleUnit} from './app/battle-hd2d/unit';export {useLocalCombat,useLocalBattleground,publishLocalCombat} from './lib/local-combat-store';export {useCombatPlayback} from './lib/use-combat-playback';",resolveDir:web,loader:'tsx'},outfile,bundle:true,platform:'node',format:'esm',packages:'external',jsx:'automatic',logLevel:'silent',plugins:[{
   name:'headless-assets',setup(builder){
    builder.onResolve({filter:/^@react-three\/drei$/},()=>({path:'drei-probe',namespace:'probe'}));
    builder.onLoad({filter:/.*/,namespace:'probe'},()=>({resolveDir:web,loader:'js',contents:`import {useMemo} from 'react';import {Texture} from 'three';
@@ -40,6 +40,19 @@ test('HUD-only updates preserve the local combat projection until the next simul
   const first=result;assert.equal(first.state.clock,100);
   await renderer.update(React.createElement(Probe,{hud:1}));assert.equal(result,first,'a second HUD commit must not restart scene interpolation');
   await act(async()=>components.publishLocalCombat(packet(200)));assert.notEqual(result,first);assert.equal(result.state.clock,200);
+ }finally{await renderer.unmount();components.publishLocalCombat(null);}
+});
+
+test('local battleground deployment orders expose their new revision immediately',async()=>{
+ const fallback={match:{id:'match',phase:'preparing',clock:0,revision:0}};let result;
+ function Probe(){result=components.useLocalBattleground(fallback);return null;}
+ const renderer=await create(React.createElement(Probe));
+ try{
+  const updated={match:{...fallback.match,revision:1}};
+  await act(async()=>components.publishLocalCombat({view:{battleground:updated}}));
+  assert.equal(result,updated,'the next order must use the acknowledged local revision');
+  await act(async()=>components.publishLocalCombat({view:{battleground:{match:{...updated.match,id:'other'}}}}));
+  assert.equal(result,fallback,'another match cannot replace deployment');
  }finally{await renderer.unmount();components.publishLocalCombat(null);}
 });
 

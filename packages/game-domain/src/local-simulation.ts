@@ -5,13 +5,14 @@ import {requireThat, type Activity, type Instance, type ActorLease, type Rules} 
 import {account, owned, persistCharacter, bump, economicEvent} from './context.ts';
 import {invalidateCombatPlan} from './combat-execution.ts';
 import {PAUSED_EVENT_AT} from './presence.ts';
+import {projectLocalCheckpoint, itemIdentityChanges} from './rules/local-checkpoint.js';
 
 export type LocalSession = {id:string; clientId:string; expiresAt:number; sequence:number; lastSeenAt:number; receiptId?:string};
 export const LOCAL_LEASE_MS = 30_000;
 type Owner = Activity | Instance;
 export function localEligible(owner: Owner | null | undefined) {
-    if(owner && 'roster' in owner && owner.roster.some(r=>r.controller==='npc'))return false;
-    return !!owner && !('simulation' in owner && owner.simulation?.goldRaid?.active) && owner.status === 'running' && ('roster' in owner
+    // NPCs (including gold-raid seats) are simulation actors, not remote players.
+    return !!owner && owner.status === 'running' && ('roster' in owner
         ? new Set(owner.roster.filter(r => r.controller !== 'npc').map(r => r.accountId)).size === 1
         : owner.type === 'personal');
 }
@@ -35,6 +36,20 @@ export function resetLocalSession(owner: Owner) {
         // Commands fence in-flight browser results. The next claim creates a fresh token.
         owner.localSimulation = {id:'',clientId:'',expiresAt:0,sequence:0,lastSeenAt:owner.localSimulation.lastSeenAt,receiptId:owner.localSimulation.receiptId};
     }
+}
+/** Reserve browser execution in the command transaction, before the Worker
+ * bundle loads or claim arrives. Otherwise the server can race the initial load
+ * and simulate a raid that the browser is about to take over. */
+export async function reserveLocalSimulation(tx:Transaction, characterId:string, now:number) {
+    const lease=await tx.get<ActorLease>('actor_leases',characterId);
+    if(!lease)return;
+    const table=lease.kind==='instance'?'instances':'activities';
+    const owner=await tx.get<Owner>(table,lease.ownerId);
+    if(!owner||!localEligible(owner)||owner.localSimulation)return;
+    await invalidateCombatPlan(tx,owner);
+    owner.localSimulation={id:'',clientId:'',expiresAt:0,sequence:0,lastSeenAt:now};
+    owner.nextEventAt=PAUSED_EVENT_AT;
+    await tx.put(table,owner);
 }
 export async function guardLocalCommand(service: GameService, tx: ReadView, cId:string, cmd:Rules, now:number) {
     const lease = await tx.get<ActorLease>('actor_leases', cId);
@@ -87,6 +102,7 @@ export async function localSimulation(this: GameService, accountId:string, input
             const lastSeen = local?.lastSeenAt ?? (await tx.get<Rules>('account_presence', accountId))!.lastSeenAt;
             const skipped = Math.max(0, now - Math.max(lastSeen, state.wallAt) - this.offlineLimitMs);
             state.wallAt += skipped;
+            state = projectLocalCheckpoint(state);
             await invalidateCombatPlan(tx, owner);
             owner.localSimulation = {id:this.id(), clientId:input.clientId, expiresAt:now+LOCAL_LEASE_MS, sequence:0, lastSeenAt:now};
             if ('roster' in owner) {
@@ -105,13 +121,14 @@ export async function localSimulation(this: GameService, accountId:string, input
             requireThat(Number.isSafeInteger(input.sequence) && input.sequence === local.sequence+1, 'LOCAL_SEQUENCE', '检查点顺序无效');
             const next = input.state;
             validateCheckpoint(state, next, Math.min(now, local.lastSeenAt+this.offlineLimitMs));
-            state = structuredClone(next);
+            // Enforce storage policy server-side too, even for an unfiltered upload.
+            state = projectLocalCheckpoint(next);
             const key = `local:${owner.id}:${local.id}:${input.sequence}`;
             if ('roster' in owner) {
                 owner.simulation = state;
                 owner.rngState = state.rngState;
                 owner.sequence++;
-                await this.persistInstance(tx, owner, now, key);
+                await this.persistInstance(tx, owner, now, key, undefined, {localCheckpoint:true});
             } else {
                 const c = await owned(tx, accountId, owner.actorId);
                 await persistCharacter(tx, c, state, state.wallAt, key, this.id);
@@ -123,7 +140,7 @@ export async function localSimulation(this: GameService, accountId:string, input
                     owner.status = 'completed';
                     for (const id of owner.participantIds || [owner.actorId]) await this.release(tx, id, owner.id);
                 }
-                await economicEvent(tx, key, accountId, 'localCheckpoint', {ownerId:owner.id, sequence:input.sequence});
+                if(owner.status === 'completed')await economicEvent(tx, key, accountId, 'localCompleted', {ownerId:owner.id, sequence:input.sequence});
             }
             owner.localSimulation = {...local, sequence:input.sequence, expiresAt:now+LOCAL_LEASE_MS, lastSeenAt:now};
         }
@@ -135,7 +152,8 @@ export async function localSimulation(this: GameService, accountId:string, input
         state = await stateFor(this, tx, owner);
         const oldReceipt = local?.receiptId;
         owner.localSimulation!.receiptId = receiptId;
-        const result = {ownerId:owner.id, session:owner.localSimulation, state, serverNow:now,
+        const result:Rules = {ownerId:owner.id, session:owner.localSimulation,
+            ...(input.type==='claim'?{state:projectLocalCheckpoint(state)}:{itemIds:[...itemIdentityChanges(input.state,state)]}), serverNow:now,
             contentVersion:this.contentVersion, deadline:now+this.offlineLimitMs, active:owner.status === 'running'};
         await tx.insert('receipts', {id:receiptId, accountId, fingerprint, result, createdAt:now});
         // Keep only the last response per client/owner; there is one checkpoint in flight.

@@ -14,7 +14,7 @@ export default function JourneyLog({state:s,data:d,onObserve,...props}:GameProps
  const [selected,setSelected]=useState<any>(null);
  const archive=selected&&selected.playerId===s.id?selected:null;
  const historicalState=archive?{...s,clock:archive.battle.endedAt,combat:null,lastCombat:archive.battle,logs:archive.logs,location:archive.location.id,dungeon:null}:null;
- return <section className="panel"><div className="section-heading"><h2>战斗与旅程记录</h2><small>击杀 {s.totals.kills} · 获得经验 {s.totals.xp}</small></div><p>记录核心旅程事件；最近 20 场战斗可查看结束时的战场与战报。</p><div className="combat-log">{[...(s.journey||[])].reverse().map((row:any)=>{
+ return <section className="panel"><div className="section-heading"><h2>战斗与旅程记录</h2><small>击杀 {s.totals.kills} · 获得经验 {s.totals.xp}</small></div><p>核心旅程事件会保存；单人模式最近 20 场战斗的详细战报仅在当前本地冒险中保留，重新载入后不恢复。</p><div className="combat-log">{[...(s.journey||[])].reverse().map((row:any)=>{
  const active=row.kind==='hunt'&&s.activity.type==='hunt'&&s.activity.journeySession===row.id;
  const live=s.combat&&row.battleIds?.includes(s.combat.id);
  const battles=(row.battleIds||[]).map((id:string)=>(s.battleHistory||[]).find((item:any)=>item.battle.id===id)).filter(Boolean).reverse();

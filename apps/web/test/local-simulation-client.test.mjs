@@ -13,7 +13,7 @@ before(async()=>{
 });
 after(async()=>{await unlink(outfile);await rmdir(directory);});
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
-function harness(t,{lag=0}={}){
+function harness(t,{lag=0,itemIds=[]}={}){
  const savedWindow=globalThis.window,savedWorker=globalThis.Worker;
  const requests=[],workers=[],statuses=[];
  let pendingReply=null,failNext=false,generation=0;
@@ -27,6 +27,7 @@ function harness(t,{lag=0}={}){
    this.messages.push(message);
    if(message.type==='start'){this.state=structuredClone(message.state);this.generation=message.generation;}
    if(message.type==='checkpoint'&&this.autoCapture)queueMicrotask(()=>this.onmessage?.({data:{type:'checkpoint',generation:this.generation,requestId:message.requestId,state:structuredClone(this.state)}}));
+   if(message.type==='command')queueMicrotask(()=>this.onmessage?.({data:{type:'commandResult',generation:this.generation,requestId:message.requestId,error:message.command.invalid?'invalid order':undefined}}));
   }
   terminate(){}
  }
@@ -38,7 +39,8 @@ function harness(t,{lag=0}={}){
   if(body.type==='release')return Response.json({});
   if(failNext){failNext=false;return Response.json({error:'retry'},{status:503});}
   canonical=structuredClone(body.state);
-  const response=Response.json(result(body.sequence));
+  const {state,...ack}=result(body.sequence);
+  const response=Response.json({...ack,itemIds});
   if(pendingReply)return new Promise(resolve=>{pendingReply.resolve=()=>resolve(response);});
   return response;
  });
@@ -57,7 +59,8 @@ test('rules load only after ownership; delayed periodic ACK does not restart or 
  worker.state.clock=worker.state.wallAt=12000;
  deliver();await flush();
  assert.equal(worker.messages.filter(m=>m.type==='start').length,1);
- assert.equal(worker.messages.findLast(m=>m.type==='ack').state.clock,10000);
+ assert.equal(worker.messages.findLast(m=>m.type==='ack').state,undefined);
+ assert.deepEqual(worker.messages.findLast(m=>m.type==='ack').itemIds,[]);
  assert.equal(worker.state.clock,12000);
  assert.equal(h.requests.filter(r=>r.type==='checkpoint').length,1);
 });
@@ -76,6 +79,19 @@ test('a failed checkpoint retries the identical request and manual commands paus
  assert.equal(executed,true);
  await flush();
  assert.equal(h.requests.filter(r=>r.type==='claim').length,2);
+});
+
+test('identity-only ACK updates queued inventory commands and preserves live action eligibility',async t=>{
+ const h=harness(t,{itemIds:[['drop','asset-id']]});
+ h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ h.workers[0].state.bag.push({uid:'drop',count:1});
+ t.mock.timers.tick(10000);await flush();
+ assert.deepEqual(h.workers[0].messages.findLast(m=>m.type==='ack').itemIds,[['drop','asset-id']]);
+ assert.equal(h.client.canAct({type:'cast',characterId:'hero'}),true);
+ await h.client.command(async(credentials,prepare)=>{
+  assert.equal(credentials.localSessionId,'session-1');
+  assert.deepEqual(prepare({type:'loot',uids:['drop']}),{type:'loot',uids:['asset-id']});
+ });
 });
 
 test('a command received during offline catch-up waits for its settled checkpoint and executes once',async t=>{
@@ -129,4 +145,43 @@ test('a stalled command checkpoint still times out and ignores non-advancing pro
  t.mock.timers.tick(10000);
  worker.onmessage({data:{type:'checkpointProgress',generation:worker.generation,requestId:capture.requestId,wallAt:0}});
  t.mock.timers.tick(5000);await rejected;
+});
+
+test('live commands bypass a delayed checkpoint upload without saving, restarting or reclaiming',async t=>{
+ const h=harness(t);h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ const worker=h.workers[0],deliver=h.hold();t.mock.timers.tick(10000);await flush();
+ assert.equal(h.requests.filter(r=>r.type==='checkpoint').length,1);
+ for(const type of ['combatCommand','raidOrder','cast','petCommand','battlegroundOrder','arenaSurrender'])assert.equal(await h.client.act({type,characterId:'hero'}),true);
+ assert.equal(h.requests.length,2,'claim and periodic save only; no network round-trip for live commands');
+ assert.equal(worker.messages.filter(m=>m.type==='start').length,1);
+ assert.equal(worker.messages.filter(m=>m.type==='checkpoint').length,1);
+ deliver();await flush();assert.equal(h.requests.length,2);
+});
+
+test('live command rejection is surfaced without retrying on the server or stopping the Worker',async t=>{
+ const h=harness(t);h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ await assert.rejects(h.client.act({type:'combatCommand',invalid:true}),/invalid order/);
+ assert.equal(await h.client.act({type:'combatCommand',order:'resume'}),true);
+ assert.equal(h.client.canAct({type:'equip'}),false);
+ assert.equal(h.client.canAct({type:'cast',characterId:'other'}),false);
+ assert.equal(h.client.canAct({type:'combatCommand',order:'prepare'}),false);
+ assert.equal(h.requests.length,1);
+});
+
+test('temporary save failures keep combat and input running while preserving the retry body',async t=>{
+ const h=harness(t);h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ const worker=h.workers[0],stops=worker.messages.filter(m=>m.type==='stop').length;
+ h.fail();t.mock.timers.tick(10000);await flush();
+ assert.equal(worker.messages.filter(m=>m.type==='stop').length,stops);
+ worker.onmessage({data:{type:'frame',generation:worker.generation,behindMs:0,snapshot:{player:{clock:10000},view:{}}}});
+ assert.match(h.statuses.at(-1),/暂未同步/,'live frames must not hide a failed save');
+ assert.equal(await h.client.act({type:'raidOrder'}),true);
+ t.mock.timers.tick(2000);await flush();
+ assert.deepEqual(h.requests.filter(r=>r.type==='checkpoint')[0],h.requests.filter(r=>r.type==='checkpoint')[1]);
+});
+
+test('the first browser command requests local execution before an owner or Worker exists',async t=>{
+ const h=harness(t);
+ await h.client.command(async credentials=>{assert.equal(typeof credentials.localClientId,'string');assert.ok(credentials.localClientId.length);assert.equal(credentials.localSessionId,undefined);});
+ assert.equal(h.requests.length,0);assert.equal(h.workers.length,0);
 });

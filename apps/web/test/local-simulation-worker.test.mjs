@@ -7,14 +7,15 @@ import {build} from 'esbuild';
 let source;
 before(async()=>{
  const fixtures={
-  'engine.js':'export const advance=(...args)=>globalThis.advanceFixture(...args);export const view=state=>globalThis.viewFixture(state);',
+  'engine.js':'export const advanceOwned=(...args)=>globalThis.advanceFixture(...args);export const act=(...args)=>globalThis.actFixture(...args);export const view=state=>globalThis.viewFixture(state);',
+  'raid-command.js':'export const raidCommandView=state=>({clock:state.clock,order:state.order});',
+  'combat-command.js':'export const combatCommandView=()=>null;',
   'arena.js':'export const arenaView=()=>({});',
   'battleground.js':'export const battlegroundView=()=>({});',
   'gold-raid.js':'export const goldRaidView=state=>({clock:state.clock});',
   'battle-presentation.js':'export const battlePresentation=()=>({});',
   'client-snapshot.ts':'export const projectClientSnapshot=(player,view)=>({player,view});export const projectCombatPlayback=()=>({view:{}});',
   'manifest.json':'export default {contentVersion:"fixture"};',
-  'local-item-identities.js':'export const reconcileItemIdentities=state=>state;',
  };
  const bundle=await build({absWorkingDir:fileURLToPath(new URL('../',import.meta.url)),entryPoints:['lib/local-simulation.worker.ts'],write:false,bundle:true,format:'iife',platform:'browser',logLevel:'silent',plugins:[{name:'worker-fixtures',setup(build){
   build.onResolve({filter:/\.(js|ts|json)$/},args=>{const name=args.path.split('/').at(-1);if(fixtures[name])return {path:name,namespace:'fixture'};});
@@ -24,14 +25,14 @@ before(async()=>{
 
 function runtime({now=0,wallAt=0,serverNow=100000,deadline=200000,visible=true,extra={},computeMs=0}={}){
  const messages=[],timers=new Map(),steps=[],views=[],delays=[];let id=0,time=now,patch={};
- const sandbox={performance:{now:()=>time},structuredClone,postMessage:message=>messages.push(structuredClone(message)),setTimeout:(fn,delay)=>{delays.push(delay);timers.set(++id,fn);return id;},clearTimeout:key=>timers.delete(key),viewFixture:state=>{views.push(state.clock);return {clock:state.clock};},advanceFixture:(state,target,{maxTicks})=>{
+ const sandbox={actFixture:(state,command)=>{if(command.invalid)throw new Error('invalid order');return {...state,order:command.order};},performance:{now:()=>time},structuredClone,postMessage:message=>messages.push(structuredClone(message)),setTimeout:(fn,delay)=>{delays.push(delay);timers.set(++id,fn);return id;},clearTimeout:key=>timers.delete(key),viewFixture:state=>{views.push(state.clock);return {clock:state.clock};},advanceFixture:(state,target,{maxTicks})=>{
   time+=computeMs;
   const next=Math.min(target,state.wallAt+maxTicks*100);steps.push({target,maxTicks,wallAt:next});
-  return {state:{...state,...patch,clock:next,wallAt:next},complete:next===target};
+  Object.assign(state,patch,{clock:next,wallAt:next});return {state,complete:next===target};
  }};
  runInNewContext(source,sandbox);
  const send=data=>sandbox.onmessage({data});
- const initial={clock:wallAt,wallAt,activity:{type:'battlegroundCombat'},...extra};
+ const initial={id:'hero',clock:wallAt,wallAt,activity:{type:'battlegroundCombat'},...extra};
  send({type:'visibility',visible,watching:true});send({type:'start',contentVersion:'fixture',generation:'session',state:initial,serverNow,deadline});
  const run=()=>{const first=timers.entries().next().value;if(!first)return false;timers.delete(first[0]);first[1]();return true;};
  return {messages,steps,views,delays,send,run,clock:value=>{time=value;},change:value=>{patch=value;},pending:()=>timers.size};
@@ -93,4 +94,59 @@ test('starting a new session discards a pending command from the old session',()
  const r=runtime();r.send({type:'checkpoint',generation:'session',pause:true,requestId:'old'});
  r.send({type:'start',generation:'new',contentVersion:'fixture',serverNow:100000,deadline:200000,state:{wallAt:100000,clock:100000,activity:{type:'idle'}}});
  r.run();assert.equal(r.messages.some(m=>m.type==='checkpoint'&&m.requestId==='old'),false);
+});
+
+test('live input catches up to its arrival time, publishes immediately and keeps running',()=>{
+ const r=runtime({serverNow:10000,extra:{combat:{id:'fight'}}});
+ r.send({type:'command',generation:'session',requestId:'focus',command:{type:'combatCommand',order:'focus',characterId:'hero'}});
+ assert.equal(r.messages.some(m=>m.type==='commandResult'),false);
+ for(let i=0;i<10&&!r.messages.some(m=>m.type==='commandResult');i++)r.run();
+ assert.equal(r.messages.findLast(m=>m.type==='commandResult').error,undefined);
+ assert.equal(r.messages.findLast(m=>m.type==='frame').snapshot.view.raidCommand.order,'focus');
+ assert.equal(r.views.length,1,'live orders must not compute the expensive full view');
+ assert.ok(r.pending());assert.equal(r.messages.some(m=>m.type==='checkpoint'),false);
+});
+
+test('invalid commands reject independently and cannot mutate state or stop simulation',()=>{
+ const r=runtime({serverNow:0,extra:{combat:{id:'fight'}}});
+ for(const command of [{type:'equip'},{type:'cast',characterId:'other'},{type:'cast',casterId:'other'},{type:'combatCommand',invalid:true}]){
+  r.send({type:'command',generation:'session',requestId:'bad',command});
+  assert.ok(r.messages.findLast(m=>m.type==='commandResult').error);assert.ok(r.pending());
+ }
+ r.send({type:'command',generation:'old',requestId:'stale',command:{type:'cast'}});
+ assert.equal(r.messages.some(m=>m.requestId==='stale'),false);
+ r.send({type:'command',generation:'session',requestId:'good',command:{type:'combatCommand',order:'resume'}});
+ assert.equal(r.messages.findLast(m=>m.type==='commandResult').error,undefined);
+});
+
+test('PvP phase transitions publish a full snapshot even when the activity is unchanged',()=>{
+ for(const key of ['arena','battleground']){
+  const r=runtime({serverNow:0,extra:{[key]:{id:'match',phase:'countdown'}}});
+  r.clock(100);r.change({[key]:{id:'match',phase:'combat'}});r.run();
+  assert.equal(r.views.length,2);assert.equal(r.messages.filter(m=>m.type==='boundary').length,1);
+ }
+});
+
+test('compact checkpoints omit local history; identity-only ACK preserves newer live state and logs',()=>{
+ const r=runtime({serverNow:0,extra:{logs:[{text:'local event'}],battleHistory:[{battle:{id:'old'}}],bag:[{uid:'drop'}]}});r.clock(100);r.run();
+ r.send({type:'checkpoint',generation:'session',requestId:'save'});
+ const captured=r.messages.findLast(m=>m.type==='checkpoint').state;
+ assert.deepEqual(captured.logs,[]);assert.deepEqual(captured.battleHistory,[]);
+ r.clock(200);r.run();
+ r.send({type:'ack',generation:'session',itemIds:[['drop','canonical']],deadline:200000});
+ r.send({type:'visibility',visible:true,watching:false});r.clock(250);r.run();
+ const live=r.messages.findLast(m=>m.type==='full').snapshot.player;
+ assert.equal(live.wallAt,250);assert.equal(live.bag[0].uid,'canonical');
+ assert.equal(live.logs[0].text,'local event');assert.equal(live.battleHistory[0].battle.id,'old');
+ assert.equal(captured.wallAt,100);assert.equal(captured.bag[0].uid,'drop');
+});
+
+test('a server handoff settles queued live input and then its own later capture time',()=>{
+ const r=runtime();
+ r.send({type:'command',generation:'session',requestId:'live',command:{type:'combatCommand',order:'focus'}});
+ r.clock(1000);r.send({type:'checkpoint',generation:'session',requestId:'handoff',pause:true});
+ for(let i=0;i<100&&r.run();i++);
+ assert.equal(r.messages.findLast(m=>m.type==='commandResult').error,undefined);
+ const checkpoint=r.messages.findLast(m=>m.type==='checkpoint');
+ assert.equal(checkpoint.state.wallAt,101000);assert.equal(checkpoint.state.order,'focus');assert.equal(r.pending(),0);
 });
