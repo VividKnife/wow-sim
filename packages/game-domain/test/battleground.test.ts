@@ -6,6 +6,7 @@ import {battlegroundTick,battlegroundView} from '../src/rules/battleground.js';
 import {bgNodes,bgSight,battlegroundPath,moveBgActor} from '../src/rules/battleground-space.js';
 import {WARSONG} from '../../game-data/battlegrounds.js';
 import {projectClientSnapshot} from '../src/rules/client-snapshot.ts';
+import {projectLocalCheckpoint} from '../src/rules/local-checkpoint.js';
 import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
 import type {Rules} from '../src/model.ts';
@@ -104,13 +105,15 @@ test('本地战场检查点支持连续保存、刷新接管、即时命令并�
  for(let i=1;i<=4;i++){
   now+=10000;const next=advance(session.state,now).state;
   const saved=await service.localSimulation(save.id,{...base,type:'checkpoint',sessionId:session.session.id,sequence:i,state:next,requestId:`save-${i}`});
-  assert.deepEqual(saved.state.battleground,next.battleground);session=saved;
+  assert.equal(saved.state,undefined);
+  assert.deepEqual((await service.snapshot(save.id)).state.battleground,projectLocalCheckpoint(next).battleground);
+  session={...saved,state:next};
  }
  assert.equal(session.state.battleground.clock,40000);
  await service.localSimulation(save.id,{...base,type:'release',sessionId:session.session.id,requestId:'release'});
  const fresh={...base,clientId:'bg-refreshed'};
  const restored=await service.localSimulation(save.id,{...fresh,type:'claim',requestId:'reclaim'});
- assert.deepEqual(restored.state.battleground,session.state.battleground);
+ assert.deepEqual(restored.state.battleground,projectLocalCheckpoint(session.state).battleground);
  const commanded=await service.command(save.id,{type:'battlegroundOrder',matchId:p.state.battleground.id,revision:1,memberIds:['bg:0:0','bg:0:1'],task:'escort',route:'ramp',localClientId:fresh.clientId,localSessionId:restored.session.id,requestId:'live-order'});
  assert.ok(commanded.state.battleground.teams[0].members.slice(0,2).every((c:Rules)=>c.order.task==='escort'));
  await assert.rejects(()=>service.localSimulation(save.id,{...base,type:'checkpoint',sessionId:session.session.id,sequence:5,state:session.state,requestId:'old'}),/更新/);

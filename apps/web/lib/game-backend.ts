@@ -14,6 +14,15 @@ type ProxyOptions = {
 const safeResponseHeaders = ['cache-control', 'content-type', 'etag', 'retry-after'];
 const encoder = new TextEncoder();
 
+function acceptsGzip(header: string | null): boolean {
+  const encodings = new Map((header || '').toLowerCase().split(',').map(part => {
+    const [name, ...parameters] = part.trim().split(';');
+    const quality = parameters.find(value => value.trim().startsWith('q='));
+    return [name.trim(), quality ? Number(quality.trim().slice(2)) : 1] as const;
+  }));
+  return (encodings.get('gzip') ?? encodings.get('*') ?? 0) > 0;
+}
+
 function base64Url(bytes: Uint8Array): string {
   let binary = '';
   for (const byte of bytes) binary += String.fromCharCode(byte);
@@ -57,7 +66,8 @@ export async function proxyGameRequest(request: Request, options: ProxyOptions):
   const headers = new Headers();
   for (const name of ['accept', 'content-type', 'if-none-match']) {
     const value = request.headers.get(name);
-    if (value) headers.set(name, value);
+    // Compression exposes a weak validator for the same upstream JSON.
+    if (value) headers.set(name, name === 'if-none-match' ? value.replace(/^W\//, '') : value);
   }
   if (!options.public) headers.set('authorization', `Bearer ${await signAccount(options.accountId!, config.secret)}`);
   const method = request.method.toUpperCase();
@@ -73,5 +83,17 @@ export async function proxyGameRequest(request: Request, options: ProxyOptions):
     const value = upstream.headers.get(name);
     if (value) responseHeaders.set(name, value);
   }
-  return new Response(upstream.body, {status: upstream.status, statusText: upstream.statusText, headers: responseHeaders});
+  // Next's streamed route responses are not automatically compressed. Raid
+  // snapshots can be several MB; compress at the public boundary, asynchronously
+  // and without buffering a second copy of the entire snapshot in memory.
+  responseHeaders.set('vary', 'Accept-Encoding');
+  const gzip = acceptsGzip(request.headers.get('accept-encoding'));
+  const etag = responseHeaders.get('etag');
+  if (gzip && etag && !etag.startsWith('W/')) responseHeaders.set('etag', `W/${etag}`);
+  let responseBody = upstream.body;
+  if (gzip && responseBody && method !== 'HEAD' && responseHeaders.get('content-type')?.includes('application/json')) {
+    responseHeaders.set('content-encoding', 'gzip');
+    responseBody = responseBody.pipeThrough(new CompressionStream('gzip'));
+  }
+  return new Response(responseBody, {status: upstream.status, statusText: upstream.statusText, headers: responseHeaders});
 }

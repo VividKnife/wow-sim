@@ -9,15 +9,18 @@ import {buildGameResponse} from '../../../packages/game-domain/src/rules/server-
 import {clientContent,CONTENT_VERSION} from '../../../packages/game-domain/src/rules/client-content.js';
 import {contentPack} from '../../../packages/game-domain/src/rules/content-packs.js';
 import {commandServiceFixture} from '../test/support/command-service-fixture.mjs';
+import {reserveLocalSimulation} from '../../../packages/game-domain/src/local-simulation.ts';
+import {handleModelRequest} from '../lib/wowhead-model-assets.js';
 const commandFixture=await commandServiceFixture({now:()=>Date.now(),contentVersion:CONTENT_VERSION});
+await commandFixture.store.transaction(tx=>reserveLocalSimulation(tx,commandFixture.started.state.id,Date.now()));
 const app=fileURLToPath(new URL('../',import.meta.url));
 const store=new MemoryStore(),service=new GameService(store,{contentVersion:CONTENT_VERSION,xpMultiplier:Number(process.env.GAME_XP_MULTIPLIER||1),seed:()=>60325});
 const raid=await service.createSave('preview',{name:'本地远征',classId:8,raceId:1,raidReady:true},'raid');
 await service.command(raid.id,{type:'enterDungeon',contentId:'molten-core-gold',requestId:'enter'});
 for(const type of ['goldPublish','goldRecommend','goldLaunch'])await service.command(raid.id,{type,requestId:type});
-if(!process.env.PREVIEW_COMMAND_ONLY)await service.command(raid.id,{type:'goldNavigate',destination:'lucifron',requestId:'start'});
+if(!process.env.PREVIEW_COMMAND_ONLY)await service.command(raid.id,{type:'goldNavigate',destination:'lucifron',requestId:'start',localClientId:'preview-bootstrap'});
 const solo=await service.createSave('preview',{name:'本地法师',classId:8,raceId:1},'solo');
-if(!process.env.PREVIEW_COMMAND_ONLY)await service.command(solo.id,{type:'hunt',id:299,requestId:'hunt'});
+if(!process.env.PREVIEW_COMMAND_ONLY)await service.command(solo.id,{type:'hunt',id:299,requestId:'hunt',localClientId:'preview-bootstrap'});
 await service.createSave('preview',{name:'竞技队长',classId:8,raceId:1,raidReady:true},'arena');
 let claims=0,checkpoints=0,commands=0,workerCommits=0;
 const work=setInterval(async()=>{const result=await service.work();workerCommits+=result.activities+result.instances;},1000);
@@ -28,6 +31,10 @@ const api={name:'local-simulation-preview',configureServer(server){server.middle
   const activeService=accountId===commandFixture.save.id?commandFixture.service:service;
   res.setHeader('content-type','application/json');res.setHeader('cache-control','no-store');
   let data;
+  if(url.pathname.startsWith('/api/model-viewer/')){
+   const response=await handleModelRequest(new Request(url,{method:req.method}));
+   res.statusCode=response.status;response.headers.forEach((value,key)=>res.setHeader(key,value));res.end(Buffer.from(await response.arrayBuffer()));return;
+  }
   if(url.pathname==='/api/game/content')data=contentPack(clientContent(),url.searchParams);
   else if(url.pathname==='/api/metrics')data={claims,checkpoints,commands,workerCommits};
   else if(url.pathname==='/api/game/local'){

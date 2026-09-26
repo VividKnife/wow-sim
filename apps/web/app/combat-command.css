@@ -13,4 +13,7 @@
 @media(max-width:480px){.command-personal{grid-template-columns:repeat(4,minmax(0,1fr))}.command-slot{height:44px;flex-direction:row;justify-content:center;gap:3px;padding:6px 3px}.command-slot-icon,.command-slot-icon>img{width:22px;height:22px}.command-slot-icon>svg{width:19px;height:19px}.command-slot-name{font-size:10px;writing-mode:horizontal-tb;white-space:normal;line-height:12px;max-width:33px;max-height:24px}.command-captain .command-slot{height:48px;flex-direction:column;gap:3px}.command-hotbar-heading>div>span:last-child{display:none}.command-target-hud{top:118px;width:174px}.command-target-marks{gap:3px}.command-target-marks button{width:19px;height:23px}.command-feedback>span{max-width:calc(100% - 45px)}}
 
 .command-members-mobile{display:none}
+/* Keep pause/resume beside the member, clear of the classic HUD's right meter. */
+.world-embedded-battle .command-hotbar-heading{justify-content:flex-start}
+.world-embedded-battle .command-pause{flex-shrink:0}
 @media(max-width:800px){.command-members-mobile{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;margin-bottom:7px}.command-members-mobile button{min-width:0;justify-content:center;padding:4px 2px;gap:3px;font-size:9px;color:#d4c395;white-space:nowrap;overflow:hidden}.command-members-mobile button img{width:16px;height:16px}.command-members-mobile button:focus-visible{outline:2px solid #f1d591}}

@@ -135,8 +135,17 @@ export function quietIdle(s){
  * @param {{maxTicks?:number,idleFastForward?:boolean,onStep?:((state:any,wallAt:number)=>void)|null,stopWhen?:((state:any)=>boolean)|null}} [options]
  */
 export function advance(input,now,options={}){
+ return advanceOwned(clone(input),now,options);
+}
+/** Advance an exclusively owned simulation. Callers must copy checkpoints before
+ * retaining them; transactional/speculative callers use immutable advance above.
+ * @param {any} s
+ * @param {number} now
+ * @param {{maxTicks?:number,idleFastForward?:boolean,onStep?:((state:any,wallAt:number)=>void)|null,stopWhen?:((state:any)=>boolean)|null}} [options]
+ */
+export function advanceOwned(s,now,options={}){
  const {maxTicks=20000,idleFastForward=true,onStep=null,stopWhen=null}=options;
- if(!Number.isSafeInteger(now)||now<input.wallAt)throw new Error('无效的结算时间');const s=clone(input),origin=s.clock,target=s.clock+now-s.wallAt;let ticks=0;
+ if(!Number.isSafeInteger(now)||now<s.wallAt)throw new Error('无效的结算时间');const origin=s.clock,target=s.clock+now-s.wallAt;let ticks=0;
  if(s.arena?.phase==='preparing'||s.battleground?.phase==='preparing'){s.clock=target;s.wallAt=now;s.nextTick=target+100;s.nextRegen=target+2000;return{state:s,complete:true};}
  while(s.clock<target){if(s.combat?.command?.paused){s.commandPausedMs=(s.commandPausedMs||0)+target-s.clock;s.wallAt=now;return{state:s,complete:true};}if(ticks>=maxTicks){s.wallAt+=s.clock-origin;return{state:s,complete:false};}
   if(idleFastForward&&target>=s.nextTick&&quietIdle(s)){

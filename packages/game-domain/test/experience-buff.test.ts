@@ -49,5 +49,6 @@ for(const kind of ['personal','instance'])test(`${kind}: local simulation receiv
  await assert.rejects(f.service.localSimulation('a',{...base,type:'checkpoint',sessionId:claim.session.id,sequence:1,state:next,requestId:'bad'}),/经验增益/);
  next.serverBuffs[0].xpMultiplier=2;
  const saved=await f.service.localSimulation('a',{...base,type:'checkpoint',sessionId:claim.session.id,sequence:1,state:next,requestId:'good'});
- assert.equal(saved.state.serverBuffs[0].xpMultiplier,2);
+ assert.equal(saved.state,undefined);
+ assert.equal((await f.service.snapshot('a')).state.serverBuffs[0].xpMultiplier,2);
 });

@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "4298a5da6693fa9cd3c3ba1379b730c7bb938d50e757c1e674e98071335209d7",
+  "contentVersion": "9bcd40761290ae8d2769d269de8984d1d8444e067e1a7b852819153e54144b4e",
   "bundles": {
     "class-demons-reference.json": {
       "sha256": "cff264f075ba885d340bbd4df0fe06f0b2e1d96179994dea548f37cc417abb81",
@@ -417,8 +417,8 @@
       "bytes": 13206
     },
     "../game-domain/src/rules/engine.js": {
-      "sha256": "60bb11e7447ca89b19bd8ee4912983177c59accc9a9fbcaa37090d61833bcb18",
-      "bytes": 40902
+      "sha256": "89d767548ad51023a4d5b3dbd7f86f6f85da8cecb92faed2098630668c1fe0ee",
+      "bytes": 41341
     },
     "../game-domain/src/rules/escort.js": {
       "sha256": "fe83090625db214a05be1cf2120a87e4826904d093f899bb4b77c6e45a1e8e6a",
@@ -459,6 +459,10 @@
     "../game-domain/src/rules/journey.js": {
       "sha256": "7e5e43f920f4a9ffa54cbae227491a7366e1d9692f803557397957317059cc17",
       "bytes": 1306
+    },
+    "../game-domain/src/rules/local-checkpoint.js": {
+      "sha256": "a78566eaae5e866bed5b5f29b4e2ba2c98cef3dd020b5557997195e0ea27a038",
+      "bytes": 1554
     },
     "../game-domain/src/rules/loot.js": {
       "sha256": "6ed6d7ffe9b25efe15bc1aeabb701e717e5cf556de6a0b2d781bf52c410d4939",

@@ -158,7 +158,7 @@ export async function instanceCommand(this: GameService, tx: Transaction, c: Cha
     await this.persistInstance(tx, instance, now, `instance:${id}:command:${cmd.requestId}`, observedPresence);
     await this.bumpInstanceAccounts(tx, instance, c.accountId);
 }
-export async function persistInstance(this: GameService, tx: Transaction, instance: Instance, now: number, key: string, observedPresence?: ReadonlyMap<string, number>) {
+export async function persistInstance(this: GameService, tx: Transaction, instance: Instance, now: number, key: string, observedPresence?: ReadonlyMap<string, number>, options:{localCheckpoint?:boolean}={}) {
     await invalidateCombatPlan(tx, instance);
     const s = instance.simulation!;
     for (const row of instance.roster) {
@@ -199,7 +199,9 @@ export async function persistInstance(this: GameService, tx: Transaction, instan
         instance.nextEventAt = PAUSED_EVENT_AT;
     if (instance.localSimulation) instance.nextEventAt = PAUSED_EVENT_AT;
     await tx.put('instances', instance);
-    await economicEvent(tx, key, instance.creatorAccountId, 'instanceSettled', { instanceId: instance.id, sequence: instance.sequence });
+    // Routine browser saves are covered by the session sequence and bounded
+    // receipt. Keep asset ledger entries and the actual completion event.
+    if(!options.localCheckpoint||instance.status==='completed')await economicEvent(tx, key, instance.creatorAccountId, 'instanceSettled', { instanceId: instance.id, sequence: instance.sequence });
 }
 export async function leaveInstance(this: GameService, tx: Transaction, c: Character, id: string, now: number) {
     const instance = await this.instanceFor(tx, c, id);

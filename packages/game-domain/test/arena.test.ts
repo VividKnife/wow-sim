@@ -1,3 +1,4 @@
+import {projectLocalCheckpoint} from '../src/rules/local-checkpoint.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance} from '../src/rules/engine.js';
@@ -174,7 +175,8 @@ test('service persists preparation, survives restart, accepts local checkpoints 
  const session=await service.localSimulation(save.id,{...base,type:'claim',requestId:'claim'});
  now+=12000;const expected=advance(session.state,now).state;
  const saved=await service.localSimulation(save.id,{...base,type:'checkpoint',sessionId:session.session.id,sequence:1,state:expected,requestId:'checkpoint'});
- assert.deepEqual(saved.state.arena,expected.arena);
+ assert.equal(saved.state,undefined);
+ assert.deepEqual((await service.snapshot(save.id)).state.arena,projectLocalCheckpoint(expected).arena);
  const finished=await service.command(save.id,{type:'arenaSurrender',matchId:frozen.id,localClientId:base.clientId,localSessionId:saved.session.id,requestId:'surrender'});
  assert.equal(finished.state.activity.type,'idle');assert.equal(finished.state.hp,original.state.hp);assert.deepEqual(finished.state.equipment,original.state.equipment);
  assert.equal(finished.state.arena.result.winner,1);

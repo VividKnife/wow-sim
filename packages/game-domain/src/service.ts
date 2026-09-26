@@ -1,5 +1,5 @@
 import {experienceMultiplier, applyExperienceBuff} from './rules/experience.js';
-import {localSimulation, localManifest, guardLocalCommand, resetLocalSession} from './local-simulation.ts';
+import {localSimulation, localManifest, guardLocalCommand, resetLocalSession, reserveLocalSimulation} from './local-simulation.ts';
 import {advancePersonal, advanceInstance} from './background-simulation.ts';
 import {talentSummary} from './rules/talent-summary.js';
 import {listSaves,resolveSave,createSave,deleteSave} from './saves.ts';
@@ -256,6 +256,8 @@ export class GameService {
                 }
                 else
                     await this.personalCommand(tx, c, command, now);
+                if(typeof command.localClientId==='string'&&command.localClientId.length>0)
+                    await reserveLocalSimulation(tx,c.id,now);
                 await this.receipt(tx, accountId, command.requestId, command);
                 await bump(tx, accountId);
             });

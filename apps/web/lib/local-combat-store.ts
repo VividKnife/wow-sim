@@ -16,7 +16,7 @@ export function useLocalArena(fallback:any){
 export function useLocalBattleground(fallback:BattlegroundView|undefined):BattlegroundView|undefined{
  const sample=useSyncExternalStore(subscribe,read,empty)?.view?.battleground;
  const match=fallback?.match;
- return match&&sample?.match?.id===match.id&&['countdown','combat'].includes(match.phase)&&sample.match.clock>=match.clock&&sample.match.revision>=match.revision?sample:fallback;
+ return match&&sample?.match?.id===match.id&&['preparing','countdown','combat'].includes(match.phase)&&sample.match.clock>=match.clock&&sample.match.revision>=match.revision?sample:fallback;
 }
 export function useLocalCombat(state:any,data:any,enabled:boolean) {
   const sample=useSyncExternalStore(enabled?subscribe:()=>()=>{},enabled?read:empty,empty);

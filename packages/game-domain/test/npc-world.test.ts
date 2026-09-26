@@ -87,7 +87,7 @@ test('service restores a persistent NPC roster after restart without owned compa
  const f=await fixture();let snap=await f.command('npcRecommend');const selected=snap.state.npcWorld.selection;
  const friend=selected[0];await f.command('npcFriend',{id:friend,friend:true});f.restart();snap=await f.snapshot();assert.deepEqual(snap.state.party,[]);
  snap=await f.command('enterDungeon',{contentId:'deadmines'});assert.equal(snap.state.party.length,4);assert.ok(snap.state.party.every((c:Rules)=>c.npcPlayer));assert.equal(snap.instance!.roster.filter((r:Rules)=>r.controller==='npc').length,4);
- const instance:any=await f.store.read(tx=>tx.get('instances',snap.instanceId!));assert.equal(localEligible(instance),false);
+ const instance:any=await f.store.read(tx=>tx.get('instances',snap.instanceId!));assert.equal(localEligible(instance),true);
  assert.equal((await f.store.read(tx=>tx.list('actor_leases'))).length,1);
  await assert.rejects(f.command('npcGroup',{memberIds:[]}),/先离开|这项操作/);
  await f.command('leaveDungeon');f.restart();snap=await f.snapshot();assert.deepEqual(snap.state.party,[]);assert.deepEqual(snap.state.npcWorld.selection,selected);

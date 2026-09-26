@@ -85,12 +85,14 @@ test('authenticated local simulation accepts checkpoints larger than a command a
   assert.equal((await fetch(`${url}/game/local`,{method:'POST',body:JSON.stringify(input)})).status,401);
   const claim=await post(input);assert.equal(claim.status,200);const session=await claim.json();
   now=2000;const state=advance(session.state,now).state;
-  // The engine legitimately keeps a log/history much larger than command bodies.
+  // An unfiltered upload must still be pruned by the server.
   state.logs.push({id:999,at:state.clock,text:'checkpoint evidence '.repeat(2000)});
   const command={...input,type:'checkpoint',sessionId:session.session.id,sequence:1,state,requestId:'check-0001'};
   assert.ok(JSON.stringify(command).length>16384);
   const first=await post(command);assert.equal(first.status,200);
-  assert.deepEqual(await (await post(command)).json(),await first.json());
+  const ack=await first.json();assert.equal(ack.state,undefined);assert.ok(JSON.stringify(ack).length<1000);
+  assert.deepEqual(await (await post(command)).json(),ack);
+  assert.deepEqual((await service.snapshot('local-a')).state.logs,[]);
   await service.createAccount('local-b',{name:'Other',classId:8,raceId:1},'create');
   assert.equal((await post({...input,requestId:'foreign-1'},'local-b')).status,403);
 });

@@ -22,10 +22,36 @@ test('polling uses the remaining interval and sleeps while hidden until explicit
  visible=false;await clock.tick(1000);assert.equal(count,2);
  visible=true;await poller.refresh();assert.equal(count,3);poller.stop();
 });
-test('a timed out network request is aborted and retries on the next turn',async()=>{
+test('a timed out network request is aborted and waits before retrying',async()=>{
  const clock=timers();let count=0;const errors=[];
- const poller=createSnapshotPoller({...clock,delay:()=>200,timeoutMs:500,onError:e=>errors.push(e),request:signal=>new Promise((_,reject)=>{count++;signal.addEventListener('abort',()=>reject(new Error('timeout')));})});
+ const poller=createSnapshotPoller({...clock,random:()=>0,delay:()=>200,timeoutMs:500,onError:e=>errors.push(e),request:signal=>new Promise((_,reject)=>{count++;signal.addEventListener('abort',()=>reject(new Error('timeout')));})});
  await clock.tick(500);await flush();assert.equal(errors.length,1);assert.match(errors[0].message,/timeout/);
  // The retried request remains pending; tick without awaiting its promise.
- const next=[...clock.pending.values()][0];assert.equal(next.at,516);void next.fn();assert.equal(count,2);poller.stop();await flush();
+ const next=[...clock.pending.values()][0];assert.equal(next.at,1500);void next.fn();assert.equal(count,2);poller.stop();await flush();
+});
+test('repeated failures back off to a cap and successful recovery restores normal polling',async()=>{
+ const clock=timers();let fail=true,count=0;
+ const poller=createSnapshotPoller({...clock,random:()=>0,delay:()=>200,request:async()=>{count++;if(fail)throw new Error('unavailable');}});
+ await flush();
+ for(const wait of [1000,2000,4000,8000,16000,30000,30000]){
+  const before=count;await clock.tick(wait-1);assert.equal(count,before);
+  await clock.tick(1);assert.equal(count,before+1);
+ }
+ fail=false;await clock.tick(30000);const recovered=count;
+ await clock.tick(199);assert.equal(count,recovered);await clock.tick(1);assert.equal(count,recovered+1);
+ poller.stop();assert.equal(clock.pending.size,0);
+});
+test('a request returning after cancellation is still a timeout, not a successful sync',async()=>{
+ const clock=timers(),errors=[];
+ const poller=createSnapshotPoller({...clock,random:()=>0,delay:()=>200,timeoutMs:500,onError:e=>errors.push(e),request:signal=>new Promise(resolve=>signal.addEventListener('abort',resolve))});
+ await clock.tick(500);await flush();
+ assert.equal(errors.length,1);assert.equal(errors[0].name,'AbortError');
+ assert.equal([...clock.pending.values()][0].at,1500);poller.stop();
+});
+test('retry jitter spreads clients and preserves a longer normal polling interval',async()=>{
+ const clock=timers();
+ const poller=createSnapshotPoller({...clock,random:()=>1,delay:()=>200,request:async()=>{throw new Error('offline');}});
+ await flush();assert.equal([...clock.pending.values()][0].at,1200);poller.stop();
+ const slow=createSnapshotPoller({...clock,random:()=>0,delay:()=>10000,request:async()=>{throw new Error('offline');}});
+ await flush();assert.equal([...clock.pending.values()][0].at,10000);slow.stop();
 });
