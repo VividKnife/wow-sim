@@ -34,6 +34,8 @@ CI 的 `validate` 成功后，`publish-deployment` 使用 `scripts/publish-zeabu
 | game-worker | ZBPACK_DOCKERFILE_NAME=runtime | DATABASE_URL、SERVICE_ROLE=worker | 无公网，无 HTTP 健康检查 |
 | PostgreSQL | Zeabur PostgreSQL 模板 | 模板生成的认证配置 | 内网、持久化卷 |
 
+game-api 和 game-worker 默认提供 2 倍经验及永久经验加成 Buff。若在 Zeabur 控制台设置 `GAME_XP_MULTIPLIER`，两个服务必须都设为 `2`，否则显式配置会覆盖代码默认值。
+
 Dockerfile 选择变量是后缀 `runtime`，不是 `Dockerfile.runtime`。移除 `ZBPACK_IGNORE_DOCKERFILE=true`、旧构建/启动覆盖和静态输出目录配置；镜像管理启动命令。
 
 API 的 Networking 只保留 HTTP 8788，删除平台初建服务时添加的 8080。随后将 Variable 中平台生成的 `PORT=${WEB_PORT}` 改为 `PORT=8788`，保存并 Restart；否则它引用已删除的默认端口，API 会启动失败。Web 保留 HTTP 8080，并绑定上述公网域名。修改环境变量后需要重启使其生效。
