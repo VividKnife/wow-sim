@@ -52,8 +52,10 @@ test('transaction handles expire and failed writes do not poison later transacti
 test('due queue orders events deterministically, bounds work and excludes terminal activities',async()=>{
  const store=new MemoryStore();
  await store.transaction(async tx=>{
-  for(const row of [{id:'b',status:'running',nextEventAt:10},{id:'a',status:'returning',nextEventAt:10},{id:'done',status:'completed',nextEventAt:0},{id:'later',status:'running',nextEventAt:30}])await tx.insert('activities',row);
-  assert.deepEqual((await tx.due<any>('activities',20,1)).map(row=>row.id),['a']);
-  assert.deepEqual((await tx.due<any>('activities',20,10)).map(row=>row.id),['a','b']);
+  for(const row of [{id:'b',status:'running',nextEventAt:10},{id:'a',status:'returning',nextEventAt:10},{id:'done',status:'completed',nextEventAt:0},{id:'later',status:'running',nextEventAt:30}])await tx.insert('activities',{...row,contentVersion:'current'});
+  await tx.insert('activities',{id:'obsolete',status:'running',nextEventAt:0,contentVersion:'old'});
+  assert.deepEqual((await tx.due<any>('activities',20,1,'current')).map(row=>row.id),['a']);
+  assert.deepEqual((await tx.due<any>('activities',20,10,'current')).map(row=>row.id),['a','b']);
  });
+ assert.deepEqual((await store.read(tx=>tx.due<any>('activities',20,1,'current'))).map(row=>row.id),['a']);
 });

@@ -9,7 +9,7 @@ export type Where = Record<string, string | number | boolean | null>;
 export interface ReadView {
     get<T = Row>(table: TableName, id: string): Promise<T | null>;
     list<T = Row>(table: TableName, where?: Where): Promise<T[]>;
-    due<T = Row>(table: 'activities' | 'instances', now: number, limit: number): Promise<T[]>;
+    due<T = Row>(table: 'activities' | 'instances', now: number, limit: number, contentVersion: string): Promise<T[]>;
 }
 export interface Transaction extends ReadView {
     insert(table: TableName, row: Row): Promise<void>;

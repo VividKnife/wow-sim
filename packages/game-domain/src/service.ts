@@ -464,7 +464,11 @@ export class GameService {
     advanceInstance = advanceInstance;
     async work(now = this.now(), limit = 50) {
         requireThat(Number.isSafeInteger(now) && Number.isInteger(limit) && limit > 0, 'WORK', '无效的调度参数', 400);
-        const pending = await this.store.read(async (tx) => ({ activities: await tx.due<Activity>('activities', now, limit), instances: await tx.due<Instance>('instances', now, limit) }));
+        // Filter before LIMIT and before loading large simulation JSON or taking
+        // leases. Incompatible activities cannot advance, and retrying them on
+        // every worker tick causes a database/log storm after a deployment.
+        // An older worker in a rolling deployment also cannot pause newer jobs.
+        const pending = await this.store.read(async (tx) => ({ activities: await tx.due<Activity>('activities', now, limit, this.contentVersion), instances: await tx.due<Instance>('instances', now, limit, this.contentVersion) }));
         const result: {
             activities: number;
             instances: number;

@@ -17,6 +17,21 @@ function embeddedPool(db:PGlite):SqlPool {
  };
 }
 
+test('SQL due query filters rule versions before LIMIT for activities and instances',async()=>{
+ const store=new PostgresStore(embeddedPool(new PGlite()));
+ try{
+  await store.initialize();
+  await store.transaction(async tx=>{
+   for(const table of ['activities','instances'] as const){
+    await tx.insert(table,{id:'old',status:'running',nextEventAt:0,contentVersion:'old'});
+    await tx.insert(table,{id:'new',status:'running',nextEventAt:10,contentVersion:'current'});
+    assert.deepEqual((await tx.due<any>(table,20,1,'current')).map(row=>row.id),['new']);
+   }
+  });
+  for(const table of ['activities','instances'] as const)assert.deepEqual((await store.read(tx=>tx.due<any>(table,20,1,'old'))).map(row=>row.id),['old']);
+ }finally{await store.close();}
+});
+
 test('local checkpoints survive SQL serialization, restart and duplicate result delivery',async()=>{
  const store=new PostgresStore(embeddedPool(new PGlite()));let now=1000;
  try{

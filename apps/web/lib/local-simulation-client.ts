@@ -70,6 +70,7 @@ export class LocalSimulationClient {
     this.options.onStatus(error.message);
   }
   get active() {return !!this.session;}
+  get blocked() {return this.failed;}
   get latest() {return this.snapshot;}
   get ownerId() {return this.session?.ownerId;}
   canAct(command:any) {
@@ -100,7 +101,11 @@ export class LocalSimulationClient {
       this.observedSession=manifest.sessionId;
       void this.enqueue(async()=>{this.clear();await this.claim();}).catch(error=>this.report(error));
     } else if(changed && !this.commandPending) {
-      void this.enqueue(async()=>{if(this.session)await this.checkpoint();this.clear();await this.claim();}).catch(error=>this.report(error));
+      void this.enqueue(async()=>{
+        if(this.session&&!this.failed)await this.checkpoint();
+        this.clear();this.failed=false;this.failure=null;
+        await this.claim();
+      }).catch(error=>this.report(error));
     }
   }
   visibility(visible:boolean,watching:boolean) {
