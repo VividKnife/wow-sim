@@ -12,7 +12,7 @@ import {projectClientSnapshot} from '../src/rules/client-snapshot.ts';
 import type {Rules} from '../src/model.ts';
 const base=createMoltenCoreDemo().state;
 function start(id='ragnaros'){
- const s=structuredClone(base);if(id==='onyxia')s.guildRaid={active:true,raidId:'onyxias-lair'};
+ const s=structuredClone(base);if(id==='onyxia')s.goldRaid={active:true,raidId:'onyxias-lair'};
  beginMoltenCoreBattle(s,id,{...defaultRaidTactics});return s;
 }
 const noDamage=()=>{};

@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 import tailwind from '@tailwindcss/postcss';
 import {fileURLToPath} from 'node:url';
 import {mkdir,readFile,writeFile,rename} from 'node:fs/promises';
-import {createMoltenCoreDemo,startMoltenCoreBoss,advanceMoltenCore,configureMoltenCore,retreatMoltenCore,moltenCoreView,moltenCoreBosses,guildSquadNames} from '../../../packages/game-domain/src/molten-core-demo.ts';
+import {createMoltenCoreDemo,startMoltenCoreBoss,advanceMoltenCore,configureMoltenCore,retreatMoltenCore,moltenCoreView,moltenCoreBosses,raidSquadNames} from '../../../packages/game-domain/src/molten-core-demo.ts';
 const app=fileURLToPath(new URL('../',import.meta.url)),repo=fileURLToPath(new URL('../../../',import.meta.url));
 const port=Number(process.env.PREVIEW_PORT||5189),directory=repo+'.cache/molten-core-demo',savePath=directory+'/run.json';
 await mkdir(directory,{recursive:true});
@@ -20,7 +20,7 @@ function settle(){
  // Computation does not recursively create more work when the demo is accelerated.
  lastAt=performance.now();if(run.status!=='combat')paused=true;
 }
-function snapshot(){return {...moltenCoreView(run),paused,speed,bosses:moltenCoreBosses,squadNames:guildSquadNames};}
+function snapshot(){return {...moltenCoreView(run),paused,speed,bosses:moltenCoreBosses,squadNames:raidSquadNames};}
 async function body(req){let value='';for await(const chunk of req){value+=chunk;if(value.length>4096)throw new Error('请求过大。');}return JSON.parse(value||'{}');}
 const api={name:'molten-core-demo',configureServer(server){server.middlewares.use((req,res,next)=>{
  if(req.url!=='/api/molten-core-demo')return next();

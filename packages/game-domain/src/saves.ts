@@ -1,4 +1,4 @@
-import {provisionRaidCore} from './raid-ready.ts';
+import {provisionRaidHero} from './raid-ready.ts';
 import type {GameService} from './service.ts';
 import type {Account,AccountPresence,Character} from './model.ts';
 import {requireThat} from './model.ts';
@@ -46,8 +46,8 @@ export async function createSave(this:GameService,userId:string,input:{name:stri
   await tx.insert('account_presence',{id:saveId,accountId:saveId,lastSeenAt:now});
   await tx.insert('characters',c);
   await tx.insert('parties',{id:partyId,accountId:saveId,characterIds:[id]});
-  await persistAssets(tx,c,s,`create:${saveId}`,this.id);
-  if(input.raidReady)await provisionRaidCore(this,tx,saveId,s,partyId,now);
+  if(input.raidReady)await provisionRaidHero(this,tx,saveId,s,partyId,now);
+  else await persistAssets(tx,c,s,`create:${saveId}`,this.id);
   await tx.insert('receipts',{id:receiptId,userId,fingerprint});
  });
  return {id:saveId};

@@ -12,30 +12,34 @@ const target=Number(process.argv[3]||14),source=JSON.parse(readFileSync(sourcePa
 const store=new MemoryStore();let now=source.wallAt,sequence=0;
 const options={contentVersion:'service-deadmines-validation',now:()=>now,seed:()=>1234,id:()=>`service-dm-${++sequence}`};
 let service=new GameService(store,options);
-const report={fixture:{sourcePath,kind:'explicit normalized initialization; not service natural leveling',overrides:['fresh dungeon progress','deadmines entrance','stable normalized identities','empty companion personal inventories']},routes:[],recoveries:[],failures:[]};
+const report={fixture:{sourcePath,kind:'explicit normalized initialization; not service natural leveling',overrides:['fresh dungeon progress','deadmines entrance','stable normalized identities','persistent NPC roster']},routes:[],recoveries:[],failures:[]};
 const command=value=>service.command('dm-account',{...value,requestId:`command-${++sequence}`});
 const initial=await service.createAccount('dm-account',{name:source.name,classId:source.classId,raceId:source.raceId},'create');
 const ids=[initial.account.primaryCharacterId];
 await store.transaction(async tx=>{const c=await tx.get('characters',ids[0]);c.rules.level=Math.max(18,source.level);c.rules.location='stormwind';c.rules.completed[900001]=1;await tx.put('characters',c);});
-for(const member of source.party){const added=await command({type:'createCompanion',name:member.name,classId:member.classId,raceId:member.raceId||1});ids.push(added.roster.find(r=>!ids.includes(r.id)).id);}
-const mapping=new Map([source,...source.party].map((m,i)=>[m.id,ids[i]]));
+await command({type:'npcVisit'});
 await store.transaction(async tx=>{
- for(const [index,original] of [source,...source.party].entries()){
-  const c=await tx.get('characters',ids[index]);
-  const s={...newState(original.name,original.classId,original.raceId||1,1234,now,c.id),...structuredClone(original),id:c.id,party:[],location:'deadmines',wallAt:now,clock:source.clock,activity:{type:'idle'},combat:null,lastCombat:null};
-  delete s.dungeon;delete s.dungeonSaves;s.dungeonEntries=[];s.dungeonSequence=0;
-  for(const item of [...s.bag,...Object.values(s.equipment),...s.bags,...s.bank])if(item.ownerId)item.ownerId=mapping.get(item.ownerId)||item.ownerId;
-  await persistCharacter(tx,c,s,now,`fixture-${index}`,options.id);
+ const c=await tx.get('characters',ids[0]);
+ const s={...newState(source.name,source.classId,source.raceId||1,1234,now,c.id),...structuredClone(source),npcWorld:c.rules.npcWorld,id:c.id,party:[],location:'deadmines',wallAt:now,clock:source.clock,activity:{type:'idle'},combat:null,lastCombat:null};
+ delete s.dungeon;delete s.dungeonSaves;s.dungeonEntries=[];s.dungeonSequence=0;
+ const chosen=[];
+ for(const original of source.party){
+  const p=s.npcWorld.residents.find(p=>!chosen.includes(p.id)&&p.unit.classId===original.classId);
+  if(!p)throw Error('Fixture class missing from NPC world');
+  p.unit={...p.unit,...structuredClone(original),id:p.id,npcPlayer:true,growthPolicy:'npcPlayer'};
+  for(const item of Object.values(p.unit.equipment))item.ownerId=p.id;
+  chosen.push(p.id);ids.push(p.id);
  }
+ s.npcWorld.selection=chosen;
+ await persistCharacter(tx,c,s,now,'fixture-hero',options.id);
 });
-await command({type:'setParty',characterIds:ids});
 const before=await service.snapshot('dm-account');
 const moneyBefore=before.state.money,killsBefore=before.state.totals.kills;
 const walletsBefore=await store.transaction(tx=>tx.list('wallets'));
 const initialItemIds=new Set((await store.transaction(tx=>tx.list('items'))).map(i=>i.id));
 const formed=await command({type:'createInstance',contentId:'deadmines',characterIds:ids,capacity:5});
 const instanceId=formed.instanceId;
-assert.deepEqual((await store.transaction(tx=>tx.list('actor_leases'))).map(l=>l.actorId).sort(),[...ids].sort());
+assert.deepEqual((await store.transaction(tx=>tx.list('actor_leases'))).map(l=>l.actorId).sort(),[ids[0]].sort());
 await command({type:'startInstance',instanceId});
 await assert.rejects(command({type:'travel',to:'goldshire'}),/离开实例/);
 const instance=()=>store.transaction(tx=>tx.get('instances',instanceId));
@@ -50,7 +54,7 @@ try{
  let revived=await state();const resurrectionEnd=revived.activity.endsAt;
  revived=await tick(resurrectionEnd-revived.clock);
  assert.ok(revived.party.find(c=>c.id===fallenId).hp>0);
- assert.ok((await service.snapshot('dm-account',fallenId)).state.hp>0);
+ assert.ok((await service.snapshot('dm-account')).state.party.find(c=>c.id===fallenId).hp>0);
  report.recoveries.push({kind:'controlled death fixture before first encounter',id:fallenId,method:'priest resurrect command and worker',persisted:true});
  for(let operation=0;operation<500;operation++){
   let s=await state();if(s.dungeon.cursor>=target)break;
@@ -68,7 +72,7 @@ try{
   for(let wait=0;wait<120;wait++){s=await tick(2000);if(!s.combat&&s.activity.type==='idle')break;}
   assert.equal(s.combat,null,'encounter must finish within 240 simulated seconds');
   report.routes.push({cursor,route:dungeonRoute[cursor].id,after:s.dungeon.cursor,kills:s.totals.kills-killsBefore,fallen:[s,...s.party].filter(c=>c.hp<=0).map(c=>c.id)});
-  assert.deepEqual([s.id,...s.party.map(c=>c.id)].sort(),[...ids].sort());
+  assert.deepEqual([s.id,...s.party.map(c=>c.id)].sort(),[ids[0]].sort());
   console.log(JSON.stringify(report.routes.at(-1)));
  }
  const s=await state();assert.ok(s.dungeon.cursor>=target,'bounded run must reach requested route checkpoint');assert.ok(s.dungeon.cleared['dm-rhahkzor'],'first guaranteed boss must be cleared');
@@ -82,7 +86,7 @@ try{
  await command({type:'leaveInstance',instanceId});
  assert.equal((await store.transaction(tx=>tx.list('actor_leases'))).length,0);
  service=new GameService(store,options);
- const after=await service.snapshot('dm-account');assert.equal(after.instanceId,null);assert.equal(after.state.money,s.money);assert.equal(after.state.id,ids[0]);assert.deepEqual(after.roster.map(r=>r.id).sort(),[...ids].sort());
+ const after=await service.snapshot('dm-account');assert.equal(after.instanceId,null);assert.equal(after.state.money,s.money);assert.equal(after.state.id,ids[0]);assert.deepEqual(after.roster.map(r=>r.id).sort(),[ids[0]].sort());
  for(const id of ids){const reloaded=await service.snapshot('dm-account',id);assert.equal(reloaded.state.id,id);assert.ok(reloaded.state.hp>0);}
  report.result={passed:true,checkpoint:target,instanceStatus:(await instance()).status,leases:0,stableRoster:true,restartPersistent:true};
 }catch(error){report.failures.push({message:error.message,stack:error.stack});process.exitCode=1;console.error(error);}

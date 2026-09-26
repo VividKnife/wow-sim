@@ -15,10 +15,7 @@ export async function removeInvalidSave(tx: Transaction, accountId: string) {
         }
         for (const member of instance.roster)
             if (member.accountId !== accountId) otherAccounts.add(member.accountId);
-        for (const contract of await tx.list('contracts', {instanceId: instance.id})) {
-            contract.status = 'ended';
-            await tx.put('contracts', contract);
-        }
+
         await tx.delete('instance_leases', instance.id);
         await tx.delete('combat_plans', instance.id);
         await tx.delete('instances', instance.id);

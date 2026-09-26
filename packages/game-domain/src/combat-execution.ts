@@ -10,7 +10,7 @@ export function combatExecutionMode(owner: Activity | Instance, state: Rules): '
     // Content may declare manual control before an encounter starts. A browser
     // cannot change this flag through a command.
     if (state.combat?.command || state.combat?.requiresManualControl) return 'realtime';
-    if ('roster' in owner && new Set(owner.roster.filter(row => row.controller !== 'mercenary').map(row => row.accountId)).size > 1) return 'realtime';
+    if ('roster' in owner && new Set(owner.roster.filter(row => row.controller !== 'npc').map(row => row.accountId)).size > 1) return 'realtime';
     return 'recorded';
 }
 
@@ -49,7 +49,7 @@ export async function prepareCombatPlan(this: GameService, table: 'activities' |
         const deadline = 'roster' in owner ? await this.instanceDeadline(tx, owner) : await this.activityDeadline(tx, owner);
         if (deadline <= state.wallAt) return null;
         const owners = [];
-        for (const id of new Set('roster' in owner ? owner.roster.filter(r => r.controller !== 'mercenary').map(r => r.accountId) : [accountId]))
+        for (const id of new Set('roster' in owner ? owner.roster.filter(r => r.controller !== 'npc').map(r => r.accountId) : [accountId]))
             owners.push(await account(tx,id));
         return {owner, state, deadline, accountId, owners};
     });

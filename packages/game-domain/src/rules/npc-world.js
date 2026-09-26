@@ -1,4 +1,5 @@
-import {roles,recruit,companionSkills} from './party.js';
+import {gearScore} from '../molten-core-roster.ts';
+import {roles,createNpcMember,companionSkills} from './party.js';
 import {items,quests,questLinks,creatureLocations,nodes,nameOf,xpTable,classDefinitions,raceDefinitions} from './catalog.js';
 import {rng,stats,canEquip,slotOf} from './character.js';
 import {combatRole} from './combat-roles.js';
@@ -29,9 +30,11 @@ function initialEquipment(c,index){
   for(const item of Object.values(items)){
    if(![2,3].includes(item.Quality)||item.ItemLevel>c.level+3||item.ItemLevel<Math.max(10,c.level-8)||item.companionKit||item.raidReward||item.RequiredSkill||item.startquest||!canEquip(c,item))continue;
    if(dualWield&&item.InventoryType===17)continue;
-   const plan=equipmentUpgrade(naked,item);if(!plan.need)continue;
-   const slot=slotOf(item);(bySlot[slot]??=[]).push({id:item.entry,value:plan.improvement});
-   if(dualWield&&item.class===2&&[13,22].includes(item.InventoryType))offhand.push({id:item.entry,value:plan.improvement});
+   if(combatRole(c)==='tank'&&c.classId!==11&&(item.InventoryType===17||slotOf(item)===17&&item.InventoryType!==14))continue;
+   if(![2,4].includes(item.class)||!item.InventoryType||[4,19].includes(item.InventoryType))continue;
+   const score=gearScore(item,combatRole(c),c.classId);
+   const slot=slotOf(item);(bySlot[slot]??=[]).push({id:item.entry,value:score});
+   if(dualWield&&item.class===2&&[13,22].includes(item.InventoryType))offhand.push({id:item.entry,value:score});
   }
   const pools=Object.entries(bySlot).map(([slot,pool])=>({slot:Number(slot),ids:pool.sort((a,b)=>b.value-a.value||a.id-b.id).slice(0,5).map(x=>x.id)})).sort((a,b)=>a.slot-b.slot);
   if(offhand.length)pools.push({slot:17,ids:offhand.sort((a,b)=>b.value-a.value||a.id-b.id).slice(0,5).map(x=>x.id)});
@@ -64,21 +67,21 @@ function buildUnit(s,index,level,initial=true){
  const classDef=classDefinitions.find(c=>c.id===def.classId);
  const raceId=classDef.races.find(id=>raceDefinitions.find(r=>r.id===id)?.faction===faction)||classDef.races[0];
  const host={id:s.id,level,clock:s.clock,location:s.location,itemSequence:0,logs:[],logSequence:0,party:[],money:0,bag:[],bags:[]};
- const c=recruit(host,def.id,{name:names[index],role,raceId});
+ const c=createNpcMember(host,def.id,{name:names[index],role,raceId});
  c.id=`npc:${s.id}:${index+1}`;c.growthPolicy='npcPlayer';c.npcPlayer=true;c.professions={};c.potions={enabled:false};
  c.strategyPolicy={...c.strategyPolicy,protectCC:true,waitForTank:true,pullDelaySeconds:index%3===0?2:1};
- delete c.bags;delete c.recruitmentGeneration;
+ delete c.bags;
  for(const [slot,item] of Object.entries(c.equipment)){item.uid=`${c.id}:starter:${slot}`;item.ownerId=c.id;}
  if(initial)initialEquipment(c,index);
  if(c.classId===3){c.ammunition={2512:2000,2516:2000};c.ammoPolicy={enabled:false,target:2000};}
  return c;
 }
 export function ensureNpcWorld(s){
- if(s.growthPolicy==='companion'||s.level<18)throw new Error('主角达到18级后开放冒险者大厅。');
+ if(s.npcPlayer||s.growthPolicy==='companion'||s.level<18)throw new Error('主角达到18级后开放冒险者大厅。');
  if(s.npcWorld)return s.npcWorld;
- s.npcWorld={selection:null,autoLoot:false,residents:names.map((name,index)=>{
+ s.npcWorld={selection:[],autoLoot:false,residents:names.map((name,index)=>{
   const unit=buildUnit(s,index,s.level);
-  return {id:unit.id,index,unit,friend:false,personality:styles[index%styles.length],runs:0,events:0,history:[],completedQuests:[],rngState:seedOf(unit.id),lastProgressWall:s.wallAt,steps:0,wallet:100000};
+  return {id:unit.id,index,unit,friend:false,personality:styles[index%styles.length],runs:0,events:0,history:[],completedQuests:[],rngState:seedOf(unit.id),lastProgressWall:s.wallAt,steps:0,wallet:Math.round((45+(index*137)%650)*(s.level/60))*10000,raidProfile:{personality:['saver','value','collector','whale','impulsive'][index%5],skill:index%7===0?'novice':index%3===0?'expert':'regular'},raidRuns:0};
  })};
  for(const p of s.npcWorld.residents)note(p,'来到冒险者大厅，期待结识新的伙伴。');
  s.npcWorld.board={ids:[],shown:{},rngState:seedOf(`${s.id}:hall`),refreshAt:0,sequence:0};
@@ -125,7 +128,7 @@ function dungeonEvent(s,p){
 }
 export function progressNpcWorld(s){
  const world=s.npcWorld;if(!world)return;
- const active=new Set(s.dungeon?s.party.filter(c=>c.npcPlayer).map(c=>c.id):[]);
+ const active=new Set(s.dungeon||s.goldRaid?.active?s.party.filter(c=>c.npcPlayer).map(c=>c.id):[]);
  for(const p of world.residents){
   const elapsed=Math.max(0,s.wallAt-p.lastProgressWall);
   if(active.has(p.id)){p.lastProgressWall=s.wallAt;continue;}
@@ -133,7 +136,7 @@ export function progressNpcWorld(s){
   if(!steps)continue;
   p.lastProgressWall=s.wallAt-(budget%cadence);
   for(let i=0;i<steps;i++){
-   p.steps++;
+   p.steps++;p.wallet+=Math.max(100, p.unit.level*25);
    if(p.unit.level<s.level&&p.steps%2===0){
     const old=p.unit,fresh=buildUnit(s,p.index,old.level+1,false);
     // Training updates skills and talents, never replaces earned equipment.
@@ -152,16 +155,17 @@ export function syncNpcWorld(s){
   if(!c.npcPlayer)continue;
   const p=s.npcWorld.residents.find(p=>p.id===c.id);if(!p)continue;
   // Preserve durable character data, not the entire battle object graph.
-  for(const key of ['level','xp','equipment','learned','talents','rules','strategyPolicy','hunterPet','ammunition'])if(c[key]!==undefined)p.unit[key]=structuredClone(c[key]);
+  for(const key of ['level','xp','equipment','learned','talents','rules','strategyPolicy','hunterPet','ammunition','raidCollection','raidPendingEquipment'])if(c[key]!==undefined)p.unit[key]=structuredClone(c[key]);
+  if(c.goldNpc)p.wallet=c.money;
   p.lastProgressWall=s.wallAt;
  }
 }
 export function selectedDungeonMembers(s){
- if(s.dungeon||!s.npcWorld?.selection)return s.party.filter(c=>!c.guildUnit&&!c.goldNpc);
- return s.npcWorld.selection.map(id=>s.party.find(c=>c.id===id)||s.npcWorld.residents.find(p=>p.id===id)?.unit).filter(c=>c&&!c.guildUnit&&!c.goldNpc);
+ if(s.dungeon||!s.npcWorld?.selection)return s.party.filter(c=>!c.goldNpc);
+ return s.npcWorld.selection.map(id=>s.party.find(c=>c.id===id)||s.npcWorld.residents.find(p=>p.id===id)?.unit).filter(c=>c&&c.npcPlayer&&!c.goldNpc);
 }
 export function npcAction(s,a){
- if(s.combat||s.dungeon||s.guildRaid?.active||s.goldRaid?.active||s.activity.type!=='idle')throw new Error('请结束当前活动并离开副本后再安排冒险者。');
+ if(s.combat||s.dungeon||s.goldRaid?.active||s.activity.type!=='idle')throw new Error('请结束当前活动并离开副本后再安排冒险者。');
  const world=ensureNpcWorld(s);progressNpcWorld(s);
  if(a.type==='npcRefresh'){
   if(s.wallAt<world.board.refreshAt)throw new Error(`旅店正在联络下一批冒险者，请在${Math.ceil((world.board.refreshAt-s.wallAt)/1000)}秒后再来。`);
@@ -169,8 +173,8 @@ export function npcAction(s,a){
  }else if(a.type==='npcFriend'){
   const p=world.residents.find(p=>p.id===a.id);if(!p||typeof a.friend!=='boolean')throw new Error('冒险者或好友设置无效。');p.friend=a.friend;
  }else if(a.type==='npcGroup'){
-  if(a.memberIds===null){world.selection=null;return;}
-  if(!Array.isArray(a.memberIds)||a.memberIds.length>4||new Set(a.memberIds).size!==a.memberIds.length||a.memberIds.some(id=>![...s.party,...world.residents.map(p=>p.unit)].some(c=>c.id===id)))throw new Error('请选择至多四名不同的同行成员。');
+  if(a.memberIds===null){world.selection=[];return;}
+  if(!Array.isArray(a.memberIds)||a.memberIds.length>4||new Set(a.memberIds).size!==a.memberIds.length||a.memberIds.some(id=>!world.residents.some(p=>p.id===id)))throw new Error('请选择至多四名不同的同行成员。');
   world.selection=[...a.memberIds];
  }else if(a.type==='npcRecommend'){
   const selectedIds=new Set(selectedDungeonMembers(s).map(c=>c.id));
@@ -201,9 +205,21 @@ export function npcAward(s,c,item,need){
  syncNpcWorld(s);
 }
 export function npcWorldView(s){
- const w=s.npcWorld,selected=selectedDungeonMembers(s),active=!!s.dungeon;
+ const w=s.npcWorld,selected=selectedDungeonMembers(s),active=!!s.dungeon||!!s.goldRaid?.active;
  const member=c=>({id:c.id,name:c.name,classId:c.classId,level:c.level,role:combatRole(c),npc:!!c.npcPlayer,hp:c.hp});
- return {unlocked:s.level>=18&&s.growthPolicy!=='companion',ready:!!w,locked:!!s.combat||active||!!s.guildRaid?.active||s.goldRaid?.active||s.activity.type!=='idle',custom:w?.selection!==null&&!!w,autoLoot:!!w?.autoLoot,selected:selected.map(member),owned:s.party.filter(c=>!c.npcPlayer&&!c.guildUnit&&!c.goldNpc).map(member),
+ return {unlocked:s.level>=18&&!s.npcPlayer&&s.growthPolicy!=='companion',ready:!!w,locked:!!s.combat||active||s.goldRaid?.active||s.activity.type!=='idle',autoLoot:!!w?.autoLoot,selected:selected.map(member),
   total:w?.residents.length||names.length,board:w?{ids:w.board.ids,sequence:w.board.sequence,remaining:Math.max(0,w.board.refreshAt-s.wallAt),cooldown:NPC_REFRESH_MS}:null,
-  residents:(w?.residents||[]).map(p=>{const c=s.party.find(c=>c.id===p.id)||p.unit;return {...member(c),friend:p.friend,personality:p.personality,runs:p.runs,history:p.history,wallet:p.wallet,status:active&&s.party.some(c=>c.id===p.id)?'与你冒险':p.steps%2?'正在任务历练':'等待组队',equipment:Object.entries(c.equipment).map(([slot,item])=>({slot:Number(slot),...item})),talents:c.talents,stats:stats(c),nextXp:xpTable[c.level]?.xp_for_next_level||0,xp:c.xp};})};
+  residents:(w?.residents||[]).map(p=>{const c=s.party.find(c=>c.id===p.id)||p.unit;return {...member(c),friend:p.friend,personality:p.personality,runs:p.runs,history:p.history,wallet:c.goldNpc?c.money:p.wallet,raidRuns:p.raidRuns,raidProfile:p.raidProfile,status:active&&s.party.some(c=>c.id===p.id)?'与你冒险':p.steps%2?'正在任务历练':'等待组队',equipment:Object.entries(c.equipment).map(([slot,item])=>({slot:Number(slot),...item})),talents:c.talents,stats:stats(c),nextXp:xpTable[c.level]?.xp_for_next_level||0,xp:c.xp};})};
+}
+
+export function recordNpcRaid(s,completed=false){
+ const world=ensureNpcWorld(s);
+ syncNpcWorld(s);
+ for(const c of s.party.filter(c=>c.npcPlayer&&c.goldNpc)){
+  const p=world.residents.find(p=>p.id===c.id);if(!p)continue;
+  if(completed&&s.goldRaid.contributions[c.id]?.kills>0){
+   p.raidRuns++;if(p.raidRuns>=3)p.raidProfile.skill='expert';
+   note(p,`金团结算：与你击败${s.goldRaid.cleared.length}名首领，分红${((s.goldRaid.settlement?.rows.find(r=>r.id===c.id)?.total||0)/10000).toFixed(2)}金。装备与余额已保存。`);
+  }else if(!completed){p.runs++;note(p,'与你组成25人金团，独立竞拍并按公告分金。');}
+ }
 }

@@ -5,17 +5,17 @@ import {quests,questLinks,endpointNodes,nodes,creatures,items,table} from '../..
 import {questProgress,questAvailable,questContentReason,questScenes,creditKill,meetsCondition,itemSources} from '../../../packages/game-domain/src/rules/quests.js';
 import {questItemActions,questFishingSources} from '../../../packages/game-data/world-quest-content.js';
 import {addItem,countItem,stats} from '../../../packages/game-domain/src/rules/character.js';
-import {recruit} from '../../../packages/game-domain/src/rules/party.js';
+import {createNpcMember} from '../../../packages/game-domain/src/rules/party.js';
 import {startCombat,beginHunterTaming} from '../../../packages/game-domain/src/rules/combat.js';
 import {dungeonRoute,enterDungeon,interactDungeon,prepareEncounter,recordDungeonProgress,dungeonEntryReason} from '../../../packages/game-domain/src/rules/dungeon.js';
 import {dungeonBossTick,dungeonBossPhaseTick} from '../../../packages/game-domain/src/rules/dungeon-boss-ai.js';
 import {selectedDungeonMembers,npcWorldView} from '../../../packages/game-domain/src/rules/npc-world.js';
 import {resourceView} from '../../../packages/game-domain/src/rules/professions.js';
 import {raidAttunementReason,grantRaidReadyAttunements} from '../../../packages/game-domain/src/rules/raid-attunement.js';
-import {enterGuildRaid} from '../../../packages/game-domain/src/rules/guild-raid.js';
+import {enterGoldRaid} from '../../../packages/game-domain/src/rules/gold-raid.js';
 
 function player(classId=1){const s=createGame('审计回归',73,0,{raceId:classId===3?3:1,classId});s.level=60;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;return s;}
-function dungeon(id){const s=player();for(const name of ['warrior','priest','rogue','mage'])recruit(s,name);s.location=id;enterDungeon(s,id);return s;}
+function dungeon(id){const s=player();for(const name of ['warrior','priest','rogue','mage'])createNpcMember(s,name);s.location=id;enterDungeon(s,id);return s;}
 function completeBattle(s){for(const e of s.combat.enemies)e.hp=0;s.lastCombat=s.combat;s.combat=null;recordDungeonProgress(s);}
 
 test('all public quests have located endpoints and scripted item inputs have valid templates',()=>{
@@ -76,17 +76,17 @@ test('taming a distant enemy already in combat refuses before spending resources
  assert.throws(()=>beginHunterTaming(s,e.id),/射程/);assert.equal(s.mana,mana);assert.equal(e.position,s.position+60);assert.equal(s.cast,null);
 });
 
-test('guild members never count as owned five-person companions and raids lock dungeon entry',()=>{
- const s=player();for(const name of ['warrior','priest','rogue','mage'])recruit(s,name);s.party.push(...Array.from({length:20},(_,i)=>({...s.party[0],id:'guild:'+i,guildUnit:true})));s.guildRaid={active:true};
- assert.equal(selectedDungeonMembers(s).length,4);assert.equal(npcWorldView(s).owned.length,4);assert.equal(npcWorldView(s).locked,true);assert.match(dungeonEntryReason(s,'deadmines'),/团队副本/);
+test('gold raid members never count as dungeon party members and raids lock dungeon entry',()=>{
+ const s=player();for(const name of ['warrior','priest','rogue','mage'])createNpcMember(s,name);s.party.push(...Array.from({length:20},(_,i)=>({...s.party[0],id:'gold:'+i,goldNpc:true})));s.goldRaid={active:true};
+ assert.equal(selectedDungeonMembers(s).length,4);assert.ok(!('owned' in npcWorldView(s)));assert.equal(npcWorldView(s).locked,true);assert.match(dungeonEntryReason(s,'deadmines'),/团队副本/);
 });
 
 test('both factions require the leader attunement, while raid-ready presets provide it',()=>{
  for(const team of [67,469]){
-  const s=player();s.teamId=team;for(const name of ['warrior','priest','rogue','mage'])recruit(s,name);
-  assert.throws(()=>enterGuildRaid(s),/传送门/);assert.throws(()=>enterGuildRaid(s,'onyxias-lair'),/龙火护符/);
+  const s=player();s.teamId=team;for(const name of ['warrior','priest','rogue','mage'])createNpcMember(s,name);
+  assert.throws(()=>enterGoldRaid(s),/传送门/);assert.throws(()=>enterGoldRaid(s,'onyxias-lair'),/龙火护符/);
   grantRaidReadyAttunements(s);assert.equal(raidAttunementReason(s,'molten-core'),'');assert.equal(raidAttunementReason(s,'onyxias-lair'),'');
-  enterGuildRaid(s,'onyxias-lair');assert.equal(s.guildRaid.active,true);
+  enterGoldRaid(s,'onyxias-lair');assert.equal(s.goldRaid.active,true);
  }
 });
 

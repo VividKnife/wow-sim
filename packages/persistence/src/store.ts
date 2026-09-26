@@ -1,4 +1,4 @@
-export const tables = ['accounts', 'account_presence', 'characters', 'companions', 'parties', 'wallets', 'items', 'reservations', 'activities', 'actor_leases', 'instances', 'instance_leases', 'combat_plans', 'contracts', 'settlements', 'ledger', 'receipts', 'outbox', 'inbox', 'reward_claims'] as const;
+export const tables = ['accounts', 'account_presence', 'characters', 'companions', 'parties', 'wallets', 'items', 'reservations', 'activities', 'actor_leases', 'instances', 'instance_leases', 'combat_plans', 'settlements', 'ledger', 'receipts', 'outbox', 'inbox', 'reward_claims'] as const;
 export type TableName = typeof tables[number];
 // Domain tables validate their own payloads; the store only requires identity.
 export type Row = {
@@ -38,7 +38,7 @@ export function validateRow(table: TableName, row: Row) {
     if (table === 'instance_leases' && ('epoch' in row) && (!Number.isSafeInteger(row.epoch) || Number(row.epoch) < 1))
         throw new Error('Instance epoch must be positive');
 }
-export const uniqueFields: Partial<Record<TableName, string[]>> = { wallets: ['characterId'], actor_leases: ['actorId'], instance_leases: ['instanceId'], settlements: ['businessKey'], reward_claims: ['businessKey'], contracts: ['businessKey'] };
+export const uniqueFields: Partial<Record<TableName, string[]>> = { wallets: ['characterId'], actor_leases: ['actorId'], instance_leases: ['instanceId'], settlements: ['businessKey'], reward_claims: ['businessKey'] };
 export const copy = <T>(value: T): T => JSON.parse(JSON.stringify(value));
 
 export class DatabaseOperationError extends Error {

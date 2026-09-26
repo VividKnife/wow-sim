@@ -81,7 +81,7 @@ export interface Instance {
     roster: {
         characterId: string;
         accountId: string;
-        controller: 'player' | 'companion' | 'mercenary' | 'npc';
+        controller: 'player' | 'companion' | 'npc';
     }[];
     simulation: Rules | null;
     rngState: number;

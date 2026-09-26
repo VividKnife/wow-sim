@@ -7,7 +7,6 @@ import {makeItem,canEquip} from '../src/rules/character.js';
 import {itemDetails} from '../src/rules/item-details.js';
 import {rollClassicLoot,rollRaidLoot,raidLoot,canReceiveRaidLoot} from '../src/rules/raid-rewards.js';
 import {createMoltenCoreDemo} from '../src/molten-core-demo.ts';
-import {enterGuildRaid,settleGuildRaid,guildRaidAction} from '../src/rules/guild-raid.js';
 import {advance} from '../src/rules/engine.js';
 import {enterGoldRaid,goldRaidAction,goldAuctionStep} from '../src/rules/gold-raid.js';
 
@@ -63,15 +62,15 @@ test('repeated real rolls retain boss counts, chest alternatives and low legenda
  assert.ok(eyes>20&&eyes<80);assert.ok(bindings>25&&bindings<100);assert.ok(leaves>650&&leaves<850);
 });
 
-test('guild receives all actual drops once, without smart loot replacement',()=>{
- let s=createMoltenCoreDemo().state;s.party=s.party.slice(0,4);s.growthPolicy='player';enterGuildRaid(s);
- s.guildRaid.clearedPacks=['mc-gate','mc-bridge','mc-imps','mc-hounds-1'];s.guildRaid.locationId='mc-hounds-1';
- guildRaidAction(s,{type:'raidStart',bossId:'lucifron'});s.combat.enemies.forEach((e:any)=>e.hp=0);
+test('gold sends all actual drops to auction once without smart loot replacement',()=>{
+ let s=createMoltenCoreDemo().state;s.party=[];enterGoldRaid(s);
+ for(const type of ['goldPublish','goldRecommend','goldLaunch'])goldRaidAction(s,{type});
+ s.goldRaid.clearedPacks=['mc-gate','mc-bridge','mc-imps','mc-hounds-1'];s.goldRaid.locationId='mc-hounds-1';
+ goldRaidAction(s,{type:'goldStart',bossId:'lucifron'});s.combat.enemies.forEach((e:any)=>e.hp=0);
  s=advance(s,s.wallAt+100).state;
- assert.equal(s.pending.filter((i:any)=>items[i.id].Quality===4&&items[i.id].InventoryType).length,2);
- assert.ok(s.pending.some((i:any)=>i.id===16665));
- const ids=s.pending.map((i:any)=>i.uid),rewards=s.guildRaid.rewards.length;settleGuildRaid(s);
- assert.deepEqual(s.pending.map((i:any)=>i.uid),ids);assert.equal(s.guildRaid.rewards.length,rewards);
+ const lots=[s.goldRaid.auction,...s.goldRaid.lots];
+ assert.equal(lots.filter((i:any)=>items[i.itemId].Quality===4&&items[i.itemId].InventoryType).length,2);
+ assert.ok(lots.some((i:any)=>i.itemId===16665));assert.equal(s.pending.length,0);
 });
 
 test('auction delivers material stacks to NPC storage and retains original BoE binding for players',()=>{
@@ -80,7 +79,7 @@ test('auction delivers material stacks to NPC storage and retains original BoE b
  const npc=s.party.find((c:any)=>c.goldNpc),before=structuredClone(npc.equipment);
  const lot=(itemId:number,count:number,leader:string)=>({id:'material-test',bossId:'garr',itemId,count,leader,price:100000,limits:{},bids:[],quiet:2,round:0,step:50000});
  s.goldRaid.auction=lot(17010,3,npc.id);goldAuctionStep(s);
- assert.deepEqual(npc.equipment,before);assert.equal(npc.goldProfile.collectedLoot[0].id,17010);assert.equal(npc.goldProfile.collectedLoot[0].count,3);
+ assert.deepEqual(npc.equipment,before);assert.equal(npc.raidCollection[0].id,17010);assert.equal(npc.raidCollection[0].count,3);
  s.goldRaid.auction=lot(16802,1,'player');goldAuctionStep(s);
  assert.equal(s.pending.at(-1).id,16802);assert.equal(s.pending.at(-1).bound,false);
 });

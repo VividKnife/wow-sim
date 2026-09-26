@@ -9,7 +9,7 @@ import {questAvailable,questProgress,creditKill,questScenes} from '../src/rules/
 import {dungeonDefinitions,dungeonRoute} from '../src/rules/dungeon-registry.js';
 import {dungeonMap,dungeonPath} from '../src/rules/dungeon-map.js';
 import {enterDungeon,beginDungeonAdvance,recordDungeonProgress,leaveDungeon} from '../src/rules/dungeon.js';
-import {recruit} from '../src/rules/party.js';
+import {createNpcMember} from '../src/rules/party.js';
 import {bindHearth} from '../src/rules/hearthstone.js';
 import {bankHere} from '../src/rules/inventory.js';
 import {canTrainAt} from '../src/rules/city.js';
@@ -70,7 +70,7 @@ test('faction masks, actual quest rewards, and boosted faction capitals replace 
 
 test('level-ten parties can prepare for early Horde dungeons with legal equipment',()=>{
  const s:Rules=createGame('怒焰小队',15,0,{raceId:2,classId:7});s.level=10;
- for(const id of ['warrior','priest','rogue','mage'])recruit(s,id);
+ for(const id of ['warrior','priest','rogue','mage'])createNpcMember(s,id);
  assert.equal(s.party.length,4);
  for(const c of s.party)for(const item of Object.values(c.equipment) as any[])assert.ok(canEquip(c,items[item.id]));
  s.location='ragefire-chasm';s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;enterDungeon(s,'ragefire-chasm');assert.equal(s.dungeon.id,'ragefire-chasm');
@@ -80,7 +80,7 @@ test('every expanded dungeon has finite enemy stats, connected encounters and re
  assert.equal(Object.keys(dungeonDefinitions).length,28);
  for(const def of Object.values(dungeonDefinitions) as any[]){
   const s:Rules=createGame('副本',27,0);s.level=60;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
-  for(const id of ['warrior','priest','rogue','mage'])recruit(s,id);
+  for(const id of ['warrior','priest','rogue','mage'])createNpcMember(s,id);
   s.location=def.entrance;enterDungeon(s,def.id);
   const map=dungeonMap(def.id),route=dungeonRoute(def.id);
   for(const e of route){assert.ok(dungeonPath(def.id,'entrance',e.id).length);assert.ok(map.points[e.id].every(Number.isFinite));}
@@ -147,7 +147,7 @@ test('turning in a racial class quest grants its source-backed class abilities o
 test('Alliance and Horde can enter each other’s city dungeons',()=>{
  for(const raceId of [1,2])for(const id of ['ragefire-chasm','stockades']){
   const s:Rules=createGame('跨阵营副本',25,0,{raceId,classId:1});s.level=26;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
-  for(const role of ['priest','rogue','mage','hunter'])recruit(s,role);
+  for(const role of ['priest','rogue','mage','hunter'])createNpcMember(s,role);
   s.location=id;enterDungeon(s,id);assert.equal(s.dungeon.id,id);beginDungeonAdvance(s);assert.ok(s.combat);
  }
 });

@@ -2,12 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCooperativePreviewRaid, createPreviewRaid, inspectRaidPlan, makePreviewSquad, validateRaidPlan } from '../src/raid-planning.ts';
 
-test('1–8 accounts replace guild squads while keeping 40 unique seats', () => {
+test('1–8 accounts replace NPC squads while keeping 40 unique seats', () => {
   for (let count = 1; count <= 8; count++) {
     const plan = createPreviewRaid(count, 40), result = inspectRaidPlan(plan, 'gate');
     assert.deepEqual(validateRaidPlan(plan), []);
     assert.equal(result.humanCount, count);
-    assert.equal(result.guildCount, 8 - count);
+    assert.equal(result.npcCount, 8 - count);
     assert.equal(result.members, 40);
     assert.equal(new Set(plan.squads.flatMap(s => s.members.map(m => m.id))).size, 40);
   }
@@ -27,9 +27,9 @@ test('capability alone is insufficient without assigning its task', () => {
 });
 test('replacing a specialist changes readiness, restoring it repairs the plan', () => {
   const plan = createPreviewRaid(1, 40);
-  plan.squads[1] = makePreviewSquad('squad-2', 'vanguard', { kind: 'guild' }, 'adds');
+  plan.squads[1] = makePreviewSquad('squad-2', 'vanguard', { kind: 'npc' }, 'adds');
   assert.equal(inspectRaidPlan(plan, 'pack').checks.find(c => c.id === 'addTanks')?.met, false);
-  plan.squads[1] = makePreviewSquad('squad-2', 'bulwark', { kind: 'guild' }, 'adds');
+  plan.squads[1] = makePreviewSquad('squad-2', 'bulwark', { kind: 'npc' }, 'adds');
   assert.equal(inspectRaidPlan(plan, 'pack').ready, true);
 });
 test('eight dungeon parties reveal excess tanks and missing raid assignments', () => {
@@ -68,7 +68,7 @@ test('25-player default has 2 tanks, 5 healers, 18 damage and supports 1–5 acc
     const report = inspectRaidPlan(createPreviewRaid(count), 'gate');
     assert.equal(report.members, 25);
     assert.equal(report.humanCount, count);
-    assert.equal(report.guildCount, 5 - count);
+    assert.equal(report.npcCount, 5 - count);
   }
 });
 test('five humans can keep their five-member ownership groups and fill raid-wide roles', () => {
@@ -77,7 +77,7 @@ test('five humans can keep their five-member ownership groups and fill raid-wide
   assert.equal(original.ready, false);
   const plan = createCooperativePreviewRaid(), result = inspectRaidPlan(plan, 'gate');
   assert.equal(result.humanCount, 5);
-  assert.equal(result.guildCount, 0);
+  assert.equal(result.npcCount, 0);
   assert.deepEqual(result.roles, {tank:2, healer:5, melee:8, ranged:10});
   assert.equal(result.ready, true);
   assert.equal(inspectRaidPlan(plan, 'lava').ready, true);

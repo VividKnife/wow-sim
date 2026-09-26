@@ -1,3 +1,4 @@
+import {createNpcMember} from '../packages/game-domain/src/rules/party.js';
 // Real combat route benchmark. Initial fixture grants level, learned ranks,
 // companion equipment and supplies; no combatant HP or victory flags are changed.
 import assert from 'node:assert/strict';
@@ -10,7 +11,7 @@ import {dungeonRoute} from '../packages/game-domain/src/rules/dungeon.js';
 const levels=process.argv.slice(2).map(Number);
 for(const level of levels.length?levels:[60,30,26]){
  let s=createGame('监狱实战验证',812,0);s.level=level;s.completed[900001]=true;s.location='stormwind';
- for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},s.wallAt);
+ for(const id of ['warrior','priest','rogue','mage'])createNpcMember(s,id);
  s.learned=companionSkills(s);s.equipment=structuredClone(s.party.find(c=>c.classId===8).equipment);
  s.bags=Array.from({length:4},()=>makeItem(s,14156));
  for(const c of [s,...s.party]){c.hp=stats(c).maxHp;c.mana=stats(c).maxMana;}

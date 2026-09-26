@@ -79,19 +79,18 @@ test('manual roll clock starts after combat, automatic policy resolves safely, q
 
 test('NPC commands reject invalid rosters, companion control and changes during a run',()=>{
  const s=world(),id=s.npcWorld.residents[0].id;assert.throws(()=>act(s,{type:'npcGroup',memberIds:[id,id]},0),/不同/);assert.throws(()=>act(s,{type:'npcGroup',memberIds:['foreign']},0),/同行/);
- assert.throws(()=>act({...s,growthPolicy:'companion'},{type:'npcVisit'},0),/主角/);
+ assert.throws(()=>act({...s,growthPolicy:'companion'},{type:'npcVisit'},0),/主角/);assert.throws(()=>act({...s,npcPlayer:true},{type:'npcVisit'},0),/主角/);
  const playing=run();assert.throws(()=>act(playing,{type:'npcVisit'},0),/离开副本/);assert.throws(()=>act(playing,{type:'strategy',target:playing.party[0].id,rules:[]},0),/自行管理/);
 });
 
-test('service saves NPCs independently of owned companions and restores the mixed roster after restart',async()=>{
- const f=await fixture();let snap=await f.command('recruit',{id:'warrior',role:'tank'});const own=snap.state.party[0].id;const ownedGear=structuredClone(snap.state.party[0].equipment);
- await f.command('npcGroup',{memberIds:[own]});snap=await f.command('npcRecommend',{keep:true});const selected=snap.state.npcWorld.selection;assert.equal(selected[0],own);
- const friend=selected[1];await f.command('npcFriend',{id:friend,friend:true});f.restart();snap=await f.snapshot();assert.deepEqual(snap.state.party.map((c:Rules)=>c.id),[own]);assert.deepEqual(snap.state.party[0].equipment,ownedGear);
- snap=await f.command('enterDungeon',{contentId:'deadmines'});assert.equal(snap.state.party.length,4);assert.equal(snap.state.party.filter((c:Rules)=>c.npcPlayer).length,3);assert.equal(snap.instance!.roster.filter((r:Rules)=>r.controller==='npc').length,3);
+test('service restores a persistent NPC roster after restart without owned companions',async()=>{
+ const f=await fixture();let snap=await f.command('npcRecommend');const selected=snap.state.npcWorld.selection;
+ const friend=selected[0];await f.command('npcFriend',{id:friend,friend:true});f.restart();snap=await f.snapshot();assert.deepEqual(snap.state.party,[]);
+ snap=await f.command('enterDungeon',{contentId:'deadmines'});assert.equal(snap.state.party.length,4);assert.ok(snap.state.party.every((c:Rules)=>c.npcPlayer));assert.equal(snap.instance!.roster.filter((r:Rules)=>r.controller==='npc').length,4);
  const instance:any=await f.store.read(tx=>tx.get('instances',snap.instanceId!));assert.equal(localEligible(instance),false);
- assert.equal((await f.store.read(tx=>tx.list('actor_leases'))).length,2);
+ assert.equal((await f.store.read(tx=>tx.list('actor_leases'))).length,1);
  await assert.rejects(f.command('npcGroup',{memberIds:[]}),/先离开|这项操作/);
- await f.command('leaveDungeon');f.restart();snap=await f.snapshot();assert.deepEqual(snap.state.party.map((c:Rules)=>c.id),[own]);assert.deepEqual(snap.state.npcWorld.selection,selected);
+ await f.command('leaveDungeon');f.restart();snap=await f.snapshot();assert.deepEqual(snap.state.party,[]);assert.deepEqual(snap.state.npcWorld.selection,selected);
  assert.equal(snap.state.npcWorld.residents.find((p:Rules)=>p.id===friend).friend,true);assert.equal((await f.store.read(tx=>tx.list('actor_leases'))).length,0);
  snap=await f.command('enterDungeon',{contentId:'deadmines'});assert.deepEqual(snap.state.party.map((c:Rules)=>c.id),selected);
 });
@@ -105,10 +104,6 @@ test('committed NPC loot survives service restart, duplicate command and subsequ
  await assert.rejects(f.command('groupLoot',{id:lootId,choice:'pass'}),/已经分配/);
 });
 
-test('legacy all-owned dungeon still bypasses group rolls',()=>{
- let s:Rules=createGame('原有队伍',42,0);s.level=24;s.location='deadmines';for(const [id,role] of [['warrior','tank'],['priest','healer'],['rogue','melee'],['hunter','ranged']])s=act(s,{type:'recruit',id,role},0);
- s=act(s,{type:'enterDungeon'},0);assert.equal(queueGroupLoot(s,5191,1),false);assert.equal(s.party.filter((c:Rules)=>c.npcPlayer).length,0);
-});
 
 test('actual NPC dungeon combat advances using existing combat engine',()=>{
  let s=run();s.settings.autoLoot=true;s.npcWorld.autoLoot=true;s=act(s,{type:'dungeonNext'},0);
@@ -123,13 +118,6 @@ test('emergency exit settles only committed drops and preserves NPC winnings wit
  assert.equal((await f.store.read(tx=>tx.list('actor_leases'))).length,0);f.restart();snap=await f.snapshot();assert.equal(snap.state.groupLoot.history.length,1);
 });
 
-test('owned companion winnings and displaced gear persist exactly once without changing NPC ownership',async()=>{
- const f=await fixture();let snap=await f.command('recruit',{id:'rogue',role:'melee'});const own=snap.state.party[0].id;
- await f.command('npcGroup',{memberIds:[own]});await f.command('npcRecommend',{keep:true});snap=await f.command('enterDungeon',{contentId:'deadmines'});let lootId='';
- await f.store.transaction(async tx=>{const i:any=await tx.get('instances',snap.instanceId!);const s=i.simulation,c=s.party.find((p:Rules)=>p.id===own);c.equipment={};queueGroupLoot(s,5191,1);const l=s.groupLoot.pending[0];lootId=l.id;for(const m of l.members)m.roll=m.id===own?100:1;await tx.put('instances',i);});
- await f.command('groupLoot',{id:lootId,choice:'pass'});await f.command('leaveDungeon');snap=await f.snapshot();assert.equal(snap.state.party[0].equipment[16].id,5191);
- const rows:any[]=await f.store.read(tx=>tx.list('items',{ownerCharacterId:own}));assert.equal(rows.filter(r=>r.data.id===5191).length,1);
-});
 
 test('unique-item eligibility and simultaneous duplicate drops cannot bypass the ownership limit',()=>{
  const s=run(),unique=Object.values(items).find((i:any)=>i.maxcount===1&&i.Quality>=2&&[2,4].includes(i.class)&&i.InventoryType&&!i.startquest&&i.bonding!==4) as any;

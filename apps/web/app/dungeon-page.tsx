@@ -23,11 +23,11 @@ export default function DungeonPage(props:GameProps&{onOpenParty:()=>void;onConf
  return <div className="dungeon-page">
   <header className="panel dungeon-page-intro"><div><h1>地下城手册</h1><p>查阅首领与掉落，选择地下城后前往入口。</p></div><span className="dungeon-page-status">{journal.length} 座地下城 · {journal.filter((x:any)=>x.playable).length} 座已开放</span></header>
   {!expedition&&<section className="panel dungeon-ready" aria-label="地下城准备"><div className="section-heading"><h2>出发准备</h2><small>建议搭配坦克、治疗与输出</small></div><div className="dungeon-preparation">
-   <div><small>小队成员</small><strong>{(d.npcWorld?.selected.length??s.party.length)+1} / 5 人</strong><Button variant="outline" disabled={!d.partyUnlocked} title={!d.partyUnlocked?'10级解锁队友':undefined} onClick={onOpenParty}>管理队伍</Button></div>
+   <div><small>小队成员</small><strong>{(d.npcWorld?.selected.length??s.party.length)+1} / 5 人</strong><Button variant="outline" disabled={!d.partyUnlocked} title={!d.partyUnlocked?'18级解锁冒险者大厅':undefined} onClick={onOpenParty}>管理队伍</Button></div>
    <div><small>战斗配置</small><strong>{hasRole('tank')?'坦克已就位':'建议配置坦克'} · {hasRole('healer')?'治疗已就位':'建议配置治疗'}</strong><Button variant="outline" onClick={onConfigure}>调整策略</Button></div>
    <div><small>共享补给</small><strong>食物 {d.recovery?.food??0} · 饮水 {d.recovery?.water??0}</strong><span>倒下成员 {members.filter((member:any)=>member.hp<=0).length} 人</span></div>
   </div></section>}
-  {!expedition&&<details className="panel dungeon-roster"><summary>副本出征名单 <small>自有队友与 NPC 混编</small></summary><AdventureHall {...props} compact/></details>}
+  {!expedition&&<details className="panel dungeon-roster"><summary>副本出征名单 <small>邀请持久 NPC 玩家</small></summary><AdventureHall {...props} compact/></details>}
   {expedition&&<Dungeon {...props} data={{...d,dungeon:expedition}}/>}
   {expedition&&<QuestScenes {...props}/>}<section className="panel dungeon-journal" aria-label="地下城手册">
    {selected?<>

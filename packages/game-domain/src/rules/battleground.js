@@ -1,6 +1,7 @@
+import {selectedDungeonMembers} from './npc-world.js';
 import {WARSONG,BATTLEGROUND_ORDERS,BATTLEGROUND_ROUTES} from '../../../game-data/battlegrounds.js';
 import {stats,log} from './character.js';
-import {recruit} from './party.js';
+import {createNpcMember} from './party.js';
 import {combatRole} from './combat-roles.js';
 import {classDefinitions} from './catalog.js';
 import {bgNodes,bgDistance,bgSight,nearestBgNode,moveBgActor} from './battleground-space.js';
@@ -33,7 +34,7 @@ function fillTeam(s,side,sources){
  const staging={...s,party:[],logs:[],journey:[],money:0,itemSequence:0,growthPolicy:undefined};
  return Array.from({length:10},(_,i)=>{
   let source=sources[i];
-  if(!source){staging.party=[];const [id,role]=lineup[i];source=recruit(staging,id,{role});source.name=`${side?'战歌':'银翼'}·${source.name}`;}
+  if(!source){staging.party=[];const [id,role]=lineup[i];source=createNpcMember(staging,id,{role});source.name=`${side?'战歌':'银翼'}·${source.name}`;}
   return makeActor(source,side,i);
  });
 }
@@ -49,7 +50,7 @@ function blockedReason(s){
  if(s.level<20)return'主角达到20级后开放战场。';
  if(s.growthPolicy==='companion')return'请切换到主角指挥战场。';
  if(s.hp<=0)return'请先复活主角。';
- if(s.combat||s.dungeon||s.guildRaid?.active||s.goldRaid?.active||s.escort||s.stockadesQuestEvent||s.activity.type!=='idle')return'请先结束当前活动并离开副本。';
+ if(s.combat||s.dungeon||s.goldRaid?.active||s.escort||s.stockadesQuestEvent||s.activity.type!=='idle')return'请先结束当前活动并离开副本。';
  return'';
 }
 export function battlegroundAction(s,a){
@@ -58,7 +59,7 @@ export function battlegroundAction(s,a){
   const serial=(s.battleground?.serial||0)+1;
   // Only present, living, same-level companions join; the match supplies the
   // remaining volunteers. No persistent recruitment or inventory mutations.
-  const own=[s,...s.party.filter(c=>c.hp>0&&c.level===s.level)].slice(0,10);
+  const own=[s,...selectedDungeonMembers(s).filter(c=>c.hp>0&&c.level===s.level)].slice(0,10);
   const teams=[{...WARSONG.teams[0],members:fillTeam(s,0,own)},{...WARSONG.teams[1],members:fillTeam(s,1,[])}];
   for(const team of teams)defaultOrders(team);
   const m={id:`battleground:${s.id}:${serial}`,serial,mapId:WARSONG.id,phase:'preparing',clock:0,revision:0,

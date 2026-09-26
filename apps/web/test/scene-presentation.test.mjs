@@ -41,7 +41,7 @@ test('instance scenery wins over outdoor location and dungeon actions respect ac
  assert.equal(instanceActions(state,{...d,recovery:{canRest:false,canRevive:true,fallen:[{id:'ally'}]}}).revive.disabled,false);
 });
 test('raid recovery and navigation use each existing command family',()=>{
- for(const [key,kind,prefix] of [['guildRaid','guild','raid'],['goldRaid','gold','gold']]){
+ for(const [key,kind,prefix] of [['goldRaid','gold','gold']]){
   const state={...travel,activity:{type:'idle'}},d={...data,[key]:{active:true,phase:'camp',members:[{hp:0}],map:{id:'molten-core',route:[],canFullClear:true}}};
   assert.equal(scenePresentation(state,d).instance.kind,kind);
   assert.equal(instanceActions(state,d).recover.command.type,prefix+'Recover');
@@ -76,7 +76,7 @@ test('every playable location, dungeon and raid resolves a credited, nonempty We
   const location=map[0],dungeon={id,name:id,route:[]};
   verify(scenePresentation({...state,dungeon:{id}},{map,location,dungeon}));
  }
- for(const key of ['goldRaid','guildRaid'])verify(scenePresentation(state,{[key]:{active:true,map:{id:'molten-core',route:[]}}}));
+ for(const key of ['goldRaid'])verify(scenePresentation(state,{[key]:{active:true,map:{id:'molten-core',route:[]}}}));
 });
 test('each dungeon wing has its own scene instead of a shared entrance photograph',()=>{
  const images=Object.values(backgrounds.dungeons);

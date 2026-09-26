@@ -32,7 +32,6 @@ test('instance pause controls target the active controller',()=>{
  const s={hp:100,activity:{type:'hunt'},dungeon:{}};
  assert.equal(classicStopAction(s,{dungeon:{autoAdvance:true}}).command.type,'dungeonPause');
  assert.equal(classicStopAction(s,{dungeon:{autoAdvance:false}}).disabled,true);
- assert.equal(classicStopAction(s,{guildRaid:{active:true,map:{autoAdvance:true}}}).command.type,'raidPause');
  assert.equal(classicStopAction(s,{goldRaid:{active:true,map:{autoAdvance:true}}}).command.type,'goldPause');
  assert.equal(classicStopAction(s,{goldRaid:{active:true,map:{autoAdvance:false}}}).disabled,true);
 });

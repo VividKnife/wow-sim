@@ -48,7 +48,7 @@ export default function ClassicGame(props:Props){
   window.addEventListener('keydown',keydown);return()=>window.removeEventListener('keydown',keydown);
  },[panel,props.modalBattleOpen,onPanelChange]);
  const battling=!!s.combat;
- const members=(d.goldRaid?.active||d.guildRaid?.active)&&d.battleView?.actors?.length?d.battleView.actors.filter((u:Model)=>!u.petUnit&&!u.totemUnit&&!u.escortNpc):[{...s,stats:d.stats},...(d.party||[])];
+ const members=(d.goldRaid?.active)&&d.battleView?.actors?.length?d.battleView.actors.filter((u:Model)=>!u.petUnit&&!u.totemUnit&&!u.escortNpc):[{...s,stats:d.stats},...(d.party||[])];
  const quests=d.quests.filter((q:Model)=>q.active),available=d.quests.filter((q:Model)=>q.canAccept).length;
  const resource=d.resource||{name:'法力',value:s.mana,max:d.stats.maxMana};
  const presentation=scenePresentation(s,d),instance=presentation.instance,actions=instanceActions(s,d),travelling=s.activity.type==='travel'&&!instance;

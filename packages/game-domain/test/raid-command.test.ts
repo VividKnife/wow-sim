@@ -1,8 +1,9 @@
+import {restoreRaidMember} from '../src/rules/raid-recovery.js';
 import {addRaidField} from '../src/rules/raid-battlefield.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createMoltenCoreDemo} from '../src/molten-core-demo.ts';
-import {enterGuildRaid,guildRaidAction,restoreRaidMember} from '../src/rules/guild-raid.js';
+import {enterGoldRaid,goldRaidAction} from '../src/rules/gold-raid.js';
 import {beginMoltenCoreBattle} from '../src/rules/molten-core-battle.js';
 import {moltenCoreTick} from '../src/rules/molten-core-encounter.js';
 import {raidCommandAction,raidPlan,raidCommandView,raidCommandTick,raidAttemptReview,assignedRaidSupport} from '../src/rules/raid-command.js';
@@ -11,8 +12,8 @@ import {stats,spellInfo,knownRank} from '../src/rules/character.js';
 import {advance,act} from '../src/rules/engine.js';
 import {buildGameResponse} from '../src/rules/server-response.js';
 import type {Rules} from '../src/model.ts';
-function fixture(){const s=createMoltenCoreDemo().state;s.party=s.party.slice(0,4);s.growthPolicy='player';enterGuildRaid(s);return s;}
-function start(s:Rules,id='magmadar'){for(const c of [s,...s.party])restoreRaidMember(c,s);beginMoltenCoreBattle(s,id,s.guildRaid.tactics);return s;}
+function fixture(){const s=createMoltenCoreDemo().state;s.party=s.party.slice(0,4);s.growthPolicy='player';enterGoldRaid(s);for(const type of ['goldPublish','goldRecommend','goldLaunch'])goldRaidAction(s,{type});return s;}
+function start(s:Rules,id='magmadar'){for(const c of [s,...s.party])restoreRaidMember(c,s);beginMoltenCoreBattle(s,id,s.goldRaid.tactics);return s;}
 
 test('plans validate actors, lock in combat and survive serialization per boss',()=>{
  const s=fixture(),plan=raidPlan(s,'magmadar');
@@ -43,7 +44,7 @@ test('manual reserved shield wall applies the actual aura once, and rejects stal
 test('automatic emergency skills obey health thresholds and real resource costs',()=>{
  const s=start(fixture()),command=s.combat.raidEncounter.command,actors=[s,...s.party];
  const main=actors.find(c=>c.id===command.plan.mainTank)!;main.stance='defensive';main.hp=stats(main).maxHp*.2;
- const paladin=actors.find(c=>c.id===command.plan.cooldowns.rescue.actorId);assert.ok(paladin,'guild roster has a paladin for Lay on Hands');
+ const paladin=actors.find(c=>c.id===command.plan.cooldowns.rescue.actorId);assert.ok(paladin,'NPC roster has a paladin for Lay on Hands');
  paladin.position=main.position;paladin.positionY=main.positionY;paladin.cast={spell:1};
  const original=main.hp;raidCommandTick(s,actors);
  assert.equal(command.used.wall,1);assert.equal(command.used.rescue,1);assert.ok(main.hp>original);assert.equal(paladin.mana,0);assert.equal(paladin.cast,null);
@@ -81,11 +82,11 @@ test('published tank and movement choices change actual initial targets and dang
 });
 
 test('automatic traversal pauses before a boss and wipe review preserves the plan for the next attempt',()=>{
- let s=fixture();s.settings.autoLoot=true;guildRaidAction(s,{type:'raidNavigate',destination:'lucifron'});
+ let s=fixture();s.settings.autoLoot=true;goldRaidAction(s,{type:'goldNavigate',destination:'lucifron'});
  for(let i=0;i<4;i++){s.combat.enemies.forEach((e:Rules)=>e.hp=0);s=advance(s,s.wallAt+100).state;s=advance(s,s.wallAt+3000).state;}
- assert.equal(s.combat,null);assert.equal(s.guildRaid.autoAdvance,false);assert.match(s.activity.reason,/首领前/);
- s=act(s,{type:'raidNavigate',destination:'lucifron'},s.wallAt);assert.equal(s.combat.raidEncounter.id,'lucifron');
- s=act(s,{type:'abandonCombat',encounterId:s.combat.id},s.wallAt);const attempt=s.guildRaid.attempts.at(-1);assert.ok(attempt.review);assert.equal(attempt.won,false);assert.equal(attempt.review.bossRemaining,100);
- const review=structuredClone(attempt.review);guildRaidAction(s,{type:'raidRecover'});s=advance(s,s.wallAt+10000).state;
- assert.deepEqual(s.guildRaid.attempts.at(-1).review,review);
+ assert.equal(s.combat,null);assert.equal(s.goldRaid.autoAdvance,false);assert.match(s.activity.reason,/首领前/);
+ s=act(s,{type:'goldNavigate',destination:'lucifron'},s.wallAt);assert.equal(s.combat.raidEncounter.id,'lucifron');
+ s=act(s,{type:'abandonCombat',encounterId:s.combat.id},s.wallAt);const attempt=s.goldRaid.attempts.at(-1);assert.ok(attempt.review);assert.equal(attempt.won,false);assert.equal(attempt.review.bossRemaining,100);
+ const review=structuredClone(attempt.review);goldRaidAction(s,{type:'goldRecover'});s=advance(s,s.wallAt+10000).state;
+ assert.deepEqual(s.goldRaid.attempts.at(-1).review,review);
 });

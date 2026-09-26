@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act} from '../../../packages/game-domain/src/rules/engine.js';
-import {recruit,companionSkills} from '../../../packages/game-domain/src/rules/party.js';
+import {createNpcMember,companionSkills} from '../../../packages/game-domain/src/rules/party.js';
 import {arenaView} from '../../../packages/game-domain/src/rules/arena.js';
 import {stats} from '../../../packages/game-domain/src/rules/character.js';
 import {arenaBattleScene} from '../lib/arena-battle-scene.js';
@@ -10,7 +10,7 @@ import {battleObstacles,worldPoint,worldRadius,spriteAppearance,unitAnimation,gr
 
 function fixture(){
  const s=createGame('Arena',123,0);s.level=60;s.learned=companionSkills(s);s.hp=stats(s).maxHp;
- recruit(s,'rogue',{role:'melee'});recruit(s,'priest',{role:'healer'});
+ createNpcMember(s,'rogue',{role:'melee'});createNpcMember(s,'priest',{role:'healer'});
  return act(s,{type:'arenaPrepare',size:3,mapId:'four-pillars',opponentId:'rmp',memberIds:[s.id,...s.party.map(c=>c.id)]},0);
 }
 test('arena projection drives the shared character sprites, casts, damage and polymorph animations',()=>{

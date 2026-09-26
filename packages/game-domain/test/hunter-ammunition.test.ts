@@ -39,51 +39,7 @@ test('returning to town prompts below 400 and auto-buys the highest level matchi
  assert.equal(view(state).ammoPrompt,null);
 });
 
-test('recruiting a hunter companion immediately opens the same ammunition prompt',()=>{
- const state:any=createGame('Leader',12345,0,{classId:1,raceId:1});
- state.level=18;state.location='stormwind';state.completed[900001]=1;
- const result=act(state,{type:'recruit',id:'hunter',role:'ranged',professions:['herbalism','alchemy']},0);
- const hunter=result.party.find((member:any)=>member.classId===3);
- assert.ok(hunter);
- assert.equal(result.ammoRestockPrompt.memberId,hunter.id);
- const prompt=view(result).ammoPrompt;
- assert.equal(prompt.trigger,'recruit');
- assert.equal(prompt.current,0);
- assert.ok(prompt.itemId>0);
-});
 
-test('a recruited hunter prompt keeps its durable character id and purchases ammunition for that companion',async()=>{
- const store=new MemoryStore();let sequence=0;
- const service=new GameService(store,{contentVersion:'hunter-ammunition',now:()=>1000,seed:()=>12345,id:()=>`ammo-${++sequence}`});
- const created=await service.createAccount('a',{name:'Leader',classId:1,raceId:1},'create');
- const leaderId=created.state.id;
- await store.transaction(async tx=>{
-  const character=(await tx.get<Character>('characters',leaderId))!;
-  character.rules.level=18;character.rules.location='stormwind';character.rules.completed[900001]=1;
-  await tx.put('characters',character);
-  const wallet=(await tx.get<Rules & {id:string}>('wallets',leaderId))!;wallet.balance=1000;await tx.put('wallets',wallet);
- });
- const recruited=await service.command('a',{type:'recruit',id:'hunter',role:'ranged',professions:['herbalism','alchemy'],requestId:'recruit'});
- const hunter=recruited.state.party.find((member:any)=>member.classId===3)!;
- assert.equal(recruited.state.ammoRestockPrompt.memberId,hunter.id);
- const stocked=await service.command('a',{type:'ammoRestock',memberId:hunter.id,enabled:true,target:400,requestId:'ammo'});
- const durable=await store.transaction(tx=>tx.get<Character>('characters',hunter.id));
- assert.deepEqual(durable!.rules.ammoPolicy,{enabled:true,target:400});
- assert.ok(ammoCount(stocked.state.party.find((member:any)=>member.id===hunter.id))>=400);
- assert.ok(stocked.state.money<1000);
- const changed=await service.command('a',{type:'ammoSettings',memberId:hunter.id,enabled:false,target:800,requestId:'settings'});
- assert.equal(changed.state.money,stocked.state.money);
- const saved=await store.transaction(tx=>tx.get<Character>('characters',hunter.id));
- assert.deepEqual(saved!.rules.ammoPolicy,{enabled:false,target:800});
- const before=ammoCount(changed.state.party.find((member:any)=>member.id===hunter.id));
- const purchased=await service.command('a',{type:'buy',id:2512,count:1,requestId:'buy-ammo'});
- const stack=purchased.state.bag.find((item:any)=>item.id===2512)!;
- const loaded=await service.command('a',{type:'loadAmmo',memberId:hunter.id,uid:stack.uid,requestId:'load-ammo'});
- assert.ok(!loaded.state.bag.some((item:any)=>item.uid===stack.uid));
- assert.equal(ammoCount(loaded.state.party.find((member:any)=>member.id===hunter.id)),before+stack.count);
- const persisted=await store.transaction(tx=>tx.get<Character>('characters',hunter.id));
- assert.equal(ammoCount({...persisted!.rules,equipment:loaded.state.party.find((member:any)=>member.id===hunter.id).equipment}),before+stack.count);
-});
 
 test('declining each hunter prompt ends the queue until the next town visit',()=>{
  const state:any=createGame('Leader',12345,0,{classId:3,raceId:2});

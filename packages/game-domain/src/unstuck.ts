@@ -77,18 +77,16 @@ export async function unstuck(this: GameService, tx: Transaction, actor: Charact
                 await persistAssets(tx, c, s, `${key}:cannon`, this.id);
             }
         }
+        if(instance?.leaderId===c.id && instance.simulation?.goldRaid?.active){
+            // Settle NPC escrow and purchases from the committed instance roster.
+            // Personal character rows intentionally do not contain party units.
+            for(const field of ['party','goldRaid','npcWorld','goldRaidSaves'])s[field]=clone(instance.simulation[field]);
+        }
         if (s.goldRaid?.active) {
             emergencyGoldExit(s);
             await persistAssets(tx, c, s, `${key}:gold`, this.id);
         }
         delete s.dungeon;
-        // Guild units belong to the instance; emergency exit keeps only the
-        // committed progression and releases the camp just like a normal exit.
-        if (s.guildRaid) {
-            s.guildRaid.active = false;
-            s.guildRaid.activeBoss = null;
-            s.guildRaid.recoverUntil = 0;
-        }
         delete s.preparationTravel;
         if (s.location === 'deadmines') s.location = 'moonbrook';
         if (s.location === 'stockades') s.location = 'magetower';
@@ -108,10 +106,7 @@ export async function unstuck(this: GameService, tx: Transaction, actor: Charact
     if (owner) delete owner.resumeEventAt;
     if (lease?.kind === 'instance') {
         await tx.delete('instance_leases', lease.ownerId);
-        for (const contract of await tx.list('contracts', {instanceId: lease.ownerId})) {
-            contract.status = 'ended';
-            await tx.put('contracts', contract);
-        }
+
     }
     if (instance) {
         instance.status = 'completed';

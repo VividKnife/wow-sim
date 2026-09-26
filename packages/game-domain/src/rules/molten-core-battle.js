@@ -5,7 +5,7 @@ import {combatRole} from './combat-roles.js';
 import {raidNodesFor,raidBossesFor,moltenCoreTrash,raidEnemy} from './molten-core-content.js';
 
 export function beginMoltenCoreBattle(s,bossId,tactics){
- const moltenCoreRoute=raidNodesFor(s.guildRaid?.active?s.guildRaid.raidId:undefined),moltenCoreBosses=raidBossesFor(s.guildRaid?.active?s.guildRaid.raidId:undefined);
+ const moltenCoreRoute=raidNodesFor(s.goldRaid?.raidId),moltenCoreBosses=raidBossesFor(s.goldRaid?.raidId);
  const node=moltenCoreRoute.find(n=>n.id===bossId),def=moltenCoreBosses.find(b=>b.id===bossId)||node;
  if(!def||s.combat)throw new Error('当前不能开始这场首领战。');
  const profile=(...args)=>raidEnemy(s,...args);
@@ -18,7 +18,7 @@ export function beginMoltenCoreBattle(s,bossId,tactics){
  startCombat(s,[],true,foes,{shape:'rectangle',minX:-20,maxX:bossId==='ragnaros'?58:50,minY:-28,maxY:28});
  s.combat.ground=bossId==='onyxia'?'onyxia':'molten';
  s.combat.area.name=def.name+' · '+(bossId==='ragnaros'?'螺旋熔岩祭坛':bossId==='onyxia'?'龙巢':'熔火战场');
- s.combat.raidMode=s.goldRaid?.active?'gold':s.guildRaid?.active?'guild':'demo';
+ s.combat.raidMode=s.goldRaid?.active?'gold':'demo';
  const actors=[s,...s.party],plan=raidPlan(s,bossId),allTanks=actors.filter(c=>combatRole(c)==='tank'),tanks=[allTanks.find(c=>c.id===plan.mainTank),allTanks.find(c=>c.id===plan.offTank)].filter(Boolean);
  const spread=plan.formation==='spread'?6:2;
  for(const [i,c]of actors.entries()){
@@ -30,5 +30,5 @@ export function beginMoltenCoreBattle(s,bossId,tactics){
  const at=s.clock;
  s.combat.raidEncounter={id:bossId,enrageAt:at+(def.enrageMs||180000),kind:node?.kind||'boss',bossId:foes[0].id,tactics:{...tactics},nextDoom:at+8000,nextCurse:at+12000,nextShock:at+5000,nextFrenzy:at+12000,nextFear:at+22000,nextBomb:at+7000,nextSpecial:at+8000,nextPulse:at+12000,nextHeal:at+7000,nextSubmerge:at+45000,deadAdds:[],bombs:[],fieldSequence:0,fires:[],events:[],support:{dispels:0,tranquilizes:0,wards:0},failures:{doom:0,fire:0,feared:0}};
  initializeRaidBattlefield(s,foes[0]);
- if(s.goldRaid?.active||s.guildRaid?.active)initRaidCommand(s,bossId);
+ if(s.goldRaid?.active)initRaidCommand(s,bossId);
 }

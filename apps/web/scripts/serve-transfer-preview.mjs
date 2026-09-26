@@ -1,3 +1,4 @@
+import {seedCompanion} from '../../../packages/game-domain/test/support/characters.ts';
 // Isolated in-memory fixture; never accesses saved accounts.
 import {fileURLToPath} from 'node:url';
 const app=fileURLToPath(new URL('../',import.meta.url));
@@ -13,8 +14,8 @@ const service=new GameService(new MemoryStore(),{contentVersion:'preview',now:()
 const hero=(await service.createAccount('preview',{name:'队长',classId:1,raceId:1},'create')).account.primaryCharacterId;
 await service.store.transaction(async tx=>{const c=await tx.get('characters',hero);c.rules.level=18;c.rules.location='stormwind';await tx.put('characters',c);});
 await service.command('preview',{type:'turnin',id:900001,requestId:'unlock'});
-await service.command('preview',{type:'recruit',id:'mage',requestId:'mage'});
-await service.command('preview',{type:'recruit',id:'priest',requestId:'priest'});
+await seedCompanion(service,'preview',{name:'测试法师',classId:8,raceId:1});
+await seedCompanion(service,'preview',{name:'测试牧师',classId:5,raceId:1});
 await service.store.transaction(async tx=>{const c=await tx.get('characters',hero),s=await context(tx,c,1000,false);for(const [id,n]of [[2589,17],[118,5],[159,7],[80,1]])receive(s,id,n);await persistAssets(tx,c,s,'fixture',service.id);});
 const api={name:'transfer-fixture',configureServer(server){server.middlewares.use(async(req,res,next)=>{
  if(!req.url?.startsWith('/fixture-api'))return next();

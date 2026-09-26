@@ -1,4 +1,4 @@
-// Authored level-60 guild equipment: stable when the world item catalog grows.
+// Authored level-60 raid fixture equipment: stable when the world item catalog grows.
 export const raidLoadouts:Record<string,number[]>= {
   "8:ranged": [
     16686,

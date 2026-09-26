@@ -16,14 +16,6 @@ test('recruitment retains starting proficiencies and never issues an unusable we
  }
 });
 
-test('recruits match current level and bounded equipment; identity and gear persist after player growth',()=>{
- let s=createGame('队长',2,0);s.level=18;const candidates=view(s).candidates;assert.equal(candidates.length,9);
- for(const candidate of candidates.slice(0,4))s=recruitForTest(s,{type:'recruit',id:candidate.id},0);
- assert.equal(s.party.length,4);assert.equal(new Set(s.party.map(c=>c.id)).size,4);
- for(const c of s.party){assert.equal(c.level,18);assert.equal(c.hp,stats(c).maxHp);for(const item of Object.values(c.equipment)){assert.ok(canEquip(c,items[item.id]));assert.ok(items[item.id].ItemLevel<=25);assert.equal(item.issued,true);}}
- const saved=structuredClone(s.party);s.level=20;s=advance(s,5000).state;assert.deepEqual(s.party.map(c=>[c.id,c.level,c.equipment]),saved.map(c=>[c.id,c.level,c.equipment]));
- assert.throws(()=>recruitForTest(s,{type:'recruit',id:candidates[0].id},5000));
-});
 test('loot allocation moves exactly one real instance and preserves bind ownership',()=>{
  let s=createGame('分配',2,0);s.level=18;s=recruitForTest(s,{type:'recruit',id:'warrior'},0);addItem(s,1270);const item=s.bag.find(i=>i.id===1270);s=act(s,{type:'equip',uid:item.uid,target:s.party[0].id},0);
  assert.equal(s.party[0].equipment[15].uid,item.uid);assert.ok(!s.bag.some(i=>i.uid===item.uid));assert.equal(s.equipment[15],undefined);

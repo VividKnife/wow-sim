@@ -10,7 +10,6 @@ before(async()=>{
   'engine.js':'export const advance=(...args)=>globalThis.advanceFixture(...args);export const view=state=>globalThis.viewFixture(state);',
   'arena.js':'export const arenaView=()=>({});',
   'battleground.js':'export const battlegroundView=()=>({});',
-  'guild-raid.js':'export const guildRaidView=state=>({clock:state.clock});',
   'gold-raid.js':'export const goldRaidView=state=>({clock:state.clock});',
   'battle-presentation.js':'export const battlePresentation=()=>({});',
   'client-snapshot.ts':'export const projectClientSnapshot=(player,view)=>({player,view});export const projectCombatPlayback=()=>({view:{}});',
@@ -39,13 +38,13 @@ function runtime({now=0,wallAt=0,serverNow=100000,deadline=200000,visible=true,e
 }
 
 test('watching a fight streams frames without rebuilding the full overview every second',()=>{
- for(const extra of [{combat:{id:'boss'},guildRaid:{}},{arena:{phase:'combat'}},{battleground:{phase:'countdown'}}]){
+ for(const extra of [{combat:{id:'boss'},goldRaid:{}},{arena:{phase:'combat'}},{battleground:{phase:'countdown'}}]){
   const r=runtime({serverNow:0,extra});
   for(let ms=100;ms<=3000;ms+=100){r.clock(ms);r.run();}
   assert.equal(r.views.length,1);
   assert.equal(r.messages.filter(m=>m.type==='frame').length,30);
   assert.equal(r.messages.findLast(m=>m.type==='frame').behindMs,0);
-  if(extra.guildRaid)assert.equal(r.messages.findLast(m=>m.type==='frame').snapshot.view.guildRaid.clock,2100);
+  if(extra.goldRaid)assert.equal(r.messages.findLast(m=>m.type==='frame').snapshot.view.goldRaid.clock,2100);
   r.send({type:'visibility',visible:true,watching:false});r.clock(3050);r.run();
   assert.equal(r.views.length,2,'closing the fight refreshes the overview immediately');
   assert.equal(r.messages.findLast(m=>m.type==='full').snapshot.player.clock,3050);

@@ -41,19 +41,7 @@ test('client snapshot retains the fields needed for active play and battle rende
  assert.equal(projectClientSnapshot(state,view(state)).player.activity.mount,5656);
 });
 
-test('unlocked party candidates retain every selectable role',()=>{
- const state=createGame('队长',23,1000);
- state.level=18;
- state.location='stormwind';
- state.completed[900001]=true;
- const projected=projectClientSnapshot(state,view(state));
- assert.ok(projected.view.partyUnlocked);
- assert.ok(projected.view.candidates.length>0);
- for(const candidate of projected.view.candidates){
-  assert.ok(Array.isArray(candidate.roles),candidate.id);
-  assert.ok(candidate.roles.length>0,candidate.id);
- }
-});
+test('removed recruitment candidates are not projected',()=>{const s=createGame('组队',1,0);s.level=20;assert.ok(!('candidates' in projectClientSnapshot(s,view(s)).view));});
 
 test('entered dungeons and battle actors expose no pre-rolled or whole-state internals',()=>{
  const state=createGame('副本边界',53,0);state.level=10;state.location='deadmines';
@@ -73,18 +61,4 @@ test('entered dungeons and battle actors expose no pre-rolled or whole-state int
  assert.equal('bag' in combatSnapshot.view.battleView.actors[0],false);
  assert.equal('dungeon' in combatSnapshot.view.battleView.actors[0],false);
  assert.equal('internalPlan' in combatSnapshot.view.battleView.actors[0],false);
-});
-
-test('recruited companions retain replacement eligibility in the actual client projection',async()=>{
- const {act}=await import('../../../packages/game-domain/src/rules/engine.js');
- let state=createGame('队长',123,0);state.level=18;
- state=act(state,{type:'recruit',id:'priest'},0);
- const snapshot=projectClientSnapshot(state,view(state));
- assert.equal(snapshot.player.party[0].growthPolicy,'companion');
- const replaceable=snapshot.view.party.filter(c=>c.id!==snapshot.player.id&&c.growthPolicy==='companion');
- assert.equal(replaceable.length,1);assert.equal(replaceable[0].id,state.party[0].id);
- state.money=100000;
- state=act(state,{type:'recruit',id:'paladin',replaceId:replaceable[0].id},0);
- const replaced=projectClientSnapshot(state,view(state));
- assert.equal(replaced.view.party[0].growthPolicy,'companion');assert.equal(replaced.view.party[0].classId,2);
 });

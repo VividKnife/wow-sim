@@ -13,11 +13,11 @@ const viewKeys = [
   'playerBuffs',
   'npcWorld','groupLoot',
   'arena','pvp','battleground',
-  'combatCommand','raidCommand','goldRaid','guildRaid','partyUnlocked','battleView','reincarnation','canSoulstoneRevive','skillUsesByTarget','environment','trackingKind','trackedTreasures','lockpicking',
+  'combatCommand','raidCommand','goldRaid','partyUnlocked','battleView','reincarnation','canSoulstoneRevive','skillUsesByTarget','environment','trackingKind','trackedTreasures','lockpicking',
   'trackedTargets','scouting','lockTargets','petControls','classPortals','skillUses','itemUses','itemBuffs','professions','professionRecipeCount','canTrainProfession',
   'resources','disenchantable','className','raceName','faction','resource','raceTraits','talentTrees','talentResetCost','canResetTalents',
   'talentResetBlockedReason','bankCapacity','bankHere','bankUpgradeCost','inventoryActions','escort','escortNpc','hearthstone','mounts',
-  'strategyMembers','journey','dungeon','dungeons','stockadesQuestEvent','recovery','combatSkills','candidates','party','nextXp','stats','characterAttributes','location','map','monsters','quests',
+  'strategyMembers','journey','dungeon','dungeons','stockadesQuestEvent','recovery','combatSkills','party','nextXp','stats','characterAttributes','location','map','monsters','quests',
   'questTools','shop','gatherables','bagCapacity','skills','talents','canTrain','hasFlight','city','flight','interactions','ammo','ammoPrompt'
 ] as const;
 

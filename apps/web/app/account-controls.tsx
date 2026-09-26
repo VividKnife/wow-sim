@@ -21,7 +21,7 @@ export default function AccountControls({game,busy,send}:Props){
   </div></section>
   <section><h3>共享实例</h3>{instance?<>
    <p>实例编号：<code>{String(instance.id)}</code></p><p>{instance.status==='forming'?'等待成员加入':instance.status==='completed'?'遭遇已完成':'正在进行'} · {instance.roster?.length||0} / {instance.capacity} 人</p>
-   <div className="filterbar">{instance.status==='forming'&&<><Button disabled={busy} onClick={()=>void send({type:'startInstance',instanceId:instance.id})}>开始实例</Button>{[['warrior','战士'],['priest','牧师'],['mage','法师']].map(([id,label])=><Button key={id} variant="outline" disabled={busy} onClick={()=>void send({type:'hireMercenary',instanceId:instance.id,templateId:id})}>雇佣{label} · 1 银</Button>)}</>}
+   <div className="filterbar">{instance.status==='forming'&&<><Button disabled={busy} onClick={()=>void send({type:'startInstance',instanceId:instance.id})}>开始实例</Button></>}
     <Button variant="outline" disabled={busy||!!player.combat} onClick={()=>void send({type:'leaveInstance',instanceId:instance.id})}>离开实例</Button></div>
   </>:<><div className="filterbar">
    <GameSelect aria-label="实例内容" value={contentId} onValueChange={nextValue=>setContentId(nextValue)}><GameSelectOption value="northshire-skirmish">北郡遭遇</GameSelectOption><GameSelectOption value="deadmines">死亡矿井</GameSelectOption><GameSelectOption value="stockades">暴风城监狱</GameSelectOption></GameSelect>

@@ -51,7 +51,7 @@ export async function advanceInstance(this: GameService, instanceId: string, wor
         requireThat(lease && instance && lease.workerId === workerId && lease.epoch === epoch && instance.epoch === epoch && lease.expiresAt > now, 'STALE_EPOCH', '副本执行租约已失效');
         if (instance.localSimulation || instance.status !== 'running' || instance.nextEventAt > now) return null;
         requireThat(instance.contentVersion === this.contentVersion, 'CONTENT_VERSION', '副本内容版本暂不可用');
-        const owners = [], ids = new Set(instance.roster.filter(r => r.controller !== 'mercenary').map(r => r.accountId));
+        const owners = [], ids = new Set(instance.roster.filter(r => r.controller !== 'npc').map(r => r.accountId));
         let lastSeenAt = 0;
         for (const id of ids) {
             owners.push(await account(tx,id));

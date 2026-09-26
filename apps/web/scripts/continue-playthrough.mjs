@@ -124,13 +124,8 @@ try{
   while(countItem(s,7249)<6&&attempts++<300){const object=gatherables(s).find(o=>o.items.some(i=>i.id===7249));if(object){command({type:'gather',id:object.id});finish();}else wait(2000);}
   turnin(1921);wait(10000);command({type:'accept',id:1941});turnin(1941);
  }
- travel('goldshire');sell();train();for(const id of ['warrior','priest','rogue','mage'])if(!s.party.some(c=>c.roleId===id))command({type:'recruit',id});
- const tank=s.party.find(c=>c.classId===1);
- if(process.argv.includes('--crowd-control'))travel('stormwind');
- for(const slot of [16,17]){const offer=shop(s).filter(o=>score(tank,o.id)>=0&&slotOf(items[o.id])===slot&&o.price<=s.money).sort((a,b)=>score(tank,b.id)-score(tank,a.id))[0];if(offer&&score(tank,offer.id)>score(tank,tank.equipment[slot]?.id)){command({type:'buy',id:offer.id,count:1});command({type:'equip',uid:s.bag.find(i=>i.id===offer.id).uid,target:tank.id});}}
- for(const c of [s,...s.party].filter(c=>c.classId===8))command({type:'strategy',target:c.id,policy:{protectCC:true,waitForTank:true},rules:[...(process.argv.includes('--crowd-control')?[{spell:118,condition:'always',value:0,enabled:true}]:[]),{spell:2136,condition:'targetHealthBelow',value:20,enabled:true},{spell:c===s?133:116,condition:'always',value:0,enabled:true}]});
- if(process.argv.includes('--crowd-control'))for(const c of [s,...s.party].filter(c=>[5,8].includes(c.classId)))command({type:'strategy',target:c.id,rules:c.rules||[{spell:585,condition:'always',value:0,enabled:true}],autoBuffs:{enabled:true,armor:true,int:true,sta:true,targets:'party',refreshSeconds:30}});
- supplies();travel('deadmines');command({type:'enterDungeon'});
+ travel('goldshire');sell();train();command({type:'npcVisit'});command({type:'npcRecommend'});
+  supplies();travel('deadmines');command({type:'enterDungeon'});
  let iterations=0;const retries={};
  while(s.dungeon.cursor<dungeonRoute.length&&iterations++<200){
   const cursor=s.dungeon.cursor,e=dungeonRoute[cursor];recover();equip();

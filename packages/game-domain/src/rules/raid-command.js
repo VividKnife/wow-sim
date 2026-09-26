@@ -9,7 +9,7 @@ import {distance} from '../../../sim-core/src/geometry.js';
 import {raidBossesFor} from './molten-core-content.js';
 import {raidNotice} from './molten-core-mechanics.js';
 
-const owner=s=>s.goldRaid?.active?s.goldRaid:s.guildRaid?.active?s.guildRaid:null;
+const owner=s=>s.goldRaid?.active?s.goldRaid:null;
 const members=s=>[s,...s.party];
 const require=(ok,message)=>{if(!ok)throw new Error(message);};
 export const raidJobs={magic:{name:'末日 / 魔法驱散',spell:527},curse:{name:'解除诅咒',spell:475},tranquilize:{name:'宁神轮换',spell:19801},ward:{name:'主坦防恐',spell:6346}};

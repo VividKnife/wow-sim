@@ -54,7 +54,6 @@ process.on('SIGINT',()=>{if(stopping)return;stopping=true;save().finally(()=>pro
 function command(action){
  const before=s.level;
  s=act(s,action,s.wallAt);
- if(action.type==='recruit')for(const member of s.party)applyExperienceBuff(member,xpMultiplier);
  meta.commands[action.type]=(meta.commands[action.type]||0)+1;
  if(s.level!==before)onLevel(before);
 }
@@ -337,17 +336,9 @@ function revive(){
   tickTo(s.activity.endsAt,x=>x.activity.type==='idle');
  }
 }
-function refreshParty(minimumLevel=s.level-7,roles=['warrior','priest','mage']){
- for(const role of [...roles].sort((a,b)=>(s.party.find(c=>c.roleId===a)?.level??0)-(s.party.find(c=>c.roleId===b)?.level??0))){
-  const member=s.party.find(c=>c.roleId===role);
-  if(!member||member.level>=minimumLevel||s.money<100000)continue;
-  const oldLevel=member.level;
-  try{
-   command({type:'recruit',id:role,role:role==='warrior'?'tank':role==='priest'?'healer':role==='mage'?'ranged':'melee',replaceId:member.id});
-   meta.replacements??=[];meta.replacements.push({role,from:oldLevel,to:s.level,at:s.wallAt,cost:100000});
-   console.log(`REPLACE ${role} ${oldLevel}->${s.level} at ${(s.wallAt/3600000).toFixed(2)}h`);
-  }catch{}
- }
+function refreshParty(){
+ if(s.level<18||s.dungeon||s.combat)return;
+ command({type:'npcVisit'});command({type:'npcRecommend'});
 }
 function reachDungeonEntrance(def){
  for(let attempt=0;attempt<4&&s.location!==def.entrance;attempt++){
@@ -365,7 +356,6 @@ async function runDungeon(){
  const id=ids[index],def=dungeonDefinitions[id];
  if(!resumed&&s.dungeonSaves?.[id]?.completedAt){meta.lastDungeonLevel=levels[index];await save();return true;}
  if(!resumed){
-  for(const [role,kind] of [['warrior','tank'],['priest','healer'],['rogue','melee'],['mage','ranged']])if(!s.party.some(c=>c.roleId===role))command({type:'recruit',id:role,role:kind});
   refreshParty(Math.max(def.minimumLevel,s.level-2),['warrior','priest','rogue','mage']);
  }
  const started=s.wallAt,atLevel=s.level,kills=s.totals.kills,xp=s.totals.xp,deaths=s.totals.deaths;

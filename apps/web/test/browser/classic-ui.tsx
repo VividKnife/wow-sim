@@ -5,7 +5,7 @@ import {Dialog} from 'radix-ui';
 import {ChevronDown, Compass, Footprints, Pause, Play, Swords, X} from 'lucide-react';
 import {createGame, act, advance, stats, view} from '../../../../packages/game-domain/src/rules/engine.js';
 import {startCombat} from '../../../../packages/game-domain/src/rules/combat.js';
-import {recruit, companionSkills} from '../../../../packages/game-domain/src/rules/party.js';
+import {createNpcMember, companionSkills} from '../../../../packages/game-domain/src/rules/party.js';
 import {clientContent} from '../../../../packages/game-domain/src/rules/client-content.js';
 import {projectClientSnapshot} from '../../../../packages/game-domain/src/rules/client-snapshot';
 import {meterRows} from '../../../../packages/sim-core/src/combat-meter.js';
@@ -38,7 +38,7 @@ function fixture(location='goldshire'){
  const s:Rules=createGame('林间旅人',283,0,{raceId:1,classId:8,gender:'female'});
  s.location=location;s.level=20;s.xp=7820;s.money=128450;s.learned=companionSkills(s);
  s.riding={horse:true};s.mounts=[900020];s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
- for(const [id,role] of [['warrior','tank'],['priest','healer'],['rogue','melee'],['warlock','ranged']])recruit(s,id,{role});
+ for(const [id,role] of [['warrior','tank'],['priest','healer'],['rogue','melee'],['warlock','ranged']])createNpcMember(s,id,{role});
  return s;
 }
 function Icon({name}:{name:string}){return <img src={`${icons}${name}.png`} alt="" draggable={false}/>;}

@@ -5,26 +5,24 @@ import {GameService} from '../src/service.ts';
 import {advance} from '../src/rules/engine.js';
 import {LOCAL_LEASE_MS} from '../src/local-simulation.ts';
 
-test('guild retreat from local combat permits recovery and rejects the old browser token',async()=>{
-    const store=new MemoryStore();let now=Date.UTC(2026,8,22);
-    const service=new GameService(store,{contentVersion:'test',now:()=>now,seed:()=>283});
-    const save=await service.createSave('raider',{name:'恢复团长',classId:8,raceId:1,raidReady:true},'local-recovery');
-    await service.command(save.id,{type:'enterDungeon',contentId:'molten-core',requestId:'enter'});
-    const started=await service.command(save.id,{type:'raidNavigate',destination:'lucifron',requestId:'start'});
-    const base={ownerId:started.instanceId,characterId:started.state.id,clientId:'browser',contentVersion:'test'};
-    const claimed=await service.localSimulation(save.id,{...base,type:'claim',requestId:'claim'});
-    const credentials={localClientId:base.clientId,localSessionId:claimed.session.id};
-    const retreat=await service.command(save.id,{type:'abandonCombat',encounterId:claimed.state.combat.id,requestId:'retreat',...credentials});
-    assert.equal(retreat.localSimulation,null);assert.equal(retreat.state.hp,0);
-    await assert.rejects(service.command(save.id,{type:'raidRecover',requestId:'stale',...credentials}),{code:'LOCAL_SYNC_REQUIRED'});
-    const recovering=await service.command(save.id,{type:'raidRecover',requestId:'recover'});
-    assert.equal(recovering.state.activity.type,'raidRecovery');
-    const fresh=await service.localSimulation(save.id,{...base,type:'claim',requestId:'fresh'});
-    now+=10000;
-    const recovered=await service.localSimulation(save.id,{...base,type:'checkpoint',sessionId:fresh.session.id,sequence:1,state:advance(fresh.state,now).state,requestId:'recovered'});
-    assert.equal(recovered.state.activity.type,'idle');
-    assert.ok([recovered.state,...recovered.state.party].every(c=>c.hp>0));
-    assert.equal(recovered.state.guildRaid.recoverUntil,0);
+test('gold raid retreat permits server recovery and rejects browser simulation',async()=>{
+ const store=new MemoryStore();let now=Date.UTC(2026,8,22);
+ const service=new GameService(store,{contentVersion:'test',now:()=>now,seed:()=>283});
+ const save=await service.createSave('raider',{name:'恢复团长',classId:8,raceId:1,raidReady:true},'recovery');
+ await service.command(save.id,{type:'enterDungeon',contentId:'molten-core-gold',requestId:'enter'});
+ for(const type of ['goldPublish','goldRecommend','goldLaunch'])await service.command(save.id,{type,requestId:type});
+ const started=await service.command(save.id,{type:'goldNavigate',destination:'lucifron',requestId:'start'});
+ assert.equal(started.localSimulation,null);
+ await assert.rejects(service.localSimulation(save.id,{ownerId:started.instanceId,characterId:started.state.id,clientId:'browser',contentVersion:'test',type:'claim',requestId:'claim'}));
+ const retreat=await service.command(save.id,{type:'abandonCombat',encounterId:started.state.combat.id,requestId:'retreat'});
+ assert.equal(retreat.state.hp,0);
+ const recovering=await service.command(save.id,{type:'goldRecover',requestId:'recover'});
+ assert.equal(recovering.state.activity.type,'goldRecovery');
+ now+=10000;for(let i=0;i<5;i++)assert.deepEqual((await service.work()).errors,[]);
+ const recovered=await service.snapshot(save.id);
+ assert.equal(recovered.state.activity.type,'idle');
+ assert.ok([recovered.state,...recovered.state.party].every(c=>c.hp>0));
+ assert.equal(recovered.state.goldRaid.recoverUntil,0);
 });
 
 async function fixture(kind='personal', offlineLimitMs=7200000) {

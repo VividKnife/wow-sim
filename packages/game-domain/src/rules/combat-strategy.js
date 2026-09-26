@@ -97,7 +97,8 @@ export function strategyAllows(s,c,e,sp,rule,center){
  if(targets.some(x=>commandProtected(s,x))||policy.protectCC&&targets.some(x=>protectCombatTarget(s,x)))return false;
  if(sp.SpellName!=='Polymorph'){
   const tank=waitingTank(s,c);
-  if(tank&&!(order?.kind==='kite'&&order.targetId===e?.id)&&(waitingForPull(s,c)||targets.some(x=>x.target!==tank.id||!(x.threat?.[tank.id]>0))))return false;
+  const tanks=s.combat?.raidEncounter?combatMembers(s).filter(a=>a.hp>0&&combatRole(a)==='tank'):[tank].filter(Boolean);
+  if(tank&&!(order?.kind==='kite'&&order.targetId===e?.id)&&(waitingForPull(s,c)||targets.some(x=>!tanks.some(t=>x.target===t.id&&x.threat?.[t.id]>0))))return false;
  }
  return true;
 }

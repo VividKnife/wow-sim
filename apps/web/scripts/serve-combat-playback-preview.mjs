@@ -1,3 +1,4 @@
+import {createNpcMember} from '../../../packages/game-domain/src/rules/party.js';
 // Isolated local fixture: server-side computation, real HTTP recording fetch,
 // and the production React playback component. No database or saved accounts.
 import {createServer} from 'vite';
@@ -14,7 +15,7 @@ let fixture;
 function reset(){
  let state=createGame('回放测试法师',283,0);state.level=20;
  state.learned=abilities.filter(a=>a.requiredLevel<=20).map(a=>a.spellId);state.hp=stats(state).maxHp;state.mana=stats(state).maxMana;
- for(const id of ['warrior','priest','rogue','mage'])state=act(state,{type:'recruit',id},0);
+ for(const id of ['warrior','priest','rogue','mage'])createNpcMember(state,id);
  startCombat(state,[636,636,1729],true);
  const result=simulateCombatRecording(state,{id:crypto.randomUUID(),contentVersion:'fixture'});
  fixture={recording:result.recording,finalState:result.finalState,startedAt:Date.now(),snapshot:projectClientSnapshot(state,view(state)),requests:0};

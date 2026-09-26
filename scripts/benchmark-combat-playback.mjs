@@ -1,3 +1,4 @@
+import {createNpcMember} from '../packages/game-domain/src/rules/party.js';
 // Synthetic in-memory characters only. Never connects to player saves.
 import {gzipSync} from 'node:zlib';
 import {cpus} from 'node:os';
@@ -12,7 +13,7 @@ let state=createGame('回放基准',283,0);
 state.level=20;state.learned=abilities.filter(a=>a.requiredLevel<=20).map(a=>a.spellId);
 state.hp=stats(state).maxHp;state.mana=stats(state).maxMana;
 state.completed[900001]=1;state.location='stormwind';
- for(const id of ['warrior','priest','rogue','mage'])state=act(state,{type:'recruit',id},0);
+ for(const id of ['warrior','priest','rogue','mage'])createNpcMember(state,id);
 startCombat(state,[636,636,1729],true);
 const coldStart=performance.now();
 const result=simulateCombatRecording(state,{id:'benchmark',contentVersion:'test'});

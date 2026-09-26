@@ -1,3 +1,4 @@
+import {createNpcMember} from '../../../../packages/game-domain/src/rules/party.js';
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
 /// <reference types="vite/client" />
 import React,{useEffect,useRef,useState} from 'react';
@@ -12,7 +13,7 @@ import '../../app/globals.css';
 function fixture(ground='grass',group=true){
  let s:any=createGame('艾琳 · 霜语',283,0);s.level=20;s.learned=abilities.filter(a=>a.requiredLevel<=20).map(a=>a.spellId);s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
  s.location='stormwind';
- if(group)for(const id of ['warrior','priest','rogue','mage'])s=act(s,{type:'recruit',id},0);
+ if(group)for(const id of ['warrior','priest','rogue','mage'])createNpcMember(s,id);
  s.location='goldshire';
  s.rules=[{spell:10,condition:'enemyCountAtLeast',value:3,enabled:true},{spell:116,condition:'always',value:0,enabled:true}];
  if(group)s.party.find((c:any)=>c.classId===8).rules=[{spell:133,condition:'always',value:0,enabled:true}];

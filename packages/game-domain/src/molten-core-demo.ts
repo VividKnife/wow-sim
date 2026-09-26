@@ -3,7 +3,7 @@ import {raidNextMechanics} from './rules/molten-core-mechanics.js';
 import {grantRaidReadyAttunements} from './rules/raid-attunement.js';
 import {beginMoltenCoreBattle} from './rules/molten-core-battle.js';
 import {createGame,advance} from './rules/engine.js';
-import {recruit} from './rules/party.js';
+import {createNpcMember} from './rules/party.js';
 import {items,spells,nameOf} from './rules/catalog.js';
 import {canEquip,slotOf,stats,clone} from './rules/character.js';
 import {abandonCombat} from './rules/combat.js';
@@ -13,8 +13,8 @@ import {meterRows} from '../../sim-core/src/combat-meter.js';
 import type {Rules} from './model.ts';
 
 export {moltenCoreBosses,defaultRaidTactics};
-import {createRoster,guildSquadNames} from './molten-core-roster.ts';
-export {guildSquadNames};
+import {createRoster,raidSquadNames} from './molten-core-roster.ts';
+export {raidSquadNames};
 export type RaidTactics = typeof defaultRaidTactics;
 export interface MoltenCoreDemo {
  version:2; seed:number; revision:number; tactics:RaidTactics;
