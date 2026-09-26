@@ -81,7 +81,7 @@ export class PostgresStore implements Store {
             const tx: Transaction = {
                 get: async <T = Row>(table: TableName, id: string) => (await query(`SELECT data FROM ${tableName(table)} WHERE id=$1`, [id])).rows[0]?.data as T ?? null,
                 list: async <T = Row>(table: TableName, where: Where = {}) => (await query(`SELECT data FROM ${tableName(table)} WHERE data @> $1::jsonb ORDER BY id`, [JSON.stringify(where)])).rows.map(row => row.data as T),
-                due: async <T = Row>(table: 'activities' | 'instances', now: number, limit: number) => (await query(`SELECT data FROM ${tableName(table)} WHERE status IN ('running','returning') AND next_event_at<=$1 ORDER BY next_event_at,id LIMIT $2`, [now, limit])).rows.map(row => row.data as T),
+                due: async <T = Row>(table: 'activities' | 'instances', now: number, limit: number, contentVersion: string) => (await query(`SELECT data FROM ${tableName(table)} WHERE status IN ('running','returning') AND next_event_at<=$1 AND data @> $3::jsonb ORDER BY next_event_at,id LIMIT $2`, [now, limit, JSON.stringify({contentVersion})])).rows.map(row => row.data as T),
                 insert: (table, row) => write(table, row, false), put: (table, row) => write(table, row, true),
                 delete: async (table, id) => { if (readOnly) throw new Error('Read-only view'); await query(`DELETE FROM ${tableName(table)} WHERE id=$1`, [id]); },
             };

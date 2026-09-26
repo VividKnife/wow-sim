@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readGameResponse,responseMatchesSelection} from '../lib/game-response.js';
+import {readGameResponse,responseMatchesSelection,syncErrorMessage} from '../lib/game-response.js';
 import {buildGameResponse} from '../../../packages/game-domain/src/rules/server-response.js';
 import {createGame} from '../../../packages/game-domain/src/rules/engine.js';
 
@@ -33,6 +33,16 @@ test('HTML and empty server failures produce a useful reconnect message',async()
 test('action errors and sign-in requirements retain their meaning',async()=>{
  await assert.rejects(readGameResponse(Response.json({error:'背包空间不足'},{status:400})),/背包空间不足/);
  await assert.rejects(readGameResponse(Response.json({error:'请先登录'},{status:401})),e=>e.status===401&&e.message==='请先登录');
+});
+test('sync notices distinguish expired rules, database contention, timeouts and server failures',async()=>{
+ for(const [status,code,message,pattern] of [[409,'CONTENT_VERSION','此活动规则已过期，请使用脱离卡死',/规则已过期/],[503,'DATABASE_BUSY','private details',/状态正在更新/],[502,'UPSTREAM','private details',/502/]]){
+  const error=await readGameResponse(Response.json({error:message,code},{status})).catch(e=>e);
+  assert.equal(error.code,code);assert.match(syncErrorMessage(error),pattern);
+  if(status>=500)assert.ok(!syncErrorMessage(error).includes('private details'));
+ }
+ assert.match(syncErrorMessage(new DOMException('aborted','AbortError')),/超时/);
+ assert.match(syncErrorMessage({status:401}),/重新登录/);
+ assert.equal(syncErrorMessage(null),'');
 });
 test('invalid success payloads cannot replace a valid saved-game view',async()=>{
  for(const value of [null,[],{}, {protocolVersion:1,contentVersion:'abc',snapshot:null,revision:'3'},{protocolVersion:2,contentVersion:'abc',snapshot:null,revision:3},{protocolVersion:1,contentVersion:'',snapshot:null,revision:3},{protocolVersion:1,contentVersion:'abc',revision:3}])await assert.rejects(readGameResponse(Response.json(value)),/存档响应.*重试/);

@@ -13,7 +13,7 @@ before(async()=>{
 });
 after(async()=>{await unlink(outfile);await rmdir(directory);});
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
-function harness(t,{lag=0,itemIds=[]}={}){
+function harness(t,{lag=0,itemIds=[],claimError=null}={}){
  const savedWindow=globalThis.window,savedWorker=globalThis.Worker;
  const requests=[],workers=[],statuses=[];
  let pendingReply=null,failNext=false,generation=0;
@@ -35,7 +35,7 @@ function harness(t,{lag=0,itemIds=[]}={}){
  t.mock.method(globalThis,'fetch',async(url,options)=>{
   assert.match(url,/saveId=one/);
   const body=JSON.parse(options.body);requests.push(body);
-  if(body.type==='claim'){generation++;return Response.json(result());}
+  if(body.type==='claim'){if(claimError){const error=claimError;claimError=null;return Response.json(error,{status:409});}generation++;return Response.json(result());}
   if(body.type==='release')return Response.json({});
   if(failNext){failNext=false;return Response.json({error:'retry'},{status:503});}
   canonical=structuredClone(body.state);
@@ -49,6 +49,17 @@ function harness(t,{lag=0,itemIds=[]}={}){
  t.after(()=>{client.dispose();globalThis.window=savedWindow;globalThis.Worker=savedWorker;});
  return {client,workers,requests,statuses,hold:()=>{pendingReply={};return ()=>{pendingReply.resolve();pendingReply=null;};},fail:()=>{failNext=true;}};
 }
+test('expired content blocks local work without retrying and clears after activity recovery',async t=>{
+ const h=harness(t,{claimError:{code:'CONTENT_VERSION',error:'活动规则已过期'}});
+ h.client.observe({ownerId:'old-activity',sessionId:null},'fixture','hero');await flush();
+ assert.equal(h.client.blocked,true);assert.equal(h.client.active,false);assert.equal(h.workers.length,0);
+ h.client.observe({ownerId:'old-activity',sessionId:null},'fixture','hero');
+ t.mock.timers.tick(60000);await flush();
+ assert.equal(h.requests.length,1);
+ h.client.observe(null,'fixture','hero');await flush();assert.equal(h.client.blocked,false);
+ h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ assert.equal(h.client.active,true);assert.equal(h.workers.length,1);
+});
 test('rules load only after ownership; delayed periodic ACK does not restart or rewind the Worker',async t=>{
  const h=harness(t);assert.equal(h.workers.length,0);
  h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();

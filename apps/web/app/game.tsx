@@ -22,7 +22,7 @@ import PlayerHud from './player-hud';
 import AmmoRestockDialog from './ammo-restock-dialog';
 import {BookOpen,Map as MapIcon,Castle,UserRound,UsersRound,Swords} from 'lucide-react';
 import {createCommandQueue} from '@/lib/command-queue.js';
-import {readGameResponse,responseMatchesSelection,mergeGameResponse} from '@/lib/game-response.js';
+import {readGameResponse,responseMatchesSelection,mergeGameResponse,syncErrorMessage} from '@/lib/game-response.js';
 import {createSnapshotPoller} from '@/lib/snapshot-poller.js';
 import {combatPollDelay} from '@/lib/combat-playback.js';
 import {inlineWorldBattle,opensBattleDialog} from '@/lib/battle-presentation.js';
@@ -111,7 +111,7 @@ export default function Game(){
   const poller=createSnapshotPoller({
    // Checkpoint responses already renew the local lease every ten seconds.
    // Full account polling only refreshes background orders / other characters.
-   delay:()=>localClient.current?.active?60000:combatPollDelay(playbackRef.current,combatPolling.current),
+   delay:()=>localClient.current?.active||localClient.current?.blocked?60000:combatPollDelay(playbackRef.current,combatPolling.current),
    isVisible:()=>document.visibilityState==='visible',
    request:async(signal:AbortSignal)=>{
     const characterId=selectedCharacterRef.current;
@@ -130,7 +130,7 @@ export default function Game(){
      }
     }
    },
-   onError:(e:any)=>{if(!cancelled)setConnectionError(!e?'':e.status===401?'登录已过期，请重新登录。':'暂时无法同步，正在重试。恢复连接后会更新进度。');},
+   onError:(e:any)=>{if(!cancelled)setConnectionError(syncErrorMessage(e));},
   });
   const visible=()=>{if(document.visibilityState==='visible')void poller.refresh();};
   document.addEventListener('visibilitychange',visible);
@@ -146,7 +146,7 @@ export default function Game(){
  const accountPanel=s&&d?<details className="panel account-drawer" open={interfaceStyle==='classic'?true:undefined}><summary><span>角色与后台活动</span><small>角色切换 · 生产与采集</small></summary> {<section className="panel account-overview" aria-label="账号角色与活动"><div className="section-heading"><div><h2>账号队伍</h2></div>{game.roster?.length>1&&<CharacterPicker label="当前角色" roster={game.roster} value={selectedCharacter||s.id} disabled={busy} onChange={id=>void selectCharacter(id)}/>}</div>{game.activities?.length>0&&<div className="activity-roster">{game.activities.map((activity:any)=>{const actor=game.roster?.find((member:any)=>member.id===activity.actorId);return <div key={activity.id}><strong>{actor?.name||activity.actorId}</strong><span>{activity.type} · {activity.status}{activity.location?` · ${activity.location}`:''}</span>{activity.nextEventAt&&activity.nextEventAt<Number.MAX_SAFE_INTEGER&&<small>下次结算 {new Date(activity.nextEventAt).toLocaleTimeString()}</small>}{['craft','gather'].includes(activity.type)&&['running','returning'].includes(activity.status)&&<Button size="sm" variant="outline" disabled={busy||activity.status==='returning'} onClick={()=>send({type:'recall',activityId:activity.id})}>{activity.status==='returning'?'召回中':'召回'}</Button>}</div>})}</div>}</section>}
   <AccountControls game={game} busy={busy} send={send}/>
 </details>:null;
- if(!s||!d)return <main className="game-shell"><section className="panel"><h1>{loading?'正在读取存档…':'无法进入游戏'}</h1>{error&&<p role="alert">{error}</p>}<a href={signedIn?'/':'/login'}>{signedIn?'返回角色选择':'重新登录'}</a></section></main>;
+ if(!s||!d)return <main className="game-shell"><section className="panel"><h1>{loading?'正在读取存档…':'无法进入游戏'}</h1>{error&&<p role="alert">{error}</p>}<a href={signedIn?'/':'/login'}>{signedIn?'返回角色选择':'重新登录'}</a></section>{!loading&&signedIn&&error&&<UnstuckControl busy={busy} send={send}/>}</main>;
  const overlays=<>{s&&signedIn&&!d.goldRaid?.active&&(!game.instance||game.instance.leaderId===s.id)&&<LootWindow settingsInMenu={interfaceStyle==='classic'} key={`${s.id}:${s.lastCombat?.id||'pending'}`} {...props}/>}
 {s&&d.ammoPrompt&&<AmmoRestockDialog key={`${d.ammoPrompt.memberId}:${d.ammoPrompt.trigger}`} prompt={d.ammoPrompt} item={d.items[d.ammoPrompt.itemId]} busy={busy} send={send}/>}
 {error&&<div className="error toast" role="alert">{error}<button aria-label="关闭提示" onClick={()=>setError('')}>×</button></div>}</>;

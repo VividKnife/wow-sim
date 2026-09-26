@@ -18,7 +18,7 @@ export class MemoryStore implements Store {
         const view: ReadView = {
             get: async <T = Row>(table: TableName, id: string) => copy(getRows(table).get(id) ?? null) as T | null,
             list: async <T = Row>(table: TableName, where: Where = {}) => copy([...getRows(table).values()].filter(row => Object.entries(where).every(([key, value]) => row[key] === value)).sort((a,b) => a.id.localeCompare(b.id))) as T[],
-            due: async <T = Row>(table: 'activities' | 'instances', now: number, limit: number) => copy([...getRows(table).values()].filter(row => ['running','returning'].includes(row.status) && row.nextEventAt <= now).sort((a,b) => a.nextEventAt-b.nextEventAt || a.id.localeCompare(b.id)).slice(0,limit)) as T[],
+            due: async <T = Row>(table: 'activities' | 'instances', now: number, limit: number, contentVersion: string) => copy([...getRows(table).values()].filter(row => row.contentVersion === contentVersion && ['running','returning'].includes(row.status) && row.nextEventAt <= now).sort((a,b) => a.nextEventAt-b.nextEventAt || a.id.localeCompare(b.id)).slice(0,limit)) as T[],
         };
         try { return await work(view); } finally { active = false; }
     }
@@ -54,7 +54,7 @@ export class MemoryStore implements Store {
         const tx: Transaction = {
             get: async <T = Row>(table: TableName, id: string) => { const row = tableRows(table).get(id); return row ? copy(row) as T : null; },
             list: async <T = Row>(table: TableName, where: Where = {}) => [...tableRows(table).values()].filter(row => Object.entries(where).every(([key, value]) => row[key] === value)).map(row => copy(row) as T),
-            due: async <T = Row>(table: 'activities' | 'instances', now: number, limit: number) => [...tableRows(table).values()].filter(row => ['running', 'returning'].includes(row.status) && row.nextEventAt <= now).sort((a, b) => a.nextEventAt - b.nextEventAt || a.id.localeCompare(b.id)).slice(0, limit).map(row => copy(row) as T),
+            due: async <T = Row>(table: 'activities' | 'instances', now: number, limit: number, contentVersion: string) => [...tableRows(table).values()].filter(row => row.contentVersion === contentVersion && ['running', 'returning'].includes(row.status) && row.nextEventAt <= now).sort((a, b) => a.nextEventAt - b.nextEventAt || a.id.localeCompare(b.id)).slice(0, limit).map(row => copy(row) as T),
             insert: (table, row) => write(table, row, true), put: (table, row) => write(table, row, false),
             delete: async (table, id) => { tableRows(table).delete(id); },
         };
