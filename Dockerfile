@@ -1,7 +1,7 @@
 FROM node:24.11.1-bookworm-slim AS deployment-assets
-ADD https://codeload.github.com/VividKnife/wow-sim/tar.gz/433e1692bdc0fe79312219ef59d0d31fac41b04e /tmp/source.tar.gz
-RUN mkdir /assets && tar -xzf /tmp/source.tar.gz -C /assets --strip-components=4 wow-sim-433e1692bdc0fe79312219ef59d0d31fac41b04e/apps/web/public && rm /tmp/source.tar.gz
-RUN printf '%s\n' '{"commit":"433e1692bdc0fe79312219ef59d0d31fac41b04e","source":"VividKnife/wow-sim"}' > /assets/__deployment.json
+ADD https://codeload.github.com/VividKnife/wow-sim/tar.gz/997c9f77f9e9262b9936983b954db0d8a2f6f421 /tmp/source.tar.gz
+RUN mkdir /assets && tar -xzf /tmp/source.tar.gz -C /assets --strip-components=4 wow-sim-997c9f77f9e9262b9936983b954db0d8a2f6f421/apps/web/public && rm /tmp/source.tar.gz
+RUN printf '%s\n' '{"commit":"997c9f77f9e9262b9936983b954db0d8a2f6f421","source":"VividKnife/wow-sim","publicAssetVersion":"8c03de098e6a23aef62c44bd0089e4ca1fa76fad"}' > /assets/__deployment.json
 
 FROM node:24.11.1-bookworm-slim AS build
 WORKDIR /app
