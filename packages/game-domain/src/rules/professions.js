@@ -1,3 +1,4 @@
+import {groupRows} from '../../../sim-core/src/collections.js';
 import {reserveMarket,marketOffer,marketAvailability} from './market.js';
 import {racialModifiers} from './racial-effects.js';
 import {questFishingSources} from '../../../game-data/world-quest-content.js';
@@ -106,7 +107,7 @@ export function professionAction(s,a){
   if(!selected.length)throw new Error('没有可分解的未锁定装备，或尚未学习附魔');
   for(const i of selected){
    s.bag=s.bag.filter(x=>x.uid!==i.uid);
-   const groups=Object.groupBy(disenchantLoot[items[i.id].DisenchantID],r=>r.groupid);
+   const groups=groupRows(disenchantLoot[items[i.id].DisenchantID],r=>r.groupid);
    for(const [group,rows] of Object.entries(groups)){
     let chosen=[];
     if(group==='0')chosen=rows.filter(r=>rng(s)*100<Math.abs(r.ChanceOrQuestChance));

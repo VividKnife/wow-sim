@@ -4,6 +4,7 @@ import {publishLocalCombat} from './local-combat-store';
 import {remapItemReferences} from '../../../packages/sim-core/src/item-identities.js';
 import {isLocalCombatAction} from './local-combat-actions';
 import {syncErrorMessage} from './game-response.js';
+import {usePolicyWorker,SIMULATION_STARTUP_TIMEOUT_MS} from './simulation-resources.js';
 
 type Options = {onFull:(snapshot:any)=>void;onStatus:(message:string)=>void;refresh:()=>Promise<unknown>};
 /** One owner, one worker, one in-flight mutation. Routine checkpoints reconcile
@@ -12,6 +13,7 @@ type Options = {onFull:(snapshot:any)=>void;onStatus:(message:string)=>void;refr
 export class LocalSimulationClient {
   private worker:Worker|undefined;
   private policyWorker:Worker|undefined;
+  private workerReady=false;
   private frames=new CombatStreamReceiver();
   private combatEvents:any[]=[];
   private presentation={visible:true,watching:false};
@@ -45,10 +47,11 @@ export class LocalSimulationClient {
   constructor(private options:Options) {}
   private prepareWorker() {
     if(this.worker)return;
-    this.options.onStatus('正在准备冒险…');
+    this.options.onStatus('正在准备冒险，首次加载可能需要一些时间…');
     const worker=this.worker=new Worker(new URL('./local-simulation.worker.ts',import.meta.url),{type:'module'});
+    this.workerReady=false;
     this.frames.reset();this.combatEvents=[];
-    if(typeof MessageChannel!=='undefined'){
+    if(usePolicyWorker()&&typeof MessageChannel!=='undefined'){
       try{
         const policy=this.policyWorker=new Worker(new URL('./combat-policy.worker.ts',import.meta.url),{type:'module'});
         const channel=new MessageChannel();
@@ -60,6 +63,7 @@ export class LocalSimulationClient {
     worker.onmessage=({data})=>{
       if (worker!==this.worker || data.generation!==this.session?.session.id || this.suspended) return;
       if (data.type==='ready') {
+        this.workerReady=true;
         this.starting?.resolve();
         this.options.onStatus(this.syncStatus);
       }
@@ -222,11 +226,11 @@ export class LocalSimulationClient {
     if(!this.session||this.stopped||this.failed||this.suspended)return;
     try {this.prepareWorker();}catch{throw this.breakWorker('本地战斗引擎无法启动');}
     await new Promise<void>((resolve,reject)=>{
-      const timeout=setTimeout(()=>this.breakWorker('本地战斗引擎启动超时'),15000);
+      const timeout=setTimeout(()=>this.breakWorker('本地战斗引擎启动超时'),this.workerReady?15000:SIMULATION_STARTUP_TIMEOUT_MS);
       const finish=(error?:Error)=>{clearTimeout(timeout);this.starting=null;if(error)reject(error);else resolve();};
       this.starting={resolve:()=>finish(),reject:finish};
       this.frames.reset();this.combatEvents=[];
-      this.worker!.postMessage({type:'start',...this.session,generation:this.session.session.id});
+      this.worker!.postMessage({type:'start',...this.session,sentAt:performance.timeOrigin+performance.now(),generation:this.session.session.id});
     });
     this.schedule(10000);
   }

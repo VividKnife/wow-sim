@@ -1,3 +1,4 @@
+import {groupRows} from '../../../packages/sim-core/src/collections.js';
 import {worldNodes,worldDungeons} from '../../../packages/game-data/world-content.js';
 import atlas from '../../../packages/game-data/data/world-map-atlas.json' with {type:'json'};
 // Hand-placed locations on the full reference artwork, in percentages.
@@ -41,7 +42,7 @@ export const mapPoints={
  lakeshire:[22,79],ironforge:[22,22],thelsamar:[57,45],algaz:[78,20],silverstream:[81,65],
  darkshire:[74,46],menethil:[12,64],dunmodr:[47,17],
 };
-for(const [region,places]of Object.entries(Object.groupBy(worldNodes,n=>n.region))){
+for(const [region,places]of Object.entries(groupRows(worldNodes,n=>n.region))){
  if(region==='暴风城')continue;
  const original=atlas.regions[region];
  mapRegions[region]=original||{name:region+' · 区域路线',image:null};

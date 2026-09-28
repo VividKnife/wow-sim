@@ -1,3 +1,4 @@
+import {groupRows} from '../../../sim-core/src/collections.js';
 import spellCoefficients from '../../../game-data/data/classic-spell-coefficients.json' with {type:'json'};
 import raidCombatReference from '../../../game-data/data/raid-combat-reference.json' with {type:'json'};
 import moltenCoreLoot from '../../../game-data/data/molten-core-loot.json' with {type:'json'};
@@ -124,7 +125,7 @@ export const icon=(kind,id)=>kind==='items'&&moltenCoreLoot.assets[id]?.icon?'/i
 export const provenance={database:source.meta,core:helpers.core,talents:talentSource.source,classes:classReference.meta};
 export const spellChain=index('spell_chain','spell_id');
 export const abilities=classAbilities[8];
-export const groupBy=(rows,key)=>Object.groupBy(rows,r=>r[key]);
+export const groupBy=(rows,key)=>groupRows(rows,r=>r[key]);
 export const creatureLoot=groupBy(table('creature_loot_template'),'entry');
 export const referenceLoot=groupBy(table('reference_loot_template'),'entry');
 export const objectLoot=groupBy(table('gameobject_loot_template'),'entry');
@@ -209,10 +210,10 @@ export function nearestNode(x,y,map=0){
  if(!pool.length)return null;
  return pool.reduce((best,n)=>Math.hypot(x-n.x,y-n.y)<Math.hypot(x-best.x,y-best.y)?n:best).id;
 }
-const alternateEntries=Object.groupBy([...supplement.tables.regionalCreatureSpawnEntry,...(stockades.tables.creature_spawn_entry||[])],r=>r.guid);
+const alternateEntries=groupRows([...supplement.tables.regionalCreatureSpawnEntry,...(stockades.tables.creature_spawn_entry||[])],r=>r.guid);
 const creatureGroups=new Set(supplement.tables.spawn_group.filter(g=>g.Type===0).map(g=>g.Id));
-const groupEntries=Object.groupBy(supplement.tables.spawn_group_entry,r=>r.Id);
-const groupsByGuid=Object.groupBy(supplement.tables.spawn_group_spawn.filter(g=>creatureGroups.has(g.Id)),r=>r.Guid);
+const groupEntries=groupRows(supplement.tables.spawn_group_entry,r=>r.Id);
+const groupsByGuid=groupRows(supplement.tables.spawn_group_spawn.filter(g=>creatureGroups.has(g.Id)),r=>r.Guid);
 // Resolve available templates by GUID; zero is a spawn placeholder, not a mob.
 // The 2D location catalogue lists alternatives. Spawn population and rare-spawn
 // scheduling are separate encounter rules and remain to be implemented.
@@ -242,7 +243,7 @@ export const flightNodes=['stormwind','sentinel',...worldFlightNodes];
 export const flights=[{a:'stormwind',b:'sentinel',duration:fasterTravelDuration(78000),cost:110,status:'estimated flight time; reference base cost'}];
 for(const capital of capitals)for(const id of flightNodes){const n=nodes[id];if(id===capital.id||n.map!==capital.map||n.faction!==capital.faction&&n.faction!=='Contested'||flights.some(f=>f.a===capital.id&&f.b===id))continue;flights.push({a:capital.id,b:id,duration:Math.max(30000,Math.ceil(Math.hypot(n.x-capital.x,n.y-capital.y)/32*1000)),cost:Math.max(10,n.min*10),faction:capital.faction,status:'adapted flight route'});}
 const routeCache=new Map();
-const adjacent=Object.groupBy(edges.flatMap(e=>[{node:e.a,edge:e},{node:e.b,edge:e}]),e=>e.node);
+const adjacent=groupRows(edges.flatMap(e=>[{node:e.a,edge:e},{node:e.b,edge:e}]),e=>e.node);
 export function route(from,to,speed=baseTravelSpeed){
  if(!nodes[from]||!nodes[to])throw new Error('未知目的地');
  if(speed>baseTravelSpeed)return ridingRoute(from,to,speed);
