@@ -4,6 +4,7 @@ import {mkdtemp,unlink,rmdir} from 'node:fs/promises';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {join} from 'node:path';
 import {build} from 'esbuild';
+import {SIMULATION_STARTUP_TIMEOUT_MS} from '../lib/simulation-resources.js';
 
 let Client,directory,outfile;
 before(async()=>{
@@ -13,9 +14,10 @@ before(async()=>{
 });
 after(async()=>{await unlink(outfile);await rmdir(directory);});
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
-function harness(t,{lag=0,itemIds=[],claimError=null,ready=true}={}){
+function harness(t,{lag=0,itemIds=[],claimError=null,ready=true,device,channels=false}={}){
  const savedWindow=globalThis.window,savedWorker=globalThis.Worker,savedChannel=globalThis.MessageChannel;
- globalThis.MessageChannel=undefined;
+ globalThis.MessageChannel=channels?class {port1={};port2={};}:undefined;
+ if(device)t.mock.getter(globalThis,'navigator',()=>device);
  const requests=[],workers=[],statuses=[];
  let pendingReply=null,failNext=false,generation=0;
  const initial={id:'hero',clock:0,wallAt:0,bag:[]};
@@ -50,6 +52,31 @@ function harness(t,{lag=0,itemIds=[],claimError=null,ready=true}={}){
  t.after(()=>{client.dispose();globalThis.window=savedWindow;globalThis.Worker=savedWorker;globalThis.MessageChannel=savedChannel;});
  return {client,workers,requests,statuses,setReady:value=>{ready=value;},hold:()=>{pendingReply={};return ()=>{pendingReply.resolve();pendingReply=null;};},fail:()=>{failNext=true;}};
 }
+test('iPhone startup creates one Worker even when MessageChannel is available',async t=>{
+ const h=harness(t,{channels:true,device:{userAgent:'iPhone EdgiOS',maxTouchPoints:5,hardwareConcurrency:8}});
+ h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ assert.equal(h.workers.length,1);
+ assert.equal(h.workers[0].messages.some(m=>m.type==='policyPort'),false);
+ assert.equal(await h.client.act({type:'cast',characterId:'hero'}),true);
+});
+
+test('a capable desktop retains the policy Worker',async t=>{
+ const h=harness(t,{channels:true,device:{userAgent:'desktop',maxTouchPoints:0,hardwareConcurrency:8,deviceMemory:8}});
+ h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ assert.equal(h.workers.length,2);
+ assert.equal(h.workers[0].messages.some(m=>m.type==='policyPort'),true);
+});
+
+test('slow cold startup can finish after 15 seconds without reclaiming or losing commands',async t=>{
+ const h=harness(t,{ready:false});h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ const worker=h.workers[0];
+ t.mock.timers.tick(30000);await flush();
+ assert.equal(worker.terminated,false);assert.equal(h.requests.length,1);
+ worker.onmessage({data:{type:'ready',generation:worker.generation}});await flush();
+ assert.equal(await h.client.act({type:'cast',characterId:'hero'}),true);
+ assert.equal(h.requests.length,1);assert.equal(h.statuses.at(-1),'');
+});
+
 test('expired content blocks local work without retrying and clears after activity recovery',async t=>{
  const h=harness(t,{claimError:{code:'CONTENT_VERSION',error:'活动规则已过期'}});
  h.client.observe({ownerId:'old-activity',sessionId:null},'fixture','hero');await flush();
@@ -201,7 +228,8 @@ test('the first browser command requests local execution before an owner or Work
 test('startup has a deadline, replaces an unresponsive Worker and ignores its late messages',async t=>{
  const h=harness(t,{ready:false});h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
  const old=h.workers[0];assert.match(h.statuses.at(-1),/准备冒险/);
- t.mock.timers.tick(15000);await flush();assert.equal(old.terminated,true);assert.match(h.statuses.at(-1),/启动超时/);
+ t.mock.timers.tick(15000);await flush();assert.equal(old.terminated,false,'cold boot must survive the running-engine response deadline');
+ t.mock.timers.tick(SIMULATION_STARTUP_TIMEOUT_MS-15000);await flush();assert.equal(old.terminated,true);assert.match(h.statuses.at(-1),/启动超时/);
  h.setReady(true);t.mock.timers.tick(1000);await flush();
  assert.equal(h.workers.length,2);assert.equal(h.client.blocked,false);assert.equal(h.statuses.at(-1),'');
  old.onmessage({data:{type:'error',generation:h.workers[1].generation,error:'late worker failure'}});
@@ -210,7 +238,7 @@ test('startup has a deadline, replaces an unresponsive Worker and ignores its la
 
 test('repeated startup failures stop after two recovery attempts instead of preparing forever',async t=>{
  const h=harness(t,{ready:false});h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
- for(let i=0;i<3;i++){t.mock.timers.tick(15000);await flush();t.mock.timers.tick(1000);await flush();}
+ for(let i=0;i<3;i++){t.mock.timers.tick(SIMULATION_STARTUP_TIMEOUT_MS);await flush();t.mock.timers.tick(1000);await flush();}
  assert.equal(h.workers.length,3);assert.equal(h.client.blocked,true);assert.match(h.statuses.at(-1),/恢复失败.*停止重试/);
  t.mock.timers.tick(60000);await flush();assert.equal(h.workers.length,3);
 });
