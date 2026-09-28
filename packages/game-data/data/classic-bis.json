@@ -1,0 +1,4530 @@
+{
+  "edition": "Classic Era · 60级",
+  "revision": "7779ebbf79dc7f1341e6ab939b28a3402c9a730a",
+  "sourceName": "WoWSims Classic",
+  "phases": {
+    "0": "团本前",
+    "1": "熔火之心 / 奥妮克希亚",
+    "2": "厄运之槌 / 世界首领",
+    "3": "黑翼之巢",
+    "4": "祖尔格拉布",
+    "5": "安其拉",
+    "6": "纳克萨玛斯"
+  },
+  "specs": {
+    "druid-balance": {
+      "classId": 11,
+      "role": "ranged",
+      "name": "平衡德鲁伊",
+      "icon": "/icons/assets/spell_nature_starfall.png"
+    },
+    "shaman-elemental": {
+      "classId": 7,
+      "role": "ranged",
+      "name": "元素萨满",
+      "icon": "/icons/assets/spell_nature_lightning.png"
+    },
+    "shaman-enhancement": {
+      "classId": 7,
+      "role": "melee",
+      "name": "增强萨满",
+      "icon": "/icons/assets/spell_nature_lightningshield.png"
+    },
+    "druid-feral": {
+      "classId": 11,
+      "role": "melee",
+      "name": "野性德鲁伊",
+      "icon": "/icons/assets/ability_druid_catform.png"
+    },
+    "hunter": {
+      "classId": 3,
+      "role": "ranged",
+      "name": "猎人",
+      "icon": "/icons/assets/ability_hunter_aimedshot.png"
+    },
+    "mage-frost": {
+      "classId": 8,
+      "role": "ranged",
+      "name": "冰霜法师",
+      "icon": "/icons/assets/spell_frost_frostbolt02.png"
+    },
+    "rogue-combat-dagger": {
+      "classId": 4,
+      "role": "melee",
+      "name": "战斗盗贼·匕首",
+      "icon": "/icons/assets/ability_backstab.png"
+    },
+    "rogue-combat-sword": {
+      "classId": 4,
+      "role": "melee",
+      "name": "战斗盗贼·剑",
+      "icon": "/icons/assets/ability_backstab.png"
+    },
+    "priest-shadow": {
+      "classId": 5,
+      "role": "ranged",
+      "name": "暗影牧师",
+      "icon": "/icons/assets/spell_shadow_shadowwordpain.png"
+    },
+    "warrior-protection": {
+      "classId": 1,
+      "role": "tank",
+      "name": "防护战",
+      "icon": "/icons/assets/ability_warrior_defensivestance.png"
+    },
+    "warlock": {
+      "classId": 9,
+      "role": "ranged",
+      "name": "术士",
+      "icon": "/icons/assets/spell_shadow_shadowbolt.png"
+    },
+    "warrior-fury": {
+      "classId": 1,
+      "role": "melee",
+      "name": "狂暴战",
+      "icon": "/icons/assets/ability_warrior_innerrage.png"
+    }
+  },
+  "sources": [
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/balance_druid/gear_sets/p0.bis.gear.json",
+      "sha256": "c3a417914b266a32d2ccb82c68ba94c60ec0c5f0d339f990bd336f30d3b5e5d4"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/balance_druid/gear_sets/p1.bis.gear.json",
+      "sha256": "db81badbedc5ec4038670b040b2fcda3cebb22724fbd4472cc00728554ccb2de"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/balance_druid/gear_sets/p2.bis.gear.json",
+      "sha256": "5f86db75b3bb354cca13e5aff15aa2798e10b20a4460b784fd6f4889e817f5b7"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/balance_druid/gear_sets/p3.bis.gear.json",
+      "sha256": "64ef5c5e81c99b689e162d27b5762a712228e757df2d3ff94fd5f23a16c2f734"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/balance_druid/gear_sets/p4.bis.gear.json",
+      "sha256": "75cdf51cfc0a7f8b6fc399fb5f0c33080838843eccdffdc741ece1303ba75e4b"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/balance_druid/gear_sets/p5.bis.gear.json",
+      "sha256": "362148e4fb2da23798663e2b35958f4041c73bd34bcba16a720ebd37ba6893de"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/elemental_shaman/gear_sets/phase_1.gear.json",
+      "sha256": "8df0d99cd39dfb0c0ca916826533c3e7a6276a3007e57d02250c172c82face87"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/elemental_shaman/gear_sets/phase_2.gear.json",
+      "sha256": "5c1c2d3e5ecea39cab695a2977c495dc3c69720e589a882905d0491b1dec66b7"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/elemental_shaman/gear_sets/phase_3.gear.json",
+      "sha256": "84eb765cb674f21d28afe1be9ab177169df6ba642c602cdcb8574c8b45c84360"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/elemental_shaman/gear_sets/phase_4.gear.json",
+      "sha256": "2df719ca3294f80a1481b31eec02016cabacda7fb2fd5c51f287fd25c7d53306"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/elemental_shaman/gear_sets/phase_5.gear.json",
+      "sha256": "72065e908050810635d7ddb5d525ee0549a2e507841812b4375a16935d0a2e6e"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/elemental_shaman/gear_sets/phase_6.gear.json",
+      "sha256": "16fecacafafa2b948e8f9371a46c0c3feace78470688555569aafe2f0a2f769e"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/enhancement_shaman/gear_sets/phase_1.gear.json",
+      "sha256": "f3809fac91dfd655424816d2649658e0ec0a964dadceb3b4f1235cda2870fa97"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/enhancement_shaman/gear_sets/phase_2.gear.json",
+      "sha256": "56b3f52ffba10f38a61f6d7cb1ab742238de32b814197d3b55c1bdc14428311a"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/enhancement_shaman/gear_sets/phase_3.gear.json",
+      "sha256": "94fd2fa621b9a51439ca04785306a028b68ea1720d0680d42b8920ddb456b935"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/enhancement_shaman/gear_sets/phase_5.gear.json",
+      "sha256": "43ffc7db0ab8ffff11fb74e64a339718bc0452b4fa66972e63f211c026da66f0"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/feral_druid/gear_sets/p0.bis.gear.json",
+      "sha256": "8ac85077ae540199012beaffbfd708a73ffec65ab66f163ef42e7e719e403f9a"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/feral_druid/gear_sets/p1.bis.gear.json",
+      "sha256": "cd180446e7d619aaa4519df662ad15bc4db8718ffe1b7af84537a314f1a6d872"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/feral_druid/gear_sets/p2.bis.gear.json",
+      "sha256": "6019b3ffee0cbcb4d35cbd4e33cd4b750471ec2d436fe90b15ff5d63509e8632"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/feral_druid/gear_sets/p3.bis.gear.json",
+      "sha256": "a22b7c1115b72e623115a214bd8e7b58773717b1bae94795eb3864410a495c63"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/feral_druid/gear_sets/p4.bis.gear.json",
+      "sha256": "dbf3a32c843f727612fde3c576935090b6ce709abea2f5cb838d7e18e1c9b964"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/feral_druid/gear_sets/p5.bis.gear.json",
+      "sha256": "8e20f97dbabcf1e432601727a59e2abad265f394721265712d56ad70a356acbf"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/feral_druid/gear_sets/p6.bis.gear.json",
+      "sha256": "aa8c55b883b6f0ad180083e063efef1aca552ffd1f851bd28d30d6d239d82960"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/hunter/gear_sets/p0.bis.gear.json",
+      "sha256": "9af2f3a2654bc5108f38dd650e320d97c1101f022fb684da63343bd245c167dd"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/hunter/gear_sets/p1.bis.gear.json",
+      "sha256": "40fa7b641675540fdf68885de1eda8cb3e5c87e3269cf24ecb2f5174d5bb5958"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/mage/gear_sets/p0.bis.gear.json",
+      "sha256": "4b63ba164adff8f29150eec13fed8b0194da18982c4b17b2d2faee1bd73829a3"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/mage/gear_sets/p1.bis.gear.json",
+      "sha256": "f7968bfcc32f01d283bbf5a6c244c75947daaeaf6a9eb448d1e67b03543378ea"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/rogue/gear_sets/combat_backstab_p1_bis.gear.json",
+      "sha256": "9ddf7e6ffdec53beda7fc1e72cc0a77ac4473a4419c9932009b0572e0e751ed8"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/rogue/gear_sets/combat_backstab_p2_bis.gear.json",
+      "sha256": "0ea7e49d039486ed11509fc948b39c1acd817c190fd18a508ee6b753b212b66f"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/rogue/gear_sets/combat_backstab_prebis.gear.json",
+      "sha256": "33cb87ac787c34fd3c3a57e66271a08817a0d92714980fda6e185446235b3f98"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/rogue/gear_sets/combat_sinister_strike_p1_bis.gear.json",
+      "sha256": "83c39f53bbd5a92c00f6d245ebac5058301c73e2daf9982c822c5e8ef06d6b83"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/rogue/gear_sets/combat_sinister_strike_p2_bis.gear.json",
+      "sha256": "e22829d6d608b0762752f61640b2ae3a72329a2efcaba51a757c463ab995486d"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/rogue/gear_sets/combat_sinister_strike_prebis.gear.json",
+      "sha256": "f4260c1badd97f406de2fa81887491b92e7c23624ebfa10c0f3554be6967845e"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/shadow_priest/gear_sets/p0.bis.gear.json",
+      "sha256": "cbb3bc61a60545e886f04c24d9596a8e2e50d271dd772120e4fb33ae5b66d6e9"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/shadow_priest/gear_sets/p1.bis.gear.json",
+      "sha256": "d92714361b36455fb8637cf746f2a5c84ede676b3ff486cd874216cdfa00f0c5"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/tank_warrior/gear_sets/p0.bis.gear.json",
+      "sha256": "58771ccf53742391182621c62dd9cd130410f4222e51ab3833608bbac436b6b3"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/tank_warrior/gear_sets/p1.bis.gear.json",
+      "sha256": "30c8c531912e32a406001c3b01b04df1862ee357354c396c376c00390a6626e8"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/warlock/gear_sets/mc.gear.json",
+      "sha256": "4d4e663c7c3b01a5b5f9c4e7ddc6a8316fc7d5f49763dd745989cb65cda99f97"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/warlock/gear_sets/prebis.gear.json",
+      "sha256": "3f5a1bafec35de798b8bb90b71506edc7961d45dce3274dc5a508b023f29696c"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/warrior/gear_sets/p0.bis.gear.json",
+      "sha256": "ed17d1d9ba4ccea81c8d2322f821a48b5a58021fbcfbed637ed2183263fce5e8"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/warrior/gear_sets/phase_1.gear.json",
+      "sha256": "e9c0a97560c0423d4942094f9caf71e004441efbd2be6e4d20fa7f405247e3dd"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/warrior/gear_sets/phase_2.gear.json",
+      "sha256": "9d759d751ca9b0284809df2f54e4aa2c1b412c478c4a5b8a1e33a5318502c9d8"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/warrior/gear_sets/phase_3.gear.json",
+      "sha256": "56718c4dc6d9deb7b6ac82982001105a1962c3028c94c409a76c1aa4ce7f7606"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/warrior/gear_sets/phase_4.gear.json",
+      "sha256": "28b22ba14cb27471b3eb5ca0ec3f2e7c3f59bad208a4c23d762b4180fcec4158"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/warrior/gear_sets/phase_5.gear.json",
+      "sha256": "8c826b1e61a96d98d14393f464f1291e2def79a88ba0e9971dfc62b9bb205f51"
+    },
+    {
+      "url": "https://github.com/wowsims/classic/blob/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/warrior/gear_sets/phase_6.gear.json",
+      "sha256": "040981a38ad50e0a20bc85d8778d6ba26b57db5560b59d8348f5ab559dc5f8ca"
+    }
+  ],
+  "entries": [
+    {
+      "itemId": 942,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 942,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 2100,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 8345,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 8345,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 8345,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 8345,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 8345,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 9449,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 9449,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 9449,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 9449,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 9449,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 10246,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 10247,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 10247,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 10247,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 10247,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 10248,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 10248,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 10248,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 10248,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 10249,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 10267,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 10267,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 10270,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 10504,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 10796,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 10796,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 10796,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 10796,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 11662,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 11662,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 11686,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 11686,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 11726,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 11726,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 11726,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 11726,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 11726,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 11726,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 11726,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 11726,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 11726,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 11765,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 11766,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 11782,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 11782,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 11815,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 11815,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 11815,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 11815,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 11815,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 11815,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 11815,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 11815,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 11815,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 11815,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 11815,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 11815,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 11815,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 11815,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 11815,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 11815,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 12103,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 12103,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 12543,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 12543,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 12590,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 12634,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 12640,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 12640,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 12640,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 12640,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 12640,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 12640,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 12640,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 12653,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 12927,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 12927,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 12927,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 12927,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 12927,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 12927,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 12930,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 12930,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 12930,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 12930,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 12930,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 12930,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 12930,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 12939,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 12940,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 13001,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 13001,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 13001,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 13001,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 13098,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 13098,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 13107,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 13170,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 13170,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 13170,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 13170,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 13210,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 13210,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 13252,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 13253,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 13253,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 13253,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 13253,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 13253,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 13253,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 13253,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 13253,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 13253,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 13253,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 13255,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 13286,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 13340,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 13340,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 13340,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 13340,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 13340,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 13340,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 13340,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 13340,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 13349,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 13358,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 13386,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 13386,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 13386,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 13386,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 13396,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 13396,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 13396,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 13400,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 13404,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 13515,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 13956,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 13959,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 13964,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 13964,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 13965,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 13965,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 13965,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 13965,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 13965,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 13965,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 13965,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 13965,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 13965,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 13965,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 13965,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 13965,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 13965,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 13965,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 13965,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 13965,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 13967,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 13968,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 13968,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 13968,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 13968,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 13968,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 13968,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 14111,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 14112,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 14112,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 14112,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 14136,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 14152,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 14152,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 14153,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 14332,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 14551,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 14551,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 14551,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 14551,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 14554,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 14554,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 14616,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 14616,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 14616,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 15062,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 15062,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 15062,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 15062,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 15063,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 15063,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 15063,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 15063,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 15191,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 15278,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 15283,
+      "spec": "mage-frost",
+      "phase": 0,
+      "source": 25
+    },
+    {
+      "itemId": 15283,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 15411,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 15411,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 15411,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 15411,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 15684,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 15684,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 15942,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 16543,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 16543,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 16544,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 16544,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 16549,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 16549,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 16551,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 16551,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 16552,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 16552,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 16552,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 16555,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 16555,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 16580,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 16681,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 16706,
+      "spec": "druid-feral",
+      "phase": 0,
+      "source": 16
+    },
+    {
+      "itemId": 16707,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 16707,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 16708,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 16708,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 16709,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 16709,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 16709,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 16709,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 16710,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 16710,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 16710,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 16710,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 16711,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 16711,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 16711,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 16711,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 16712,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 16712,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 16713,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 16713,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 16713,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 16713,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 16714,
+      "spec": "druid-feral",
+      "phase": 0,
+      "source": 16
+    },
+    {
+      "itemId": 16715,
+      "spec": "druid-feral",
+      "phase": 0,
+      "source": 16
+    },
+    {
+      "itemId": 16716,
+      "spec": "druid-feral",
+      "phase": 0,
+      "source": 16
+    },
+    {
+      "itemId": 16717,
+      "spec": "druid-feral",
+      "phase": 0,
+      "source": 16
+    },
+    {
+      "itemId": 16718,
+      "spec": "druid-feral",
+      "phase": 0,
+      "source": 16
+    },
+    {
+      "itemId": 16719,
+      "spec": "druid-feral",
+      "phase": 0,
+      "source": 16
+    },
+    {
+      "itemId": 16720,
+      "spec": "druid-feral",
+      "phase": 0,
+      "source": 16
+    },
+    {
+      "itemId": 16721,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 16721,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 16730,
+      "spec": "warrior-protection",
+      "phase": 0,
+      "source": 35
+    },
+    {
+      "itemId": 16731,
+      "spec": "warrior-protection",
+      "phase": 0,
+      "source": 35
+    },
+    {
+      "itemId": 16732,
+      "spec": "warrior-protection",
+      "phase": 0,
+      "source": 35
+    },
+    {
+      "itemId": 16733,
+      "spec": "warrior-protection",
+      "phase": 0,
+      "source": 35
+    },
+    {
+      "itemId": 16734,
+      "spec": "warrior-protection",
+      "phase": 0,
+      "source": 35
+    },
+    {
+      "itemId": 16735,
+      "spec": "warrior-protection",
+      "phase": 0,
+      "source": 35
+    },
+    {
+      "itemId": 16736,
+      "spec": "warrior-protection",
+      "phase": 0,
+      "source": 35
+    },
+    {
+      "itemId": 16737,
+      "spec": "warrior-protection",
+      "phase": 0,
+      "source": 35
+    },
+    {
+      "itemId": 16795,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 16799,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 16800,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 16804,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 16811,
+      "spec": "priest-shadow",
+      "phase": 1,
+      "source": 34
+    },
+    {
+      "itemId": 16812,
+      "spec": "priest-shadow",
+      "phase": 1,
+      "source": 34
+    },
+    {
+      "itemId": 16813,
+      "spec": "priest-shadow",
+      "phase": 1,
+      "source": 34
+    },
+    {
+      "itemId": 16814,
+      "spec": "priest-shadow",
+      "phase": 1,
+      "source": 34
+    },
+    {
+      "itemId": 16815,
+      "spec": "priest-shadow",
+      "phase": 1,
+      "source": 34
+    },
+    {
+      "itemId": 16816,
+      "spec": "priest-shadow",
+      "phase": 1,
+      "source": 34
+    },
+    {
+      "itemId": 16817,
+      "spec": "priest-shadow",
+      "phase": 1,
+      "source": 34
+    },
+    {
+      "itemId": 16819,
+      "spec": "priest-shadow",
+      "phase": 1,
+      "source": 34
+    },
+    {
+      "itemId": 16820,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 16820,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 16823,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 16823,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 16824,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 16824,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 16825,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 16826,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 16826,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 16827,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 16827,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 16828,
+      "spec": "druid-feral",
+      "phase": 1,
+      "source": 17
+    },
+    {
+      "itemId": 16829,
+      "spec": "druid-feral",
+      "phase": 1,
+      "source": 17
+    },
+    {
+      "itemId": 16830,
+      "spec": "druid-feral",
+      "phase": 1,
+      "source": 17
+    },
+    {
+      "itemId": 16831,
+      "spec": "druid-feral",
+      "phase": 1,
+      "source": 17
+    },
+    {
+      "itemId": 16833,
+      "spec": "druid-feral",
+      "phase": 1,
+      "source": 17
+    },
+    {
+      "itemId": 16834,
+      "spec": "druid-feral",
+      "phase": 1,
+      "source": 17
+    },
+    {
+      "itemId": 16835,
+      "spec": "druid-feral",
+      "phase": 1,
+      "source": 17
+    },
+    {
+      "itemId": 16836,
+      "spec": "druid-feral",
+      "phase": 1,
+      "source": 17
+    },
+    {
+      "itemId": 16845,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 16846,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 16847,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 16848,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 16849,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 16850,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 16851,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 16852,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 16861,
+      "spec": "warrior-protection",
+      "phase": 1,
+      "source": 36
+    },
+    {
+      "itemId": 16862,
+      "spec": "warrior-protection",
+      "phase": 1,
+      "source": 36
+    },
+    {
+      "itemId": 16863,
+      "spec": "warrior-protection",
+      "phase": 1,
+      "source": 36
+    },
+    {
+      "itemId": 16864,
+      "spec": "warrior-protection",
+      "phase": 1,
+      "source": 36
+    },
+    {
+      "itemId": 16865,
+      "spec": "warrior-protection",
+      "phase": 1,
+      "source": 36
+    },
+    {
+      "itemId": 16866,
+      "spec": "warrior-protection",
+      "phase": 1,
+      "source": 36
+    },
+    {
+      "itemId": 16867,
+      "spec": "warrior-protection",
+      "phase": 1,
+      "source": 36
+    },
+    {
+      "itemId": 16868,
+      "spec": "warrior-protection",
+      "phase": 1,
+      "source": 36
+    },
+    {
+      "itemId": 16908,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 16908,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 16908,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 16908,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 16909,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 16909,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 16915,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 16929,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 16930,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 16946,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 16946,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 16946,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 17063,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 17063,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 17063,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 17063,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 17063,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 17063,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 17063,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 17063,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 17063,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 17063,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 17063,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 17063,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 17063,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 17069,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 17069,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 17069,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 17069,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 17069,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 17069,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 17069,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 17069,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 17070,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 17075,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 17075,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 17075,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 17075,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 17078,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 17078,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 17078,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 17102,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 17103,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 17103,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 17105,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 17112,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 17112,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 17112,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 17112,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 17182,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 17182,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 17182,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 17713,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 17713,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 17713,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 17713,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 18323,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 18392,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 18404,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 18404,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 18404,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 18404,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 18404,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 18404,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 18404,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 18404,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 18404,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 18404,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 18404,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 18404,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 18407,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 18407,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 18500,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 18500,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 18541,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 18541,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 18541,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 18541,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 18541,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 18681,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 18681,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 18681,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 18691,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 18691,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 18713,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 18725,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 18725,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 18727,
+      "spec": "druid-balance",
+      "phase": 0,
+      "source": 0
+    },
+    {
+      "itemId": 18727,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 18727,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 18735,
+      "spec": "priest-shadow",
+      "phase": 0,
+      "source": 33
+    },
+    {
+      "itemId": 18735,
+      "spec": "warlock",
+      "phase": 0,
+      "source": 38
+    },
+    {
+      "itemId": 18735,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 18736,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 18737,
+      "spec": "warrior-fury",
+      "phase": 0,
+      "source": 39
+    },
+    {
+      "itemId": 18738,
+      "spec": "hunter",
+      "phase": 0,
+      "source": 23
+    },
+    {
+      "itemId": 18805,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 18805,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 18812,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 18812,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 18814,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 18814,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 18814,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 18814,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 18814,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 18814,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 18814,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 18814,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 18814,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 18814,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 18816,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 18816,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 18817,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 18817,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 18817,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 18817,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 18820,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 18820,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 18820,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 18820,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 18820,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 18820,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 18820,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 18820,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 18820,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 18821,
+      "spec": "hunter",
+      "phase": 1,
+      "source": 24
+    },
+    {
+      "itemId": 18821,
+      "spec": "shaman-enhancement",
+      "phase": 1,
+      "source": 12
+    },
+    {
+      "itemId": 18821,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 18821,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 18821,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 18821,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 18821,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 18821,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 18821,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 18823,
+      "spec": "rogue-combat-dagger",
+      "phase": 1,
+      "source": 27
+    },
+    {
+      "itemId": 18823,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 18829,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 18829,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 18829,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 18829,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 18829,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 18832,
+      "spec": "rogue-combat-sword",
+      "phase": 1,
+      "source": 30
+    },
+    {
+      "itemId": 18832,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 18832,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 18842,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 18842,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 19131,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 19131,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 19136,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 19136,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 19136,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 19136,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 19136,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 19136,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 19136,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 19136,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 19137,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 19137,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 19137,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 19137,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 19137,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 19145,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 19145,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 19145,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 19145,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 19145,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 19145,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 19145,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 19146,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 19146,
+      "spec": "warrior-fury",
+      "phase": 1,
+      "source": 40
+    },
+    {
+      "itemId": 19146,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 19147,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 19147,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 19147,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 19147,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 19147,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 19147,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 19147,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 19147,
+      "spec": "mage-frost",
+      "phase": 1,
+      "source": 26
+    },
+    {
+      "itemId": 19147,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 19147,
+      "spec": "shaman-elemental",
+      "phase": 1,
+      "source": 6
+    },
+    {
+      "itemId": 19147,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 19147,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 19147,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 19147,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19147,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 19147,
+      "spec": "warlock",
+      "phase": 1,
+      "source": 37
+    },
+    {
+      "itemId": 19157,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 19157,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 19163,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 19165,
+      "spec": "druid-balance",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 19165,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 19308,
+      "spec": "druid-balance",
+      "phase": 2,
+      "source": 2
+    },
+    {
+      "itemId": 19308,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 19315,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 19325,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 19325,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 19325,
+      "spec": "rogue-combat-dagger",
+      "phase": 2,
+      "source": 28
+    },
+    {
+      "itemId": 19325,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 19325,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 19325,
+      "spec": "shaman-enhancement",
+      "phase": 2,
+      "source": 13
+    },
+    {
+      "itemId": 19325,
+      "spec": "warrior-fury",
+      "phase": 2,
+      "source": 41
+    },
+    {
+      "itemId": 19325,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 19344,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 19344,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19344,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 19344,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 19352,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 19352,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 19352,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 19360,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 19360,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19360,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 19370,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 19370,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 19370,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 19374,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 19374,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 19374,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 19374,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19375,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 19375,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 19375,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 19375,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 19375,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19375,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 19375,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 19377,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 19377,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 19377,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 19377,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 19377,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 19378,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 19379,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 19379,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 19379,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 19379,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 19379,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19379,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 19381,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 19381,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 19381,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 19384,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 19384,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 19384,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 19384,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 19387,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 19387,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 19387,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 19387,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 19393,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 19400,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 19400,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19403,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 19403,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 19403,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 19403,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 19403,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19403,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 19406,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 19406,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 19406,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 19406,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 19406,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 19406,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 19406,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 19406,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 19432,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 19432,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 19436,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 19436,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 19436,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 19436,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 19436,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 19436,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 19578,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 19578,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 19587,
+      "spec": "druid-feral",
+      "phase": 3,
+      "source": 19
+    },
+    {
+      "itemId": 19587,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 19587,
+      "spec": "rogue-combat-sword",
+      "phase": 2,
+      "source": 31
+    },
+    {
+      "itemId": 19587,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 19595,
+      "spec": "shaman-elemental",
+      "phase": 2,
+      "source": 7
+    },
+    {
+      "itemId": 19682,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 19682,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 19682,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19683,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 19683,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 19683,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 19683,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19684,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 19684,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 19684,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 19684,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19857,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19891,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 19891,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 19891,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 19929,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 19929,
+      "spec": "shaman-elemental",
+      "phase": 4,
+      "source": 9
+    },
+    {
+      "itemId": 20130,
+      "spec": "warrior-fury",
+      "phase": 3,
+      "source": 42
+    },
+    {
+      "itemId": 20130,
+      "spec": "warrior-fury",
+      "phase": 4,
+      "source": 43
+    },
+    {
+      "itemId": 20130,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 20130,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 20216,
+      "spec": "druid-feral",
+      "phase": 4,
+      "source": 20
+    },
+    {
+      "itemId": 21134,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 21186,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 21186,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 21186,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 21205,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 21330,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 21330,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 21332,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 21461,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 21493,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 21493,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 21493,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 21581,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 21581,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 21585,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 21585,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 21585,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 21586,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 21586,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 21597,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 21600,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 21600,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 21602,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 21602,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 21602,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 21602,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 21607,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 21608,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 21608,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 21608,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 21651,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 21664,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 21664,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 21665,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 21665,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 21665,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 21672,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 21672,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 21677,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 21680,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 21680,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 21680,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 21701,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 21709,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 21709,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 21709,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 21710,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 21710,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 21814,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 21838,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 21838,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 22329,
+      "spec": "shaman-elemental",
+      "phase": 3,
+      "source": 8
+    },
+    {
+      "itemId": 22395,
+      "spec": "shaman-enhancement",
+      "phase": 5,
+      "source": 15
+    },
+    {
+      "itemId": 22397,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 22397,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 22730,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 22730,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 22730,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 22731,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 22731,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 22731,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 22731,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 22750,
+      "spec": "shaman-enhancement",
+      "phase": 3,
+      "source": 14
+    },
+    {
+      "itemId": 22811,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 22852,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 22877,
+      "spec": "druid-feral",
+      "phase": 2,
+      "source": 18
+    },
+    {
+      "itemId": 22879,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 22936,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 22954,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 22954,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 22988,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 23000,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 23031,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 23038,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 23038,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 23045,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 23049,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 23050,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 23053,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 23054,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 23068,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 23070,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 23071,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 23197,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 23197,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 23199,
+      "spec": "shaman-elemental",
+      "phase": 5,
+      "source": 10
+    },
+    {
+      "itemId": 23199,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 23206,
+      "spec": "druid-feral",
+      "phase": 6,
+      "source": 22
+    },
+    {
+      "itemId": 23207,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    },
+    {
+      "itemId": 23219,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 23258,
+      "spec": "rogue-combat-sword",
+      "phase": 0,
+      "source": 32
+    },
+    {
+      "itemId": 23298,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 23313,
+      "spec": "rogue-combat-dagger",
+      "phase": 0,
+      "source": 29
+    },
+    {
+      "itemId": 23451,
+      "spec": "druid-balance",
+      "phase": 3,
+      "source": 3
+    },
+    {
+      "itemId": 23451,
+      "spec": "druid-balance",
+      "phase": 4,
+      "source": 4
+    },
+    {
+      "itemId": 23451,
+      "spec": "druid-balance",
+      "phase": 5,
+      "source": 5
+    },
+    {
+      "itemId": 23557,
+      "spec": "warrior-fury",
+      "phase": 5,
+      "source": 44
+    },
+    {
+      "itemId": 23570,
+      "spec": "druid-feral",
+      "phase": 5,
+      "source": 21
+    },
+    {
+      "itemId": 23577,
+      "spec": "warrior-fury",
+      "phase": 6,
+      "source": 45
+    },
+    {
+      "itemId": 23664,
+      "spec": "shaman-elemental",
+      "phase": 6,
+      "source": 11
+    }
+  ]
+}

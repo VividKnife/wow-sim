@@ -72,7 +72,7 @@ test('a melee challenger can pull aggro even when a higher ranged challenger is 
 
 test('companion attacks preserve polymorph when an uncontrolled enemy is available',()=>{
  const s=group();startCombat(s,[636,636],true);const [sheep,active]=s.combat.enemies;sheep.polyUntil=100000;sheep.position=30;active.position=30;member(s,'rogue').position=27;s.rules=[];for(const role of ['rogue','priest'])member(s,role).strategyPolicy={waitForTank:false};
- combatTick(s);s.clock=100;combatTick(s); // Priest first walks into legal 2D Smite range.
+ combatTick(s);s.clock=100;combatTick(s);s.clock=300;combatTick(s); // Movement integrates each tick; policy retries at its 200ms cadence.
  for(const role of ['rogue','priest']){const c=member(s,role),cast=s.logs.find(l=>l.actorId===c.id&&l.kind==='cast');assert.equal(cast?.targetId,active.id);}
  assert.equal(sheep.polyUntil,100000);
 });
@@ -129,7 +129,9 @@ test('a threatened priest uses its learned shield with real mana cost and weaken
 test('a priest in danger can abandon a pushed-back ally heal for an instant self shield',()=>{
  const s=group(),priest=member(s,'priest'),tank=member(s,'warrior'),e=s.combat.enemies[0];
  priest.hp=100;tank.hp=1;e.target=priest.id;e.threat={[priest.id]:100};priest.cast={spell:2053,target:tank.id,startedAt:0,until:6500,friendly:true};priest.nextAction=6500;
- s.clock=2000;combatTick(s);assert.equal(priest.cast,null);assert.equal(priest.absorb?.spell,600);
+ s.clock=2000;combatTick(s);assert.equal(priest.cast,null);
+ // Cancellation and the replacement spell use successive policy reactions.
+ e.target=priest.id;priest.hp=100;s.clock=2200;combatTick(s);assert.equal(priest.absorb?.spell,600);
 });
 
 test('an already completed priest heal resolves before emergency interruption is considered',()=>{

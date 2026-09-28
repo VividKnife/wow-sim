@@ -20,7 +20,8 @@ export default function BattleRaidFrames({units,views,selectedId,onSelect,clock,
     const role=unit.strategyPolicy?.role&&unit.strategyPolicy.role!=='auto'?unit.strategyPolicy.role:unit.role;
     const RoleIcon=role==='tank'?Shield:role==='healer'?Plus:['melee','ranged','damage'].includes(role)?Swords:null;
     const condition=dead?'死亡':unitCondition(unit,clock)||'';
-    const effects=dead?[]:(ui?.effects||[]).filter((effect:any)=>!effect.until||effect.until>clock);
+    const effects=dead?[]:(ui?.effects||[]).filter((effect:any)=>(!effect.until||effect.until>clock)&&(effect.kind==='debuff'||!effect.routine));
+    effects.sort((a:any,b:any)=>Number(b.kind==='debuff')-Number(a.kind==='debuff'));
     const cast=!dead&&ui?.cast?.until>clock?ui.cast:null;
     const health=`生命 ${Math.ceil(Math.max(0,hp))} / ${Math.ceil(maxHp)}`;
     const power=resource?.max>0?`${resource.name} ${Math.floor(resource.value)} / ${Math.floor(resource.max)}`:'';
@@ -28,7 +29,7 @@ export default function BattleRaidFrames({units,views,selectedId,onSelect,clock,
      <span className="raid-frame-health" style={{width:percent+'%'}}/>
      <span className="raid-frame-name">{RoleIcon&&<RoleIcon size={11} aria-hidden="true"/>}<span>{unit.name}</span></span>
      <span className="raid-frame-state">{condition||`${Math.round(percent)}%`}</span>
-     <span className="raid-frame-effects">{effects.slice(0,3).map((effect:any,i:number)=><span key={`${effect.spellId}:${i}`} className="raid-frame-aura" title={`${effect.name}${effect.until?' · '+duration(effect.until-clock):''}`}>
+     <span className="raid-frame-effects">{effects.slice(0,3).map((effect:any,i:number)=><span key={`${effect.spellId}:${i}`} className={`raid-frame-aura ${effect.kind==='debuff'?'is-debuff':''}`} title={`${effect.name}${effect.until?' · '+duration(effect.until-clock):''}`}>
       {effect.icon?<img src={effect.icon} alt={effect.name}/>:<span>{effect.name.slice(0,1)}</span>}{(effect.stacks>1||effect.charges>1)&&<b>{effect.stacks>1?effect.stacks:effect.charges}</b>}
      </span>)}{effects.length>3&&<small>+{effects.length-3}</small>}</span>
      {cast&&<span className="raid-frame-cast" title={cast.name} style={{width:actionProgress(cast.startedAt,cast.until,clock)*100+'%'}}/>}

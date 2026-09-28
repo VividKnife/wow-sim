@@ -1,3 +1,4 @@
+import {mightSetBonuses} from './might-set.js';
 import {scaledXp} from './experience.js';
 import {partyUnlocked} from './party-unlock.js';
 import {recordJourneyLog} from './journey.js';
@@ -7,10 +8,11 @@ import {table,items,spells,spellChain,xpTable,talents,classAbilities,classDefini
 import {armorWithAuras} from '../../../sim-core/src/combat-auras.js';
 import {enchants,professionSkillIds,specializationKnown} from './profession-data.js';
 import {talentModifiers,talentCombatDefense,modifySpell} from './talent-effects.js';
+import {memoizeDerived} from './derived-cache.js';
 export const clone=x=>JSON.parse(JSON.stringify(x));
 export const LEVEL_CAP=60;
 // Content tables are immutable during play. Index their first matching rows once;
-// dynamic equipment, buffs and talents are still evaluated on every stats call.
+// dynamic equipment, buffs and talents are checked on every stats call.
 const statTables=new Map();
 function statRow(name,fields,values){
  let rows=statTables.get(name);
@@ -99,7 +101,24 @@ export function refreshPetStats(owner,pet,{heal=false}={}){
  const computed=petStats(pet);pet.maxHp=computed.maxHp;pet.maxMana=computed.maxMana;pet.armor=petStats({...pet,auras:[]}).armor;
  pet.hp=heal?pet.maxHp:Math.max(0,Math.min(pet.hp||0,pet.maxHp));pet.mana=heal?pet.maxMana:Math.max(0,Math.min(pet.mana||0,pet.maxMana));
 }
+// Dependency contract for calculateStats, petStats, talent modifiers/defense,
+// racial modifiers and armorWithAuras. Keep HP/resources/cooldowns/position out:
+// they change constantly but do not change a character sheet. A living
+// felhunter is the exception, represented by the two explicit pet dependencies.
+const cachedStats=memoizeDerived([
+ 'time','classId','raceId','level','form','stance','petUnit','escortNpc','kind','entry',
+ 'maxHp','maxMana','armor','petStatBase','ownerPetModifiers','ownerMasterDemonologist',
+ 'equipment','learned','talents','buffs','itemBuffs','classBuffs','auras',
+ 'talentBuffs','talentProcs','racialBuff','racialEffects','spiritTapUntil',
+ ['pet','hp'],['pet','kind']
+],calculateStats);
 export function stats(c){
+ const result=cachedStats(c);
+ // Preserve the public function's independent, mutable return value. Callers
+ // may annotate a sheet without corrupting a later combat calculation.
+ return {...result,resistances:{...result.resistances},...(result.spellPenetration?{spellPenetration:{...result.spellPenetration}}:{})};
+}
+function calculateStats(c){
  if(c.petUnit&&c.kind)return petStats(c);
  if(c.escortNpc||c.petUnit)return{str:0,agi:0,sta:0,int:0,spi:0,armor:armorWithAuras(c,c.armor||0,c.time||0),maxHp:c.maxHp||0,maxMana:c.maxMana||0,baseMana:0,attackPower:0,rangedAttackPower:0,crit:.05,spellCrit:0,dodge:0,parry:0,hit:0,spellHit:0,spellPower:0,healing:0,resistances:resistances(c),regenCasting:0};
  const base=statRow('player_levelstats',['race','class','level'],[c.raceId||1,c.classId,Math.min(LEVEL_CAP,c.level)]);
@@ -144,10 +163,15 @@ export function stats(c){
   if(a.type===54)result.hit+=a.amount/100;
   if(a.type===55)result.spellHit+=a.amount/100;
  }
+ result.spellPenetration=Object.fromEntries([1,2,3,4,5,6].map(school=>[school,-statAuras.filter(a=>a.type===123&&(a.misc&(1<<school))).reduce((n,a)=>n+a.amount,0)]));
  const skillBonus=skill=>statAuras.filter(a=>[30,98].includes(a.type)&&a.misc===skill).reduce((n,a)=>n+a.amount,0);
  const skillIds={0:44,1:172,2:45,3:46,4:54,5:160,6:229,7:43,8:55,10:136,13:473,15:173,16:176,18:226,19:228};
  const skillAt=slot=>{const subclass=items[c.equipment?.[slot]?.id]?.subclass;return c.level*5+(mods.weaponSkill||0)+(racialModifiers(c).weaponSkillBySubclass[subclass]||0)+skillBonus(skillIds[subclass]);};
  result.maxEnergy=100+(mods.energyFlat||0);result.maxRage=1000;result.block=(mods.block||0)+(c.learned?.includes(107)?.05:0);result.blockValuePct=mods.blockValuePct||0;result.defense=c.level*5+(mods.defense||0)+skillBonus(95);result.weaponSkill=skillAt(16);result.offhandWeaponSkill=skillAt(17);result.rangedWeaponSkill=skillAt(18);result.rangedCrit=result.crit+(mods.rangedCrit||0);
+ result.dodge+=equipmentAuras.filter(a=>a.type===49).reduce((n,a)=>n+a.amount/100,0);
+ result.parry+=equipmentAuras.filter(a=>a.type===47).reduce((n,a)=>n+a.amount/100,0);
+ result.block+=equipmentAuras.filter(a=>a.type===51).reduce((n,a)=>n+a.amount/100,0);
+ const shield=items[c.equipment?.[17]?.id];result.blockValue=shield?.InventoryType===14&&c.equipment[17].durability!==0?Math.max(0,(shield.block||0)+result.str/20-1+statAuras.filter(a=>a.type===158).reduce((n,a)=>n+a.amount,0)+mightSetBonuses(c).blockValue)*(1+result.blockValuePct):0;
  result.spellPower+=result.spi*(mods.spellPowerFromSpiritPct||0);result.healing+=result.spi*(mods.healingFromSpiritPct||0);result.armor+=result.int*(mods.armorFromIntPct||0);
  result.spellCrit=intellectCrit(c.classId,c.level,result.int)+(mods.spellCrit||0)+statAuras.filter(a=>a.type===57).reduce((n,a)=>n+a.amount/100,0);
  const power=baseAttackPower(c.classId,c.level,result.str,result.agi,c.form);

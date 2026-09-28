@@ -3,8 +3,13 @@ const clamp=n=>Math.max(0,Math.min(1,n));
 // Classic PvE reference model: +19% dual-wield white miss, a steeper
 // NPC skill-gap penalty above ten points, and mutually exclusive outcomes.
 export function weaponMissChance(skill,defense,{hit=0,dualWield=false,playerTarget=false}={}){
- const d=defense-skill,penalty=playerTarget||d<=0?d*.0004:d<=10?d*.001:.01+(d-10)*.006;
- return clamp(.05+penalty+(dualWield?.19:0)-hit);
+ const d=defense-skill,penalty=playerTarget||d<=0?d*.0004:d<=10?d*.001:d*.002;
+ const effectiveHit=!playerTarget&&d>10?Math.max(0,hit-(d-10)*.002):hit;
+ return clamp(.05+penalty+(dualWield?.19:0)-effectiveHit);
+}
+export function meleeCritSuppression(level,targetLevel,auraCrit=0,{playerTarget=false}={}){
+ const delta=(targetLevel-level)*5;
+ return delta*(playerTarget||delta<=0?.0004:.002)+(!playerTarget&&delta>=15?Math.min(.018,Math.max(0,auraCrit)):0);
 }
 export function rollAttackTable(roll,chances){
  let boundary=0;

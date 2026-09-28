@@ -42,11 +42,11 @@ export function extendedMoltenCoreTick(s,actors,boss,hurt,targets){
   if(!r.submerged&&s.clock>=r.nextSubmerge){
    r.submerged=true;r.emergeAt=s.clock+45000;boss.stunUntil=r.emergeAt;raidAnimation(s,boss,'submerge',45000);
    addCombatAura(boss,{spell:21107,type:39,misc:127,until:r.emergeAt,positive:true},s.clock);
-   for(let i=0;i<6;i++){const e=raidEnemy(s,`son-${s.clock}-${i}`,'烈焰之子',12143,10500,300,430);const angle=i*Math.PI/3,p=fieldSafePoint({x:boss.position+Math.cos(angle)*10,y:boss.positionY+Math.sin(angle)*10},r.fires.filter(f=>f.terrain),s.combat.area);e.position=p.x;e.positionY=p.y;e.target=living.find(c=>combatRole(c)==='tank'&&!c.raidMainTank)?.id||s.id;e.threat[e.target]=2500;s.combat.enemies.push(e);}
+   for(let i=0;i<6;i++){const e=raidEnemy(s,`son-${s.clock}-${i}`,'烈焰之子',12143);const angle=i*Math.PI/3,p=fieldSafePoint({x:boss.position+Math.cos(angle)*10,y:boss.positionY+Math.sin(angle)*10},r.fires.filter(f=>f.terrain),s.combat.area);e.position=p.x;e.positionY=p.y;e.target=living.find(c=>combatRole(c)==='tank'&&!c.raidMainTank)?.id||s.id;e.threat[e.target]=2500;s.combat.enemies.push(e);}
    raidNotice(s,'拉格纳罗斯潜入熔岩：击败六名烈焰之子，迫使炎魔现身。');
   }
   if(r.submerged){
-   if(!s.combat.enemies.some(e=>e.id.startsWith('son-')&&e.hp>0)||s.clock>=r.emergeAt){r.submerged=false;boss.stunUntil=0;boss.auras=boss.auras.filter(a=>a.spell!==21107);r.nextSubmerge=s.clock+65000;raidAnimation(s,boss,'emerge',2500);raidNotice(s,'拉格纳罗斯重新现身！');}
+   if(!s.combat.enemies.some(e=>e.id.startsWith('son-')&&e.hp>0)||s.clock>=r.emergeAt){r.submerged=false;boss.stunUntil=0;boss.auras=boss.auras.filter(a=>a.spell!==21107);r.nextSubmerge=s.clock+180000;raidAnimation(s,boss,'emerge',2500);raidNotice(s,'拉格纳罗斯重新现身！');}
    else {if(s.clock>=r.nextPulse){r.nextPulse=s.clock+5000;for(const c of targets(s,living,5)){c.mana=Math.max(0,c.mana-250);hit(c,180,'烈焰之子法力燃烧');}}return;}
   }
  }

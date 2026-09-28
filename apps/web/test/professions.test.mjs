@@ -4,7 +4,8 @@ import {createGame,act,advance,view,stats} from '../../../packages/game-domain/s
 import {addItem,countItem} from '../../../packages/game-domain/src/rules/character.js';
 import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
 import {items} from '../../../packages/game-domain/src/rules/catalog.js';
-import {recipes,marketIds} from '../../../packages/game-domain/src/rules/profession-data.js';
+import {recipes} from '../../../packages/game-domain/src/rules/profession-data.js';
+import {marketIds} from '../../../packages/game-domain/src/rules/market.js';
 import {clientContent} from '../../../packages/game-domain/src/rules/client-content.js';
 import {workshopView} from '../../../packages/game-domain/src/rules/workshop.js';
 const fresh=()=>{const s=createGame('工匠',71,0);s.money=100000;s.level=20;return s;};
@@ -61,7 +62,7 @@ test('potion strategy consumes real inventory and obeys shared cooldown',()=>{
 });
 test('every profession recipe and market item is fully defined',()=>{
  for(const id of marketIds)assert.ok(items[id],`missing item ${id}`);
- for(const r of recipes){let s=learn(fresh(),r.profession);s.level=60;s.money=1000000000;s.professions[r.profession]={skill:300,cap:300,specialization:r.specialization};s=action(s,{type:'craft',id:r.id,count:1,buyMissing:true});assert.ok(countItem(s,r.item)>=r.output,r.id);}
+ for(const r of recipes){let s=learn(fresh(),r.profession);s.level=60;s.money=1000000000;s.professions[r.profession]={skill:300,cap:300,specialization:r.specialization};s.bags=Array.from({length:4},(_,n)=>({uid:'test-bag'+n,id:14155,count:1}));for(const m of r.materials)addItem(s,m.id,m.count);for(const id of r.tools)addItem(s,id,1);s=action(s,{type:'craft',id:r.id,count:1});assert.ok(countItem(s,r.item)>=r.output,r.id);}
 });
 test('organizing stacks preserves quantities, locks and enchantments',()=>{
  let s=fresh();addItem(s,2447,20);addItem(s,2447,10);s.bag.find(i=>i.id===2447).count=7;

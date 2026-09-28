@@ -4,7 +4,7 @@ import {characterAttributes} from './character-attributes.js';
 const playerKeys = [
   'serverBuffs','id','name','classId','raceId','gender','growthPolicy','level','xp','hp','mana','rage','energy','power','form','stance','money','clock','wallAt',
   'activity','rest','location','visited','flightPoints','hearth','hearthReady','equipment','bag','bags','pending','bank','bankUpgrades',
-  'auctions','marketHistory','party','pet','escort','combat','lastCombat','dungeon','cast','groundEffects','learned','talents','quests',
+  'auctions','marketHistory','marketStock','marketClock','party','pet','escort','combat','lastCombat','dungeon','cast','groundEffects','learned','talents','quests',
   'completed','reputation','rules','settings','potions','mounts','riding','mounted','professions','professionCooldowns','resourceCooldowns',
   'journey','logs','logSequence','totals','soulstone','bandageReady','nextPull','ammunition','ammoPolicy','ammoRestockPrompt'
 ] as const;
@@ -13,7 +13,7 @@ const viewKeys = [
   'playerBuffs',
   'npcWorld','groupLoot',
   'arena','pvp','battleground',
-  'combatCommand','raidCommand','goldRaid','partyUnlocked','battleView','reincarnation','canSoulstoneRevive','skillUsesByTarget','environment','trackingKind','trackedTreasures','lockpicking',
+  'partyBuffCheck','combatCommand','raidCommand','goldRaid','partyUnlocked','battleView','reincarnation','canSoulstoneRevive','skillUsesByTarget','environment','trackingKind','trackedTreasures','lockpicking',
   'trackedTargets','scouting','lockTargets','petControls','classPortals','skillUses','itemUses','itemBuffs','professions','professionRecipeCount','canTrainProfession',
   'resources','disenchantable','className','raceName','faction','resource','raceTraits','talentTrees','talentResetCost','canResetTalents',
   'talentResetBlockedReason','bankCapacity','bankHere','bankUpgradeCost','inventoryActions','escort','escortNpc','hearthstone','mounts',
@@ -25,9 +25,11 @@ const actorKeys=['serverBuffs','npcPlayer','growthPolicy','serverBuffs','id','na
 const enemyKeys=['modelAnimation',...actorKeys,'minDamage','maxDamage','attackTime','spells','threat','smite','capturePhase','captureUntil'];
 const combatKeys=['lootGold','area','ground','id','runId','routeId','encounterId','startedAt','endedAt','dungeon','pull','command','participantIds','metrics','projectiles','actorsSnapshot'];
 const dungeonKeys=['id','runId','cursor','position','startedAt','completedAt','metrics'];
-const activityKeys=['type','reason','to','from','startedAt','endsAt','target','quest','spell','mount','caster','targets','routeId','journeySession','auto','flight','stopAtNext'];
+const activityKeys=['completed','remaining','type','reason','to','from','startedAt','endsAt','target','quest','spell','mount','caster','targets','routeId','journeySession','auto','flight','stopAtNext'];
 
 function copy(value: unknown): any {
+  // Keep in-memory Worker snapshots identical to their JSON representation.
+  if (value === 0) return 0;
   if (value === null || typeof value !== 'object') return value;
   if (Array.isArray(value)) return value.map(copy);
   const result:Record<string,unknown>={};
@@ -98,4 +100,23 @@ export function projectCombatPlayback(state:any,battle:any,wallAt:number){
  const projected=battlePresentationView(battle);
  if(projected)projected.actors=combatMembers(state,state.combat||state.lastCombat).map((actor:any)=>({...actorView(actor),...(!actor.petUnit&&!actor.escortNpc&&actor.classId?{characterAttributes:characterAttributes(actor)}:{})}));
  return {player,view:{battleView:projected}};
+}
+
+/** Live Worker projection. Attribute descriptions are metadata refreshed at most
+ * once per simulation second; each actor is projected once and referenced by ID.
+ * Historical playback keeps its independent complete snapshots above. */
+export function createCombatFrameProjector(){
+ let attributes=new Map<string,any>(),at=-Infinity,encounter:string|undefined;
+ return (state:any,battle:any,wallAt:number,force=false)=>{
+  if(force||state.combat?.id!==encounter||state.clock-at>=1000){
+   attributes=new Map(combatMembers(state,state.combat||state.lastCombat).filter((a:any)=>!a.petUnit&&!a.escortNpc&&a.classId).map((a:any)=>[a.id,characterAttributes(a)]));at=state.clock;encounter=state.combat?.id;
+  }
+  const members=combatMembers(state,state.combat||state.lastCombat),owners=[state,...(state.party||[])];
+  const actors=Object.fromEntries([...new Map([...owners,...members].map((a:any)=>[a.id,a])).values()].map((actor:any)=>[actor.id,{...actorView(actor),...(attributes.has(actor.id)?{characterAttributes:attributes.get(actor.id)}:{})}]));
+  const player=pick(state,['id','clock','hp','mana','rage','energy','power','form','stance','cast','logSequence']);
+  player.wallAt=wallAt;player.combat=combatView(state.combat);player.lastCombat=state.combat?null:combatView(state.lastCombat);
+  player.party=(state.party||[]).map((a:any)=>a.id);if(state.pet)player.pet=actorView(state.pet);
+  const projected=battlePresentationView(battle);if(projected)projected.actors=members.map((a:any)=>a.id);
+  return {player,view:{battleView:projected},actors};
+ };
 }

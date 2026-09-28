@@ -1,5 +1,10 @@
+import {observePolicyChanges,stepCombatPolicy,flushQueuedCombatIntent,queueManualCombatIntent,invalidatePolicyIntents} from './combat-policy.js';
+import {combatInputReadyReason,combatInputTargetReason,pendingCombatInput,inputWaiting,inputResult,pruneCombatInputs} from './combat-input.js';
+import {mightSetBonuses} from './might-set.js';
+import {spellResistance,mitigateSpellDamage} from './spell-mitigation.js';
+import {binarySpell} from '../../../sim-core/src/spell-resistance.js';
 import {markCombatEngaged} from './combat-engagement.js';
-import {commandAvailable,commandOrder,commandSkillReason,commandDamageRules} from './combat-command.js';
+import {commandAvailable,commandOrder,commandSkillReason,commandDamageSpell,commandDamageRules} from './combat-command.js';
 import {beginJourneyBattle} from './journey.js';
 import {pvpApplyControl,pvpAbilityAllowed,pvpTriggeredControl} from './pvp-runtime.js';
 import {breakPvpControls,syncPvpDiminishing} from '../../../sim-core/src/pvp-control.js';
@@ -15,10 +20,10 @@ import {racialActiveNames} from './racial-effects.js';
 import {combatRole} from './combat-roles.js';
 import {sceneCombatArea,validateCombatArea,setCombatPosition} from './combat-area.js';
 import {beginSpellTiming,finishSpellTiming,spellReady} from './spell-timing.js';
-import {positionPartyMember,holdsBackline,mayApproachForSpell,spellApproachRange,recordCombatMotion} from './combat-positioning.js';
+import {approachRear,positionPartyMember,holdsBackline,mayApproachForSpell,spellApproachRange,recordCombatMotion} from './combat-positioning.js';
 import {receive} from './inventory.js';
 import {environmentDamage} from './class-environment.js';
-import {classChannelTick,classIncoming,classMeleeProc,tameClassPet,gainHunterPetXp} from './class-spell-effects.js';
+import {selectPetSpell,executePetSpell,classChannelTick,classIncoming,classMeleeProc,tameClassPet,gainHunterPetXp} from './class-spell-effects.js';
 import {onTalentEvent,beginTalentCast,endTalentCast} from './talent-runtime.js';
 import {point,distance} from '../../../sim-core/src/geometry.js';
 import {detectsTarget,moveToward,moveAway,areaTargets,castRange,inSpellRange,groundArea,selfArea,spellRadius,aliveEnemy} from './combat-space.js';
@@ -29,10 +34,10 @@ import { creatures, spells, monsterIdsAt, objectTemplates, creatureLoot, nameOf,
 import { stats, enemy, knownRank, spellInfo, effectRange, armorReduction, talentRank, rng, roll, log, gainXp, killXp } from './character.js';
 import { creditKill, lootRows } from './quests.js';
 import {skinBeast} from './professions.js';
-import {useStrategyPotion} from './consumables.js';
-import {stanceModifiers,gainRage,effectiveArmor,weaponDamage,resolveHeal,decideCompanion,companionTarget,stanceAllows,interruptPriestForRescue,decidePriestDefense} from './companion-combat.js';
+import {selectStrategyPotion,executeStrategyPotion} from './consumables.js';
+import {stanceModifiers,gainRage,effectiveArmor,weaponDamage,resolveHeal,selectCompanion,executeCompanionAbility,companionTarget,stanceAllows,selectPriestRescue,selectPriestDefense} from './companion-combat.js';
 import {companionSkills} from './party.js';
-import {activeAuras,controlled,rooted,hasAura,movementMultiplier,addMovementSlow,addCombatAura,attackTimeMultiplier,schoolImmune,physicalDamageBonus} from '../../../sim-core/src/combat-auras.js';
+import {activeAuras,controlled,rooted,hasAura,movementMultiplier,addMovementSlow,addCombatAura,attackTimeMultiplier,schoolImmune,mechanicImmune,physicalDamageBonus} from '../../../sim-core/src/combat-auras.js';
 import {enemyAITick,enemyDesiredRange} from './enemy-ai.js';
 import {tickEnemyAuras,tickEnemySpell,tickEnemyProjectiles} from './enemy-spells.js';
 import {initializeSmite,smiteTick} from './smite.js';
@@ -44,7 +49,7 @@ import {consumeHunterAmmo} from './ammunition.js';
 import {dismount} from './mounts.js';
 import {moltenCoreTick} from './molten-core-encounter.js';
 import {canPolymorph,polymorphTarget,applyPolymorph,tickPolymorph} from './polymorph.js';
-import {decideClass,classEffect,tickClassEffects,petTick,racialTick,healAmount} from './class-mechanics.js';
+import {selectClass,executeClassAbility,classEffect,tickClassEffects,petTick,selectPetPolicy,selectRacialReaction,executeRacialReaction,healAmount} from './class-mechanics.js';
 import {talentModifiers,abilityDamageMultiplier,spellCritBonus,ranks,talentSpellValue,talentSchoolThreat,talentOffhandMultiplier,talentArmorPenetration,talentCombatDefense} from './talent-effects.js';
 
 export const defaultRules = [
@@ -70,7 +75,7 @@ export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombat
  dismount(s);if(s.activity.type==='mount')s.activity={type:'idle'};
  s.groundEffects=[]; // A new encounter establishes a new local coordinate frame.
  s.combat={id:'encounter-'+(s.encounterSequence=(s.encounterSequence||0)+1),startedAt:s.clock,dungeon,area,ground,participantIds:combatMembers(s,null).map(c=>c.id),projectiles:[],enemies:prepared||ids.map((id,i)=>enemy(s,id,'enemy-'+i)),damage:{},healing:{},casts:0,pendingSpawns:[]};
- for(const c of combatMembers(s)){c.rest=null;c.cast=null;c.nextAction=s.clock;c.nextSwing=s.clock;c.position=combatRole(c)==='tank'?20:combatRole(c)==='melee'?18:0;c.positionY=c.id===s.id||c.classId===1?0:c.classId===4?2:c.classId===5?-4:4;c.time=s.clock;c.nextPowerRegen=s.clock+2000;c.combo=0;c.comboTarget=null;c.queuedStrike=null;}
+ for(const c of combatMembers(s)){c.target=null;c.policyMovement=null;c.rest=null;c.cast=null;c.nextAction=s.clock;c.nextSwing=s.clock;c.position=combatRole(c)==='tank'?20:combatRole(c)==='melee'?18:0;c.positionY=c.id===s.id||c.classId===1?0:c.classId===4?2:c.classId===5?-4:4;c.time=s.clock;c.nextPowerRegen=s.clock+2000;c.combo=0;c.comboTarget=null;c.queuedStrike=null;}
  const pullTank=combatMembers(s).find(c=>!c.petUnit&&!c.totemUnit&&!c.escortNpc&&c.hp>0&&combatRole(c)==='tank');
  for(const [i,e] of s.combat.enemies.entries()){if(pullTank&&!e.target&&!e.controlledBy)e.target=pullTank.id;const spawn=dungeon?{position:30+Math.floor(i/3)*2,positionY:i===0?0:(i%2?1:-1)*Math.ceil(i/2)*2}:personalEnemyPosition(s,i,openingRange);e.position=spawn.position;e.positionY=spawn.positionY;e.nextAttack=s.clock;e.nextSpell=s.clock+6000;}
  for(const unit of [...combatMembers(s),...s.combat.enemies])setCombatPosition(s,unit,unit);
@@ -84,9 +89,9 @@ export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombat
  beginJourneyBattle(s);
  log(s,'遭遇：'+s.combat.enemies.map(e=>e.name).join('、'),'combat');
 }
-function recordDamage(s,c,target,amount,label,threatMultiplier=1,detail={}){
+export function recordDamage(s,c,target,amount,label,threatMultiplier=1,detail={}){
  markCombatEngaged(s,c);c.stealthed=false;
- const sp=spells[detail.spellId],school=detail.school??sp?.School??0;if(school===0&&!detail.periodic)amount+=physicalDamageBonus(c,s.clock);for(const a of activeAuras(target,s.clock))if(a.type===14&&(a.misc&(1<<school))&&(a.charges==null||a.charges>0)){amount+=a.amount;if(a.charges>0)a.charges--;}if(!detail.talentProc)amount*=abilityDamageMultiplier(c,sp,{...target,creatureType:creatures[target.entry]?.CreatureType},!!detail.periodic);
+ const rawSpell=spells[detail.spellId],sp=rawSpell&&detail.weaponAttack?{...rawSpell,School:detail.school??rawSpell.School,DmgClass:2}:rawSpell,school=detail.school??sp?.School??0;if(school===0&&!detail.periodic)amount+=physicalDamageBonus(c,s.clock);for(const a of activeAuras(target,s.clock))if(a.type===14&&(a.misc&(1<<school))&&(a.charges==null||a.charges>0)){amount+=a.amount;if(a.charges>0)a.charges--;}if(!detail.talentProc)amount*=abilityDamageMultiplier(c,sp,{...target,creatureType:creatures[target.entry]?.CreatureType},!!detail.periodic);
  threatMultiplier*=talentSchoolThreat(c,sp?.School||0);if(sp)threatMultiplier*=talentSpellValue(c,sp,2,1);
  if(c.form==='bear')threatMultiplier*=1+.03*(ranks(c)['Feral Instinct']||0);
  for(const a of activeAuras(c,s.clock))if(a.type===79&&(a.misc&(1<<(detail.school??sp?.School??0))))amount*=1+a.amount/100;
@@ -98,14 +103,14 @@ function recordDamage(s,c,target,amount,label,threatMultiplier=1,detail={}){
   if(c.pvpBlockedHit?.targetId===target.id&&c.pvpBlockedHit.at===s.clock){amount=Math.max(0,amount-c.pvpBlockedHit.amount);delete c.pvpBlockedHit;}
   const before=target.hp;hurtPlayer(s,c,target,amount,label,{...detail,pvpDamage:true});dealt=before-target.hp;
   if(dealt>0){c.inCombat=true;target.inCombat=true;c.lastHostileAt=target.lastHostileAt=s.clock;breakPvpControls(target,s.clock,dealt,()=>rng(s));}
- }else{dealt=Math.min(target.capturePhase?Math.max(0,target.hp-1):target.hp,Math.max(0,Math.round(amount)));target.hp-=dealt;target.polyUntil=0;if(dealt>0)target.auras=(target.auras||[]).filter(a=>!((spells[a.spell]?.AuraInterruptFlags||0)&2));}
+ }else{amount=mitigateSpellDamage(s,c,target,amount,detail);dealt=Math.min(target.capturePhase?Math.max(0,target.hp-1):target.hp,Math.max(0,Math.round(amount)));target.hp-=dealt;target.polyUntil=0;if(dealt>0)target.auras=(target.auras||[]).filter(a=>!((spells[a.spell]?.AuraInterruptFlags||0)&2));}
  recordMetric(s,c,target,dealt,{...detail,label,effective:true});
  for(const a of activeAuras(c,s.clock))if(a.type===10&&(a.misc&(1<<(detail.school??sp?.School??0))))threatMultiplier*=1+a.amount/100;
  target.threat[c.id]=(target.threat[c.id]||0)+dealt*threatMultiplier;
  const key=c.name+' · '+label;s.combat.damage[key]=(s.combat.damage[key]||0)+dealt;
  log(s,`${c.name} 的${label}对 ${target.name} 造成 ${dealt} 点伤害`,'damage',{actorId:c.id,targetId:target.id,amount:dealt,action:label,...detail});
  if(label==='近战攻击'){gainRage(c,dealt,true);const wrath=ranks(c)['Unbridled Wrath']||0;if(wrath&&rng(s)<.08*wrath)c.rage=Math.min(1000,(c.rage||0)+10);}
- const melee=label==='近战攻击'||detail.hand==='off'||detail.spellId&&spells[detail.spellId]?.DmgClass===2;
+ const melee=detail.weaponAttack||label==='近战攻击'||detail.hand==='off'||detail.spellId&&spells[detail.spellId]?.DmgClass===2;
  if(dealt>0&&melee&&!target.pvp)triggerMeleeProcs(s,target,c,label==='近战攻击'?8:32,combatMembers(s),hurtPlayer);
  if(target.capturePhase==='fighting'&&target.hp/target.maxHp<.01){target.capturePhase='weakened';target.captureUntil=s.clock+29500;target.stunUntil=s.clock+30000;target.cast=null;target.dots=[];log(s,'裂隙怒灵已经虚弱，使用收容箱进行捕获！','quest');}
  onTalentEvent(s,c,{type:'damage',target,spell:sp,amount:dealt,critical:detail.critical,periodic:detail.periodic,melee,comboBuilder:['Sinister Strike','Backstab','Ambush','Ghostly Strike','Hemorrhage'].includes(sp?.SpellName),talentProc:detail.talentProc},{damage:recordDamage,healAmount,stats,rng,actors:combatMembers(s)});
@@ -115,7 +120,9 @@ function spellLands(s,c,e,sp){
  if(e.pvp&&!pvpAbilityAllowed(c,e,sp,s.clock))return false;
  if(schoolImmune(e,sp.School,s.clock)){log(s,`${e.name} 免疫了 ${nameOf('spells',sp.Id)}`,'miss',{actorId:c.id,targetId:e.id,spellId:sp.Id});return false;}
  if([2,3].includes(sp.DmgClass))return weaponAttack(s,c,e,{special:true,ranged:sp.DmgClass===3,spell:sp,rollCritical:false}).landed;
- const miss=spellMissChance(c.level,e.level,talentSpellValue(c,sp,16,0)/100+(stats(c).spellHit||0),{playerTarget:!!e.pvp});
+ const baseMiss=spellMissChance(c.level,e.level,0,{playerTarget:!!e.pvp});
+ const hit=talentSpellValue(c,sp,16,0)/100+(stats(c).spellHit||0);
+ const miss=Math.max(.01,1-(1-baseMiss)*(binarySpell(sp)?1-.75*spellResistance(s,c,e,sp):1)-hit);
  if(rng(s)<miss){log(s,`${e.name} 抵抗了 ${nameOf('spells',sp.Id)}`,'miss',{actorId:c.id,targetId:e.id,spellId:sp.Id});return false;}return true;
 }
 function magicHit(s,c,e,sp,n,periodic=false){
@@ -138,14 +145,13 @@ function resolveSpell(s,c,e,sp,center){
    const duration=sp.durationMs;
    target.dots.push({caster:c.id,spell:sp.Id,effect:n,next:s.clock+(sp['EffectAmplitude'+n]||2000),interval:sp['EffectAmplitude'+n]||2000,remaining:Math.floor(duration/(sp['EffectAmplitude'+n]||2000))});
   }
-  if(effect===6&&aura===33){addMovementSlow(target,{caster:c.id,spell:sp.Id,until:s.clock+sp.durationMs,amount:Math.min(.9,Math.abs(sp['EffectBasePoints'+n]+1)/100+(talentRank(c,'Permafrost')?[0,.04,.07,.1][talentRank(c,'Permafrost')]:0))},s.clock);if(rng(s)<.05*talentRank(c,'Frostbite')){if(!pvpTriggeredControl(s,c,target,12494,26,5000)){target.rootUntil=s.clock+5000;target.frozenUntil=target.rootUntil;}}}
-  if(effect===6&&aura===26){if(!pvpApplyControl(s,c,target,sp,26)){target.rootUntil=s.clock+sp.durationMs;if(sp.School===4)target.frozenUntil=target.rootUntil;}}
+  if(effect===6&&aura===33){addMovementSlow(target,{caster:c.id,spell:sp.Id,until:s.clock+sp.durationMs,amount:Math.min(.9,Math.abs(sp['EffectBasePoints'+n]+1)/100+(talentRank(c,'Permafrost')?[0,.04,.07,.1][talentRank(c,'Permafrost')]:0))},s.clock);if(!mechanicImmune(target,7)&&rng(s)<.05*talentRank(c,'Frostbite')){if(!pvpTriggeredControl(s,c,target,12494,26,5000)){target.rootUntil=s.clock+5000;target.frozenUntil=target.rootUntil;}}}
+  if(effect===6&&aura===26&&!mechanicImmune(target,7)){if(!pvpApplyControl(s,c,target,sp,26)){target.rootUntil=s.clock+sp.durationMs;if(sp.School===4)target.frozenUntil=target.rootUntil;}}
   if(effect===6&&[9,138].includes(aura))addCombatAura(target,{spell:sp.Id,effect:n,type:aura,amount:sp['EffectBasePoints'+n]+1,until:s.clock+sp.durationMs,caster:c.id},s.clock);
  }}
 }
 function releaseSpell(s,c,e,sp,center){
  const aim=groundArea(sp)?center||e:e;
- if(!strategyAllows(s,c,e,sp,undefined,center)){log(s,'施法取消：保护控场或等待坦克','cancel',{actorId:c.id,targetId:e?.id??null,spellId:sp.Id});return;}
  if(!aim||!groundArea(sp)&&!aliveEnemy(e)||!inSpellRange(c,aim,sp)){log(s,'施法取消：目标失效或超出距离','cancel',{actorId:c.id,targetId:e?.id,spellId:sp.Id});return;}
  if(!launchProjectile(s,c,e,sp))resolveSpell(s,c,e,sp,center);
  endTalentCast(s,c,sp,sp.talentCast,{damage:recordDamage,healAmount,rng,stats,actors:combatMembers(s)},{target:e});
@@ -157,33 +163,125 @@ function tickPlayerEffects(s,actors){
   while(area.next<=s.clock&&area.next<=area.until){for(const victim of s.combat.enemies.filter(e=>aliveEnemy(e)&&distance(e,area)<=area.radius))magicHit(s,c,victim,spellInfo(c,area.spell),area.effect,true);area.next+=area.interval;}
  }
 }
-const manualMageSpells=new Set(['Fireball','Frostbolt','Arcane Missiles','Polymorph','Fire Blast','Frost Nova','Arcane Explosion','Flamestrike','Blizzard','Counterspell','Scorch']);
+// One authoritative action entry point for local policy, Worker policy and input.
+// Validation is read-only; family/spell objects supplied by policy are never trusted.
+export function executeCombatIntent(s,c,intent,{manual=false}={}){
+ if(!s.combat||!combatMembers(s).includes(c)||c.hp<=0)return {accepted:false,reason:'actor'};
+ if(s.combat.command?.paused)return {accepted:false,reason:'paused'};
+ const actors=combatMembers(s),target=intent?.kind==='move'&&intent.destination?intent.destination:[...actors,...s.combat.enemies].find(a=>a.id===intent?.targetId);
+ if(intent?.kind==='cancel'){
+  if(!c.cast||c.cast.spell!==intent.spellId||c.cast.startedAt!==intent.startedAt)return {accepted:false,reason:'cast'};
+  cancelInvalidCast(s,c,c.cast,'strategy');return {accepted:true};
+ }
+ if(intent?.kind==='racial'){if(intent.raceId!==c.raceId||!selectRacialReaction(s,c))return {accepted:false,reason:'racial'};executeRacialReaction(s,c,s.combat.enemies);return {accepted:true};}
+ if(controlled(c,s.clock))return {accepted:false,reason:'controlled'};
+ // Revalidate allegiance here: control may change after a policy observation
+ // or while a spell waits in the queue.
+ if(['attack','cast','petCast'].includes(intent?.kind)&&target?.controlledBy&&s.combat.enemies.includes(target))return {accepted:false,reason:'target-kind'};
+ if(intent?.kind==='stopAttack'){c.target=null;c.policyMovement=null;return {accepted:true};}
+ if(intent?.kind==='attack'){
+  if(!target||!s.combat.enemies.includes(target)||!aliveEnemy(target)||s.combat.command?.holdFire)return {accepted:false,reason:'target'};
+  c.target=target.id;return {accepted:true};
+ }
+ if(intent?.kind==='petCast'){
+  const owner=actors.find(a=>a.id===c.ownerId),sp=spellInfo(c,intent.spellId);
+  if(!c.petUnit||!owner||!target||target.hp<=0||!sp||c.silenceUntil>s.clock||hasAura(c,27,s.clock)||(c.schoolLockouts?.[sp.School]||0)>s.clock)return {accepted:false,reason:'pet'};
+  const selected=selectPetSpell(s,c,owner,target,actors,intent.spellId);
+  if(!selected||selected.targetId!==target.id||s.combat.command?.holdFire&&commandDamageSpell(sp))return {accepted:false,reason:'pet-requirements'};
+  if(s.combat.enemies.includes(target))c.target=target.id;
+  executePetSpell(s,c,owner,target,sp,actors,{damage:recordDamage,healAmount,stats,rng});return {accepted:true};
+ }
+ if(intent?.kind==='potion')return {accepted:executeStrategyPotion(s,c,intent.itemId)};
+ if(intent?.kind==='move'){
+  if(c.cast||!target||!Number.isFinite(target.position)||!Number.isFinite(target.positionY??0)||target.hp<=0||target.removed||!['toward','away','rear'].includes(intent.mode)||!Number.isFinite(intent.range)||intent.range<0||intent.range>100)return {accepted:false,reason:'movement'};
+  c.policyMovement={...intent};return {accepted:true};
+ }
+ if(intent?.kind!=='cast'||!c.learned.includes(intent.spellId))return {accepted:false,reason:'spell'};
+ const sp=spellInfo(c,intent.spellId);if(!sp||!target||target.removed||target.hp<=0&&sp.SpellName!=='Rebirth')return {accepted:false,reason:'target'};
+ const friendly=actors.includes(target),kind=classAbilityKind(sp),name=sp.SpellName;
+ const either=['Dispel Magic','Holy Shock'].includes(name);
+ const friendlySpell=['heal','buff','enchant','summon','dispel'].includes(kind)&&name!=='Purge'&&!['Tame Beast','Inferno'].includes(name)||['Cold Snap','Fade','Feign Death','Blink','Evocation'].includes(name)||racialActiveNames.has(name)||talentActiveNames.has(name)&&!['damage','control'].includes(kind);
+ const alliedBuff=/^(Blessing of |Greater Blessing of |Power Word: |Prayer of |Mark of the Wild|Gift of the Wild|Thorns|Fear Ward|Power Infusion|Innervate|Divine Intervention|Arcane Intellect|Arcane Brilliance|Dampen Magic|Amplify Magic|Divine Spirit|Shadow Protection)/.test(name);
+ const selfOnly=(kind==='buff'&&!alliedBuff)||kind==='enchant'||kind==='summon'&&!['Tame Beast','Inferno'].includes(name)||['Cold Snap','Fade','Feign Death','Blink','Evocation'].includes(name)||racialActiveNames.has(name);
+ if(selfOnly&&target!==c)return {accepted:false,reason:'self-only'};
+ if(!either&&(friendlySpell?!friendly:friendly)||!friendly&&!aliveEnemy(target)&&name!=='Rebirth')return {accepted:false,reason:'target-kind'};
+ const independent=!sp.StartRecoveryTime&&!sp.castMs&&!sp.ChannelInterruptFlags;
+ if(!independent&&(c.cast||c.nextAction>s.clock)||!spellReady(c,sp,s.clock))return {accepted:false,reason:'timing'};
+ if(sp.School>0&&(c.silenceUntil>s.clock||hasAura(c,27,s.clock))||(c.schoolLockouts?.[sp.School]||0)>s.clock)return {accepted:false,reason:'silence'};
+ if(target!==c&&!inSpellRange(c,target,sp))return {accepted:false,reason:'range'};
+ const pool=sp.PowerType===1?'rage':sp.PowerType===2?'focus':sp.PowerType===3?'energy':[-2,4294967294].includes(sp.PowerType)?'hp':'mana';
+ if((c[pool]||0)<sp.mana||pool==='hp'&&c.hp<=sp.mana)return {accepted:false,reason:'resource'};
+ if(s.combat.command?.holdFire&&commandDamageSpell(sp))return {accepted:false,reason:'hold-fire'};
+ const rule={spell:sp.Id,enabled:true,condition:'always',value:0},input={target,authoritative:true,manual};
+ const focus=friendly?(s.combat.enemies.find(e=>e.id===c.comboTarget||e.id===c.target)||s.combat.enemies[0]||target):target;
+ const selected=selectClass(s,c,focus,actors,null,[rule],input)||
+  (c.classId===8&&selectMage(s,c,target,[rule],input))||
+  ([1,4,5].includes(c.classId)&&selectCompanion(s,c,[target],actors,null,null,null,[rule],input));
+ if(!selected||selected.kind!=='cast'||selected.spellId!==sp.Id||selected.targetId!==target.id)return {accepted:false,reason:'requirements'};
+ const api={damage:recordDamage,cast:releaseSpell,heal:resolveHeal,healAmount,lands:spellLands,summonInfernal,doomRitual:beginDoomRitual,rng,stats,actors};
+ const explicit=manual?{target}:null;
+ c.policyMovement=null;
+ const occupied=c.nextAction;
+ if(!friendly)c.target=target.id;
+ const result=selected.family==='class'?executeClassAbility(s,c,target,sp,actors,api,explicit):selected.family==='mage'?executeMageAbility(s,c,target,sp,explicit):executeCompanionAbility(s,c,target,sp,actors,recordDamage,spellLands,api,explicit);
+ if(c.cast?.startedAt===s.clock&&!manual)c.cast.policyControlled=true;
+ if(independent)c.nextAction=Math.max(c.nextAction,occupied);
+ return {accepted:true,result:selected.family==='companion'?(result==='queued'?false:'core'):result};
+}
+function applyDecision(s,c,intent){if(!intent)return false;const result=executeCombatIntent(s,c,intent);if(!result.accepted)return false;if(intent.kind==='move'){integratePolicyMovement(s,c);return true;}return result.result??true;}
+function integratePolicyMovement(s,c){
+ const move=c.policyMovement;if(!move||c.cast||c.hp<=0||controlled(c,s.clock))return false;
+ const target=move.destination||[...combatMembers(s),...s.combat.enemies].find(a=>a.id===move.targetId);
+ if(!target||target.hp<=0||target.removed){c.policyMovement=null;return false;}
+ if(move.mode==='rear')return approachRear(s,c,target,move.range);
+ return move.mode==='away'?moveAway(s,c,target,s.clock):moveToward(s,c,target,move.range,s.clock);
+}
+function decideClass(s,c,e,actors,api,rules,input){return applyDecision(s,c,selectClass(s,c,e,actors,api,rules,input));}
+
 const positioningReactions=new Set(['Cold Snap','Deterrence','Frost Nova','Concussive Shot','Wing Clip','Psychic Scream','Hammer of Justice','Frost Shock','Gouge','Counterspell','Earth Shock','Kick','Silence']);
+// Both direct player input and queued team input reach the same AI executors.
+// Only selection policy differs: an explicit rank/recipient cannot be retargeted.
 export function commandCombatCast(s,c,id,targetId){
  if(!s.combat||!combatMembers(s).includes(c))throw new Error('需要角色正在参与战斗');
  if(s.combat.pull&&(s.clock<s.combat.pull.startsAt||s.combat.pull.engagedAt==null))throw new Error('请等待倒计时结束并由坦克开怪');
- const sp=spellInfo(c,id);if(c.classId!==8||!sp||!manualMageSpells.has(sp.SpellName))throw new Error('当前手动战斗施法支持法师伤害与控场法术；其他技能请使用自己的战斗策略');
- if(!c.learned.includes(id))throw new Error('角色尚未学习这个法术');
- if(c.hp<=0||c.cast||(c.nextAction||0)>s.clock||!spellReady(c,sp,s.clock))throw new Error('角色当前不能开始新的施法');
- const enemy=s.combat.enemies.find(e=>e.id===targetId&&aliveEnemy(e)&&!e.controlledBy);if(!enemy)throw new Error('请选择当前战斗中的存活敌人');
- if(!decideMage(s,c,enemy,[{spell:id,condition:'always',value:0,enabled:true}]))throw new Error('法术资源、冷却、距离或控场策略不满足要求');
+ const actors=combatMembers(s),target=actors.find(a=>a.id===targetId)||s.combat.enemies.find(e=>e.id===targetId),sp=spellInfo(c,id);
+ const invalid=combatInputTargetReason(s,c,sp,target);if(invalid)throw new Error(invalid);
+ const reason=combatInputReadyReason(s,c,sp,target);if(reason)throw new Error(reason);
+ if(inputWaiting(s,c,sp)){if(queueManualCombatIntent(s,c,{kind:'cast',spellId:id,targetId}))return;throw new Error('角色正在施法或公共冷却中');}
+ const result=executeCombatIntent(s,c,{kind:'cast',spellId:id,targetId},{manual:true});
+ if(!result.accepted)throw new Error('技能的姿态、装备、材料或特殊条件不满足：'+result.reason);
+ invalidatePolicyIntents(s,[c.id]);
 }
-function decideMage(s,c,focus,rules=c.rules||defaultRules){
- for(const rule of rules){if(!rule.enabled)continue;const id=knownRank(c,rule.spell);if(!id)continue;const sp=spellInfo(c,id),e=sp.SpellName==='Polymorph'?polymorphTarget(s,c,focus,sp,rule):focus;if(!e||!ruleMatches(s,c,e,rule,sp)||!strategyAllows(s,c,e,sp,rule))continue;
-  if(sp.SpellName==='Flamestrike'&&(s.groundEffects||[]).some(a=>a.caster===c.id&&a.spell===id&&a.until>s.clock+sp.castMs&&distance(a,e)<=a.radius))continue;
+function executeCombatInput(s,c){
+ const input=pendingCombatInput(s,c);if(!input)return false;
+ const sp=spellInfo(c,input.spellId);
+ if(inputWaiting(s,c,sp))return true;
+ try{commandCombatCast(s,c,input.spellId,input.targetId);inputResult(s,input,'started');}
+ catch(error){inputResult(s,input,'rejected',error.message);}
+ return true;
+}
+export function selectMage(s,c,focus,rules=c.rules||defaultRules,input=null){
+ for(const rule of rules){if(!rule.enabled)continue;const id=input?rule.spell:knownRank(c,rule.spell);if(!id)continue;const sp={...spellInfo(c,id),...(input?{commanded:true}:{})},e=!input&&sp.SpellName==='Polymorph'?polymorphTarget(s,c,focus,sp,rule):focus;if(!e||!ruleMatches(s,c,e,rule,sp)||!input&&!strategyAllows(s,c,e,sp,rule))continue;
+  if(!input&&sp.SpellName==='Flamestrike'&&c.cast?.spell===id)continue;
+  if(!input&&sp.SpellName==='Flamestrike'&&(s.groundEffects||[]).some(a=>a.caster===c.id&&a.spell===id&&a.until>s.clock+sp.castMs&&distance(a,e)<=a.radius))continue;
   if(c.silenceUntil>s.clock||hasAura(c,27,s.clock)||(c.schoolLockouts?.[sp.School]||0)>s.clock||!spellReady(c,sp,s.clock)||c.mana<sp.mana)continue;
-  if(sp.range>10&&!groundArea(sp)&&(e.target===c.id||!holdsBackline(s,c))&&rooted(e,s.clock)&&distance(c,e)<=8&&!rooted(c,s.clock)&&moveAway(s,c,e,s.clock))return true;
-  const approach=spellApproachRange(s,c,e,sp);
-  if(!inSpellRange(c,e,sp)||distance(c,e)>approach+1e-9){if(!mayApproachForSpell(s,c,e,sp))continue;return {approach:{target:e,range:approach}};}
+  if(!input&&sp.range>10&&!groundArea(sp)&&(e.target===c.id||!holdsBackline(s,c))&&rooted(e,s.clock)&&distance(c,e)<=8&&!rooted(c,s.clock))return {kind:'move',mode:'away',targetId:e.id,range:0};
+  if(!['Fireball','Frostbolt','Fire Blast','Frost Nova','Arcane Missiles','Arcane Explosion','Flamestrike','Blizzard','Counterspell','Polymorph','Scorch','Pyroblast'].includes(sp.SpellName))continue;
+  const approach=input?sp.range:spellApproachRange(s,c,e,sp);
+  if(!inSpellRange(c,e,sp)||!input&&distance(c,e)>approach+1e-9){if(!mayApproachForSpell(s,c,e,sp))continue;return {kind:'move',mode:'toward',targetId:e.id,range:approach};}
+  return {kind:'cast',family:'mage',spellId:id,targetId:e.id};
+ }
+ return null;
+}
+function executeMageAbility(s,c,e,sp,input){
+ const id=sp.Id;
   const talentCast=beginTalentCast(s,c,sp),timing=beginSpellTiming(c,sp,s.clock,{channel:!!(sp.ChannelInterruptFlags&&sp.durationMs)});s.combat.casts++;
   log(s,`${c.name} 施放 ${nameOf('spells',id)}`,'cast',{actorId:c.id,targetId:e.id,spellId:id,school:sp.School,duration:sp.castMs||sp.durationMs,center:selfArea(sp)?point(c):point(e),radius:spellRadius(sp)});
-  if(sp.ChannelInterruptFlags&&sp.durationMs){const interval=sp.EffectAmplitude1||1000;c.cast={spell:id,target:e.id,talentCast,timing,startedAt:s.clock,until:s.clock+sp.durationMs,next:s.clock+interval,interval,channel:true,center:point(e)};c.nextAction=c.cast.until;endTalentCast(s,c,sp,talentCast,{damage:recordDamage,healAmount,rng,stats,actors:combatMembers(s)},{target:e});}
-  else if(sp.castMs)c.cast={spell:id,target:e.id,talentCast,timing,startedAt:s.clock,until:s.clock+sp.castMs,channel:false,polymorph:sp.SpellName==='Polymorph',center:groundArea(sp)?point(e):null};else releaseSpell(s,c,e,{...sp,talentCast});
+  if(sp.ChannelInterruptFlags&&sp.durationMs){const interval=sp.EffectAmplitude1||1000;c.cast={spell:id,target:e.id,talentCast,timing,startedAt:s.clock,until:s.clock+sp.durationMs,next:s.clock+interval,interval,channel:true,commanded:!!input,center:point(e)};c.nextAction=c.cast.until;endTalentCast(s,c,sp,talentCast,{damage:recordDamage,healAmount,rng,stats,actors:combatMembers(s)},{target:e});}
+  else if(sp.castMs)c.cast={spell:id,target:e.id,talentCast,timing,startedAt:s.clock,until:s.clock+sp.castMs,channel:false,commanded:!!input,polymorph:sp.SpellName==='Polymorph',center:groundArea(sp)?point(e):null};else releaseSpell(s,c,e,{...sp,talentCast});
   return true;
- }
- return false;
 }
-function melee(s,c,e){if(e.airborne)return;if(c.pvp&&!arenaSight(c,e)){moveToward(s,c,e,5,s.clock);return;}if(c.talentProcs?.spiritOfRedemption?.until>s.clock)return;if(!strategyAllows(s,c,e,{SpellName:'Melee'}))return;const weapon=!hasAura(c,67,s.clock)&&c.equipment[16];const data=weapon&&itemsForWeapon(weapon.id);const swing=(c.escortNpc?c.swing:c.form==='cat'?1000:c.form==='bear'?2500:(data?.delay||2000))*attackTimeMultiplier(c,s.clock)/(1+talentModifiers(c).meleeHastePct);if(distance(e,c)>5){moveToward(s,c,e,5,s.clock);return;}if(s.clock<c.nextSwing)return;
+function melee(s,c,e){if(e.airborne)return;if(c.pvp&&!arenaSight(c,e)){moveToward(s,c,e,5,s.clock);return;}if(c.talentProcs?.spiritOfRedemption?.until>s.clock)return;if(s.combat.command?.holdFire)return;const weapon=!hasAura(c,67,s.clock)&&c.equipment[16];const data=weapon&&itemsForWeapon(weapon.id);const swing=(c.escortNpc?c.swing:c.form==='cat'?1000:c.form==='bear'?2500:(data?.delay||2000))*attackTimeMultiplier(c,s.clock)/(1+talentModifiers(c).meleeHastePct);if(distance(e,c)>5){moveToward(s,c,e,5,s.clock);return;}if(s.clock<c.nextSwing)return;
  c.nextSwing=s.clock+swing;c.swingStartedAt=s.clock;onTalentEvent(s,c,{type:'swing'},{rng,stats});
  const queued=!hasAura(c,67,s.clock)&&c.queuedStrike&&spellInfo(c,c.queuedStrike),pool=queued?.PowerType===1?'rage':'mana',strike=queued&&(c[pool]||0)>=queued.mana&&spellReady(c,queued,s.clock,{ignoreGcd:true})&&stanceAllows(c,queued)&&strategyAllows(s,c,e,queued)?queued:null;c.queuedStrike=null;
  if(strike){beginSpellTiming(c,{...strike,castMs:0,StartRecoveryTime:0},s.clock,{pool});log(s,`${c.name} 施放 ${nameOf('spells',strike.Id)}`,'cast',{actorId:c.id,targetId:e.id,spellId:strike.Id});}
@@ -192,7 +290,7 @@ function melee(s,c,e){if(e.airborne)return;if(c.pvp&&!arenaSight(c,e)){moveTowar
  const critical=attack.critical;
  const raw=c.escortNpc?roll(s,Math.floor(c.low),Math.ceil(c.high)):(weaponDamage(s,c)+extra)*attack.multiplier;const victims=strike?.SpellName==='Cleave'&&strategyAllows(s,c,e,strike)?areaTargets(s,c,e,strike):[e];for(const victim of victims){const damage=raw*(1-armorReduction(effectiveArmor(victim,s.clock)-talentArmorPenetration(c),c.level));recordDamage(s,c,victim,damage,strike?nameOf('spells',strike.Id):'近战攻击',1,strike?{spellId:strike.Id,school:0,critical,outcome:attack.outcome}:{critical,glancing:attack.glancing,outcome:attack.outcome});}
  if(strike)e.threat[c.id]=(e.threat[c.id]||0)+(table('spell_threat').find(r=>r.entry===strike.Id)?.Threat||0)*stanceModifiers(c).threat;
- classMeleeProc(s,c,e,{damage:recordDamage,healAmount,stats,rng,actors:combatMembers(s)});
+ classMeleeProc(s,c,e,{damage:recordDamage,healAmount,stats,rng,lands:spellLands,actors:combatMembers(s)});
  if(c.seal?.until>s.clock&&spells[c.seal.spell]?.SpellName==='Seal of Righteousness'){
   const seal=spellInfo(c,c.seal.spell),speed=(data?.delay||2000)/1000,trigger=effectRange(c,seal)[0],twoHanded=data?.InventoryType===17;
   // Pinned UnitAuraProcHandler.cpp Seal of Righteousness dummy proc formula.
@@ -203,16 +301,16 @@ function melee(s,c,e){if(e.airborne)return;if(c.pvp&&!arenaSight(c,e)){moveTowar
  const rockbiter=c.classBuffs?.find(b=>b.name==='Rockbiter Weapon'&&b.until>s.clock);if(rockbiter)e.threat[c.id]=(e.threat[c.id]||0)+({8017:6,8018:10,8019:16}[rockbiter.spell]||0);
 }
 function offhand(s,c,e){if(c.pvp&&!arenaSight(c,e))return;if(c.talentProcs?.spiritOfRedemption?.until>s.clock)return;
- const weapon=itemsForWeapon(c.equipment?.[17]?.id);if(!weapon||weapon.class!==2||!c.learned.includes(674)||hasAura(c,67,s.clock)||distance(c,e)>5||(c.nextOffhand||0)>s.clock||!strategyAllows(s,c,e,{SpellName:'Melee'}))return;
+ const weapon=itemsForWeapon(c.equipment?.[17]?.id);if(!weapon||weapon.class!==2||!c.learned.includes(674)||hasAura(c,67,s.clock)||distance(c,e)>5||(c.nextOffhand||0)>s.clock||s.combat.command?.holdFire)return;
  c.offhandStartedAt=s.clock;c.nextOffhand=s.clock+(weapon.delay||2000)*attackTimeMultiplier(c,s.clock)/(1+talentModifiers(c).meleeHastePct);onTalentEvent(s,c,{type:'swing'},{rng,stats});const attack=weaponAttack(s,c,e,{hand:'off'});if(!attack.landed)return;
  const raw=(roll(s,weapon.dmg_min1||1,weapon.dmg_max1||2)+stats(c).attackPower/14*(weapon.delay||2000)/1000)*.5*talentOffhandMultiplier(c)*attack.multiplier;
- recordDamage(s,c,e,raw*(1-armorReduction(effectiveArmor(e,s.clock)-talentArmorPenetration(c),c.level)),'副手攻击',1,{school:0,hand:'off',critical:attack.critical,glancing:attack.glancing,outcome:attack.outcome});classMeleeProc(s,c,e,{damage:recordDamage,healAmount,stats,rng,actors:combatMembers(s)},17);
+ recordDamage(s,c,e,raw*(1-armorReduction(effectiveArmor(e,s.clock)-talentArmorPenetration(c),c.level)),'副手攻击',1,{school:0,hand:'off',critical:attack.critical,glancing:attack.glancing,outcome:attack.outcome});classMeleeProc(s,c,e,{damage:recordDamage,healAmount,stats,rng,lands:spellLands,actors:combatMembers(s)},17);
 }
 let itemLookup;
 function itemsForWeapon(id){itemLookup??=Object.fromEntries(table('item_template').map(i=>[i.entry,i]));return itemLookup[id];}
 function hunterShot(s,c,e){if(c.pvp&&!arenaSight(c,e)){moveToward(s,c,e,25,s.clock);return;}
  if(!c.learned.includes(75)){melee(s,c,e);return;}
- if(!strategyAllows(s,c,e,{SpellName:'Auto Shot'}))return;
+ if(s.combat.command?.holdFire)return;
  const weapon=itemsForWeapon(c.equipment[18]?.id);if(!weapon||c.equipment[18]?.durability===0){melee(s,c,e);return;}
  if(distance(c,e)<8){melee(s,c,e);return;}if(distance(c,e)>35){moveToward(s,c,e,35,s.clock);return;}if(s.clock<(c.nextRanged||0))return;
  const ammunition=consumeHunterAmmo(c);if(!ammunition){if(!c.ammoEmptyLogged){log(s,`${c.name} 的弹药已耗尽，改用近战攻击。`,'info',{actorId:c.id});c.ammoEmptyLogged=true;}melee(s,c,e);return;}delete c.ammoEmptyLogged;
@@ -242,12 +340,12 @@ export function hurtPlayer(s,e,c,amount,label='攻击',detail={}){
  if(!detail.environmental)markCombatEngaged(s,c);
  if(c===s&&s.activity.type==='mount'&&amount>0){s.activity={type:'idle',reason:'受到伤害，骑乘中断。'};}
  c.rest=null;c.stealthed=false;if(amount>0){c.cannibalize=null;c.shadowmeld=null;}
- if(!detail.environmental){const school=detail.school??spells[detail.spellId]?.School??0;if(school>0){const resist=stats(c).resistances?.[school]??0;amount*=1-Math.min(.75,resist/Math.max(1,(e.level||c.level)*5)*.75);}amount=classIncoming(s,e,c,amount,detail,{damage:recordDamage,healAmount,stats,rng,actors:c.pvp?s.arenaAllActors.filter(a=>a.teamId===c.teamId):combatMembers(s)});amount=onTalentEvent(s,c,{type:'incoming',target:e,spell:spells[detail.spellId],amount,periodic:detail.periodic,melee:!detail.periodic&&!detail.spellId,critical:detail.critical},{damage:recordDamage,healAmount,stats,rng,actors:c.pvp?s.arenaAllActors.filter(a=>a.teamId===c.teamId):combatMembers(s)});if(amount<=0)return;
+ if(!detail.environmental){const school=detail.school??spells[detail.spellId]?.School??0;if(school>0)amount=mitigateSpellDamage(s,e,c,amount,detail);amount=classIncoming(s,e,c,amount,detail,{damage:recordDamage,healAmount,stats,rng,actors:c.pvp?s.arenaAllActors.filter(a=>a.teamId===c.teamId):combatMembers(s)});amount=onTalentEvent(s,c,{type:'incoming',target:e,spell:spells[detail.spellId],amount,periodic:detail.periodic,melee:!detail.periodic&&!detail.spellId,critical:detail.critical},{damage:recordDamage,healAmount,stats,rng,actors:c.pvp?s.arenaAllActors.filter(a=>a.teamId===c.teamId):combatMembers(s)});if(amount<=0)return;
  if((detail.school??spells[detail.spellId]?.School??0)===0&&c.stoneskin?.until>s.clock){amount=Math.max(0,amount-c.stoneskin.amount);if(!amount)return;}
 
  if(c.absorb?.until>s.clock&&c.absorb.amount>0&&(!c.absorb.schoolMask||(c.absorb.schoolMask&(1<<(detail.school??spells[detail.spellId]?.School??0))))){const absorbed=Math.min(c.absorb.amount,amount);c.absorb.amount-=absorbed;amount-=absorbed;log(s,c.name+' 的护盾吸收了 '+Math.round(absorbed)+' 点伤害','absorb',{actorId:c.id,targetId:c.id,amount:absorbed,spellId:c.absorb.spell});if(amount<=0)return;}
 
- }const damage=Math.min(c.hp,Math.max(c.pvp?0:1,Math.round(amount*(detail.environmental?1:stanceModifiers(c).incoming))));c.hp-=damage;gainRage(c,damage,false);if(!detail.pvpDamage)log(s,`${e.name} 的${label}对 ${c.name} 造成 ${damage} 点伤害`,'incoming',{actorId:e.id,targetId:c.id,amount:damage,action:label,...detail});
+ }const damage=Math.min(c.hp,Math.max(c.pvp?0:1,Math.round(amount*(detail.environmental?1:stanceModifiers(c).incoming))));c.hp-=damage;gainRage(c,damage,false);const mightRage=damage>0&&!detail.environmental?mightSetBonuses(c).rageChance:0;if(mightRage&&rng(s)<mightRage)c.rage=Math.min(1000,(c.rage||0)+10);if(!detail.pvpDamage)log(s,`${e.name} 的${label}对 ${c.name} 造成 ${damage} 点伤害`,'incoming',{actorId:e.id,targetId:c.id,amount:damage,action:label,...detail});
  if(damage>0)environmentDamage(c);
  if(damage>0&&!detail.periodic&&!detail.environmental&&c.cast?.channel&&spells[c.cast.spell]?.SpellName==='Blizzard')cancelInvalidCast(s,c,c.cast,'damage');
  const protection=c.cast?Math.min(1,(talentSpellValue(c,spells[c.cast.spell],9,0)+activeAuras(c,s.clock).filter(a=>[149,117].includes(a.type)).reduce((n,a)=>n+a.amount,0))/100):0;
@@ -264,32 +362,60 @@ export function expireCapture(s){
 }
 // Dispatch one rule at a time: handler families must not reorder the configured list.
 // Core instant attacks can still swing this tick; casts are gated by c.cast below.
-function decideConfigured(s,c,e,targets,actors,api,rules=c.rules){
- if(!rules){
-  if(decideClass(s,c,e,actors,api))return true;
-  if(c.classId===8){const decision=decideMage(s,c,e);if(decision?.approach){moveToward(s,c,decision.approach.target,decision.approach.range,s.clock);return true;}if(decision)return true;}
-  const decision=[1,4,5].includes(c.classId)&&decideCompanion(s,c,targets,actors,recordDamage,spellLands,api);
-  return decision===true?'core':false;
- }
+export function selectConfigured(s,c,e,targets,actors,rules=c.rules){
+ if(!rules)return selectClass(s,c,e,actors,null)||
+  (c.classId===8&&selectMage(s,c,e))||
+  ([1,4,5].includes(c.classId)&&selectCompanion(s,c,targets,actors,null,null,null));
  let approach=null;
  for(const rule of rules){
   if(!rule.enabled)continue;
   const assignedId=s.combat?.pvp?(spells[rule.spell]?.SpellName===c.arenaControlSpell?c.arenaControlTarget:spells[rule.spell]?.SpellName===c.arenaInterruptSpell?c.arenaInterruptTarget:null):null;
-  const assigned=targets.find(t=>t.id===assignedId);
-  const ruleTarget=assigned||e;
-  // When a higher-priority cast needs movement, only try lower-priority
-  // instants already in range. Their usual conditions/cooldowns still apply.
+  const target=targets.find(t=>t.id===assignedId)||e;
   if(approach){const id=knownRank(c,rule.spell),sp=id&&spellInfo(c,id);if(!sp||sp.castMs||sp.ChannelInterruptFlags&&sp.durationMs||!inSpellRange(c,e,sp))continue;}
-  if(decideClass(s,c,ruleTarget,actors,api,[rule]))return true;
-  const name=spells[rule.spell]?.SpellName;
-  if(c.classId===8&&!extendedSpellNames.has(name)&&!talentActiveNames.has(name)&&!racialActiveNames.has(name)){const decision=decideMage(s,c,ruleTarget,[rule]);if(decision?.approach)approach??=decision.approach;else if(decision)return true;}
-  const decision=[1,4,5].includes(c.classId)&&decideCompanion(s,c,targets,actors,recordDamage,spellLands,api,[rule]);
-  if(decision==='queued')return false;
-  if(decision)return 'core';
+  const intent=selectClass(s,c,target,actors,null,[rule])||
+   (c.classId===8&&!extendedSpellNames.has(spells[rule.spell]?.SpellName)&&!talentActiveNames.has(spells[rule.spell]?.SpellName)&&!racialActiveNames.has(spells[rule.spell]?.SpellName)&&selectMage(s,c,target,[rule]))||
+   ([1,4,5].includes(c.classId)&&selectCompanion(s,c,targets,actors,null,null,null,[rule]));
+  if(intent?.kind==='move'&&intent.mode==='toward')approach??=intent;
+  else if(intent)return intent;
  }
- if(approach){moveToward(s,c,approach.target,approach.range,s.clock);return true;}
- return false;
+ return approach;
 }
+function decideConfigured(s,c,e,targets,actors,api,rules=c.rules){return applyDecision(s,c,selectConfigured(s,c,e,targets,actors,rules));}
+export function selectCombatPolicy(s,c,{regular=true,urgent=false}={}){
+ if(c.petUnit)return selectPetPolicy(s,c);
+ const actors=combatMembers(s),targets=s.combat.enemies.filter(aliveEnemy),e=companionTarget(s,c,targets);
+ if(!e)return null;
+ const potion=selectStrategyPotion(s,c);if(potion)return potion;
+ const rescue=selectPriestRescue(s,c,actors);if(rescue)return rescue;
+ if(c.cast?.policyControlled&&!c.cast.commanded&&!c.cast.friendly&&!actors.some(a=>a.id===c.cast.target)&&spells[c.cast.spell]?.SpellName!=='Blizzard'&&!strategyAllows(s,c,targets.find(t=>t.id===c.cast.target),spellInfo(c,c.cast.spell),undefined,c.cast.center))return {kind:'cancel',spellId:c.cast.spell,startedAt:c.cast.startedAt};
+ // Reactions have their own clock. While occupied only cancellation is legal;
+ // while on GCD, independent cooldown abilities remain eligible.
+ {
+  const defense=!c.cast&&selectPriestDefense(s,c,actors);if(defense)return defense;
+  const reactions=(c.rules||[]).filter(r=>(!c.cast||!spells[r.spell]?.StartRecoveryTime&&!spellInfo(c,r.spell)?.castMs&&!spells[r.spell]?.ChannelInterruptFlags)&&(!regular&&!spells[r.spell]?.StartRecoveryTime||['enemyNear','targetCasting','healthBelow'].includes(r.condition)&&positioningReactions.has(spells[r.spell]?.SpellName)));
+  const reaction=selectConfigured(s,c,e,targets,actors,reactions);if(reaction)return reaction;
+ }
+ if(!c.cast){const candidate={...c};if(positionPartyMember(s,candidate,e)){
+  return {kind:'move',mode:'toward',range:0,destination:{position:c.position+2*(candidate.position-c.position),positionY:(c.positionY||0)+2*((candidate.positionY||0)-(c.positionY||0))}};
+ }}
+ const attackIntent=strategyAllows(s,c,e,{SpellName:'Melee'})?(c.target!==e.id?{kind:'attack',targetId:e.id}:null):c.target?{kind:'stopAttack'}:null;
+ if(!regular&&!urgent)return attackIntent;
+ // Candidate preparation may approximate future readiness; execution never uses
+ // this clock. The authoritative queue validates again at release time.
+ const ready=Math.max(s.clock,c.cast?.until||0,c.nextAction||0,c.globalCooldowns?.[133]||0);
+ if(ready-s.clock>300)return attackIntent;
+ const future=ready>s.clock?{...s,clock:ready}:s;
+ if(c===s&&future!==s)c=future;
+ if(combatRole(c)==='healer'&&actors.some(a=>a.hp>0&&a.hp<stats(a).maxHp*.85)){
+  const rules=c.rules?.filter(r=>classAbilityKind(spells[r.spell])==='heal'||['Power Word: Shield','Inner Focus',"Nature's Swiftness",'Divine Favor'].includes(spells[r.spell]?.SpellName));
+  const heal=rules?.length?selectConfigured(future,c,e,targets,actors,rules):c.classId===5&&c!==s?selectCompanion(future,c,targets,actors,null,null,null):!c.rules&&selectClass(future,c,e,actors,null);
+  if(heal)return heal;
+ }
+
+ const area=commandDamageRules(s,c);
+ return (area.length&&selectConfigured(future,c,e,targets,actors,area))||selectConfigured(future,c,e,targets,actors)||attackIntent;
+}
+
 function executeCombatOrder(s,c,actors,api){
  const order=commandOrder(s,c);if(!order||order.kind==='kite')return false;
  const target=s.combat.enemies.find(e=>e.id===order.targetId&&aliveEnemy(e));
@@ -315,7 +441,7 @@ function executeCombatOrder(s,c,actors,api){
  return !!result;
 }
 function cancelInvalidCast(s,c,cast,reason){
- c.cast=null;c.nextAction=s.clock;
+ c.cast=null;c.nextAction=s.clock;invalidatePolicyIntents(s,[c.id]);
  if(reason==='range')c.castRangeFailure={target:cast.target,until:s.clock+10000};
  const labels={target:'目标失效',range:'目标超出射程',strategy:'保护控场或等待坦克',resource:'资源不足',emptyArea:'暴风雪范围内已无敌人',damage:'受到直接攻击伤害'};
  log(s,`${cast.channel?'引导中止':'施法取消'}：${labels[reason]}`,'cancel',{actorId:c.id,targetId:cast.target,spellId:cast.spell,reason});
@@ -324,7 +450,7 @@ export function combatTick(s,{pvpTeam=false}={}){
  const battle=s.combat;if(!battle||battle.command?.paused)return;
  if(battle.command){battle.command.orders=battle.command.orders.filter(o=>battle.enemies.some(e=>e.id===o.targetId&&aliveEnemy(e))&&combatMembers(s).some(c=>c.id===o.memberId&&c.hp>0));if(battle.enemies.filter(aliveEnemy).length===1)battle.command.orders=battle.command.orders.filter(o=>o.kind!=='soft');}
  if(battle.pull&&s.clock<battle.pull.startsAt)return;
- initializeMetrics(s);const actors=combatMembers(s);for(const c of actors){c.time=s.clock;const st=stats(c);c.currentMaxHp=st.maxHp;c.currentMaxMana=st.maxMana;}
+ initializeMetrics(s);const actors=combatMembers(s);pruneCombatInputs(s,actors);for(const c of actors){c.time=s.clock;const st=stats(c);c.currentMaxHp=st.maxHp;c.currentMaxMana=st.maxMana;}
  if(!pvpTeam)dungeonBossPhaseTick(s,actors,hurtPlayer);
  // A room is visible before combat starts. Only the tank opens; enemies wait
  // for a hostile action or melee contact instead of charging during the pull.
@@ -346,58 +472,44 @@ export function combatTick(s,{pvpTeam=false}={}){
   if(aim){const p=point(e),q=point(aim);e.combatFacing=Math.atan2(q.y-p.y,q.x-p.x);}
  }
  const enemyPositions=new Map(battle.enemies.map(e=>[e.id,point(e)])),openingLogSequence=s.logSequence;
+ observePolicyChanges(s,actors);
  for(const c of actors.filter(c=>c.hp>0)){
   if(c===opener&&battle.pull&&battle.pull.engagedAt==null&&s.clock<battle.pull.startsAt+10000&&battle.command?.orders.some(o=>o.kind==='soft'&&!o.startedAt&&o.memberId!==c.id))continue;
   if(!pvpTeam&&dungeonCharmTick(s,c,actors,hurtPlayer))continue;
   if(c.raidEvadingAt===s.clock)continue;
   if(battle.pull&&battle.pull.engagedAt==null&&c!==opener&&!commandOrder(s,c))continue;
-  racialTick(s,c,battle.enemies);onTalentEvent(s,c,{type:'tick'},{...classApi});
+  onTalentEvent(s,c,{type:'tick'},{...classApi});
   if(c.pvp){syncPvpDiminishing(c,s.clock);if(s.clock-(c.lastHostileAt??-Infinity)>5000)c.inCombat=false;}
   if(c.totemUnit)continue;
-  if(c.petUnit){petTick(s,c,actors,recordDamage);continue;}
+  if(c.petUnit){stepCombatPolicy(s,c);petTick(s,c,actors,recordDamage);continue;}
   if(c.pvp&&c.nextPowerRegen<=s.clock){c.nextPowerRegen+=2000;if(c.classId===4||c.form==='cat')c.energy=Math.min(stats(c).maxEnergy||100,(c.energy||0)+(c.talentProcs?.adrenalineRush?.until>s.clock?40:20));}
+  const tactical=commandOrder(s,c);
+  if(!pendingCombatInput(s,c)&&(!tactical||tactical.kind==='kite'||tactical.startedAt!=null||tactical.executed))stepCombatPolicy(s,c);
   if(controlled(c,s.clock)){c.cast=null;c.nextAction=s.clock;const fear=activeAuras(c,s.clock).find(a=>a.type===7),caster=fear&&battle.enemies.find(e=>e.id===fear.caster);if(caster&&!hasAura(c,12,s.clock))moveAway(s,c,caster,s.clock);continue;}
-  useStrategyPotion(s,c);
   if(c.nextPowerRegen<=s.clock){c.nextPowerRegen+=2000;if(c.classId===4||c.form==='cat')c.energy=Math.min(stats(c).maxEnergy||100,(c.energy||0)+(c.talentProcs?.adrenalineRush?.until>s.clock?40:20));}
-  interruptPriestForRescue(s,c,actors);
-  if(c.cast){const cast=c.cast,sp={...spellInfo(c,cast.spell),talentCast:cast.talentCast},target=battle.enemies.find(e=>e.id===cast.target)||actors.find(a=>a.id===cast.target);
+  if(c.cast){const cast=c.cast,sp={...spellInfo(c,cast.spell),talentCast:cast.talentCast,commanded:cast.commanded},target=battle.enemies.find(e=>e.id===cast.target)||actors.find(a=>a.id===cast.target);
    const channelAim=groundArea(sp)?cast.center||target:target;
    // Once Blizzard starts, keep its fixed area until empty or a direct hit interrupts it.
    // Opening strategy conditions must not replace an active channel with another spell.
    if(cast.channel){const reason=sp.SpellName==='Blizzard'
     ?areaTargets(s,c,target,sp,cast.center).length?null:'emptyArea'
-    :!channelAim||!groundArea(sp)&&!aliveEnemy(target)?'target':!inSpellRange(c,channelAim,sp)?'range':!cast.friendly&&!strategyAllows(s,c,target,sp,undefined,groundArea(sp)?cast.center:undefined)?'strategy':null;if(reason){cancelInvalidCast(s,c,cast,reason);continue;}}
+    :!channelAim||!groundArea(sp)&&!aliveEnemy(target)?'target':!inSpellRange(c,channelAim,sp)?'range':null;if(reason){cancelInvalidCast(s,c,cast,reason);continue;}}
    if(cast.channel&&s.clock>=cast.next){if((target&&target.hp>0)||groundArea(sp)){
     if(cast.taming||cast.controlChannel){}else if(cast.extendedChannel)classChannelTick(s,c,target,sp,cast,actors,classApi);
-    else if(sp.SpellName==='Blizzard'){for(const victim of areaTargets(s,c,target,sp,cast.center))magicHit(s,c,victim,sp,1,true);}
+    else if(sp.SpellName==='Blizzard'){for(const victim of areaTargets(s,c,target,sp,cast.center))if(spellLands(s,c,victim,sp))magicHit(s,c,victim,sp,1,true);}
     else{const triggered=sp.EffectTriggerSpell1;if(triggered)releaseSpell(s,c,target,spellInfo(c,triggered));}
    }cast.next+=cast.interval||1000;}
    if(s.clock>=cast.until){
-    if(!cast.channel){const aim=groundArea(sp)?cast.center||target:target,reason=!aim||!groundArea(sp)&&!(target?.hp>0)&&sp.SpellName!=='Rebirth'?'target':aim!==c&&!inSpellRange(c,aim,sp)?'range':!cast.friendly&&!cast.classSpecial&&!strategyAllows(s,c,target,sp,undefined,cast.center)?'strategy':!finishSpellTiming(c,cast.timing,s.clock)?'resource':null;if(reason){cancelInvalidCast(s,c,cast,reason);continue;}}
+    if(!cast.channel){const aim=groundArea(sp)?cast.center||target:target,reason=!aim||!groundArea(sp)&&!(target?.hp>0)&&sp.SpellName!=='Rebirth'?'target':aim!==c&&!inSpellRange(c,aim,sp)?'range':!finishSpellTiming(c,cast.timing,s.clock)?'resource':null;if(reason){cancelInvalidCast(s,c,cast,reason);continue;}}
     if(cast.taming){if(target?.hp>0&&inSpellRange(c,target,sp))tameClassPet(s,c,target,sp);}else if(cast.classSpecial){const recipient=actors.find(a=>a.id===cast.target)||target;if(recipient&&(recipient.hp>0||sp.SpellName==='Rebirth')&&(recipient===c||inSpellRange(c,recipient,sp)))classEffect(s,c,recipient,sp,actors,classApi);}else if(cast.friendly){resolveHeal(s,c,actors.find(a=>a.id===cast.target),sp);endTalentCast(s,c,sp,cast.talentCast,classApi,{target});}else if(!cast.channel)releaseSpell(s,c,target,sp,cast.center);if(c.cast===cast)c.cast=null;
    }else continue;
   }
+  if(executeCombatInput(s,c))continue;
   if(executeCombatOrder(s,c,actors,classApi))continue;
-  const targets=battle.enemies.filter(aliveEnemy);const e=companionTarget(s,c,targets);if(!e)continue;c.target=e.id;
+  if(flushQueuedCombatIntent(s,c)&&c.cast)continue;
+  if(integratePolicyMovement(s,c))continue;
+  const targets=battle.enemies.filter(aliveEnemy);const e=targets.find(e=>e.id===c.target);if(!e)continue;
   if(c.pvp&&c.arenaRetreatTarget&&!c.cast){const ally=actors.find(a=>a.id===c.arenaRetreatTarget&&a.hp>0);if(ally&&(distance(c,ally)>8||!arenaSight(c,ally))&&moveToward(s,c,ally,8,s.clock))continue;}
-  if(s.clock>=c.nextAction){
-   if(decidePriestDefense(s,c,actors,classApi))continue;
-   // Use configured close-range defenses/interrupts before retreating; otherwise
-   // Frost Nova and Concussive Shot would never fire while enemies are closing.
-   if(holdsBackline(s,c)){
-    const reactions=(c.rules||[]).filter(r=>['enemyNear','targetCasting','healthBelow'].includes(r.condition)&&positioningReactions.has(spells[r.spell]?.SpellName));
-    if(decideConfigured(s,c,e,targets,actors,classApi,reactions))continue;
-   }
-   if(combatRole(c)==='healer'&&actors.some(a=>a.hp>0&&a.hp<stats(a).maxHp*.85)){
-    const healingRules=c.rules?.filter(r=>classAbilityKind(spells[r.spell])==='heal'||['Power Word: Shield','Inner Focus'].includes(spells[r.spell]?.SpellName));
-    if(healingRules?.length){if(decideConfigured(s,c,e,targets,actors,classApi,healingRules))continue;}
-    else if(c.classId===5&&c!==s)decideCompanion(s,c,targets,actors,recordDamage,spellLands,classApi);
-    else if(!c.rules&&decideClass(s,c,e,actors,classApi))continue;
-    if(c.cast||c.nextAction>s.clock)continue;
-   }
-  }
-  if(positionPartyMember(s,c,e))continue;
-  if(s.clock>=c.nextAction){if(decidePriestDefense(s,c,actors,classApi))continue;const areaRules=commandDamageRules(s,c);if(areaRules.length&&decideConfigured(s,c,e,targets,actors,classApi,areaRules)===true)continue;if(decideConfigured(s,c,e,targets,actors,classApi)===true)continue;}
   if(!c.cast&&!c.stealthed)offhand(s,c,e);
   if(c.classId===3&&!c.cast)hunterShot(s,c,e);
   else if(!holdsBackline(s,c)&&!c.cast&&!c.stealthed&&(c.classId!==5||c===s)&&!(c.classId===8&&s.clock<c.nextAction)&&(![7,9,11].includes(c.classId)||c.form||s.clock>=c.nextAction))melee(s,c,e);

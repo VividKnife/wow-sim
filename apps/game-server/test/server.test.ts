@@ -414,3 +414,22 @@ test('conditional snapshots validate identity and stop unchanged response serial
  const changed=await fetch(url+'/game',{headers:{...headers,'if-none-match':etag}});
  assert.equal(changed.status,200);assert.notEqual(changed.headers.get('etag'),etag);
 });
+
+test('a task command and its large local checkpoint use one authenticated request and replay once',async t=>{
+ let now=1000;
+ const service=new GameService(new MemoryStore(),{contentVersion:CONTENT_VERSION,now:()=>now});
+ await service.createAccount('combined',{name:'Combined',classId:8,raceId:1},'create');
+ const started=await service.command('combined',{type:'hunt',id:299,requestId:'hunt'});
+ const session=await service.localSimulation('combined',{type:'claim',ownerId:started.localSimulation!.ownerId,characterId:started.state.id,contentVersion:CONTENT_VERSION,clientId:'browser',requestId:'claim'});
+ now=1100;
+ const state=advance(session.state,now).state;state.logs.push({id:999,text:'log '.repeat(5000)});
+ const localCheckpoint={type:'checkpoint',ownerId:started.localSimulation!.ownerId,characterId:started.state.id,contentVersion:CONTENT_VERSION,clientId:'browser',sessionId:session.session.id,sequence:1,state,requestId:'combined-checkpoint'};
+ const input={type:'settings',autoLoot:true,characterId:started.state.id,localClientId:'browser',localSessionId:session.session.id,localCheckpoint,requestId:'combined-command'};
+ const {game,url}=await start(service);t.after(()=>game.close());
+ const post=async (body:any)=>fetch(`${url}/game`,{method:'POST',headers:{...await auth('combined'),'content-type':'application/json'},body:JSON.stringify(body)});
+ const response=await post(input);assert.equal(response.status,200);
+ const result=await response.json();assert.equal(result.snapshot.player.settings.autoLoot,true);assert.equal(result.snapshot.player.wallAt,1100);
+ const replay=await post(input);assert.equal(replay.status,200);assert.equal((await replay.json()).revision,result.revision);
+ assert.equal((await post({...input,localCheckpoint:[]})).status,400);
+ assert.equal((await post({type:'settings',requestId:'oversize-command',unused:'x'.repeat(20_000)})).status,413);
+});

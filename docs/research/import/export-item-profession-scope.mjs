@@ -2,7 +2,8 @@
 import {writeFileSync,mkdirSync,readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {items,spells,icon,classAbilities,talents} from '../../../packages/game-domain/src/rules/catalog.js';
-import {recipes,professions,professionRanks,specializations,marketIds} from '../../../packages/game-domain/src/rules/profession-data.js';
+import {recipes,professions,professionRanks,specializations} from '../../../packages/game-domain/src/rules/profession-data.js';
+import {marketIds} from '../../../packages/game-domain/src/rules/market.js';
 
 const out=new URL('./item-profession-assets/',import.meta.url);
 mkdirSync(out,{recursive:true});

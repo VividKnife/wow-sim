@@ -33,8 +33,8 @@ test('full map traversal saves every kill once and all-clear locks new runs unti
  for(const node of moltenCoreRoute){for(const c of [s,...s.party])restoreRaidMember(c,s);s.pending=[];goldRaidAction(s,{type:'goldNavigate',destination:node.id});assert.equal(s.combat.raidEncounter.id,node.id);s=forceVictory(s);}
  assert.equal(s.goldRaid.cleared.length,10);assert.equal(s.goldRaid.clearedPacks.length,15);assert.equal(s.goldRaid.locationId,'ragnaros');
  assert.deepEqual(s.goldRaidSaves['molten-core'].cleared,s.goldRaid.cleared);
- const before=s.goldRaid.lots.length;settleGoldRaid(s);assert.equal(s.goldRaid.lots.length,before);
- for(let i=0;i<10000&&s.goldRaid.auction;i++)goldAuctionStep(s);
+ const before=s.goldRaid.auctions.length;settleGoldRaid(s);assert.equal(s.goldRaid.auctions.length,before);
+ for(let i=0;i<10000&&s.goldRaid.auctions[0];i++)goldAuctionStep(s);
  finishGoldRun(s);leaveGoldRaid(s);
  assert.throws(()=>enterGoldRaid(s),/本周已全通/);
  s.wallAt+=604800000;enterGoldRaid(s);assert.deepEqual(s.goldRaid.cleared,[]);

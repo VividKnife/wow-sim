@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {commandServiceFixture} from '../../../apps/web/test/support/command-service-fixture.mjs';
 import {advance} from '../src/rules/engine.js';
+import type {Rules} from '../src/model.ts';
 import {GameService} from '../src/service.ts';
 
 test('command mode survives server restart and local pause checkpoints with no timer gain',async()=>{
@@ -22,4 +23,16 @@ test('command mode survives server restart and local pause checkpoints with no t
  assert.equal((await restarted.snapshot(f.save.id)).state.combat.command.paused,true);
  const resumed=await restarted.command(f.save.id,{type:'combatCommand',order:'resume',encounterId:persisted.combat.id,requestId:'resume'});
  assert.equal(resumed.state.combat.command.paused,false);assert.equal(resumed.state.clock,persisted.clock);
+});
+
+test('team spell inputs use persisted request idempotency and fence foreign controllers/shared pause',async()=>{
+ const f=await commandServiceFixture();const s=f.started.state;
+ const member=s.party.find((c:Rules)=>c.classId===5),target=s.id;
+ const command={type:'combatCommand',order:'cast',encounterId:s.combat.id,memberId:member.id,spellId:2050,targetId:target,requestId:'one-heal'};
+ const first=await f.service.command(f.save.id,command),again=await f.service.command(f.save.id,command);
+ assert.equal(first.state.combat.command.inputs.length,1);assert.equal(again.state.combat.command.inputSequence,1);
+ await f.service.createAccount('foreign',{name:'访客',classId:8,raceId:1},'create-foreign');
+ await f.store.transaction(async tx=>{const instance=await tx.get<any>('instances',f.started.instanceId!);instance.roster.find((r:Rules)=>r.characterId===member.id).accountId='foreign';await tx.put('instances',instance);});
+ await assert.rejects(f.service.command(f.save.id,{...command,requestId:'foreign-heal'}),{code:'FORBIDDEN'});
+ await assert.rejects(f.service.command(f.save.id,{type:'combatCommand',order:'pause',encounterId:s.combat.id,requestId:'pause-shared'}),{code:'SHARED_CLOCK'});
 });

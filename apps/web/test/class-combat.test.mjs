@@ -30,7 +30,7 @@ test('Renew restores health in periodic ticks instead of charging mana for a no-
 });
 
 test('every class produces its own damaging action with seeded state and real resource costs',()=>{
- for(const [id,skills,spell]of [[1,[78],78],[2,[21084,20271],20271],[3,[3044],3044],[4,[1752],1752],[5,[585],585],[7,[403],403],[8,[133],133],[9,[686],686],[11,[5176],5176]]){
+ for(const [id,skills,spell]of [[1,[78],78],[2,[21084,20271],20187],[3,[3044],3044],[4,[1752],1752],[5,[585],585],[7,[403],403],[8,[133],133],[9,[686],686],[11,[5176],5176]]){
   const s=fixture(id,skills);tickTo(s,20000);assert.ok(s.logs.some(l=>l.kind==='damage'&&l.spellId===spell),`class ${id} must deal damage with ${spell}`);
   assert.ok(Number.isFinite(s.hp)&&Number.isFinite(s.mana));
  }
@@ -92,7 +92,7 @@ test('Rockbiter uses the enchant aura attack power, never the 1800-second durati
 test('Stoneskin reduces physical hits, Strength of Earth changes strength, and fire totem deals damage',()=>{
  const s=fixture(7,[8071,8075,3599]);s.rules=[{spell:8071,condition:'always',value:0,enabled:true}];s.position=20;combatTick(s);s.rules=[];tickTo(s,2100);assert.equal(s.stoneskin.amount,4);const hp=s.hp;hurtPlayer(s,s.combat.enemies[0],s,10);assert.equal(s.hp,hp-6);
  s.rules=[{spell:8075,condition:'always',value:0,enabled:true}];s.nextAction=0;const str=stats(s).str;combatTick(s);s.rules=[];tickTo(s,4200);assert.equal(stats(s).str,str+10);
- s.rules=[{spell:3599,condition:'always',value:0,enabled:true}];s.nextAction=0;combatTick(s);s.rules=[];tickTo(s,6500);assert.ok(s.logs.some(l=>l.kind==='damage'&&l.spellId===3599));
+ s.rules=[{spell:3599,condition:'always',value:0,enabled:true}];s.nextAction=0;combatTick(s);s.rules=[];tickTo(s,6500);assert.ok(s.logs.some(l=>l.kind==='damage'&&l.triggeredBy===3599&&l.spellId===22048));
 });
 
 test('pets are living combat targets and never dilute player experience rewards',()=>{

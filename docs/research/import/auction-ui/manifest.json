@@ -1,0 +1,78 @@
+{
+  "commit": "b852b560442b31579e77ef3967b3c2d594832da8",
+  "version": "1.13.2 (30550), 2019-05-27, prerelease texture reference",
+  "files": [
+    {
+      "path": "interface/classic/auctionframe/ui-auctionframe-browse-botleft.png",
+      "sourceUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/AUCTIONFRAME/UI-AUCTIONFRAME-BROWSE-BOTLEFT.PNG",
+      "gitBlob": "de76797311611132dcf6f65afffe7449e98f6d2a",
+      "sha256": "0ef61b28c7dbbac8a086543efc7e21c20f4cbcbf09afffe8cf2a0ca887c42e72",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "path": "interface/classic/auctionframe/ui-auctionframe-browse-top.png",
+      "sourceUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/AUCTIONFRAME/UI-AUCTIONFRAME-BROWSE-TOP.PNG",
+      "gitBlob": "d3b5703ef6613c639df45382a9887423720446da",
+      "sha256": "7c2962aeb31202fa7866622fcd866ca6e8868bf8f6dfca0febd7db87680f291f",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "path": "interface/classic/auctionframe/ui-auctionframe-browse-topleft.png",
+      "sourceUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/AUCTIONFRAME/UI-AUCTIONFRAME-BROWSE-TOPLEFT.PNG",
+      "gitBlob": "ec6d0fda47ad610b39461672072ab6e7f9211663",
+      "sha256": "41399c67a00ddd5ed86d238c21a8fed77e5ace56924f7b7c5b468b7e844b5f83",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "path": "interface/classic/auctionframe/ui-auctionframe-browse-topright.png",
+      "sourceUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/AUCTIONFRAME/UI-AUCTIONFRAME-BROWSE-TOPRIGHT.PNG",
+      "gitBlob": "d7aad91061b900787c294194b8af47f55113e8b6",
+      "sha256": "eef5b53e788c301dad307bb2875d9d600a2319839100567d733b090919d0a21e",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "path": "interface/classic/auctionframe/ui-auctionframe-browse-bot.png",
+      "sourceUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/AUCTIONFRAME/UI-AuctionFrame-Browse-Bot.PNG",
+      "gitBlob": "72993665a1a0f796d6a970ff507db7d51b88f20a",
+      "sha256": "7b3ab45e992b244c68788f1f2de9c25af173c5e5b99c89342f9ee8fabed04466",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "path": "interface/classic/auctionframe/ui-auctionframe-browse-botright.png",
+      "sourceUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/AUCTIONFRAME/UI-AuctionFrame-Browse-BotRight.PNG",
+      "gitBlob": "28387bd9a11f1d0fb683e05ab94ed2c9f7f3a944",
+      "sha256": "d8c271d6469b78d7eb296a8ffeb9b3dfdd7d070f3d9fa7ad56b22a575e3532d4",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "path": "interface/classic/auctionframe/ui-auctionframe-filterbg.png",
+      "sourceUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/AUCTIONFRAME/UI-AuctionFrame-FilterBg.PNG",
+      "gitBlob": "9d1b0c81dcf2801a4d7e215d226d76685bab759a",
+      "sha256": "d2b8e1b2b59ef2ce07ac4b1f1edd4cb0ea06799fb8b038c9745c16e4e2af2a20",
+      "width": 256,
+      "height": 32
+    },
+    {
+      "path": "interface/classic/auctionframe/ui-auctionframe-itemslot.png",
+      "sourceUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/AUCTIONFRAME/UI-AuctionFrame-ItemSlot.PNG",
+      "gitBlob": "b404ea2478ab45b43594aab91111521b92195bcd",
+      "sha256": "b08d8e0f43ff57d565bd664b766757d20d67ac0ac3b610b917b997e36f36f31e",
+      "width": 256,
+      "height": 64
+    },
+    {
+      "path": "interface/classic/auctionframe/ui-auctionitemnameframe.png",
+      "sourceUrl": "https://raw.githubusercontent.com/Gethe/wow-ui-textures/b852b560442b31579e77ef3967b3c2d594832da8/AUCTIONFRAME/UI-AuctionItemNameFrame.PNG",
+      "gitBlob": "bbb24a9564545e180d86ec6d0ce5d3b9f33cc9b5",
+      "sha256": "54c9bf2c6eeccc249f25c6fe30b059596586a0982f38d6ac517c7e3deb07e41f",
+      "width": 128,
+      "height": 32
+    }
+  ]
+}

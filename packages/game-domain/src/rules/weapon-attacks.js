@@ -1,5 +1,6 @@
 import {markCombatEngaged} from './combat-engagement.js';
-import {rollAttackTable,weaponMissChance,glanceMultiplier} from '../../../sim-core/src/attack-table.js';
+import {rollAttackTable,weaponMissChance,glanceMultiplier,meleeCritSuppression} from '../../../sim-core/src/attack-table.js';
+import {agilityChances} from '../../../sim-core/src/class-stats.js';
 import {point} from '../../../sim-core/src/geometry.js';
 import {activeAuras,controlled,hasAura} from '../../../sim-core/src/combat-auras.js';
 import {stats,rng,log} from './character.js';
@@ -10,6 +11,11 @@ export function weaponSkill(c,slot=16){
  const st=stats(c);
  if(c.form==='bear'||c.form==='cat')return c.level*5;
  return slot===18?(st.rangedWeaponSkill||c.level*5):slot===17?(st.offhandWeaponSkill||c.level*5):(st.weaponSkill||c.level*5);
+}
+export function weaponCritChance(c,target,st,{ranged=false,spell=null}={}){
+ const chance=(ranged?st.rangedCrit??st.crit:st.crit)+(spell?spellCritBonus(c,spell,target):0);
+ const base=agilityChances(c.classId,c.level,st.agi||0).crit;
+ return Math.max(0,chance-meleeCritSuppression(c.level,target.level,chance-base,{playerTarget:!!target.pvp}));
 }
 export function facesAttacker(s,attacker,target){
  if(!target.pvp&&Number.isFinite(target.combatFacing)){const a=point(attacker),t=point(target);return (a.x-t.x)*Math.cos(target.combatFacing)+(a.y-t.y)*Math.sin(target.combatFacing)>=0;}
@@ -26,7 +32,7 @@ export function weaponAttack(s,c,target,{special=false,hand='main',ranged=false,
  const dual=!ranged&&!special&&!c.form&&c.learned?.includes(674)&&items[c.equipment?.[17]?.id]?.class===2;
  const dodge=canDefend&&!ranged&&(!target.pvp||!target.classId||front)?Math.max(0,(playerTarget?stats(target).dodge:.05)+(difference*(playerTarget||difference<=0?.0004:.001))+auras.filter(a=>a.type===49).reduce((n,a)=>n+a.amount/100,0)):0;
  const parry=canDefend&&front&&!ranged&&!hasAura(target,67,s.clock)?Math.max(0,(playerTarget?stats(target).parry:.05)+(difference*(playerTarget||difference<=0?.0004:difference>10?.006:.001))+auras.filter(a=>a.type===47).reduce((n,a)=>n+a.amount/100,0)):0;
- const critical=Math.max(0,(ranged?st.rangedCrit??st.crit:st.crit)+(spell?spellCritBonus(c,spell,target):0)-difference*(playerTarget?.0004:.002));
+ const critical=weaponCritChance(c,target,st,{ranged,spell});
  const chances={miss:weaponMissChance(skill,defense,{hit:st.hit,dualWield:dual,playerTarget}),dodge,parry,
   glancing:!special&&!ranged&&!playerTarget&&target.level>10?Math.max(0,Math.min(.4,([5,8,9].includes(c.classId)?Math.min(30,target.level):10)*.01+(defense-Math.min(c.level*5,skill))*.02)):0,
   block:target.pvp&&canDefend&&front&&items[target.equipment?.[17]?.id]?.InventoryType===14?Math.max(0,(stats(target).block||.05)+difference*.0004+auras.filter(a=>a.type===51).reduce((n,a)=>n+a.amount/100,0)):0,

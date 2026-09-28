@@ -1,0 +1,448 @@
+{
+  "date": "2026-09-28",
+  "status": "real-time-capacity-not-accepted",
+  "notes": [
+    "Shared desktop with other applications; no isolated hardware control.",
+    "Final Lucifron run had no other test or preview launched by this task. Preview startup began late in the second scenario; do not treat Majordomo as an isolated benchmark.",
+    "The workspace includes concurrent unrelated combat/data changes; this is not an A/B measurement attributing regression to input handling.",
+    "No browser/GPU/network/database included; 40-player synthetic fixtures, formal raid gameplay remains 25-player."
+  ],
+  "final": [
+    {
+      "kind": "environment",
+      "node": "v24.15.0",
+      "cpu": "Apple M4",
+      "duration": 15000,
+      "runs": 1,
+      "sizes": [
+        40
+      ],
+      "bosses": [
+        "lucifron",
+        "majordomo"
+      ],
+      "rosters": [
+        "gold"
+      ],
+      "method": "50ms calls, 100ms rule ticks + frames, 1s raid views, 10s checkpoints; synchronous structuredClone approximates transport; no browser/GPU/network/DB"
+    },
+    {
+      "kind": "result",
+      "roster": "gold",
+      "boss": "lucifron",
+      "size": 40,
+      "roles": {
+        "tank": 3,
+        "healer": 8,
+        "melee": 13,
+        "ranged": 16
+      },
+      "totalMs": [
+        21465.44
+      ],
+      "processCpuMs": [
+        16236.21
+      ],
+      "wallBudgetPercent": 143.1,
+      "timings": {
+        "tick": {
+          "mean": 92.46,
+          "p95": 167.02,
+          "max": 386.88
+        },
+        "frame": {
+          "mean": 26.49,
+          "p95": 45.12,
+          "max": 167.99
+        },
+        "aux": {
+          "mean": 58.41,
+          "p95": 97.68,
+          "max": 97.68
+        },
+        "transportClone": {
+          "mean": 17.44,
+          "p95": 26.21,
+          "max": 48.47
+        },
+        "checkpoint": {
+          "mean": 21.02,
+          "p95": 21.02,
+          "max": 21.02
+        },
+        "slice": {
+          "mean": 71.44,
+          "p95": 204.05,
+          "max": 419.23
+        }
+      },
+      "componentTotalMs": {
+        "tick": 13868.67,
+        "frame": 3974.05,
+        "aux": 934.61,
+        "transportClone": 2616.29,
+        "checkpoint": 21.02
+      },
+      "minAlive": 40,
+      "maxFriendlyUnits": 56,
+      "activeTicks": 150,
+      "expectedTicks": 150,
+      "combatStillActive": true,
+      "enemyCount": 3,
+      "fullSnapshotMs": {
+        "mean": 2172.04,
+        "p95": 2913.04,
+        "max": 2913.04
+      },
+      "frameBytes": 1471104,
+      "checkpointBytes": 705408,
+      "fullSnapshotBytes": 3346122,
+      "raidCommandVisible": true,
+      "hash": "c11da96a1e5949a25760d10575d675498b3bda557554e573082f1dbc1da29069"
+    },
+    {
+      "kind": "result",
+      "roster": "gold",
+      "boss": "majordomo",
+      "size": 40,
+      "roles": {
+        "tank": 3,
+        "healer": 8,
+        "melee": 13,
+        "ranged": 16
+      },
+      "totalMs": [
+        23374.41
+      ],
+      "processCpuMs": [
+        15347.09
+      ],
+      "wallBudgetPercent": 155.83,
+      "timings": {
+        "tick": {
+          "mean": 94.62,
+          "p95": 203.15,
+          "max": 497.42
+        },
+        "frame": {
+          "mean": 31.02,
+          "p95": 56.73,
+          "max": 165.81
+        },
+        "aux": {
+          "mean": 77.79,
+          "p95": 167.34,
+          "max": 167.34
+        },
+        "transportClone": {
+          "mean": 21.42,
+          "p95": 35.19,
+          "max": 66.86
+        },
+        "checkpoint": {
+          "mean": 26.7,
+          "p95": 26.7,
+          "max": 26.7
+        },
+        "slice": {
+          "mean": 77.81,
+          "p95": 252.72,
+          "max": 695.22
+        }
+      },
+      "componentTotalMs": {
+        "tick": 14193.23,
+        "frame": 4652.76,
+        "aux": 1244.64,
+        "transportClone": 3212.5,
+        "checkpoint": 26.7
+      },
+      "minAlive": 37,
+      "maxFriendlyUnits": 56,
+      "activeTicks": 150,
+      "expectedTicks": 150,
+      "combatStillActive": true,
+      "enemyCount": 9,
+      "fullSnapshotMs": {
+        "mean": 4979.44,
+        "p95": 6083.26,
+        "max": 6083.26
+      },
+      "frameBytes": 1527105,
+      "checkpointBytes": 707650,
+      "fullSnapshotBytes": 3437662,
+      "raidCommandVisible": true,
+      "hash": "430b6d44db2cdea8459bba6f09b8ef29d960935e8626433fd03ad4b5497db4f5"
+    }
+  ],
+  "interfered": [
+    {
+      "kind": "environment",
+      "node": "v24.15.0",
+      "cpu": "Apple M4",
+      "duration": 15000,
+      "runs": 1,
+      "sizes": [
+        40
+      ],
+      "bosses": [
+        "lucifron",
+        "majordomo"
+      ],
+      "rosters": [
+        "gold"
+      ],
+      "method": "50ms calls, 100ms rule ticks + frames, 1s raid views, 10s checkpoints; synchronous structuredClone approximates transport; no browser/GPU/network/DB"
+    },
+    {
+      "kind": "result",
+      "roster": "gold",
+      "boss": "lucifron",
+      "size": 40,
+      "roles": {
+        "tank": 3,
+        "healer": 8,
+        "melee": 13,
+        "ranged": 16
+      },
+      "totalMs": [
+        60005.77
+      ],
+      "processCpuMs": [
+        25158.64
+      ],
+      "wallBudgetPercent": 400.04,
+      "timings": {
+        "tick": {
+          "mean": 276.56,
+          "p95": 745.87,
+          "max": 1775.11
+        },
+        "frame": {
+          "mean": 73.79,
+          "p95": 237.05,
+          "max": 398.12
+        },
+        "aux": {
+          "mean": 138.29,
+          "p95": 333.56,
+          "max": 333.56
+        },
+        "transportClone": {
+          "mean": 33.83,
+          "p95": 97.75,
+          "max": 143.96
+        },
+        "checkpoint": {
+          "mean": 88.97,
+          "p95": 88.97,
+          "max": 88.97
+        },
+        "slice": {
+          "mean": 199.9,
+          "p95": 892.54,
+          "max": 2240.97
+        }
+      },
+      "componentTotalMs": {
+        "tick": 41483.82,
+        "frame": 11068.65,
+        "aux": 2212.63,
+        "transportClone": 5074.23,
+        "checkpoint": 88.97
+      },
+      "minAlive": 40,
+      "maxFriendlyUnits": 56,
+      "activeTicks": 150,
+      "expectedTicks": 150,
+      "combatStillActive": true,
+      "enemyCount": 3,
+      "fullSnapshotMs": {
+        "mean": 3254.72,
+        "p95": 4798.27,
+        "max": 4798.27
+      },
+      "frameBytes": 1471104,
+      "checkpointBytes": 705408,
+      "fullSnapshotBytes": 3346122,
+      "raidCommandVisible": true,
+      "hash": "c11da96a1e5949a25760d10575d675498b3bda557554e573082f1dbc1da29069"
+    },
+    {
+      "kind": "result",
+      "roster": "gold",
+      "boss": "majordomo",
+      "size": 40,
+      "roles": {
+        "tank": 3,
+        "healer": 8,
+        "melee": 13,
+        "ranged": 16
+      },
+      "totalMs": [
+        61631.35
+      ],
+      "processCpuMs": [
+        27085.6
+      ],
+      "wallBudgetPercent": 410.88,
+      "timings": {
+        "tick": {
+          "mean": 244.48,
+          "p95": 551.99,
+          "max": 932.19
+        },
+        "frame": {
+          "mean": 95.09,
+          "p95": 258.36,
+          "max": 841.8
+        },
+        "aux": {
+          "mean": 243.77,
+          "p95": 729.25,
+          "max": 729.25
+        },
+        "transportClone": {
+          "mean": 44.16,
+          "p95": 91.55,
+          "max": 722.36
+        },
+        "checkpoint": {
+          "mean": 71.54,
+          "p95": 71.54,
+          "max": 71.54
+        },
+        "slice": {
+          "mean": 205.25,
+          "p95": 697.01,
+          "max": 2464.16
+        }
+      },
+      "componentTotalMs": {
+        "tick": 36672.46,
+        "frame": 14263.94,
+        "aux": 3900.37,
+        "transportClone": 6623.97,
+        "checkpoint": 71.54
+      },
+      "minAlive": 37,
+      "maxFriendlyUnits": 56,
+      "activeTicks": 150,
+      "expectedTicks": 150,
+      "combatStillActive": true,
+      "enemyCount": 9,
+      "fullSnapshotMs": {
+        "mean": 2911.87,
+        "p95": 3529.26,
+        "max": 3529.26
+      },
+      "frameBytes": 1527105,
+      "checkpointBytes": 707650,
+      "fullSnapshotBytes": 3437662,
+      "raidCommandVisible": true,
+      "hash": "430b6d44db2cdea8459bba6f09b8ef29d960935e8626433fd03ad4b5497db4f5"
+    }
+  ],
+  "profiledShortRun": [
+    {
+      "kind": "environment",
+      "node": "v24.15.0",
+      "cpu": "Apple M4",
+      "duration": 5000,
+      "runs": 1,
+      "sizes": [
+        40
+      ],
+      "bosses": [
+        "lucifron"
+      ],
+      "rosters": [
+        "gold"
+      ],
+      "method": "50ms calls, 100ms rule ticks + frames, 1s raid views, 10s checkpoints; synchronous structuredClone approximates transport; no browser/GPU/network/DB"
+    },
+    {
+      "kind": "result",
+      "roster": "gold",
+      "boss": "lucifron",
+      "size": 40,
+      "roles": {
+        "tank": 3,
+        "healer": 8,
+        "melee": 13,
+        "ranged": 16
+      },
+      "totalMs": [
+        16172.09
+      ],
+      "processCpuMs": [
+        8293.28
+      ],
+      "wallBudgetPercent": 323.44,
+      "timings": {
+        "tick": {
+          "mean": 201.13,
+          "p95": 431.63,
+          "max": 812
+        },
+        "frame": {
+          "mean": 52.19,
+          "p95": 124.25,
+          "max": 374.05
+        },
+        "aux": {
+          "mean": 321.26,
+          "p95": 815.7,
+          "max": 815.7
+        },
+        "transportClone": {
+          "mean": 30.63,
+          "p95": 68.66,
+          "max": 99.17
+        },
+        "checkpoint": {
+          "mean": null,
+          "p95": null,
+          "max": null
+        },
+        "slice": {
+          "mean": 161.46,
+          "p95": 581.38,
+          "max": 1463.55
+        }
+      },
+      "componentTotalMs": {
+        "tick": 10056.63,
+        "frame": 2609.38,
+        "aux": 1927.57,
+        "transportClone": 1531.51,
+        "checkpoint": 0
+      },
+      "minAlive": 40,
+      "maxFriendlyUnits": 51,
+      "activeTicks": 50,
+      "expectedTicks": 50,
+      "combatStillActive": true,
+      "enemyCount": 3,
+      "fullSnapshotMs": {
+        "mean": 4691.1,
+        "p95": 7499.33,
+        "max": 7499.33
+      },
+      "frameBytes": 1387813,
+      "checkpointBytes": 661742,
+      "fullSnapshotBytes": 3176959,
+      "raidCommandVisible": true,
+      "hash": "14c2bab8300938b696bbb88913235c1aea36a8a410f79683ada70a6ff57742ef"
+    }
+  ],
+  "sourceHashes": {
+    "packages/game-domain/src/rules/combat-input.js": "6528a59835479a308cd4761018255cee2256440c62fc8c0f26366554f24371a5",
+    "packages/game-domain/src/rules/combat.js": "44dacdcbfd27de10c4f0d27030c5bffd9ccf913ab1cbaf069fe758a2536d033d",
+    "packages/game-domain/src/rules/combat-command.js": "0d0471687adddd82d77575e66f53289987fcb2cddf2f601d834a49c70157b633",
+    "packages/game-domain/src/rules/character.js": "479d8f8f266773eeb69613f6b1d77bfed2e170140488a8673e10f28d0c6af6ee",
+    "packages/game-domain/src/rules/battle-presentation.js": "e20a8a61072d26a468621a045bf3a52c49f32f5f1a58906ef41ab2ca1c1c00d7",
+    "packages/game-domain/src/rules/client-snapshot.ts": "ca705d30a6dc4b5ced92dff69a9d819d0bb65dcda1277518f6c892293ec26093",
+    "packages/game-domain/src/rules/derived-cache.js": "04cf65bf03bf24f215b3ecf5ba9294e3b1e866097f5adbdadb11f39881eef666"
+  }
+}

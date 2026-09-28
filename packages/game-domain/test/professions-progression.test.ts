@@ -5,6 +5,8 @@ import {GameService} from '../src/service.ts';
 import type {Character, Rules} from '../src/model.ts';
 import {professions, recipes, professionRanks} from '../src/rules/profession-data.js';
 import {countItem} from '../src/rules/character.js';
+import {items} from '../src/rules/catalog.js';
+import {marketOffer,marketAvailability} from '../src/rules/market.js';
 
 // Explicit integration fixtures: bankroll and character level only. Professions,
 // skill points, materials, tools and output always come from public commands.
@@ -51,10 +53,17 @@ for(const profession of ['alchemy','blacksmithing','leatherworking','tailoring',
   for(const [target,level] of [[50,10],[125,20]]){
    while((await f.state()).professions[profession].skill<target){
     const state=await f.state(),skill=state.professions[profession].skill;
-    const recipe=recipes.filter(r=>r.profession===profession&&r.skill<=skill&&r.gray>skill&&!r.specialization&&!r.cooldown&&r.outputMax<=5)
+    // Binding tools must be made by the enchanter, not purchased from an NPC.
+    if(profession==='enchanting'){
+     const tool=skill>=100?6339:6218;
+     if(!countItem(state,tool)){const rod=recipes.find(r=>r.item===tool)!;await f.cmd({type:'craft',id:rod.id,count:1,buyMissing:true});await f.settle();continue;}
+    }
+    const recipe=recipes.filter(r=>r.profession===profession&&r.skill<=skill&&r.gray>skill&&!r.specialization&&!r.cooldown&&r.outputMax<=5&&![1,4].includes(items[r.item].bonding))
      .sort((a,b)=>b.yellow-a.yellow)[0];
     assert.ok(recipe,`${profession} has a skill-gaining recipe at ${skill}`);
     const count=Math.min(5,target-skill),before=countItem(state,recipe.item);
+    const waiting=recipe.materials.map(m=>{const offer=marketOffer(m.id);assert.ok(offer);const stock=marketAvailability(state.marketStock,state.clock,offer);return m.count*count-countItem(state,m.id)>stock.available?stock.restockAt-state.clock:0;});
+    if(Math.max(...waiting)>0)await f.settle(Math.max(...waiting));
     const dispatched=await f.cmd({type:'craft',id:recipe.id,count,buyMissing:true});
     assert.equal(countItem(dispatched.state,recipe.item),before,'dispatch must not deliver output');
     if(orders++===0)f.restart();

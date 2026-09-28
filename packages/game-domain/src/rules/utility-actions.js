@@ -1,3 +1,5 @@
+import {buffTooltip} from './buff-tooltip.js';
+import {drinkPotion} from './consumables.js';
 import {beginSpellTiming,finishSpellTiming,cooldownUntil,gcdUntil} from './spell-timing.js';
 import {beginHunterTaming} from './combat.js';
 import {classBookUse,useClassBook} from './class-acquisition.js';
@@ -125,11 +127,11 @@ export function useBagItem(s,uid,slot){
  }else{
   stopRecovery(s);
   if(effect.kind==='buff'){s.itemBuffs=(s.itemBuffs||[]).filter(b=>buffFamily(b.item,b.stats)!==buffFamily(instance.id,effect.values)&&b.until>s.clock);s.itemBuffs.push({spell:effect.sp.Id,item:instance.id,stats:effect.values,until:s.clock+effect.sp.durationMs});}
-  else{const field=effect.kind==='health'?'hp':'mana',max=effect.kind==='health'?stats(s).maxHp:stats(s).maxMana;s[field]=Math.min(max,s[field]+roll(s,effect.min,effect.max));s.potionReady=s.clock+120000;}
+  else drinkPotion(s,s,instance.id);
  }
  log(s,'使用 '+nameOf('items',instance.id),effect.kind==='buff'?'buff':'rest');
 }
 
 export function utilityView(s){
- return {...classUtilityView(s),skillUses:Object.fromEntries(s.learned.map(id=>[id,skillUseView(s,id)]).filter(([,use])=>use)),itemUses:Object.fromEntries(s.bag.map(i=>[i.uid,itemUseView(s,i)]).filter(([,use])=>use)),itemBuffs:(s.itemBuffs||[]).filter(b=>b.until>s.clock).map(b=>({...b,name:nameOf('items',b.item),icon:icon('items',b.item)}))};
+ return {...classUtilityView(s),skillUses:Object.fromEntries(s.learned.map(id=>[id,skillUseView(s,id)]).filter(([,use])=>use)),itemUses:Object.fromEntries(s.bag.map(i=>[i.uid,itemUseView(s,i)]).filter(([,use])=>use)),itemBuffs:(s.itemBuffs||[]).filter(b=>b.until>s.clock).map(b=>({...b,...buffTooltip(b.spell),name:nameOf('spells',b.spell),icon:icon('spells',b.spell)}))};
 }

@@ -16,15 +16,18 @@ const commandFixture=await commandServiceFixture({now:()=>Date.now(),contentVers
 await commandFixture.store.transaction(tx=>reserveLocalSimulation(tx,commandFixture.started.state.id,Date.now()));
 const app=fileURLToPath(new URL('../',import.meta.url));
 const store=new MemoryStore(),service=new GameService(store,{contentVersion:CONTENT_VERSION,xpMultiplier:experienceMultiplier(process.env.GAME_XP_MULTIPLIER),seed:()=>60325});
-const raid=await service.createSave('preview',{name:'本地远征',classId:8,raceId:1,raidReady:true},'raid');
-await service.command(raid.id,{type:'enterDungeon',contentId:'molten-core-gold',requestId:'enter'});
-for(const type of ['goldPublish','goldRecommend','goldLaunch'])await service.command(raid.id,{type,requestId:type});
-if(!process.env.PREVIEW_COMMAND_ONLY)await service.command(raid.id,{type:'goldNavigate',destination:'lucifron',requestId:'start',localClientId:'preview-bootstrap'});
-const solo=await service.createSave('preview',{name:'本地法师',classId:8,raceId:1},'solo');
-if(!process.env.PREVIEW_COMMAND_ONLY)await service.command(solo.id,{type:'hunt',id:299,requestId:'hunt',localClientId:'preview-bootstrap'});
-await service.createSave('preview',{name:'竞技队长',classId:8,raceId:1,raidReady:true},'arena');
+let raid={id:'preview:raid'};
+if(!process.env.PREVIEW_COMMAND_ONLY){
+  raid=await service.createSave('preview',{name:'本地远征',classId:8,raceId:1,raidReady:true},'raid');
+  await service.command(raid.id,{type:'enterDungeon',contentId:'molten-core-gold',requestId:'enter'});
+  for(const type of ['goldPublish','goldRecommend','goldLaunch'])await service.command(raid.id,{type,requestId:type});
+  await service.command(raid.id,{type:'goldNavigate',destination:'lucifron',requestId:'start',localClientId:'preview-bootstrap'});
+  const solo=await service.createSave('preview',{name:'本地法师',classId:8,raceId:1},'solo');
+  await service.command(solo.id,{type:'hunt',id:299,requestId:'hunt',localClientId:'preview-bootstrap'});
+  await service.createSave('preview',{name:'竞技队长',classId:8,raceId:1,raidReady:true},'arena');
+}
 let claims=0,checkpoints=0,commands=0,workerCommits=0;
-const work=setInterval(async()=>{const result=await service.work();workerCommits+=result.activities+result.instances;},1000);
+const work=process.env.PREVIEW_COMMAND_ONLY?null:setInterval(async()=>{const result=await service.work();workerCommits+=result.activities+result.instances;},1000);
 const api={name:'local-simulation-preview',configureServer(server){server.middlewares.use((req,res,next)=>{
  if(!req.url?.startsWith('/api/'))return next();
  void(async()=>{
@@ -57,6 +60,6 @@ await server.listen();
 console.log('Local simulation: http://127.0.0.1:5192/local-simulation.html?saveId=preview:raid');
 console.log('Arena: http://127.0.0.1:5192/local-simulation.html?saveId=preview:arena');
 console.log('Solo: http://127.0.0.1:5192/local-simulation.html?saveId=preview:solo');
-server.httpServer.once('close',()=>clearInterval(work));
+server.httpServer.once('close',()=>{if(work)clearInterval(work);});
 
 console.log('Command: http://127.0.0.1:5192/local-simulation.html?saveId=preview:command');

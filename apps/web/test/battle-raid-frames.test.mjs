@@ -33,3 +33,9 @@ test('live HUD frames show recovered camp members instead of the last battle cas
  assert.match(html,/2\/2/);assert.match(html,/生命 1000 \/ 1000/);assert.match(html,/法力 800 \/ 1000/);assert.match(html,/怒气 50 \/ 100/);
  assert.match(html,/aria-pressed="true" aria-label="坦克/);assert.doesNotMatch(html,/死亡|战斗结束时/);
 });
+test('raid frames hide routine buffs and prioritize curses over combat buffs',()=>{
+ const effects=[{name:'真言术：韧',routine:true,kind:'buff'},{name:'奥术智慧',routine:true,kind:'buff'},...['恢复','护盾','激活'].map(name=>({name,kind:'buff'})),{name:'Boss诅咒',kind:'debuff'}];
+ const html=render(units().slice(0,1),{'0':{effects}});
+ assert.doesNotMatch(html,/真言术：韧|奥术智慧/);
+ assert.match(html,/is-debuff/);assert.match(html,/Boss诅咒/);assert.match(html,/恢复/);assert.match(html,/\+1/);
+});

@@ -1,0 +1,566 @@
+{
+  "date": "2026-09-26",
+  "command": "node scripts/benchmark-raid-capacity.mjs --rosters=gold --runs=2 --fixtures=.cache/raid-capacity/final-fixtures",
+  "seed": 60325,
+  "gitHead": "e95e3c4ca4c75aa8a39db1eed9afee46d25e2cc1",
+  "workingTree": "Uncommitted changes present; results describe the working tree, not git HEAD alone.",
+  "sourceHashesAtReport": {
+    "packages/game-domain/src/rules/engine.js": "a67b3c8db6f97c729561dd6eda46b35d49ee92723277e273790bd2184511e0c1",
+    "packages/game-domain/src/rules/combat.js": "f12e6780d47fdf3a5a1edc8663aa5208155ee2b35ce61d282f3c8e7bd189f5ab",
+    "packages/game-domain/src/rules/character.js": "bebfd977c3a3068204e6a1146e3b0fb47e244dbb0fdb645abef85a2215e2aa93",
+    "packages/game-domain/src/rules/talent-effects.js": "cddeddcc17304d00382a84c9d0c69002802849318e51d19740625b1b9104be8e",
+    "packages/game-domain/src/rules/combat-strategy.js": "8db91ded25802fb67fe181f3effdaa973100f7c5c7ff8bf2c2f151a3e76da85b",
+    "packages/game-domain/src/rules/class-mechanics.js": "f499725385bb4c485dde49404192053a3b9e54f22b736a8963c9cd3a5acc5933",
+    "packages/game-domain/src/rules/class-spell-effects.js": "a66ad36790eccc95178b914f903fb37160a2249c701311478b973824a54ef73d",
+    "packages/game-domain/src/rules/client-snapshot.ts": "06f822d8a2229df7c9350d3932c47a774f482cb52926abb91a91c77ae8272632",
+    "packages/game-domain/src/rules/battle-presentation.js": "d93acf284d03e312bb2fee6357900b4261b495265dd4aaf57f5c9e1a8349642e",
+    "apps/web/lib/local-simulation.worker.ts": "a34602b2948a8744fcc72d33ae0873f8f14619efe4c95901fe448f5c02b2334f"
+  },
+  "environment": {
+    "kind": "environment",
+    "node": "v24.15.0",
+    "cpu": "Apple M4",
+    "duration": 15000,
+    "runs": 2,
+    "sizes": [
+      25,
+      40
+    ],
+    "bosses": [
+      "lucifron",
+      "majordomo"
+    ],
+    "rosters": [
+      "gold"
+    ],
+    "method": "50ms calls, 100ms rule ticks + frames, 1s raid views, 10s checkpoints; synchronous structuredClone approximates transport; no browser/GPU/network/DB"
+  },
+  "results": [
+    {
+      "kind": "result",
+      "roster": "gold",
+      "boss": "lucifron",
+      "size": 25,
+      "roles": {
+        "tank": 2,
+        "healer": 5,
+        "melee": 11,
+        "ranged": 7
+      },
+      "totalMs": [
+        15301.82,
+        11788.13
+      ],
+      "processCpuMs": [
+        14075,
+        11474.2
+      ],
+      "wallBudgetPercent": 90.3,
+      "timings": {
+        "tick": {
+          "mean": 72.92,
+          "p95": 136.51,
+          "max": 241.48
+        },
+        "frame": {
+          "mean": 10.59,
+          "p95": 16.31,
+          "max": 72.1
+        },
+        "aux": {
+          "mean": 14.32,
+          "p95": 21.62,
+          "max": 25.87
+        },
+        "transportClone": {
+          "mean": 5.12,
+          "p95": 6.98,
+          "max": 40.47
+        },
+        "checkpoint": {
+          "mean": 7.23,
+          "p95": 7.35,
+          "max": 7.35
+        },
+        "slice": {
+          "mean": 45.12,
+          "p95": 124.42,
+          "max": 354.06
+        }
+      },
+      "componentTotalMs": {
+        "tick": 10937.86,
+        "frame": 1588.13,
+        "aux": 229.12,
+        "transportClone": 767.7,
+        "checkpoint": 7.23
+      },
+      "minAlive": 25,
+      "maxFriendlyUnits": 33,
+      "activeTicks": 150,
+      "expectedTicks": 150,
+      "combatStillActive": true,
+      "enemyCount": 3,
+      "fullSnapshotMs": {
+        "mean": 486.51,
+        "p95": 574.51,
+        "max": 574.51
+      },
+      "frameBytes": 775987,
+      "checkpointBytes": 540763,
+      "fullSnapshotBytes": 3131938,
+      "raidCommandVisible": true,
+      "hash": "01f1605ae0c3d14535240fbdad742fda95daa60fa2a4f18e469a83d3d9e4fae8"
+    },
+    {
+      "kind": "result",
+      "roster": "gold",
+      "boss": "lucifron",
+      "size": 40,
+      "roles": {
+        "tank": 3,
+        "healer": 8,
+        "melee": 13,
+        "ranged": 16
+      },
+      "totalMs": [
+        24814.24,
+        25131.44
+      ],
+      "processCpuMs": [
+        23841.97,
+        24024.21
+      ],
+      "wallBudgetPercent": 166.49,
+      "timings": {
+        "tick": {
+          "mean": 141.29,
+          "p95": 204.2,
+          "max": 307.49
+        },
+        "frame": {
+          "mean": 16.63,
+          "p95": 22.84,
+          "max": 45.24
+        },
+        "aux": {
+          "mean": 4.75,
+          "p95": 6.56,
+          "max": 12.03
+        },
+        "transportClone": {
+          "mean": 7.8,
+          "p95": 10.84,
+          "max": 26.64
+        },
+        "checkpoint": {
+          "mean": 16.16,
+          "p95": 18.66,
+          "max": 18.66
+        },
+        "slice": {
+          "mean": 83.19,
+          "p95": 208.65,
+          "max": 330.64
+        }
+      },
+      "componentTotalMs": {
+        "tick": 21193.96,
+        "frame": 2494.23,
+        "aux": 76.04,
+        "transportClone": 1170.09,
+        "checkpoint": 16.16
+      },
+      "minAlive": 40,
+      "maxFriendlyUnits": 56,
+      "activeTicks": 150,
+      "expectedTicks": 150,
+      "combatStillActive": true,
+      "enemyCount": 3,
+      "fullSnapshotMs": {
+        "mean": 571.83,
+        "p95": 582.97,
+        "max": 582.97
+      },
+      "frameBytes": 1191828,
+      "checkpointBytes": 705174,
+      "fullSnapshotBytes": 3936258,
+      "raidCommandVisible": false,
+      "hash": "285e458a76142410f151d095a7fa86b33915b34c621c5e037be0ade689b06554"
+    },
+    {
+      "kind": "result",
+      "roster": "gold",
+      "boss": "majordomo",
+      "size": 25,
+      "roles": {
+        "tank": 2,
+        "healer": 5,
+        "melee": 11,
+        "ranged": 7
+      },
+      "totalMs": [
+        10083.76,
+        9915.63
+      ],
+      "processCpuMs": [
+        9751.98,
+        9718.5
+      ],
+      "wallBudgetPercent": 66.66,
+      "timings": {
+        "tick": {
+          "mean": 49.94,
+          "p95": 87.64,
+          "max": 189.63
+        },
+        "frame": {
+          "mean": 9.89,
+          "p95": 15.03,
+          "max": 46.41
+        },
+        "aux": {
+          "mean": 16.3,
+          "p95": 17.98,
+          "max": 72.29
+        },
+        "transportClone": {
+          "mean": 4.94,
+          "p95": 7.44,
+          "max": 23.3
+        },
+        "checkpoint": {
+          "mean": 7.99,
+          "p95": 8.08,
+          "max": 8.08
+        },
+        "slice": {
+          "mean": 33.3,
+          "p95": 96.01,
+          "max": 249.51
+        }
+      },
+      "componentTotalMs": {
+        "tick": 7491.12,
+        "frame": 1483.69,
+        "aux": 260.85,
+        "transportClone": 741,
+        "checkpoint": 7.99
+      },
+      "minAlive": 21,
+      "maxFriendlyUnits": 32,
+      "activeTicks": 150,
+      "expectedTicks": 150,
+      "combatStillActive": true,
+      "enemyCount": 9,
+      "fullSnapshotMs": {
+        "mean": 448.57,
+        "p95": 463.91,
+        "max": 463.91
+      },
+      "frameBytes": 736415,
+      "checkpointBytes": 527826,
+      "fullSnapshotBytes": 3139475,
+      "raidCommandVisible": true,
+      "hash": "25559bedf5b337f7a114cb9fe1ac4f55bb10800203a4adaeb2b85f67b72686b1"
+    },
+    {
+      "kind": "result",
+      "roster": "gold",
+      "boss": "majordomo",
+      "size": 40,
+      "roles": {
+        "tank": 3,
+        "healer": 8,
+        "melee": 13,
+        "ranged": 16
+      },
+      "totalMs": [
+        24496.02,
+        20933.66
+      ],
+      "processCpuMs": [
+        21080.48,
+        20229.19
+      ],
+      "wallBudgetPercent": 151.43,
+      "timings": {
+        "tick": {
+          "mean": 122.59,
+          "p95": 211.47,
+          "max": 1018.45
+        },
+        "frame": {
+          "mean": 19.34,
+          "p95": 33.25,
+          "max": 112.28
+        },
+        "aux": {
+          "mean": 5.33,
+          "p95": 11.19,
+          "max": 11.71
+        },
+        "transportClone": {
+          "mean": 8.71,
+          "p95": 13.29,
+          "max": 137.83
+        },
+        "checkpoint": {
+          "mean": 10.23,
+          "p95": 10.83,
+          "max": 10.83
+        },
+        "slice": {
+          "mean": 75.66,
+          "p95": 207.46,
+          "max": 1268.64
+        }
+      },
+      "componentTotalMs": {
+        "tick": 18388.66,
+        "frame": 2900.6,
+        "aux": 85.33,
+        "transportClone": 1306.05,
+        "checkpoint": 10.23
+      },
+      "minAlive": 37,
+      "maxFriendlyUnits": 56,
+      "activeTicks": 150,
+      "expectedTicks": 150,
+      "combatStillActive": true,
+      "enemyCount": 9,
+      "fullSnapshotMs": {
+        "mean": 601.08,
+        "p95": 612.61,
+        "max": 612.61
+      },
+      "frameBytes": 1178317,
+      "checkpointBytes": 705569,
+      "fullSnapshotBytes": 3957025,
+      "raidCommandVisible": false,
+      "hash": "bc85652bb333cb80f1f3667c8ec9c97327c279fb0a0783544e0d62931c836375"
+    }
+  ],
+  "diagnosticProfile": {
+    "context": "Diagnostic sampling during gold 40 lucifron warmup; machine under concurrent load; samples are not percentages of wall time",
+    "samples": 733,
+    "inclusive": [
+      {
+        "function": "(root)",
+        "file": "",
+        "samples": 733
+      },
+      {
+        "function": "tick",
+        "file": "engine.js",
+        "samples": 590
+      },
+      {
+        "function": "advanceOwned",
+        "file": "engine.js",
+        "samples": 590
+      },
+      {
+        "function": "run",
+        "file": "benchmark-raid-capacity.mjs",
+        "samples": 590
+      },
+      {
+        "function": "",
+        "file": "benchmark-raid-capacity.mjs",
+        "samples": 590
+      },
+      {
+        "function": "run",
+        "file": "module_job",
+        "samples": 590
+      },
+      {
+        "function": "combatTick",
+        "file": "combat.js",
+        "samples": 587
+      },
+      {
+        "function": "decideConfigured",
+        "file": "combat.js",
+        "samples": 487
+      },
+      {
+        "function": "decideClass",
+        "file": "class-mechanics.js",
+        "samples": 481
+      },
+      {
+        "function": "stats",
+        "file": "character.js",
+        "samples": 467
+      },
+      {
+        "function": "",
+        "file": "combat-strategy.js",
+        "samples": 442
+      },
+      {
+        "function": "ruleMatches",
+        "file": "combat-strategy.js",
+        "samples": 442
+      },
+      {
+        "function": "conditionMatches",
+        "file": "combat-strategy.js",
+        "samples": 441
+      },
+      {
+        "function": "talentModifiers",
+        "file": "talent-effects.js",
+        "samples": 224
+      },
+      {
+        "function": "(garbage collector)",
+        "file": "",
+        "samples": 141
+      },
+      {
+        "function": "resistances",
+        "file": "character.js",
+        "samples": 108
+      },
+      {
+        "function": "talentCombatDefense",
+        "file": "talent-effects.js",
+        "samples": 82
+      },
+      {
+        "function": "passiveTalentSpells",
+        "file": "talent-effects.js",
+        "samples": 79
+      },
+      {
+        "function": "selectedTalentSpells",
+        "file": "talent-effects.js",
+        "samples": 61
+      },
+      {
+        "function": "ranks",
+        "file": "talent-effects.js",
+        "samples": 54
+      }
+    ],
+    "self": [
+      {
+        "function": "talentModifiers",
+        "file": "talent-effects.js",
+        "samples": 151
+      },
+      {
+        "function": "(garbage collector)",
+        "file": "",
+        "samples": 141
+      },
+      {
+        "function": "stats",
+        "file": "character.js",
+        "samples": 106
+      },
+      {
+        "function": "ranks",
+        "file": "talent-effects.js",
+        "samples": 54
+      },
+      {
+        "function": "selectedTalentSpells",
+        "file": "talent-effects.js",
+        "samples": 40
+      },
+      {
+        "function": "",
+        "file": "combat-strategy.js",
+        "samples": 32
+      },
+      {
+        "function": "resistances",
+        "file": "character.js",
+        "samples": 27
+      },
+      {
+        "function": "",
+        "file": "talent-effects.js",
+        "samples": 22
+      },
+      {
+        "function": "talentCombatDefense",
+        "file": "talent-effects.js",
+        "samples": 20
+      },
+      {
+        "function": "combatTick",
+        "file": "combat.js",
+        "samples": 18
+      },
+      {
+        "function": "passiveTalentSpells",
+        "file": "talent-effects.js",
+        "samples": 15
+      },
+      {
+        "function": "",
+        "file": "character.js",
+        "samples": 14
+      },
+      {
+        "function": "statRow",
+        "file": "character.js",
+        "samples": 14
+      },
+      {
+        "function": "decideClass",
+        "file": "class-mechanics.js",
+        "samples": 10
+      },
+      {
+        "function": "spellInfo",
+        "file": "character.js",
+        "samples": 9
+      }
+    ],
+    "statsCallers": [
+      {
+        "function": "",
+        "file": "combat-strategy.js",
+        "line": 67,
+        "samples": 354
+      },
+      {
+        "function": "combatTick",
+        "file": "combat.js",
+        "line": 327,
+        "samples": 67
+      },
+      {
+        "function": "conditionMatches",
+        "file": "combat-strategy.js",
+        "line": 65,
+        "samples": 44
+      },
+      {
+        "function": "useStrategyPotion",
+        "file": "consumables.js",
+        "line": 17,
+        "samples": 1
+      },
+      {
+        "function": "racialTick",
+        "file": "class-mechanics.js",
+        "line": 184,
+        "samples": 1
+      }
+    ]
+  },
+  "limitations": [
+    "Concurrent desktop load; process CPU time reported separately.",
+    "Opening 15 seconds, one seed, existing 25-player boss stats.",
+    "40-player command view is currently omitted by an exact-size guard.",
+    "Node budget benchmark, not browser Worker scheduling, GPU, network or database load.",
+    "Majordomo has player deaths; not an all-alive upper-bound stress test."
+  ]
+}

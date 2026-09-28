@@ -28,8 +28,8 @@ export function finishResurrection(s){
  if(!finishSpellTiming(caster,a.timing,s.clock))return;const sp=spellInfo(caster,a.spell),st=stats(target);target.hp=Math.min(st.maxHp,effectRange(caster,sp)[0]);target.mana=Math.min(st.maxMana,sp.EffectMiscValue1);target.cast=null;target.spiritRedemptionUsed=false;
  log(s,target.name+' 接受复活，重新站了起来。','info');
 }
-export function startRecovery(s,minimumMana={}){let needed=false;
- for(const c of recoveryMembers(s)){
+export function startRecovery(s,minimumMana={},members=recoveryMembers(s)){let needed=false;
+ for(const c of members){
   if(c.hp<=0)continue;if(c.rest){needed=true;continue;}
   const st=stats(c),foodNeeded=c.hp<st.maxHp*s.settings.health/100,waterNeeded=c.mana<Math.max(st.maxMana*s.settings.mana/100,minimumMana[c.id]||0);
   if(!foodNeeded&&!waterNeeded)continue;needed=true;

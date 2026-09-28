@@ -1,0 +1,2725 @@
+{
+  "contentVersion": "620e960b4d8a4c84e9e4c070710b419a64aa23262c0341c9d66c3daf691f869c",
+  "scaling": {
+    "sourcePlayers": 40,
+    "targetPlayers": 25,
+    "health": 0.625,
+    "meleeDamage": 1,
+    "encounterLimitMs": 900000
+  },
+  "method": "25 players: 2 warrior tanks, 5 healers, 18 damage. Only tank gear differs between baseline and T1; both use the regular NPC tank strategy. Other actors retain demo gear and rules. Independent fresh pulls; no consumable/world-buff injection.",
+  "results": [
+    {
+      "profile": "baseline",
+      "boss": "lucifron",
+      "seed": 60325,
+      "won": true,
+      "durationMs": 122000,
+      "wallMs": 62881,
+      "alive": 16,
+      "firstDeath": {
+        "name": "鹰眼",
+        "role": "ranged",
+        "at": 80000
+      },
+      "tankInputs": [
+        {
+          "id": "mc-member-2",
+          "name": "加瑞克",
+          "stats": {
+            "str": 257,
+            "agi": 125,
+            "sta": 328,
+            "int": 47,
+            "spi": 94,
+            "armor": 6627.8,
+            "maxHp": 4789,
+            "maxMana": 0,
+            "spellPower": 0,
+            "healing": 15,
+            "weaponDamage": 0,
+            "manaRegen": 0,
+            "threat": 0,
+            "schoolPower4": 0,
+            "schoolPower16": 0,
+            "schoolPower32": 0,
+            "resistances": {
+              "1": 0,
+              "2": 17,
+              "3": 7,
+              "4": 7,
+              "5": 7,
+              "6": 0
+            },
+            "regenCasting": 0,
+            "baseMana": 0,
+            "crit": 0.1125,
+            "dodge": 0.0625,
+            "parry": 0.1,
+            "hit": 0,
+            "spellHit": 0,
+            "spellPenetration": {
+              "1": 0,
+              "2": 0,
+              "3": 0,
+              "4": 0,
+              "5": 0,
+              "6": 0
+            },
+            "maxEnergy": 100,
+            "maxRage": 1000,
+            "block": 0.1,
+            "blockValuePct": 0,
+            "defense": 318,
+            "weaponSkill": 305,
+            "offhandWeaponSkill": 300,
+            "rangedWeaponSkill": 300,
+            "rangedCrit": 0.1125,
+            "blockValue": 44.85,
+            "spellCrit": 0.0007833333333333334,
+            "attackPower": 674,
+            "rangedAttackPower": 175
+          },
+          "rules": [
+            {
+              "spell": 71,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 355,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 1672,
+              "condition": "targetCasting",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 12975,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 871,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 2565,
+              "condition": "underAttack",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 2687,
+              "condition": "manaBelow",
+              "value": 30,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "healthAbove",
+                  "value": 60
+                }
+              ]
+            },
+            {
+              "spell": 25289,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 25288,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 23925,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 11556,
+              "condition": "enemyCountAtLeast",
+              "value": 3,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 11597,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 20569,
+              "condition": "enemyCountAtLeast",
+              "value": 2,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 25286,
+              "condition": "manaAbove",
+              "value": 70,
+              "enabled": true
+            }
+          ],
+          "equipment": [
+            {
+              "slot": 1,
+              "id": 16731,
+              "name": "勇气头盔",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 2,
+              "id": 18443,
+              "name": "军士长的徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 3,
+              "id": 16733,
+              "name": "勇气肩甲",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 5,
+              "id": 16730,
+              "name": "勇气胸甲",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 6,
+              "id": 19051,
+              "name": "黎明束腰",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 7,
+              "id": 12619,
+              "name": "附魔瑟银护腿",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 8,
+              "id": 16734,
+              "name": "勇气战靴",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 9,
+              "id": 18445,
+              "name": "士官长的板甲护腕",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 10,
+              "id": 16737,
+              "name": "勇气护手",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 11,
+              "id": 20505,
+              "name": "礼节徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 12,
+              "id": 13096,
+              "name": "圣者指环",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 13,
+              "id": 11811,
+              "name": "浓烟山脉之心",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 14,
+              "id": 18466,
+              "name": "埃雷萨拉斯皇家徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 15,
+              "id": 16342,
+              "name": "军士的斗篷",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 16,
+              "id": 13006,
+              "name": "玛克迦文之锤",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 17,
+              "id": 1203,
+              "name": "暴风城纹章盾",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 18,
+              "id": 13023,
+              "name": "鹰角长弓",
+              "enchant": null,
+              "itemSet": 0
+            }
+          ]
+        },
+        {
+          "id": "mc-member-6",
+          "name": "布洛克",
+          "stats": {
+            "str": 257,
+            "agi": 125,
+            "sta": 328,
+            "int": 47,
+            "spi": 94,
+            "armor": 6627.8,
+            "maxHp": 4789,
+            "maxMana": 0,
+            "spellPower": 0,
+            "healing": 15,
+            "weaponDamage": 0,
+            "manaRegen": 0,
+            "threat": 0,
+            "schoolPower4": 0,
+            "schoolPower16": 0,
+            "schoolPower32": 0,
+            "resistances": {
+              "1": 0,
+              "2": 17,
+              "3": 7,
+              "4": 7,
+              "5": 7,
+              "6": 0
+            },
+            "regenCasting": 0,
+            "baseMana": 0,
+            "crit": 0.1125,
+            "dodge": 0.0625,
+            "parry": 0.1,
+            "hit": 0,
+            "spellHit": 0,
+            "spellPenetration": {
+              "1": 0,
+              "2": 0,
+              "3": 0,
+              "4": 0,
+              "5": 0,
+              "6": 0
+            },
+            "maxEnergy": 100,
+            "maxRage": 1000,
+            "block": 0.1,
+            "blockValuePct": 0,
+            "defense": 318,
+            "weaponSkill": 305,
+            "offhandWeaponSkill": 300,
+            "rangedWeaponSkill": 300,
+            "rangedCrit": 0.1125,
+            "blockValue": 44.85,
+            "spellCrit": 0.0007833333333333334,
+            "attackPower": 674,
+            "rangedAttackPower": 175
+          },
+          "rules": [
+            {
+              "spell": 71,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 355,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 1672,
+              "condition": "targetCasting",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 12975,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 871,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 2565,
+              "condition": "underAttack",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 2687,
+              "condition": "manaBelow",
+              "value": 30,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "healthAbove",
+                  "value": 60
+                }
+              ]
+            },
+            {
+              "spell": 25289,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 25288,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 23925,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 11556,
+              "condition": "enemyCountAtLeast",
+              "value": 3,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 11597,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 20569,
+              "condition": "enemyCountAtLeast",
+              "value": 2,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 25286,
+              "condition": "manaAbove",
+              "value": 70,
+              "enabled": true
+            }
+          ],
+          "equipment": [
+            {
+              "slot": 1,
+              "id": 16731,
+              "name": "勇气头盔",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 2,
+              "id": 18443,
+              "name": "军士长的徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 3,
+              "id": 16733,
+              "name": "勇气肩甲",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 5,
+              "id": 16730,
+              "name": "勇气胸甲",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 6,
+              "id": 19051,
+              "name": "黎明束腰",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 7,
+              "id": 12619,
+              "name": "附魔瑟银护腿",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 8,
+              "id": 16734,
+              "name": "勇气战靴",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 9,
+              "id": 18445,
+              "name": "士官长的板甲护腕",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 10,
+              "id": 16737,
+              "name": "勇气护手",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 11,
+              "id": 20505,
+              "name": "礼节徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 12,
+              "id": 13096,
+              "name": "圣者指环",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 13,
+              "id": 11811,
+              "name": "浓烟山脉之心",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 14,
+              "id": 18466,
+              "name": "埃雷萨拉斯皇家徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 15,
+              "id": 16342,
+              "name": "军士的斗篷",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 16,
+              "id": 13006,
+              "name": "玛克迦文之锤",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 17,
+              "id": 1203,
+              "name": "暴风城纹章盾",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 18,
+              "id": 13023,
+              "name": "鹰角长弓",
+              "enchant": null,
+              "itemSet": 0
+            }
+          ]
+        }
+      ],
+      "tankIncoming": {
+        "mc-member-2": {
+          "total": 19219,
+          "maxHit": 1620,
+          "hits": 29,
+          "crits": 0,
+          "crushes": 0,
+          "deathAt": 85900
+        },
+        "mc-member-6": {
+          "total": 22520,
+          "maxHit": 1620,
+          "hits": 37,
+          "crits": 3,
+          "crushes": 0,
+          "deathAt": 98000
+        }
+      },
+      "enemies": [
+        {
+          "name": "鲁西弗隆",
+          "hp": 0,
+          "maxHp": 219863,
+          "remainingPercent": 0
+        },
+        {
+          "name": "烈焰行者护卫 1",
+          "hp": 0,
+          "maxHp": 56656,
+          "remainingPercent": 0
+        },
+        {
+          "name": "烈焰行者护卫 2",
+          "hp": 0,
+          "maxHp": 56656,
+          "remainingPercent": 0
+        }
+      ],
+      "healers": [
+        {
+          "name": "艾琳",
+          "hp": 2737,
+          "mana": 279,
+          "maxMana": 6181
+        },
+        {
+          "name": "罗兰",
+          "hp": 3381,
+          "mana": 142,
+          "maxMana": 5462
+        },
+        {
+          "name": "晨星",
+          "hp": 2737,
+          "mana": 249,
+          "maxMana": 6181
+        },
+        {
+          "name": "白露",
+          "hp": 2737,
+          "mana": 90,
+          "maxMana": 6181
+        },
+        {
+          "name": "圣烛",
+          "hp": 3381,
+          "mana": 2,
+          "maxMana": 5462
+        }
+      ],
+      "failures": {
+        "doom": 24,
+        "fire": 0,
+        "feared": 0
+      },
+      "support": {
+        "dispels": 67,
+        "tranquilizes": 0,
+        "wards": 0
+      }
+    },
+    {
+      "profile": "baseline",
+      "boss": "magmadar",
+      "seed": 60325,
+      "won": true,
+      "durationMs": 251300,
+      "wallMs": 95865,
+      "alive": 22,
+      "firstDeath": {
+        "name": "加瑞克",
+        "role": "tank",
+        "at": 170400
+      },
+      "tankInputs": [
+        {
+          "id": "mc-member-2",
+          "name": "加瑞克",
+          "stats": {
+            "str": 257,
+            "agi": 125,
+            "sta": 328,
+            "int": 47,
+            "spi": 94,
+            "armor": 6627.8,
+            "maxHp": 4789,
+            "maxMana": 0,
+            "spellPower": 0,
+            "healing": 15,
+            "weaponDamage": 0,
+            "manaRegen": 0,
+            "threat": 0,
+            "schoolPower4": 0,
+            "schoolPower16": 0,
+            "schoolPower32": 0,
+            "resistances": {
+              "1": 0,
+              "2": 17,
+              "3": 7,
+              "4": 7,
+              "5": 7,
+              "6": 0
+            },
+            "regenCasting": 0,
+            "baseMana": 0,
+            "crit": 0.1125,
+            "dodge": 0.0625,
+            "parry": 0.1,
+            "hit": 0,
+            "spellHit": 0,
+            "spellPenetration": {
+              "1": 0,
+              "2": 0,
+              "3": 0,
+              "4": 0,
+              "5": 0,
+              "6": 0
+            },
+            "maxEnergy": 100,
+            "maxRage": 1000,
+            "block": 0.1,
+            "blockValuePct": 0,
+            "defense": 318,
+            "weaponSkill": 305,
+            "offhandWeaponSkill": 300,
+            "rangedWeaponSkill": 300,
+            "rangedCrit": 0.1125,
+            "blockValue": 44.85,
+            "spellCrit": 0.0007833333333333334,
+            "attackPower": 674,
+            "rangedAttackPower": 175
+          },
+          "rules": [
+            {
+              "spell": 71,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 355,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 1672,
+              "condition": "targetCasting",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 12975,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 871,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 2565,
+              "condition": "underAttack",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 2687,
+              "condition": "manaBelow",
+              "value": 30,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "healthAbove",
+                  "value": 60
+                }
+              ]
+            },
+            {
+              "spell": 25289,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 25288,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 23925,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 11556,
+              "condition": "enemyCountAtLeast",
+              "value": 3,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 11597,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 20569,
+              "condition": "enemyCountAtLeast",
+              "value": 2,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 25286,
+              "condition": "manaAbove",
+              "value": 70,
+              "enabled": true
+            }
+          ],
+          "equipment": [
+            {
+              "slot": 1,
+              "id": 16731,
+              "name": "勇气头盔",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 2,
+              "id": 18443,
+              "name": "军士长的徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 3,
+              "id": 16733,
+              "name": "勇气肩甲",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 5,
+              "id": 16730,
+              "name": "勇气胸甲",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 6,
+              "id": 19051,
+              "name": "黎明束腰",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 7,
+              "id": 12619,
+              "name": "附魔瑟银护腿",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 8,
+              "id": 16734,
+              "name": "勇气战靴",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 9,
+              "id": 18445,
+              "name": "士官长的板甲护腕",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 10,
+              "id": 16737,
+              "name": "勇气护手",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 11,
+              "id": 20505,
+              "name": "礼节徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 12,
+              "id": 13096,
+              "name": "圣者指环",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 13,
+              "id": 11811,
+              "name": "浓烟山脉之心",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 14,
+              "id": 18466,
+              "name": "埃雷萨拉斯皇家徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 15,
+              "id": 16342,
+              "name": "军士的斗篷",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 16,
+              "id": 13006,
+              "name": "玛克迦文之锤",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 17,
+              "id": 1203,
+              "name": "暴风城纹章盾",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 18,
+              "id": 13023,
+              "name": "鹰角长弓",
+              "enchant": null,
+              "itemSet": 0
+            }
+          ]
+        },
+        {
+          "id": "mc-member-6",
+          "name": "布洛克",
+          "stats": {
+            "str": 257,
+            "agi": 125,
+            "sta": 328,
+            "int": 47,
+            "spi": 94,
+            "armor": 6627.8,
+            "maxHp": 4789,
+            "maxMana": 0,
+            "spellPower": 0,
+            "healing": 15,
+            "weaponDamage": 0,
+            "manaRegen": 0,
+            "threat": 0,
+            "schoolPower4": 0,
+            "schoolPower16": 0,
+            "schoolPower32": 0,
+            "resistances": {
+              "1": 0,
+              "2": 17,
+              "3": 7,
+              "4": 7,
+              "5": 7,
+              "6": 0
+            },
+            "regenCasting": 0,
+            "baseMana": 0,
+            "crit": 0.1125,
+            "dodge": 0.0625,
+            "parry": 0.1,
+            "hit": 0,
+            "spellHit": 0,
+            "spellPenetration": {
+              "1": 0,
+              "2": 0,
+              "3": 0,
+              "4": 0,
+              "5": 0,
+              "6": 0
+            },
+            "maxEnergy": 100,
+            "maxRage": 1000,
+            "block": 0.1,
+            "blockValuePct": 0,
+            "defense": 318,
+            "weaponSkill": 305,
+            "offhandWeaponSkill": 300,
+            "rangedWeaponSkill": 300,
+            "rangedCrit": 0.1125,
+            "blockValue": 44.85,
+            "spellCrit": 0.0007833333333333334,
+            "attackPower": 674,
+            "rangedAttackPower": 175
+          },
+          "rules": [
+            {
+              "spell": 71,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 355,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 1672,
+              "condition": "targetCasting",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 12975,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 871,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 2565,
+              "condition": "underAttack",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 2687,
+              "condition": "manaBelow",
+              "value": 30,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "healthAbove",
+                  "value": 60
+                }
+              ]
+            },
+            {
+              "spell": 25289,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 25288,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 23925,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 11556,
+              "condition": "enemyCountAtLeast",
+              "value": 3,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 11597,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 20569,
+              "condition": "enemyCountAtLeast",
+              "value": 2,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 25286,
+              "condition": "manaAbove",
+              "value": 70,
+              "enabled": true
+            }
+          ],
+          "equipment": [
+            {
+              "slot": 1,
+              "id": 16731,
+              "name": "勇气头盔",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 2,
+              "id": 18443,
+              "name": "军士长的徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 3,
+              "id": 16733,
+              "name": "勇气肩甲",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 5,
+              "id": 16730,
+              "name": "勇气胸甲",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 6,
+              "id": 19051,
+              "name": "黎明束腰",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 7,
+              "id": 12619,
+              "name": "附魔瑟银护腿",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 8,
+              "id": 16734,
+              "name": "勇气战靴",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 9,
+              "id": 18445,
+              "name": "士官长的板甲护腕",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 10,
+              "id": 16737,
+              "name": "勇气护手",
+              "enchant": null,
+              "itemSet": 189
+            },
+            {
+              "slot": 11,
+              "id": 20505,
+              "name": "礼节徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 12,
+              "id": 13096,
+              "name": "圣者指环",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 13,
+              "id": 11811,
+              "name": "浓烟山脉之心",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 14,
+              "id": 18466,
+              "name": "埃雷萨拉斯皇家徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 15,
+              "id": 16342,
+              "name": "军士的斗篷",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 16,
+              "id": 13006,
+              "name": "玛克迦文之锤",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 17,
+              "id": 1203,
+              "name": "暴风城纹章盾",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 18,
+              "id": 13023,
+              "name": "鹰角长弓",
+              "enchant": null,
+              "itemSet": 0
+            }
+          ]
+        }
+      ],
+      "tankIncoming": {
+        "mc-member-2": {
+          "total": 55412,
+          "maxHit": 1741,
+          "hits": 68,
+          "crits": 2,
+          "crushes": 3,
+          "deathAt": 170400
+        },
+        "mc-member-6": {
+          "total": 32401,
+          "maxHit": 1479,
+          "hits": 45,
+          "crits": 1,
+          "crushes": 4,
+          "deathAt": 244700
+        }
+      },
+      "enemies": [
+        {
+          "name": "玛格曼达",
+          "hp": 0,
+          "maxHp": 516305,
+          "remainingPercent": 0
+        }
+      ],
+      "healers": [
+        {
+          "name": "艾琳",
+          "hp": 1987,
+          "mana": 131,
+          "maxMana": 6181
+        },
+        {
+          "name": "罗兰",
+          "hp": 3381,
+          "mana": 182,
+          "maxMana": 5462
+        },
+        {
+          "name": "晨星",
+          "hp": 2737,
+          "mana": 159,
+          "maxMana": 6181
+        },
+        {
+          "name": "白露",
+          "hp": 2737,
+          "mana": 91,
+          "maxMana": 6181
+        },
+        {
+          "name": "圣烛",
+          "hp": 2631,
+          "mana": 102,
+          "maxMana": 5462
+        }
+      ],
+      "failures": {
+        "doom": 0,
+        "fire": 22,
+        "feared": 116
+      },
+      "support": {
+        "dispels": 0,
+        "tranquilizes": 6,
+        "wards": 5
+      }
+    },
+    {
+      "profile": "t1",
+      "boss": "lucifron",
+      "seed": 60325,
+      "won": true,
+      "durationMs": 116000,
+      "wallMs": 58520,
+      "alive": 25,
+      "firstDeath": null,
+      "tankInputs": [
+        {
+          "id": "mc-member-2",
+          "name": "加瑞克",
+          "stats": {
+            "str": 281,
+            "agi": 105,
+            "sta": 401,
+            "int": 30,
+            "spi": 49,
+            "armor": 7986.6,
+            "maxHp": 5619,
+            "maxMana": 0,
+            "spellPower": 0,
+            "healing": 0,
+            "weaponDamage": 0,
+            "manaRegen": 0,
+            "threat": 0,
+            "schoolPower4": 0,
+            "schoolPower16": 0,
+            "schoolPower32": 0,
+            "resistances": {
+              "1": 0,
+              "2": 44,
+              "3": 0,
+              "4": 0,
+              "5": 24,
+              "6": 0
+            },
+            "regenCasting": 0,
+            "baseMana": 0,
+            "crit": 0.1325,
+            "dodge": 0.08249999999999999,
+            "parry": 0.11,
+            "hit": 0.03,
+            "spellHit": 0,
+            "spellPenetration": {
+              "1": 0,
+              "2": 0,
+              "3": 0,
+              "4": 0,
+              "5": 0,
+              "6": 0
+            },
+            "maxEnergy": 100,
+            "maxRage": 1000,
+            "block": 0.17,
+            "blockValuePct": 0,
+            "defense": 371,
+            "weaponSkill": 305,
+            "offhandWeaponSkill": 300,
+            "rangedWeaponSkill": 300,
+            "rangedCrit": 0.1325,
+            "blockValue": 112.05,
+            "spellCrit": 0.0005,
+            "attackPower": 722,
+            "rangedAttackPower": 155
+          },
+          "rules": [
+            {
+              "spell": 71,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 355,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 1672,
+              "condition": "targetCasting",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 12975,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 871,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 2565,
+              "condition": "underAttack",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 2687,
+              "condition": "manaBelow",
+              "value": 30,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "healthAbove",
+                  "value": 60
+                }
+              ]
+            },
+            {
+              "spell": 25289,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 25288,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 23925,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 11556,
+              "condition": "enemyCountAtLeast",
+              "value": 3,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 11597,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 20569,
+              "condition": "enemyCountAtLeast",
+              "value": 2,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 25286,
+              "condition": "manaAbove",
+              "value": 70,
+              "enabled": true
+            }
+          ],
+          "equipment": [
+            {
+              "slot": 1,
+              "id": 16866,
+              "name": "力量头盔",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 2,
+              "id": 17065,
+              "name": "稳固之力勋章",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 3,
+              "id": 16868,
+              "name": "力量肩铠",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 5,
+              "id": 16865,
+              "name": "力量胸甲",
+              "enchant": "20026",
+              "itemSet": 209
+            },
+            {
+              "slot": 6,
+              "id": 16864,
+              "name": "力量腰带",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 7,
+              "id": 16867,
+              "name": "力量腿铠",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 8,
+              "id": 16862,
+              "name": "力量马靴",
+              "enchant": "20020",
+              "itemSet": 209
+            },
+            {
+              "slot": 9,
+              "id": 16861,
+              "name": "力量护腕",
+              "enchant": "20011",
+              "itemSet": 209
+            },
+            {
+              "slot": 10,
+              "id": 16863,
+              "name": "力量护手",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 11,
+              "id": 18879,
+              "name": "沉重的黑铁戒指",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 12,
+              "id": 17063,
+              "name": "埃古雷亚指环",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 13,
+              "id": 18466,
+              "name": "埃雷萨拉斯皇家徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 14,
+              "id": 11810,
+              "name": "意志之力",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 15,
+              "id": 18204,
+              "name": "艾斯卡达尔的毛皮",
+              "enchant": "20015",
+              "itemSet": 261
+            },
+            {
+              "slot": 16,
+              "id": 18832,
+              "name": "残忍利刃",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 17,
+              "id": 17066,
+              "name": "钻孔虫之碟",
+              "enchant": "20017",
+              "itemSet": 0
+            },
+            {
+              "slot": 18,
+              "id": 17072,
+              "name": "爆击猎枪",
+              "enchant": null,
+              "itemSet": 0
+            }
+          ]
+        },
+        {
+          "id": "mc-member-6",
+          "name": "布洛克",
+          "stats": {
+            "str": 281,
+            "agi": 105,
+            "sta": 401,
+            "int": 30,
+            "spi": 49,
+            "armor": 7986.6,
+            "maxHp": 5619,
+            "maxMana": 0,
+            "spellPower": 0,
+            "healing": 0,
+            "weaponDamage": 0,
+            "manaRegen": 0,
+            "threat": 0,
+            "schoolPower4": 0,
+            "schoolPower16": 0,
+            "schoolPower32": 0,
+            "resistances": {
+              "1": 0,
+              "2": 44,
+              "3": 0,
+              "4": 0,
+              "5": 24,
+              "6": 0
+            },
+            "regenCasting": 0,
+            "baseMana": 0,
+            "crit": 0.1325,
+            "dodge": 0.08249999999999999,
+            "parry": 0.11,
+            "hit": 0.03,
+            "spellHit": 0,
+            "spellPenetration": {
+              "1": 0,
+              "2": 0,
+              "3": 0,
+              "4": 0,
+              "5": 0,
+              "6": 0
+            },
+            "maxEnergy": 100,
+            "maxRage": 1000,
+            "block": 0.17,
+            "blockValuePct": 0,
+            "defense": 371,
+            "weaponSkill": 305,
+            "offhandWeaponSkill": 300,
+            "rangedWeaponSkill": 300,
+            "rangedCrit": 0.1325,
+            "blockValue": 112.05,
+            "spellCrit": 0.0005,
+            "attackPower": 722,
+            "rangedAttackPower": 155
+          },
+          "rules": [
+            {
+              "spell": 71,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 355,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 1672,
+              "condition": "targetCasting",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 12975,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 871,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 2565,
+              "condition": "underAttack",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 2687,
+              "condition": "manaBelow",
+              "value": 30,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "healthAbove",
+                  "value": 60
+                }
+              ]
+            },
+            {
+              "spell": 25289,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 25288,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 23925,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 11556,
+              "condition": "enemyCountAtLeast",
+              "value": 3,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 11597,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 20569,
+              "condition": "enemyCountAtLeast",
+              "value": 2,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 25286,
+              "condition": "manaAbove",
+              "value": 70,
+              "enabled": true
+            }
+          ],
+          "equipment": [
+            {
+              "slot": 1,
+              "id": 16866,
+              "name": "力量头盔",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 2,
+              "id": 17065,
+              "name": "稳固之力勋章",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 3,
+              "id": 16868,
+              "name": "力量肩铠",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 5,
+              "id": 16865,
+              "name": "力量胸甲",
+              "enchant": "20026",
+              "itemSet": 209
+            },
+            {
+              "slot": 6,
+              "id": 16864,
+              "name": "力量腰带",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 7,
+              "id": 16867,
+              "name": "力量腿铠",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 8,
+              "id": 16862,
+              "name": "力量马靴",
+              "enchant": "20020",
+              "itemSet": 209
+            },
+            {
+              "slot": 9,
+              "id": 16861,
+              "name": "力量护腕",
+              "enchant": "20011",
+              "itemSet": 209
+            },
+            {
+              "slot": 10,
+              "id": 16863,
+              "name": "力量护手",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 11,
+              "id": 18879,
+              "name": "沉重的黑铁戒指",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 12,
+              "id": 17063,
+              "name": "埃古雷亚指环",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 13,
+              "id": 18466,
+              "name": "埃雷萨拉斯皇家徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 14,
+              "id": 11810,
+              "name": "意志之力",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 15,
+              "id": 18204,
+              "name": "艾斯卡达尔的毛皮",
+              "enchant": "20015",
+              "itemSet": 261
+            },
+            {
+              "slot": 16,
+              "id": 18832,
+              "name": "残忍利刃",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 17,
+              "id": 17066,
+              "name": "钻孔虫之碟",
+              "enchant": "20017",
+              "itemSet": 0
+            },
+            {
+              "slot": 18,
+              "id": 17072,
+              "name": "爆击猎枪",
+              "enchant": null,
+              "itemSet": 0
+            }
+          ]
+        }
+      ],
+      "tankIncoming": {
+        "mc-member-2": {
+          "total": 24782,
+          "maxHit": 941,
+          "hits": 43,
+          "crits": 0,
+          "crushes": 1,
+          "deathAt": null
+        },
+        "mc-member-6": {
+          "total": 9099,
+          "maxHit": 572,
+          "hits": 20,
+          "crits": 0,
+          "crushes": 0,
+          "deathAt": null
+        }
+      },
+      "enemies": [
+        {
+          "name": "鲁西弗隆",
+          "hp": 0,
+          "maxHp": 219863,
+          "remainingPercent": 0
+        },
+        {
+          "name": "烈焰行者护卫 1",
+          "hp": 0,
+          "maxHp": 56656,
+          "remainingPercent": 0
+        },
+        {
+          "name": "烈焰行者护卫 2",
+          "hp": 0,
+          "maxHp": 56656,
+          "remainingPercent": 0
+        }
+      ],
+      "healers": [
+        {
+          "name": "艾琳",
+          "hp": 2737,
+          "mana": 228,
+          "maxMana": 6181
+        },
+        {
+          "name": "罗兰",
+          "hp": 3381,
+          "mana": 42,
+          "maxMana": 5462
+        },
+        {
+          "name": "晨星",
+          "hp": 2737,
+          "mana": 144,
+          "maxMana": 6181
+        },
+        {
+          "name": "白露",
+          "hp": 2737,
+          "mana": 132,
+          "maxMana": 6181
+        },
+        {
+          "name": "圣烛",
+          "hp": 3381,
+          "mana": 122,
+          "maxMana": 5462
+        }
+      ],
+      "failures": {
+        "doom": 7,
+        "fire": 0,
+        "feared": 0
+      },
+      "support": {
+        "dispels": 73,
+        "tranquilizes": 0,
+        "wards": 0
+      }
+    },
+    {
+      "profile": "t1",
+      "boss": "magmadar",
+      "seed": 60325,
+      "won": true,
+      "durationMs": 249600,
+      "wallMs": 94483,
+      "alive": 25,
+      "firstDeath": null,
+      "tankInputs": [
+        {
+          "id": "mc-member-2",
+          "name": "加瑞克",
+          "stats": {
+            "str": 281,
+            "agi": 105,
+            "sta": 401,
+            "int": 30,
+            "spi": 49,
+            "armor": 7986.6,
+            "maxHp": 5619,
+            "maxMana": 0,
+            "spellPower": 0,
+            "healing": 0,
+            "weaponDamage": 0,
+            "manaRegen": 0,
+            "threat": 0,
+            "schoolPower4": 0,
+            "schoolPower16": 0,
+            "schoolPower32": 0,
+            "resistances": {
+              "1": 0,
+              "2": 44,
+              "3": 0,
+              "4": 0,
+              "5": 24,
+              "6": 0
+            },
+            "regenCasting": 0,
+            "baseMana": 0,
+            "crit": 0.1325,
+            "dodge": 0.08249999999999999,
+            "parry": 0.11,
+            "hit": 0.03,
+            "spellHit": 0,
+            "spellPenetration": {
+              "1": 0,
+              "2": 0,
+              "3": 0,
+              "4": 0,
+              "5": 0,
+              "6": 0
+            },
+            "maxEnergy": 100,
+            "maxRage": 1000,
+            "block": 0.17,
+            "blockValuePct": 0,
+            "defense": 371,
+            "weaponSkill": 305,
+            "offhandWeaponSkill": 300,
+            "rangedWeaponSkill": 300,
+            "rangedCrit": 0.1325,
+            "blockValue": 112.05,
+            "spellCrit": 0.0005,
+            "attackPower": 722,
+            "rangedAttackPower": 155
+          },
+          "rules": [
+            {
+              "spell": 71,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 355,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 1672,
+              "condition": "targetCasting",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 12975,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 871,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 2565,
+              "condition": "underAttack",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 2687,
+              "condition": "manaBelow",
+              "value": 30,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "healthAbove",
+                  "value": 60
+                }
+              ]
+            },
+            {
+              "spell": 25289,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 25288,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 23925,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 11556,
+              "condition": "enemyCountAtLeast",
+              "value": 3,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 11597,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 20569,
+              "condition": "enemyCountAtLeast",
+              "value": 2,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 25286,
+              "condition": "manaAbove",
+              "value": 70,
+              "enabled": true
+            }
+          ],
+          "equipment": [
+            {
+              "slot": 1,
+              "id": 16866,
+              "name": "力量头盔",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 2,
+              "id": 17065,
+              "name": "稳固之力勋章",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 3,
+              "id": 16868,
+              "name": "力量肩铠",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 5,
+              "id": 16865,
+              "name": "力量胸甲",
+              "enchant": "20026",
+              "itemSet": 209
+            },
+            {
+              "slot": 6,
+              "id": 16864,
+              "name": "力量腰带",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 7,
+              "id": 16867,
+              "name": "力量腿铠",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 8,
+              "id": 16862,
+              "name": "力量马靴",
+              "enchant": "20020",
+              "itemSet": 209
+            },
+            {
+              "slot": 9,
+              "id": 16861,
+              "name": "力量护腕",
+              "enchant": "20011",
+              "itemSet": 209
+            },
+            {
+              "slot": 10,
+              "id": 16863,
+              "name": "力量护手",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 11,
+              "id": 18879,
+              "name": "沉重的黑铁戒指",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 12,
+              "id": 17063,
+              "name": "埃古雷亚指环",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 13,
+              "id": 18466,
+              "name": "埃雷萨拉斯皇家徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 14,
+              "id": 11810,
+              "name": "意志之力",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 15,
+              "id": 18204,
+              "name": "艾斯卡达尔的毛皮",
+              "enchant": "20015",
+              "itemSet": 261
+            },
+            {
+              "slot": 16,
+              "id": 18832,
+              "name": "残忍利刃",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 17,
+              "id": 17066,
+              "name": "钻孔虫之碟",
+              "enchant": "20017",
+              "itemSet": 0
+            },
+            {
+              "slot": 18,
+              "id": 17072,
+              "name": "爆击猎枪",
+              "enchant": null,
+              "itemSet": 0
+            }
+          ]
+        },
+        {
+          "id": "mc-member-6",
+          "name": "布洛克",
+          "stats": {
+            "str": 281,
+            "agi": 105,
+            "sta": 401,
+            "int": 30,
+            "spi": 49,
+            "armor": 7986.6,
+            "maxHp": 5619,
+            "maxMana": 0,
+            "spellPower": 0,
+            "healing": 0,
+            "weaponDamage": 0,
+            "manaRegen": 0,
+            "threat": 0,
+            "schoolPower4": 0,
+            "schoolPower16": 0,
+            "schoolPower32": 0,
+            "resistances": {
+              "1": 0,
+              "2": 44,
+              "3": 0,
+              "4": 0,
+              "5": 24,
+              "6": 0
+            },
+            "regenCasting": 0,
+            "baseMana": 0,
+            "crit": 0.1325,
+            "dodge": 0.08249999999999999,
+            "parry": 0.11,
+            "hit": 0.03,
+            "spellHit": 0,
+            "spellPenetration": {
+              "1": 0,
+              "2": 0,
+              "3": 0,
+              "4": 0,
+              "5": 0,
+              "6": 0
+            },
+            "maxEnergy": 100,
+            "maxRage": 1000,
+            "block": 0.17,
+            "blockValuePct": 0,
+            "defense": 371,
+            "weaponSkill": 305,
+            "offhandWeaponSkill": 300,
+            "rangedWeaponSkill": 300,
+            "rangedCrit": 0.1325,
+            "blockValue": 112.05,
+            "spellCrit": 0.0005,
+            "attackPower": 722,
+            "rangedAttackPower": 155
+          },
+          "rules": [
+            {
+              "spell": 71,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 355,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 1672,
+              "condition": "targetCasting",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 12975,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 871,
+              "condition": "healthBelow",
+              "value": 40,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "underAttack",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "spell": 2565,
+              "condition": "underAttack",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 2687,
+              "condition": "manaBelow",
+              "value": 30,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "healthAbove",
+                  "value": 60
+                }
+              ]
+            },
+            {
+              "spell": 25289,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 25288,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 23925,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 11556,
+              "condition": "enemyCountAtLeast",
+              "value": 3,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 11597,
+              "condition": "always",
+              "value": 0,
+              "enabled": true
+            },
+            {
+              "spell": 20569,
+              "condition": "enemyCountAtLeast",
+              "value": 2,
+              "enabled": true,
+              "and": [
+                {
+                  "condition": "manaAbove",
+                  "value": 35
+                }
+              ]
+            },
+            {
+              "spell": 25286,
+              "condition": "manaAbove",
+              "value": 70,
+              "enabled": true
+            }
+          ],
+          "equipment": [
+            {
+              "slot": 1,
+              "id": 16866,
+              "name": "力量头盔",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 2,
+              "id": 17065,
+              "name": "稳固之力勋章",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 3,
+              "id": 16868,
+              "name": "力量肩铠",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 5,
+              "id": 16865,
+              "name": "力量胸甲",
+              "enchant": "20026",
+              "itemSet": 209
+            },
+            {
+              "slot": 6,
+              "id": 16864,
+              "name": "力量腰带",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 7,
+              "id": 16867,
+              "name": "力量腿铠",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 8,
+              "id": 16862,
+              "name": "力量马靴",
+              "enchant": "20020",
+              "itemSet": 209
+            },
+            {
+              "slot": 9,
+              "id": 16861,
+              "name": "力量护腕",
+              "enchant": "20011",
+              "itemSet": 209
+            },
+            {
+              "slot": 10,
+              "id": 16863,
+              "name": "力量护手",
+              "enchant": null,
+              "itemSet": 209
+            },
+            {
+              "slot": 11,
+              "id": 18879,
+              "name": "沉重的黑铁戒指",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 12,
+              "id": 17063,
+              "name": "埃古雷亚指环",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 13,
+              "id": 18466,
+              "name": "埃雷萨拉斯皇家徽记",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 14,
+              "id": 11810,
+              "name": "意志之力",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 15,
+              "id": 18204,
+              "name": "艾斯卡达尔的毛皮",
+              "enchant": "20015",
+              "itemSet": 261
+            },
+            {
+              "slot": 16,
+              "id": 18832,
+              "name": "残忍利刃",
+              "enchant": null,
+              "itemSet": 0
+            },
+            {
+              "slot": 17,
+              "id": 17066,
+              "name": "钻孔虫之碟",
+              "enchant": "20017",
+              "itemSet": 0
+            },
+            {
+              "slot": 18,
+              "id": 17072,
+              "name": "爆击猎枪",
+              "enchant": null,
+              "itemSet": 0
+            }
+          ]
+        }
+      ],
+      "tankIncoming": {
+        "mc-member-2": {
+          "total": 39271,
+          "maxHit": 1196,
+          "hits": 56,
+          "crits": 0,
+          "crushes": 4,
+          "deathAt": null
+        },
+        "mc-member-6": {
+          "total": 33531,
+          "maxHit": 986,
+          "hits": 46,
+          "crits": 0,
+          "crushes": 1,
+          "deathAt": null
+        }
+      },
+      "enemies": [
+        {
+          "name": "玛格曼达",
+          "hp": 0,
+          "maxHp": 516305,
+          "remainingPercent": 0
+        }
+      ],
+      "healers": [
+        {
+          "name": "艾琳",
+          "hp": 2737,
+          "mana": 130,
+          "maxMana": 6181
+        },
+        {
+          "name": "罗兰",
+          "hp": 3381,
+          "mana": 102,
+          "maxMana": 5462
+        },
+        {
+          "name": "晨星",
+          "hp": 2419,
+          "mana": 41,
+          "maxMana": 6181
+        },
+        {
+          "name": "白露",
+          "hp": 2737,
+          "mana": 84,
+          "maxMana": 6181
+        },
+        {
+          "name": "圣烛",
+          "hp": 2631,
+          "mana": 62,
+          "maxMana": 5462
+        }
+      ],
+      "failures": {
+        "doom": 0,
+        "fire": 23,
+        "feared": 122
+      },
+      "support": {
+        "dispels": 0,
+        "tranquilizes": 3,
+        "wards": 4
+      }
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 'use client';
+import {PartyBuffOrder} from './party-buffs';
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
@@ -35,7 +36,7 @@ export default function RaidCommandPanel(props:GameProps){
  const [selected,setSelected]=useState('');if(!r)return null;
  const bossId=selected||r.live?.bossId||(r.bosses.some((b:any)=>b.id===g.activeBoss)?g.activeBoss:'')||r.bosses.find((b:any)=>!g.cleared.includes(b.id))?.id||r.bosses[0].id;
  const boss=r.bosses.find((b:any)=>b.id===bossId)||r.bosses[0],info=r.plans[boss.id],attempts=r.attempts.filter((a:any)=>a.bossId===boss.id),last=attempts.at(-1),previous=attempts.at(-2);
- return <section className="panel raid-command-panel" aria-label="开荒指挥台"><div className="section-heading"><div><div className="eyebrow">PLAN / EXECUTE / LEARN</div><h2>开荒指挥台</h2></div><Choice label="作战首领" value={boss.id} onChange={setSelected} options={r.bosses}/></div><p>{boss.description}</p><RaidLiveOrders {...props}/>
+ return <section className="panel raid-command-panel" aria-label="开荒指挥台"><div className="section-heading"><div><div className="eyebrow">PLAN / EXECUTE / LEARN</div><h2>开荒指挥台</h2></div><Choice label="作战首领" value={boss.id} onChange={setSelected} options={r.bosses}/></div><p>{boss.description}</p>{g.phase==='camp'&&<PartyBuffOrder {...props}/>}<RaidLiveOrders {...props}/>
  {last&&<section className="raid-debrief" aria-label="团灭与战斗复盘"><h3>{last.won?'击败首领 · 本次复盘':last.abandoned?'主动撤退 · 本次复盘':'挑战复盘 · 调整后再战'}</h3>{last.abandoned&&<p>本次由团长主动结束；撤退结算的倒下人数不代表自然死亡，不作为死因判断。</p>}<div className="raid-review-metrics"><span>首领剩余 <b>{last.review.bossRemaining}%</b></span><span>治疗平均剩余法力 <b>{last.review.healerMana}%</b></span><span>首个倒下 <b>{last.review.firstDeath?`${last.review.firstDeath.name} · ${roleNames[last.review.firstDeath.role]} · ${last.review.firstDeath.cause}`:'无记录'}</b></span>{previous&&<span>上次首领剩余 <b>{previous.review.bossRemaining}%</b></span>}</div><ul>{last.review.suggestions.map((text:string)=><li key={text}>{text}</li>)}</ul>{last.review.unused.length>0&&<p>预留但未使用：{last.review.unused.join('、')}。检查触发条件和施法者状态，未使用不一定代表失误。</p>}<details><summary>本次执行记录与战前安排</summary><p>{last.review.plan.focus==='adds'?'先清小怪':'集中首领'} / {last.review.plan.formation==='spread'?'分散':'紧凑'} / {last.review.plan.movement==='early'?'提前撤离':'贪读条'} / {last.review.plan.dispelPolicy==='assigned'?'专人驱散':'全员驱散'}</p>{last.review.events.length?last.review.events.map((e:any,i:number)=><p key={i}>{e.text}</p>):<p>本次没有成功执行的团长口令或预留技能。</p>}</details></section>}
  <details open={!r.live} className="raid-preparation-fold"><summary>战前作战安排 · {boss.name}</summary><Preparation key={boss.id+JSON.stringify(info.plan)} bossId={boss.id} info={info} props={props}/></details></section>;
 }

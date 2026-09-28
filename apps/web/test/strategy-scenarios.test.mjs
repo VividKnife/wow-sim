@@ -39,9 +39,15 @@ test('Blizzard finishes all eight ticks after pulling aggro without switching sp
  const enemy=s.combat.enemies[1];enemy.threat[s.id]=20000;enemy.target=s.id;
  for(s.clock=100;s.clock<cast.until;s.clock+=100){combatTick(s);assert.equal(s.cast,cast);}
  combatTick(s);
- assert.deepEqual(casts(s),['Blizzard']);
+ assert.equal(casts(s)[0],'Blizzard');
+ assert.ok(s.logs.filter(l=>l.kind==='cast'&&l.actorId===s.id&&l.spellId!==cast.spell).every(l=>l.at>=cast.until),'queued next action cannot interrupt the channel');
  assert.ok(!s.logs.some(l=>l.actorId===s.id&&l.kind==='cancel'));
- for(const e of s.combat.enemies)assert.equal(s.logs.filter(l=>l.actorId===s.id&&l.targetId===e.id&&l.periodic&&l.spellId===cast.spell).length,8);
+ // A tick can be resisted. Count resolutions, not only successful damage: the
+ // fixed seed includes a resisted seventh tick on the first enemy.
+ for(const e of s.combat.enemies){
+  const ticks=s.logs.filter(l=>l.actorId===s.id&&l.targetId===e.id&&l.spellId===cast.spell&&(l.periodic||l.kind==='miss'));
+  assert.deepEqual(ticks.map(l=>l.at),Array.from({length:8},(_,i)=>cast.startedAt+(i+1)*1000));
+ }
 });
 test('Blizzard does not re-evaluate crowd control while already channeling',()=>{
  const s=scenario(8,61,3);combatTick(s);const cast=s.cast;

@@ -1,0 +1,10 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import BossTarget from '../../app/boss-target';
+import RaidBossPreview from '../../app/raid-boss-preview';
+import BattleRaidFrames from '../../app/battle-raid-frames';
+import '../../app/globals.css';
+const boss={id:'lucifron',entry:12118,name:'鲁西弗隆',hp:135000,maxHp:180000};
+const effects=[{spellId:139,name:'恢复',kind:'buff',icon:'/icons/assets/spell_holy_renew.png',until:10000},{spellId:19703,name:'鲁西弗隆的诅咒',kind:'debuff',icon:'/icons/assets/spell_shadow_curseoftounges.png',until:23000},{spellId:1243,name:'真言术：韧',kind:'buff',routine:true,icon:'/icons/assets/spell_holy_wordfortitude.png',until:1800000}];
+const members=Array.from({length:25},(_,i)=>({id:String(i),name:`团队成员 ${i+1}`,classId:5,hp:850,maxHp:1000}));
+createRoot(document.getElementById('root')!).render(<main style={{padding:20,maxWidth:1000,margin:'auto'}}><h1>Boss 战斗目标板与开战前展示</h1><div style={{height:360,position:'relative',background:'#1b211e'}}><BossTarget battle={{enemies:[boss]}} data={{goldRaid:{bosses:[boss]},battleView:{units:{lucifron:{hp:135000,maxHp:180000,effects}}}}} clock={1000} onSelect={()=>{}}/></div><BattleRaidFrames units={members} views={Object.fromEntries(members.map(m=>[m.id,{effects}]))} selectedId="0" onSelect={()=>{}} clock={1000} live/><div style={{height:440,position:'relative',marginTop:20}}><RaidBossPreview boss={boss} active/></div></main>);

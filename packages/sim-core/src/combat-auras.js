@@ -5,7 +5,8 @@ export const hasAura=(unit,type,clock)=>activeAuras(unit,clock).some(a=>a.type==
 export const hasSpellAura=(unit,spell,clock)=>activeAuras(unit,clock).some(a=>a.spell===spell);
 export const controlled=(unit,clock)=>unit.stunUntil>clock||unit.polyUntil>clock||hasAura(unit,12,clock)||hasAura(unit,7,clock)||hasAura(unit,5,clock);
 export const rooted=(unit,clock)=>unit.rootUntil>clock||hasAura(unit,26,clock);
-export const schoolImmune=(unit,school,clock)=>activeAuras(unit,clock).some(a=>a.type===39&&(a.misc&(1<<school)));
+export const schoolImmune=(unit,school,clock)=>!!(unit.schoolImmuneMask&(1<<school))||activeAuras(unit,clock).some(a=>a.type===39&&(a.misc&(1<<school)));
+export const mechanicImmune=(unit,mechanic)=>mechanic>0&&!!(unit.mechanicImmuneMask&(1<<(mechanic-1)));
 export function armorWithAuras(unit,armor,clock){
  const auras=activeAuras(unit,clock);
  for(const a of auras)if(a.type===22&&(a.misc&1))armor+=a.amount;
@@ -17,6 +18,7 @@ export const attackTimeMultiplier=(unit,clock)=>timeMultiplier(unit,clock,[9,138
 export const castTimeMultiplier=(unit,clock)=>timeMultiplier(unit,clock,[65]);
 export const movementMultiplier=(unit,clock)=>Math.max(0,1-Math.max(0,...activeAuras(unit,clock).filter(a=>a.type===33).map(a=>-a.amount/100),...(unit.movementSlows||[]).filter(a=>a.until>clock).map(a=>a.amount)));
 export function addMovementSlow(unit,slow,clock){
+ if(mechanicImmune(unit,11))return;
  // Preserve a restored legacy slow when the first source-aware slow arrives.
  if(!unit.movementSlows)unit.movementSlows=unit.slowUntil>clock?[{caster:null,spell:0,amount:unit.slow||0,until:unit.slowUntil}]:[];
  unit.movementSlows=unit.movementSlows.filter(a=>a.until>clock&&!(a.caster===slow.caster&&a.spell===slow.spell));
@@ -28,6 +30,8 @@ export function addMovementSlow(unit,slow,clock){
 export const physicalDamageBonus=(unit,clock)=>activeAuras(unit,clock).filter(a=>a.type===13&&(a.misc&1)).reduce((n,a)=>n+a.amount,0);
 
 export function addCombatAura(unit,aura,clock){
+ const mechanic=aura.mechanic||({5:2,7:5,12:12,26:7,33:11}[aura.type]);
+ if(!aura.positive&&mechanicImmune(unit,mechanic))return;
  if(aura.mechanic){const immunity=activeAuras(unit,clock).find(a=>a.type===77&&a.misc===aura.mechanic);if(immunity){if(immunity.consumeOnImmune)immunity.until=clock;return;}}
  aura=preparePvpAura(unit,aura,clock);if(!aura)return;
  if(aura.type===27){unit.cast=null;unit.nextAction=clock;}

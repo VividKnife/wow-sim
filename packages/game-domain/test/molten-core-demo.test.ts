@@ -1,3 +1,5 @@
+import {prepareRaidTanks} from './support/t1-tank-fixture.js';
+import {raidScaling,raidCreatureStats} from '../src/rules/raid-scaling.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createMoltenCoreDemo,startMoltenCoreBoss,advanceMoltenCore,configureMoltenCore,retreatMoltenCore,moltenCoreView} from '../src/molten-core-demo.ts';
@@ -7,7 +9,7 @@ import {dispelSpellAuras} from '../src/rules/spell-aura-lifecycle.js';
 
 const finish=(initial:ReturnType<typeof createMoltenCoreDemo>)=>{
  let run=initial;
- for(let i=0;i<18&&run.status==='combat';i++)run=advanceMoltenCore(run,10000);
+ for(let i=0;i<raidScaling.encounterLimitMs/10000+1&&run.status==='combat';i++)run=advanceMoltenCore(run,10000);
  assert.notEqual(run.status,'combat','Every attempt must terminate within the encounter budget');
  return run;
 };
@@ -40,7 +42,7 @@ test('boss order, combat configuration locking, retreat, retry and invalid input
  assert.equal(withdrawn.status,'defeat');
  const retry=startMoltenCoreBoss(withdrawn,'lucifron');
  assert.equal(retry.attemptNumber,2);assert.equal(retry.attempts.length,1);
- assert.equal(retry.state.clock,0);assert.equal(retry.state.combat.enemies[0].hp,180000);
+ assert.equal(retry.state.clock,0);assert.equal(retry.state.combat.enemies[0].hp,raidCreatureStats(12118).hp);
  assert.ok([retry.state,...retry.state.party].every(c=>c.hp===stats(c).maxHp));
 });
 
@@ -62,13 +64,14 @@ test('JSON checkpoint and segmented execution preserve deterministic battle resu
  assert.ok(moltenCoreView(full).events.some((e:any)=>e.text.includes('末日降临')));
 });
 
-test('both bosses are defeated through shared combat rules and grant demo rewards once',()=>{
- let run=finish(startMoltenCoreBoss(createMoltenCoreDemo(),'lucifron'));
+test('T1 tanks defeat both bosses at original damage and grant demo rewards once',()=>{
+ const start=(run:ReturnType<typeof createMoltenCoreDemo>,boss:string)=>{const next=startMoltenCoreBoss(run,boss);prepareRaidTanks(next.state);return next;};
+ let run=finish(start(createMoltenCoreDemo(),'lucifron'));
  assert.equal(run.status,'victory');assert.deepEqual(run.cleared,['lucifron']);
  assert.ok(run.attempts[0].support.dispels>0);
  assert.ok(moltenCoreView(run).meter.some((row:any)=>row.healing>0));
  assert.throws(()=>startMoltenCoreBoss(run,'lucifron'));
- run=finish(startMoltenCoreBoss(JSON.parse(JSON.stringify(run)),'magmadar'));
+ run=finish(start(JSON.parse(JSON.stringify(run)),'magmadar'));
  assert.equal(run.status,'victory');assert.equal(run.rewards.length,2);
  assert.ok(run.attempts[1].support.tranquilizes>0);assert.ok(run.attempts[1].support.wards>0);
  assert.equal(run.state.money,0);assert.equal(run.state.pending.length,0);

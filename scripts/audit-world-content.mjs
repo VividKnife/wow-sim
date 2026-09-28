@@ -7,7 +7,8 @@ import {questScenes,itemSources,questContentReason} from '../packages/game-domai
 import {supportedConditionTypes} from '../packages/game-domain/src/rules/quest-conditions.js';
 import {dungeonDefinitions,dungeonRoute} from '../packages/game-domain/src/rules/dungeon-registry.js';
 import {createGame} from '../packages/game-domain/src/rules/engine.js';
-import {recipes,marketIds} from '../packages/game-domain/src/rules/profession-data.js';
+import {recipes} from '../packages/game-domain/src/rules/profession-data.js';
+import {marketIds} from '../packages/game-domain/src/rules/market.js';
 
 const issues={};
 const add=(kind,data)=>(issues[kind]??=[]).push(data);

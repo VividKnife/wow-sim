@@ -1,3 +1,4 @@
+import {executeCombatIntent} from '../../../packages/game-domain/src/rules/combat.js';
 import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -6,7 +7,7 @@ import {companionSkills} from '../../../packages/game-domain/src/rules/party.js'
 import {spellInfo,newCharacter,addItem} from '../../../packages/game-domain/src/rules/character.js';
 import {ruleMatches,strategyAllows} from '../../../packages/game-domain/src/rules/combat-strategy.js';
 import {prepareAutoBuffs} from '../../../packages/game-domain/src/rules/auto-buffs.js';
-import {decideCompanion,stanceAllows} from '../../../packages/game-domain/src/rules/companion-combat.js';
+import {selectCompanion,stanceAllows} from '../../../packages/game-domain/src/rules/companion-combat.js';
 
 test('strategies persist on the selected member and validate class and count threshold',()=>{
  let s=createGame('队长',41,0);s.level=20;s=recruitForTest(s,{type:'recruit',id:'warrior'},0);
@@ -77,8 +78,8 @@ test('buff preparation refreshes expiring effects but never replaces a stronger 
 test('priest rescues an injured ally before damage count and tank-wait conditions',()=>{
  let s=createGame('救急',61,0);s.level=20;for(const id of ['warrior','priest'])s=recruitForTest(s,{type:'recruit',id},0);
  const [tank,c]=s.party;tank.position=5;tank.hp=1;c.position=0;c.strategyPolicy={waitForTank:true,protectCC:true};c.rules=[{spell:585,condition:'enemyCountAtLeast',value:10,enabled:true}];
- const e={id:'e',hp:100,position:8,threat:{},target:s.id};s.combat={enemies:[e],casts:0};
- decideCompanion(s,c,[e],[s,...s.party],()=>{},()=>true,{});assert.equal(c.cast?.target,tank.id);assert.equal(c.cast?.friendly,true);
+ const e={id:'e',hp:100,position:8,threat:{},target:s.id};s.combat={enemies:[e],casts:0,dungeon:true};
+ executeCombatIntent(s,c,selectCompanion(s,c,[e],[s,...s.party]));assert.equal(c.cast?.target,tank.id);assert.equal(c.cast?.classSpecial,true);
  assert.equal(stanceAllows({...tank,stance:'battle'},spellInfo(tank,355)),false);
  assert.equal(stanceAllows({...tank,stance:'defensive'},spellInfo(tank,355)),true);
 });
@@ -124,7 +125,7 @@ test('outdoor preparation finishes affordable buffs before drinking',()=>{
 test('warrior queues Cleave only at the configured count and never NPC Thunderclap',()=>{
  let s=createGame('顺劈',57,0);s.level=20;s=recruitForTest(s,{type:'recruit',id:'warrior'},0);const c=s.party[0];c.position=0;c.positionY=0;c.rage=500;
  c.rules=[{spell:845,condition:'enemyCountAtLeast',value:3,enabled:true}];
- const enemies=[1,2,3].map(n=>({id:'e'+n,hp:100,position:n,positionY:0,threat:{},target:c.id}));s.combat={enemies,casts:0};
- decideCompanion(s,c,enemies,[s,c],()=>{},()=>true,{});assert.equal(c.queuedStrike,845);
- c.queuedStrike=null;enemies[2].positionY=20;decideCompanion(s,c,enemies,[s,c],()=>{},()=>true,{});assert.equal(c.queuedStrike,null);
+ const enemies=[1,2,3].map(n=>({id:'e'+n,hp:100,position:n,positionY:0,threat:{},target:c.id}));s.combat={enemies,casts:0,dungeon:true};
+ executeCombatIntent(s,c,selectCompanion(s,c,enemies,[s,c]));assert.equal(c.queuedStrike,845);
+ c.queuedStrike=null;enemies[2].positionY=20;executeCombatIntent(s,c,selectCompanion(s,c,enemies,[s,c]));assert.equal(c.queuedStrike,null);
 });

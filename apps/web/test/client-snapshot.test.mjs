@@ -62,3 +62,10 @@ test('entered dungeons and battle actors expose no pre-rolled or whole-state int
  assert.equal('dungeon' in combatSnapshot.view.battleView.actors[0],false);
  assert.equal('internalPlan' in combatSnapshot.view.battleView.actors[0],false);
 });
+
+test('local and HTTP snapshots agree on numeric zero',()=>{
+ const state=createGame('数值投影',23,0);
+ const snapshot=projectClientSnapshot(state,{stats:{spellPenetration:{1:-0}}});
+ assert.equal(Object.is(snapshot.view.stats.spellPenetration[1],0),true);
+ assert.deepEqual(JSON.parse(JSON.stringify(snapshot)),snapshot);
+});

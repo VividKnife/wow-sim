@@ -42,17 +42,19 @@ export default function Professions({state:s,data:baseData,busy,revision,send}:G
   </section>
   {p.recipeCount>0?<section className="panel"><div className="section-heading"><h2>配方制造 <small>{p.recipeCount} 条</small></h2><input aria-label="搜索配方" placeholder="中文、英文或配方编号…" value={search} onChange={e=>{setSearch(e.target.value);setPage(0);}}/></div>
    <div className="economy-toolbar"><GameSelect aria-label="筛选配方" value={filter} onValueChange={nextValue=>{setFilter(nextValue);setPage(0);}}>{['全部','已解锁','可提升','专精配方','冷却配方'].map(x=><GameSelectOption value={x} key={x}>{x}</GameSelectOption>)}</GameSelect><label>制造次数 <input aria-label="制造次数" type="number" min={1} max={100} value={count} onChange={e=>setCount(Number(e.target.value))}/></label><label><input type="checkbox" checked={buyMissing} onChange={e=>setBuyMissing(e.target.checked)}/> 拍卖行自动补齐材料与工具</label></div>
-   <details className="crafting-help"><summary>材料与制造规则</summary><p>达到熟练度后自动解锁配方。优先消耗背包内未锁定材料，工具保留；银行材料需先取出。有冷却的配方每次制造一次。需要熔炉、铁砧或月亮井时，请到城镇工坊。</p></details>{pagination}
+   <details className="crafting-help"><summary>材料与制造规则</summary><p>达到熟练度后自动解锁配方。优先消耗背包内未锁定材料，工具保留；银行材料需先取出。补购使用拍卖行实时库存；绑定工具需自行制造，绑定材料需自行获取。有冷却的配方每次制造一次。需要熔炉、铁砧或月亮井时，请到城镇工坊。</p></details>{pagination}
    {workshopError&&<p className="error" role="alert">{workshopError}</p>}<div className="recipe-list">{recipes.map(r=>{
     const cost=r.materials.reduce((n:number,m:Material)=>n+Math.max(0,m.count*count-m.have)*m.price,0)+r.tools.filter(t=>!t.have).reduce((n,t)=>n+t.price,0);
+    const missing=[...r.materials.filter(m=>m.count*count>m.have).map(m=>({...m,needed:m.count*count-m.have})),...r.tools.filter(t=>!t.have).map(t=>({...t,needed:1}))];
+    const purchaseReason=missing.some(m=>!m.purchasable)?'绑定材料或工具需自行获取':missing.some(m=>m.needed>m.available)?'库存不足，等待补货':'';
     const cooldown=r.readyAt>s.clock,reason=!r.known?'熟练度或专精不足':!r.facilityReady?'需要城镇工坊':cooldown?'冷却中':r.cooldown&&count!==1?'每次限制造一次':'';
     return <article className={'recipe-card '+(!r.known?'recipe-locked':'')} key={r.id}>
      <div className="recipe-title"><div><ItemDisplay item={d.items[r.item]||{name:r.name}}/><small>需要 {p.name} {r.skill} · 产出 ×{r.output*(valid?count:1)}{r.outputMax>r.output?'—'+r.outputMax*(valid?count:1):''} <span className={'skill-color skill-'+r.color}>{colorNames[r.color]}</span></small></div></div>
      <p className="recipe-source">原始来源：{r.source}{r.specialization?' · '+p.specializations.find(x=>x.id===r.specialization)?.name:''}{r.cooldown?' · 制造冷却 '+duration(r.cooldown):''}{cooldown?' · 剩余 '+duration(r.readyAt-s.clock):''}</p>
 
      <div className="recipe-materials">{r.materials.map(m=><span className={m.have<m.count*count?'material-missing':''} key={m.id}><ItemDisplay item={d.items[m.id]} size={28}/> <b>{m.have} / {m.count*(valid?count:1)}</b>{m.bank>0&&<small>银行 {m.bank}</small>}</span>)}</div>
-     {!!r.tools.length&&<p className="recipe-tools">工具（不消耗）：{r.tools.map(t=><span className={t.have?'':'material-missing'} key={t.id}><ItemDisplay item={d.items[t.id]} size={28}/> {t.have?'✓':'需补购'}　</span>)}</p>}
-     <div className="recipe-actions"><small>补购合计：{money(valid?cost:0)}</small><Button size="sm" variant="outline" disabled={locked||!valid||!r.known||cost===0||s.money<cost} onClick={()=>send({type:'buyMaterials',id:r.id,count})}>一键补齐</Button><Button size="sm" disabled={locked||!valid||!!reason||(buyMissing?s.money<cost:cost>0)} onClick={()=>send({type:'craft',id:r.id,count,buyMissing})}>{reason||(buyMissing&&cost>0?'补齐并制造':'制造')}</Button></div>
+     {!!r.tools.length&&<p className="recipe-tools">工具（不消耗）：{r.tools.map(t=><span className={t.have?'':'material-missing'} key={t.id}><ItemDisplay item={d.items[t.id]} size={28}/> {t.have?'✓':t.purchasable?'需补购':'需自行制造或获取'}　</span>)}</p>}
+     <div className="recipe-actions"><small>{purchaseReason||<>补购合计：{money(valid?cost:0)}</>}</small><Button size="sm" variant="outline" disabled={locked||!valid||!r.known||cost===0||s.money<cost||!!purchaseReason} onClick={()=>send({type:'buyMaterials',id:r.id,count})}>一键补齐</Button><Button size="sm" disabled={locked||!valid||!!reason||(buyMissing?s.money<cost||!!purchaseReason:cost>0)} onClick={()=>send({type:'craft',id:r.id,count,buyMissing})}>{reason||(buyMissing&&cost>0?'补齐并制造':'制造')}</Button></div>
     </article>;
    })}</div>{!recipes.length&&!workshopLoading&&!workshopError&&<p className="empty">没有匹配的配方。</p>}{workshop.total>pageSize&&pagination}
   </section>:<Gathering state={s} data={d} busy={busy} send={send}/>}

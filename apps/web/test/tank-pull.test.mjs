@@ -71,9 +71,10 @@ test('opening delay validates and survives strategy/client projection',()=>{
 test('offensive totems can be prepared but do not deal damage during the hold',()=>{
  const s=group(7);s.learned.push(3599);s.position=15;s.strategyPolicy={role:'melee'};s.rules=[{spell:3599,condition:'always',value:0,enabled:true}];
  for(s.clock=0;s.clock<3000;s.clock+=100)combatTick(s);
- assert.ok(s.totems?.fire);assert.equal(s.logs.some(l=>l.actorId===s.id&&l.spellId===3599&&l.kind==='damage'),false);
- for(;s.clock<=4500;s.clock+=100)combatTick(s);
- assert.ok(s.logs.some(l=>l.actorId===s.id&&l.spellId===3599&&l.kind==='damage'));
+ assert.ok(s.totems?.fire);assert.equal(s.logs.some(l=>l.actorId===s.id&&l.triggeredBy===3599&&l.spellId===22048&&l.kind==='damage'),false);
+ // The first legal shot may miss; allow subsequent totem shots to land.
+ for(;s.clock<=8500;s.clock+=100)combatTick(s);
+ assert.ok(s.logs.some(l=>l.actorId===s.id&&l.triggeredBy===3599&&l.spellId===22048&&l.kind==='damage'));
 });
 
 

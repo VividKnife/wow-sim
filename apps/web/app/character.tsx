@@ -12,6 +12,7 @@ import Professions from './professions';
 import Mounts from './mounts';
 import Strategy from './strategy';
 import {Bank,Auction} from './storage-market';
+import {spellbookSkills} from '@/lib/spell-ranks.js';
 import {spellbookSkillLines} from './spellbook-skill-lines';
 import './character.css';
 
@@ -37,13 +38,13 @@ function SpellDetails({details}: {details?: {facts:string[];effects:string[];res
 const spellRank=(rank:any)=>String(rank||'').replace(/^Rank\s*/,'等级 ').replace('Racial Passive','种族被动').replace('Passive','被动').replace('Racial','种族技能');
 
 function Spellbook({state:s,data:d,busy,send}:GameProps){
- const [bookSection,setBookSection]=useState(0),[skillFilter,setSkillFilter]=useState('全部'),[skillSearch,setSkillSearch]=useState(''),[targetId,setTargetId]=useState(s.id);
+ const [bookSection,setBookSection]=useState(0),[skillFilter,setSkillFilter]=useState('已学习'),[skillSearch,setSkillSearch]=useState(''),[targetId,setTargetId]=useState(s.id);
  useEffect(()=>setTargetId(s.id),[s.id]);
- const skills=d.skills||[],resource=d.resource||{name:'法力'},uses={...d.skillUses,...(d.skillUsesByTarget?.[targetId]||{})};
+ const skills=spellbookSkills(d.skills||[],skillFilter),resource=d.resource||{name:'法力'},uses={...d.skillUses,...(d.skillUsesByTarget?.[targetId]||{})};
  const tabs=spellbookSkillLines(s.classId,skills);
  const activeTab=tabs.some(tab=>tab.id===bookSection)?bookSection:tabs[0]?.id;
  const visible=(tabs.find(tab=>tab.id===activeTab)?.skills||[])
-  .filter((a:any)=>(!skillSearch||(a.name+' '+a.nameEn).toLowerCase().includes(skillSearch.toLowerCase()))&&(skillFilter==='全部'||skillFilter==='已学习'&&a.known||skillFilter==='可学习'&&a.canTrain||skillFilter==='未学习'&&!a.known));
+  .filter((a:any)=>!skillSearch||(a.name+' '+a.nameEn).toLowerCase().includes(skillSearch.toLowerCase()));
  return <><ClassCompanion state={s} data={d} busy={busy} send={send}/><section className="spellbook-shell" aria-label={`${d.className}法术书`}>
   <nav className="spellbook-tabs" aria-label="法术书技能系">{tabs.map(tab=>{const sample=tab.skills[0];return <button type="button" key={tab.id} className={activeTab===tab.id?'active':''} aria-pressed={activeTab===tab.id} onClick={()=>setBookSection(tab.id)} title={`${tab.label} · ${tab.skills.length}`}><span className="spellbook-tab-icon">{sample?.icon?<Icon src={sample.icon} name={tab.label} size={34}/>:<ClassIcon classId={s.classId} size={34}/>}</span><span>{tab.label}<small>{tab.skills.length}</small></span></button>;})}</nav>
   <div className="spellbook-frame">

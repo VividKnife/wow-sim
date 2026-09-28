@@ -1,3 +1,4 @@
+import {reserveMarket,marketOffer,marketAvailability} from './market.js';
 import {racialModifiers} from './racial-effects.js';
 import {questFishingSources} from '../../../game-data/world-quest-content.js';
 import {items,nodes,nameOf,creatures,objectTemplates,objectLocations,objectLoot} from './catalog.js';
@@ -12,8 +13,8 @@ function skillUp(s,id,count=1,required=1,yellow=required+25,gray=required+75){co
 const rods=[6218,6339,11130,11145,16207];
 const hasTool=(s,id)=>countItem(s,id)>0||(rods.includes(id)&&rods.slice(rods.indexOf(id)+1).some(x=>countItem(s,x)>0));
 export function recipeQuote(s,r,count=1){
- const materials=r.materials.map(m=>({...m,count:m.count*count,have:usableCount(s,m.id),bank:(s.bank||[]).filter(i=>i.id===m.id).reduce((n,i)=>n+i.count,0)})).map(m=>({...m,missing:Math.max(0,m.count-m.have),price:marketPrice(m.id).buy}));
- const tools=r.tools.map(id=>({id,have:hasTool(s,id),price:marketPrice(id).buy}));
+ const materials=r.materials.map(m=>({...m,count:m.count*count,have:usableCount(s,m.id),bank:(s.bank||[]).filter(i=>i.id===m.id).reduce((n,i)=>n+i.count,0)})).map(m=>({...m,missing:Math.max(0,m.count-m.have),price:marketPrice(m.id).buy,available:marketOffer(m.id)?marketAvailability(s.marketStock,s.marketClock??s.clock,marketOffer(m.id)).available:0,purchasable:!!marketOffer(m.id)}));
+ const tools=r.tools.map(id=>({id,have:hasTool(s,id),price:marketPrice(id).buy,available:marketOffer(id)?marketAvailability(s.marketStock,s.marketClock??s.clock,marketOffer(id)).available:0,purchasable:!!marketOffer(id)}));
  return{...r,...recipeAvailability(s,r),materials,tools,readyAt:s.professionCooldowns?.[r.cooldownGroup]||0,facilityReady:!r.focus||canTrainProfession(s),missingCost:materials.reduce((n,m)=>n+m.missing*m.price,0)+tools.filter(t=>!t.have).reduce((n,t)=>n+t.price,0)};
 }
 export function recipeAvailability(s,r){
@@ -84,14 +85,15 @@ export function professionAction(s,a){
    if(!q.facilityReady)throw new Error('此配方需要前往城镇工坊使用工作台');
   }
   if(buy&&s.money<q.missingCost)throw new Error('补齐材料与工具的金币不足');if(!buy&&q.missingCost>0)throw new Error('制造材料或工具不足');
+  if(buy)reserveMarket(s,[...q.materials.filter(m=>m.missing).map(m=>({id:m.id,count:m.missing})),...q.tools.filter(t=>!t.have).map(t=>({id:t.id,count:1}))]);
   if(a.type==='buyMaterials'){
    for(const m of q.materials)if(m.missing)receive(s,m.id,m.missing);
    for(const t of q.tools)if(!t.have)receive(s,t.id,1);
-   s.money-=q.missingCost;log(s,'已从拍卖行补齐材料与工具，花费 '+q.missingCost+' 铜','trade');return;
+   log(s,'已从拍卖行补齐材料与工具，花费 '+q.missingCost+' 铜','trade');return;
   }
   // Consumption, output, tools and payment are one engine transaction.
   for(const m of q.materials)consume(s,m.id,Math.min(m.count,m.have));
-  if(buy){s.money-=q.missingCost;for(const t of q.tools)if(!t.have)receive(s,t.id,1);}
+  if(buy){for(const t of q.tools)if(!t.have)receive(s,t.id,1);}
   let output=0;for(let n=0;n<a.count;n++)output+=r.output===r.outputMax?r.output:roll(s,r.output,r.outputMax);
   receive(s,r.item,output);skillUp(s,r.profession,a.count,r.skill,r.yellow,r.gray);
   if(r.cooldown){s.professionCooldowns??={};s.professionCooldowns[r.cooldownGroup]=s.clock+r.cooldown;}

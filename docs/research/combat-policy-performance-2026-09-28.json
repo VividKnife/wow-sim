@@ -1,0 +1,143 @@
+{
+  "date": "2026-09-28T12:22:31.334Z",
+  "contentVersion": "38f8ce91e2c0144d356a7b1bac38279d07c9b0636f6bce9e40b2dc314594f1d5",
+  "fixture": "40-person synthetic Lucifron; enemy HP x100; production Workers, no GPU; V8 metadata bytes are an encoding proxy, not browser structured-clone bytes",
+  "results": [
+    {
+      "mode": "single-worker",
+      "durationMs": 30000,
+      "wallMs": 30036.966875,
+      "processCpuMs": 7296.558,
+      "activeSamples": 590,
+      "samples": 590,
+      "minAlive": 40,
+      "frames": 306,
+      "tickMs": {
+        "count": 590,
+        "mean": 9.95201158135601,
+        "p95": 22.665791999999783,
+        "max": 501.6693329999998
+      },
+      "inputFeedbackMs": {
+        "count": 39,
+        "mean": 7.426408153846028,
+        "p95": 16.635916000002908,
+        "max": 24.371166999997513
+      },
+      "transferredNumericBytes": {
+        "count": 305,
+        "mean": 1440.5508196721312,
+        "p95": 1472,
+        "max": 2024
+      },
+      "structuredMetadataV8Bytes": {
+        "count": 305,
+        "mean": 1950.865573770492,
+        "p95": 6567,
+        "max": 55412
+      },
+      "receiverMs": {
+        "count": 306,
+        "mean": 0.34236548039225334,
+        "p95": 0.6609580000003916,
+        "max": 6.962874999997439
+      },
+      "backlogMs": {
+        "count": 590,
+        "mean": 9.950847457627118,
+        "p95": 22,
+        "max": 501
+      },
+      "finalBacklogMs": 10,
+      "last100BacklogMs": {
+        "count": 100,
+        "mean": 8.38,
+        "p95": 19,
+        "max": 40
+      },
+      "policyTransfers": {
+        "packets": 0,
+        "numericBytes": 0,
+        "maxNumericBytes": 0
+      },
+      "policyWorkerMeasuredMs": 0,
+      "metrics": {
+        "evaluations": 6467,
+        "requests": 0,
+        "rejected": 23,
+        "queued": 463
+      },
+      "policyErrors": 0,
+      "policyTimeouts": 0,
+      "lastPolicyError": ""
+    },
+    {
+      "mode": "dual-worker",
+      "durationMs": 30000,
+      "wallMs": 30031.485541999995,
+      "processCpuMs": 9038.615,
+      "activeSamples": 807,
+      "samples": 807,
+      "minAlive": 40,
+      "frames": 275,
+      "tickMs": {
+        "count": 807,
+        "mean": 7.106200975216865,
+        "p95": 18.352874999996857,
+        "max": 459.049583
+      },
+      "inputFeedbackMs": {
+        "count": 39,
+        "mean": 11.492745769230682,
+        "p95": 18.633999999998196,
+        "max": 105.54383300000336
+      },
+      "transferredNumericBytes": {
+        "count": 274,
+        "mean": 1041.8394160583941,
+        "p95": 1440,
+        "max": 1936
+      },
+      "structuredMetadataV8Bytes": {
+        "count": 274,
+        "mean": 2268.9306569343066,
+        "p95": 7308,
+        "max": 37145
+      },
+      "receiverMs": {
+        "count": 275,
+        "mean": 0.28637861090929206,
+        "p95": 0.5192499999975553,
+        "max": 3.2708330000023125
+      },
+      "backlogMs": {
+        "count": 807,
+        "mean": 18.247831474597273,
+        "p95": 60,
+        "max": 459
+      },
+      "finalBacklogMs": 31,
+      "last100BacklogMs": {
+        "count": 100,
+        "mean": 14.98,
+        "p95": 51,
+        "max": 65
+      },
+      "policyTransfers": {
+        "packets": 274,
+        "numericBytes": 383912,
+        "maxNumericBytes": 1560
+      },
+      "policyWorkerMeasuredMs": 1406.4204609999797,
+      "metrics": {
+        "evaluations": 0,
+        "requests": 6359,
+        "rejected": 11,
+        "queued": 446
+      },
+      "policyErrors": 0,
+      "policyTimeouts": 0,
+      "lastPolicyError": ""
+    }
+  ]
+}

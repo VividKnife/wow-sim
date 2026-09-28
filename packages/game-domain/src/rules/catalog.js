@@ -1,3 +1,5 @@
+import spellCoefficients from '../../../game-data/data/classic-spell-coefficients.json' with {type:'json'};
+import raidCombatReference from '../../../game-data/data/raid-combat-reference.json' with {type:'json'};
 import moltenCoreLoot from '../../../game-data/data/molten-core-loot.json' with {type:'json'};
 import stockades from '../../../game-data/data/stockades-reference.json' with {type:'json'};
 import {companionKitItems} from './companion-kit.js';
@@ -60,6 +62,7 @@ export function table(name) {
     for(const row of moltenCoreLoot.tables[name]||[])if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}
     for(const packed of world.tableData[name]?JSON.parse(world.tableData[name]):[]){const row=decode(world,packed);if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}}
     if(name==='npc_vendor')for(const c of table('creature_template'))if(c.VendorTemplateId)for(const r of table('npc_vendor_template').filter(r=>r.entry===c.VendorTemplateId)){const row={...r,entry:c.Entry};if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}}
+    for(const row of raidCombatReference.tables[name]||[])if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}
     cache.set(name,rows);
   }
   return cache.get(name);
@@ -71,6 +74,7 @@ for(const item of companionKitItems()){const appearance=Object.values(items).fin
 for(const item of moltenCoreLoot.tables.item_template)if(item.Quality>=4)items[item.entry].raidReward=true;
 for(const item of supplementalItems)items[item.entry]??=item;
 export const spells=index('spell_template','Id');
+for(const [id,rule] of Object.entries(spellCoefficients.spells))if(spells[id])Object.assign(spells[id],{binary:rule.binary,pureDot:rule.pureDot});
 for (const spell of clientRules.mageTalentSpells) spells[spell.Id]??=spell;
 for (const item of clientRules.humanMageStartingItems) items[item.itemId]??=item.source;
 export const classDefinitions=classReference.classDefinitions;

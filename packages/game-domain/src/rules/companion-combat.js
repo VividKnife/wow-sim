@@ -1,3 +1,5 @@
+import {combatRole} from './combat-roles.js';
+import {mightSetBonuses} from './might-set.js';
 import {commandOrder,commandProtected} from './combat-command.js';
 import {weaponAttack} from './weapon-attacks.js';
 import {spellPowerBonus} from './spell-scaling.js';
@@ -60,46 +62,48 @@ function readyPriestSpell(s,c,base){
 const affordableHeals=(s,c)=>[2050,2054,2061].map(id=>readyPriestSpell(s,c,id)).filter(Boolean);
 function selfShield(s,c){return c.hp<stats(c).maxHp*.85&&!(c.weakenedSoulUntil>s.clock)&&!(c.absorb?.amount>0&&c.absorb.until>s.clock)&&readyPriestSpell(s,c,17);}
 function attackingPriest(s,c){return s.combat.enemies.filter(e=>e.hp>0&&!e.removed&&!e.controlledBy&&!protectedTarget(e,s.clock)&&e.target===c.id);}
-export function interruptPriestForRescue(s,c,actors){
- if(c===s||c.classId!==5||!c.cast||c.cast.until<=s.clock)return;
+export function selectPriestRescue(s,c,actors){
+ if(c===s||c.classId!==5||!c.cast||c.cast.commanded||c.cast.until<=s.clock)return;
  const damage=spells[c.cast.spell]?.SpellName==='Smite'&&injuredAllies(actors).length&&affordableHeals(s,c).length;
  const danger=c.cast.friendly&&c.hp<stats(c).maxHp*.4&&attackingPriest(s,c).length&&selfShield(s,c);
  if(!damage&&!danger)return;
- const cast=c.cast;c.cast=null;c.nextAction=s.clock;
- log(s,c.name+(danger?' 中止读条，优先自救':' 停止惩击，优先治疗受伤队友'),'cancel',{actorId:c.id,spellId:cast.spell});
+ return {kind:'cancel',spellId:c.cast.spell,startedAt:c.cast.startedAt};
 }
-export function decidePriestDefense(s,c,actors,api){
+export function selectPriestDefense(s,c,actors,api){
  if(c===s||c.classId!==5)return false;
  const attackers=attackingPriest(s,c),shield=attackers.length&&selfShield(s,c),fade=attackers.length&&!(c.fade?.until>s.clock)&&readyPriestSpell(s,c,586);
  const usefulFade=fade&&attackers.some(e=>actors.some(a=>a!==c&&a.hp>0&&Math.max(0,(e.threat[a.id]||0)-(a.fade?.until>s.clock?a.fade.amount:0))>Math.max(0,(e.threat[c.id]||0)-Math.abs(effectRange(c,fade)[0]))*(distance(a,e)<=5?1.1:1.3)));
  const defense=shield&&c.hp<stats(c).maxHp*.4?shield:usefulFade?fade:shield;
  if(!defense)return false;
- announce(s,c,c,defense);classEffect(s,c,c,defense,actors,api);return true;
+ return {kind:'cast',family:'class',spellId:defense.Id,targetId:c.id};
 }
-function decidePriest(s,c,enemies,actors,api,rules){
- if(decidePriestDefense(s,c,actors,api))return true;
+function selectPriest(s,c,enemies,actors,api,rules,input=null){
+ if(!input){const defense=selectPriestDefense(s,c,actors,api);if(defense)return defense;}
  // The controlled priest already evaluates configured healing rules in decideClass.
  // Only party AI has an independent emergency-healing policy.
  const target=!rules&&c!==s&&injuredAllies(actors)[0];
  if(target){
-  if(distance(c,target)>40){moveToward(s,c,target,40,s.clock);return true;}
+  if(distance(c,target)>40){return {kind:'move',mode:'toward',targetId:target.id,range:40};}
   const deficit=stats(target).maxHp-target.hp,emergency=target.hp/stats(target).maxHp<.3;
   const heals=affordableHeals(s,c);
   heals.sort((a,b)=>{if(emergency&&a.castMs!==b.castMs)return a.castMs-b.castMs;const av=effectRange(c,a).reduce((x,y)=>x+y)/2,bv=effectRange(c,b).reduce((x,y)=>x+y)/2;return Math.abs(av-deficit)-Math.abs(bv-deficit);});
-  const sp=heals[0];if(!sp)return false;const talentCast=beginTalentCast(s,c,sp),timing=announce(s,c,target,sp);c.cast={timing,talentCast,spell:sp.Id,target:target.id,startedAt:s.clock,until:s.clock+sp.castMs,friendly:true};return true;
+  const sp=heals[0];return sp?{kind:'cast',family:'class',spellId:sp.Id,targetId:target.id}:null;
  }
  // Party healers reserve 70% mana; the controlled priest follows its damage rules.
  if(c.talentProcs?.spiritOfRedemption?.until>s.clock)return false;const e=enemies[0];if(!e)return false;
  for(const rule of rules||companionRules(c)){
-  const id=rule.enabled&&knownRank(c,rule.spell),sp=id&&spellInfo(c,id);
-  if(!sp||sp.SpellName!=='Smite'||!readyPriestSpell(s,c,rule.spell)||!rules&&c!==s&&c.mana<stats(c).maxMana*.7||!strategyAllows(s,c,e,sp,rule))continue;
-  if(!inSpellRange(c,e,sp)){moveToward(s,c,e,sp.range,s.clock);return true;}
-  const talentCast=beginTalentCast(s,c,sp),timing=announce(s,c,e,sp);c.cast={timing,talentCast,spell:id,target:e.id,startedAt:s.clock,until:s.clock+sp.castMs};return true;
+  const id=rule.enabled&&(input?rule.spell:knownRank(c,rule.spell)),sp=id&&spellInfo(c,id);
+  if(input&&sp)sp.commanded=true;
+  if(!sp||sp.SpellName!=='Smite'||!readyPriestSpell(s,c,rule.spell)||!rules&&c!==s&&c.mana<stats(c).maxMana*.7||!input&&!strategyAllows(s,c,e,sp,rule))continue;
+  if(!inSpellRange(c,e,sp)){return {kind:'move',mode:'toward',targetId:e.id,range:sp.range};}
+  return {kind:'cast',family:'companion',spellId:id,targetId:e.id};
  }
 
 }
 export function companionTarget(s,c,enemies){enemies=enemies.filter(e=>!e.controlledBy&&detectsTarget(c,e,s.clock));
  if(s.combat?.pvp)return enemies.find(e=>e.id===c.arenaTargetId)||enemies.find(e=>!protectCombatTarget(s,e));
+ const liveFocus=enemies.find(e=>e.id===s.combat?.command?.focusId);
+ if(liveFocus&&combatRole(c)!=='tank')return liveFocus;
  const assigned=s.combat?.raidEncounter&&enemies.find(e=>e.id===c.raidTargetId);if(assigned)return assigned;
  const order=commandOrder(s,c),kite=order?.kind==='kite'&&enemies.find(e=>e.id===order.targetId);if(kite)return kite;
  enemies=enemies.filter(e=>!commandProtected(s,e));
@@ -110,34 +114,47 @@ export function companionTarget(s,c,enemies){enemies=enemies.filter(e=>!e.contro
  // Stay on a recently taunted enemy while building threat during its forced focus.
  return rescueTarget(s,c,enemies)||focus||enemies[0];
 }
-export function decideCompanion(s,c,enemies,actors,damage,spellLands,api,rules){
- if(c.strategyPolicy?.protectCC!==false)enemies=enemies.filter(e=>!protectCombatTarget(s,e));
+export function selectCompanion(s,c,enemies,actors,damage,spellLands,api,rules,input=null){
+ if(!input&&c.strategyPolicy?.protectCC!==false)enemies=enemies.filter(e=>!protectCombatTarget(s,e));
  // Healing is independent of damage rules and remains the first priest decision.
- if(c.classId===5){return decidePriest(s,c,enemies,actors,api,rules);}
- const e=companionTarget(s,c,enemies);if(!e||distance(c,e)>5||!arenaSight(c,e))return false;
+ if(c.classId===5){return selectPriest(s,c,enemies,actors,api,rules,input);}
+ const e=input?.target||companionTarget(s,c,enemies);if(!e||distance(c,e)>5||!arenaSight(c,e))return false;
  if(c.classId===1){
   const taunt=c.learned.includes(355)&&spellInfo(c,355);
-  if(taunt&&(!rules||rules.some(r=>r.enabled&&spells[r.spell]?.SpellName==='Taunt'&&strategyAllows(s,c,e,taunt,r)))&&stanceAllows(c,taunt)&&e.target&&e.target!==c.id&&spellReady(c,taunt,s.clock)){announce(s,c,e,taunt);if(spellLands(s,c,e,taunt)){e.threat[c.id]=Math.max(0,...Object.values(e.threat));e.tauntedBy=c.id;e.tauntUntil=s.clock+taunt.durationMs;e.target=c.id;}return true;}
-  if(hasAura(c,67,s.clock)){c.queuedStrike=null;return false;}
+  if(taunt&&(!rules||rules.some(r=>r.enabled&&spells[r.spell]?.SpellName==='Taunt'&&strategyAllows(s,c,e,taunt,r)))&&stanceAllows(c,taunt)&&(input||e.target&&e.target!==c.id)&&spellReady(c,taunt,s.clock)){return {kind:'cast',family:'companion',spellId:taunt.Id,targetId:e.id};}
+  if(hasAura(c,67,s.clock))return false;
   for(const rule of rules||companionRules(c)){
-   const id=rule.enabled&&knownRank(c,rule.spell),sp=id&&spellInfo(c,id);
-   if(!sp||!stanceAllows(c,sp)||!spellReady(c,sp,s.clock)||c.rage<sp.mana||!strategyAllows(s,c,e,sp,rule))continue;
-   if(sp.SpellName==='Sunder Armor'&&(!e.sunder||e.sunder.stacks<sp.StackAmount||e.sunder.until<s.clock+5000)){
-    announce(s,c,e,sp);
-    if(physical(s,c,e,sp,0,damage)){e.sunder={stacks:Math.min(sp.StackAmount,(e.sunder?.until>s.clock?e.sunder.stacks:0)+1),amount:Math.abs(sp.EffectBasePoints1+1),until:s.clock+sp.durationMs};e.threat[c.id]=(e.threat[c.id]||0)+(threatRows[sp.Id]?.Threat||0)*stanceModifiers(c).threat;}
-    return true;
+   const id=rule.enabled&&(input?rule.spell:knownRank(c,rule.spell)),sp=id&&spellInfo(c,id);
+   if(input&&sp)sp.commanded=true;
+   if(!sp||!stanceAllows(c,sp)||!spellReady(c,sp,s.clock)||c.rage<sp.mana||!input&&!strategyAllows(s,c,e,sp,rule))continue;
+   if(sp.SpellName==='Sunder Armor'&&(input||!e.sunder||e.sunder.stacks<sp.StackAmount||e.sunder.until<s.clock+5000)){
+    return {kind:'cast',family:'companion',spellId:id,targetId:e.id};
    }
-   if(sp.SpellName==='Cleave'||sp.SpellName==='Heroic Strike'&&c.rage>=450){c.queuedStrike=id;return 'queued';}
+   if(sp.SpellName==='Cleave'||sp.SpellName==='Heroic Strike'&&(input||c.rage>=450)){return {kind:'cast',family:'companion',spellId:id,targetId:e.id};}
   }
  }else if(c.classId===4){
   if(hasAura(c,67,s.clock))return false;
-  if(c.comboTarget!==e.id){c.combo=0;c.comboTarget=e.id;}
+  if(input&&rules.some(r=>spells[r.spell]?.SpellName==='Eviscerate')&&(c.comboTarget!==e.id||!(c.combo>0)))return false;
+
   for(const rule of rules||companionRules(c)){
-   const id=rule.enabled&&knownRank(c,rule.spell),sp=id&&spellInfo(c,id),finishing=sp?.SpellName==='Eviscerate';
-   if(!sp||!['Eviscerate','Sinister Strike'].includes(sp.SpellName)||finishing&&c.combo<4||c.energy<sp.mana||!spellReady(c,sp,s.clock)||!strategyAllows(s,c,e,sp,rule))continue;
+   const id=rule.enabled&&(input?rule.spell:knownRank(c,rule.spell)),sp=id&&spellInfo(c,id),finishing=sp?.SpellName==='Eviscerate';
+   if(input&&sp)sp.commanded=true;
+   if(!sp||!['Eviscerate','Sinister Strike'].includes(sp.SpellName)||finishing&&(c.comboTarget!==e.id||c.combo<(input?1:4))||c.energy<sp.mana||!spellReady(c,sp,s.clock)||!input&&!strategyAllows(s,c,e,sp,rule))continue;
+   return {kind:'cast',family:'companion',spellId:id,targetId:e.id};
+  }
+ }
+}
+
+// Selection never spends resources, rolls damage, changes targets or starts casts.
+export function executeCompanionAbility(s,c,e,sp,actors,damage,spellLands,api,input=null){
+ const name=sp.SpellName;
+ if(['Heroic Strike','Cleave'].includes(name)){c.queuedStrike=sp.Id;return 'queued';}
+ if(name==='Smite'){const talentCast=beginTalentCast(s,c,sp),timing=announce(s,c,e,sp);c.cast={timing,talentCast,spell:sp.Id,target:e.id,commanded:!!input,startedAt:s.clock,until:s.clock+sp.castMs};return true;}
+ if(name==='Taunt'){announce(s,c,e,sp);if(spellLands(s,c,e,sp)){e.threat[c.id]=Math.max(0,...Object.values(e.threat));e.tauntedBy=c.id;e.tauntUntil=s.clock+sp.durationMs;e.target=c.id;}return true;}
+ if(name==='Sunder Armor'){announce(s,c,e,sp);if(physical(s,c,e,sp,0,damage)){e.sunder={stacks:Math.min(sp.StackAmount,(e.sunder?.until>s.clock?e.sunder.stacks:0)+1),amount:Math.abs(sp.EffectBasePoints1+1),until:s.clock+sp.durationMs};e.threat[c.id]=(e.threat[c.id]||0)+(threatRows[sp.Id]?.Threat||0)*stanceModifiers(c).threat*mightSetBonuses(c).sunderThreat;}return true;}
+ const finishing=name==='Eviscerate';
+ if(c.comboTarget!==e.id){c.combo=0;c.comboTarget=e.id;}
    announce(s,c,e,sp);
    const snapshot=beginTalentCast(s,c,sp),comboBefore=c.combo||0;const [low,high]=effectRange(c,sp),amount=finishing?roll(s,low,high)+sp.EffectPointsPerComboPoint1*c.combo+Math.floor(stats(c).attackPower*c.combo*.03):weaponDamage(s,c,true)+low;
    if(physical(s,c,e,sp,amount,damage)){if(finishing)c.combo=(ranks(c).Ruthlessness||0)&&rng(s)<.2*ranks(c).Ruthlessness?1:0;else c.combo=Math.min(5,c.combo+1);}endTalentCast(s,c,sp,snapshot,{stats,rng,damage,actors},{target:e,comboSpent:finishing?comboBefore:0});return true;
-  }
- }
 }

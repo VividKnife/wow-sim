@@ -7,7 +7,7 @@ import { bagCapacity } from './rules/character.js';
 import type { Transaction } from '../../persistence/src/store.ts';
 import { requireThat } from './model.ts';
 import type { Character, Activity, Rules, Item } from './model.ts';
-import { account, presence, owned, bump, context, persistCharacter, economicEvent, clone } from './context.ts';
+import { account, presence, owned, bump, context, persistCharacter, economicEvent, clone, rebaseSimulation } from './context.ts';
 import {simulationInterval,simulationTickBudget} from './simulation-cadence.ts';
 import type { GameService } from './service.ts';
 import { PAUSED_EVENT_AT } from './presence.ts';
@@ -40,7 +40,7 @@ export async function startActivity(this: GameService, tx: Transaction, c: Chara
         requireThat(recipient.id === c.id || ![1, 4].includes(items[recipe.item]?.bonding), 'BOUND_OUTPUT', '绑定产物必须由制造角色接收');
         let payerState = await context(tx, payer, now, false);
         payerState = advance(payerState, now).state;
-        let input = { ...clone(s), bag: clone(payerState.bag), bank: clone(payerState.bank), money: payerState.money };
+        let input = { ...clone(s), bag: clone(payerState.bag), bank: clone(payerState.bank), money: payerState.money, marketStock: rebaseSimulation({clock:payerState.clock,marketStock:clone(payerState.marketStock)},s.clock).marketStock };
         // Dry run uses the same authoritative engine validation as eventual settlement.
         act(input, { ...action, type: 'craft' }, now);
         if (action.buyMissing) {
@@ -48,6 +48,8 @@ export async function startActivity(this: GameService, tx: Transaction, c: Chara
             payerState.bag = input.bag;
             payerState.bank = input.bank;
             payerState.money = input.money;
+            payerState.marketStock = rebaseSimulation({clock:s.clock,marketStock:clone(input.marketStock)},payerState.clock).marketStock;
+            if (payer.id === c.id) s.marketStock = clone(input.marketStock);
             await persistCharacter(tx, payer, payerState, now, `purchase:${a.id}`, this.id);
         }
         const quote = recipeQuote(input, recipe, action.count);

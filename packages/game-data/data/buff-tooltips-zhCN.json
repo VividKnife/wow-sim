@@ -1,0 +1,6109 @@
+{
+  "source": "https://nether.wowhead.com/classic/tooltip/spell/{id}?locale=4",
+  "spells": {
+    "10": {
+      "description": "每1秒26点冰霜伤害。",
+      "dispel": ""
+    },
+    "17": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "56": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "67": {
+      "description": "力量和敏捷降低5%。",
+      "dispel": "魔法"
+    },
+    "89": {
+      "description": "移动速度降低40%，近战攻击间隔延长45%，远程攻击间隔延长45%。",
+      "dispel": "魔法"
+    },
+    "99": {
+      "description": "近战攻击强度降低40点。",
+      "dispel": ""
+    },
+    "116": {
+      "description": "移动速度降低40%。",
+      "dispel": "魔法"
+    },
+    "118": {
+      "description": "不能攻击或施法。回复速度提高。",
+      "dispel": "魔法"
+    },
+    "120": {
+      "description": "移动速度降低50%。",
+      "dispel": "魔法"
+    },
+    "122": {
+      "description": "被冻结在原地。",
+      "dispel": "魔法"
+    },
+    "126": {
+      "description": "正在控制基尔罗格之眼。",
+      "dispel": ""
+    },
+    "128": {
+      "description": "吸收魔法伤害。",
+      "dispel": "魔法"
+    },
+    "130": {
+      "description": "减慢下落速度。",
+      "dispel": "魔法"
+    },
+    "131": {
+      "description": "水下呼吸。",
+      "dispel": "魔法"
+    },
+    "132": {
+      "description": "侦测次级隐形术。",
+      "dispel": "魔法"
+    },
+    "133": {
+      "description": "每2秒1点火焰伤害。",
+      "dispel": ""
+    },
+    "136": {
+      "description": "每秒治疗20点伤害。",
+      "dispel": ""
+    },
+    "139": {
+      "description": "每3秒回复9点生命值。",
+      "dispel": "魔法"
+    },
+    "143": {
+      "description": "每2秒1点火焰伤害。",
+      "dispel": ""
+    },
+    "145": {
+      "description": "每2秒2点火焰伤害。",
+      "dispel": ""
+    },
+    "168": {
+      "description": "护甲值提高30点，并可使攻击者减速。",
+      "dispel": "魔法"
+    },
+    "172": {
+      "description": "每3秒10点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "205": {
+      "description": "移动速度降低40%。",
+      "dispel": "魔法"
+    },
+    "324": {
+      "description": "在被击中后对攻击者造成13点自然伤害。",
+      "dispel": "魔法"
+    },
+    "325": {
+      "description": "在被击中后对攻击者造成29点自然伤害。",
+      "dispel": "魔法"
+    },
+    "339": {
+      "description": "被缠绕，造成每3秒5点伤害。",
+      "dispel": "魔法"
+    },
+    "348": {
+      "description": "每3秒4点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "408": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "430": {
+      "description": "每秒恢复8.4点法力值。",
+      "dispel": ""
+    },
+    "431": {
+      "description": "每秒恢复20.8点法力值。",
+      "dispel": ""
+    },
+    "432": {
+      "description": "每秒恢复34.8点法力值。",
+      "dispel": ""
+    },
+    "433": {
+      "description": "每秒恢复3.4点生命值。",
+      "dispel": ""
+    },
+    "434": {
+      "description": "每秒恢复11.6点生命值。",
+      "dispel": ""
+    },
+    "435": {
+      "description": "每秒恢复23点生命值。",
+      "dispel": ""
+    },
+    "453": {
+      "description": "减小目标的警戒范围。",
+      "dispel": ""
+    },
+    "458": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "465": {
+      "description": "护甲值提高55点。",
+      "dispel": ""
+    },
+    "467": {
+      "description": "对攻击者造成3点自然伤害。",
+      "dispel": "魔法"
+    },
+    "470": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "472": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "498": {
+      "description": "免疫一切物理和法术攻击，同时无法攻击或者使用物理技能。",
+      "dispel": ""
+    },
+    "543": {
+      "description": "吸收火焰伤害。",
+      "dispel": "魔法"
+    },
+    "546": {
+      "description": "可以在水上行走。",
+      "dispel": "魔法"
+    },
+    "552": {
+      "description": "每5秒驱散1个疾病效果。",
+      "dispel": "魔法"
+    },
+    "580": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "586": {
+      "description": "降低威胁等级。",
+      "dispel": "魔法"
+    },
+    "588": {
+      "description": "防御值提高315点。",
+      "dispel": "魔法"
+    },
+    "589": {
+      "description": "每3秒5点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "592": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "594": {
+      "description": "每3秒11点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "600": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "602": {
+      "description": "防御值提高720点。",
+      "dispel": "魔法"
+    },
+    "603": {
+      "description": "在1分钟后造成3200点暗影伤害。",
+      "dispel": "诅咒"
+    },
+    "604": {
+      "description": "降低法术伤害，最多10点。\n降低法术治疗效果，最多20点。",
+      "dispel": "魔法"
+    },
+    "605": {
+      "description": "被魅惑，攻击间隔延长25%。",
+      "dispel": "魔法"
+    },
+    "642": {
+      "description": "免疫一切攻击和法术，但 [S03 - 调整与覆盖被动 - 圣骑士: 造成的所有伤害降低50% / 攻击间隔延长100%]。",
+      "dispel": ""
+    },
+    "643": {
+      "description": "护甲值提高275点。",
+      "dispel": ""
+    },
+    "673": {
+      "description": "护甲提高50点。",
+      "dispel": ""
+    },
+    "676": {
+      "description": "被缴械！",
+      "dispel": ""
+    },
+    "687": {
+      "description": "护甲值提高40点，每5秒恢复3点生命值。",
+      "dispel": "魔法"
+    },
+    "689": {
+      "description": "每秒吸取10点生命值并将其转移给施法者。",
+      "dispel": "魔法"
+    },
+    "694": {
+      "description": "被嘲讽。",
+      "dispel": ""
+    },
+    "696": {
+      "description": "护甲值提高120点，每5秒恢复5点生命值。",
+      "dispel": "魔法"
+    },
+    "699": {
+      "description": "每秒吸取17点生命值并将其转移给施法者。",
+      "dispel": "魔法"
+    },
+    "700": {
+      "description": "沉睡。",
+      "dispel": "魔法"
+    },
+    "702": {
+      "description": "对目标造成的物理伤害降低3点。",
+      "dispel": "诅咒"
+    },
+    "703": {
+      "description": "每3秒24点伤害。",
+      "dispel": ""
+    },
+    "704": {
+      "description": "近战攻击强度提高20点，护甲降低140点。目标不会逃跑，且免疫恐惧效果。",
+      "dispel": "诅咒"
+    },
+    "706": {
+      "description": "护甲值提高210点，暗影抗性提高3点，每5秒回复7点生命值。",
+      "dispel": "魔法"
+    },
+    "707": {
+      "description": "每3秒8点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "709": {
+      "description": "每秒吸取29点生命值并将其转移给施法者。",
+      "dispel": "魔法"
+    },
+    "710": {
+      "description": "不会受到任何伤害，但也无法做出任何动作。",
+      "dispel": "魔法"
+    },
+    "740": {
+      "description": "每2秒为附近的小队成员恢复98点生命值。",
+      "dispel": ""
+    },
+    "746": {
+      "description": "每1秒治疗11点伤害。",
+      "dispel": ""
+    },
+    "755": {
+      "description": "正在转移生命值。",
+      "dispel": ""
+    },
+    "768": {
+      "description": "免疫变形效果。近战攻击强度提高40点加上敏捷数值。",
+      "dispel": ""
+    },
+    "770": {
+      "description": "护甲降低175点，无法潜行或隐形。",
+      "dispel": "魔法"
+    },
+    "772": {
+      "description": "因流血受到每3秒5点伤害。",
+      "dispel": ""
+    },
+    "774": {
+      "description": "每3秒治疗8点伤害。",
+      "dispel": "魔法"
+    },
+    "778": {
+      "description": "护甲降低285点，无法潜行或隐形。",
+      "dispel": "魔法"
+    },
+    "782": {
+      "description": "对攻击者造成6点自然伤害。",
+      "dispel": "魔法"
+    },
+    "783": {
+      "description": "移动速度提高40%。免疫变形效果。",
+      "dispel": ""
+    },
+    "833": {
+      "description": "每秒回复6点法力值。",
+      "dispel": ""
+    },
+    "835": {
+      "description": "昏迷。",
+      "dispel": "魔法"
+    },
+    "837": {
+      "description": "移动速度降低40%。",
+      "dispel": "魔法"
+    },
+    "853": {
+      "description": "昏迷。",
+      "dispel": "魔法"
+    },
+    "865": {
+      "description": "被冻结在原地。",
+      "dispel": "魔法"
+    },
+    "871": {
+      "description": "伤害降低75%。",
+      "dispel": ""
+    },
+    "905": {
+      "description": "在被击中后对攻击者造成51点自然伤害。",
+      "dispel": "魔法"
+    },
+    "945": {
+      "description": "在被击中后对攻击者造成80点自然伤害。",
+      "dispel": "魔法"
+    },
+    "970": {
+      "description": "每3秒22点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "976": {
+      "description": "暗影抗性提高30点。",
+      "dispel": "魔法"
+    },
+    "980": {
+      "description": "在24秒内造成总计84点暗影伤害。",
+      "dispel": "诅咒"
+    },
+    "992": {
+      "description": "每3秒39点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "1002": {
+      "description": "直接控制宠物。",
+      "dispel": ""
+    },
+    "1006": {
+      "description": "防御值提高945点。",
+      "dispel": "魔法"
+    },
+    "1008": {
+      "description": "被法术攻击时所承受的伤害最多提高15点，被法术治疗时所恢复的生命值最多提高30点。",
+      "dispel": "魔法"
+    },
+    "1014": {
+      "description": "在24秒内造成总计180点暗影伤害。",
+      "dispel": "诅咒"
+    },
+    "1020": {
+      "description": "免疫一切攻击和法术，但 [S03 - 调整与覆盖被动 - 圣骑士: 造成的所有伤害降低50% / 攻击间隔延长100%]。",
+      "dispel": ""
+    },
+    "1022": {
+      "description": "免疫物理攻击。无法攻击或使用物理技能。",
+      "dispel": "魔法"
+    },
+    "1032": {
+      "description": "护甲值提高505点。",
+      "dispel": ""
+    },
+    "1038": {
+      "description": "威胁值降低30%。",
+      "dispel": "魔法"
+    },
+    "1044": {
+      "description": "对一切移动限制效果免疫。",
+      "dispel": "魔法"
+    },
+    "1058": {
+      "description": "每3秒治疗14点伤害。",
+      "dispel": "魔法"
+    },
+    "1062": {
+      "description": "被缠绕，造成每3秒10点伤害。",
+      "dispel": "魔法"
+    },
+    "1066": {
+      "description": "免疫变形效果。游泳速度提高50%，可在水下呼吸。",
+      "dispel": ""
+    },
+    "1075": {
+      "description": "对攻击者造成9点自然伤害。",
+      "dispel": "魔法"
+    },
+    "1079": {
+      "description": "每2秒因流血受到一次伤害。",
+      "dispel": ""
+    },
+    "1086": {
+      "description": "护甲值提高300点，暗影抗性提高6点，每5秒回复9点生命值。",
+      "dispel": "魔法"
+    },
+    "1090": {
+      "description": "沉睡。",
+      "dispel": "魔法"
+    },
+    "1094": {
+      "description": "每3秒18点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "1098": {
+      "description": "被奴役。",
+      "dispel": ""
+    },
+    "1108": {
+      "description": "对目标造成的物理伤害降低6点。",
+      "dispel": "诅咒"
+    },
+    "1120": {
+      "description": "每3秒11点暗影伤害。",
+      "dispel": ""
+    },
+    "1126": {
+      "description": "护甲提高25点。",
+      "dispel": "魔法"
+    },
+    "1127": {
+      "description": "每秒恢复32.4点生命值。",
+      "dispel": ""
+    },
+    "1129": {
+      "description": "每秒恢复46.4点生命值。",
+      "dispel": ""
+    },
+    "1130": {
+      "description": "对此目标进行的所有远程攻击均有额外的20点远程攻击强度加成。",
+      "dispel": "魔法"
+    },
+    "1131": {
+      "description": "每秒恢复71.6点生命值。",
+      "dispel": ""
+    },
+    "1133": {
+      "description": "每秒恢复49.8点法力值。",
+      "dispel": ""
+    },
+    "1135": {
+      "description": "每秒恢复66.4点法力值。",
+      "dispel": ""
+    },
+    "1137": {
+      "description": "每秒恢复97.8点法力值。",
+      "dispel": ""
+    },
+    "1138": {
+      "description": "冰霜和暗影抗性提高。",
+      "dispel": "魔法"
+    },
+    "1139": {
+      "description": "攻击速度降低。",
+      "dispel": "魔法"
+    },
+    "1159": {
+      "description": "每1秒治疗19点伤害。",
+      "dispel": ""
+    },
+    "1160": {
+      "description": "近战攻击强度降低45点。",
+      "dispel": ""
+    },
+    "1161": {
+      "description": "被嘲讽。",
+      "dispel": ""
+    },
+    "1243": {
+      "description": "耐力提高3点。",
+      "dispel": "魔法"
+    },
+    "1244": {
+      "description": "耐力提高8点。",
+      "dispel": "魔法"
+    },
+    "1245": {
+      "description": "耐力提高20点。",
+      "dispel": "魔法"
+    },
+    "1430": {
+      "description": "每3秒治疗29点伤害。",
+      "dispel": "魔法"
+    },
+    "1459": {
+      "description": "智力提高2点。",
+      "dispel": "魔法"
+    },
+    "1460": {
+      "description": "智力提高7点。",
+      "dispel": "魔法"
+    },
+    "1461": {
+      "description": "智力提高15点。",
+      "dispel": "魔法"
+    },
+    "1462": {
+      "description": "显示相关资料。",
+      "dispel": ""
+    },
+    "1463": {
+      "description": "吸收物理伤害，同时消耗法力。",
+      "dispel": "魔法"
+    },
+    "1490": {
+      "description": "火焰和冰霜抗性降低45点。受到火焰和冰霜系攻击时所承受的伤害提高6%。",
+      "dispel": "诅咒"
+    },
+    "1494": {
+      "description": "正在追踪野兽。",
+      "dispel": ""
+    },
+    "1513": {
+      "description": "恐惧。",
+      "dispel": "魔法"
+    },
+    "1515": {
+      "description": "正在驯服宠物。",
+      "dispel": ""
+    },
+    "1539": {
+      "description": "提高快乐度。",
+      "dispel": ""
+    },
+    "1543": {
+      "description": "显示潜行和隐形的单位。",
+      "dispel": ""
+    },
+    "1706": {
+      "description": "正在漂浮。",
+      "dispel": "魔法"
+    },
+    "1714": {
+      "description": "以恶魔语念出咒语，使施法时间延长50%。",
+      "dispel": "诅咒"
+    },
+    "1715": {
+      "description": "移动速度降低40%。",
+      "dispel": ""
+    },
+    "1719": {
+      "description": "免疫恐惧效果。爆击几率提高100%[，但受到的伤害提高20%]。",
+      "dispel": ""
+    },
+    "1735": {
+      "description": "近战攻击强度降低60点。",
+      "dispel": ""
+    },
+    "1776": {
+      "description": "瘫痪。",
+      "dispel": ""
+    },
+    "1777": {
+      "description": "瘫痪。",
+      "dispel": ""
+    },
+    "1784": {
+      "description": "潜行中，移动速度降低50%。",
+      "dispel": "潜行"
+    },
+    "1785": {
+      "description": "潜行中，移动速度降低40%。",
+      "dispel": "潜行"
+    },
+    "1786": {
+      "description": "潜行中，移动速度降低35%。",
+      "dispel": "潜行"
+    },
+    "1787": {
+      "description": "潜行中，移动速度降低30%。",
+      "dispel": "潜行"
+    },
+    "1822": {
+      "description": "因流血受到每3秒13点伤害。",
+      "dispel": ""
+    },
+    "1823": {
+      "description": "因流血受到每3秒19点伤害。",
+      "dispel": ""
+    },
+    "1824": {
+      "description": "因流血受到每3秒25点伤害。",
+      "dispel": ""
+    },
+    "1833": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "1850": {
+      "description": "移动速度提高50%。",
+      "dispel": ""
+    },
+    "1943": {
+      "description": "每2秒8 + (2 * 连击点)点伤害。",
+      "dispel": ""
+    },
+    "1949": {
+      "description": "对自己和周围的所有敌人造成伤害。",
+      "dispel": ""
+    },
+    "1953": {
+      "description": "闪现。",
+      "dispel": ""
+    },
+    "1978": {
+      "description": "每3秒4点自然伤害。",
+      "dispel": "中毒"
+    },
+    "2070": {
+      "description": "瘫痪。",
+      "dispel": ""
+    },
+    "2090": {
+      "description": "每3秒治疗45点伤害。",
+      "dispel": "魔法"
+    },
+    "2091": {
+      "description": "每3秒治疗61点伤害。",
+      "dispel": "魔法"
+    },
+    "2094": {
+      "description": "迷惑。",
+      "dispel": "中毒"
+    },
+    "2096": {
+      "description": "以目标的视角观察世界。",
+      "dispel": ""
+    },
+    "2120": {
+      "description": "每2秒12点火焰伤害。",
+      "dispel": ""
+    },
+    "2121": {
+      "description": "每222点火焰伤害。",
+      "dispel": ""
+    },
+    "2367": {
+      "description": "力量提高4点。",
+      "dispel": ""
+    },
+    "2374": {
+      "description": "敏捷提高4点。",
+      "dispel": ""
+    },
+    "2378": {
+      "description": "生命值上限提高27点。",
+      "dispel": ""
+    },
+    "2379": {
+      "description": "奔跑速度提高50%。",
+      "dispel": "魔法"
+    },
+    "2380": {
+      "description": "提高魔法抗性。",
+      "dispel": "魔法"
+    },
+    "2481": {
+      "description": "寻找财宝。",
+      "dispel": ""
+    },
+    "2565": {
+      "description": "下一次格挡攻击的几率提高75%。",
+      "dispel": ""
+    },
+    "2637": {
+      "description": "沉睡。",
+      "dispel": "魔法"
+    },
+    "2639": {
+      "description": "每秒恢复14点生命值和14点法力值。",
+      "dispel": ""
+    },
+    "2645": {
+      "description": "移动速度提高40%。",
+      "dispel": "魔法"
+    },
+    "2651": {
+      "description": "受到远程攻击时所承受的伤害降低21点，躲闪几率提高10%。",
+      "dispel": "魔法"
+    },
+    "2652": {
+      "description": "下一次对你造成伤害的近战攻击可以削弱攻击者。",
+      "dispel": "魔法"
+    },
+    "2767": {
+      "description": "每3秒61点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "2791": {
+      "description": "耐力提高32点。",
+      "dispel": "魔法"
+    },
+    "2836": {
+      "description": "正在侦测陷阱。",
+      "dispel": ""
+    },
+    "2855": {
+      "description": "侦测魔法。",
+      "dispel": "魔法"
+    },
+    "2878": {
+      "description": "被强迫逃跑。",
+      "dispel": ""
+    },
+    "2893": {
+      "description": "每2秒驱散1个中毒效果。",
+      "dispel": "魔法"
+    },
+    "2908": {
+      "description": "减小目标的警戒范围。",
+      "dispel": ""
+    },
+    "2941": {
+      "description": "每3秒33点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "2944": {
+      "description": "每3秒造成19点伤害，并治疗施法者。",
+      "dispel": "疾病"
+    },
+    "2947": {
+      "description": "对攻击者造成5点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "2970": {
+      "description": "侦测隐形术。",
+      "dispel": "魔法"
+    },
+    "2974": {
+      "description": "移动速度降低50%。",
+      "dispel": ""
+    },
+    "2983": {
+      "description": "移动速度提高50%。",
+      "dispel": ""
+    },
+    "3034": {
+      "description": "每2吸收154点法力值。",
+      "dispel": "中毒"
+    },
+    "3043": {
+      "description": "力量和敏捷降低20点。",
+      "dispel": "中毒"
+    },
+    "3045": {
+      "description": "远程攻击速度提高40%[，近战攻击速度提高0%]。",
+      "dispel": "魔法"
+    },
+    "3111": {
+      "description": "每秒治疗38点伤害。",
+      "dispel": ""
+    },
+    "3140": {
+      "description": "每2秒3点火焰伤害。",
+      "dispel": ""
+    },
+    "3160": {
+      "description": "敏捷提高8点。",
+      "dispel": ""
+    },
+    "3164": {
+      "description": "力量提高8点。",
+      "dispel": ""
+    },
+    "3166": {
+      "description": "智力提高6点。",
+      "dispel": ""
+    },
+    "3169": {
+      "description": "对物理攻击免疫。",
+      "dispel": "魔法"
+    },
+    "3219": {
+      "description": "每5秒恢复2点生命值。",
+      "dispel": ""
+    },
+    "3220": {
+      "description": "护甲提高150点。",
+      "dispel": ""
+    },
+    "3222": {
+      "description": "每5秒恢复6点生命值。",
+      "dispel": ""
+    },
+    "3223": {
+      "description": "每5秒恢复12点生命值。",
+      "dispel": ""
+    },
+    "3267": {
+      "description": "每1秒治疗23点伤害。",
+      "dispel": ""
+    },
+    "3268": {
+      "description": "每1秒治疗43点伤害。",
+      "dispel": ""
+    },
+    "3593": {
+      "description": "生命值上限提高120点。",
+      "dispel": ""
+    },
+    "3627": {
+      "description": "每3秒治疗76点伤害。",
+      "dispel": "魔法"
+    },
+    "3661": {
+      "description": "每秒治疗68点伤害。",
+      "dispel": ""
+    },
+    "3662": {
+      "description": "每秒治疗103点伤害。",
+      "dispel": ""
+    },
+    "3680": {
+      "description": "次级隐形",
+      "dispel": "隐形"
+    },
+    "3698": {
+      "description": "正在转移生命值。",
+      "dispel": ""
+    },
+    "3699": {
+      "description": "正在转移生命值。",
+      "dispel": ""
+    },
+    "3700": {
+      "description": "正在转移生命值。",
+      "dispel": ""
+    },
+    "3742": {
+      "description": "对攻击者造成10点自然伤害。",
+      "dispel": "魔法"
+    },
+    "3747": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "4057": {
+      "description": "吸收500点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "4060": {
+      "description": "被变成麻风侏儒，近战和法术伤害降低40点，移动速度降低20%。",
+      "dispel": "诅咒"
+    },
+    "4064": {
+      "description": "昏迷。任何伤害都会打断这个效果。",
+      "dispel": ""
+    },
+    "4065": {
+      "description": "昏迷。任何伤害都会打断这个效果。",
+      "dispel": ""
+    },
+    "4066": {
+      "description": "昏迷。任何伤害都会打断这个效果。",
+      "dispel": ""
+    },
+    "4067": {
+      "description": "昏迷。任何伤害都会打断这个效果。",
+      "dispel": ""
+    },
+    "4068": {
+      "description": "昏迷。任何伤害都会打断这个效果。",
+      "dispel": ""
+    },
+    "4069": {
+      "description": "昏迷。任何伤害都会打断这个效果。",
+      "dispel": ""
+    },
+    "4077": {
+      "description": "吸收600点冰霜伤害。",
+      "dispel": "魔法"
+    },
+    "4079": {
+      "description": "隐形10秒。",
+      "dispel": "隐形"
+    },
+    "4318": {
+      "description": "敏捷提高。",
+      "dispel": "魔法"
+    },
+    "4941": {
+      "description": "提高护甲值。",
+      "dispel": ""
+    },
+    "5004": {
+      "description": "每秒恢复3.4点生命值。",
+      "dispel": ""
+    },
+    "5005": {
+      "description": "每秒恢复11.6点生命值。",
+      "dispel": ""
+    },
+    "5006": {
+      "description": "每秒恢复23点生命值。",
+      "dispel": ""
+    },
+    "5007": {
+      "description": "每秒恢复32.4点生命值。",
+      "dispel": ""
+    },
+    "5024": {
+      "description": "奔跑速度提高，但是会不断损失生命值和法力值。",
+      "dispel": ""
+    },
+    "5116": {
+      "description": "移动速度降低50%。",
+      "dispel": "魔法"
+    },
+    "5118": {
+      "description": "移动速度提高30%。如果被击中则会眩晕。",
+      "dispel": ""
+    },
+    "5134": {
+      "description": "恐惧。",
+      "dispel": ""
+    },
+    "5138": {
+      "description": "每秒将44点法力值转移给施法者。",
+      "dispel": "魔法"
+    },
+    "5171": {
+      "description": "近战攻击速度提高20%。",
+      "dispel": ""
+    },
+    "5195": {
+      "description": "被缠绕，造成每3秒15点伤害。",
+      "dispel": "魔法"
+    },
+    "5196": {
+      "description": "被缠绕，造成每3秒20点伤害。",
+      "dispel": "魔法"
+    },
+    "5209": {
+      "description": "被嘲讽。",
+      "dispel": ""
+    },
+    "5211": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "5215": {
+      "description": "潜行中，移动速度降低40%。",
+      "dispel": "潜行"
+    },
+    "5217": {
+      "description": "伤害提高10点。",
+      "dispel": ""
+    },
+    "5225": {
+      "description": "追踪人型生物。",
+      "dispel": ""
+    },
+    "5229": {
+      "description": "每秒获得2点怒气值。[][基础护甲值降低。]",
+      "dispel": ""
+    },
+    "5232": {
+      "description": "护甲提高65点，所有属性提高2点。",
+      "dispel": "魔法"
+    },
+    "5234": {
+      "description": "护甲提高150点，所有属性提高6点，所有抗性提高5点。",
+      "dispel": "魔法"
+    },
+    "5242": {
+      "description": "使你的近战攻击强度提高40点。",
+      "dispel": ""
+    },
+    "5246": {
+      "description": "被恐吓。",
+      "dispel": ""
+    },
+    "5277": {
+      "description": "躲闪几率提高50%。",
+      "dispel": ""
+    },
+    "5384": {
+      "description": "装死。",
+      "dispel": ""
+    },
+    "5484": {
+      "description": "因恐惧而逃跑。",
+      "dispel": "魔法"
+    },
+    "5487": {
+      "description": "免疫变形效果。近战攻击强度提高120点，由装备而获得的护甲值提高180%，生命值提高560点。",
+      "dispel": ""
+    },
+    "5500": {
+      "description": "正在侦测恶魔。",
+      "dispel": ""
+    },
+    "5502": {
+      "description": "正在侦测亡灵。",
+      "dispel": ""
+    },
+    "5570": {
+      "description": "攻击命中率降低2%，每2秒受到11点自然伤害。",
+      "dispel": "魔法"
+    },
+    "5573": {
+      "description": "免疫一切物理和法术攻击，同时无法攻击或者使用物理技能。",
+      "dispel": ""
+    },
+    "5588": {
+      "description": "昏迷。",
+      "dispel": "魔法"
+    },
+    "5589": {
+      "description": "昏迷。",
+      "dispel": "魔法"
+    },
+    "5599": {
+      "description": "免疫物理攻击。无法攻击或使用物理技能。",
+      "dispel": "魔法"
+    },
+    "5627": {
+      "description": "被强迫逃跑。",
+      "dispel": ""
+    },
+    "5665": {
+      "description": "近战伤害能力提高。",
+      "dispel": "魔法"
+    },
+    "5697": {
+      "description": "水下呼吸。",
+      "dispel": "魔法"
+    },
+    "5740": {
+      "description": "每2秒44点火焰伤害。",
+      "dispel": ""
+    },
+    "5782": {
+      "description": "恐惧。",
+      "dispel": "魔法"
+    },
+    "5784": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "5917": {
+      "description": "命中率降低。",
+      "dispel": "魔法"
+    },
+    "6065": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "6066": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "6074": {
+      "description": "每3秒回复20点生命值。",
+      "dispel": "魔法"
+    },
+    "6075": {
+      "description": "每3秒回复35点生命值。",
+      "dispel": "魔法"
+    },
+    "6076": {
+      "description": "每3秒回复49点生命值。",
+      "dispel": "魔法"
+    },
+    "6077": {
+      "description": "每3秒回复63点生命值。",
+      "dispel": "魔法"
+    },
+    "6078": {
+      "description": "每3秒回复80点生命值。",
+      "dispel": "魔法"
+    },
+    "6114": {
+      "description": "智力提高，耐力降低。",
+      "dispel": ""
+    },
+    "6117": {
+      "description": "对所有魔法的抗性提高5点，在任意情况下都保持30%的法力值回复速度。",
+      "dispel": "魔法"
+    },
+    "6131": {
+      "description": "被冻结在原地。",
+      "dispel": "魔法"
+    },
+    "6136": {
+      "description": "移动速度降低30%，攻击间隔延长25%。",
+      "dispel": "魔法"
+    },
+    "6141": {
+      "description": "每1秒45点冰霜伤害。",
+      "dispel": ""
+    },
+    "6143": {
+      "description": "吸收冰霜伤害。",
+      "dispel": "魔法"
+    },
+    "6150": {
+      "description": "远程攻击速度提高30%。",
+      "dispel": ""
+    },
+    "6190": {
+      "description": "近战攻击强度降低65点。",
+      "dispel": ""
+    },
+    "6192": {
+      "description": "使你的近战攻击强度提高60点。",
+      "dispel": ""
+    },
+    "6196": {
+      "description": "在使用视界术时无法移动。",
+      "dispel": ""
+    },
+    "6205": {
+      "description": "对目标造成的物理伤害降低10点。",
+      "dispel": "诅咒"
+    },
+    "6213": {
+      "description": "恐惧。",
+      "dispel": "魔法"
+    },
+    "6215": {
+      "description": "恐惧。",
+      "dispel": "魔法"
+    },
+    "6217": {
+      "description": "在24秒内造成总计324点暗影伤害。",
+      "dispel": "诅咒"
+    },
+    "6219": {
+      "description": "每2秒98点火焰伤害。",
+      "dispel": ""
+    },
+    "6222": {
+      "description": "每3秒18点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "6223": {
+      "description": "每3秒37点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "6226": {
+      "description": "每秒将71点法力值转移给施法者。",
+      "dispel": "魔法"
+    },
+    "6229": {
+      "description": "吸收暗影伤害。",
+      "dispel": "魔法"
+    },
+    "6298": {
+      "description": "隐形。",
+      "dispel": "隐形"
+    },
+    "6307": {
+      "description": "耐力提高3点。",
+      "dispel": ""
+    },
+    "6343": {
+      "description": "攻击间隔延长10%。",
+      "dispel": ""
+    },
+    "6346": {
+      "description": "受恐惧防护结界的保护。",
+      "dispel": "魔法"
+    },
+    "6358": {
+      "description": "被魅惑。",
+      "dispel": "魔法"
+    },
+    "6405": {
+      "description": "变形成熊怪。",
+      "dispel": ""
+    },
+    "6410": {
+      "description": "每秒恢复14点生命值。",
+      "dispel": ""
+    },
+    "6495": {
+      "description": "可以使用图腾监视附近的区域，右键点击该技能的状态图标可以在萨满祭司视角和图腾视角之间切换。",
+      "dispel": ""
+    },
+    "6512": {
+      "description": "正在侦测次级隐形。",
+      "dispel": ""
+    },
+    "6546": {
+      "description": "因流血受到每3秒7点伤害。",
+      "dispel": ""
+    },
+    "6547": {
+      "description": "因流血受到每3秒9点伤害。",
+      "dispel": ""
+    },
+    "6548": {
+      "description": "因流血受到每3秒11点伤害。",
+      "dispel": ""
+    },
+    "6615": {
+      "description": "自由行动。",
+      "dispel": "魔法"
+    },
+    "6648": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "6653": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "6654": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "6673": {
+      "description": "使你的近战攻击强度提高20点。",
+      "dispel": ""
+    },
+    "6724": {
+      "description": "对所有攻击和法术免疫。",
+      "dispel": ""
+    },
+    "6756": {
+      "description": "护甲提高105点，所有属性提高4点。",
+      "dispel": "魔法"
+    },
+    "6770": {
+      "description": "瘫痪。",
+      "dispel": ""
+    },
+    "6774": {
+      "description": "近战攻击速度提高30%。",
+      "dispel": ""
+    },
+    "6777": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "6783": {
+      "description": "潜行中，移动速度降低35%。",
+      "dispel": "潜行"
+    },
+    "6789": {
+      "description": "恐惧。",
+      "dispel": "魔法"
+    },
+    "6793": {
+      "description": "伤害提高20点。",
+      "dispel": ""
+    },
+    "6798": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "6898": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "6899": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "6940": {
+      "description": "每次被击中时，圣骑士都将分担45点伤害。",
+      "dispel": "魔法"
+    },
+    "7128": {
+      "description": "防御值提高495点。",
+      "dispel": "魔法"
+    },
+    "7178": {
+      "description": "水下呼吸。",
+      "dispel": ""
+    },
+    "7211": {
+      "description": "非常愤怒。",
+      "dispel": ""
+    },
+    "7233": {
+      "description": "吸收975至1625点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "7239": {
+      "description": "吸收1350至2250点冰霜伤害。",
+      "dispel": "魔法"
+    },
+    "7242": {
+      "description": "吸收675至1125点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "7245": {
+      "description": "吸收300至500点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "7254": {
+      "description": "吸收1350至2250点自然伤害。",
+      "dispel": "魔法"
+    },
+    "7294": {
+      "description": "对攻击者造成5点神圣伤害。",
+      "dispel": ""
+    },
+    "7300": {
+      "description": "护甲值提高110点，并可使攻击者减速。",
+      "dispel": "魔法"
+    },
+    "7301": {
+      "description": "护甲值提高200点，并可使攻击者减速。",
+      "dispel": "魔法"
+    },
+    "7302": {
+      "description": "使护甲提高290点，冰霜抗性提高6点，并可令攻击者减速。",
+      "dispel": "魔法"
+    },
+    "7320": {
+      "description": "使护甲提高380点，冰霜抗性提高9点，并可令攻击者减速。",
+      "dispel": "魔法"
+    },
+    "7321": {
+      "description": "移动速度降低30%，攻击间隔延长25%。",
+      "dispel": "魔法"
+    },
+    "7322": {
+      "description": "移动速度降低40%。",
+      "dispel": "魔法"
+    },
+    "7372": {
+      "description": "移动速度降低45%。",
+      "dispel": ""
+    },
+    "7373": {
+      "description": "移动速度降低50%。",
+      "dispel": ""
+    },
+    "7386": {
+      "description": "护甲降低90点。",
+      "dispel": ""
+    },
+    "7396": {
+      "description": "提高攻击速度。",
+      "dispel": "魔法"
+    },
+    "7400": {
+      "description": "被嘲讽。",
+      "dispel": ""
+    },
+    "7402": {
+      "description": "被嘲讽。",
+      "dispel": ""
+    },
+    "7405": {
+      "description": "护甲降低180点。",
+      "dispel": ""
+    },
+    "7646": {
+      "description": "对目标造成的物理伤害降低15点。",
+      "dispel": "诅咒"
+    },
+    "7648": {
+      "description": "每3秒54点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "7651": {
+      "description": "每秒吸取41点生命值并将其转移给施法者。",
+      "dispel": "魔法"
+    },
+    "7658": {
+      "description": "近战攻击强度提高45点，护甲降低290点。目标不会逃跑，且免疫恐惧效果。",
+      "dispel": "诅咒"
+    },
+    "7659": {
+      "description": "近战攻击强度提高65点，护甲降低465点。目标不会逃跑，且免疫恐惧效果。",
+      "dispel": "诅咒"
+    },
+    "7737": {
+      "description": "每秒恢复2点生命值。",
+      "dispel": ""
+    },
+    "7744": {
+      "description": "免疫魅惑、恐惧和催眠。",
+      "dispel": ""
+    },
+    "7804": {
+      "description": "耐力提高9点。",
+      "dispel": ""
+    },
+    "7805": {
+      "description": "耐力提高19点。",
+      "dispel": ""
+    },
+    "7812": {
+      "description": "吸收所有伤害。",
+      "dispel": "魔法"
+    },
+    "7840": {
+      "description": "游泳速度提高100%。",
+      "dispel": "魔法"
+    },
+    "7844": {
+      "description": "火焰法术所造成的伤害提高最多10点。",
+      "dispel": ""
+    },
+    "7870": {
+      "description": "隐形。",
+      "dispel": "隐形"
+    },
+    "7914": {
+      "description": "捕捉灵魂。",
+      "dispel": ""
+    },
+    "7922": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "7926": {
+      "description": "每1秒治疗50点伤害。",
+      "dispel": ""
+    },
+    "7927": {
+      "description": "每1秒治疗80点伤害。",
+      "dispel": ""
+    },
+    "8050": {
+      "description": "每3秒7点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "8052": {
+      "description": "每3秒12点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "8053": {
+      "description": "每3秒24点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "8056": {
+      "description": "移动速度降低50%。",
+      "dispel": "魔法"
+    },
+    "8058": {
+      "description": "移动速度降低50%。",
+      "dispel": "魔法"
+    },
+    "8070": {
+      "description": "每3秒治疗45点伤害。",
+      "dispel": "魔法"
+    },
+    "8091": {
+      "description": "护甲提高60点。",
+      "dispel": "魔法"
+    },
+    "8094": {
+      "description": "护甲提高120点。",
+      "dispel": "魔法"
+    },
+    "8095": {
+      "description": "护甲提高180点。",
+      "dispel": "魔法"
+    },
+    "8096": {
+      "description": "智力提高4点。",
+      "dispel": "魔法"
+    },
+    "8097": {
+      "description": "智力提高8点。",
+      "dispel": "魔法"
+    },
+    "8098": {
+      "description": "智力提高12点。",
+      "dispel": "魔法"
+    },
+    "8099": {
+      "description": "耐力提高4点。",
+      "dispel": "魔法"
+    },
+    "8100": {
+      "description": "耐力提高8点。",
+      "dispel": "魔法"
+    },
+    "8101": {
+      "description": "耐力提高12点。",
+      "dispel": "魔法"
+    },
+    "8112": {
+      "description": "精神提高3点。",
+      "dispel": "魔法"
+    },
+    "8113": {
+      "description": "精神提高7点。",
+      "dispel": "魔法"
+    },
+    "8114": {
+      "description": "精神提高11点。",
+      "dispel": "魔法"
+    },
+    "8115": {
+      "description": "敏捷提高5点。",
+      "dispel": "魔法"
+    },
+    "8116": {
+      "description": "敏捷提高9点。",
+      "dispel": "魔法"
+    },
+    "8117": {
+      "description": "敏捷提高13点。",
+      "dispel": "魔法"
+    },
+    "8118": {
+      "description": "力量提高5点。",
+      "dispel": "魔法"
+    },
+    "8119": {
+      "description": "力量提高9点。",
+      "dispel": "魔法"
+    },
+    "8120": {
+      "description": "力量提高13点。",
+      "dispel": "魔法"
+    },
+    "8122": {
+      "description": "恐惧地逃跑。",
+      "dispel": ""
+    },
+    "8124": {
+      "description": "恐惧地逃跑。",
+      "dispel": ""
+    },
+    "8134": {
+      "description": "在被击中后对攻击者造成114点自然伤害。",
+      "dispel": "魔法"
+    },
+    "8191": {
+      "description": "护甲和伤害能力提高。",
+      "dispel": "魔法"
+    },
+    "8192": {
+      "description": "减小目标的警戒范围。",
+      "dispel": ""
+    },
+    "8198": {
+      "description": "攻击间隔延长10%。",
+      "dispel": ""
+    },
+    "8202": {
+      "description": "侦测元素之魂。",
+      "dispel": "魔法"
+    },
+    "8204": {
+      "description": "攻击间隔延长10%。",
+      "dispel": ""
+    },
+    "8205": {
+      "description": "攻击间隔延长10%。",
+      "dispel": ""
+    },
+    "8212": {
+      "description": "体型增大了，力量提高8点。",
+      "dispel": ""
+    },
+    "8277": {
+      "description": "对敌人造成的物理伤害降低。",
+      "dispel": "诅咒"
+    },
+    "8288": {
+      "description": "每3秒31点暗影伤害。",
+      "dispel": ""
+    },
+    "8289": {
+      "description": "每3秒59点暗影伤害。",
+      "dispel": ""
+    },
+    "8312": {
+      "description": "被定身。",
+      "dispel": "魔法"
+    },
+    "8313": {
+      "description": "每2秒造成4点自然伤害。",
+      "dispel": "中毒"
+    },
+    "8316": {
+      "description": "对攻击者造成7点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "8317": {
+      "description": "对攻击者造成9点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "8348": {
+      "description": "每2秒治疗13点伤害。",
+      "dispel": "魔法"
+    },
+    "8380": {
+      "description": "护甲降低270点。",
+      "dispel": ""
+    },
+    "8394": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "8395": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "8400": {
+      "description": "每2秒5点火焰伤害。",
+      "dispel": ""
+    },
+    "8401": {
+      "description": "每2秒7点火焰伤害。",
+      "dispel": ""
+    },
+    "8402": {
+      "description": "每2秒8点火焰伤害。",
+      "dispel": ""
+    },
+    "8406": {
+      "description": "移动速度降低40%。",
+      "dispel": "魔法"
+    },
+    "8407": {
+      "description": "移动速度降低40%。",
+      "dispel": "魔法"
+    },
+    "8408": {
+      "description": "移动速度降低40%。",
+      "dispel": "魔法"
+    },
+    "8422": {
+      "description": "每235点火焰伤害。",
+      "dispel": ""
+    },
+    "8423": {
+      "description": "每249点火焰伤害。",
+      "dispel": ""
+    },
+    "8427": {
+      "description": "每1秒66点冰霜伤害。",
+      "dispel": ""
+    },
+    "8450": {
+      "description": "降低法术伤害，最多20点。\n降低法术治疗效果，最多40点。",
+      "dispel": "魔法"
+    },
+    "8451": {
+      "description": "降低法术伤害，最多40点。\n降低法术治疗效果，最多80点。",
+      "dispel": "魔法"
+    },
+    "8455": {
+      "description": "被法术攻击时所承受的伤害最多提高30点，被法术治疗时所恢复的生命值最多提高60点。",
+      "dispel": "魔法"
+    },
+    "8457": {
+      "description": "吸收火焰伤害。",
+      "dispel": "魔法"
+    },
+    "8458": {
+      "description": "吸收火焰伤害。",
+      "dispel": "魔法"
+    },
+    "8461": {
+      "description": "吸收冰霜伤害。",
+      "dispel": "魔法"
+    },
+    "8462": {
+      "description": "吸收冰霜伤害。",
+      "dispel": "魔法"
+    },
+    "8492": {
+      "description": "移动速度降低50%。",
+      "dispel": "魔法"
+    },
+    "8494": {
+      "description": "吸收物理伤害，同时消耗法力。",
+      "dispel": "魔法"
+    },
+    "8495": {
+      "description": "吸收物理伤害，同时消耗法力。",
+      "dispel": "魔法"
+    },
+    "8552": {
+      "description": "对目标造成的物理伤害降低5点。",
+      "dispel": "魔法"
+    },
+    "8629": {
+      "description": "瘫痪。",
+      "dispel": ""
+    },
+    "8631": {
+      "description": "每3秒34点伤害。",
+      "dispel": ""
+    },
+    "8632": {
+      "description": "每3秒47点伤害。",
+      "dispel": ""
+    },
+    "8633": {
+      "description": "每3秒59点伤害。",
+      "dispel": ""
+    },
+    "8639": {
+      "description": "每2秒12 + (3 * 连击点)点伤害。",
+      "dispel": ""
+    },
+    "8640": {
+      "description": "每2秒18 + (4 * 连击点)点伤害。",
+      "dispel": ""
+    },
+    "8643": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "8647": {
+      "description": "护甲降低。",
+      "dispel": ""
+    },
+    "8649": {
+      "description": "护甲降低。",
+      "dispel": ""
+    },
+    "8650": {
+      "description": "护甲降低。",
+      "dispel": ""
+    },
+    "8696": {
+      "description": "移动速度提高60%。",
+      "dispel": ""
+    },
+    "8747": {
+      "description": "游泳速度提高15%。",
+      "dispel": ""
+    },
+    "8892": {
+      "description": "奔跑速度提高。可能会爆炸。",
+      "dispel": ""
+    },
+    "8898": {
+      "description": "侦测元素之魂。",
+      "dispel": "魔法"
+    },
+    "8899": {
+      "description": "侦测元素之魂。",
+      "dispel": "魔法"
+    },
+    "8907": {
+      "description": "护甲提高195点，所有属性提高8点，所有抗性提高10点。",
+      "dispel": "魔法"
+    },
+    "8910": {
+      "description": "每3秒治疗97点伤害。",
+      "dispel": "魔法"
+    },
+    "8914": {
+      "description": "对攻击者造成12点自然伤害。",
+      "dispel": "魔法"
+    },
+    "8918": {
+      "description": "每2秒为附近的小队成员恢复143点生命值。",
+      "dispel": ""
+    },
+    "8921": {
+      "description": "每3秒4点奥术伤害。",
+      "dispel": "魔法"
+    },
+    "8924": {
+      "description": "每3秒8点奥术伤害。",
+      "dispel": "魔法"
+    },
+    "8925": {
+      "description": "每3秒13点奥术伤害。",
+      "dispel": "魔法"
+    },
+    "8926": {
+      "description": "每3秒20点奥术伤害。",
+      "dispel": "魔法"
+    },
+    "8927": {
+      "description": "每3秒31点奥术伤害。",
+      "dispel": "魔法"
+    },
+    "8928": {
+      "description": "每3秒41点奥术伤害。",
+      "dispel": "魔法"
+    },
+    "8929": {
+      "description": "每3秒53点奥术伤害。",
+      "dispel": "魔法"
+    },
+    "8936": {
+      "description": "每3秒治疗14点伤害。",
+      "dispel": "魔法"
+    },
+    "8938": {
+      "description": "每3秒治疗25点伤害。",
+      "dispel": "魔法"
+    },
+    "8939": {
+      "description": "每3秒治疗37点伤害。",
+      "dispel": "魔法"
+    },
+    "8940": {
+      "description": "每3秒治疗49点伤害。",
+      "dispel": "魔法"
+    },
+    "8941": {
+      "description": "每3秒治疗61点伤害。",
+      "dispel": "魔法"
+    },
+    "8955": {
+      "description": "减小目标的警戒范围。",
+      "dispel": ""
+    },
+    "8983": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "9005": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "9007": {
+      "description": "因流血受到每3秒15点伤害。",
+      "dispel": ""
+    },
+    "9035": {
+      "description": "对目标造成的物理伤害降低2点，治疗效果降低20%。",
+      "dispel": "诅咒"
+    },
+    "9159": {
+      "description": "沉睡。",
+      "dispel": "魔法"
+    },
+    "9175": {
+      "description": "使你的奔跑速度提高40%。",
+      "dispel": ""
+    },
+    "9176": {
+      "description": "降低护甲值。",
+      "dispel": "魔法"
+    },
+    "9484": {
+      "description": "被束缚。",
+      "dispel": "魔法"
+    },
+    "9485": {
+      "description": "被束缚。",
+      "dispel": "魔法"
+    },
+    "9490": {
+      "description": "近战攻击强度降低75点。",
+      "dispel": ""
+    },
+    "9492": {
+      "description": "每2秒因流血受到一次伤害。",
+      "dispel": ""
+    },
+    "9493": {
+      "description": "每2秒因流血受到一次伤害。",
+      "dispel": ""
+    },
+    "9578": {
+      "description": "降低威胁等级。",
+      "dispel": "魔法"
+    },
+    "9579": {
+      "description": "降低威胁等级。",
+      "dispel": "魔法"
+    },
+    "9592": {
+      "description": "降低威胁等级。",
+      "dispel": "魔法"
+    },
+    "9632": {
+      "description": "对附近的所有敌人造成武器伤害外加5点伤害。",
+      "dispel": ""
+    },
+    "9634": {
+      "description": "免疫变形效果。近战攻击强度提高180点，由装备而获得的护甲值提高360%，生命值提高1240点。",
+      "dispel": ""
+    },
+    "9747": {
+      "description": "近战攻击强度降低110点。",
+      "dispel": ""
+    },
+    "9749": {
+      "description": "护甲降低395点，无法潜行或隐形。",
+      "dispel": "魔法"
+    },
+    "9750": {
+      "description": "每3秒治疗78点伤害。",
+      "dispel": "魔法"
+    },
+    "9752": {
+      "description": "每2秒因流血受到一次伤害。",
+      "dispel": ""
+    },
+    "9756": {
+      "description": "对攻击者造成15点自然伤害。",
+      "dispel": "魔法"
+    },
+    "9774": {
+      "description": "免疫定身效果，持续5秒。",
+      "dispel": ""
+    },
+    "9796": {
+      "description": "感染疾病。每5秒15点自然伤害。",
+      "dispel": "疾病"
+    },
+    "9800": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "9806": {
+      "description": "护甲降低100点，无法潜行或隐形。",
+      "dispel": "魔法"
+    },
+    "9821": {
+      "description": "移动速度提高60%。",
+      "dispel": ""
+    },
+    "9823": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "9824": {
+      "description": "因流血受到每3秒20点伤害。",
+      "dispel": ""
+    },
+    "9826": {
+      "description": "因流血受到每3秒25点伤害。",
+      "dispel": ""
+    },
+    "9827": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "9833": {
+      "description": "每3秒66点奥术伤害。",
+      "dispel": "魔法"
+    },
+    "9834": {
+      "description": "每3秒80点奥术伤害。",
+      "dispel": "魔法"
+    },
+    "9835": {
+      "description": "每3秒96点奥术伤害。",
+      "dispel": "魔法"
+    },
+    "9839": {
+      "description": "每3秒治疗122点伤害。",
+      "dispel": "魔法"
+    },
+    "9840": {
+      "description": "每3秒治疗152点伤害。",
+      "dispel": "魔法"
+    },
+    "9841": {
+      "description": "每3秒治疗189点伤害。",
+      "dispel": "魔法"
+    },
+    "9845": {
+      "description": "伤害提高30点。",
+      "dispel": ""
+    },
+    "9846": {
+      "description": "伤害提高40点。",
+      "dispel": ""
+    },
+    "9852": {
+      "description": "被缠绕，造成每3秒25点伤害。",
+      "dispel": "魔法"
+    },
+    "9853": {
+      "description": "被缠绕，造成每3秒30点伤害。",
+      "dispel": "魔法"
+    },
+    "9856": {
+      "description": "每3秒治疗98点伤害。",
+      "dispel": "魔法"
+    },
+    "9857": {
+      "description": "每3秒治疗123点伤害。",
+      "dispel": "魔法"
+    },
+    "9858": {
+      "description": "每3秒治疗152点伤害。",
+      "dispel": "魔法"
+    },
+    "9862": {
+      "description": "每2秒为附近的小队成员恢复211点生命值。",
+      "dispel": ""
+    },
+    "9863": {
+      "description": "每2秒为附近的小队成员恢复294点生命值。",
+      "dispel": ""
+    },
+    "9884": {
+      "description": "护甲提高240点，所有属性提高10点，所有抗性提高15点。",
+      "dispel": "魔法"
+    },
+    "9885": {
+      "description": "护甲提高285点，所有属性提高12点，所有抗性提高20点。",
+      "dispel": "魔法"
+    },
+    "9894": {
+      "description": "每2秒因流血受到一次伤害。",
+      "dispel": ""
+    },
+    "9896": {
+      "description": "每2秒因流血受到一次伤害。",
+      "dispel": ""
+    },
+    "9898": {
+      "description": "近战攻击强度降低138点。",
+      "dispel": ""
+    },
+    "9901": {
+      "description": "减小目标的警戒范围。",
+      "dispel": ""
+    },
+    "9904": {
+      "description": "因流血受到每3秒32点伤害。",
+      "dispel": ""
+    },
+    "9907": {
+      "description": "护甲降低505点，无法潜行或隐形。",
+      "dispel": "魔法"
+    },
+    "9910": {
+      "description": "对攻击者造成18点自然伤害。",
+      "dispel": "魔法"
+    },
+    "9913": {
+      "description": "潜行中，移动速度降低30%。",
+      "dispel": "潜行"
+    },
+    "10060": {
+      "description": "使其法术伤害和治疗效果提高20%。",
+      "dispel": "魔法"
+    },
+    "10148": {
+      "description": "每2秒10点火焰伤害。",
+      "dispel": ""
+    },
+    "10149": {
+      "description": "每2秒13点火焰伤害。",
+      "dispel": ""
+    },
+    "10150": {
+      "description": "每2秒15点火焰伤害。",
+      "dispel": ""
+    },
+    "10151": {
+      "description": "每2秒18点火焰伤害。",
+      "dispel": ""
+    },
+    "10156": {
+      "description": "智力提高22点。",
+      "dispel": "魔法"
+    },
+    "10157": {
+      "description": "智力提高31点。",
+      "dispel": "魔法"
+    },
+    "10159": {
+      "description": "移动速度降低50%。",
+      "dispel": "魔法"
+    },
+    "10160": {
+      "description": "移动速度降低50%。",
+      "dispel": "魔法"
+    },
+    "10161": {
+      "description": "移动速度降低50%。",
+      "dispel": "魔法"
+    },
+    "10169": {
+      "description": "被法术攻击时所承受的伤害最多提高50点，被法术治疗时所恢复的生命值最多提高100点。",
+      "dispel": "魔法"
+    },
+    "10170": {
+      "description": "被法术攻击时所承受的伤害最多提高75点，被法术治疗时所恢复的生命值最多提高150点。",
+      "dispel": "魔法"
+    },
+    "10173": {
+      "description": "降低法术伤害，最多60点。\n降低法术治疗效果，最多120点。",
+      "dispel": "魔法"
+    },
+    "10174": {
+      "description": "降低法术伤害，最多90点。\n降低法术治疗效果，最多180点。",
+      "dispel": "魔法"
+    },
+    "10177": {
+      "description": "吸收冰霜伤害。",
+      "dispel": "魔法"
+    },
+    "10179": {
+      "description": "移动速度降低40%。",
+      "dispel": "魔法"
+    },
+    "10180": {
+      "description": "移动速度降低40%。",
+      "dispel": "魔法"
+    },
+    "10181": {
+      "description": "移动速度降低40%。",
+      "dispel": "魔法"
+    },
+    "10185": {
+      "description": "每1秒92点冰霜伤害。",
+      "dispel": ""
+    },
+    "10186": {
+      "description": "每1秒119点冰霜伤害。",
+      "dispel": ""
+    },
+    "10187": {
+      "description": "每1秒149点冰霜伤害。",
+      "dispel": ""
+    },
+    "10191": {
+      "description": "吸收物理伤害，同时消耗法力。",
+      "dispel": "魔法"
+    },
+    "10192": {
+      "description": "吸收物理伤害，同时消耗法力。",
+      "dispel": "魔法"
+    },
+    "10193": {
+      "description": "吸收物理伤害，同时消耗法力。",
+      "dispel": "魔法"
+    },
+    "10215": {
+      "description": "每266点火焰伤害。",
+      "dispel": ""
+    },
+    "10216": {
+      "description": "每285点火焰伤害。",
+      "dispel": ""
+    },
+    "10219": {
+      "description": "使护甲提高470点，冰霜抗性提高12点，并可令攻击者减速。",
+      "dispel": "魔法"
+    },
+    "10220": {
+      "description": "使护甲提高560点，冰霜抗性提高15点，并可令攻击者减速。",
+      "dispel": "魔法"
+    },
+    "10223": {
+      "description": "吸收火焰伤害。",
+      "dispel": "魔法"
+    },
+    "10225": {
+      "description": "吸收火焰伤害。",
+      "dispel": "魔法"
+    },
+    "10230": {
+      "description": "被冻结在原地。",
+      "dispel": "魔法"
+    },
+    "10256": {
+      "description": "每秒恢复46.4点生命值。",
+      "dispel": ""
+    },
+    "10278": {
+      "description": "免疫物理攻击。无法攻击或使用物理技能。",
+      "dispel": "魔法"
+    },
+    "10290": {
+      "description": "护甲值提高160点。",
+      "dispel": ""
+    },
+    "10291": {
+      "description": "护甲值提高390点。",
+      "dispel": ""
+    },
+    "10292": {
+      "description": "护甲值提高620点。",
+      "dispel": ""
+    },
+    "10293": {
+      "description": "护甲值提高735点。",
+      "dispel": ""
+    },
+    "10298": {
+      "description": "对攻击者造成8点神圣伤害。",
+      "dispel": ""
+    },
+    "10299": {
+      "description": "对攻击者造成12点神圣伤害。",
+      "dispel": ""
+    },
+    "10300": {
+      "description": "对攻击者造成16点神圣伤害。",
+      "dispel": ""
+    },
+    "10301": {
+      "description": "对攻击者造成20点神圣伤害。",
+      "dispel": ""
+    },
+    "10308": {
+      "description": "昏迷。",
+      "dispel": "魔法"
+    },
+    "10326": {
+      "description": "被强迫逃跑。",
+      "dispel": ""
+    },
+    "10342": {
+      "description": "提高护甲值。",
+      "dispel": ""
+    },
+    "10351": {
+      "description": "防御力提高。",
+      "dispel": ""
+    },
+    "10368": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "10431": {
+      "description": "在被击中后对攻击者造成154点自然伤害。",
+      "dispel": "魔法"
+    },
+    "10432": {
+      "description": "在被击中后对攻击者造成198点自然伤害。",
+      "dispel": "魔法"
+    },
+    "10447": {
+      "description": "每3秒42点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "10448": {
+      "description": "每3秒64点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "10472": {
+      "description": "移动速度降低50%。",
+      "dispel": "魔法"
+    },
+    "10473": {
+      "description": "移动速度降低50%。",
+      "dispel": "魔法"
+    },
+    "10578": {
+      "description": "每2秒10点火焰伤害。",
+      "dispel": ""
+    },
+    "10618": {
+      "description": "吸收魔法伤害。",
+      "dispel": "魔法"
+    },
+    "10667": {
+      "description": "力量提高25点。",
+      "dispel": ""
+    },
+    "10668": {
+      "description": "耐力提高25点。",
+      "dispel": ""
+    },
+    "10669": {
+      "description": "敏捷提高25点。",
+      "dispel": ""
+    },
+    "10692": {
+      "description": "智力提高25点。",
+      "dispel": ""
+    },
+    "10693": {
+      "description": "精神提高25点。",
+      "dispel": ""
+    },
+    "10789": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "10793": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "10796": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "10797": {
+      "description": "在6秒内造成84点奥术伤害。",
+      "dispel": ""
+    },
+    "10799": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "10838": {
+      "description": "每1秒治疗100点伤害。",
+      "dispel": ""
+    },
+    "10839": {
+      "description": "每1秒治疗138点伤害。",
+      "dispel": ""
+    },
+    "10873": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "10888": {
+      "description": "恐惧地逃跑。",
+      "dispel": ""
+    },
+    "10890": {
+      "description": "恐惧地逃跑。",
+      "dispel": ""
+    },
+    "10892": {
+      "description": "每3秒85点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "10893": {
+      "description": "每3秒112点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "10894": {
+      "description": "每3秒142点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "10898": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "10899": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "10900": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "10901": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "10909": {
+      "description": "以目标的视角观察世界。",
+      "dispel": ""
+    },
+    "10911": {
+      "description": "被魅惑，攻击间隔延长25%。",
+      "dispel": "魔法"
+    },
+    "10912": {
+      "description": "被魅惑，攻击间隔延长25%。",
+      "dispel": "魔法"
+    },
+    "10927": {
+      "description": "每3秒回复102点生命值。",
+      "dispel": "魔法"
+    },
+    "10928": {
+      "description": "每3秒回复130点生命值。",
+      "dispel": "魔法"
+    },
+    "10929": {
+      "description": "每3秒回复162点生命值。",
+      "dispel": "魔法"
+    },
+    "10937": {
+      "description": "耐力提高43点。",
+      "dispel": "魔法"
+    },
+    "10938": {
+      "description": "耐力提高54点。",
+      "dispel": "魔法"
+    },
+    "10941": {
+      "description": "降低威胁等级。",
+      "dispel": "魔法"
+    },
+    "10942": {
+      "description": "降低威胁等级。",
+      "dispel": "魔法"
+    },
+    "10951": {
+      "description": "防御值提高1170点。",
+      "dispel": "魔法"
+    },
+    "10952": {
+      "description": "防御值提高1395点。",
+      "dispel": "魔法"
+    },
+    "10953": {
+      "description": "减小目标的警戒范围。",
+      "dispel": ""
+    },
+    "10955": {
+      "description": "被束缚。",
+      "dispel": "魔法"
+    },
+    "10957": {
+      "description": "暗影抗性提高45点。",
+      "dispel": "魔法"
+    },
+    "10958": {
+      "description": "暗影抗性提高60点。",
+      "dispel": "魔法"
+    },
+    "10969": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "11113": {
+      "description": "眩晕。",
+      "dispel": ""
+    },
+    "11197": {
+      "description": "护甲降低。",
+      "dispel": ""
+    },
+    "11198": {
+      "description": "护甲降低。",
+      "dispel": ""
+    },
+    "11273": {
+      "description": "每2秒27 + (5 * 连击点)点伤害。",
+      "dispel": ""
+    },
+    "11274": {
+      "description": "每2秒37 + (7 * 连击点)点伤害。",
+      "dispel": ""
+    },
+    "11275": {
+      "description": "每2秒60 + (8 * 连击点)点伤害。",
+      "dispel": ""
+    },
+    "11285": {
+      "description": "瘫痪。",
+      "dispel": ""
+    },
+    "11286": {
+      "description": "瘫痪。",
+      "dispel": ""
+    },
+    "11289": {
+      "description": "每3秒74点伤害。",
+      "dispel": ""
+    },
+    "11290": {
+      "description": "每3秒92点伤害。",
+      "dispel": ""
+    },
+    "11297": {
+      "description": "瘫痪。",
+      "dispel": ""
+    },
+    "11305": {
+      "description": "移动速度提高70%。",
+      "dispel": ""
+    },
+    "11327": {
+      "description": "强化潜行。",
+      "dispel": "潜行"
+    },
+    "11328": {
+      "description": "敏捷提高15点。",
+      "dispel": ""
+    },
+    "11329": {
+      "description": "强化潜行。",
+      "dispel": "潜行"
+    },
+    "11334": {
+      "description": "敏捷提高25点。",
+      "dispel": ""
+    },
+    "11348": {
+      "description": "护甲提高450点。",
+      "dispel": ""
+    },
+    "11349": {
+      "description": "护甲提高250点。",
+      "dispel": ""
+    },
+    "11350": {
+      "description": "每3秒对周围半径5码范围内的所有敌人造成50点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "11359": {
+      "description": "每5秒从你身上驱散1个魔法、诅咒、中毒或疾病效果。持续30秒。",
+      "dispel": "魔法"
+    },
+    "11364": {
+      "description": "提高魔法抗性。",
+      "dispel": "魔法"
+    },
+    "11366": {
+      "description": "每3秒14点火焰伤害。",
+      "dispel": ""
+    },
+    "11371": {
+      "description": "暗影抗性提高10点，可能令攻击者感染疾病。",
+      "dispel": "魔法"
+    },
+    "11374": {
+      "description": "受到物理攻击时承受的伤害提高8点。",
+      "dispel": "疾病"
+    },
+    "11389": {
+      "description": "正在侦测亡灵。",
+      "dispel": ""
+    },
+    "11390": {
+      "description": "法术伤害提高最多20点。",
+      "dispel": ""
+    },
+    "11392": {
+      "description": "隐形",
+      "dispel": "隐形"
+    },
+    "11396": {
+      "description": "智力提高25点。",
+      "dispel": ""
+    },
+    "11403": {
+      "description": "在梦中视物。",
+      "dispel": ""
+    },
+    "11405": {
+      "description": "力量提高25点。",
+      "dispel": ""
+    },
+    "11406": {
+      "description": "对恶魔的攻击强度提高265点。",
+      "dispel": ""
+    },
+    "11407": {
+      "description": "正在侦测恶魔。",
+      "dispel": ""
+    },
+    "11426": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "11474": {
+      "description": "法术所造成的暗影伤害提高最多40点。",
+      "dispel": ""
+    },
+    "11549": {
+      "description": "使你的近战攻击强度提高94点。",
+      "dispel": ""
+    },
+    "11550": {
+      "description": "使你的近战攻击强度提高139点。",
+      "dispel": ""
+    },
+    "11551": {
+      "description": "使你的近战攻击强度提高193点。",
+      "dispel": ""
+    },
+    "11554": {
+      "description": "近战攻击强度降低80点。",
+      "dispel": ""
+    },
+    "11555": {
+      "description": "近战攻击强度降低115点。",
+      "dispel": ""
+    },
+    "11556": {
+      "description": "近战攻击强度降低146点。",
+      "dispel": ""
+    },
+    "11572": {
+      "description": "因流血受到每3秒14点伤害。",
+      "dispel": ""
+    },
+    "11573": {
+      "description": "因流血受到每3秒18点伤害。",
+      "dispel": ""
+    },
+    "11574": {
+      "description": "因流血受到每3秒21点伤害。",
+      "dispel": ""
+    },
+    "11580": {
+      "description": "攻击间隔延长10%。",
+      "dispel": ""
+    },
+    "11581": {
+      "description": "攻击间隔延长10%。",
+      "dispel": ""
+    },
+    "11596": {
+      "description": "护甲降低360点。",
+      "dispel": ""
+    },
+    "11597": {
+      "description": "护甲降低450点。",
+      "dispel": ""
+    },
+    "11657": {
+      "description": "吸收物理伤害。",
+      "dispel": "魔法"
+    },
+    "11665": {
+      "description": "每3秒51点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "11667": {
+      "description": "每3秒73点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "11668": {
+      "description": "每3秒97点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "11671": {
+      "description": "每3秒81点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "11672": {
+      "description": "每3秒111点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "11675": {
+      "description": "每3秒91点暗影伤害。",
+      "dispel": ""
+    },
+    "11677": {
+      "description": "每2秒158点火焰伤害。",
+      "dispel": ""
+    },
+    "11678": {
+      "description": "每2秒228点火焰伤害。",
+      "dispel": ""
+    },
+    "11683": {
+      "description": "对自己和周围的所有敌人造成伤害。",
+      "dispel": ""
+    },
+    "11684": {
+      "description": "对自己和周围的所有敌人造成伤害。",
+      "dispel": ""
+    },
+    "11693": {
+      "description": "正在转移生命值。",
+      "dispel": ""
+    },
+    "11694": {
+      "description": "正在转移生命值。",
+      "dispel": ""
+    },
+    "11695": {
+      "description": "正在转移生命值。",
+      "dispel": ""
+    },
+    "11699": {
+      "description": "每秒吸取55点生命值并将其转移给施法者。",
+      "dispel": "魔法"
+    },
+    "11700": {
+      "description": "每秒吸取71点生命值并将其转移给施法者。",
+      "dispel": "魔法"
+    },
+    "11703": {
+      "description": "每秒将102点法力值转移给施法者。",
+      "dispel": "魔法"
+    },
+    "11707": {
+      "description": "对目标造成的物理伤害降低22点。",
+      "dispel": "诅咒"
+    },
+    "11708": {
+      "description": "对目标造成的物理伤害降低31点。",
+      "dispel": "诅咒"
+    },
+    "11711": {
+      "description": "在24秒内造成总计504点暗影伤害。",
+      "dispel": "诅咒"
+    },
+    "11712": {
+      "description": "在24秒内造成总计780点暗影伤害。",
+      "dispel": "诅咒"
+    },
+    "11713": {
+      "description": "在24秒内造成总计1044点暗影伤害。",
+      "dispel": "诅咒"
+    },
+    "11717": {
+      "description": "近战攻击强度提高90点，护甲降低640点。目标不会逃跑，且免疫恐惧效果。",
+      "dispel": "诅咒"
+    },
+    "11719": {
+      "description": "以恶魔语念出咒语，使施法时间延长60%。",
+      "dispel": "诅咒"
+    },
+    "11721": {
+      "description": "火焰和冰霜抗性降低60点。受到火焰和冰霜系攻击时所承受的伤害提高8%。",
+      "dispel": "诅咒"
+    },
+    "11722": {
+      "description": "火焰和冰霜抗性降低75点。受到火焰和冰霜系攻击时所承受的伤害提高10%。",
+      "dispel": "诅咒"
+    },
+    "11725": {
+      "description": "被奴役。",
+      "dispel": ""
+    },
+    "11726": {
+      "description": "被奴役。",
+      "dispel": ""
+    },
+    "11733": {
+      "description": "护甲值提高390点，暗影抗性提高9点，每5秒回复11点生命值。",
+      "dispel": "魔法"
+    },
+    "11734": {
+      "description": "护甲值提高480点，暗影抗性提高12点，每5秒回复13点生命值。",
+      "dispel": "魔法"
+    },
+    "11735": {
+      "description": "护甲值提高570点，暗影抗性提高15点，每5秒回复15点生命值。",
+      "dispel": "魔法"
+    },
+    "11739": {
+      "description": "吸收暗影伤害。",
+      "dispel": "魔法"
+    },
+    "11740": {
+      "description": "吸收暗影伤害。",
+      "dispel": "魔法"
+    },
+    "11743": {
+      "description": "侦测强效隐形术。",
+      "dispel": "魔法"
+    },
+    "11766": {
+      "description": "耐力提高30点。",
+      "dispel": ""
+    },
+    "11767": {
+      "description": "耐力提高42点。",
+      "dispel": ""
+    },
+    "11770": {
+      "description": "对攻击者造成11点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "11771": {
+      "description": "对攻击者造成13点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "11789": {
+      "description": "水下呼吸。",
+      "dispel": ""
+    },
+    "11790": {
+      "description": "每5秒对敌人造成5点自然伤害。",
+      "dispel": "中毒"
+    },
+    "11791": {
+      "description": "护甲降低100点。",
+      "dispel": ""
+    },
+    "11826": {
+      "description": "引导闪电。",
+      "dispel": ""
+    },
+    "11841": {
+      "description": "对近战攻击者造成5点自然伤害。",
+      "dispel": "魔法"
+    },
+    "11879": {
+      "description": "被缴械。",
+      "dispel": ""
+    },
+    "11958": {
+      "description": "对所有攻击和法术免疫。无法攻击、移动或施法。",
+      "dispel": ""
+    },
+    "12022": {
+      "description": "耐力提高10点。",
+      "dispel": "魔法"
+    },
+    "12042": {
+      "description": "你的法术可以造成更高伤害，但是需要消耗更多法力值才能施放。",
+      "dispel": "魔法"
+    },
+    "12043": {
+      "description": "你的下一个施法时间低于10秒的法师法术会成为瞬发法术。",
+      "dispel": "魔法"
+    },
+    "12051": {
+      "description": "法力值回复速度提高1500%。",
+      "dispel": ""
+    },
+    "12174": {
+      "description": "敏捷提高17点。",
+      "dispel": "魔法"
+    },
+    "12175": {
+      "description": "护甲提高240点。",
+      "dispel": "魔法"
+    },
+    "12176": {
+      "description": "智力提高16点。",
+      "dispel": "魔法"
+    },
+    "12177": {
+      "description": "精神提高15点。",
+      "dispel": "魔法"
+    },
+    "12178": {
+      "description": "耐力提高16点。",
+      "dispel": "魔法"
+    },
+    "12179": {
+      "description": "力量提高17点。",
+      "dispel": "魔法"
+    },
+    "12292": {
+      "description": "你在接下来的5次近战攻击中可以攻击到一个额外的敌人。",
+      "dispel": ""
+    },
+    "12294": {
+      "description": "治疗效果降低50%。",
+      "dispel": ""
+    },
+    "12323": {
+      "description": "移动速度降低50%。",
+      "dispel": ""
+    },
+    "12328": {
+      "description": "物理伤害能力提高20%。护甲值和所有抗性降低20%。免疫恐惧效果。",
+      "dispel": ""
+    },
+    "12355": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "12418": {
+      "description": "提高潜行侦测能力。",
+      "dispel": ""
+    },
+    "12421": {
+      "description": "昏迷。任何伤害都会打断这个效果。",
+      "dispel": ""
+    },
+    "12438": {
+      "description": "坠落速度减缓。",
+      "dispel": ""
+    },
+    "12494": {
+      "description": "被冻结。",
+      "dispel": "魔法"
+    },
+    "12505": {
+      "description": "每3秒18点火焰伤害。",
+      "dispel": ""
+    },
+    "12522": {
+      "description": "每3秒24点火焰伤害。",
+      "dispel": ""
+    },
+    "12523": {
+      "description": "每3秒31点火焰伤害。",
+      "dispel": ""
+    },
+    "12524": {
+      "description": "每3秒39点火焰伤害。",
+      "dispel": ""
+    },
+    "12525": {
+      "description": "每3秒47点火焰伤害。",
+      "dispel": ""
+    },
+    "12526": {
+      "description": "每3秒57点火焰伤害。",
+      "dispel": ""
+    },
+    "12536": {
+      "description": "你的下一个伤害法术所消耗的法力值减少100%。",
+      "dispel": "魔法"
+    },
+    "12543": {
+      "description": "昏迷。任何伤害都会打断这个效果。",
+      "dispel": ""
+    },
+    "12561": {
+      "description": "吸收火焰伤害。",
+      "dispel": "魔法"
+    },
+    "12562": {
+      "description": "昏迷。任何伤害都会打断这个效果。",
+      "dispel": ""
+    },
+    "12579": {
+      "description": "冰霜法术对敌人造成爆击的几率提高2%。",
+      "dispel": "魔法"
+    },
+    "12608": {
+      "description": "侦测潜行能力略微提高。",
+      "dispel": ""
+    },
+    "12685": {
+      "description": "降低威胁等级。",
+      "dispel": "魔法"
+    },
+    "12686": {
+      "description": "提高近战伤害和攻击速度。",
+      "dispel": ""
+    },
+    "12731": {
+      "description": "提高近战伤害。",
+      "dispel": "魔法"
+    },
+    "12733": {
+      "description": "护甲值提高，增强抗性，免疫恐惧。",
+      "dispel": ""
+    },
+    "12766": {
+      "description": "每5秒造成50点自然伤害。",
+      "dispel": "中毒"
+    },
+    "12798": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "12809": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "12824": {
+      "description": "不能攻击或施法。回复速度提高。",
+      "dispel": "魔法"
+    },
+    "12825": {
+      "description": "不能攻击或施法。回复速度提高。",
+      "dispel": "魔法"
+    },
+    "12826": {
+      "description": "不能攻击或施法。回复速度提高。",
+      "dispel": "魔法"
+    },
+    "12880": {
+      "description": "近战伤害提高5%。",
+      "dispel": ""
+    },
+    "12883": {
+      "description": "视距增长，直到你进行移动。",
+      "dispel": ""
+    },
+    "12966": {
+      "description": "攻击速度提高10%。",
+      "dispel": ""
+    },
+    "12967": {
+      "description": "攻击速度提高15%。",
+      "dispel": ""
+    },
+    "12968": {
+      "description": "攻击速度提高20%。",
+      "dispel": ""
+    },
+    "12969": {
+      "description": "攻击速度提高25%。",
+      "dispel": ""
+    },
+    "12970": {
+      "description": "攻击速度提高30%。",
+      "dispel": ""
+    },
+    "13018": {
+      "description": "眩晕。",
+      "dispel": ""
+    },
+    "13019": {
+      "description": "眩晕。",
+      "dispel": ""
+    },
+    "13020": {
+      "description": "眩晕。",
+      "dispel": ""
+    },
+    "13021": {
+      "description": "眩晕。",
+      "dispel": ""
+    },
+    "13031": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "13032": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "13033": {
+      "description": "吸收伤害。",
+      "dispel": "魔法"
+    },
+    "13141": {
+      "description": "奔跑速度提高。可能因为回转稳定器故障而导致沿不规则路线前进。",
+      "dispel": ""
+    },
+    "13159": {
+      "description": "移动速度提高30%。如果受到伤害则会眩晕。",
+      "dispel": ""
+    },
+    "13161": {
+      "description": "无法被追踪。",
+      "dispel": ""
+    },
+    "13163": {
+      "description": "躲闪几率提高8%。",
+      "dispel": ""
+    },
+    "13165": {
+      "description": "远程攻击强度提高20点。",
+      "dispel": ""
+    },
+    "13183": {
+      "description": "每秒造成61至69点火焰伤害。",
+      "dispel": ""
+    },
+    "13234": {
+      "description": "吸收伤害，不保证总是有效。",
+      "dispel": ""
+    },
+    "13237": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "13278": {
+      "description": "使用你的生命能量为死亡射线充能。",
+      "dispel": ""
+    },
+    "13318": {
+      "description": "因流血受到每3秒10点伤害。",
+      "dispel": ""
+    },
+    "13327": {
+      "description": "瘫痪。",
+      "dispel": "魔法"
+    },
+    "13424": {
+      "description": "护甲降低50点，无法潜行或隐形。",
+      "dispel": "魔法"
+    },
+    "13438": {
+      "description": "每2秒3点火焰伤害。",
+      "dispel": ""
+    },
+    "13439": {
+      "description": "移动速度降低50%。",
+      "dispel": "魔法"
+    },
+    "13490": {
+      "description": "攻击强度降低30点。",
+      "dispel": ""
+    },
+    "13494": {
+      "description": "提高攻击速度。",
+      "dispel": ""
+    },
+    "13496": {
+      "description": "移动速度降低。",
+      "dispel": ""
+    },
+    "13518": {
+      "description": "每3秒造成5点自然伤害。",
+      "dispel": "中毒"
+    },
+    "13524": {
+      "description": "所有属性降低2点。",
+      "dispel": "诅咒"
+    },
+    "13526": {
+      "description": "护甲降低，周期性自然伤害。",
+      "dispel": "中毒"
+    },
+    "13528": {
+      "description": "力量降低10点。",
+      "dispel": "疾病"
+    },
+    "13530": {
+      "description": "每1秒造成15点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "13532": {
+      "description": "攻击间隔延长11%。",
+      "dispel": ""
+    },
+    "13533": {
+      "description": "提高攻击速度。",
+      "dispel": ""
+    },
+    "13534": {
+      "description": "被缴械。",
+      "dispel": ""
+    },
+    "13542": {
+      "description": "每秒治疗142点伤害。",
+      "dispel": ""
+    },
+    "13543": {
+      "description": "每秒治疗189点伤害。",
+      "dispel": ""
+    },
+    "13544": {
+      "description": "每秒治疗245点伤害。",
+      "dispel": ""
+    },
+    "13549": {
+      "description": "每3秒8点自然伤害。",
+      "dispel": "中毒"
+    },
+    "13550": {
+      "description": "每3秒16点自然伤害。",
+      "dispel": "中毒"
+    },
+    "13551": {
+      "description": "每3秒28点自然伤害。",
+      "dispel": "中毒"
+    },
+    "13552": {
+      "description": "每3秒42点自然伤害。",
+      "dispel": "中毒"
+    },
+    "13553": {
+      "description": "每3秒58点自然伤害。",
+      "dispel": "中毒"
+    },
+    "13554": {
+      "description": "每3秒77点自然伤害。",
+      "dispel": "中毒"
+    },
+    "13555": {
+      "description": "每3秒98点自然伤害。",
+      "dispel": "中毒"
+    },
+    "13587": {
+      "description": "坐骑速度提高3%。",
+      "dispel": ""
+    },
+    "13744": {
+      "description": "提高火焰抗性，降低承受的火焰伤害。",
+      "dispel": ""
+    },
+    "13750": {
+      "description": "能量值回复速度提高100%。",
+      "dispel": ""
+    },
+    "13752": {
+      "description": "护甲降低100点，无法潜行或隐形。",
+      "dispel": "魔法"
+    },
+    "13808": {
+      "description": "昏迷。任何伤害都会打断这个效果。",
+      "dispel": ""
+    },
+    "13819": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "13877": {
+      "description": "攻击速度提高20%。武器攻击可对附近的一个额外的敌人造成伤害。",
+      "dispel": ""
+    },
+    "13896": {
+      "description": "任何对牧师成功施放的敌对法术都会令施法者损失18点法力值，并对其造成等量的暗影伤害。",
+      "dispel": "魔法"
+    },
+    "14118": {
+      "description": "因流血受到每3秒15点伤害。",
+      "dispel": ""
+    },
+    "14143": {
+      "description": "你的下一次邪恶攻击、背刺、伏击或鬼魅攻击造成爆击的几率提高20%。",
+      "dispel": ""
+    },
+    "14149": {
+      "description": "你的下一次邪恶攻击、背刺、伏击或鬼魅攻击造成爆击的几率提高40%。",
+      "dispel": ""
+    },
+    "14177": {
+      "description": "你的下一次邪恶攻击、背刺、伏击或刺骨造成爆击的几率提高100%。",
+      "dispel": ""
+    },
+    "14201": {
+      "description": "近战伤害提高10%。",
+      "dispel": ""
+    },
+    "14202": {
+      "description": "近战伤害提高15%。",
+      "dispel": ""
+    },
+    "14203": {
+      "description": "近战伤害提高20%。",
+      "dispel": ""
+    },
+    "14204": {
+      "description": "近战伤害提高25%。",
+      "dispel": ""
+    },
+    "14251": {
+      "description": "被缴械。",
+      "dispel": ""
+    },
+    "14253": {
+      "description": "每2秒驱散1个中毒效果。",
+      "dispel": "魔法"
+    },
+    "14267": {
+      "description": "移动速度降低55%。",
+      "dispel": ""
+    },
+    "14268": {
+      "description": "移动速度降低60%。",
+      "dispel": ""
+    },
+    "14275": {
+      "description": "力量和敏捷降低29点。",
+      "dispel": "中毒"
+    },
+    "14276": {
+      "description": "力量和敏捷降低45点。",
+      "dispel": "中毒"
+    },
+    "14277": {
+      "description": "力量和敏捷降低68点。",
+      "dispel": "中毒"
+    },
+    "14278": {
+      "description": "躲闪几率提高15%。",
+      "dispel": ""
+    },
+    "14279": {
+      "description": "每2吸收212点法力值。",
+      "dispel": "中毒"
+    },
+    "14280": {
+      "description": "每2吸收277点法力值。",
+      "dispel": "中毒"
+    },
+    "14318": {
+      "description": "远程攻击强度提高35点。",
+      "dispel": ""
+    },
+    "14319": {
+      "description": "远程攻击强度提高50点。",
+      "dispel": ""
+    },
+    "14320": {
+      "description": "远程攻击强度提高70点。",
+      "dispel": ""
+    },
+    "14321": {
+      "description": "远程攻击强度提高90点。",
+      "dispel": ""
+    },
+    "14322": {
+      "description": "远程攻击强度提高110点。",
+      "dispel": ""
+    },
+    "14323": {
+      "description": "对此目标进行的所有远程攻击均有额外的45点远程攻击强度加成。",
+      "dispel": "魔法"
+    },
+    "14324": {
+      "description": "对此目标进行的所有远程攻击均有额外的75点远程攻击强度加成。",
+      "dispel": "魔法"
+    },
+    "14325": {
+      "description": "对此目标进行的所有远程攻击均有额外的110点远程攻击强度加成。",
+      "dispel": "魔法"
+    },
+    "14326": {
+      "description": "恐惧。",
+      "dispel": "魔法"
+    },
+    "14327": {
+      "description": "恐惧。",
+      "dispel": "魔法"
+    },
+    "14530": {
+      "description": "使你的奔跑速度提高40%。",
+      "dispel": ""
+    },
+    "14743": {
+      "description": "不会因受到伤害而损失施法时间，抵抗打断效果的几率提高10%。",
+      "dispel": "魔法"
+    },
+    "14751": {
+      "description": "你的下一个法术所消耗的法力值减少100%。",
+      "dispel": "魔法"
+    },
+    "14752": {
+      "description": "精神提高17点。",
+      "dispel": "魔法"
+    },
+    "14818": {
+      "description": "精神提高23点。",
+      "dispel": "魔法"
+    },
+    "14819": {
+      "description": "精神提高33点。",
+      "dispel": "魔法"
+    },
+    "14893": {
+      "description": "护甲值提高8%。",
+      "dispel": "魔法"
+    },
+    "14914": {
+      "description": "每2秒6点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "15229": {
+      "description": "每3秒治疗134点伤害。",
+      "dispel": "魔法"
+    },
+    "15231": {
+      "description": "精神提高30点。",
+      "dispel": "魔法"
+    },
+    "15233": {
+      "description": "护甲值提高200点。",
+      "dispel": "魔法"
+    },
+    "15235": {
+      "description": "护甲降低200点，持续2分钟。",
+      "dispel": ""
+    },
+    "15258": {
+      "description": "受到暗影攻击时承受的伤害提高3%。",
+      "dispel": "魔法"
+    },
+    "15261": {
+      "description": "每2秒29点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "15262": {
+      "description": "每2秒8点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "15263": {
+      "description": "每2秒11点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "15264": {
+      "description": "每2秒13点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "15265": {
+      "description": "每2秒17点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "15266": {
+      "description": "每2秒20点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "15267": {
+      "description": "每2秒25点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "15269": {
+      "description": "昏迷。",
+      "dispel": "魔法"
+    },
+    "15271": {
+      "description": "精神提高100%，施法时拥有50%的法力回复。",
+      "dispel": "魔法"
+    },
+    "15279": {
+      "description": "对攻击者造成12点自然伤害。",
+      "dispel": "魔法"
+    },
+    "15280": {
+      "description": "护甲降低300点。",
+      "dispel": ""
+    },
+    "15283": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "15286": {
+      "description": "牧师造成的暗影伤害总量的20%治疗牧师及其队友。",
+      "dispel": "诅咒"
+    },
+    "15357": {
+      "description": "护甲值提高16%。",
+      "dispel": "魔法"
+    },
+    "15359": {
+      "description": "护甲值提高25%。",
+      "dispel": "魔法"
+    },
+    "15407": {
+      "description": "移动速度降低50%。",
+      "dispel": ""
+    },
+    "15473": {
+      "description": "造成的暗影伤害提高15%。[所有暗影法术消耗的法力值降低0%。]受到的物理伤害降低15%。无法施放神圣法术。",
+      "dispel": ""
+    },
+    "15487": {
+      "description": "沉默。",
+      "dispel": "魔法"
+    },
+    "15494": {
+      "description": "附有弗兰克罗恩·铸铁的灵魂。你只能用矮人语说话。",
+      "dispel": ""
+    },
+    "15571": {
+      "description": "眩晕。",
+      "dispel": ""
+    },
+    "15595": {
+      "description": "受到近战攻击时所承受的伤害降低25点。",
+      "dispel": ""
+    },
+    "15602": {
+      "description": "攻击强度提高50点。",
+      "dispel": ""
+    },
+    "15604": {
+      "description": "每1秒恢复30点法力值。",
+      "dispel": "魔法"
+    },
+    "15646": {
+      "description": "减少法力值消耗。",
+      "dispel": "魔法"
+    },
+    "15662": {
+      "description": "每2秒5点火焰伤害。",
+      "dispel": ""
+    },
+    "15752": {
+      "description": "被缴械。",
+      "dispel": ""
+    },
+    "15753": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "15779": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "15822": {
+      "description": "无梦睡眠。",
+      "dispel": "魔法"
+    },
+    "15852": {
+      "description": "你感觉不太好……",
+      "dispel": "中毒"
+    },
+    "16055": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "16056": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "16080": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "16081": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "16082": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "16083": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "16084": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "16166": {
+      "description": "你的下一个火焰、冰霜或自然法术必定造成爆击，且法力值消耗降低100%。",
+      "dispel": "魔法"
+    },
+    "16177": {
+      "description": "使你因装备而获得的护甲值提高8%。",
+      "dispel": "魔法"
+    },
+    "16188": {
+      "description": "你的下一个施法时间低于10秒的自然法术会成为瞬发法术。",
+      "dispel": "魔法"
+    },
+    "16236": {
+      "description": "使你因装备而获得的护甲值提高16%。",
+      "dispel": "魔法"
+    },
+    "16237": {
+      "description": "使你因装备而获得的护甲值提高25%。",
+      "dispel": "魔法"
+    },
+    "16246": {
+      "description": "你的下一个元素伤害法术所消耗的法力值减少100%。",
+      "dispel": "魔法"
+    },
+    "16257": {
+      "description": "攻击速度提高10%。",
+      "dispel": ""
+    },
+    "16277": {
+      "description": "攻击速度提高15%。",
+      "dispel": ""
+    },
+    "16278": {
+      "description": "攻击速度提高20%。",
+      "dispel": ""
+    },
+    "16279": {
+      "description": "攻击速度提高25%。",
+      "dispel": ""
+    },
+    "16280": {
+      "description": "攻击速度提高30%。",
+      "dispel": ""
+    },
+    "16321": {
+      "description": "躲闪几率提高5%。",
+      "dispel": ""
+    },
+    "16322": {
+      "description": "使目标的攻击速度提高3%。",
+      "dispel": "魔法"
+    },
+    "16323": {
+      "description": "力量提高30点。",
+      "dispel": "魔法"
+    },
+    "16325": {
+      "description": "冰霜抗性提高15点。",
+      "dispel": "魔法"
+    },
+    "16326": {
+      "description": "火焰抗性提高15点。",
+      "dispel": "魔法"
+    },
+    "16327": {
+      "description": "智力提高30点。",
+      "dispel": "魔法"
+    },
+    "16329": {
+      "description": "攻击强度提高40点。",
+      "dispel": "魔法"
+    },
+    "16400": {
+      "description": "每3秒造成6点自然伤害。",
+      "dispel": "中毒"
+    },
+    "16401": {
+      "description": "每6秒造成30点自然伤害。",
+      "dispel": "中毒"
+    },
+    "16403": {
+      "description": "因流血受到每6秒9点伤害。",
+      "dispel": ""
+    },
+    "16406": {
+      "description": "因流血受到每3秒8点伤害。",
+      "dispel": ""
+    },
+    "16413": {
+      "description": "每2秒3点火焰伤害。",
+      "dispel": ""
+    },
+    "16415": {
+      "description": "每2秒9点火焰伤害。",
+      "dispel": ""
+    },
+    "16470": {
+      "description": "护甲值提高1000点，无法攻击或施法。",
+      "dispel": "魔法"
+    },
+    "16488": {
+      "description": "在6秒内回复1%的生命值。",
+      "dispel": ""
+    },
+    "16490": {
+      "description": "在6秒内回复2%的生命值。",
+      "dispel": ""
+    },
+    "16491": {
+      "description": "在6秒内回复3%的生命值。",
+      "dispel": ""
+    },
+    "16511": {
+      "description": "受到物理攻击时所承受的伤害提高3点。",
+      "dispel": ""
+    },
+    "16528": {
+      "description": "每2秒10点自然伤害。\n攻击间隔延长11%。",
+      "dispel": "中毒"
+    },
+    "16560": {
+      "description": "提高火焰抗性，对攻击者造成10点火焰伤害。",
+      "dispel": ""
+    },
+    "16603": {
+      "description": "每5秒吸取10点生命值。",
+      "dispel": "魔法"
+    },
+    "16608": {
+      "description": "每秒吸取30点生命值并将其转移给施法者。",
+      "dispel": "魔法"
+    },
+    "16621": {
+      "description": "免疫物理伤害。",
+      "dispel": ""
+    },
+    "16629": {
+      "description": "召唤者阿拉基的攻击伤害降低25%。",
+      "dispel": ""
+    },
+    "16689": {
+      "description": "在受到近战伤害时有一定几率令攻击者被根须纠缠。",
+      "dispel": "魔法"
+    },
+    "16739": {
+      "description": "已伪装。",
+      "dispel": ""
+    },
+    "16810": {
+      "description": "在受到近战伤害时有一定几率令攻击者被根须纠缠。",
+      "dispel": "魔法"
+    },
+    "16811": {
+      "description": "在受到近战伤害时有一定几率令攻击者被根须纠缠。",
+      "dispel": "魔法"
+    },
+    "16812": {
+      "description": "在受到近战伤害时有一定几率令攻击者被根须纠缠。",
+      "dispel": "魔法"
+    },
+    "16813": {
+      "description": "在受到近战伤害时有一定几率令攻击者被根须纠缠。",
+      "dispel": "魔法"
+    },
+    "16857": {
+      "description": "护甲降低175点，无法潜行或隐形。",
+      "dispel": "魔法"
+    },
+    "16864": {
+      "description": "每次近战攻击[或非瞬发法术]有几率使施法者进入节能施法状态。",
+      "dispel": "魔法"
+    },
+    "16870": {
+      "description": "你的下一个治疗法术、伤害法术或攻击技能所消耗的法力值、怒气值或能量值减少100%。",
+      "dispel": "魔法"
+    },
+    "16886": {
+      "description": "你的下一个法术的施法时间减少0.5秒。",
+      "dispel": "魔法"
+    },
+    "16898": {
+      "description": "每3秒造成10点伤害。",
+      "dispel": "魔法"
+    },
+    "16914": {
+      "description": "每1秒72点伤害，攻击间隔延长25%。",
+      "dispel": ""
+    },
+    "16916": {
+      "description": "力量提高120点。",
+      "dispel": "魔法"
+    },
+    "16927": {
+      "description": "移动速度降低30%，攻击间隔延长25%。",
+      "dispel": "魔法"
+    },
+    "16928": {
+      "description": "护甲降低200点。",
+      "dispel": ""
+    },
+    "17038": {
+      "description": "近战攻击强度提高35点，体型增大。",
+      "dispel": "魔法"
+    },
+    "17116": {
+      "description": "你的下一个自然法术会成为瞬发法术。",
+      "dispel": "魔法"
+    },
+    "17148": {
+      "description": "智力降低。",
+      "dispel": ""
+    },
+    "17152": {
+      "description": "力量提高200点。",
+      "dispel": "魔法"
+    },
+    "17153": {
+      "description": "因流血受到每3秒56点伤害。",
+      "dispel": ""
+    },
+    "17154": {
+      "description": "自然抗性提高，并对攻击者造成3点自然伤害。",
+      "dispel": "魔法"
+    },
+    "17196": {
+      "description": "所有属性降低20点，受到周期性自然伤害。",
+      "dispel": "中毒"
+    },
+    "17229": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "17252": {
+      "description": "吸收伤害，法力值回复速度提高每5秒22点。",
+      "dispel": ""
+    },
+    "17308": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "17311": {
+      "description": "移动速度降低50%。",
+      "dispel": ""
+    },
+    "17312": {
+      "description": "移动速度降低50%。",
+      "dispel": ""
+    },
+    "17313": {
+      "description": "移动速度降低50%。",
+      "dispel": ""
+    },
+    "17314": {
+      "description": "移动速度降低50%。",
+      "dispel": ""
+    },
+    "17315": {
+      "description": "护甲降低200点。",
+      "dispel": ""
+    },
+    "17329": {
+      "description": "在受到近战伤害时有一定几率令攻击者被根须纠缠。",
+      "dispel": "魔法"
+    },
+    "17330": {
+      "description": "每2秒造成20点自然伤害。",
+      "dispel": "中毒"
+    },
+    "17331": {
+      "description": "施法、近战和远程攻击速度降低。",
+      "dispel": "魔法"
+    },
+    "17347": {
+      "description": "受到物理攻击时所承受的伤害提高5点。",
+      "dispel": ""
+    },
+    "17348": {
+      "description": "受到物理攻击时所承受的伤害提高7点。",
+      "dispel": ""
+    },
+    "17350": {
+      "description": "格挡几率提高50%。",
+      "dispel": ""
+    },
+    "17351": {
+      "description": "格挡几率提高50%。",
+      "dispel": ""
+    },
+    "17352": {
+      "description": "对亡灵的攻击强度提高。",
+      "dispel": ""
+    },
+    "17364": {
+      "description": "自然伤害提高20%。",
+      "dispel": "魔法"
+    },
+    "17390": {
+      "description": "护甲降低285点，无法潜行或隐形。",
+      "dispel": "魔法"
+    },
+    "17391": {
+      "description": "护甲降低395点，无法潜行或隐形。",
+      "dispel": "魔法"
+    },
+    "17392": {
+      "description": "护甲降低505点，无法潜行或隐形。",
+      "dispel": "魔法"
+    },
+    "17401": {
+      "description": "每1秒102点伤害，攻击间隔延长25%。",
+      "dispel": ""
+    },
+    "17402": {
+      "description": "每1秒134点伤害，攻击间隔延长25%。",
+      "dispel": ""
+    },
+    "17407": {
+      "description": "每1秒造成6点伤害。",
+      "dispel": ""
+    },
+    "17447": {
+      "description": "转化法力值。",
+      "dispel": ""
+    },
+    "17450": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "17453": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "17454": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "17459": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "17460": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "17461": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "17462": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "17463": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "17464": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "17465": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "17481": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "17483": {
+      "description": "每2秒造成40点暗影伤害。",
+      "dispel": ""
+    },
+    "17484": {
+      "description": "吸取生命。",
+      "dispel": "诅咒"
+    },
+    "17500": {
+      "description": "被打傻。",
+      "dispel": ""
+    },
+    "17504": {
+      "description": "因流血受到每3秒12点伤害。",
+      "dispel": ""
+    },
+    "17505": {
+      "description": "所有属性降低15点。",
+      "dispel": "诅咒"
+    },
+    "17506": {
+      "description": "每3秒吸取12点生命值和法力值。",
+      "dispel": "魔法"
+    },
+    "17510": {
+      "description": "每1秒造成10点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "17511": {
+      "description": "每2秒造成8点自然伤害。",
+      "dispel": "中毒"
+    },
+    "17528": {
+      "description": "力量提高60点。",
+      "dispel": "魔法"
+    },
+    "17535": {
+      "description": "智力和精神提高18点。",
+      "dispel": ""
+    },
+    "17537": {
+      "description": "力量和耐力提高18点。",
+      "dispel": ""
+    },
+    "17538": {
+      "description": "使敏捷提高25点，爆击几率提高2%。",
+      "dispel": ""
+    },
+    "17539": {
+      "description": "法术伤害提高最多35点。",
+      "dispel": ""
+    },
+    "17540": {
+      "description": "提高护甲值。",
+      "dispel": ""
+    },
+    "17543": {
+      "description": "吸收1950至3250点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "17544": {
+      "description": "吸收1950至3250点冰霜伤害。",
+      "dispel": "魔法"
+    },
+    "17546": {
+      "description": "吸收1950至3250点自然伤害。",
+      "dispel": "魔法"
+    },
+    "17548": {
+      "description": "吸收1950至3250点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "17549": {
+      "description": "吸收1950至3250点奥术伤害。",
+      "dispel": "魔法"
+    },
+    "17623": {
+      "description": "使佩戴者可以看到凯尔达隆的幽灵。只在凯尔达隆有效。",
+      "dispel": ""
+    },
+    "17624": {
+      "description": "对所有攻击和法术免疫。无法攻击、移动或施法。",
+      "dispel": ""
+    },
+    "17625": {
+      "description": "移动速度和生命值回复速度提高。",
+      "dispel": ""
+    },
+    "17626": {
+      "description": "生命值上限提高1200点。",
+      "dispel": ""
+    },
+    "17627": {
+      "description": "法力值上限提高2000点。",
+      "dispel": ""
+    },
+    "17628": {
+      "description": "法术伤害提高最多150点。",
+      "dispel": ""
+    },
+    "17629": {
+      "description": "所有魔法抗性提高25点。",
+      "dispel": ""
+    },
+    "17639": {
+      "description": "击中目标的几率降低10%。",
+      "dispel": "诅咒"
+    },
+    "17670": {
+      "description": "佩戴后可以从天灾军团成员身上找到天灾石。",
+      "dispel": ""
+    },
+    "17729": {
+      "description": "吸收魔法伤害。",
+      "dispel": "魔法"
+    },
+    "17730": {
+      "description": "吸收魔法伤害。",
+      "dispel": "魔法"
+    },
+    "17767": {
+      "description": "每2秒治疗65点伤害。",
+      "dispel": ""
+    },
+    "17794": {
+      "description": "暗影伤害提高4%。",
+      "dispel": "魔法"
+    },
+    "17797": {
+      "description": "暗影伤害提高12%。",
+      "dispel": "魔法"
+    },
+    "17798": {
+      "description": "暗影伤害提高8%。",
+      "dispel": "魔法"
+    },
+    "17799": {
+      "description": "暗影伤害提高16%。",
+      "dispel": "魔法"
+    },
+    "17800": {
+      "description": "暗影伤害提高20%。",
+      "dispel": "魔法"
+    },
+    "17850": {
+      "description": "每2秒治疗116点伤害。",
+      "dispel": ""
+    },
+    "17851": {
+      "description": "每2秒治疗168点伤害。",
+      "dispel": ""
+    },
+    "17852": {
+      "description": "每2秒治疗226点伤害。",
+      "dispel": ""
+    },
+    "17853": {
+      "description": "每2秒治疗306点伤害。",
+      "dispel": ""
+    },
+    "17854": {
+      "description": "每2秒治疗389点伤害。",
+      "dispel": ""
+    },
+    "17862": {
+      "description": "暗影和奥术抗性降低60点。受到暗影和奥术系攻击时所承受的伤害提高8%。",
+      "dispel": "诅咒"
+    },
+    "17925": {
+      "description": "恐惧。",
+      "dispel": "魔法"
+    },
+    "17926": {
+      "description": "恐惧。",
+      "dispel": "魔法"
+    },
+    "17928": {
+      "description": "因恐惧而逃跑。",
+      "dispel": "魔法"
+    },
+    "17937": {
+      "description": "暗影和奥术抗性降低75点。受到暗影和奥术系攻击时所承受的伤害提高10%。",
+      "dispel": "诅咒"
+    },
+    "18075": {
+      "description": "因流血受到每6秒10点伤害。",
+      "dispel": ""
+    },
+    "18077": {
+      "description": "每3秒造成3点自然伤害。",
+      "dispel": "中毒"
+    },
+    "18078": {
+      "description": "因流血受到每6秒6点伤害。",
+      "dispel": ""
+    },
+    "18082": {
+      "description": "每2秒6点火焰伤害。",
+      "dispel": ""
+    },
+    "18088": {
+      "description": "每1秒造成30点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "18118": {
+      "description": "移动速度降低50%。",
+      "dispel": "魔法"
+    },
+    "18124": {
+      "description": "每秒恢复71.6点生命值。",
+      "dispel": ""
+    },
+    "18125": {
+      "description": "力量提高10点。",
+      "dispel": ""
+    },
+    "18137": {
+      "description": "在被击中后对攻击者造成20点暗影伤害，这种伤害不会造成威胁值。可使用3次。",
+      "dispel": "魔法"
+    },
+    "18140": {
+      "description": "每秒恢复147点法力值。",
+      "dispel": ""
+    },
+    "18141": {
+      "description": "精神提高10点。",
+      "dispel": ""
+    },
+    "18191": {
+      "description": "耐力提高10点。",
+      "dispel": ""
+    },
+    "18192": {
+      "description": "敏捷提高10点。",
+      "dispel": ""
+    },
+    "18193": {
+      "description": "精神提高10点。",
+      "dispel": ""
+    },
+    "18194": {
+      "description": "每5秒回复8点法力值。",
+      "dispel": ""
+    },
+    "18197": {
+      "description": "每3秒造成7点自然伤害。",
+      "dispel": "中毒"
+    },
+    "18199": {
+      "description": "每2秒6点火焰伤害。",
+      "dispel": ""
+    },
+    "18200": {
+      "description": "因流血受到每3秒13点伤害。",
+      "dispel": ""
+    },
+    "18202": {
+      "description": "因流血受到每3秒11点伤害。",
+      "dispel": ""
+    },
+    "18203": {
+      "description": "每2秒造成7点自然伤害。",
+      "dispel": "中毒"
+    },
+    "18208": {
+      "description": "每5秒造成13点自然伤害。",
+      "dispel": "中毒"
+    },
+    "18222": {
+      "description": "每5秒回复6点生命值。",
+      "dispel": ""
+    },
+    "18223": {
+      "description": "移动速度降低10%。",
+      "dispel": "诅咒"
+    },
+    "18229": {
+      "description": "每秒恢复32.4点生命值。",
+      "dispel": ""
+    },
+    "18230": {
+      "description": "每秒恢复32.4点生命值。",
+      "dispel": ""
+    },
+    "18231": {
+      "description": "每秒恢复32.4点生命值。",
+      "dispel": ""
+    },
+    "18232": {
+      "description": "每秒恢复32.4点生命值。",
+      "dispel": ""
+    },
+    "18233": {
+      "description": "每秒恢复32.4点生命值。",
+      "dispel": ""
+    },
+    "18234": {
+      "description": "每秒恢复71.6点生命值。",
+      "dispel": ""
+    },
+    "18264": {
+      "description": "智力提高20点。",
+      "dispel": "魔法"
+    },
+    "18265": {
+      "description": "每3秒将15点生命值转移给施法者。",
+      "dispel": "魔法"
+    },
+    "18278": {
+      "description": "不能施法。",
+      "dispel": "魔法"
+    },
+    "18288": {
+      "description": "使你的下一个虚弱诅咒或痛苦诅咒的效果提高50%，或使你的下一个疲劳诅咒的效果提高20%。",
+      "dispel": "魔法"
+    },
+    "18289": {
+      "description": "每3秒造成55点自然伤害。",
+      "dispel": "疾病"
+    },
+    "18364": {
+      "description": "每5秒造成25点火焰伤害。",
+      "dispel": ""
+    },
+    "18371": {
+      "description": "法力值回复速度提高100%。施法时仍可保持50%的法力值回复速度。",
+      "dispel": "魔法"
+    },
+    "18381": {
+      "description": "攻击强度降低。",
+      "dispel": ""
+    },
+    "18400": {
+      "description": "随着音乐起舞。",
+      "dispel": ""
+    },
+    "18425": {
+      "description": "沉默。",
+      "dispel": "魔法"
+    },
+    "18469": {
+      "description": "沉默。",
+      "dispel": "魔法"
+    },
+    "18498": {
+      "description": "沉默。",
+      "dispel": "魔法"
+    },
+    "18499": {
+      "description": "对恐惧和击昏效果免疫，在受到伤害时产生额外的怒气值。",
+      "dispel": ""
+    },
+    "18608": {
+      "description": "每1秒治疗170点伤害。",
+      "dispel": ""
+    },
+    "18610": {
+      "description": "每1秒治疗250点伤害。",
+      "dispel": ""
+    },
+    "18633": {
+      "description": "感染疾病，力量降低。",
+      "dispel": "疾病"
+    },
+    "18647": {
+      "description": "不会受到任何伤害，但也无法做出任何动作。",
+      "dispel": "魔法"
+    },
+    "18652": {
+      "description": "每3秒将30点生命值转移给施法者。",
+      "dispel": "魔法"
+    },
+    "18656": {
+      "description": "每1秒造成70点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "18657": {
+      "description": "沉睡。",
+      "dispel": "魔法"
+    },
+    "18658": {
+      "description": "沉睡。",
+      "dispel": "魔法"
+    },
+    "18708": {
+      "description": "召唤小鬼、虚空行者、魅魔、夜魔或地狱猎手的法术施法时间减少5.5秒，法力消耗减少50%。",
+      "dispel": "魔法"
+    },
+    "18764": {
+      "description": "每4秒恢复3点生命值。",
+      "dispel": ""
+    },
+    "18787": {
+      "description": "攻击强度提高。",
+      "dispel": "魔法"
+    },
+    "18796": {
+      "description": "每2秒8点火焰伤害。",
+      "dispel": ""
+    },
+    "18798": {
+      "description": "被冻结。",
+      "dispel": "魔法"
+    },
+    "18803": {
+      "description": "下一个法术变为瞬发。",
+      "dispel": ""
+    },
+    "18807": {
+      "description": "移动速度降低50%。",
+      "dispel": ""
+    },
+    "18809": {
+      "description": "每3秒67点火焰伤害。",
+      "dispel": ""
+    },
+    "18820": {
+      "description": "法力消耗减少。",
+      "dispel": "魔法"
+    },
+    "18826": {
+      "description": "提高护甲值。",
+      "dispel": ""
+    },
+    "18828": {
+      "description": "提高护甲值。",
+      "dispel": "魔法"
+    },
+    "18879": {
+      "description": "每3秒将22点生命值转移给施法者。",
+      "dispel": "魔法"
+    },
+    "18880": {
+      "description": "每3秒将33点生命值转移给施法者。",
+      "dispel": "魔法"
+    },
+    "18881": {
+      "description": "每3秒将45点生命值转移给施法者。",
+      "dispel": "魔法"
+    },
+    "18946": {
+      "description": "护甲值提高250点。",
+      "dispel": ""
+    },
+    "18956": {
+      "description": "正在治疗。",
+      "dispel": "魔法"
+    },
+    "18957": {
+      "description": "正在治疗。",
+      "dispel": "魔法"
+    },
+    "18989": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "18990": {
+      "description": "速度提高60%。",
+      "dispel": ""
+    },
+    "18991": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "18992": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "19185": {
+      "description": "无法行动。",
+      "dispel": "魔法"
+    },
+    "19229": {
+      "description": "无法行动。",
+      "dispel": ""
+    },
+    "19261": {
+      "description": "下一次对你造成伤害的近战攻击可以削弱攻击者。",
+      "dispel": "魔法"
+    },
+    "19262": {
+      "description": "下一次对你造成伤害的近战攻击可以削弱攻击者。",
+      "dispel": "魔法"
+    },
+    "19263": {
+      "description": "躲闪和招架几率提高25%。",
+      "dispel": ""
+    },
+    "19264": {
+      "description": "下一次对你造成伤害的近战攻击可以削弱攻击者。",
+      "dispel": "魔法"
+    },
+    "19265": {
+      "description": "下一次对你造成伤害的近战攻击可以削弱攻击者。",
+      "dispel": "魔法"
+    },
+    "19266": {
+      "description": "下一次对你造成伤害的近战攻击可以削弱攻击者。",
+      "dispel": "魔法"
+    },
+    "19271": {
+      "description": "任何对牧师成功施放的敌对法术都会令施法者损失35点法力值，并对其造成等量的暗影伤害。",
+      "dispel": "魔法"
+    },
+    "19273": {
+      "description": "任何对牧师成功施放的敌对法术都会令施法者损失54点法力值，并对其造成等量的暗影伤害。",
+      "dispel": "魔法"
+    },
+    "19276": {
+      "description": "每3秒造成34点伤害，并治疗施法者。",
+      "dispel": "疾病"
+    },
+    "19277": {
+      "description": "每3秒造成50点伤害，并治疗施法者。",
+      "dispel": "疾病"
+    },
+    "19278": {
+      "description": "每3秒造成68点伤害，并治疗施法者。",
+      "dispel": "疾病"
+    },
+    "19279": {
+      "description": "每3秒造成89点伤害，并治疗施法者。",
+      "dispel": "疾病"
+    },
+    "19280": {
+      "description": "每3秒造成113点伤害，并治疗施法者。",
+      "dispel": "疾病"
+    },
+    "19281": {
+      "description": "对目标造成的物理伤害降低4点，治疗效果降低20%。",
+      "dispel": "诅咒"
+    },
+    "19282": {
+      "description": "对目标造成的物理伤害降低7点，治疗效果降低20%。",
+      "dispel": "诅咒"
+    },
+    "19283": {
+      "description": "对目标造成的物理伤害降低11点，治疗效果降低20%。",
+      "dispel": "诅咒"
+    },
+    "19284": {
+      "description": "对目标造成的物理伤害降低15点，治疗效果降低20%。",
+      "dispel": "诅咒"
+    },
+    "19285": {
+      "description": "对目标造成的物理伤害降低20点，治疗效果降低20%。",
+      "dispel": "诅咒"
+    },
+    "19289": {
+      "description": "受到远程攻击时所承受的伤害降低33点，躲闪几率提高10%。",
+      "dispel": "魔法"
+    },
+    "19291": {
+      "description": "受到远程攻击时所承受的伤害降低52点，躲闪几率提高10%。",
+      "dispel": "魔法"
+    },
+    "19292": {
+      "description": "受到远程攻击时所承受的伤害降低75点，躲闪几率提高10%。",
+      "dispel": "魔法"
+    },
+    "19293": {
+      "description": "受到远程攻击时所承受的伤害降低95点，躲闪几率提高10%。",
+      "dispel": "魔法"
+    },
+    "19296": {
+      "description": "在6秒内造成162点奥术伤害。",
+      "dispel": ""
+    },
+    "19299": {
+      "description": "在6秒内造成288点奥术伤害。",
+      "dispel": ""
+    },
+    "19302": {
+      "description": "在6秒内造成414点奥术伤害。",
+      "dispel": ""
+    },
+    "19303": {
+      "description": "在6秒内造成570点奥术伤害。",
+      "dispel": ""
+    },
+    "19304": {
+      "description": "在6秒内造成756点奥术伤害。",
+      "dispel": ""
+    },
+    "19305": {
+      "description": "在6秒内造成936点奥术伤害。",
+      "dispel": ""
+    },
+    "19306": {
+      "description": "无法行动。",
+      "dispel": ""
+    },
+    "19307": {
+      "description": "周期性地损失生命值和法力值。",
+      "dispel": ""
+    },
+    "19308": {
+      "description": "在被击中后对攻击者造成35点暗影伤害，这种伤害不会造成威胁值。可使用3次。",
+      "dispel": "魔法"
+    },
+    "19309": {
+      "description": "在被击中后对攻击者造成51点暗影伤害，这种伤害不会造成威胁值。可使用3次。",
+      "dispel": "魔法"
+    },
+    "19310": {
+      "description": "在被击中后对攻击者造成70点暗影伤害，这种伤害不会造成威胁值。可使用3次。",
+      "dispel": "魔法"
+    },
+    "19311": {
+      "description": "在被击中后对攻击者造成90点暗影伤害，这种伤害不会造成威胁值。可使用3次。",
+      "dispel": "魔法"
+    },
+    "19312": {
+      "description": "在被击中后对攻击者造成116点暗影伤害，这种伤害不会造成威胁值。可使用3次。",
+      "dispel": "魔法"
+    },
+    "19386": {
+      "description": "沉睡。",
+      "dispel": "中毒"
+    },
+    "19410": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "19438": {
+      "description": "吸收所有伤害。",
+      "dispel": "魔法"
+    },
+    "19440": {
+      "description": "吸收所有伤害。",
+      "dispel": "魔法"
+    },
+    "19441": {
+      "description": "吸收所有伤害。",
+      "dispel": "魔法"
+    },
+    "19442": {
+      "description": "吸收所有伤害。",
+      "dispel": "魔法"
+    },
+    "19443": {
+      "description": "吸收所有伤害。",
+      "dispel": "魔法"
+    },
+    "19478": {
+      "description": "令攻击者损失17点近战攻击强度，可叠加5次。",
+      "dispel": "魔法"
+    },
+    "19479": {
+      "description": "近战攻击强度降低17点。",
+      "dispel": "魔法"
+    },
+    "19480": {
+      "description": "潜行侦测能力提高。",
+      "dispel": ""
+    },
+    "19503": {
+      "description": "困惑。",
+      "dispel": ""
+    },
+    "19506": {
+      "description": "[远程]攻击强度提高50点[，并使施法者的远程攻击强度额外提高100点]。",
+      "dispel": ""
+    },
+    "19548": {
+      "description": "正在驯服冰爪熊。",
+      "dispel": ""
+    },
+    "19574": {
+      "description": "狂怒。",
+      "dispel": ""
+    },
+    "19577": {
+      "description": "胁迫。",
+      "dispel": ""
+    },
+    "19578": {
+      "description": "宠物击中敌人后，其主人获得1点生命值。",
+      "dispel": ""
+    },
+    "19634": {
+      "description": "每3秒恢复50点法力值。",
+      "dispel": "魔法"
+    },
+    "19652": {
+      "description": "近战攻击强度降低23点。",
+      "dispel": "魔法"
+    },
+    "19653": {
+      "description": "近战攻击强度降低32点。",
+      "dispel": "魔法"
+    },
+    "19654": {
+      "description": "近战攻击强度降低40点。",
+      "dispel": "魔法"
+    },
+    "19655": {
+      "description": "令攻击者损失23点近战攻击强度，可叠加5次。",
+      "dispel": "魔法"
+    },
+    "19656": {
+      "description": "令攻击者损失32点近战攻击强度，可叠加5次。",
+      "dispel": "魔法"
+    },
+    "19660": {
+      "description": "令攻击者损失40点近战攻击强度，可叠加5次。",
+      "dispel": "魔法"
+    },
+    "19674": {
+      "description": "正在驯服大型峭壁野猪。",
+      "dispel": ""
+    },
+    "19675": {
+      "description": "被冲锋击昏。",
+      "dispel": ""
+    },
+    "19687": {
+      "description": "正在驯服雪豹。",
+      "dispel": ""
+    },
+    "19688": {
+      "description": "正在驯服成年陆行鸟。",
+      "dispel": ""
+    },
+    "19689": {
+      "description": "正在驯服草原捕食者。",
+      "dispel": ""
+    },
+    "19692": {
+      "description": "正在驯服猛鹫。",
+      "dispel": ""
+    },
+    "19693": {
+      "description": "正在驯服树林潜伏者。",
+      "dispel": ""
+    },
+    "19694": {
+      "description": "正在驯服可怕的杂斑野猪。",
+      "dispel": ""
+    },
+    "19696": {
+      "description": "正在驯服海浪蟹。",
+      "dispel": ""
+    },
+    "19697": {
+      "description": "正在驯服硬甲蝎。",
+      "dispel": ""
+    },
+    "19699": {
+      "description": "正在驯服夜刃捕食者。",
+      "dispel": ""
+    },
+    "19700": {
+      "description": "正在驯服恶翼巨枭。",
+      "dispel": ""
+    },
+    "19705": {
+      "description": "耐力和精神提高2点。",
+      "dispel": ""
+    },
+    "19706": {
+      "description": "耐力和精神提高4点。",
+      "dispel": ""
+    },
+    "19708": {
+      "description": "耐力和精神提高6点。",
+      "dispel": ""
+    },
+    "19709": {
+      "description": "耐力和精神提高8点。",
+      "dispel": ""
+    },
+    "19710": {
+      "description": "耐力和精神提高12点。",
+      "dispel": ""
+    },
+    "19740": {
+      "description": "近战攻击强度提高20点。",
+      "dispel": "魔法"
+    },
+    "19742": {
+      "description": "每5秒恢复10点法力值。",
+      "dispel": "魔法"
+    },
+    "19746": {
+      "description": "在施法时有35%的几率不会因为受到伤害而被打断。",
+      "dispel": ""
+    },
+    "19753": {
+      "description": "完全免疫一切伤害，但无法移动。",
+      "dispel": ""
+    },
+    "19755": {
+      "description": "所有属性降低10点。",
+      "dispel": "诅咒"
+    },
+    "19769": {
+      "description": "昏迷。任何伤害都会打断这个效果。",
+      "dispel": ""
+    },
+    "19784": {
+      "description": "昏迷。任何伤害都会打断这个效果。",
+      "dispel": ""
+    },
+    "19821": {
+      "description": "沉默。",
+      "dispel": "魔法"
+    },
+    "19834": {
+      "description": "近战攻击强度提高35点。",
+      "dispel": "魔法"
+    },
+    "19835": {
+      "description": "近战攻击强度提高55点。",
+      "dispel": "魔法"
+    },
+    "19836": {
+      "description": "近战攻击强度提高85点。",
+      "dispel": "魔法"
+    },
+    "19837": {
+      "description": "近战攻击强度提高115点。",
+      "dispel": "魔法"
+    },
+    "19838": {
+      "description": "近战攻击强度提高155点。",
+      "dispel": "魔法"
+    },
+    "19850": {
+      "description": "每5秒恢复15点法力值。",
+      "dispel": "魔法"
+    },
+    "19852": {
+      "description": "每5秒恢复20点法力值。",
+      "dispel": "魔法"
+    },
+    "19853": {
+      "description": "每5秒恢复25点法力值。",
+      "dispel": "魔法"
+    },
+    "19854": {
+      "description": "每5秒恢复30点法力值。",
+      "dispel": "魔法"
+    },
+    "19876": {
+      "description": "暗影抗性提高30点。",
+      "dispel": ""
+    },
+    "19878": {
+      "description": "正在追踪恶魔。",
+      "dispel": ""
+    },
+    "19879": {
+      "description": "正在追踪龙类。",
+      "dispel": ""
+    },
+    "19880": {
+      "description": "正在追踪元素生物。",
+      "dispel": ""
+    },
+    "19882": {
+      "description": "正在追踪巨人。",
+      "dispel": ""
+    },
+    "19883": {
+      "description": "正在追踪人型生物。",
+      "dispel": ""
+    },
+    "19884": {
+      "description": "正在追踪亡灵。",
+      "dispel": ""
+    },
+    "19885": {
+      "description": "正在追踪隐藏生物。",
+      "dispel": ""
+    },
+    "19888": {
+      "description": "冰霜抗性提高30点。",
+      "dispel": ""
+    },
+    "19891": {
+      "description": "火焰抗性提高30点。",
+      "dispel": ""
+    },
+    "19895": {
+      "description": "暗影抗性提高45点。",
+      "dispel": ""
+    },
+    "19896": {
+      "description": "暗影抗性提高60点。",
+      "dispel": ""
+    },
+    "19897": {
+      "description": "冰霜抗性提高45点。",
+      "dispel": ""
+    },
+    "19898": {
+      "description": "冰霜抗性提高60点。",
+      "dispel": ""
+    },
+    "19899": {
+      "description": "火焰抗性提高45点。",
+      "dispel": ""
+    },
+    "19900": {
+      "description": "火焰抗性提高60点。",
+      "dispel": ""
+    },
+    "19937": {
+      "description": "伪装成黑龙军团成员。",
+      "dispel": "魔法"
+    },
+    "19970": {
+      "description": "被缠绕，造成每3秒30点伤害。",
+      "dispel": "魔法"
+    },
+    "19971": {
+      "description": "被缠绕，造成每3秒25点伤害。",
+      "dispel": "魔法"
+    },
+    "19972": {
+      "description": "被缠绕，造成每3秒20点伤害。",
+      "dispel": "魔法"
+    },
+    "19973": {
+      "description": "被缠绕，造成每3秒15点伤害。",
+      "dispel": "魔法"
+    },
+    "19974": {
+      "description": "被缠绕，造成每3秒10点伤害。",
+      "dispel": "魔法"
+    },
+    "19975": {
+      "description": "被缠绕，造成每3秒5点伤害。",
+      "dispel": "魔法"
+    },
+    "19977": {
+      "description": "因圣光术恢复的生命值提高210点，因圣光闪现恢复的生命值提高60点。",
+      "dispel": "魔法"
+    },
+    "19978": {
+      "description": "因圣光术恢复的生命值提高300点，因圣光闪现恢复的生命值提高85点。",
+      "dispel": "魔法"
+    },
+    "19979": {
+      "description": "因圣光术恢复的生命值提高400点，因圣光闪现恢复的生命值提高115点。",
+      "dispel": "魔法"
+    },
+    "20043": {
+      "description": "自然抗性提高45点。",
+      "dispel": ""
+    },
+    "20050": {
+      "description": "物理和神圣伤害提高3%。",
+      "dispel": "魔法"
+    },
+    "20052": {
+      "description": "物理和神圣伤害提高6%。",
+      "dispel": "魔法"
+    },
+    "20053": {
+      "description": "物理和神圣伤害提高9%。",
+      "dispel": "魔法"
+    },
+    "20054": {
+      "description": "物理和神圣伤害提高12%。",
+      "dispel": "魔法"
+    },
+    "20055": {
+      "description": "物理和神圣伤害提高15%。",
+      "dispel": "魔法"
+    },
+    "20066": {
+      "description": "残废。",
+      "dispel": "魔法"
+    },
+    "20116": {
+      "description": "每1秒15点伤害。",
+      "dispel": ""
+    },
+    "20128": {
+      "description": "格挡几率提高6%。最多格挡5次。",
+      "dispel": ""
+    },
+    "20131": {
+      "description": "格挡几率提高12%。最多格挡5次。",
+      "dispel": ""
+    },
+    "20132": {
+      "description": "格挡几率提高18%。最多格挡5次。",
+      "dispel": ""
+    },
+    "20133": {
+      "description": "格挡几率提高24%。最多格挡5次。",
+      "dispel": ""
+    },
+    "20134": {
+      "description": "格挡几率提高30%。最多格挡5次。",
+      "dispel": ""
+    },
+    "20154": {
+      "description": "近战攻击有一定几率造成3到9点额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20162": {
+      "description": "近战攻击强度提高60点。近战攻击速度提高40%，但是所造成的伤害减少。",
+      "dispel": "魔法"
+    },
+    "20164": {
+      "description": "近战攻击有一定几率令目标昏迷2秒。",
+      "dispel": "魔法"
+    },
+    "20165": {
+      "description": "近战攻击有一定几率为你回复39点生命值。",
+      "dispel": "魔法"
+    },
+    "20166": {
+      "description": "近战攻击有一定几率回复50点法力值。",
+      "dispel": "魔法"
+    },
+    "20170": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "20190": {
+      "description": "自然抗性提高60点。",
+      "dispel": ""
+    },
+    "20216": {
+      "description": "你的下一个圣光闪现、圣光术或神圣震击造成极效治疗效果的几率提高100%。",
+      "dispel": "魔法"
+    },
+    "20217": {
+      "description": "所有属性提高10%。",
+      "dispel": "魔法"
+    },
+    "20218": {
+      "description": "神圣伤害提高10%。",
+      "dispel": ""
+    },
+    "20230": {
+      "description": "反击所有近战伤害。",
+      "dispel": ""
+    },
+    "20233": {
+      "description": "护甲提高15%。",
+      "dispel": "魔法"
+    },
+    "20236": {
+      "description": "护甲提高30%。",
+      "dispel": "魔法"
+    },
+    "20253": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "20287": {
+      "description": "近战攻击有一定几率造成4到13点额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20288": {
+      "description": "近战攻击有一定几率造成6到20点额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20289": {
+      "description": "近战攻击有一定几率造成9到29点额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20290": {
+      "description": "近战攻击有一定几率造成12到40点额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20291": {
+      "description": "近战攻击有一定几率造成15到53点额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20292": {
+      "description": "近战攻击有一定几率造成20到68点额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20293": {
+      "description": "近战攻击有一定几率造成22到75点额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20305": {
+      "description": "近战攻击强度提高108点。近战攻击速度提高40%，但是所造成的伤害减少。",
+      "dispel": "魔法"
+    },
+    "20306": {
+      "description": "近战攻击强度提高161点。近战攻击速度提高40%，但是所造成的伤害减少。",
+      "dispel": "魔法"
+    },
+    "20307": {
+      "description": "近战攻击强度提高239点。近战攻击速度提高40%，但是所造成的伤害减少。",
+      "dispel": "魔法"
+    },
+    "20308": {
+      "description": "近战攻击强度提高326点。近战攻击速度提高40%，但是所造成的伤害减少。",
+      "dispel": "魔法"
+    },
+    "20347": {
+      "description": "近战攻击有一定几率为你回复53点生命值。",
+      "dispel": "魔法"
+    },
+    "20348": {
+      "description": "近战攻击有一定几率为你回复76点生命值。",
+      "dispel": "魔法"
+    },
+    "20349": {
+      "description": "近战攻击有一定几率为你回复94点生命值。",
+      "dispel": "魔法"
+    },
+    "20356": {
+      "description": "近战攻击有一定几率回复71点法力值。",
+      "dispel": "魔法"
+    },
+    "20357": {
+      "description": "近战攻击有一定几率回复90点法力值。",
+      "dispel": "魔法"
+    },
+    "20375": {
+      "description": "近战攻击有一定几率造成额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20511": {
+      "description": "因恐惧而畏缩。",
+      "dispel": ""
+    },
+    "20549": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "20559": {
+      "description": "被嘲讽。",
+      "dispel": ""
+    },
+    "20560": {
+      "description": "被嘲讽。",
+      "dispel": ""
+    },
+    "20580": {
+      "description": "影遁。",
+      "dispel": "潜行"
+    },
+    "20586": {
+      "description": "每2秒受到一次自然伤害。",
+      "dispel": ""
+    },
+    "20587": {
+      "description": "够劲的烈酒。",
+      "dispel": ""
+    },
+    "20594": {
+      "description": "免疫流血、毒药和疾病，护甲值提高10%。",
+      "dispel": ""
+    },
+    "20600": {
+      "description": "潜行侦测能力提高。",
+      "dispel": ""
+    },
+    "20614": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "20615": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "20631": {
+      "description": "每1秒恢复100点生命值。",
+      "dispel": "魔法"
+    },
+    "20707": {
+      "description": "灵魂已保存。",
+      "dispel": ""
+    },
+    "20729": {
+      "description": "每次被击中时，圣骑士都将分担55点伤害。",
+      "dispel": "魔法"
+    },
+    "20762": {
+      "description": "灵魂已保存。",
+      "dispel": ""
+    },
+    "20763": {
+      "description": "灵魂已保存。",
+      "dispel": ""
+    },
+    "20764": {
+      "description": "灵魂已保存。",
+      "dispel": ""
+    },
+    "20765": {
+      "description": "灵魂已保存。",
+      "dispel": ""
+    },
+    "20875": {
+      "description": "耐力提高10点。",
+      "dispel": ""
+    },
+    "20885": {
+      "description": "每5秒恢复8点生命值。",
+      "dispel": ""
+    },
+    "20895": {
+      "description": "宠物击中敌人后，其主人获得0点生命值。",
+      "dispel": ""
+    },
+    "20905": {
+      "description": "[远程]攻击强度提高75点[，并使施法者的远程攻击强度额外提高150点]。",
+      "dispel": ""
+    },
+    "20906": {
+      "description": "[远程]攻击强度提高100点[，并使施法者的远程攻击强度额外提高200点]。",
+      "dispel": ""
+    },
+    "20909": {
+      "description": "无法行动。",
+      "dispel": ""
+    },
+    "20910": {
+      "description": "无法行动。",
+      "dispel": ""
+    },
+    "20911": {
+      "description": "受到攻击时所承受的伤害减少最多10点，格挡近战攻击会对攻击者造成14点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20912": {
+      "description": "受到攻击时所承受的伤害减少最多14点，格挡近战攻击会对攻击者造成21点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20913": {
+      "description": "受到攻击时所承受的伤害减少最多19点，格挡近战攻击会对攻击者造成28点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20914": {
+      "description": "受到攻击时所承受的伤害减少最多24点，格挡近战攻击会对攻击者造成35点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20915": {
+      "description": "近战攻击有一定几率造成额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20918": {
+      "description": "近战攻击有一定几率造成额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20919": {
+      "description": "近战攻击有一定几率造成额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20920": {
+      "description": "近战攻击有一定几率造成额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "20922": {
+      "description": "每1秒24点伤害。",
+      "dispel": ""
+    },
+    "20923": {
+      "description": "每1秒35点伤害。",
+      "dispel": ""
+    },
+    "20924": {
+      "description": "每1秒48点伤害。",
+      "dispel": ""
+    },
+    "20925": {
+      "description": "格挡几率提高30%。每次成功格挡都会对攻击者造成65点神圣伤害。神圣之盾造成的伤害额外产生20%的威胁值。[最多可格挡4次。]",
+      "dispel": "魔法"
+    },
+    "20927": {
+      "description": "格挡几率提高30%。每次成功格挡都会对攻击者造成95点神圣伤害。神圣之盾造成的伤害额外产生20%的威胁值。[最多可格挡4次。]",
+      "dispel": "魔法"
+    },
+    "20928": {
+      "description": "格挡几率提高30%。每次成功格挡都会对攻击者造成130点神圣伤害。神圣之盾造成的伤害额外产生20%的威胁值。[最多可格挡4次。]",
+      "dispel": "魔法"
+    },
+    "20969": {
+      "description": "每5秒恢复5点生命值。",
+      "dispel": ""
+    },
+    "21082": {
+      "description": "近战攻击强度提高36点。近战攻击速度提高40%，但是所造成的伤害减少。",
+      "dispel": "魔法"
+    },
+    "21084": {
+      "description": "近战攻击有一定几率造成3到9点额外的神圣伤害。",
+      "dispel": "魔法"
+    },
+    "21149": {
+      "description": "每秒恢复3.4点生命值。",
+      "dispel": ""
+    },
+    "21152": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "21153": {
+      "description": "忽略目标的700点护甲值。",
+      "dispel": "诅咒"
+    },
+    "21159": {
+      "description": "每2秒4点火焰伤害。",
+      "dispel": ""
+    },
+    "21165": {
+      "description": "提高攻击速度。",
+      "dispel": ""
+    },
+    "21346": {
+      "description": "每5秒恢复2点生命值。",
+      "dispel": ""
+    },
+    "21347": {
+      "description": "每5秒恢复4点生命值。",
+      "dispel": ""
+    },
+    "21348": {
+      "description": "每5秒恢复6点生命值。",
+      "dispel": ""
+    },
+    "21551": {
+      "description": "治疗效果降低50%。",
+      "dispel": ""
+    },
+    "21552": {
+      "description": "治疗效果降低50%。",
+      "dispel": ""
+    },
+    "21553": {
+      "description": "治疗效果降低50%。",
+      "dispel": ""
+    },
+    "21562": {
+      "description": "耐力提高43点。",
+      "dispel": "魔法"
+    },
+    "21564": {
+      "description": "耐力提高54点。",
+      "dispel": "魔法"
+    },
+    "21593": {
+      "description": "每5秒恢复3点生命值。",
+      "dispel": ""
+    },
+    "21596": {
+      "description": "每5秒恢复5点生命值。",
+      "dispel": ""
+    },
+    "21598": {
+      "description": "每5秒恢复6点生命值。",
+      "dispel": ""
+    },
+    "21599": {
+      "description": "每5秒恢复6点生命值。",
+      "dispel": ""
+    },
+    "21601": {
+      "description": "每5秒恢复7点生命值。",
+      "dispel": ""
+    },
+    "21849": {
+      "description": "护甲提高240点，所有属性提高10点，所有抗性提高15点。",
+      "dispel": "魔法"
+    },
+    "21850": {
+      "description": "护甲提高285点，所有属性提高12点，所有抗性提高20点。",
+      "dispel": "魔法"
+    },
+    "21920": {
+      "description": "冰霜法术所能造成的伤害提高最多15点。",
+      "dispel": ""
+    },
+    "21949": {
+      "description": "因流血受到每3秒23点伤害。",
+      "dispel": ""
+    },
+    "21952": {
+      "description": "每2秒造成9点自然伤害。",
+      "dispel": "中毒"
+    },
+    "21955": {
+      "description": "每1秒回复60点生命值和法力值。",
+      "dispel": ""
+    },
+    "21956": {
+      "description": "吸收350至650点物理伤害。",
+      "dispel": "魔法"
+    },
+    "21970": {
+      "description": "所有属性提高25点。",
+      "dispel": "魔法"
+    },
+    "21992": {
+      "description": "自然抗性降低25点。",
+      "dispel": "魔法"
+    },
+    "22639": {
+      "description": "移动速度降低60%，每3秒因流血而承受15点伤害。",
+      "dispel": ""
+    },
+    "22640": {
+      "description": "提高攻击速度。",
+      "dispel": ""
+    },
+    "22730": {
+      "description": "智力提高10点。",
+      "dispel": ""
+    },
+    "22731": {
+      "description": "每秒恢复71.6点生命值。",
+      "dispel": ""
+    },
+    "22734": {
+      "description": "每秒恢复140点法力值。",
+      "dispel": ""
+    },
+    "22736": {
+      "description": "你看起来像是个戈多克食人魔。",
+      "dispel": ""
+    },
+    "22782": {
+      "description": "对所有魔法的抗性提高10点，在任意情况下都保持30%的法力值回复速度。",
+      "dispel": "魔法"
+    },
+    "22783": {
+      "description": "对所有魔法的抗性提高15点，在任意情况下都保持30%的法力值回复速度。",
+      "dispel": "魔法"
+    },
+    "22789": {
+      "description": "耐力提高10点。",
+      "dispel": ""
+    },
+    "22790": {
+      "description": "精神提高25点，智力降低5点。",
+      "dispel": ""
+    },
+    "22807": {
+      "description": "水下呼吸。",
+      "dispel": ""
+    },
+    "22812": {
+      "description": "受到物理攻击时所承受的伤害降低20%，受到伤害也不会令施法被干扰，但是非瞬发法术的施法时间延长1秒，近战攻击速度降低25%。",
+      "dispel": "魔法"
+    },
+    "22842": {
+      "description": "将怒气值转化为生命值。",
+      "dispel": ""
+    },
+    "22863": {
+      "description": "使你的奔跑速度提高30%。",
+      "dispel": ""
+    },
+    "22895": {
+      "description": "将怒气值转化为生命值。",
+      "dispel": ""
+    },
+    "22896": {
+      "description": "将怒气值转化为生命值。",
+      "dispel": ""
+    },
+    "22959": {
+      "description": "受到火焰攻击时承受的伤害提高3%。",
+      "dispel": "魔法"
+    },
+    "23028": {
+      "description": "智力提高31点。",
+      "dispel": "魔法"
+    },
+    "23097": {
+      "description": "反射火焰法术。",
+      "dispel": ""
+    },
+    "23101": {
+      "description": "你感到非常放松而平静。",
+      "dispel": ""
+    },
+    "23126": {
+      "description": "你放大了整个世界！真棒！",
+      "dispel": "魔法"
+    },
+    "23131": {
+      "description": "反射冰霜法术。",
+      "dispel": ""
+    },
+    "23132": {
+      "description": "反射暗影法术。",
+      "dispel": ""
+    },
+    "23161": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23179": {
+      "description": "你与加德纳尔的关系变为友好。",
+      "dispel": ""
+    },
+    "23210": {
+      "description": "每5秒恢复16点生命值。",
+      "dispel": ""
+    },
+    "23214": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23217": {
+      "description": "提高潜行侦测能力。",
+      "dispel": ""
+    },
+    "23219": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23221": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23222": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23223": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23225": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23227": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23228": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23229": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23238": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23239": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23240": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23241": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23242": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23243": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23246": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23247": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23248": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23249": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23250": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23251": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23252": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23271": {
+      "description": "魔法伤害和治疗效果提高175点。",
+      "dispel": ""
+    },
+    "23338": {
+      "description": "移动速度提高100%。",
+      "dispel": ""
+    },
+    "23454": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "23506": {
+      "description": "吸收750至1250点伤害。",
+      "dispel": "魔法"
+    },
+    "23509": {
+      "description": "速度提高100%。",
+      "dispel": ""
+    },
+    "23510": {
+      "description": "移动速度提高100%。",
+      "dispel": ""
+    },
+    "23567": {
+      "description": "每1秒回复250点生命值。",
+      "dispel": ""
+    },
+    "23568": {
+      "description": "每1秒回复138点生命值。",
+      "dispel": ""
+    },
+    "23569": {
+      "description": "每1秒回复80点生命值。",
+      "dispel": ""
+    },
+    "23605": {
+      "description": "受到法术攻击时承受的伤害提高15%。",
+      "dispel": ""
+    },
+    "23684": {
+      "description": "施法时可继续保持100%的法力值回复速度。",
+      "dispel": ""
+    },
+    "23694": {
+      "description": "无法移动。",
+      "dispel": ""
+    },
+    "23696": {
+      "description": "每1秒回复250点生命值。",
+      "dispel": ""
+    },
+    "23697": {
+      "description": "精神提高10点。",
+      "dispel": ""
+    },
+    "23698": {
+      "description": "每秒回复147点法力值。",
+      "dispel": ""
+    },
+    "23991": {
+      "description": "吸收495至605点物理伤害。",
+      "dispel": "魔法"
+    },
+    "24005": {
+      "description": "每秒恢复总生命值的2%。",
+      "dispel": ""
+    },
+    "24132": {
+      "description": "沉睡。",
+      "dispel": "中毒"
+    },
+    "24133": {
+      "description": "沉睡。",
+      "dispel": "中毒"
+    },
+    "24259": {
+      "description": "沉默。",
+      "dispel": ""
+    },
+    "24352": {
+      "description": "攻击强度提高150点，击中敌人的几率提高2%。",
+      "dispel": ""
+    },
+    "24353": {
+      "description": "下一次攻击必定打出爆击。",
+      "dispel": ""
+    },
+    "24354": {
+      "description": "法术和魔法效果造成的治疗效果提高最多190点。",
+      "dispel": "魔法"
+    },
+    "24355": {
+      "description": "每秒钟回复2%的法力值。",
+      "dispel": ""
+    },
+    "24360": {
+      "description": "昏睡。",
+      "dispel": "魔法"
+    },
+    "24361": {
+      "description": "每5秒回复20点生命值",
+      "dispel": ""
+    },
+    "24363": {
+      "description": "每5秒回复12点法力值。",
+      "dispel": ""
+    },
+    "24364": {
+      "description": "自由行动。",
+      "dispel": "魔法"
+    },
+    "24382": {
+      "description": "精神提高50点，耐力提高50点。",
+      "dispel": ""
+    },
+    "24383": {
+      "description": "奔跑速度提高20%。",
+      "dispel": ""
+    },
+    "24388": {
+      "description": "智力降低。",
+      "dispel": ""
+    },
+    "24389": {
+      "description": "下一个火焰法术对敌人的伤害提高最多100点。",
+      "dispel": "魔法"
+    },
+    "24394": {
+      "description": "昏迷。",
+      "dispel": ""
+    },
+    "24412": {
+      "description": "每1秒回复80点生命值。",
+      "dispel": ""
+    },
+    "24413": {
+      "description": "每1秒回复138点生命值。",
+      "dispel": ""
+    },
+    "24414": {
+      "description": "每1秒回复250点生命值。",
+      "dispel": ""
+    },
+    "24417": {
+      "description": "有3%的几率反弹敌对法术。",
+      "dispel": ""
+    },
+    "24427": {
+      "description": "每5秒回复9点生命值，并使你的力量提高75点。",
+      "dispel": "魔法"
+    },
+    "24799": {
+      "description": "力量提高20点。",
+      "dispel": ""
+    },
+    "24800": {
+      "description": "每秒回复71.6点生命值。",
+      "dispel": ""
+    },
+    "24833": {
+      "description": "在对亡灵作战时获得300点攻击强度的加成，神圣法术伤害提高最多400点。",
+      "dispel": ""
+    },
+    "24858": {
+      "description": "免疫变形效果。护甲值提高360%。",
+      "dispel": ""
+    },
+    "24865": {
+      "description": "近战武器和法术造成爆击的几率提高3%。",
+      "dispel": ""
+    },
+    "24869": {
+      "description": "每秒回复2%的生命值。",
+      "dispel": ""
+    },
+    "24870": {
+      "description": "耐力和精神提高当前人物级别的25%。",
+      "dispel": ""
+    },
+    "24907": {
+      "description": "法术的爆击率提高3%。",
+      "dispel": ""
+    },
+    "24974": {
+      "description": "攻击命中率降低2%，每2秒受到23点自然伤害。",
+      "dispel": "魔法"
+    },
+    "24975": {
+      "description": "攻击命中率降低2%，每2秒受到29点自然伤害。",
+      "dispel": "魔法"
+    },
+    "24976": {
+      "description": "攻击命中率降低2%，每2秒受到44点自然伤害。",
+      "dispel": "魔法"
+    },
+    "24977": {
+      "description": "攻击命中率降低2%，每2秒受到54点自然伤害。",
+      "dispel": "魔法"
+    },
+    "25037": {
+      "description": "耐力提高5点。",
+      "dispel": ""
+    },
+    "25289": {
+      "description": "使你的近战攻击强度提高232点。",
+      "dispel": ""
+    },
+    "25290": {
+      "description": "每5秒恢复33点法力值。",
+      "dispel": "魔法"
+    },
+    "25291": {
+      "description": "近战攻击强度提高185点。",
+      "dispel": "魔法"
+    },
+    "25295": {
+      "description": "每3秒111点自然伤害。",
+      "dispel": "中毒"
+    },
+    "25296": {
+      "description": "远程攻击强度提高120点。",
+      "dispel": ""
+    },
+    "25299": {
+      "description": "每3秒回复222点生命值。",
+      "dispel": "魔法"
+    },
+    "25304": {
+      "description": "移动速度降低40%。",
+      "dispel": "魔法"
+    },
+    "25306": {
+      "description": "每2秒19点火焰伤害。",
+      "dispel": ""
+    },
+    "25309": {
+      "description": "每3秒102点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "25311": {
+      "description": "每3秒137点暗影伤害。",
+      "dispel": "魔法"
+    },
+    "25315": {
+      "description": "每3秒回复194点生命值。",
+      "dispel": "魔法"
+    },
+    "25660": {
+      "description": "每秒回复85点生命值。",
+      "dispel": ""
+    },
+    "25661": {
+      "description": "耐力提高25点。",
+      "dispel": ""
+    },
+    "25688": {
+      "description": "你就是纳瑞安！",
+      "dispel": ""
+    },
+    "25694": {
+      "description": "每5秒钟回复额外的3点法力值。",
+      "dispel": ""
+    },
+    "25695": {
+      "description": "每秒回复71.6的生命值。",
+      "dispel": ""
+    },
+    "25696": {
+      "description": "每秒回复147的法力值。",
+      "dispel": ""
+    },
+    "25700": {
+      "description": "每秒回复7.4点生命值。",
+      "dispel": ""
+    },
+    "25701": {
+      "description": "每秒回复15点法力值。",
+      "dispel": ""
+    },
+    "25702": {
+      "description": "每秒回复18的生命值。",
+      "dispel": ""
+    },
+    "25703": {
+      "description": "每秒回复27的法力值。",
+      "dispel": ""
+    },
+    "25722": {
+      "description": "耐力提高10点。",
+      "dispel": ""
+    },
+    "25746": {
+      "description": "吸收392至478点物理伤害。",
+      "dispel": "魔法"
+    },
+    "25747": {
+      "description": "吸收310至378点物理伤害。",
+      "dispel": "魔法"
+    },
+    "25750": {
+      "description": "吸收248至302点物理伤害。",
+      "dispel": "魔法"
+    },
+    "25780": {
+      "description": "使你的神圣系攻击所造成的威胁值提高60%。",
+      "dispel": "魔法"
+    },
+    "25782": {
+      "description": "近战攻击强度提高155点。",
+      "dispel": "魔法"
+    },
+    "25804": {
+      "description": "耐力提高15点。",
+      "dispel": ""
+    },
+    "25886": {
+      "description": "每秒回复27点生命值。",
+      "dispel": ""
+    },
+    "25887": {
+      "description": "每秒回复42点法力值。",
+      "dispel": ""
+    },
+    "25888": {
+      "description": "每秒恢复40点生命值。",
+      "dispel": ""
+    },
+    "25889": {
+      "description": "每秒恢复60点法力值。",
+      "dispel": ""
+    },
+    "25890": {
+      "description": "因圣光术恢复的生命值提高最多400点，因圣光闪现恢复的生命值提高最多115点。",
+      "dispel": "魔法"
+    },
+    "25891": {
+      "description": "远程和近战攻击强度提高280点。",
+      "dispel": ""
+    },
+    "25894": {
+      "description": "每5秒回复30点法力值。",
+      "dispel": "魔法"
+    },
+    "25895": {
+      "description": "威胁值降低30%。",
+      "dispel": "魔法"
+    },
+    "25898": {
+      "description": "所有属性提高10%。",
+      "dispel": "魔法"
+    },
+    "25899": {
+      "description": "受到攻击时所承受的伤害减少最多24点，格挡近战攻击会对攻击者造成35点神圣伤害。",
+      "dispel": "魔法"
+    },
+    "25907": {
+      "description": "法术效果提高132点。",
+      "dispel": ""
+    },
+    "25916": {
+      "description": "近战攻击强度提高185点。",
+      "dispel": "魔法"
+    },
+    "25918": {
+      "description": "每5秒回复33点法力值。",
+      "dispel": "魔法"
+    },
+    "25941": {
+      "description": "每5秒钟回复额外的6点法力值。",
+      "dispel": ""
+    },
+    "26008": {
+      "description": "干杯！耐力提高20点！",
+      "dispel": ""
+    },
+    "26017": {
+      "description": "力量和敏捷降低10%。",
+      "dispel": "魔法"
+    },
+    "26018": {
+      "description": "力量和敏捷降低15%。",
+      "dispel": "魔法"
+    },
+    "26260": {
+      "description": "每秒回复147的生命值。",
+      "dispel": ""
+    },
+    "26261": {
+      "description": "每秒回复147的法力值。",
+      "dispel": ""
+    },
+    "26263": {
+      "description": "每秒回复4%的生命值和法力值。",
+      "dispel": ""
+    },
+    "26276": {
+      "description": "火焰法术所造成的伤害提高最多40点。",
+      "dispel": ""
+    },
+    "26401": {
+      "description": "每秒回复85点生命值。",
+      "dispel": ""
+    },
+    "26402": {
+      "description": "每秒回复147点法力值。",
+      "dispel": ""
+    },
+    "26472": {
+      "description": "每秒回复35.8点生命值。",
+      "dispel": ""
+    },
+    "26473": {
+      "description": "每秒回复73.4点法力值。",
+      "dispel": ""
+    },
+    "26474": {
+      "description": "每秒回复53.6点生命值。",
+      "dispel": ""
+    },
+    "26475": {
+      "description": "每秒回复110.2点法力值。",
+      "dispel": ""
+    },
+    "26573": {
+      "description": "每1秒8点伤害。",
+      "dispel": ""
+    },
+    "26681": {
+      "description": "你闻起来很不错！",
+      "dispel": ""
+    },
+    "26682": {
+      "description": "你闻起来很不错！",
+      "dispel": ""
+    },
+    "27039": {
+      "description": "生命值提高。",
+      "dispel": ""
+    },
+    "27042": {
+      "description": "爆击几率提高。",
+      "dispel": ""
+    },
+    "27205": {
+      "description": "使你的宠物的伤害提高3%。",
+      "dispel": ""
+    },
+    "27208": {
+      "description": "护甲值提高。",
+      "dispel": ""
+    },
+    "27559": {
+      "description": "不能施法。",
+      "dispel": "魔法"
+    },
+    "27616": {
+      "description": "使携带者可以看到最近死去的人的灵魂。",
+      "dispel": ""
+    },
+    "27648": {
+      "description": "攻击间隔延长20%。",
+      "dispel": "魔法"
+    },
+    "27652": {
+      "description": "所有法术抗性提高15点。",
+      "dispel": ""
+    },
+    "27653": {
+      "description": "躲闪几率提高3%。",
+      "dispel": ""
+    },
+    "27675": {
+      "description": "法术伤害提高最多100点。\n治疗效果提高最多190点。",
+      "dispel": ""
+    },
+    "27681": {
+      "description": "精神提高40点。",
+      "dispel": "魔法"
+    },
+    "27683": {
+      "description": "暗影抗性提高60点。",
+      "dispel": "魔法"
+    },
+    "27828": {
+      "description": "不会因为受到伤害而延长施法时间，对打断效果的抵抗几率提高20%。",
+      "dispel": "魔法"
+    },
+    "27841": {
+      "description": "精神提高40点。",
+      "dispel": "魔法"
+    },
+    "28142": {
+      "description": "法术造成爆击的几率提高2%。",
+      "dispel": ""
+    },
+    "28143": {
+      "description": "法术和魔法效果所造成的伤害和治疗效果提高最多33点。",
+      "dispel": ""
+    },
+    "28144": {
+      "description": "法术和魔法效果所造成的治疗效果提高最多62点。",
+      "dispel": ""
+    },
+    "28145": {
+      "description": "每5秒恢复11点法力值。",
+      "dispel": ""
+    },
+    "28155": {
+      "description": "使你的法术伤害提高最多120点，治疗效果提高最多300点。",
+      "dispel": ""
+    },
+    "28200": {
+      "description": "下5次伤害或治疗法术将获得额外的效果加成。",
+      "dispel": ""
+    },
+    "28204": {
+      "description": "法术伤害提高最多40点。\n治疗效果提高最多75点。",
+      "dispel": ""
+    },
+    "28270": {
+      "description": "不能攻击或施法。回复速度提高。",
+      "dispel": "魔法"
+    },
+    "28271": {
+      "description": "不能攻击或施法。回复速度提高。",
+      "dispel": "魔法"
+    },
+    "28272": {
+      "description": "不能攻击或施法。回复速度提高。",
+      "dispel": "魔法"
+    },
+    "28609": {
+      "description": "吸收冰霜伤害。",
+      "dispel": "魔法"
+    },
+    "28610": {
+      "description": "吸收暗影伤害。",
+      "dispel": "魔法"
+    },
+    "28682": {
+      "description": "火焰系法术爆击的几率提高10%。",
+      "dispel": "魔法"
+    },
+    "29007": {
+      "description": "每秒回复97.8点法力值。",
+      "dispel": ""
+    },
+    "29008": {
+      "description": "每秒回复71.6点生命值。",
+      "dispel": ""
+    },
+    "29063": {
+      "description": "不会因为受到伤害而延长施法时间。",
+      "dispel": "魔法"
+    },
+    "29073": {
+      "description": "每秒回复106点生命值。",
+      "dispel": ""
+    },
+    "29131": {
+      "description": "每秒获得1点怒气值。",
+      "dispel": ""
+    },
+    "29166": {
+      "description": "法力回复速度提高400%。施法时仍保持100%的法力值回复速度。",
+      "dispel": "魔法"
+    },
+    "29177": {
+      "description": "使你的近战攻击造成爆击的几率提高6%。",
+      "dispel": ""
+    },
+    "29178": {
+      "description": "使你的近战攻击造成爆击的几率提高9%。",
+      "dispel": ""
+    },
+    "29203": {
+      "description": "治疗波的效果提高最多6%。",
+      "dispel": "魔法"
+    },
+    "29228": {
+      "description": "每3秒80点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "29332": {
+      "description": "命中率提高2%。",
+      "dispel": ""
+    },
+    "29333": {
+      "description": "法术伤害提高最多23点。",
+      "dispel": ""
+    },
+    "29334": {
+      "description": "提高法术所造成的治疗效果，最多44点。",
+      "dispel": ""
+    },
+    "29335": {
+      "description": "防御值提高13点。",
+      "dispel": ""
+    },
+    "29338": {
+      "description": "攻击和法术的爆击几率提高3%。",
+      "dispel": ""
+    },
+    "29388": {
+      "description": "热辣！",
+      "dispel": ""
+    },
+    "29432": {
+      "description": "吸收1500至2500点火焰伤害。",
+      "dispel": "魔法"
+    },
+    "30003": {
+      "description": "有100%的几率反弹敌对法术。",
+      "dispel": ""
+    },
+    "30165": {
+      "description": "使你的近战攻击造成爆击的几率提高3%。",
+      "dispel": ""
+    },
+    "30167": {
+      "description": "你是个两眼大如牛，体型状似山的紫色食人魔！",
+      "dispel": ""
+    }
+  }
+}

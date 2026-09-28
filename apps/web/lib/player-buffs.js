@@ -15,3 +15,10 @@ export function buffDuration(ms) {
  if(seconds>=60)return `${Math.ceil(seconds/60)}m`;
  return `${seconds}s`;
 }
+
+export function buffRemaining(ms) {
+ const seconds=Math.max(0,Math.ceil(ms/1000));
+ if(seconds>=3600)return `剩余 ${Math.ceil(seconds/3600)} 小时`;
+ if(seconds>=60)return `剩余 ${Math.ceil(seconds/60)} 分钟`;
+ return `剩余 ${seconds} 秒`;
+}

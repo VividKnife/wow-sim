@@ -2,9 +2,22 @@ import {talents,spells,items,table,preciseSpellFamilyFlags} from './catalog.js';
 import {racialModifiers} from './racial-effects.js';
 import {castTimeMultiplier} from '../../../sim-core/src/combat-auras.js';
 import {spellAttributesEx3} from '../../../sim-core/src/spell-program.js';
+import {memoizeDerived} from './derived-cache.js';
 
-export function ranks(c){const result={};for(const[id,value]of Object.entries(c.talents||{})){const t=talents[id],rank=Math.min(t?.maxRank||0,Math.max(0,Math.floor(value)));if(t&&t.classId===c.classId&&rank)result[t.name]=rank;}return result;}
-export function selectedTalentSpells(c){return Object.entries(c.talents||{}).flatMap(([id,value])=>{const t=talents[id],rank=Math.min(t?.maxRank||0,Math.max(0,Math.floor(value))),sp=t&&t.classId===c.classId&&spells[t.ranks[rank-1]];return sp?[{talent:t,rank,spell:sp}]:[];});}
+// Catalog tables are immutable for a content version; ranks remain mutable.
+const compiledTalents=memoizeDerived(['classId','talents'],c=>{
+ const ranks={},selected=[];
+ for(const [id,value]of Object.entries(c.talents||{})){
+  const talent=talents[id],rank=Math.min(talent?.maxRank||0,Math.max(0,Math.floor(value)));
+  if(!talent||talent.classId!==c.classId)continue;
+  if(rank)ranks[talent.name]=rank;
+  const spell=spells[talent.ranks[rank-1]];
+  if(spell)selected.push({talent,rank,spell});
+ }
+ return {ranks,selected};
+});
+export function ranks(c){return {...compiledTalents(c).ranks};}
+export function selectedTalentSpells(c){return compiledTalents(c).selected.map(entry=>({...entry}));}
 const n=(r,key)=>r[key]||0;
 const mask=x=>{try{return BigInt(x||0);}catch{return 0n;}};
 let affectRows,talentRoots;
@@ -20,7 +33,7 @@ function equippedFor(c,sp){
  if(sp.EquippedItemClass===-1||sp.EquippedItemClass==null)return true;
  return [16,17,18].some(slot=>{const item=items[c.equipment?.[slot]?.id];return item&&item.class===sp.EquippedItemClass&&(!sp.EquippedItemSubClassMask||(mask(sp.EquippedItemSubClassMask)&1n<<BigInt(item.subclass)))&&(!sp.EquippedItemInventoryTypeMask||(mask(sp.EquippedItemInventoryTypeMask)&1n<<BigInt(item.InventoryType)));});
 }
-export function passiveTalentSpells(c){return [...selectedTalentSpells(c).filter(({spell})=>(spell.Attributes&64)&&equippedFor(c,spell)).map(x=>x.spell),...(c.talentBuffs||[]).filter(b=>b.until>(c.time||0)).map(b=>spells[b.spell]).filter(Boolean)];}
+export function passiveTalentSpells(c){return [...compiledTalents(c).selected.filter(({spell})=>(spell.Attributes&64)&&equippedFor(c,spell)).map(x=>x.spell),...(c.talentBuffs||[]).filter(b=>b.until>(c.time||0)).map(b=>spells[b.spell]).filter(Boolean)];}
 /** DBC SPELLMOD operations. Flat modifiers add before percentages, once per learned rank. */
 export function talentSpellValue(c,sp,operation,value){
  return applyTalentSpellValue(c,sp,operation,value,passiveTalentSpells(c));

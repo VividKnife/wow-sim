@@ -1,9 +1,8 @@
-import {gearScore} from '../molten-core-roster.ts';
-import {roles,createNpcMember,companionSkills} from './party.js';
+import {roles,createNpcMember} from './party.js';
 import {items,quests,questLinks,creatureLocations,nodes,nameOf,xpTable,classDefinitions,raceDefinitions} from './catalog.js';
 import {rng,stats,canEquip,slotOf} from './character.js';
 import {combatRole} from './combat-roles.js';
-import {equipmentUpgrade,equipNpcItem} from './npc-equipment.js';
+import {equipmentUpgrade,equipNpcItem,npcEquipmentValue,npcWeaponAllowed} from './npc-equipment.js';
 import {dungeonJournal} from './dungeon-journal.js';
 
 export const npcCommands=['npcVisit','npcRefresh','npcFriend','npcGroup','npcRecommend','npcLootPolicy'];
@@ -19,20 +18,22 @@ const names=[
 ];
 const styles=[{id:'steady',name:'稳健派',quote:'等坦克接稳，我们慢慢打。'},{id:'keen',name:'热心派',quote:'缺人喊我，任务也可以一起做。'},{id:'collector',name:'装备控',quote:'有提升才需求，装备到手就毕业。'}];
 const cadence=20*60*1000,maxCatchup=2*60*60*1000;
+const trainingFields=['learned','talents','rules','strategyPolicy','autoBuffs','potions','npcBuild'];
+const npcTraining=c=>Object.fromEntries(trainingFields.map(key=>[key,c[key]]));
 function seedOf(text){let n=2166136261;for(const c of text)n=Math.imul(n^c.charCodeAt(0),16777619);return n>>>0||1;}
 const note=(p,text)=>{p.history.unshift({sequence:++p.events,text});p.history=p.history.slice(0,12);};
 const startingLoadouts=new Map();
 function initialEquipment(c,index){
- const key=`${c.classId}:${c.raceId}:${c.level}:${combatRole(c)}`;
+ const key=`${c.classId}:${c.raceId}:${c.level}:${combatRole(c)}:${c.npcBuild.skill}:${c.npcBuild.temperament}`;
  const dualWield=c.learned.includes(674)&&(c.classId===4||c.classId===1&&combatRole(c)==='melee');
  if(!startingLoadouts.has(key)){
   const naked={...c,equipment:{}},bySlot={},offhand=[];
   for(const item of Object.values(items)){
    if(![2,3].includes(item.Quality)||item.ItemLevel>c.level+3||item.ItemLevel<Math.max(10,c.level-8)||item.companionKit||item.raidReward||item.RequiredSkill||item.startquest||!canEquip(c,item))continue;
-   if(dualWield&&item.InventoryType===17)continue;
+   if(!npcWeaponAllowed(c,item))continue;
    if(combatRole(c)==='tank'&&c.classId!==11&&(item.InventoryType===17||slotOf(item)===17&&item.InventoryType!==14))continue;
    if(![2,4].includes(item.class)||!item.InventoryType||[4,19].includes(item.InventoryType))continue;
-   const score=gearScore(item,combatRole(c),c.classId);
+   const score=npcEquipmentValue(naked,{[slotOf(item)]:{id:item.entry}});
    const slot=slotOf(item);(bySlot[slot]??=[]).push({id:item.entry,value:score});
    if(dualWield&&item.class===2&&[13,22].includes(item.InventoryType))offhand.push({id:item.entry,value:score});
   }
@@ -61,15 +62,15 @@ function initialEquipment(c,index){
  }
  const st=stats(c);c.hp=st.maxHp;c.mana=st.maxMana;
 }
-function buildUnit(s,index,level,initial=true){
+function behaviorFor(index){return {skill:index%7===0?'novice':(index+Math.floor(index/9))%3===0?'expert':'regular',temperament:styles[(index+Math.floor(index/9))%styles.length].id,spending:['saver','value','collector','whale','impulsive'][index%5]};}
+function buildUnit(s,index,level,initial=true,behavior=behaviorFor(index)){
  const def=roles[index%roles.length],role=def.roles[Math.floor(index/roles.length)%def.roles.length];
  const faction=raceDefinitions.find(r=>r.id===s.raceId)?.faction;
  const classDef=classDefinitions.find(c=>c.id===def.classId);
  const raceId=classDef.races.find(id=>raceDefinitions.find(r=>r.id===id)?.faction===faction)||classDef.races[0];
  const host={id:s.id,level,clock:s.clock,location:s.location,itemSequence:0,logs:[],logSequence:0,party:[],money:0,bag:[],bags:[]};
- const c=createNpcMember(host,def.id,{name:names[index],role,raceId});
- c.id=`npc:${s.id}:${index+1}`;c.growthPolicy='npcPlayer';c.npcPlayer=true;c.professions={};c.potions={enabled:false};
- c.strategyPolicy={...c.strategyPolicy,protectCC:true,waitForTank:true,pullDelaySeconds:index%3===0?2:1};
+ const c=createNpcMember(host,def.id,{name:names[index],role,raceId,behavior});
+ c.id=`npc:${s.id}:${index+1}`;c.growthPolicy='npcPlayer';c.npcPlayer=true;c.professions={};
  delete c.bags;
  for(const [slot,item] of Object.entries(c.equipment)){item.uid=`${c.id}:starter:${slot}`;item.ownerId=c.id;}
  if(initial)initialEquipment(c,index);
@@ -81,7 +82,8 @@ export function ensureNpcWorld(s){
  if(s.npcWorld)return s.npcWorld;
  s.npcWorld={selection:[],autoLoot:false,residents:names.map((name,index)=>{
   const unit=buildUnit(s,index,s.level);
-  return {id:unit.id,index,unit,friend:false,personality:styles[index%styles.length],runs:0,events:0,history:[],completedQuests:[],rngState:seedOf(unit.id),lastProgressWall:s.wallAt,steps:0,wallet:Math.round((45+(index*137)%650)*(s.level/60))*10000,raidProfile:{personality:['saver','value','collector','whale','impulsive'][index%5],skill:index%7===0?'novice':index%3===0?'expert':'regular'},raidRuns:0};
+  const behavior=behaviorFor(index);
+  return {id:unit.id,index,unit,friend:false,personality:styles.find(style=>style.id===behavior.temperament),runs:0,events:0,history:[],completedQuests:[],rngState:seedOf(unit.id),lastProgressWall:s.wallAt,steps:0,wallet:Math.round((45+(index*137)%650)*(s.level/60))*10000,raidProfile:{personality:behavior.spending,skill:behavior.skill},raidRuns:0};
  })};
  for(const p of s.npcWorld.residents)note(p,'来到冒险者大厅，期待结识新的伙伴。');
  s.npcWorld.board={ids:[],shown:{},rngState:seedOf(`${s.id}:hall`),refreshAt:0,sequence:0};
@@ -138,9 +140,9 @@ export function progressNpcWorld(s){
   for(let i=0;i<steps;i++){
    p.steps++;p.wallet+=Math.max(100, p.unit.level*25);
    if(p.unit.level<s.level&&p.steps%2===0){
-    const old=p.unit,fresh=buildUnit(s,p.index,old.level+1,false);
+    const old=p.unit,fresh=buildUnit(s,p.index,old.level+1,false,{skill:p.raidProfile.skill,temperament:p.personality.id,spending:p.raidProfile.personality});
     // Training updates skills and talents, never replaces earned equipment.
-    Object.assign(old,{level:fresh.level,learned:fresh.learned,talents:fresh.talents,rules:fresh.rules,strategyPolicy:fresh.strategyPolicy,xp:0});
+    Object.assign(old,{...npcTraining(fresh),level:fresh.level,xp:0});
     note(p,`冒险历练升至${old.level}级，学习了新的职业技能。`);
    }
    if(p.steps%3!==0||!dungeonEvent(s,p))questEvent(p);
@@ -155,7 +157,7 @@ export function syncNpcWorld(s){
   if(!c.npcPlayer)continue;
   const p=s.npcWorld.residents.find(p=>p.id===c.id);if(!p)continue;
   // Preserve durable character data, not the entire battle object graph.
-  for(const key of ['level','xp','equipment','learned','talents','rules','strategyPolicy','hunterPet','ammunition','raidCollection','raidPendingEquipment'])if(c[key]!==undefined)p.unit[key]=structuredClone(c[key]);
+  for(const key of ['level','xp','equipment','bag',...trainingFields,'hunterPet','ammunition','raidCollection','raidPendingEquipment'])if(c[key]!==undefined)p.unit[key]=structuredClone(c[key]);
   if(c.goldNpc)p.wallet=c.money;
   p.lastProgressWall=s.wallAt;
  }
@@ -192,10 +194,10 @@ export function npcAction(s,a){
 export function npcRunStarted(s){
  for(const c of s.party.filter(c=>c.npcPlayer)){
   const p=s.npcWorld.residents.find(p=>p.id===c.id);p.runs++;note(p,`与你第${p.runs}次组队，前往${dungeonJournal.find(d=>d.id===s.dungeon.id)?.name||s.dungeon.id}。`);
-  const training=buildUnit(s,p.index,c.level,false);
-  c.talents=training.talents;c.rules=training.rules;c.strategyPolicy=training.strategyPolicy;
+  const training=buildUnit(s,p.index,c.level,false,{skill:p.raidProfile.skill,temperament:p.personality.id,spending:p.raidProfile.personality});
+  Object.assign(c,npcTraining(training));
   if(c.classId===3)for(const id of [2512,2516]){const missing=Math.max(0,2000-(c.ammunition?.[id]||0)),cost=Math.ceil(missing/200)*10;if(p.wallet>=cost){p.wallet-=cost;c.ammunition??={};c.ammunition[id]=2000;}}
-  c.learned=companionSkills(c);c.location=s.location;c.time=s.clock;
+  c.location=s.location;c.time=s.clock;
  }
 }
 export function npcAward(s,c,item,need){
@@ -218,7 +220,14 @@ export function recordNpcRaid(s,completed=false){
  for(const c of s.party.filter(c=>c.npcPlayer&&c.goldNpc)){
   const p=world.residents.find(p=>p.id===c.id);if(!p)continue;
   if(completed&&s.goldRaid.contributions[c.id]?.kills>0){
-   p.raidRuns++;if(p.raidRuns>=3)p.raidProfile.skill='expert';
+   p.raidRuns++;
+   const skill=p.raidRuns>=3?'expert':p.raidProfile.skill==='novice'?'regular':p.raidProfile.skill;
+   if(skill!==p.raidProfile.skill){
+    p.raidProfile.skill=skill;c.goldProfile.skill=skill;
+    const fresh=buildUnit(s,p.index,p.unit.level,false,{skill,temperament:p.personality.id,spending:p.raidProfile.personality});
+    Object.assign(p.unit,npcTraining(fresh));Object.assign(c,structuredClone(npcTraining(fresh)));
+    note(p,`战斗经验提升，已重新安排${fresh.npcBuild.name}的天赋与策略。`);
+   }
    note(p,`金团结算：与你击败${s.goldRaid.cleared.length}名首领，分红${((s.goldRaid.settlement?.rows.find(r=>r.id===c.id)?.total||0)/10000).toFixed(2)}金。装备与余额已保存。`);
   }else if(!completed){p.runs++;note(p,'与你组成25人金团，独立竞拍并按公告分金。');}
  }

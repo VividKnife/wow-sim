@@ -1,0 +1,57 @@
+{
+  "sounds": [
+    {
+      "cue": "buff-spirit",
+      "spellId": 23028,
+      "fileDataId": 568735,
+      "title": "BurningSpirit",
+      "url": "https://wow.zamimg.com/sound-ids/classic/enus/159/568735/BurningSpirit.ogg",
+      "vanillaPath": "Sound\\Spells\\BurningSpirit.wav",
+      "sha256": "86a902baebb3624168100e491595a7247695239f796468c09c389baaa3d67f5a",
+      "bytes": 18130,
+      "sourcePage": "https://www.wowhead.com/classic/spell=23028",
+      "sourcePageSha256": "1461ffcad58fc1e1a6a1a5a67c8aaa1e7b95103efa18f1afc2df0c1f271a6bfc",
+      "transformation": "none"
+    },
+    {
+      "cue": "buff-protection",
+      "spellId": 27681,
+      "fileDataId": 568491,
+      "title": "HolyProtection",
+      "url": "https://wow.zamimg.com/sound-ids/classic/enus/171/568491/HolyProtection.ogg",
+      "vanillaPath": "Sound\\Spells\\HolyProtection.wav",
+      "sha256": "49ff1b024122a3bd83fb19b6e99584d4ab9524ecb5d1b79b45b41073416a2c6e",
+      "bytes": 24396,
+      "sourcePage": "https://www.wowhead.com/classic/spell=27681",
+      "sourcePageSha256": "d38d68738be2b74639ca1ee88b6cf67129f2180d9c28df25b6c019a590127877",
+      "transformation": "none"
+    },
+    {
+      "cue": "buff-blessing",
+      "spellId": 25898,
+      "fileDataId": 568274,
+      "title": "SealofMight",
+      "url": "https://wow.zamimg.com/sound-ids/classic/enus/210/568274/SealofMight.ogg",
+      "vanillaPath": "Sound\\Spells\\SealofMight.wav",
+      "sha256": "4ea09c00a4c6e1e1f3445062bdbc7f3f77db465c1adbdb83afb9641d5420dc31",
+      "bytes": 11885,
+      "sourcePage": "https://www.wowhead.com/classic/spell=25898",
+      "sourcePageSha256": "2a0d9a09771ca12fc1dcaa5d4bccff69b8ddf40cf27b146a4ab483721dc91113",
+      "transformation": "none"
+    },
+    {
+      "cue": "buff-thorns",
+      "spellId": 467,
+      "fileDataId": 569022,
+      "title": "Thorns",
+      "url": "https://wow.zamimg.com/sound-ids/classic/enus/190/569022/Thorns.ogg",
+      "vanillaPath": "Sound\\Spells\\Thorns.wav",
+      "sha256": "e55ae10480cdaa1835498d48549ba168913a3b91c8ad6942aa2064fe09e3903d",
+      "bytes": 10364,
+      "sourcePage": "https://www.wowhead.com/classic/spell=467",
+      "sourcePageSha256": "83360f74cf7c324d9646b7e6e0dfee7c64c4111f85b161e209dfef6c862b749e",
+      "transformation": "none"
+    }
+  ],
+  "caveat": "Classic-served OGG; Vanilla filenames verified, not original-client byte certification."
+}

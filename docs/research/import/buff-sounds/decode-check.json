@@ -1,0 +1,66 @@
+[
+  {
+    "file": "apps/web/public/sounds/buff-thorns.ogg",
+    "decoded": true,
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "vorbis",
+        "sample_rate": "22050",
+        "channels": 1
+      }
+    ],
+    "format": {
+      "duration": "1.333288"
+    }
+  },
+  {
+    "file": "apps/web/public/sounds/buff-blessing.ogg",
+    "decoded": true,
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "vorbis",
+        "sample_rate": "22050",
+        "channels": 1
+      }
+    ],
+    "format": {
+      "duration": "1.802222"
+    }
+  },
+  {
+    "file": "apps/web/public/sounds/buff-protection.ogg",
+    "decoded": true,
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "vorbis",
+        "sample_rate": "22050",
+        "channels": 1
+      }
+    ],
+    "format": {
+      "duration": "3.438639"
+    }
+  },
+  {
+    "file": "apps/web/public/sounds/buff-spirit.ogg",
+    "decoded": true,
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "vorbis",
+        "sample_rate": "22050",
+        "channels": 1
+      }
+    ],
+    "format": {
+      "duration": "2.605351"
+    }
+  }
+]

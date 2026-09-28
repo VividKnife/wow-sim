@@ -1,3 +1,5 @@
+import {invalidatePolicyIntents} from './combat-policy.js';
+import {queueCombatInput,combatInputSkills,damagingInput,inputResult} from './combat-input.js';
 import {spells,creatures,icon,nameOf} from './catalog.js';
 import {spellInfo,log} from './character.js';
 import {combatMembers} from './combat-members.js';
@@ -14,10 +16,10 @@ const tactics=new Set(['Taunt','Growl','Challenging Shout','Challenging Roar','C
 export const commandSkillKind=sp=>soft.has(sp?.SpellName)?'soft':hard.has(sp?.SpellName)?'hard':interrupts.has(sp?.SpellName)?'interrupt':tactics.has(sp?.SpellName)?'tactic':null;
 const commandSkills=c=>strategySpellIds(c).filter(id=>commandSkillKind(spells[id])&&(spells[id].SpellName!=='Growl'||c.classId===11));
 export const commandActors=s=>combatMembers(s).filter(c=>!c.petUnit&&!c.totemUnit&&!c.escortNpc);
-export const commandAvailable=s=>!!s.combat?.dungeon&&!s.combat?.raidEncounter&&!s.combat?.pvp&&commandActors(s).length<=5;
+export const commandAvailable=s=>!!s.combat&&!s.combat.pvp;
 export const commandOrder=(s,c)=>{const orders=(s.combat?.command?.orders||[]).filter(o=>o.memberId===c.id),queued=orders.find(o=>!['soft','kite'].includes(o.kind));return queued&&(queued.executed||queued.kind!=='interrupt'||s.combat.enemies.some(e=>e.id===queued.targetId&&e.cast))?queued:orders.find(o=>['soft','kite'].includes(o.kind))||queued;};
 export const commandDamageMode=(s,c)=>s.combat?.command?.memberModes?.[c.id]||s.combat?.command?.mode||'auto';
-export const commandDamageSpell=sp=>[1,2,3].some(n=>[2,9,17,31,58,121].includes(sp?.['Effect'+n])||sp?.['EffectApplyAuraName'+n]===3);
+export const commandDamageSpell=damagingInput;
 export const commandAreaSkills=c=>strategySpellIds(c).filter(id=>areaSpell(spells[id])&&commandDamageSpell(spells[id])&&!commandSkillKind(spells[id]));
 export const commandDamageRules=(s,c)=>commandDamageMode(s,c)==='aoe'?commandAreaSkills(c).map(spell=>({spell,condition:'always',value:0,enabled:true})):[];
 export function commandProtected(s,e){
@@ -57,27 +59,43 @@ export function combatCommandAction(s,a){
   if(typeof a.enabled!=='boolean'||s.combat)throw new Error('请在战斗前选择指挥模式');
   s.settings.commandCombat=a.enabled;return;
  }
- if(!commandAvailable(s)||a.encounterId!==s.combat.id)throw new Error('当前五人战斗已变化，请重新打开指挥面板');
+ if(!commandAvailable(s)||a.encounterId!==s.combat.id)throw new Error('当前战斗已变化，请重新打开指挥面板');
  const battle=s.combat;
  if(a.order==='takeover'){battle.command??={paused:true,marks:{},orders:[],focusId:null,holdFire:false};battle.command.paused=true;log(s,'接管小队指挥，战斗已暂停。','info');return;}
  // A live order enables command mode without pausing or restarting the fight.
  const cmd=battle.command??={paused:false,marks:{},orders:[],focusId:null,holdFire:false};
- if(a.order==='pause'||a.order==='resume'){cmd.paused=a.order==='pause';log(s,cmd.paused?'指挥暂停。':'指挥完成，继续战斗。','info');return;}
- if(a.order==='holdFire'){if(typeof a.enabled!=='boolean')throw new Error('停火指令无效');cmd.holdFire=a.enabled;if(a.enabled)for(const c of commandActors(s))if(c.cast&&battle.enemies.some(e=>e.id===c.cast.target)){c.cast=null;c.nextAction=s.clock;}return;}
- if(a.order==='clearAll'){cmd.orders=[];cmd.marks={};cmd.focusId=null;cmd.holdFire=false;cmd.mode='auto';cmd.memberModes={};return;}
+ if(a.order==='pause'||a.order==='resume'){invalidatePolicyIntents(s,combatMembers(s).map(c=>c.id));cmd.paused=a.order==='pause';log(s,cmd.paused?'指挥暂停。':'指挥完成，继续战斗。','info');return;}
+ if(a.order==='holdFire'){
+  if(typeof a.enabled!=='boolean')throw new Error('停火指令无效');invalidatePolicyIntents(s,combatMembers(s).map(c=>c.id));cmd.holdFire=a.enabled;
+  if(a.enabled){
+   for(const c of combatMembers(s)){if(c.cast&&damagingInput(spells[c.cast.spell])){c.cast=null;c.nextAction=s.clock;}c.queuedStrike=null;}
+   for(const input of cmd.inputs||[])if(damagingInput(spells[input.spellId]))inputResult(s,input,'cancelled','团队下达停火');
+  }
+  return;
+ }
+ if(a.order==='cast'||a.order==='stopCast'){
+  const c=commandActors(s).find(c=>c.id===a.memberId&&c.hp>0);if(!c)throw new Error('请选择存活的参战成员');
+  if(a.order==='cast'){queueCombatInput(s,c,a.spellId,a.targetId);invalidatePolicyIntents(s,[c.id]);return;}
+  for(const input of cmd.inputs||[])if(input.memberId===c.id)inputResult(s,input,'cancelled','停止施法');
+  if(c.cast)log(s,c.name+' 停止施法','cancel',{actorId:c.id,spellId:c.cast.spell,targetId:c.cast.target,reason:'command'});
+  invalidatePolicyIntents(s,[c.id]);c.cast=null;c.queuedStrike=null;c.nextAction=s.clock;return;
+ }
+ if(a.order==='clearAll'){for(const input of cmd.inputs||[])inputResult(s,input,'cancelled','恢复自动战斗');cmd.orders=[];cmd.marks={};cmd.focusId=null;cmd.holdFire=false;cmd.mode='auto';cmd.memberModes={};return;}
  if(a.order==='mode'){
   if(!['auto','single','aoe'].includes(a.mode))throw new Error('输出模式无效');
   const members=a.memberId?commandActors(s).filter(c=>c.id===a.memberId&&c.hp>0):commandActors(s);
   if(!members.length)throw new Error('请选择存活的参战成员');
+  if(a.mode==='auto')for(const input of cmd.inputs||[])if(!a.memberId||input.memberId===a.memberId)inputResult(s,input,'cancelled','恢复自动战斗');
   if(a.memberId){cmd.memberModes??={};cmd.memberModes[a.memberId]=a.mode;if(a.mode==='auto')cmd.orders=cmd.orders.filter(o=>o.memberId!==a.memberId);}
   else{cmd.mode=a.mode;cmd.memberModes={};if(a.mode==='auto'){cmd.orders=[];cmd.focusId=null;cmd.holdFire=false;}}
+  invalidatePolicyIntents(s,members.map(c=>c.id));
   for(const c of members){const sp=c.cast&&spellInfo(c,c.cast.spell);if(a.mode==='single'&&sp&&areaSpell(sp)&&commandDamageSpell(sp)){c.cast=null;c.nextAction=s.clock;}}
   return;
  }
  const e=battle.enemies.find(e=>e.id===a.targetId&&aliveEnemy(e)&&!e.controlledBy);if(!e)throw new Error('请选择存活的敌人');
  if(a.order==='mark'){if(a.mark!==''&&!Object.hasOwn(commandMarks,a.mark))throw new Error('无效的敌人标记');for(const id of Object.keys(cmd.marks))if(cmd.marks[id]===a.mark)delete cmd.marks[id];if(a.mark)cmd.marks[e.id]=a.mark;else delete cmd.marks[e.id];return;}
  if(a.order==='clear'){cmd.orders=cmd.orders.filter(o=>o.targetId!==e.id);if(cmd.focusId===e.id)cmd.focusId=null;delete cmd.marks[e.id];return;}
- if(a.order==='focus'){cmd.focusId=e.id;cmd.orders=cmd.orders.filter(o=>o.targetId!==e.id);for(const id of Object.keys(cmd.marks))if(cmd.marks[id]==='skull')delete cmd.marks[id];cmd.marks[e.id]='skull';log(s,'集火目标：'+e.name,'info');return;}
+ if(a.order==='focus'){invalidatePolicyIntents(s,combatMembers(s).map(c=>c.id));cmd.focusId=e.id;cmd.orders=cmd.orders.filter(o=>o.targetId!==e.id);for(const id of Object.keys(cmd.marks))if(cmd.marks[id]==='skull')delete cmd.marks[id];cmd.marks[e.id]='skull';log(s,'集火目标：'+e.name,'info');return;}
  if(!['control','kite'].includes(a.order))throw new Error('未知的指挥命令');
  const c=commandActors(s).find(c=>c.id===a.memberId&&c.hp>0);if(!c)throw new Error('请选择存活的参战成员');
  let kind='kite';
@@ -91,6 +109,7 @@ export function combatCommandAction(s,a){
  cmd.orders=cmd.orders.filter(o=>persistent?!(o.memberId===c.id&&['soft','kite'].includes(o.kind)||o.targetId===e.id&&['soft','kite'].includes(o.kind)):!(o.memberId===c.id&&!['soft','kite'].includes(o.kind)));
  cmd.orders.push({kind,memberId:c.id,targetId:e.id,...(a.order==='control'?{spellId:a.spellId}:{})});
  if(cmd.focusId===e.id&&kind==='soft')cmd.focusId=null;
+ invalidatePolicyIntents(s,combatMembers(s).map(c=>c.id));
  if(c.cast){c.cast=null;c.nextAction=s.clock;}
  // Cancel outgoing casts aimed at a newly reserved control target. Projectiles
  // already in flight and existing DoTs remain real risks; they are not erased.
@@ -100,5 +119,5 @@ export function combatCommandAction(s,a){
 export function combatCommandView(s){
  if(!commandAvailable(s))return null;
  const members=commandActors(s),enemies=s.combat.enemies.filter(e=>aliveEnemy(e)&&!e.controlledBy);
- return {members:members.map(c=>({id:c.id,name:c.name,classId:c.classId,hp:c.hp,canAoe:commandAreaSkills(c).length>0,canKite:c.hp>0&&[3,8,9,7,11,5].includes(c.classId)})),skills:members.filter(c=>c.hp>0).flatMap(c=>commandSkills(c).map(id=>{const sp=spellInfo(c,id);return {memberId:c.id,memberName:c.name,spellId:id,name:nameOf('spells',id),icon:icon('spells',id),kind:commandSkillKind(sp),cooldownUntil:cooldownUntil(c,sp),range:sp.range||5,targets:Object.fromEntries(enemies.map(e=>[e.id,{reason:commandSkillReason(s,c,e,sp),status:commandWaiting(s,c,e,sp)}]))};}))};
+ return {inputSkills:Object.fromEntries(members.map(c=>[c.id,combatInputSkills(c)])),members:members.map(c=>({id:c.id,name:c.name,classId:c.classId,hp:c.hp,canAoe:commandAreaSkills(c).length>0,canKite:c.hp>0&&[3,8,9,7,11,5].includes(c.classId)})),skills:members.filter(c=>c.hp>0).flatMap(c=>commandSkills(c).map(id=>{const sp=spellInfo(c,id);return {memberId:c.id,memberName:c.name,spellId:id,name:nameOf('spells',id),icon:icon('spells',id),kind:commandSkillKind(sp),cooldownUntil:cooldownUntil(c,sp),range:sp.range||5,targets:Object.fromEntries(enemies.map(e=>[e.id,{reason:commandSkillReason(s,c,e,sp),status:commandWaiting(s,c,e,sp)}]))};}))};
 }

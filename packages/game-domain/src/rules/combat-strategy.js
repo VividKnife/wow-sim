@@ -61,11 +61,11 @@ export function validateRules(c,rules){
   for(const clause of [r,...(r.and||[])])if(!clause||!strategyConditions.includes(clause.condition)||!Number.isFinite(clause.value)||clause.value<0||clause.value>100||['enemyCountAtLeast','combatEnemyCountAtMost','comboAtLeast'].includes(clause.condition)&&(!Number.isInteger(clause.value)||clause.value<1||clause.condition==='comboAtLeast'&&clause.value>5))throw new Error('施法条件或阈值无效');
  }
 }
-export function ruleMatches(s,c,e,rule,sp){return [rule,...(rule.and||[])].every(clause=>conditionMatches(s,c,e,clause,sp));}
-function conditionMatches(s,c,e,rule,sp){const st=stats(c);switch(rule.condition){
+export function ruleMatches(s,c,e,rule,sp,readStats=stats){return [rule,...(rule.and||[])].every(clause=>conditionMatches(s,c,e,clause,sp,readStats));}
+function conditionMatches(s,c,e,rule,sp,readStats){switch(rule.condition){
  case 'always':return true;case 'targetCasting':return !!e.cast;case 'enemyNear':return distance(c,e)<=rule.value;case 'enemyFar':return distance(c,e)>rule.value;
- case 'allyHealthBelow':return combatMembers(s).some(a=>a.hp>0&&a.hp/stats(a).maxHp*100<rule.value);
- case 'healthAbove':return c.hp/st.maxHp*100>=rule.value;
+ case 'allyHealthBelow':return combatMembers(s).some(a=>a.hp>0&&a.hp/readStats(a).maxHp*100<rule.value);
+ case 'healthAbove':return c.hp/readStats(c).maxHp*100>=rule.value;
  case 'targetHealthAbove':return e.hp/e.maxHp*100>=rule.value;
  case 'comboAtLeast':return c.comboTarget===e.id&&(c.combo||0)>=rule.value;
  case 'petHealthBelow':return !!c.pet&&c.pet.hp>0&&c.pet.hp/c.pet.maxHp*100<rule.value;
@@ -74,7 +74,7 @@ function conditionMatches(s,c,e,rule,sp){const st=stats(c);switch(rule.condition
  case 'combatTimeAbove':return !!s.combat&&s.clock-(s.combat.pull?.startsAt??s.combat.startedAt)>rule.value*1000;
  // Include crowd-controlled enemies so keeping one sheep does not turn a large pack into a small pull.
  case 'combatEnemyCountAtMost':return (s.combat?.enemies||[]).filter(x=>aliveEnemy(x)&&!x.controlledBy).length<=rule.value;
- case 'healthBelow':return c.hp/st.maxHp*100<rule.value;case 'manaAbove':{const r=classResource(c,st);return r?.max>0&&r.value/r.max*100>=rule.value;}case 'manaBelow':{const r=classResource(c,st);return r?.max>0&&r.value/r.max*100<rule.value;}case 'targetHealthBelow':return e.hp/e.maxHp*100<rule.value;
+ case 'healthBelow':return c.hp/readStats(c).maxHp*100<rule.value;case 'manaAbove':{const r=classResource(c,readStats(c));return r?.max>0&&r.value/r.max*100>=rule.value;}case 'manaBelow':{const r=classResource(c,readStats(c));return r?.max>0&&r.value/r.max*100<rule.value;}case 'targetHealthBelow':return e.hp/e.maxHp*100<rule.value;
  case 'enemyCountAtLeast':return areaTargets(s,c,e,sp,undefined,{uncapped:true}).filter(x=>c.strategyPolicy?.protectCC===false||!protectCombatTarget(s,x)).length>=rule.value;
  default:return false;
 }}
@@ -85,10 +85,12 @@ export function strategyAllows(s,c,e,sp,rule,center){
   const damaging=!sp.Id||[1,2,3].some(n=>[2,9,17,31,58,121].includes(sp['Effect'+n])||sp['EffectApplyAuraName'+n]===3);
   if(e?.id===s.combat.controlTargetId&&damaging)return false;
  }
+ if(s.combat?.command?.holdFire&&(!sp.Id||commandDamageSpell(sp)))return false;
+ // Explicit casts skip AI targeting preferences, but still obey stop-damage.
+ if(sp.commanded)return true;
  const order=commandOrder(s,c);
  const orderedControl=order&&order.kind!=='kite'&&order.targetId===e?.id&&order.spellId===sp.Id;
  if(orderedControl)return !rule||ruleMatches(s,c,e,rule,sp);
- if(s.combat?.command?.holdFire)return false;
  if(commandDamageMode(s,c)==='single'&&areaSpell(sp)&&commandDamageSpell(sp))return false;
  const policy={...defaultPolicy,...c.strategyPolicy};
  if(rule&&!ruleMatches(s,c,e,rule,sp))return false;

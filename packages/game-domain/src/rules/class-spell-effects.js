@@ -1,3 +1,5 @@
+import {weaponAttack} from './weapon-attacks.js';
+import {groupBuffTargets} from './group-buffs.js';
 import {scaledXp} from './experience.js';
 import {unitCreatureType} from './pvp-runtime.js';
 import {setCombatPosition} from './combat-area.js';
@@ -16,8 +18,8 @@ import {consume} from './inventory.js';
 import {spells,items,creatures,table,nameOf,lookup,classEnchantments,spellChain,xpTable} from './catalog.js';
 import {stats,spellInfo,effectRange,roll,rng,armorReduction,log,refreshPetStats} from './character.js';
 import {distance,point} from '../../../sim-core/src/geometry.js';
-import {areaTargets,aliveEnemy,moveToward} from './combat-space.js';
-import {addCombatAura,activeAuras,schoolImmune} from '../../../sim-core/src/combat-auras.js';
+import {areaTargets,aliveEnemy,moveToward,behindTarget} from './combat-space.js';
+import {addCombatAura,activeAuras,schoolImmune,mechanicImmune} from '../../../sim-core/src/combat-auras.js';
 import {weaponDamage,effectiveArmor,stanceAllows} from './companion-combat.js';
 import {ranks,talentSpellValue,talentModifiers} from './talent-effects.js';
 import {extendedSpellNames,extendedHeals,extendedBuffs,extendedChannels,extendedDispels,extendedTotems,extendedSeals,extendedEnchants,extendedSummons,classAbilityKind} from './class-spell-registry.js';
@@ -27,7 +29,7 @@ const friendlyDispel=new Set(['Purify','Cleanse','Cure Disease','Abolish Disease
 const comboFinishers=new Set(['Slice and Dice','Rupture','Expose Armor','Kidney Shot','Ferocious Bite']);
 const stealthAttacks=new Set(['Garrote','Cheap Shot','Pounce','Ravage']);
 const selfControls=new Set(['Feign Death','Disengage','Feint','Blink']);
-const pendingDispel=(u,types)=>(u.auras||[]).some(a=>types.includes(a.dispel??spells[a.spell]?.Dispel))||(u.dots||[]).some(a=>types.includes(a.dispel??spells[a.spell??a.spellId]?.Dispel));
+const pendingDispel=(u,types,positive=false)=>(u.auras||[]).some(a=>(a.positive===true)===positive&&types.includes(a.dispel??spells[a.spell]?.Dispel))||!positive&&(u.dots||[]).some(a=>types.includes(a.dispel??spells[a.spell??a.spellId]?.Dispel));
 const dispelTypes=sp=>[1,2,3].filter(n=>sp['Effect'+n]===38).map(n=>sp['EffectMiscValue'+n]);
 export const dispelClassEffects=dispelSpellAuras;
 function allLiving(s){return(s.combat?.enemies||[]).filter(e=>aliveEnemy(e)&&!e.controlledBy);}
@@ -37,18 +39,21 @@ function amount(c,sp,n=1){const raw=effectRange(c,sp,n)[0]+(sp['EffectPointsPerC
 function aura(s,c,target,sp,n,value=amount(c,sp,n),until=s.clock+(duration(sp,c.combo)||1800000)){applySpellAura(target,{spell:sp.Id,effect:n,type:sp['EffectApplyAuraName'+n],amount:value,misc:sp['EffectMiscValue'+n],dispel:sp.Dispel,positive:target===c||[s,...(s.party||[])].includes(c)&&[s,...(s.party||[])].includes(target),consumeOnImmune:sp.SpellName==='Fear Ward',dispelResistance:talentSpellValue(c,sp,28,0),charges:sp.ProcCharges>0?talentSpellValue(c,sp,4,sp.ProcCharges):null,mechanic:sp['EffectMechanic'+n]||sp.Mechanic,caster:c.id,until},s.clock);}
 function heal(s,c,t,value,sp,api){if(api.healAmount)return api.healAmount(s,c,t,value,sp.Id,sp.SpellName);if(!t||t.hp<=0)return;const actual=Math.min(stats(t).maxHp-t.hp,Math.max(0,Math.round(value)));t.hp+=actual;}
 function damage(s,c,t,value,sp,api,periodic=false,options={}){return resolveSpellDamage(s,c,t,value,sp,api.damage,{...options,periodic}).dealt;}
-export function prepareClassAbility(s,c,e,sp,actors){
- const name=sp.SpellName;if(s.combat?.raidEncounter?.command&&['Dispel Magic','Remove Lesser Curse','Tranquilizing Shot','Fear Ward'].includes(name))return null;if(s.combat?.raidEncounter?.command&&(c.raidReservedSpells||[]).some(id=>spells[id]?.SpellName===name))return null;if(!extendedSpellNames.has(name))return undefined;if(name==='Ritual of Doom')return null;
+export function prepareClassAbility(s,c,e,sp,actors,readStats=stats,input=null){
+ const name=sp.SpellName;if(!input&&s.combat?.raidEncounter?.command&&['Dispel Magic','Remove Lesser Curse','Tranquilizing Shot','Fear Ward'].includes(name))return null;if(!input&&s.combat?.raidEncounter?.command&&(c.raidReservedSpells||[]).some(id=>spells[id]?.SpellName===name))return null;if(!extendedSpellNames.has(name))return undefined;if(name==='Ritual of Doom')return null;
  let target=name.endsWith('Trap')?c:e;
  if(extendedBuffs.has(name)||extendedSeals.has(name)||extendedEnchants.has(name)||extendedTotems.has(name)||extendedSummons.has(name)&&name!=='Inferno'||selfControls.has(name)||['Evocation','Tranquility'].includes(name))target=c;
- if(extendedHeals.has(name)&&!['Holy Shock','Holy Nova','Rebirth','Tranquility'].includes(name)){target=actors.filter(a=>a.hp>0&&a.hp<stats(a).maxHp*.9).sort((a,b)=>a.hp/stats(a).maxHp-b.hp/stats(b).maxHp)[0];if(!target)return null;}
- if(['Mend Pet','Health Funnel'].includes(name)){target=c.pet;if(!target||target.hp<=0||target.hp>=target.maxHp||name==='Health Funnel'&&c.hp<stats(c).maxHp*.2)return null;}
- if(['Blessing of Sacrifice','Divine Intervention'].includes(name)){target=actors.filter(a=>a!==c&&!a.petUnit&&a.hp>0).sort((a,b)=>a.hp/stats(a).maxHp-b.hp/stats(b).maxHp)[0];if(!target||name==='Divine Intervention'&&c.hp>stats(c).maxHp*.1)return null;}
+ if(!input&&extendedHeals.has(name)&&!['Holy Shock','Holy Nova','Rebirth','Tranquility'].includes(name)){target=actors.filter(a=>a.hp>0&&a.hp<readStats(a).maxHp*.9).sort((a,b)=>a.hp/readStats(a).maxHp-b.hp/readStats(b).maxHp)[0];if(!target)return null;}
+ if(['Mend Pet','Health Funnel'].includes(name)){target=c.pet;if(!target||target.hp<=0||target.hp>=target.maxHp||name==='Health Funnel'&&c.hp<readStats(c).maxHp*.2)return null;}
+ if(['Blessing of Sacrifice','Divine Intervention'].includes(name)){target=actors.filter(a=>a!==c&&!a.petUnit&&a.hp>0).sort((a,b)=>a.hp/readStats(a).maxHp-b.hp/readStats(b).maxHp)[0];if(!target||name==='Divine Intervention'&&c.hp>readStats(c).maxHp*.1)return null;}
  if(['Shoot','Throw'].includes(name)&&!items[c.equipment[18]?.id])return null;
  if(name==='Vampiric Embrace'&&e.vampiricEmbrace?.caster===c.id&&e.vampiricEmbrace.until>s.clock)return null;
  if(name==='Rebirth'){target=actors.find(a=>a.hp<=0&&!a.petUnit);if(!target)return null;}
- if(friendlyDispel.has(name)||name==='Dispel Magic'){const types=dispelTypes(sp);target=actors.find(a=>a.hp>0&&pendingDispel(a,types));if(!target){if(name==='Dispel Magic'&&pendingDispel(e,[1]))target=e;else return null;}}
- if(name==='Purge'&&!pendingDispel(e,[1]))return null;
+ if(!input&&(friendlyDispel.has(name)||name==='Dispel Magic')){const types=dispelTypes(sp);target=actors.find(a=>a.hp>0&&pendingDispel(a,types));if(!target){if(name==='Dispel Magic'&&pendingDispel(e,[1],true))target=e;else return null;}}
+ if(!input&&name==='Purge'&&!pendingDispel(e,[1],true))return null;
+ if(["Hunter's Mark",'Faerie Fire','Faerie Fire (Feral)'].includes(name)&&(e.auras||[]).some(a=>spells[a.spell]?.SpellName===name&&a.until>s.clock+3000))return null;
+ if(input)target=input.target;
+ if(name==='Swiftmend'&&!target.hots?.some(h=>h.caster===c.id&&h.until>s.clock&&['Rejuvenation','Regrowth'].includes(h.name)))return null;
  if(comboFinishers.has(name)&&(!c.combo||c.comboTarget!==e.id))return null;
  if(stealthAttacks.has(name)&&!c.stealthed)return null;
  if(name==='Execute'&&e.hp/e.maxHp>.2)return null;
@@ -60,22 +65,25 @@ export function prepareClassAbility(s,c,e,sp,actors){
  if(name==='Enslave Demon'&&(unitCreatureType(e)!==3||e.level>amount(c,sp)))return null;
  if(name==='Sap'&&(unitCreatureType(e)!==7||!c.stealthed))return null;
  if(name==='Shield Bash'||name==='Shield Block'||name==='Shield Slam'||name==='Shield Wall')if(items[c.equipment[17]?.id]?.InventoryType!==14)return null;
- if(['Pummel','Shield Bash','Counterspell','Silence'].includes(name)&&!e.cast)return null;
+ if(!input&&['Pummel','Shield Bash','Counterspell','Silence'].includes(name)&&!e.cast)return null;
  if(c.classId===1&&!stanceAllows(c,sp))return null;
  if(name==='Riposte'&&!(c.parryUntil>s.clock))return null;
  if(['Rake','Shred','Ferocious Bite','Pounce','Ravage'].includes(name)&&c.form!=='cat')return null;
+ if(name==='Shred'&&!behindTarget(c,e)&&(s.combat?.pvp||e.target===c.id))return null;
  if(['Swipe','Bash','Frenzied Regeneration','Enrage'].includes(name)&&c.form!=='bear')return null;
  if(name==='Overpower'&&!(c.overpowerUntil>s.clock)||name==='Revenge'&&!(c.revengeUntil>s.clock)||name==='Mongoose Bite'&&!(c.dodgeUntil>s.clock)||name==='Counterattack'&&!(c.parryUntil>s.clock))return null;
- if(extendedBuffs.has(name)&&buffActive(c,name,s.clock))return null;
+ if(name.startsWith('Blessing of ')&&(c.partyBlessingPrepared||0)>s.clock)return null;
+ if(!input&&extendedBuffs.has(name)&&buffActive(c,name,s.clock))return null;
  if(extendedSeals.has(name)&&spells[c.seal?.spell]?.SpellName===name&&c.seal.until>s.clock)return null;
  if(extendedSummons.has(name)&&name!=='Dismiss Pet'&&c.pet?.hp>0&&c.pet.spell===sp.Id)return null;
  if(name==='Dismiss Pet'&&!c.pet)return null;
  if(extendedTotems.has(name)&&Object.values(c.totems||{}).some(t=>t.name===name&&t.until>s.clock))return null;
  if(extendedEnchants.has(name)&&c.weaponEnchant?.spell===sp.Id&&c.weaponEnchant.until>s.clock)return null;
- if(name==='Evocation'&&c.mana>stats(c).maxMana*.35)return null;
- if(name==='Innervate'){target=actors.filter(a=>a.hp>0&&stats(a).maxMana>0&&a.mana<stats(a).maxMana*.5).sort((a,b)=>a.mana/stats(a).maxMana-b.mana/stats(b).maxMana)[0];if(!target)return null;}
- if(name==='Lay on Hands'&&target.hp>stats(target).maxHp*.3)return null;
- if(['Ice Block','Divine Shield','Divine Protection','Deterrence','Shield Wall','Last Stand','Barkskin','Feign Death'].includes(name)&&c.hp>stats(c).maxHp*.4)return null;
+ if(name==='Rockbiter Weapon'&&buffActive(c,name,s.clock))return null;
+ if(name==='Evocation'&&c.mana>readStats(c).maxMana*.35)return null;
+ if(!input&&name==='Innervate'){target=actors.filter(a=>a.hp>0&&readStats(a).maxMana>0&&a.mana<readStats(a).maxMana*.5).sort((a,b)=>a.mana/readStats(a).maxMana-b.mana/readStats(b).maxMana)[0];if(!target)return null;}
+ if(!input&&name==='Lay on Hands'&&target.hp>readStats(target).maxHp*.3)return null;
+ if(!input&&['Ice Block','Divine Shield','Divine Protection','Deterrence','Shield Wall','Last Stand','Barkskin','Feign Death'].includes(name)&&c.hp>readStats(c).maxHp*.4)return null;
  if(['Vanish','Prowl'].includes(name)&&c.stealthed)return null;
  if(name==='Ghost Wolf'&&c.form==='wolf'||name==='Dire Bear Form'&&c.form==='bear'||name==='Travel Form'&&c.form==='travel'||name==='Moonkin Form'&&c.form==='moonkin'||name==='Shadowform'&&c.form==='shadow')return null;
  if(name==='Berserker Stance'&&c.stance==='berserker')return null;
@@ -137,7 +145,7 @@ export function executeExtendedClassEffect(s,c,target,sp,actors=[c],api={}){
  if(name==='Conflagrate')target.dots=target.dots.filter(d=>!(d.caster===c.id&&spells[d.spell??d.spellId]?.SpellName==='Immolate'));
  if(name.startsWith('Curse of ')){target.auras=(target.auras||[]).filter(a=>!(a.caster===c.id&&spells[a.spell]?.SpellName.startsWith('Curse of ')));target.dots=(target.dots||[]).filter(a=>!(a.caster===c.id&&spells[a.spell??a.spellId]?.SpellName.startsWith('Curse of ')));}
  if(extendedDispels.has(name)){genericEffects(s,c,target,sp,actors,api);if(name.startsWith('Abolish'))target.abolish={spell:sp.Id,types:name==='Abolish Poison'?[4]:[3],next:s.clock+5000,until:s.clock+sp.durationMs};return true;}
- if(extendedBuffs.has(name)){const group=name.startsWith('Prayer of ')||name.startsWith('Greater Blessing')||name.endsWith(' Aura')||['Trueshot Aura','Aspect of the Pack'].includes(name);const recipients=group?actors.filter(a=>a.hp>0&&distance(c,a)<=40):[target];for(const a of recipients){applyStatsBuff(s,c,a,sp);genericEffects(s,c,a,sp,actors,api);}return true;}
+ if(extendedBuffs.has(name)){const group=name.startsWith('Prayer of ')||name.startsWith('Greater Blessing')||name.endsWith(' Aura')||['Trueshot Aura','Aspect of the Pack'].includes(name);const recipients=name.startsWith('Prayer of ')||name.startsWith('Greater Blessing')||['Arcane Brilliance','Gift of the Wild'].includes(name)?groupBuffTargets(s,target,sp,actors).filter(a=>distance(target,a)<=100):group?actors.filter(a=>a.hp>0&&distance(c,a)<=40):[target];for(const a of recipients){applyStatsBuff(s,c,a,sp);genericEffects(s,c,a,sp,actors,api);}return true;}
  if(['Garrote','Rupture','Expose Armor','Kidney Shot'].includes(name)){genericEffects(s,c,target,sp,actors,api);if(comboFinishers.has(name))c.combo=0;return true;}
  const recipients=name==='Chain Lightning'?[target,...allLiving(s).filter(e=>e!==target&&distance(target,e)<=10)].slice(0,sp.EffectChainTarget1||3):areaTargets(s,c,target,sp);for(const [index,t] of recipients.entries()){if(api.lands&&!api.lands(s,c,t,sp))continue;genericEffects(s,c,t,sp,actors,api,{coefficient:name==='Chain Lightning'?Math.pow(sp.DmgMultiplier1||.7,index):1});}
  if(comboFinishers.has(name))c.combo=0;return true;
@@ -146,7 +154,7 @@ export function classChannelTick(s,c,target,sp,cast,actors,api){
  if(sp.SpellName==='Evocation'){const st=stats(c);c.mana=Math.min(st.maxMana,c.mana+st.maxMana*.15);return;}
  if(sp.SpellName==='Health Funnel'){const v=amount(c,sp);const cost=Math.max(0,(sp.ManaPerSecond||0)+(sp.ManaPerSecondPerLevel||0)*c.level);if(c.hp<=cost){c.cast=null;return;}c.hp-=cost;heal(s,c,target,v,sp,api);return;}
  const friendly=sp.SpellName==='Tranquility',targets=friendly?actors.filter(a=>a.hp>0&&distance(c,a)<=(sp.radius||30)):sp.SpellName==='Mend Pet'?[target]:areaTargets(s,c,target,sp,cast.center);
- for(const t of targets)genericEffects(s,c,t,sp,actors,api,{periodic:true});
+ for(const t of targets){if(!friendly&&!actors.includes(t)&&sp.radius>0&&api.lands&&!api.lands(s,c,t,sp))continue;genericEffects(s,c,t,sp,actors,api,{periodic:true});}
  if(sp.SpellName==='Hellfire')c.hp=Math.max(1,c.hp-amount(c,sp));
 }
 export function classChannelInterval(sp){return sp.SpellName==='Evocation'?2000:Math.min(...[1,2,3].map(n=>sp['EffectAmplitude'+n]).filter(v=>v>0),100000)||1000;}
@@ -165,7 +173,7 @@ export function tickExtendedClassEffects(s,actors,api){for(const e of s.combat?.
  for(const p of c.periodicClass||[]){const source=actors.find(a=>a.id===p.caster);while(source&&p.next<=s.clock&&p.next<=p.until){if(p.type===8||p.type===161)heal(s,source,c,p.amount,spells[p.spell],api);else c.mana=Math.min(stats(c).maxMana,c.mana+p.amount);p.next+=p.interval;}}c.periodicClass=(c.periodicClass||[]).filter(p=>p.until>s.clock);
  if(c.frenziedRegen&&c.frenziedRegen.next<=s.clock&&c.frenziedRegen.until>=s.clock){const use=Math.min(100,c.rage||0);c.rage-=use;heal(s,c,c,use/10*c.frenziedRegen.amount,spells[c.frenziedRegen.spell],api);c.frenziedRegen.next+=1000;}
  if(c.trap){const trap=c.trap;if(trap.until<=s.clock){c.trap=null;}else if(trap.armAt<=s.clock){const victim=allLiving(s).find(e=>(!trap.commandTargetId||trap.commandTargetId===e.id)&&distance(trap,e)<=5);if(victim){const sp=spellInfo(c,trap.spell),name=sp.SpellName;const triggerName={'Immolation Trap':'Immolation Trap Effect','Explosive Trap':'Explosive Trap Effect','Freezing Trap':'Freezing Trap Effect','Frost Trap':'Frost Trap Aura'}[name];const trigger=Object.values(spells).filter(p=>p.SpellName===triggerName&&p.SpellLevel<=c.level).sort((a,b)=>b.SpellLevel-a.SpellLevel)[0];if(trigger){for(const t of name==='Explosive Trap'||name==='Frost Trap'?allLiving(s).filter(e=>distance(trap,e)<=10):[victim])genericEffects(s,c,t,spellInfo(c,trigger.Id),actors,api);}c.trap=null;}}}
- for(const [element,t]of Object.entries(c.totems||{})){if(!extendedTotems.has(t.name))continue;if(t.hp<=0||t.until<=s.clock){delete c.totems[element];continue;}if(t.next>s.clock)continue;t.next+=2000;const friends=actors.filter(a=>a.hp>0&&distance(t,a)<=20),foes=allLiving(s).filter(e=>distance(t,e)<=20);if(t.name==='Tremor Totem'){for(const a of friends){a.auras=(a.auras||[]).filter(a=>![7,5,6].includes(a.type));a.polyUntil=0;}}else if(t.name.includes('Cleansing'))for(const a of friends)dispelClassEffects(a,[t.name.startsWith('Poison')?4:3],1,s);else if(t.name==='Grounding Totem'){for(const a of friends)a.groundingTotemOwner=c.id;}else if(t.name==='Stoneclaw Totem'){for(const e of foes){const procId=spells[(t.effects||[])[0]]?.EffectTriggerSpell1,value=spells[procId]?amount(c,spells[procId]):0;e.threat[t.id]=(e.threat[t.id]||0)+value;}}else if(t.name==='Earthbind Totem'){for(const e of foes)addCombatAura(e,{spell:t.spell,effect:1,type:33,amount:-50,until:s.clock+2500},s.clock);}else for(const id of t.effects||[]){if(t.name==='Windfury Totem'&&spells[id]?.SpellName==='Windfury Totem')continue;const effect={...spellInfo(c,id),durationMs:2500};const offensive=[1,2,3].some(n=>effect['Effect'+n]===2||effect['EffectApplyAuraName'+n]===3);for(const a of offensive?(t.name==='Searing Totem'?foes.slice(0,1):foes):friends){if(offensive&&!strategyAllows(s,c,a,effect))continue;applyStatsBuff(s,c,a,effect);genericEffects(s,c,a,effect,actors,{...api,healAmount:(s,c,a,v)=>heal(s,c,a,v,spells[t.spell],api),damage:(s,c,victim,v,l,m,d)=>api.damage(s,c,victim,v,t.name||l,m,{...d,spellId:t.spell})},{periodic:true});}}if(t.name==='Fire Nova Totem')delete c.totems[element];}
+ for(const [element,t]of Object.entries(c.totems||{})){if(!extendedTotems.has(t.name))continue;if(t.hp<=0||t.until<=s.clock){delete c.totems[element];continue;}if(t.next>s.clock)continue;t.next+=2000;const friends=actors.filter(a=>a.hp>0&&distance(t,a)<=20),foes=allLiving(s).filter(e=>distance(t,e)<=20);if(t.name==='Tremor Totem'){for(const a of friends){a.auras=(a.auras||[]).filter(a=>![7,5,6].includes(a.type));a.polyUntil=0;}}else if(t.name.includes('Cleansing'))for(const a of friends)dispelClassEffects(a,[t.name.startsWith('Poison')?4:3],1,s);else if(t.name==='Grounding Totem'){for(const a of friends)a.groundingTotemOwner=c.id;}else if(t.name==='Stoneclaw Totem'){for(const e of foes){const procId=spells[(t.effects||[])[0]]?.EffectTriggerSpell1,value=spells[procId]?amount(c,spells[procId]):0;e.threat[t.id]=(e.threat[t.id]||0)+value;}}else if(t.name==='Earthbind Totem'){for(const e of foes)addCombatAura(e,{spell:t.spell,effect:1,type:33,amount:-50,until:s.clock+2500},s.clock);}else for(const id of t.effects||[]){if(t.name==='Windfury Totem'&&spells[id]?.SpellName==='Windfury Totem')continue;const effect={...spellInfo(c,id),durationMs:2500};const offensive=[1,2,3].some(n=>effect['Effect'+n]===2||effect['EffectApplyAuraName'+n]===3);for(const a of offensive?(t.name==='Searing Totem'?foes.slice(0,1):foes):friends){if(offensive&&(!strategyAllows(s,c,a,effect)||api.lands&&!api.lands(s,c,a,effect)))continue;applyStatsBuff(s,c,a,effect);genericEffects(s,c,a,effect,actors,{...api,healAmount:(s,c,a,v)=>heal(s,c,a,v,spells[t.spell],api),damage:(s,c,victim,v,l,m,d)=>api.damage(s,c,victim,v,t.name||l,m,{...d,triggeredBy:t.spell})},{periodic:![1,2,3].some(n=>effect['Effect'+n]===2)});}}if(t.name==='Fire Nova Totem')delete c.totems[element];}
 }}
 export function classIncoming(s,e,c,value,detail,api){const school=detail.school??spells[detail.spellId]?.School??0;if(schoolImmune(c,school,s.clock))return 0;if(school>0&&!detail.periodic&&c.groundingTotemOwner){const owner=(api.actors||[]).find(a=>a.id===c.groundingTotemOwner),totem=owner?.totems?.air;if(totem?.name==='Grounding Totem'&&totem.until>s.clock&&totem.hp>0){totem.hp=0;delete owner.totems.air;return 0;}}
  const sacrifice=c.sacrifice;if(sacrifice?.until>s.clock){const caster=api.actors?.find(a=>a.id===sacrifice.caster&&a.hp>0);if(caster&&caster!==c){const transfer=Math.min(value,sacrifice.amount,caster.hp);caster.hp-=transfer;value-=transfer;}}
@@ -177,17 +185,26 @@ export function classIncoming(s,e,c,value,detail,api){const school=detail.school
  if(c.soulLink&&c.pet?.hp>0){const transfer=Math.min(c.pet.hp,value*.3);c.pet.hp-=transfer;value-=transfer;}
  return Math.max(0,value);
 }
-export function classMeleeProc(s,c,target,api,slot=16){const totem=c.totemWeaponEnchant;if(slot===16&&totem?.until>s.clock&&totem.weaponUid===c.equipment?.[16]?.uid&&!(c.weaponEnchants?.[16]?.until>s.clock||c.weaponEnchant?.until>s.clock)){const proc=spells[totem.trigger];if(proc&&totem.name.startsWith('Windfury')&&rng(s)<totem.chance){const speed=(items[c.equipment[16]?.id]?.delay||2000)/1000;damage(s,c,target,(weaponDamage(s,c)+amount(c,proc)*totem.bonus*speed/14)*(1-armorReduction(effectiveArmor(target,s.clock),c.level)),proc,api);}else if(proc&&totem.name.startsWith('Flametongue'))damage(s,c,target,amount(c,proc)*.01*(items[c.equipment[16]?.id]?.delay||2000)/1000*totem.bonus,{...proc,castMs:0},api);}const j=target.judgement;if(j?.until>s.clock){if(j.caster===c.id)j.until=s.clock+10000;if(rng(s)<.5){if(j.name==='Seal of Light')heal(s,c,c,j.amount,spells[j.spell],api);if(j.name==='Seal of Wisdom')c.mana=Math.min(stats(c).maxMana,c.mana+j.amount);}}const enchant=c.weaponEnchants?.[slot]||(slot===16?c.weaponEnchant:null);if(enchant?.until>s.clock&&(!enchant.weaponUid||enchant.weaponUid===c.equipment?.[slot]?.uid)&&(enchant.charges==null||enchant.charges>0)){const sp=spellInfo(c,enchant.spell),name=enchant.name,speed=(items[c.equipment[slot]?.id]?.delay||2000)/1000;let trigger=spells[enchant.trigger];if(!trigger){const candidates=Object.values(spells).filter(p=>p.SpellName===name.replace(' Weapon',' Attack')&&p.SpellLevel<=c.level);trigger=candidates.sort((a,b)=>b.SpellLevel-a.SpellLevel)[0];}
- if(name==='Windfury Weapon'){if((c.windfuryReady||0)<=s.clock&&rng(s)<.2){c.windfuryReady=s.clock+3000;for(let n=0;n<2;n++)damage(s,c,target,(weaponDamage(s,c)+(trigger?amount(c,trigger):0)*speed/14)*(enchant.bonus||1)*(1-armorReduction(effectiveArmor(target,s.clock),c.level)),sp,api);}}
- else if(name==='Flametongue Weapon'&&trigger)damage(s,c,target,(amount(c,trigger)*.01*speed+stats(c).spellPower*.0385*speed)*(enchant.bonus||1),sp,api);
- else if(trigger&&rng(s)<(name.includes('Poison')?(enchant.chance||.2):Math.min(1,9*speed/60))){genericEffects(s,c,target,spellInfo(c,trigger.Id),[c],api,{coefficient:enchant.bonus||1});if(enchant.charges!=null)enchant.charges--;}}
- const seal=spells[c.seal?.spell];if(c.seal?.until>s.clock&&seal&&extendedSeals.has(seal.SpellName)){const name=seal.SpellName;if(name==='Seal of Command'&&rng(s)<Math.min(1,7*(items[c.equipment[16]?.id]?.delay||2000)/60000))damage(s,c,target,weaponDamage(s,c)*.7,seal,api);if(name==='Seal of Justice'&&rng(s)<.2)target.stunUntil=s.clock+2000;if(name==='Seal of Light'&&rng(s)<.5)heal(s,c,c,amount(c,sealTrigger(c,seal)),seal,api);if(name==='Seal of Wisdom'&&rng(s)<.5)c.mana=Math.min(stats(c).maxMana,c.mana+amount(c,sealTrigger(c,seal)));}
+// Vanilla Windfury grants extra weapon swings, including the white attack table.
+// Resolve that table once; an enchant's magic metadata must not add spell power.
+function extraWeaponSwing(s,c,target,sp,bonusAP,api){
+ const attack=weaponAttack(s,c,target,{spell:{...sp,School:0,DmgClass:2}});
+ if(!attack.landed)return;
+ const speed=(items[c.equipment[16]?.id]?.delay||2000)/1000;
+ const value=(weaponDamage(s,c)+bonusAP*speed/14)*attack.multiplier*(1-armorReduction(effectiveArmor(target,s.clock),c.level));
+ api.damage(s,c,target,value,sp.SpellName,1,{spellId:sp.Id,school:0,weaponAttack:true,critical:attack.critical,glancing:attack.glancing});
+}
+export function classMeleeProc(s,c,target,api,slot=16){const totem=c.totemWeaponEnchant;if(slot===16&&totem?.until>s.clock&&totem.weaponUid===c.equipment?.[16]?.uid&&!(c.weaponEnchants?.[16]?.until>s.clock||c.weaponEnchant?.until>s.clock)){const proc=spells[totem.trigger];if(proc&&totem.name.startsWith('Windfury')&&rng(s)<totem.chance){extraWeaponSwing(s,c,target,proc,amount(c,proc)*totem.bonus,api);}else if(proc&&totem.name.startsWith('Flametongue'))damage(s,c,target,amount(c,proc)*.01*(items[c.equipment[16]?.id]?.delay||2000)/1000*totem.bonus,{...proc,castMs:0},api);}const j=target.judgement;if(j?.until>s.clock){if(j.caster===c.id)j.until=s.clock+10000;if(rng(s)<.5){if(j.name==='Seal of Light')heal(s,c,c,j.amount,spells[j.spell],api);if(j.name==='Seal of Wisdom')c.mana=Math.min(stats(c).maxMana,c.mana+j.amount);}}const enchant=c.weaponEnchants?.[slot]||(slot===16?c.weaponEnchant:null);if(enchant?.until>s.clock&&(!enchant.weaponUid||enchant.weaponUid===c.equipment?.[slot]?.uid)&&(enchant.charges==null||enchant.charges>0)){const sp=spellInfo(c,enchant.spell),name=enchant.name,speed=(items[c.equipment[slot]?.id]?.delay||2000)/1000;let trigger=spells[enchant.trigger];if(!trigger){const candidates=Object.values(spells).filter(p=>p.SpellName===name.replace(' Weapon',' Attack')&&p.SpellLevel<=c.level);trigger=candidates.sort((a,b)=>b.SpellLevel-a.SpellLevel)[0];}
+ if(name==='Windfury Weapon'){if((c.windfuryReady||0)<=s.clock&&rng(s)<.2){c.windfuryReady=s.clock+1500;for(let n=0;n<2;n++)extraWeaponSwing(s,c,target,sp,(trigger?amount(c,trigger):0)*(enchant.bonus||1),api);}}
+ else if(name==='Flametongue Weapon'&&trigger){const proc={...sp,School:2,DmgClass:1};if(!api.lands||api.lands(s,c,target,proc)){const st=stats(c);damage(s,c,target,(amount(c,trigger)*.01*speed+((st.spellPower||0)+(st.schoolPower4||0))*.1)*(enchant.bonus||1),proc,api,false,{bonus:false});}}
+ else if(trigger&&rng(s)<(name.includes('Poison')?(enchant.chance||.2):Math.min(1,9*speed/60))){const proc=spellInfo(c,trigger.Id);if(!api.lands||api.lands(s,c,target,proc))genericEffects(s,c,target,proc,[c],api,{coefficient:enchant.bonus||1});if(enchant.charges!=null)enchant.charges--;}}
+ const seal=spells[c.seal?.spell];if(c.seal?.until>s.clock&&seal&&extendedSeals.has(seal.SpellName)){const name=seal.SpellName;if(name==='Seal of Command'&&(c.commandProcReadyAt||0)<=s.clock&&rng(s)<Math.min(1,7*(items[c.equipment[16]?.id]?.delay||2000)/60000)){c.commandProcReadyAt=s.clock+1000;const proc=spellInfo(c,seal.EffectTriggerSpell1||20424);if(proc&&weaponAttack(s,c,target,{special:true,spell:proc,rollCritical:false}).landed)damage(s,c,target,weaponDamage(s,c)*.7,proc,api,false,{coefficient:.7});}if(name==='Seal of Justice'&&!mechanicImmune(target,12)&&rng(s)<.2)target.stunUntil=s.clock+2000;if(name==='Seal of Light'&&rng(s)<.5)heal(s,c,c,amount(c,sealTrigger(c,seal)),seal,api);if(name==='Seal of Wisdom'&&rng(s)<.5)c.mana=Math.min(stats(c).maxMana,c.mana+amount(c,sealTrigger(c,seal)));}
 }
 
 export function classJudgement(s,c,target,sp,actors,api){
  const seal=spells[c.seal?.spell];if(!seal||seal.SpellName==='Seal of Righteousness')return false;c.seal=null;
  if(api.lands&&!api.lands(s,c,target,sp))return true;const slot=[1,2,3].find(n=>seal['EffectApplyAuraName'+n]===4&&seal['EffectBasePoints'+n]>0),id=slot?seal['EffectBasePoints'+slot]+1:0,judgement=spells[id];if(!judgement)return true;
- if(seal.SpellName==='Seal of Command'){const hit=Object.values(spells).find(p=>p.SpellName==='Judgement of Command'&&p.Rank1===seal.Rank1&&p.Effect1===2);if(hit)genericEffects(s,c,target,spellInfo(c,hit.Id),actors,api);}
+ if(seal.SpellName==='Seal of Command'){const hit=Object.values(spells).find(p=>p.SpellName==='Judgement of Command'&&p.Rank1===seal.Rank1&&p.Effect1===2);if(hit){const proc=spellInfo(c,hit.Id),stunned=target.stunUntil>s.clock||activeAuras(target,s.clock).some(a=>a.type===12);damage(s,c,target,roll(s,...effectRange(c,proc))*(stunned?1:.5),proc,api);}}
  else if(seal.SpellName==='Seal of Light'||seal.SpellName==='Seal of Wisdom'){const trigger=Object.values(spells).find(p=>p.SpellName===judgement.SpellName&&p.Rank1===judgement.Rank1&&p.Effect1===(seal.SpellName==='Seal of Light'?10:30));target.judgement={name:seal.SpellName,spell:id,caster:c.id,amount:trigger?amount(c,trigger):amount(c,sealTrigger(c,seal)),until:s.clock+10000};}
  else genericEffects(s,c,target,spellInfo(c,id),actors,api);return true;
 }
@@ -196,7 +213,7 @@ export function applyClassWeaponEnchant(s,c,sp,slot=16){
  if(sp.Effect1!==54||!classEnchantments[sp.EffectMiscValue1])throw new Error('This item has no weapon enchant effect');
  const weapon=c.equipment?.[slot];if(![16,17].includes(slot)||!items[weapon?.id]||items[weapon.id].class!==2)throw new Error('Equip a weapon first');
  const enchant=classEnchantments[sp.EffectMiscValue1],trigger=spells[enchant.effects[0]?.spellId],seconds=sp.EffectBasePoints1>0?sp.EffectBasePoints1+1:3600;
- const state={spell:sp.Id,name:trigger?.SpellName||sp.SpellName,until:s.clock+seconds*1000,charges:null,enchant:enchant.id,trigger:trigger?.Id,weaponUid:weapon.uid,slot,chance:talentSpellValue(c,sp,18,enchant.effects[0]?.amount||20)/100,bonus:talentSpellValue(c,sp,3,1)};
+ const state={spell:sp.Id,name:sp.SpellName,until:s.clock+seconds*1000,charges:null,enchant:enchant.id,trigger:trigger?.Id,weaponUid:weapon.uid,slot,chance:talentSpellValue(c,sp,18,enchant.effects[0]?.amount||20)/100,bonus:talentSpellValue(c,sp,3,1)};
  c.weaponEnchants??={};c.weaponEnchants[slot]=state;if(slot===16)c.weaponEnchant=state;return true;
 }
 
@@ -214,21 +231,29 @@ export function petCommand(s,a,owner=s){
 export function petSpellTick(s,pet,owner,target,actors,api){
  if(pet.nextPowerRegen<=s.clock){pet.mana=Math.min(pet.maxMana,pet.mana+Math.max(1,pet.maxMana*.05));pet.focus=Math.min(100,(pet.focus??100)+24);pet.nextPowerRegen=s.clock+2000;}
  if(pet.cast){if(pet.cast.until>s.clock)return true;const cast=pet.cast,sp=spellInfo(pet,cast.spell),recipient=[...actors,...s.combat.enemies].find(u=>u.id===cast.target&&u.hp>0);pet.cast=null;if(!recipient||recipient!==pet&&distance(pet,recipient)>sp.range||!finishSpellTiming(pet,cast.timing,s.clock))return true;genericEffects(s,pet,recipient,sp,actors,api);observeHunterPetSkill(s,owner,pet,sp.Id);return true;}
+ return false;
+}
+export function selectPetSpell(s,pet,owner,target,actors,requestedId=null){
+ if(pet.cast)return null;
  if(pet.nextAction>s.clock)return false;
  const best=new Map();for(const id of pet.learned||[]){const sp=spells[id];if(sp&&(!best.has(sp.SpellName)||best.get(sp.SpellName).SpellLevel<sp.SpellLevel))best.set(sp.SpellName,sp);}
- for(const raw of best.values()){const sp=spellInfo(pet,raw.Id);if(!spellReady(pet,sp,s.clock))continue;const pool=sp.PowerType===2?'focus':'mana';if((pet[pool]??(pool==='focus'?100:0))<sp.mana)continue;
+ for(const raw of best.values()){if(requestedId!=null&&raw.Id!==requestedId)continue;const sp=spellInfo(pet,raw.Id);if(!spellReady(pet,sp,s.clock))continue;const pool=sp.PowerType===2?'focus':'mana';if((pet[pool]??(pool==='focus'?100:0))<sp.mana)continue;
   const self=[1,2,3].some(n=>sp['EffectImplicitTargetA'+n]===1)&&![1,2,3].some(n=>sp['EffectImplicitTargetA'+n]===6),recipient=self?pet:target;
   if(!self&&distance(pet,target)>(sp.range||5))continue;
-  if(['Spell Lock','Pummel'].includes(sp.SpellName)&&!target.cast)continue;
-  if(sp.SpellName==='Sacrifice'&&owner.hp>stats(owner).maxHp*.3)continue;
-  if(sp.SpellName==='Devour Magic'&&!pendingDispel(target,[1]))continue;
+  if(requestedId==null&&['Spell Lock','Pummel'].includes(sp.SpellName)&&!target.cast)continue;
+  if(requestedId==null&&sp.SpellName==='Sacrifice'&&owner.hp>stats(owner).maxHp*.3)continue;
+  if(requestedId==null&&sp.SpellName==='Devour Magic'&&!pendingDispel(target,[1]))continue;
   if(self&&buffActive(pet,sp.SpellName,s.clock))continue;
+  return {kind:'petCast',spellId:sp.Id,targetId:sp.SpellName==='Sacrifice'?owner.id:recipient.id};
+ }
+ return null;
+}
+export function executePetSpell(s,pet,owner,recipient,sp,actors,api){
+ const pool=sp.PowerType===2?'focus':'mana',self=recipient===pet;
   pet[pool]??=100;const timing=beginSpellTiming(pet,sp,s.clock,{pool});
   if(sp.SpellName==='Sacrifice'){genericEffects(s,pet,owner,sp,actors,api);pet.hp=0;return true;}
   if(sp.castMs){pet.cast={timing,spell:sp.Id,target:recipient.id,until:s.clock+sp.castMs};return true;}
   if(self)applyStatsBuff(s,pet,pet,sp);genericEffects(s,pet,recipient,sp,actors,api);observeHunterPetSkill(s,owner,pet,sp.Id);return true;
- }
- return false;
 }
 
 export function tameClassPet(s,c,target,sp){if(c.pet||!target||target.hp<=0||!(creatures[target.entry]?.CreatureTypeFlags&1)||creatures[target.entry]?.CreatureType!==1||target.level>c.level)return false;c.hunterPet={entry:target.entry,name:target.name,level:target.level};summonClassPet(s,c,{...sp,SpellName:'Call Pet',EffectMiscValue1:target.entry,durationMs:0});c.pet.level=target.level;c.pet.name=target.name;c.pet.spell=883;target.removed=true;target.controlledBy=null;target.cast=null;return true;}

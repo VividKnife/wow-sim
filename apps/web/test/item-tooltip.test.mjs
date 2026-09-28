@@ -32,3 +32,11 @@ test('shared tooltip preserves instance status, enchantment and contextual detai
  const html=renderToStaticMarkup(createElement(Tooltip,{item:itemView(16800),instance:{count:3,durability:0,bound:true,locked:true,enchant:'test',enchantDescription:'附魔：次级速度'},details:'掉落率 12%'}));
  for(const text of ['数量：3','已绑定','已锁定','已损坏','耐久度 0 /','附魔：次级速度','掉落率 12%'])assert.ok(html.includes(text),text);
 });
+test('phase BIS is the last tooltip section with class-colored spec rows and no guessed membership',()=>{
+ const html=renderToStaticMarkup(createElement(Tooltip,{item:itemView(18814),details:'上下文信息'}));
+ assert.ok(html.indexOf('classic-item-bis')>html.indexOf('上下文信息'));
+ for(const name of ['神圣圣骑士','恢复德鲁伊','恢复萨满','冰霜法师','P1','P4'])assert.ok(html.includes(name),name);
+ assert.match(html,/分阶段 BIS 推荐/);assert.match(html,/WoWSims Classic/);
+ const material=renderToStaticMarkup(createElement(Tooltip,{item:itemView(17204)}));assert.doesNotMatch(material,/classic-item-bis/);
+ const random=renderToStaticMarkup(createElement(Tooltip,{item:itemView(10504)}));assert.match(random,/暂无已核实/);
+});

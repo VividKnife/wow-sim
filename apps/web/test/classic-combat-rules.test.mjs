@@ -65,8 +65,8 @@ test('Cold Snap and Preparation clear category and spell timers without clearing
  const rogue=actor(4);rogue.learned=[13877,14185];beginSpellTiming(rogue,spellInfo(rogue,13877),0);assert.ok(cooldownUntil(rogue,spells[13877])>0);
  executeTalentActive({clock:100},rogue,rogue,spells[14185]);assert.equal(cooldownUntil(rogue,spells[13877]),0);
 });
-test('spell power uses root-rank coefficients and is independent of instant/haste talents',()=>{
- const c=actor();assert.equal(spellCoefficient(spellInfo(c,143)),1);assert.ok(spellCoefficient(spellInfo(c,2136))>0);
+test('spell power uses per-rank coefficients and is independent of instant/haste talents',()=>{
+ const c=actor();assert.equal(spellCoefficient(spellInfo(c,143)),.271);assert.ok(spellCoefficient(spellInfo(c,2136))>0);
  const plain=spellPowerBonus({spellPower:100},spellInfo(c,133));c.talentProcs={presenceOfMind:{until:10000}};
  assert.equal(spellInfo(c,133).castMs,0);assert.equal(spellPowerBonus({spellPower:100},spellInfo(c,133)),plain);
  assert.equal(spellCoefficient(spellInfo(c,133),{periodic:true}),0,'explicit zero Fireball DOT scaling must remain zero');
@@ -85,7 +85,7 @@ test('attack tables have exclusive outcomes, a crit cap and no glancing on yello
  assert.equal(rollAttackTable(.5,{...chances,glancing:0}),'critical');
 });
 test('weapon skill, dual wield and spell hit use separate Classic probability rules',()=>{
- assert.ok(Math.abs(weaponMissChance(300,315)-.09)<1e-9);assert.ok(Math.abs(weaponMissChance(305,315)-.06)<1e-9);
+ assert.ok(Math.abs(weaponMissChance(300,315)-.08)<1e-9);assert.ok(Math.abs(weaponMissChance(305,315)-.06)<1e-9);
  assert.ok(Math.abs(weaponMissChance(300,300,{dualWield:true})-.24)<1e-9);
  assert.ok(Math.abs(spellMissChance(60,63)-.17)<1e-9);assert.equal(spellMissChance(60,63,1),.01);
  assert.ok(glanceMultiplier(305,315,.5)>glanceMultiplier(300,315,.5));
