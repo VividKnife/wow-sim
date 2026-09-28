@@ -3,7 +3,7 @@ import {useEffect,useRef,useState} from 'react';
 import {Dialog,Tooltip} from 'radix-ui';
 import ClassicActionTooltip from './classic-action-tooltip';
 import {Settings2,X} from 'lucide-react';
-import {actionKeys,actionBarStorageKey,normalizeActionSlots,quickActions,defaultActionSlots,quickActionKey} from '@/lib/classic-action-bar.js';
+import {actionKeys,actionBarStorageKey,normalizeActionSlots,upgradeActionSlots,quickActions,quickActionChoices,defaultActionSlots,quickActionKey} from '@/lib/classic-action-bar.js';
 import {Icon,type GameProps} from './game-ui';
 import ActivityProgress from './activity-progress';
 import './classic-action-bar.css';
@@ -12,11 +12,13 @@ export default function ClassicActionBar({state:s,data:d,busy,send,blocked}:{blo
  const mode=s.combat?'combat':'peace';
  const options={peace:quickActions(s,d,'peace'),combat:quickActions(s,d,'combat')};
  const actions=options[mode];
- const [profiles,setProfiles]=useState<Record<'peace'|'combat',(string|null)[]>>(()=>({peace:defaultActionSlots(options.peace),combat:defaultActionSlots(options.combat.filter(action=>'automatic' in action&&action.automatic))}));
- const slots=profiles[mode];
- const [ready,setReady]=useState(false),[editing,setEditing]=useState<number|null>(null),[search,setSearch]=useState('');
+ const [profiles,setProfiles]=useState<Record<'peace'|'combat',(string|null)[]>>(()=>({peace:defaultActionSlots(quickActionChoices(s,d,'peace')),combat:defaultActionSlots(quickActionChoices(s,d,'combat').filter(action=>'automatic' in action&&action.automatic))}));
+ const resolvedProfiles:Record<'peace'|'combat',(string|null)[]>={peace:upgradeActionSlots(profiles.peace,s,d),combat:upgradeActionSlots(profiles.combat,s,d)};
+ const slots=resolvedProfiles[mode];
+ const [loadedId,setLoadedId]=useState<string|null>(null),[editing,setEditing]=useState<number|null>(null),[search,setSearch]=useState('');
+ const ready=loadedId===s.id;
  const [editMode,setEditMode]=useState<'peace'|'combat'>(mode);
- const editorActions=options[editMode],editorSlots=profiles[editMode];
+ const editorActions=quickActionChoices(s,d,editMode),editorSlots=resolvedProfiles[editMode];
  const sending=useRef(false);
  useEffect(()=>{
   const saved:Partial<typeof profiles>={};
@@ -26,8 +28,17 @@ export default function ClassicActionBar({state:s,data:d,busy,send,blocked}:{blo
   // Browser preferences are restored after hydration, independently for each profile.
   // eslint-disable-next-line react-hooks/set-state-in-effect
   setProfiles(previous=>({...previous,...saved}));
-  setReady(true);
+  setLoadedId(s.id);
  },[s.id]);
+ // Persist the effective bindings after hydration and whenever a learned rank changes.
+ const peaceBindings=JSON.stringify(resolvedProfiles.peace),combatBindings=JSON.stringify(resolvedProfiles.combat);
+ useEffect(()=>{
+  if(!ready)return;
+  try{
+   localStorage.setItem(actionBarStorageKey(s.id,'peace'),peaceBindings);
+   localStorage.setItem(actionBarStorageKey(s.id,'combat'),combatBindings);
+  }catch{}
+ },[s.id,ready,peaceBindings,combatBindings]);
  const configure=(index:number)=>{setEditMode(mode);setEditing(index);setSearch('');};
  const assign=(key:string|null)=>{
   if(editing===null)return;

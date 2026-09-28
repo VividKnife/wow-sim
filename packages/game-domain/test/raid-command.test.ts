@@ -1,3 +1,4 @@
+import {combatRole} from '../src/rules/combat-roles.js';
 import {restoreRaidMember} from '../src/rules/raid-recovery.js';
 import {addRaidField} from '../src/rules/raid-battlefield.js';
 import test from 'node:test';
@@ -12,7 +13,11 @@ import {stats,spellInfo,knownRank} from '../src/rules/character.js';
 import {advance,act} from '../src/rules/engine.js';
 import {buildGameResponse} from '../src/rules/server-response.js';
 import type {Rules} from '../src/model.ts';
-function fixture(){const s=createMoltenCoreDemo().state;s.party=s.party.slice(0,4);s.growthPolicy='player';enterGoldRaid(s);for(const type of ['goldPublish','goldRecommend','goldLaunch'])goldRaidAction(s,{type});return s;}
+function fixture(){const s=createMoltenCoreDemo().state;s.party=s.party.slice(0,4);s.growthPolicy='player';enterGoldRaid(s);for(const type of ['goldPublish','goldRecommend'])goldRaidAction(s,{type});
+ // These scenarios exercise Shield Wall, so explicitly recruit warrior tanks.
+ const g=s.goldRaid,warriors=g.applicants.filter((c:Rules)=>combatRole(c)==='tank'&&c.classId===1).slice(0,2);
+ g.selected=[...warriors.map((c:Rules)=>c.id),...g.selected.filter((id:string)=>combatRole(g.applicants.find((c:Rules)=>c.id===id))!=='tank')].slice(0,24);
+ goldRaidAction(s,{type:'goldLaunch'});return s;}
 function start(s:Rules,id='magmadar'){for(const c of [s,...s.party])restoreRaidMember(c,s);beginMoltenCoreBattle(s,id,s.goldRaid.tactics);return s;}
 
 test('plans validate actors, lock in combat and survive serialization per boss',()=>{
@@ -89,4 +94,19 @@ test('automatic traversal pauses before a boss and wipe review preserves the pla
  s=act(s,{type:'abandonCombat',encounterId:s.combat.id},s.wallAt);const attempt=s.goldRaid.attempts.at(-1);assert.ok(attempt.review);assert.equal(attempt.won,false);assert.equal(attempt.review.bossRemaining,100);
  const review=structuredClone(attempt.review);goldRaidAction(s,{type:'goldRecover'});s=advance(s,s.wallAt+10000).state;
  assert.deepEqual(s.goldRaid.attempts.at(-1).review,review);
+});
+
+test('25-player camp buff order covers the assembled raid and resumes from a checkpoint',()=>{
+ const original=fixture();let s=act(original,{type:'partyBuffs'},original.wallAt);
+ s=advance(s,s.wallAt+1000).state;s=JSON.parse(JSON.stringify(s));
+ s=advance(s,s.wallAt+600000,{stopWhen:(state:Rules)=>state.activity.type==='idle'}).state;
+ assert.equal(s.activity.type,'idle',JSON.stringify(s.activity));
+ const actors=[s,...s.party];assert.equal(actors.length,25);
+ for(const c of actors){
+  assert.ok(c.classBuffs.some((b:Rules)=>b.name==='Power Word: Fortitude'&&b.until>s.clock),c.name);
+  if(stats(c).maxMana)assert.ok(c.buffs.int?.until>s.clock,c.name+' 智慧');
+  if(actors.some(p=>knownRank(p,20217)))assert.ok(c.classBuffs.some((b:Rules)=>b.name==='Blessing of Kings'&&b.until>s.clock),c.name+' 王者');
+ }
+ const before=actors.map(c=>stats(c).sta);for(const c of actors)restoreRaidMember(c,s);
+ assert.deepEqual(actors.map(c=>stats(c).sta),before);
 });

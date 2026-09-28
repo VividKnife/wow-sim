@@ -1,3 +1,4 @@
+import {highestSpellRanks} from './spell-ranks.js';
 export const actionKeys=['1','2','3','4','5','6','7','8','9','0','-','='];
 export const actionBarStorageKey=(id,mode)=>`wow-sim:action-bar:${id}:${mode}`;
 export function normalizeActionSlots(value){
@@ -25,4 +26,23 @@ export function quickActionKey(event){
  if(event.defaultPrevented||event.repeat||event.isComposing||event.altKey||event.ctrlKey||event.metaKey||event.shiftKey)return -1;
  if(event.target?.closest?.('input,textarea,select,[contenteditable]:not([contenteditable=false]),[role=dialog],[role=combobox],[role=listbox]'))return -1;
  return actionKeys.indexOf(event.key);
+}
+
+export function quickActionChoices(s,d,mode='peace'){
+ const skills=[...(d.skills||[]),...(mode==='combat'?d.strategyMembers?.find(member=>member.id===s.id)?.skills||[]:[])];
+ const ids=new Set(highestSpellRanks(skills.filter(skill=>skill.known)).map(skill=>`spell:${skill.spellId}`));
+ return quickActions(s,d,mode).filter(action=>action.kind==='物品'||ids.has(action.key));
+}
+
+export function upgradeActionSlots(slots,s,d){
+ const skills=[...(d.skills||[]),...(d.strategyMembers?.find(member=>member.id===s.id)?.skills||[])];
+ const family=skill=>skill.nameEn||skill.name||skill.spellId;
+ const byId=new Map(skills.map(skill=>[`spell:${skill.spellId}`,skill]));
+ const highest=new Map(highestSpellRanks(skills.filter(skill=>skill.known)).map(skill=>[family(skill),skill]));
+ return slots.map(key=>{
+  const bound=byId.get(key),learned=bound&&highest.get(family(bound));
+  if(!bound||!learned)return key;
+  const best=highestSpellRanks([bound,learned])[0];
+  return `spell:${best.spellId}`;
+ });
 }

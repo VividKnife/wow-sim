@@ -1,10 +1,10 @@
+import {commandCombatCast} from './combat.js';
+import {combatInputReadyReason} from './combat-input.js';
 import {items} from './catalog.js';
 import {stats,knownRank,spellInfo} from './character.js';
 import {combatRole} from './combat-roles.js';
-import {classEffect} from './class-mechanics.js';
 import {stanceAllows} from './companion-combat.js';
-import {beginSpellTiming,spellReady,cooldownUntil} from './spell-timing.js';
-import {controlled} from '../../../sim-core/src/combat-auras.js';
+import {spellReady,cooldownUntil} from './spell-timing.js';
 import {distance} from '../../../sim-core/src/geometry.js';
 import {raidBossesFor} from './molten-core-content.js';
 import {raidNotice} from './molten-core-mechanics.js';
@@ -40,6 +40,7 @@ export function raidCommandAction(s,a){
  const command=s.combat.raidEncounter.command;
  if(a.order==='focusAdds'||a.order==='focusBoss'){
   require(s.clock>=(command.focusReadyAt||0),'集火口令每5秒只能切换一次。');
+  if(s.combat.command)s.combat.command.focusId=null;
   s.combat.raidEncounter.tactics.focusAdds=a.order==='focusAdds';command.focusReadyAt=s.clock+5000;
   record(s,`团长下令：${a.order==='focusAdds'?'先清小怪':'集中首领'}`,'focus');return;
  }
@@ -62,7 +63,7 @@ function cooldownContext(s,key){
  if(!actor||!sp)reason='未安排可用施法者';
  else if(actor.hp<=0)reason='负责人已倒下';
  else if(!target||target.hp<=0)reason='目标已倒下';
- else if(controlled(actor,s.clock)||actor.silenceUntil>s.clock)reason='负责人被控制';
+ else if(combatInputReadyReason(s,actor,sp,target))reason=combatInputReadyReason(s,actor,sp,target);
  else if(key==='wall'&&(items[actor.equipment[17]?.id]?.InventoryType!==14||!stanceAllows(actor,sp)))reason='需要持盾并切换防御姿态';
  else if(!spellReady(actor,sp,s.clock))reason='技能或公共冷却中';
  else if(actor.mana<(sp.mana||0))reason='法力不足';
@@ -71,9 +72,10 @@ function cooldownContext(s,key){
 }
 function executeCooldown(s,key){
  const {actor,target,sp,reason}=cooldownContext(s,key);if(reason)return reason;
- actor.cast=null; // Emergency assignments interrupt the caster's ordinary rotation.
- const timing=beginSpellTiming(actor,sp,s.clock);if(!timing.committed)return '资源不足，无法执行';
- classEffect(s,actor,target,sp,members(s),{});
+ // Emergency assignments explicitly cancel the current cast, then use the
+ // same validation and settlement as player and team input. Restore on failure.
+ const cast=actor.cast,nextAction=actor.nextAction;actor.cast=null;actor.nextAction=s.clock;
+ try{commandCombatCast(s,actor,sp.Id,target.id);}catch(error){actor.cast=cast;actor.nextAction=nextAction;return error.message;}
  s.combat.raidEncounter.command.used[key]=(s.combat.raidEncounter.command.used[key]||0)+1;
  record(s,`${actor.name} 执行${raidCooldowns[key].name} → ${target.name}`,key,actor.id);return '';
 }
@@ -117,7 +119,7 @@ export function raidAttemptReview(s,b){
  return {bossRemaining:remaining,healerMana:mana,firstDeath:c.firstDeath,plan:structuredClone(c.plan),events:structuredClone(c.events),used:{...c.used},failures:{...e.failures},suggestions,unused:Object.entries(c.plan.cooldowns).filter(([key,slot])=>slot.actorId&&!c.used[key]).map(([key])=>raidCooldowns[key].name)};
 }
 export function raidCommandView(s){
- const r=owner(s);if(!r||members(s).length!==25)return null;
+ const r=owner(s);if(!r)return null;
  const moltenCoreBosses=raidBossesFor(r.raidId);
  const enc=s.combat?.raidEncounter,command=enc?.command;
  return {bosses:moltenCoreBosses.map(b=>({id:b.id,name:b.name,description:b.description})),plans:Object.fromEntries(moltenCoreBosses.map(b=>[b.id,{plan:raidPlan(s,b.id),published:!!r.plans?.[b.id]}])),

@@ -63,7 +63,7 @@ export async function guardLocalCommand(service: GameService, tx: ReadView, cId:
     requireThat(cmd.localSessionId === local.id && cmd.localClientId === local.clientId, 'LOCAL_SYNC_REQUIRED', '请先同步本地冒险进度后再操作');
 }
 
-export async function localSimulation(this: GameService, accountId:string, input:Rules) {
+export async function localSimulation(this: GameService, accountId:string, input:Rules, transaction?:Transaction) {
     this.request(input.requestId);
     requireThat(typeof input.clientId === 'string' && input.clientId.length > 0 && input.clientId.length <= 100, 'LOCAL_CLIENT', '本地会话标识无效', 400);
     requireThat(input.contentVersion === this.contentVersion, 'CONTENT_VERSION', '游戏规则已更新，请刷新页面', 409);
@@ -71,7 +71,7 @@ export async function localSimulation(this: GameService, accountId:string, input
     // A hash bounds receipt storage even for a large checkpoint. Retrying after a
     // lost response returns exactly the canonical IDs from the first commit.
     const fingerprint = createHash('sha256').update(JSON.stringify(input)).digest('hex');
-    return this.store.transaction(async tx => {
+    const work=async (tx:Transaction) => {
         const receiptId = `${accountId}:local:${input.requestId}`;
         const previous = await tx.get<Rules>('receipts', receiptId);
         if (previous) {
@@ -161,7 +161,8 @@ export async function localSimulation(this: GameService, accountId:string, input
         if (owner.status !== 'running') delete owner.localSimulation;
         await tx.put(table, owner);
         return result;
-    });
+    };
+    return transaction?work(transaction):this.store.transaction(work);
 }
 
 function validateCheckpoint(previous:Rules, next:Rules, until:number) {

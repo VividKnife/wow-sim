@@ -1,3 +1,4 @@
+import {mechanicImmune} from '../../../sim-core/src/combat-auras.js';
 import {creatures,spells} from './catalog.js';
 const activeRaces={'Blood Fury':2,Stoneform:3,Shadowmeld:4,'Will of the Forsaken':5,Cannibalize:5,'War Stomp':6,'Escape Artist':7,Perception:1,Berserking:8,'Find Treasure':3};
 export const racialActiveNames=new Set(Object.keys(activeRaces));
@@ -30,7 +31,7 @@ export function activateRacial(s,c,sp,api={}){
  if(name==='Stoneform'){c.racialBuff={kind:'stoneform',until:now+8000};c.racialEffects.stoneform={until:now+8000};for(const key of ['auras','dots'])c[key]=(c[key]||[]).filter(a=>{const source=spells[a.spell??a.spellId];return![3,4].includes(a.dispel??source?.Dispel)&&a.mechanic!==15&&source?.Mechanic!==15;});}
  if(name==='Will of the Forsaken'){c.auras=(c.auras||[]).filter(a=>a.type!==7&&![1,5,10].includes(a.mechanic??spells[a.spell]?.Mechanic));c.racialImmuneFearUntil=now+5000;c.racialEffects.forsaken={until:now+5000};}
  if(name==='Escape Artist'){c.rootUntil=0;c.slowUntil=0;c.movementSlows=[];c.auras=(c.auras||[]).filter(a=>![26,33].includes(a.type));}
- if(name==='War Stomp')for(const target of (api.enemies||s.combat?.enemies||[]).filter(e=>e.hp>0&&near(c,e,8)).slice(0,5)){target.stunUntil=now+2000;target.cast=null;}
+ if(name==='War Stomp')for(const target of (api.enemies||s.combat?.enemies||[]).filter(e=>e.hp>0&&near(c,e,8)&&!mechanicImmune(e,12)).slice(0,5)){target.stunUntil=now+2000;target.cast=null;}
  return true;
 }
 export function tickRacialEffects(s,c,api={}){

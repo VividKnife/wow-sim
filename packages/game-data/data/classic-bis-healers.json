@@ -1,0 +1,434 @@
+{
+  "sourceName": "Wowhead Classic · P1",
+  "scope": "P1 Best / Alternative Best only. Random suffix gear excluded; Shard of the Scale resolved by name because the shaman guide links the wrong item.",
+  "specs": {
+    "paladin-holy": {
+      "classId": 2,
+      "role": "healer",
+      "name": "神圣圣骑士",
+      "icon": "/icons/assets/spell_holy_holybolt.png"
+    },
+    "priest-holy": {
+      "classId": 5,
+      "role": "healer",
+      "name": "神圣牧师",
+      "icon": "/icons/assets/spell_holy_flashheal.png"
+    },
+    "druid-restoration": {
+      "classId": 11,
+      "role": "healer",
+      "name": "恢复德鲁伊",
+      "icon": "/icons/assets/spell_nature_healingtouch.png"
+    },
+    "shaman-restoration": {
+      "classId": 7,
+      "role": "healer",
+      "name": "恢复萨满",
+      "icon": "/icons/assets/spell_nature_magicimmunity.png"
+    }
+  },
+  "sources": [
+    {
+      "url": "https://www.wowhead.com/classic/guide/wow-classic-paladin-healing-molten-core-best-in-slot-gear",
+      "reviewedAt": "2026-09-28"
+    },
+    {
+      "url": "https://www.wowhead.com/classic/guide/wow-classic-priest-healing-molten-core-best-in-slot-gear",
+      "reviewedAt": "2026-09-28"
+    },
+    {
+      "url": "https://www.wowhead.com/classic/guide/wow-classic-druid-healing-molten-core-best-in-slot-gear",
+      "reviewedAt": "2026-09-28"
+    },
+    {
+      "url": "https://www.wowhead.com/classic/guide/wow-classic-shaman-healing-molten-core-best-in-slot-gear",
+      "reviewedAt": "2026-09-28"
+    }
+  ],
+  "entries": [
+    {
+      "itemId": 16955,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 18814,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 18810,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 13346,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 13969,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 12554,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 19162,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 18875,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 13954,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 19140,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 17064,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 17103,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 17105,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 17106,
+      "spec": "paladin-holy",
+      "phase": 1,
+      "source": 0
+    },
+    {
+      "itemId": 16921,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 18814,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 16816,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 14154,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 16819,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 16812,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 16817,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 16922,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 11822,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 19140,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 12930,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 18608,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 11923,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 11928,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 13938,
+      "spec": "priest-holy",
+      "phase": 1,
+      "source": 1
+    },
+    {
+      "itemId": 16900,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 18814,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 18810,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 13346,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 13208,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 12554,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 19162,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 18875,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 13954,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 19140,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 17064,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 17105,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 18842,
+      "spec": "druid-restoration",
+      "phase": 1,
+      "source": 2
+    },
+    {
+      "itemId": 16947,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 16842,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 18810,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 16841,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 13346,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 13969,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 16839,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 12554,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 19162,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 16838,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 16843,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 16946,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 16837,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 18814,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 19140,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 13178,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 17064,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 17105,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 11923,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 11932,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 18842,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    },
+    {
+      "itemId": 17106,
+      "spec": "shaman-restoration",
+      "phase": 1,
+      "source": 3
+    }
+  ]
+}

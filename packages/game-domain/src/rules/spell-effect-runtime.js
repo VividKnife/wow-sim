@@ -8,7 +8,7 @@ import {talentSpellValue,talentArmorPenetration,healingMultiplier} from './talen
 // Spell effects execute by source effect ID. Class scripts supply only exceptions;
 // recursive triggers carry the original cast snapshot and never start another GCD.
 function effect2(ctx){const {s,c,t,sp,api,periodic,coefficient,n,effect,v,damage}=ctx;
- let raw=roll(s,...effectRange(c,sp,n))*coefficient+(sp['EffectPointsPerComboPoint'+n]||0)*(c.combo||0);if(sp.SpellName==='Bloodthirst')raw=stats(c).attackPower*v/100;if(sp.SpellName==='Shield Slam')raw+=(items[c.equipment[17]?.id]?.block||0)+Math.max(0,stats(c).str/20-1);if(sp.SpellName==='Ferocious Bite'){raw+=(c.energy||0)*(sp['EffectMultipleValue'+n]||1)+stats(c).attackPower*(c.combo||0)*.03;c.energy=0;}if(sp.School===0)raw*=1-armorReduction(effectiveArmor(t,s.clock)-talentArmorPenetration(c),c.level);damage(s,c,t,raw,sp,api,periodic,{effect:n,coefficient});
+ let raw=roll(s,...effectRange(c,sp,n))*coefficient+(sp['EffectPointsPerComboPoint'+n]||0)*(c.combo||0);if(sp.SpellName==='Bloodthirst')raw=stats(c).attackPower*v/100;if(sp.SpellName==='Shield Slam')raw+=stats(c).blockValue||0;if(sp.SpellName==='Ferocious Bite'){raw+=(c.energy||0)*(sp['EffectMultipleValue'+n]||1)+stats(c).attackPower*(c.combo||0)*.03;c.energy=0;}if(sp.School===0)raw*=1-armorReduction(effectiveArmor(t,s.clock)-talentArmorPenetration(c),c.level);damage(s,c,t,raw,sp,api,periodic,{effect:n,coefficient});
 }
 function effect9(ctx){const {s,c,t,sp,api,n,v,damage,heal}=ctx;
  const dealt=damage(s,c,t,v,sp,api);heal(s,c,c,dealt*(sp['EffectMultipleValue'+n]||1),sp,api);

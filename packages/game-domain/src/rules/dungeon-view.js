@@ -20,8 +20,21 @@ export function recoveryView(s){
   members:members.map(c=>({id:c.id,name:c.name,role:c.role||'队长',level:c.level,hp:c.hp,mana:c.mana,maxHp:stats(c).maxHp,maxMana:stats(c).maxMana,restUntil:c.rest?.until||0}))};
 }
 
-export function dungeonViews(s){return Object.fromEntries(Object.keys(dungeonDefinitions).map(id=>[id,dungeonView(s,id)]));}
+// The journal needs entry eligibility, not every dungeon's full encounter map.
+export function dungeonViews(s){return Object.fromEntries(Object.keys(dungeonDefinitions).map(id=>[id,dungeonEntryView(s,id)]));}
+function dungeonEntryView(s,id){
+ const definition=dungeonDefinition(id),route=dungeonRoute(id),run=s.dungeon?.id===id?s.dungeon:s.dungeonSaves?.[id];
+ const entryReason=dungeonEntryReason(s,id),resetReason=dungeonResetReason(s,id);
+ return {id,active:s.dungeon?.id===id,background:dungeonJournal.find(d=>d.id===id)?.background,
+  entrance:definition.entrance,zone:definition.zone,description:definition.description,name:definition.name,
+  minimumLevel:definition.minimumLevel,recommendedLevel:definition.recommendedLevel,atEntrance:s.location===definition.entrance,
+  groupSize:selectedDungeonMembers(s).length+1,canEnter:!entryReason,entryReason,
+  saved:!!s.dungeonSaves?.[id],canReset:!resetReason,resetReason,completed:!!run?.completedAt,
+  progress:run?route.filter(e=>run.cleared[e.id]||run.skipped[e.id]).length:0,total:route.length};
+}
+/** @returns {Record<string, any>} */
 export function dungeonView(s,id=dungeonIdFor(s)){
+ if(s.dungeon?.id!==id)return dungeonEntryView(s,id);
  const definition=dungeonDefinition(id),route=dungeonRoute(id);
  const active=s.dungeon?.id===id,run=active?s.dungeon:s.dungeonSaves?.[id],encounter=run&&route[run.cursor];
  const context=run?{...s,dungeon:run}:s,remaining=encounter?remainingDungeonEnemies(context,encounter):[];

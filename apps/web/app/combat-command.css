@@ -17,3 +17,5 @@
 .world-embedded-battle .command-hotbar-heading{justify-content:flex-start}
 .world-embedded-battle .command-pause{flex-shrink:0}
 @media(max-width:800px){.command-members-mobile{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;margin-bottom:7px}.command-members-mobile button{min-width:0;justify-content:center;padding:4px 2px;gap:3px;font-size:9px;color:#d4c395;white-space:nowrap;overflow:hidden}.command-members-mobile button img{width:16px;height:16px}.command-members-mobile button:focus-visible{outline:2px solid #f1d591}}
+
+.combat-spell-details{margin-top:8px;border-top:1px solid #76664766;padding-top:6px}.combat-spell-details summary{cursor:pointer;color:#ddc695}.combat-spell-order{display:flex;flex-wrap:wrap;align-items:end;gap:8px;padding-top:8px}.combat-spell-order label{display:grid;gap:3px;min-width:150px;flex:1}.combat-spell-order>button{padding:7px 10px;border:1px solid #87734c;border-radius:3px;background:#293329;color:#eee0b5}.combat-spell-order>button:disabled{opacity:.45}.combat-spell-order>small{flex-basis:100%;color:#c2b58f}

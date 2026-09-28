@@ -43,15 +43,21 @@ export function createContentLoader(fetchImpl=(...args)=>fetch(...args)) {
  return {pack,ensureItems};
 }
 
-// Display records use id for inventory/rewards/materials and item for outputs.
-// Other domains may share these field names: missing IDs are negatively cached,
-// and harmless extra item matches are preferable to missing a new UI reference.
+// Numeric IDs in logs, quests, spells and creatures are not item references.
+// Only inventory/display item collections give the generic `id` field meaning.
+const itemCollections=new Set(['equipment','bag','bags','bank','pending','rewards','choices','materials','tools','shop','loot','market','disenchantable','reagents','drops']);
+const itemFields=new Set(['item','itemId','healthItem','manaItem']);
 export function referencedItemIds(value){
  const ids=new Set();
- function walk(value,key=''){
-  if(Number.isSafeInteger(value)&&value>0&&['id','item','itemId','healthItem','manaItem'].includes(key))ids.add(value);
-  else if(Array.isArray(value))for(const entry of value)walk(entry,key);
-  else if(value&&typeof value==='object')for(const [field,entry] of Object.entries(value))walk(entry,field);
+ const add=id=>{if(Number.isSafeInteger(id)&&id>0)ids.add(id);};
+ function walk(value,itemCollection=false){
+  if(Array.isArray(value)){for(const entry of value)walk(entry,itemCollection);return;}
+  if(!value||typeof value!=='object')return;
+  if(itemCollection||typeof value.uid==='string')add(value.id);
+  for(const [field,entry] of Object.entries(value)){
+   if(itemFields.has(field))add(entry);
+   walk(entry,itemFields.has(field)||itemCollections.has(field)||(itemCollection&&!Object.hasOwn(value,'id')));
+  }
  }
  walk(value);return [...ids];
 }

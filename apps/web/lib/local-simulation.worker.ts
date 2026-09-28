@@ -1,3 +1,7 @@
+import type {CombatPolicyRequest} from '../../../packages/contracts/src/combat-policy.ts';
+import {CombatStreamSender,eventBatch} from '../../../packages/sim-core/src/combat-stream.js';
+import {setCombatPolicyHost,receiveCombatIntent} from '../../../packages/game-domain/src/rules/combat-policy.js';
+import {projectCombatObservation} from '../../../packages/game-domain/src/rules/combat-observation.js';
 import {combatCommandView} from '../../../packages/game-domain/src/rules/combat-command.js';
 import {act, advanceOwned, view} from '../../../packages/game-domain/src/rules/engine.js';
 import {raidCommandView} from '../../../packages/game-domain/src/rules/raid-command.js';
@@ -5,19 +9,37 @@ import {arenaView} from '../../../packages/game-domain/src/rules/arena.js';
 import {battlegroundView} from '../../../packages/game-domain/src/rules/battleground.js';
 import {battlePresentation} from '../../../packages/game-domain/src/rules/battle-presentation.js';
 import {goldRaidView} from '../../../packages/game-domain/src/rules/gold-raid.js';
-import {projectClientSnapshot, projectCombatPlayback} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
+import {projectClientSnapshot, createCombatFrameProjector} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
 import manifest from '../../../packages/game-data/manifest.json';
-import {remapItemReferences} from './local-item-identities.js';
+import {remapItemReferences} from '../../../packages/sim-core/src/item-identities.js';
 import {projectLocalCheckpoint} from '../../../packages/game-domain/src/rules/local-checkpoint.js';
 import {isLocalCombatAction} from './local-combat-actions';
 
 let state:any, timer:ReturnType<typeof setTimeout>|undefined, origin=0, started=0, deadline=0;
 let lastFull=0, lastFrame=0, lastRaid=0, running=false, visible=true, watching=true, generation='';
+const projectFrame=createCombatFrameProjector();
+const displayStream=new CombatStreamSender(),policyStream=new CombatStreamSender();
+let displayBaseline=true,eventThrough=0,eventSentThrough=0,policyPort:MessagePort|null=null,policyReady=false;
+let policyRequests=new Map<string,CombatPolicyRequest>(),policyCpuMs=0,profile=false,policyErrors=0,policyTimeouts=0,lastPolicyError='';
+const policyTransfers={packets:0,numericBytes:0,maxNumericBytes:0};
+const policyHost={
+ available:()=>policyReady&&policyStream.ready,
+ request:(_state:any,request:CombatPolicyRequest)=>{policyRequests.set(request.actorId,request);},
+ timeout:()=>{policyTimeouts++;policyReady=false;policyRequests.clear();},
+};
+function publishPolicy(){
+ if(!state?.combat||!policyReady||!policyStream.ready||!policyRequests.size)return;
+ const requests=[...policyRequests.values()];policyRequests.clear();
+ const observation=projectCombatObservation(state);
+ const packet=policyStream.encode(observation);
+ if(profile&&packet?.buffer){policyTransfers.packets++;policyTransfers.numericBytes+=packet.buffer.byteLength;policyTransfers.maxNumericBytes=Math.max(policyTransfers.maxNumericBytes,packet.buffer.byteLength);}
+ policyPort!.postMessage({type:'observation',generation,packet,requests},packet?.buffer?[packet.buffer]:[]);
+}
 let overview:any=null;
 let raidView:any=null;
 let commandCheckpoint:{requestId:string;target:number}|null=null;
 let actions:{requestId:string;target:number;command:any}[]=[];
-const scope = globalThis as unknown as {postMessage:(message:unknown)=>void;onmessage:((event:MessageEvent)=>void)|null};
+const scope = globalThis as unknown as {postMessage:(message:unknown,transfer?:Transferable[])=>void;onmessage:((event:MessageEvent)=>void)|null};
 function currentTarget(){return Math.max(state.wallAt,Math.min(deadline,Math.floor(origin+performance.now()-started)));}
 function checkpoint(requestId:string){
   scope.postMessage({type:'checkpoint',generation,requestId,state:projectLocalCheckpoint(state)});
@@ -34,9 +56,9 @@ function publish(force=false, command=false) {
     overview=projectClientSnapshot(state,view(state));
     scope.postMessage({type:'full',generation,snapshot:overview,behindMs:Math.max(0,origin+now-started-state.wallAt)});
   }
-  if (watching && visible && (force || command || now-lastFrame>=95)) {
+  if (watching && visible && displayStream.ready && (force || command || now-lastFrame>=95)) {
     lastFrame=now;
-    const snapshot:any=projectCombatPlayback(state,battlePresentation(state),state.wallAt);
+    const snapshot:any=projectFrame(state,battlePresentation(state),state.wallAt,force);
     if(state.arena)snapshot.view.arena=arenaView(state);
     if(state.battleground)snapshot.view.battleground=battlegroundView(state);
     if(force||command||!raidView||now-lastRaid>=1000){
@@ -44,7 +66,10 @@ function publish(force=false, command=false) {
       if(state.goldRaid)raidView.goldRaid=goldRaidView(state);
     }
     Object.assign(snapshot.view,raidView);
-    scope.postMessage({type:'frame',generation,snapshot,behindMs:Math.max(0,origin+performance.now()-started-state.wallAt)});
+    const events=eventBatch(state.logs,eventThrough);eventSentThrough=events.through;
+    if(snapshot.player)delete snapshot.player.logs;
+    const packet=displayStream.encode(snapshot,{baseline:displayBaseline||force});displayBaseline=false;
+    scope.postMessage({type:'frame',generation,packet,events,behindMs:Math.max(0,origin+performance.now()-started-state.wallAt)},packet?.buffer?[packet.buffer]:[]);
   }
 }
 function tick() {
@@ -57,8 +82,9 @@ function tick() {
     const target=action?.target??commandCheckpoint?.target??currentTarget();
     const before=boundaryKey();
     // Bounded slices yield to messages and checkpoints during offline catch-up.
-    const result=advanceOwned(state,target,{maxTicks:20});
-    state=result.state;
+    setCombatPolicyHost(state,policyReady?policyHost:null);
+    const result=advanceOwned(state,target,{maxTicks:policyReady?1:20});
+    state=result.state;publishPolicy();
     if(action){
       scope.postMessage({type:'commandProgress',generation,requestId:action.requestId,wallAt:state.wallAt});
       if(result.complete){
@@ -68,8 +94,8 @@ function tick() {
           // command cannot partially mutate the running simulation.
           state=act(state,action.command,state.wallAt);
           // Boundaries are published below; live orders only need a small frame.
-          if(before===boundaryKey())publish(!watching,true);
           scope.postMessage({type:'commandResult',generation,requestId:action.requestId});
+          if(before===boundaryKey())publish(!watching,true);
         } catch(error) {
           scope.postMessage({type:'commandResult',generation,requestId:action.requestId,error:error instanceof Error?error.message:'操作失败'});
         }
@@ -84,6 +110,7 @@ function tick() {
     }
     const boundary=before!==boundaryKey();
     publish(boundary);
+    if(profile)scope.postMessage({type:'diagnostics',generation,clock:state.clock,active:!!state.combat,policyReady,policyCpuMs,policyTransfers,policyErrors,policyTimeouts,lastPolicyError,tickMs:performance.now()-tickStarted,behindMs:Math.max(0,currentTarget()-state.wallAt),metrics:state.combat?.policy?.metrics,alive:[state,...(state.party||[])].filter(c=>c.hp>0).length});
     if (boundary) scope.postMessage({type:'boundary',generation});
     // Include computation in the cadence instead of adding another 50 ms after
     // every slice; otherwise busy fights stretch 100 ms playback to 150–200 ms.
@@ -94,18 +121,39 @@ function tick() {
   }
 }
 scope.onmessage=({data})=>{
+  if(data.type==='policyPort'){
+    policyPort?.close();policyPort=data.port;
+    policyPort!.onmessage=({data:message})=>{
+      if(message.type==='ready'){policyReady=true;return;}
+      if(message.generation!==generation)return;
+      if(message.type==='baseline'){policyStream.rebase();policyRequests.clear();return;}
+      if(message.type==='policyError'){policyErrors++;lastPolicyError=message.error;policyReady=false;policyRequests.clear();return;}
+      if(message.type==='intents'){
+        if(!policyStream.acknowledge(message.sequence,message.buffer))return;
+        policyCpuMs+=message.computeMs||0;
+        if(running&&state?.combat)for(const envelope of message.results)receiveCombatIntent(state,envelope);
+      }
+    };policyPort!.start();return;
+  }
+  if(data.type==='policyUnavailable'){policyReady=false;policyRequests.clear();return;}
+  if(data.type==='frameAck'&&data.generation===generation){if(displayStream.acknowledge(data.sequence,data.buffer))eventThrough=eventSentThrough;return;}
+  if(data.type==='frameBaseline'&&data.generation===generation){displayStream.rebase();displayBaseline=true;lastFrame=-Infinity;return;}
   if (data.type==='start') {
     clearTimeout(timer);commandCheckpoint=null;actions=[];
     if (data.contentVersion!==manifest.contentVersion) {
-      scope.postMessage({type:'error',generation:data.generation,error:'游戏规则已更新，请刷新页面'});return;
+      scope.postMessage({type:'error',generation:data.generation,code:'CONTENT_VERSION',error:'游戏规则已更新，请刷新页面'});return;
     }
-    generation=data.generation;state=data.state;origin=data.serverNow;deadline=data.deadline;started=performance.now();
-    lastFull=lastFrame=lastRaid=0;overview=raidView=null;running=true;tick();
+    displayStream.reset();policyStream.reset();displayBaseline=true;eventThrough=0;policyRequests.clear();policyPort?.postMessage({type:'reset'});
+    policyCpuMs=policyErrors=policyTimeouts=0;lastPolicyError='';policyTransfers.packets=policyTransfers.numericBytes=policyTransfers.maxNumericBytes=0;
+    profile=!!data.profile;generation=data.generation;state=data.state;origin=data.serverNow;deadline=data.deadline;started=performance.now();
+    lastFull=lastFrame=lastRaid=0;overview=raidView=null;running=true;
+    // Startup acknowledgement does not depend on visibility or expensive views.
+    scope.postMessage({type:'ready',generation});tick();
   } else if (data.type==='command' && data.generation===generation) {
     const command=data.command;
     const authorized=state && (!command.characterId||command.characterId===state.id) &&
       (!command.actorId||command.actorId===state.id) && (!command.casterId||command.casterId===state.id);
-    const goldAllowed=!state?.goldRaid?.active||['cast','raidOrder','abandonCombat'].includes(command.type);
+    const goldAllowed=!state?.goldRaid?.active||['cast','combatCommand','raidOrder','abandonCombat'].includes(command.type);
     if(!running||commandCheckpoint||!authorized||!goldAllowed||!isLocalCombatAction(command)||actions.length>=32){
       scope.postMessage({type:'commandResult',generation,requestId:data.requestId,error:'当前状态不能执行此本地战斗操作'});return;
     }

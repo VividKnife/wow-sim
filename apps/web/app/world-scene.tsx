@@ -6,11 +6,14 @@ import {scenePresentation} from '@/lib/scene-presentation.js';
 import CharacterModel from './character-model';
 import SceneBackdrop from './scene-backdrop';
 import Battle from './battle';
+import RaidBossPreview from './raid-boss-preview';
+import {waitingRaidBoss} from '@/lib/boss-presentation.js';
 import type {GameProps} from './game-ui';
 import './world-scene.css';
 
 export default function WorldScene(props:GameProps&{onObserve?:()=>void;animationPaused?:boolean;canLead?:boolean;commandMemberId?:string;onCommandMemberChange?:(id:string)=>void}){
  const {state:s,data:d}=props,scene=worldSceneState(s,d),presentation=scenePresentation(s,d);
+ const waitingBoss=waitingRaidBoss(s,d);
  const container=useRef<HTMLElement>(null);
  const [paused,setPaused]=useState(false),[visible,setVisible]=useState(true),[foreground,setForeground]=useState(true);
  useEffect(()=>{
@@ -22,13 +25,13 @@ export default function WorldScene(props:GameProps&{onObserve?:()=>void;animatio
  },[]);
  const animationPaused=paused||!!props.animationPaused||!visible||!foreground||!!s.presence?.paused;
  return <section ref={container} className={`world-scene scenery-${worldScenery(presentation.location)} ${scene.ghost?'is-ghost':''} ${scene.flying?'is-flying':''} ${scene.moving&&!animationPaused?'is-moving':''} ${scene.combat?'is-combat':''}`} aria-label="世界沉浸场景" data-motion={scene.animation} data-travel-mode={scene.flying?'flight':scene.mountDisplayId?'ride':'foot'}>
-  <div className="world-exploration" aria-hidden={scene.combat} inert={scene.combat}>
+  <div className="world-exploration" aria-hidden={scene.combat||!!waitingBoss} inert={scene.combat||!!waitingBoss}>
    <SceneBackdrop image={presentation.image} city={!!d.city&&!presentation.instance} flying={scene.flying}/><div className="world-scene-mist"/>
    {scene.flying&&<div className="world-flight-clouds" aria-hidden="true"/>}
    <div className={'world-avatar '+(scene.mountDisplayId?'is-mounted':'')}>
     <div className="world-avatar-shadow"/>
     {scene.ghost&&<div className="world-spirit-aura" aria-hidden="true"><i/><i/><i/></div>}
-    <CharacterModel ghost={scene.ghost} equipment={s.equipment} items={d.items} raceId={s.raceId||1} classId={s.classId||8} gender={s.gender||'male'} view={scene.flying?'flight':'world'} animation={scene.animation as 'Stand'|'Run'|'Fly'|'Death'} mountDisplayId={scene.mountDisplayId} paused={animationPaused||scene.combat} fallback={<span className="world-model-placeholder">✦</span>} title={scene.ghost?'灵魂形态 · 返回尸体':'第三人称角色与当前装备'}/>
+    <CharacterModel ghost={scene.ghost} equipment={s.equipment} items={d.items} raceId={s.raceId||1} classId={s.classId||8} gender={s.gender||'male'} view={scene.flying?'flight':'world'} animation={scene.animation as 'Stand'|'Run'|'Fly'|'Death'} mountDisplayId={scene.mountDisplayId} paused={animationPaused||scene.combat||!!waitingBoss} fallback={<span className="world-model-placeholder">✦</span>} title={scene.ghost?'灵魂形态 · 返回尸体':'第三人称角色与当前装备'}/>
    </div>
    <div className="world-scene-vignette"/>
    <header className="world-scene-heading"><span>艾泽拉斯 · {presentation.instance?'副本':scene.flying?'天空航线':'旅途'}</span><h2>{presentation.name}{scene.flying?'上空':''}</h2><p>{presentation.region} · {presentation.instance?'副本内部':scene.flying?'飞行途中':d.city?'城镇':'野外'}</p></header>
@@ -37,6 +40,7 @@ export default function WorldScene(props:GameProps&{onObserve?:()=>void;animatio
    <button className="world-scene-pause" onClick={()=>setPaused(value=>!value)} aria-label={paused?'播放场景动画':'暂停场景动画'} aria-pressed={paused}>{paused?<Play size={14}/>:<Pause size={14}/>}</button>
    {scene.flying&&<progress className="world-flight-progress" aria-label="飞行航程" max={1} value={scene.flightProgress}/>}
   </div>
+  {waitingBoss&&<RaidBossPreview boss={waitingBoss} active={!animationPaused}/>}
   {scene.combat&&<><div className="world-battle-pending" role="status">正在进入战场…</div><div className="world-scene-combat"><Battle {...props} embedded open={visible&&!animationPaused} onOpenChange={()=>{}}/>{props.onObserve&&<button className="world-battle-expand" onClick={props.onObserve}><Maximize2 size={14}/>展开战斗</button>}</div></>}
  </section>;
 }

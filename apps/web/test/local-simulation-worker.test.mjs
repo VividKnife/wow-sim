@@ -1,3 +1,4 @@
+import {CombatStreamReceiver} from '../../../packages/sim-core/src/combat-stream.js';
 import test,{before} from 'node:test';
 import assert from 'node:assert/strict';
 import {runInNewContext} from 'node:vm';
@@ -7,6 +8,8 @@ import {build} from 'esbuild';
 let source;
 before(async()=>{
  const fixtures={
+  'combat-policy.js':'export const setCombatPolicyHost=()=>{};export const receiveCombatIntent=()=>{};',
+  'combat-observation.js':'export const projectCombatObservation=()=>null;',
   'engine.js':'export const advanceOwned=(...args)=>globalThis.advanceFixture(...args);export const act=(...args)=>globalThis.actFixture(...args);export const view=state=>globalThis.viewFixture(state);',
   'raid-command.js':'export const raidCommandView=state=>({clock:state.clock,order:state.order});',
   'combat-command.js':'export const combatCommandView=()=>null;',
@@ -14,7 +17,7 @@ before(async()=>{
   'battleground.js':'export const battlegroundView=()=>({});',
   'gold-raid.js':'export const goldRaidView=state=>({clock:state.clock});',
   'battle-presentation.js':'export const battlePresentation=()=>({});',
-  'client-snapshot.ts':'export const projectClientSnapshot=(player,view)=>({player,view});export const projectCombatPlayback=()=>({view:{}});',
+  'client-snapshot.ts':'export const projectClientSnapshot=(player,view)=>({player,view});export const createCombatFrameProjector=()=>()=>({view:{}});',
   'manifest.json':'export default {contentVersion:"fixture"};',
  };
  const bundle=await build({absWorkingDir:fileURLToPath(new URL('../',import.meta.url)),entryPoints:['lib/local-simulation.worker.ts'],write:false,bundle:true,format:'iife',platform:'browser',logLevel:'silent',plugins:[{name:'worker-fixtures',setup(build){
@@ -24,8 +27,9 @@ before(async()=>{
 });
 
 function runtime({now=0,wallAt=0,serverNow=100000,deadline=200000,visible=true,extra={},computeMs=0}={}){
+ const frames=new CombatStreamReceiver();
  const messages=[],timers=new Map(),steps=[],views=[],delays=[];let id=0,time=now,patch={};
- const sandbox={actFixture:(state,command)=>{if(command.invalid)throw new Error('invalid order');return {...state,order:command.order};},performance:{now:()=>time},structuredClone,postMessage:message=>messages.push(structuredClone(message)),setTimeout:(fn,delay)=>{delays.push(delay);timers.set(++id,fn);return id;},clearTimeout:key=>timers.delete(key),viewFixture:state=>{views.push(state.clock);return {clock:state.clock};},advanceFixture:(state,target,{maxTicks})=>{
+ const sandbox={actFixture:(state,command)=>{if(command.invalid)throw new Error('invalid order');return {...state,order:command.order};},performance:{now:()=>time},structuredClone,postMessage:message=>{if(message.type==='frame'){const decoded=frames.apply(message.packet);message={...message,snapshot:decoded.snapshot};sandbox.onmessage({data:{type:'frameAck',generation:message.generation,sequence:message.packet.sequence,buffer:message.packet.buffer}});}messages.push(structuredClone(message));},setTimeout:(fn,delay)=>{delays.push(delay);timers.set(++id,fn);return id;},clearTimeout:key=>timers.delete(key),viewFixture:state=>{views.push(state.clock);return {clock:state.clock};},advanceFixture:(state,target,{maxTicks})=>{
   time+=computeMs;
   const next=Math.min(target,state.wallAt+maxTicks*100);steps.push({target,maxTicks,wallAt:next});
   Object.assign(state,patch,{clock:next,wallAt:next});return {state,complete:next===target};
@@ -76,6 +80,7 @@ test('manual checkpoint catches up in bounded slices to a fixed instant, then pa
 
 test('hidden or stopped simulation can settle a command and report progress without visible frames',()=>{
  const r=runtime({visible:false});r.send({type:'stop'});r.send({type:'checkpoint',generation:'session',pause:true,requestId:'command'});
+ assert.equal(r.messages[0].type,'ready','startup cannot wait for a visible full snapshot');
  for(let i=0;i<100&&r.run();i++);
  assert.equal(r.messages.filter(m=>m.type==='full').length,0);assert.equal(r.messages.findLast(m=>m.type==='checkpoint').state.wallAt,100000);
  assert.ok(r.messages.some(m=>m.type==='checkpointProgress'));

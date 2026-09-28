@@ -19,7 +19,5 @@ export const potions=reference.potions;
 export const bandages=reference.bandages;
 export const disenchantLoot=Object.groupBy(reference.disenchant,r=>r.entry);
 export const materialIds=new Set(recipes.flatMap(r=>r.materials.map(m=>m.id)).concat(reference.disenchant.map(r=>r.item)));
-export const marketIds=[...new Set([...materialIds,...recipes.flatMap(r=>[r.item,...r.tools,...r.recipeItems]),...Object.keys(potions).map(Number),...Object.keys(bandages).map(Number),2318,2319,4234,4304,8170,4496,4498])];
-export const priceOverrides={2447:35,765:35,2449:60,785:65,2450:70,3820:80,2770:25,2771:80,2840:35,3576:100,2841:80,2835:10,2318:50,2319:150,2589:40,2592:100,3371:5,10940:80,10938:180,118:90,858:200,929:400,2455:120,3385:240,1251:45,2581:90,6291:10,2996:95,2997:340,4238:850,4240:1300};
 export const specializationKnown=(p,id)=>!id||p?.specialization===id||specializations.find(x=>x.id===p?.specialization)?.parent===id;
 export function enchantFits(def,item,slot){return !!(def&&item&&def.slots.includes(slot)&&(def.class<0||def.class===item.class)&&(!def.subclassMask||def.subclassMask<0||def.subclassMask&(1<<item.subclass))&&(!def.inventoryMask||def.inventoryMask&(1<<item.InventoryType)));}

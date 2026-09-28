@@ -1,4 +1,5 @@
 "use client";
+import {PartyBuffOrder} from './party-buffs';
 import {Button} from '@/components/ui/button';
 import {Bar,Icon,GameProps,duration} from './game-ui';
 import DungeonMap from './dungeon-map';
@@ -7,6 +8,7 @@ import {GroupLoot} from './adventure-hall';
 export function RecoveryControls({state:s,data:d,busy,send}:GameProps){
  const r=d.recovery;if(!r)return null;
  return <section className="recovery-controls" aria-label="小队恢复">
+  {s.dungeon&&<PartyBuffOrder state={s} data={d} busy={busy} send={send}/>}
   <div className="section-heading"><h3>休整与补给</h3><small>食物 {r.food} · 饮水 {r.water}</small></div>
   <div className="action-row">
    <Button variant="outline" disabled={busy||!r.canRest} onClick={()=>send({type:'rest'})}>{s.dungeon?'小队坐下恢复':'坐下恢复'}</Button>

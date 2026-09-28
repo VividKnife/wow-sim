@@ -13,23 +13,24 @@ before(async()=>{
 });
 after(async()=>{await unlink(outfile);await rmdir(directory);});
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
-function harness(t,{lag=0,itemIds=[],claimError=null}={}){
- const savedWindow=globalThis.window,savedWorker=globalThis.Worker;
+function harness(t,{lag=0,itemIds=[],claimError=null,ready=true}={}){
+ const savedWindow=globalThis.window,savedWorker=globalThis.Worker,savedChannel=globalThis.MessageChannel;
+ globalThis.MessageChannel=undefined;
  const requests=[],workers=[],statuses=[];
  let pendingReply=null,failNext=false,generation=0;
  const initial={id:'hero',clock:0,wallAt:0,bag:[]};
  let canonical=structuredClone(initial);
  const result=(sequence=0)=>({ownerId:'activity',state:structuredClone(canonical),contentVersion:'fixture',serverNow:canonical.wallAt+lag,deadline:999999,active:true,session:{id:`session-${generation}`,sequence}});
  class Worker {
-  onmessage=null;messages=[];state=null;generation='';autoCapture=true;
+  onmessage=null;messages=[];state=null;generation='';autoCapture=true;terminated=false;
   constructor(){workers.push(this);}
   postMessage(message){
    this.messages.push(message);
-   if(message.type==='start'){this.state=structuredClone(message.state);this.generation=message.generation;}
+   if(message.type==='start'){this.state=structuredClone(message.state);this.generation=message.generation;if(ready)queueMicrotask(()=>this.onmessage?.({data:{type:'ready',generation:this.generation}}));}
    if(message.type==='checkpoint'&&this.autoCapture)queueMicrotask(()=>this.onmessage?.({data:{type:'checkpoint',generation:this.generation,requestId:message.requestId,state:structuredClone(this.state)}}));
    if(message.type==='command')queueMicrotask(()=>this.onmessage?.({data:{type:'commandResult',generation:this.generation,requestId:message.requestId,error:message.command.invalid?'invalid order':undefined}}));
   }
-  terminate(){}
+  terminate(){this.terminated=true;}
  }
  globalThis.window={location:{origin:'http://preview',search:'?saveId=one'}};globalThis.Worker=Worker;
  t.mock.method(globalThis,'fetch',async(url,options)=>{
@@ -46,8 +47,8 @@ function harness(t,{lag=0,itemIds=[],claimError=null}={}){
  });
  t.mock.timers.enable({apis:['setTimeout']});
  const client=new Client({onFull:()=>{},onStatus:message=>statuses.push(message),refresh:async()=>{}});
- t.after(()=>{client.dispose();globalThis.window=savedWindow;globalThis.Worker=savedWorker;});
- return {client,workers,requests,statuses,hold:()=>{pendingReply={};return ()=>{pendingReply.resolve();pendingReply=null;};},fail:()=>{failNext=true;}};
+ t.after(()=>{client.dispose();globalThis.window=savedWindow;globalThis.Worker=savedWorker;globalThis.MessageChannel=savedChannel;});
+ return {client,workers,requests,statuses,setReady:value=>{ready=value;},hold:()=>{pendingReply={};return ()=>{pendingReply.resolve();pendingReply=null;};},fail:()=>{failNext=true;}};
 }
 test('expired content blocks local work without retrying and clears after activity recovery',async t=>{
  const h=harness(t,{claimError:{code:'CONTENT_VERSION',error:'活动规则已过期'}});
@@ -132,9 +133,9 @@ test('a stale lag sample no longer blocks commands after the Worker has caught u
 test('combat frames clear catch-up status even when the full overview is deferred',async t=>{
  const h=harness(t,{lag:30000});h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
  const worker=h.workers[0];
- worker.onmessage({data:{type:'frame',generation:worker.generation,behindMs:30000,snapshot:{player:{clock:0},view:{}}}});
+ worker.onmessage({data:{type:'frame',generation:worker.generation,behindMs:30000,packet:{version:1,sequence:1,base:0,snapshot:{player:{clock:0},view:{}}}}});
  assert.match(h.statuses.at(-1),/结算离线/);
- worker.onmessage({data:{type:'frame',generation:worker.generation,behindMs:0,snapshot:{player:{clock:30000},view:{}}}});
+ worker.onmessage({data:{type:'frame',generation:worker.generation,behindMs:0,packet:{version:1,sequence:2,base:0,snapshot:{player:{clock:30000},view:{}}}}});
  assert.equal(h.statuses.at(-1),'');
  assert.equal(h.client.latest,null,'a partial frame must not replace the full overview');
 });
@@ -184,7 +185,7 @@ test('temporary save failures keep combat and input running while preserving the
  const worker=h.workers[0],stops=worker.messages.filter(m=>m.type==='stop').length;
  h.fail();t.mock.timers.tick(10000);await flush();
  assert.equal(worker.messages.filter(m=>m.type==='stop').length,stops);
- worker.onmessage({data:{type:'frame',generation:worker.generation,behindMs:0,snapshot:{player:{clock:10000},view:{}}}});
+ worker.onmessage({data:{type:'frame',generation:worker.generation,behindMs:0,packet:{version:1,sequence:1,base:0,snapshot:{player:{clock:10000},view:{}}}}});
  assert.match(h.statuses.at(-1),/暂未同步/,'live frames must not hide a failed save');
  assert.equal(await h.client.act({type:'raidOrder'}),true);
  t.mock.timers.tick(2000);await flush();
@@ -195,4 +196,80 @@ test('the first browser command requests local execution before an owner or Work
  const h=harness(t);
  await h.client.command(async credentials=>{assert.equal(typeof credentials.localClientId,'string');assert.ok(credentials.localClientId.length);assert.equal(credentials.localSessionId,undefined);});
  assert.equal(h.requests.length,0);assert.equal(h.workers.length,0);
+});
+
+test('startup has a deadline, replaces an unresponsive Worker and ignores its late messages',async t=>{
+ const h=harness(t,{ready:false});h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ const old=h.workers[0];assert.match(h.statuses.at(-1),/准备冒险/);
+ t.mock.timers.tick(15000);await flush();assert.equal(old.terminated,true);assert.match(h.statuses.at(-1),/启动超时/);
+ h.setReady(true);t.mock.timers.tick(1000);await flush();
+ assert.equal(h.workers.length,2);assert.equal(h.client.blocked,false);assert.equal(h.statuses.at(-1),'');
+ old.onmessage({data:{type:'error',generation:h.workers[1].generation,error:'late worker failure'}});
+ assert.equal(h.client.blocked,false,'terminated Worker cannot poison its replacement');
+});
+
+test('repeated startup failures stop after two recovery attempts instead of preparing forever',async t=>{
+ const h=harness(t,{ready:false});h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ for(let i=0;i<3;i++){t.mock.timers.tick(15000);await flush();t.mock.timers.tick(1000);await flush();}
+ assert.equal(h.workers.length,3);assert.equal(h.client.blocked,true);assert.match(h.statuses.at(-1),/恢复失败.*停止重试/);
+ t.mock.timers.tick(60000);await flush();assert.equal(h.workers.length,3);
+});
+
+test('capture timeout replaces the Worker and restores the committed checkpoint',async t=>{
+ const h=harness(t);h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ const old=h.workers[0];old.state.wallAt=old.state.clock=10000;
+ t.mock.timers.tick(10000);await flush();
+ old.autoCapture=false;old.state.wallAt=old.state.clock=15000;
+ const rejected=assert.rejects(h.client.command(async()=>assert.fail('cannot send a command without progress')),/响应超时/);await flush();
+ t.mock.timers.tick(15000);await rejected;assert.equal(old.terminated,true);
+ t.mock.timers.tick(1000);await flush();
+ assert.equal(h.workers.length,2);assert.equal(h.workers[1].state.clock,10000);assert.equal(h.client.blocked,false);
+});
+
+test('recovery resolves an uncertain upload before claiming another simulation',async t=>{
+ const h=harness(t);h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ const old=h.workers[0];old.state.clock=old.state.wallAt=9000;
+ const deliver=h.hold();t.mock.timers.tick(10000);await flush();
+ old.onerror({message:'Worker crashed during upload'});assert.equal(old.terminated,true);
+ t.mock.timers.tick(1000);await flush();assert.equal(h.requests.filter(r=>r.type==='claim').length,1);
+ deliver();await flush();
+ t.mock.timers.tick(1000);await flush();
+ assert.equal(h.requests.filter(r=>r.type==='claim').length,2);assert.equal(h.workers[1].state.clock,9000);
+});
+
+test('commands carry a paused checkpoint in their one request and suppress the stale local overview',async t=>{
+ const h=harness(t);h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ const worker=h.workers[0],snapshot={player:{id:'hero',clock:10000},view:{quests:[]}};
+ worker.onmessage({data:{type:'full',generation:worker.generation,behindMs:0,snapshot}});
+ assert.equal(h.client.latest,snapshot);
+ worker.state.clock=worker.state.wallAt=10000;
+ await h.client.command(async credentials=>{
+  assert.equal(h.client.latest,null);assert.equal(h.client.presenting,false);
+  assert.equal(credentials.localCheckpoint.type,'checkpoint');assert.equal(credentials.localCheckpoint.state.clock,10000);
+  assert.equal(worker.messages.findLast(m=>m.type==='checkpoint').pause,true);
+  assert.equal(h.requests.filter(r=>r.type==='checkpoint').length,0,'no separate checkpoint HTTP round-trip');
+ },true);
+ await flush();assert.equal(h.requests.filter(r=>r.type==='claim').length,2);
+});
+
+test('a lost combined-command response retains the exact checkpoint for reconciliation',async t=>{
+ const h=harness(t);h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ let submitted;
+ await assert.rejects(h.client.command(async credentials=>{submitted=structuredClone(credentials.localCheckpoint);throw new Error('lost response');},true),/lost response/);
+ assert.equal(h.client.blocked,true);assert.equal(h.client.canAct({type:'cast'}),false);
+ t.mock.timers.tick(1000);await flush();
+ assert.deepEqual(h.requests.find(r=>r.type==='checkpoint'),submitted);
+ assert.equal(h.client.blocked,false);assert.equal(h.requests.filter(r=>r.type==='claim').length,2);
+});
+
+test('encounter boundaries coalesce while a background upload is still in flight',async t=>{
+ const h=harness(t);h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ const worker=h.workers[0],deliver=h.hold();t.mock.timers.tick(10000);await flush();
+ for(let i=0;i<4;i++){
+  worker.onmessage({data:{type:'boundary',generation:worker.generation}});
+  t.mock.timers.tick(500);await flush();
+ }
+ deliver();await flush();
+ assert.equal(h.requests.filter(r=>r.type==='checkpoint').length,1);
+ t.mock.timers.tick(10000);await flush();assert.equal(h.requests.filter(r=>r.type==='checkpoint').length,2);
 });

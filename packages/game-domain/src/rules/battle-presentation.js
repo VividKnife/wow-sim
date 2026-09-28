@@ -1,3 +1,4 @@
+import {buffTooltip} from './buff-tooltip.js';
 import {raidFieldPresentation} from './raid-battlefield.js';
 import {cooldownUntil,globalCooldownRemaining} from './spell-timing.js';
 import {classCombatMeta,classResource} from '../../../sim-core/src/class-combat.js';
@@ -10,27 +11,35 @@ import {ammoCount} from './ammunition.js';
 const formNames={bear:'熊形态',cat:'猎豹形态',moonkin:'枭兽形态',travel:'旅行形态',aquatic:'水栖形态',wolf:'幽魂之狼',shadow:'暗影形态'};
 const petModes={passive:'被动',defensive:'防御',aggressive:'主动',follow:'跟随',stay:'停留',attack:'攻击指定目标'};
 const spellKey=name=>name.toLowerCase().replace(/[^a-z0-9]/g,'');
+const spellKeys=new WeakMap();
+const learnedSpellKey=id=>{const sp=spells[id];if(!sp)return '';let key=spellKeys.get(sp);if(key===undefined){key=spellKey(sp.SpellName||'');spellKeys.set(sp,key);}return key;};
 const namedSpells=new Map(Object.values(spells).map(sp=>[spellKey(sp.SpellName),sp.Id]));
 const elements={earth:'大地',fire:'火焰',water:'水流',air:'空气'};
-const spellDetail=id=>({spellId:Number(id),name:Number(id)===992100?'金团战斗药剂':nameOf('spells',Number(id)),icon:Number(id)===992100?'/icons/assets/inv_potion_25.png':icon('spells',Number(id))});
+const spellDetail=id=>({...buffTooltip(id),spellId:Number(id),name:Number(id)===992100?'金团战斗药剂':nameOf('spells',Number(id)),icon:Number(id)===992100?'/icons/assets/inv_potion_25.png':icon('spells',Number(id))});
 const effectEnd=a=>a?.until??(a?.remaining>0&&a?.interval>0?a.next+(a.remaining-1)*a.interval:0);
-function effectsFor(actor,clock){
- const result=new Map((actor.serverBuffs||[]).map(buff=>[buff.id,{spellId:null,name:buff.name,icon:buff.icon,detail:buff.description,until:null}]));
- const add=(a,detail='',fallback='')=>{
+export function effectsFor(actor,clock){
+ const result=new Map((actor.serverBuffs||[]).map(buff=>[buff.id,{spellId:null,name:buff.name,icon:buff.icon,detail:buff.description,until:null,kind:'buff',routine:true}]));
+ // Long maintenance auras are routine; dedicated healing, shields and proc
+ // stores keep their combat significance regardless of duration.
+ const add=(a,detail='',fallback='',kind='buff',routine=false)=>{
   const id=a?.spell??a?.spellId,until=effectEnd(a);if(!(until>clock))return;
   const key=`${id||fallback}:${a?.caster||''}:${detail}`,prior=result.get(key)||{};
-  result.set(key,{...prior,...(id?spellDetail(id):{spellId:null,name:fallback,icon:null}),until:Math.max(prior.until||0,until),charges:a.charges>0&&a.charges<100000?a.charges:prior.charges,stacks:a.stacks??prior.stacks,amount:a.amount??prior.amount,detail,caster:a.caster||null});
+  result.set(key,{...prior,...(id?spellDetail(id):{spellId:null,name:fallback,icon:null}),kind:a.positive===false?'debuff':kind,routine:routine||(kind==='buff'&&a.positive!==false&&(spells[id]?.durationMs||0)>=120000&&detail===''),until:Math.max(prior.until||0,until),charges:a.charges>0&&a.charges<100000?a.charges:prior.charges,stacks:a.stacks??prior.stacks,amount:a.amount??prior.amount,detail,caster:a.caster||null});
  };
- for(const a of [...Object.values(actor.buffs||{}),...(actor.classBuffs||[]),...(actor.talentBuffs||[]),...(actor.auras||[]),...(actor.dots||[]),...(actor.hots||[]),...(actor.periodicClass||[])])add(a);
- add(actor.absorb,'吸收剩余');add(actor.manaShield,'法力护盾剩余');add(actor.seal,'圣印');add(actor.judgement,'审判');if(actor.reactiveClass?.charges!==0)add(actor.reactiveClass,'护盾充能');add(actor.soulstone,'灵魂石');
- for(const [slot,label]of [[16,'主手'],[17,'副手']]){const a=actor.weaponEnchants?.[slot]||(slot===16?actor.weaponEnchant:null);if(a&&a.charges!==0&&(!a.weaponUid||actor.equipment?.[slot]?.uid===a.weaponUid))add(a,label+'强化');}
- for(const [key,id,label]of [['weakenedSoulUntil',6788,'虚弱灵魂'],['sprintUntil',2983,'疾跑'],['innervateUntil',29166,'激活'],['hawkHasteUntil',6150,'强化雄鹰守护'],['feignUntil',5384,'假死']])add({spell:id,until:actor[key]},'',label);
- for(const [key,a]of Object.entries(actor.talentProcs||{})){const id=(actor.learned||[]).find(id=>spellKey(spells[id]?.SpellName||'')===key.toLowerCase())||namedSpells.get(key.toLowerCase());if(id)add({...a,spell:id},'天赋触发');}
+ for(const a of Object.values(actor.buffs||{}))add(a,'','','buff',true);
+ for(const a of [...(actor.classBuffs||[]),...(actor.talentBuffs||[]),...(actor.auras||[])])add(a);
+ for(const a of actor.dots||[])add(a,'持续伤害','','debuff');
+ for(const a of actor.hots||[])add(a,'持续治疗');
+ for(const a of actor.periodicClass||[])add(a,[8,161].includes(a.type)?'持续治疗':'资源恢复');
+ add(actor.absorb,'吸收剩余');add(actor.manaShield,'法力护盾剩余');add(actor.seal,'圣印');add(actor.judgement,'审判','','debuff');if(actor.reactiveClass?.charges!==0)add(actor.reactiveClass,'护盾充能');add(actor.soulstone,'灵魂石','','buff',true);
+ for(const [slot,label]of [[16,'主手'],[17,'副手']]){const a=actor.weaponEnchants?.[slot]||(slot===16?actor.weaponEnchant:null);if(a&&a.charges!==0&&(!a.weaponUid||actor.equipment?.[slot]?.uid===a.weaponUid))add(a,label+'强化','','buff',true);}
+ for(const [key,id,label]of [['weakenedSoulUntil',6788,'虚弱灵魂'],['sprintUntil',2983,'疾跑'],['innervateUntil',29166,'激活'],['hawkHasteUntil',6150,'强化雄鹰守护'],['feignUntil',5384,'假死']])add({spell:id,until:actor[key]},'战斗效果',label,key==='weakenedSoulUntil'?'debuff':'buff');
+ for(const [key,a]of Object.entries(actor.talentProcs||{})){const normalized=key.toLowerCase(),id=(actor.learned||[]).find(id=>learnedSpellKey(id)===normalized)||namedSpells.get(normalized);if(id)add({...a,spell:id},'天赋触发');}
  for(const [key,a]of Object.entries(actor.racialEffects||{})){const id=namedSpells.get(key==='forsaken'?'willoftheforsaken':key);if(id)add({...a,spell:id},'种族能力');}
  if(actor.racialBuff)add({...actor.racialBuff,spell:namedSpells.get(actor.racialBuff.kind)},'种族能力');
  add(actor.cannibalize,'种族能力');add({...actor.bloodrage,spell:2687},'怒气回复');
  if(actor.totemWeaponEnchant?.weaponUid===actor.equipment?.[16]?.uid)add(actor.totemWeaponEnchant,'图腾武器强化');add(actor.lightwell,'光明之泉');
- if(actor.stealthed)result.set('stealth',{...spellDetail(actor.form==='cat'?5215:1784),until:null,detail:''});
+ if(actor.stealthed)result.set('stealth',{...spellDetail(actor.form==='cat'?5215:1784),until:null,detail:'',kind:'buff',routine:true});
  // One spell can store a numerical buff and several aura effects. Show it once.
  const grouped=new Map();for(const effect of result.values()){const key=effect.spellId?`${effect.spellId}:${effect.caster||''}:${/^[主副]手/.test(effect.detail)?effect.detail:''}`:effect.name;const old=grouped.get(key);grouped.set(key,old?{...old,...effect,until:Math.max(old.until||0,effect.until||0),detail:[...new Set([old.detail,effect.detail].filter(Boolean))].join(' · ')}:effect);}
  return [...grouped.values()];

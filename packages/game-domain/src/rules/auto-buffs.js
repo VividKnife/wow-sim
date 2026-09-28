@@ -31,6 +31,7 @@ export function prepareAutoBuffs(s){
  const assigned=new Set();
  for(const {c,target,sp,kind,refresh}of requests){
   const key=target.id+':'+kind;if(assigned.has(key))continue;assigned.add(key);
+  if(kind==='sta'&&target.classBuffs?.some(b=>b.name==='Power Word: Fortitude'&&b.until>s.clock+refresh))continue;
   const buff=target.buffs?.[kind],amount=sp.EffectBasePoints1+1;
   if(buff&&buff.until>s.clock&&buff.amount>amount||buff&&buff.amount>=amount&&buff.until>s.clock+refresh)continue;
   if(c.rest||!spellReady(c,sp,s.clock))return true;

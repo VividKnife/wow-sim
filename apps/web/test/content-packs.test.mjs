@@ -11,6 +11,11 @@ import {createContentLoader,referencedItemIds} from '../lib/content-loader.js';
 const catalog=clientContent();
 const query=pack=>new URLSearchParams({pack});
 const size=value=>Buffer.byteLength(JSON.stringify(value));
+test('log, quest, creature and spell IDs never trigger item downloads',()=>{
+ const snapshot={player:{logs:[{id:78,spellId:133},{id:79,item:118}],equipment:{mainHand:{id:2092,uid:'sword'}},bag:[{id:159,uid:'water'}],auctions:[{id:80,item:{id:25}}]},
+  view:{quests:[{id:33,rewards:[{id:6948}],choices:[{id:25}]}],monsters:[{id:299}],skills:[{id:133}],shop:[{id:4540}]}};
+ assert.deepEqual(referencedItemIds(snapshot).sort((a,b)=>a-b),[25,118,159,2092,4540,6948]);
+});
 test('bootstrap is bounded and never embeds item catalogs or boss loot',()=>{
  const core=contentPack(catalog,query('core'));
  assert.deepEqual(core.items,{});assert.deepEqual(core.market,[]);

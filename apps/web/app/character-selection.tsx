@@ -18,7 +18,7 @@ function SavedModel({save}:{save:Save}){
    const response=await fetch(`/api/game?saveId=${encodeURIComponent(save.id)}`,{signal:controller.signal});
    const game=await response.json();if(!response.ok)throw new Error(game.error||'无法读取角色外观');
    const player=game.snapshot?.player;if(!player?.equipment||!game.contentVersion)throw new Error('角色外观数据不完整');
-   const items=await contentLoader.ensureItems(game.contentVersion,referencedItemIds(player.equipment));
+   const items=await contentLoader.ensureItems(game.contentVersion,referencedItemIds({equipment:player.equipment}));
    if(!controller.signal.aborted)setAppearance({raceId:player.raceId,classId:player.classId,gender:player.gender,equipment:player.equipment,items,location:game.snapshot.view?.location?.name||save.location});
   }
   void load().catch(e=>{if(!controller.signal.aborted)setError(e instanceof Error?e.message:'无法加载角色');});

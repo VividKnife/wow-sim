@@ -42,8 +42,8 @@ test('deep breath causes actual damage only inside the telegraphed lane',()=>{
 });
 test('Onyxia gold rewards are idempotent and weekly reset reopens the raid',()=>{
  let s=start();for(const e of s.combat.enemies)e.hp=0;s=advance(s,s.wallAt+100).state;const r=s.goldRaid;
- assert.ok(r.cleared.includes('onyxia'));const count=r.lots.length;assert.ok(count>0);settleGoldRaid(s);assert.equal(r.lots.length,count);
- for(let i=0;i<1000&&r.auction;i++)goldAuctionStep(s);finishGoldRun(s);leaveGoldRaid(s);s.wallAt+=604800000;enterGoldRaid(s,'onyxias-lair');assert.deepEqual(s.goldRaid.cleared,[]);
+ assert.ok(r.cleared.includes('onyxia'));const count=r.auctions.length;assert.ok(count>0);settleGoldRaid(s);assert.equal(r.auctions.length,count);
+ for(let i=0;i<1000&&r.auctions[0];i++)goldAuctionStep(s);finishGoldRun(s);leaveGoldRaid(s);s.wallAt+=604800000;enterGoldRaid(s,'onyxias-lair');assert.deepEqual(s.goldRaid.cleared,[]);
 });
 test('service enters and leaves an Onyxia gold instance after settlement',async()=>{
  const store=new MemoryStore(),service=new GameService(store,{contentVersion:'test',now:()=>Date.UTC(2026,8,23),seed:()=>60325});

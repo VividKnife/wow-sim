@@ -226,8 +226,13 @@ export function createGameServer(options: GameServerOptions) {
       }
       if (url.pathname === '/game' && request.method === 'POST') {
         const accountId = await selectedAccount(request, url);
-        const body = await readJson(request);
+        const body = await readJson(request, 8 * 1024 * 1024);
         validateCommand(body);
+        if(body.localCheckpoint===undefined&&Buffer.byteLength(JSON.stringify(body))>maximumBodyBytes)throw Object.assign(new Error('操作内容过长'),{status:413,code:'BODY_TOO_LARGE'});
+        if(body.localCheckpoint!==undefined){
+          if(!body.localCheckpoint||typeof body.localCheckpoint!=='object'||Array.isArray(body.localCheckpoint))throw Object.assign(new Error('检查点无效'),{status:400,code:'LOCAL_STATE'});
+          validateCommand(body.localCheckpoint);
+        }
         const result = body.type === 'create'
           ? await options.service.createAccount(accountId, {name: body.name.trim(), classId: body.classId, raceId: body.raceId, ...(body.gender ? {gender: body.gender} : {})}, body.requestId)
           : await options.service.command(accountId, cleanCommand(body));

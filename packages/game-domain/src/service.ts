@@ -5,7 +5,8 @@ import {talentSummary} from './rules/talent-summary.js';
 import {listSaves,resolveSave,createSave,deleteSave} from './saves.ts';
 import { createInstance, instanceFor, joinInstance, startInstance, bumpInstanceAccounts, instanceCommand, persistInstance, leaveInstance, acquireInstanceLease } from './instances.ts';
 import { startActivity, recall, restoreReservation, settleActivity } from './activities.ts';
-import { randomUUID, randomBytes } from 'node:crypto';
+import { randomUUID, randomBytes, createHash } from 'node:crypto';
+import {remapItemReferences} from '../../sim-core/src/item-identities.js';
 import { removeInvalidSave } from './account-reset.ts';
 import { unstuck } from './unstuck.ts';
 import { validAccountPresence } from './context.ts';
@@ -100,6 +101,9 @@ export class GameService {
                     state = { ...state, ...participant, party: [simulation, ...simulation.party].filter((p: Rules) => p.id !== c.id).map((p: Rules) => this.member(p)), combat: simulation.combat, lastCombat: simulation.lastCombat, activity: simulation.activity, dungeon: simulation.dungeon, clock: simulation.clock, wallAt: simulation.wallAt };
                 }
             }
+            // Free characters do not tick while idle. Expose the effective market
+            // clock without mutating or persisting a read-only snapshot.
+            state.marketClock = !lease ? state.clock + Math.max(0, now - state.wallAt) : state.clock;
             const roster = await Promise.all((await tx.list<Character>('characters', { accountId })).map(async row => {
                 const inventory = await context(tx, row, now, false);
                 return { id: row.id, characterId: row.id, name: row.rules.name, classId: row.rules.classId, raceId: row.rules.raceId, gender: row.rules.gender, level: row.rules.level, kind: row.kind, talentSummary: talentSummary(row.rules), professions: row.rules.professions,
@@ -181,6 +185,12 @@ export class GameService {
     async command(accountId: string, command: Rules) {
         this.request(command?.requestId);
         requireThat(typeof command.type === 'string', 'INVALID_COMMAND', '缺少操作类型', 400);
+        const {localCheckpoint,...submittedCommand}=command;
+        command=submittedCommand;
+        if(localCheckpoint!==undefined)requireThat(localCheckpoint && localCheckpoint.type==='checkpoint' && localCheckpoint.characterId===command.characterId &&
+            localCheckpoint.clientId===command.localClientId && localCheckpoint.sessionId===command.localSessionId,
+            'LOCAL_STATE','操作与检查点会话不一致',400);
+        const receiptCommand=localCheckpoint?{...command,localCheckpointHash:createHash('sha256').update(JSON.stringify(localCheckpoint)).digest('hex')}:command;
         const selectedLease = await this.store.read(async tx => {
             const a = await account(tx, accountId);
             const c = await owned(tx, accountId, command.characterId || a.primaryCharacterId);
@@ -204,8 +214,16 @@ export class GameService {
                 const a = await account(tx, accountId);
                 const old = await tx.get<Rules>('receipts', `${accountId}:${command.requestId}`);
                 if (old) {
-                    requireThat(old.fingerprint === JSON.stringify(command), 'REQUEST_REUSED', 'requestId 已被其他命令使用');
+                    requireThat(old.fingerprint === JSON.stringify(receiptCommand), 'REQUEST_REUSED', 'requestId 已被其他命令使用');
                     return;
+                }
+                // Persist the paused Worker and the command in one transaction.
+                // A rejected command rolls back both; receipt retries skip both.
+                let action=command;
+                if(localCheckpoint){
+                    const saved=await this.localSimulation(accountId,localCheckpoint,tx);
+                    action=remapItemReferences(structuredClone(command),new Map(saved.itemIds));
+                    if(!saved.active)delete action.localSessionId;
                 }
                 const now = this.now();
                 // Polling heartbeats update account_presence frequently. Reading it in
@@ -213,52 +231,52 @@ export class GameService {
                 // SERIALIZABLE with 40001. Only reconnect if the time since the
                 // preflight heartbeat could have crossed the offline cutoff.
                 const commandPresence = observedPresence && new Map(observedPresence);
-                if (command.type !== 'unstuck' && now - presenceCheckedAt >= this.offlineLimitMs - Math.min(1000, this.offlineLimitMs / 4)) {
+                if (action.type !== 'unstuck' && now - presenceCheckedAt >= this.offlineLimitMs - Math.min(1000, this.offlineLimitMs / 4)) {
                     await this.recordPresence(tx, accountId, now);
                     commandPresence?.set(accountId, now);
                 }
-                const c = await owned(tx, accountId, command.characterId || a.primaryCharacterId);
+                const c = await owned(tx, accountId, action.characterId || a.primaryCharacterId);
                 const lease = await tx.get<ActorLease>('actor_leases', c.id);
-                await guardLocalCommand(this, tx, c.id, command, now);
-                if (command.type === 'unstuck')
-                    await unstuck.call(this, tx, c, now, command.requestId);
-                else if (command.type === 'transferItems')
-                    await transferItems.call(this, tx, c, command, now);
-                else if (command.type === 'setParty') {
-                    requireThat(Array.isArray(command.characterIds) && command.characterIds.length >= 1 && command.characterIds.length <= 40 && new Set(command.characterIds).size === command.characterIds.length, 'PARTY', '队伍名册无效', 400);
+                await guardLocalCommand(this, tx, c.id, action, now);
+                if (action.type === 'unstuck')
+                    await unstuck.call(this, tx, c, now, action.requestId);
+                else if (action.type === 'transferItems')
+                    await transferItems.call(this, tx, c, action, now);
+                else if (action.type === 'setParty') {
+                    requireThat(Array.isArray(action.characterIds) && action.characterIds.length >= 1 && action.characterIds.length <= 40 && new Set(action.characterIds).size === action.characterIds.length, 'PARTY', '队伍名册无效', 400);
                     const previous = await tx.get<Party>('parties', a.partyId);
-                    for (const id of new Set([c.id, ...previous?.characterIds || [], ...command.characterIds])) {
+                    for (const id of new Set([c.id, ...previous?.characterIds || [], ...action.characterIds])) {
                         await owned(tx, accountId, id);
                         await this.ensureFree(tx, id);
                     }
-                    await tx.put('parties', { id: a.partyId, accountId, characterIds: command.characterIds });
+                    await tx.put('parties', { id: a.partyId, accountId, characterIds: action.characterIds });
                 }
-                else if (command.type === 'recall')
-                    await this.recall(tx, accountId, command.activityId, now);
-                else if (command.type === 'createInstance' || command.type === 'enterDungeon')
-                    await this.createInstance(tx, c, command, now);
-                else if (command.type === 'joinInstance')
-                    await this.joinInstance(tx, c, command, now);
-                else if (command.type === 'startInstance')
-                    await this.startInstance(tx, c, command, now);
-                else if (command.type === 'leaveInstance' || command.type === 'leaveDungeon')
-                    await this.leaveInstance(tx, c, command.instanceId || lease?.ownerId, now);
+                else if (action.type === 'recall')
+                    await this.recall(tx, accountId, action.activityId, now);
+                else if (action.type === 'createInstance' || action.type === 'enterDungeon')
+                    await this.createInstance(tx, c, action, now);
+                else if (action.type === 'joinInstance')
+                    await this.joinInstance(tx, c, action, now);
+                else if (action.type === 'startInstance')
+                    await this.startInstance(tx, c, action, now);
+                else if (action.type === 'leaveInstance' || action.type === 'leaveDungeon')
+                    await this.leaveInstance(tx, c, action.instanceId || lease?.ownerId, now);
                 else if (lease?.kind === 'instance')
-                    await this.instanceCommand(tx, c, lease.ownerId, command, now, commandPresence);
-                else if (['startActivity', 'gatherResource', 'gatherAll', 'craft'].includes(command.type))
-                    await this.startActivity(tx, c, command, now);
-                else if (command.type === 'stop' && lease?.kind === 'activity') {
+                    await this.instanceCommand(tx, c, lease.ownerId, action, now, commandPresence);
+                else if (['startActivity', 'gatherResource', 'gatherAll', 'craft'].includes(action.type))
+                    await this.startActivity(tx, c, action, now);
+                else if (action.type === 'stop' && lease?.kind === 'activity') {
                     const activity = await tx.get<Activity>('activities', lease.ownerId);
                     if (activity?.type !== 'personal')
                         await this.recall(tx, accountId, lease.ownerId, now);
                     else
-                        await this.personalCommand(tx, c, command, now);
+                        await this.personalCommand(tx, c, action, now);
                 }
                 else
-                    await this.personalCommand(tx, c, command, now);
-                if(typeof command.localClientId==='string'&&command.localClientId.length>0)
+                    await this.personalCommand(tx, c, action, now);
+                if(typeof action.localClientId==='string'&&action.localClientId.length>0)
                     await reserveLocalSimulation(tx,c.id,now);
-                await this.receipt(tx, accountId, command.requestId, command);
+                await this.receipt(tx, accountId, command.requestId, receiptCommand);
                 await bump(tx, accountId);
             });
         }

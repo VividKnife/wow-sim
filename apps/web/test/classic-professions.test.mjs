@@ -37,7 +37,7 @@ test('artisan progression enforces each rank, level, skill and payment',()=>{
 });
 
 test('transmute cooldown is shared, offline-clock based, and failures are atomic',()=>{
- let s=master('alchemy');s=action(s,{type:'craft',id:'spell-17187',count:1,buyMissing:true});assert.equal(countItem(s,12360),1);assert.equal(countItem(s,9149),1);
+ let s=master('alchemy');s=action(s,{type:'craft',id:'spell-11459',count:1,buyMissing:true});s=action(s,{type:'craft',id:'spell-17187',count:1,buyMissing:true});assert.equal(countItem(s,12360),1);assert.equal(countItem(s,9149),1);
  const before=JSON.stringify(s);assert.throws(()=>action(s,{type:'craft',id:'spell-11479',count:1,buyMissing:true}),/冷却/);assert.equal(JSON.stringify(s),before);
  assert.throws(()=>action(s,{type:'craft',id:'spell-17187',count:2,buyMissing:true}),/一次/);
  s.clock+=172800000;s=action(s,{type:'craft',id:'spell-17187',count:1,buyMissing:true});assert.equal(countItem(s,12360),2);assert.equal(countItem(s,9149),1);
@@ -45,7 +45,7 @@ test('transmute cooldown is shared, offline-clock based, and failures are atomic
 
 test('specialization requirements cannot be bypassed by material auto-buy',()=>{
  let s=master('blacksmithing');assert.throws(()=>action(s,{type:'craft',id:'spell-16729',count:1,buyMissing:true}),/专精/);
- s=action(s,{type:'specializeProfession',id:9788});s=action(s,{type:'craft',id:'spell-16729',count:1,buyMissing:true});assert.equal(countItem(s,12640),1);
+ s=action(s,{type:'specializeProfession',id:9788});for(const m of recipes.find(r=>r.spell===16729).materials)addItem(s,m.id,m.count);s=action(s,{type:'craft',id:'spell-16729',count:1,buyMissing:true});assert.equal(countItem(s,12640),1);
  const gold=s.money;s=action(s,{type:'specializeProfession',id:9787});assert.equal(s.money,gold-50000);
  s=action(s,{type:'specializeProfession',id:17039});assert.throws(()=>action(s,{type:'craft',id:'spell-16729',count:1,buyMissing:true}),/专精/);
 });

@@ -17,4 +17,9 @@ test('live snapshot includes all playable dungeon views but not the static journ
  const s=createGame('手册',5,0),snapshot=projectClientSnapshot(s,view(s));
  assert.deepEqual(Object.keys(snapshot.view.dungeons).sort(),Object.keys(dungeonDefinitions).sort());
  assert.equal(snapshot.view.dungeonJournal,undefined);
+ for(const entry of Object.values(snapshot.view.dungeons)){
+  assert.equal(entry.map,undefined);assert.equal(entry.route,undefined);
+  assert.equal(typeof entry.canEnter,'boolean');assert.equal(typeof entry.progress,'number');
+ }
+ assert.ok(JSON.stringify(snapshot.view.dungeons).length<50_000,'entry summaries must not contain maps and encounter routes');
 });

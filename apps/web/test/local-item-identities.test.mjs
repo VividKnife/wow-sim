@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {remapItemReferences} from '../lib/local-item-identities.js';
+import {remapItemReferences} from '../../../packages/sim-core/src/item-identities.js';
 import {itemIdentityChanges} from '../../../packages/game-domain/src/rules/local-checkpoint.js';
 test('acknowledged loot IDs are reconciled after more ticks, inventory movement and consumption',()=>{
  const submitted={clock:100,bag:[{uid:'new-loot',count:4}],equipment:{},party:[{equipment:{hand:{uid:'new-weapon'}}}]};

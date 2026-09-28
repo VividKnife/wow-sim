@@ -51,7 +51,7 @@ test('all recruitment preferences select unique persistent residents with comple
 test('NPC purchase and personal dividend survive settlement, JSON reload, and a new raid',()=>{
  let s=fixture();const npc=s.party.find((c:Rules)=>c.classId===8),id=npc.id,original=npc.money;
  npc.equipment={};
- s.goldRaid.auction={id:'persistent-loot',bossId:'lucifron',itemId:16800,count:1,leader:null,price:0,opening:10*GOLD,step:5*GOLD,quiet:0,round:0,limits:{[id]:10*GOLD},bids:[]};
+ s.goldRaid.auctions=[{id:'persistent-loot',bossId:'lucifron',itemId:16800,count:1,leader:null,price:0,playerLimit:null,opening:10*GOLD,step:5*GOLD,quiet:0,round:0,limits:{[id]:10*GOLD},bids:[]}];
  goldAuctionStep(s);assert.equal(npc.money,original-10*GOLD);
  for(let n=0;n<3;n++)goldAuctionStep(s);assert.equal(npc.equipment[8].id,16800);
  eligible(s);const playerBefore=s.money;finishGoldRun(s);
@@ -66,7 +66,7 @@ test('NPC purchase and personal dividend survive settlement, JSON reload, and a 
 test('emergency exit refunds NPC escrow and applies already-paid combat purchases once',()=>{
  const s=fixture(),npc=s.party.find((c:Rules)=>c.classId===8),before=npc.money,id=npc.id;
  npc.equipment={};npc.raidPendingEquipment=[{id:16800,uid:'paid-boots',count:1}];
- npc.money-=10*GOLD;s.goldRaid.auction={leader:id,price:10*GOLD};
+ npc.money-=10*GOLD;s.goldRaid.auctions=[{leader:id,price:10*GOLD}];
  emergencyGoldExit(s);const resident=s.npcWorld.residents.find((p:Rules)=>p.id===id);
  assert.equal(resident.wallet,before);assert.equal(resident.unit.equipment[8].uid,'paid-boots');assert.equal(s.party.length,0);
  const saved=JSON.stringify(s.npcWorld);emergencyGoldExit(s);assert.equal(JSON.stringify(s.npcWorld),saved);
@@ -79,7 +79,7 @@ test('abort without a kill does not train raid experience or mint NPC money',()=
 
 test('partial weekly progress persists across disbanding, and each raid has its own reset',()=>{
  let s=fixture();goldRaidAction(s,{type:'goldNavigate',destination:'lucifron'});s.combat.enemies.forEach((e:Rules)=>e.hp=0);goldRaidAction(s,{type:'goldPause'});s=advance(s,s.wallAt+100).state;
- for(let n=0;n<500&&s.goldRaid.auction;n++)goldAuctionStep(s);finishGoldRun(s);leaveGoldRaid(s);
+ for(let n=0;n<500&&s.goldRaid.auctions[0];n++)goldAuctionStep(s);finishGoldRun(s);leaveGoldRaid(s);
  s=JSON.parse(JSON.stringify(s));enterGoldRaid(s);assert.ok(s.goldRaid.clearedPacks.includes('mc-gate'));finishGoldRun(s);leaveGoldRaid(s);
  enterGoldRaid(s,'onyxias-lair');assert.deepEqual(s.goldRaid.clearedPacks,[]);finishGoldRun(s);leaveGoldRaid(s);
  s.wallAt+=604800000;enterGoldRaid(s);assert.deepEqual(s.goldRaid.clearedPacks,[]);
@@ -104,7 +104,7 @@ test('service emergency exit settles committed NPC escrow, dividends and purchas
   const instance:any=await tx.get('instances',started.instanceId!),s=instance.simulation;eligible(s);
   const npc=s.party[0];npcId=npc.id;wallet=npc.money;npc.money-=10*GOLD;
   npc.raidPendingEquipment=[{id:19147,uid:'paid-npc-ring',count:1,durability:0}];
-  s.goldRaid.auction={leader:npc.id,price:10*GOLD};s.goldRaid.pot=100*GOLD;
+  s.goldRaid.auctions=[{leader:npc.id,price:10*GOLD}];s.goldRaid.pot=100*GOLD;
   await service.persistInstance(tx,instance,100000,'committed-escape');
  });
  service=new GameService(store,options);

@@ -1,5 +1,5 @@
 import {spells,spellChain} from './catalog.js';
-import {addCombatAura,activeAuras} from '../../../sim-core/src/combat-auras.js';
+import {addCombatAura,activeAuras,mechanicImmune} from '../../../sim-core/src/combat-auras.js';
 import {rng} from './character.js';
 import {spellAttributesEx3} from '../../../sim-core/src/spell-program.js';
 
@@ -10,6 +10,7 @@ const identity=a=>`${spellId(a)}:${a.caster??''}`;
 // Ordinary stat/control auras are exclusive across ranks. Periodic effects keep
 // their per-caster identity in their periodic container instead of stacking stats.
 export function applySpellAura(unit,aura,clock){
+ if(!aura.positive&&mechanicImmune(unit,aura.mechanic||({5:2,7:5,12:12,26:7,33:11}[aura.type])))return false;
  const source=spells[aura.spell],group=root(aura.spell);
  const perCaster=!!(source?.AttributesEx3&spellAttributesEx3.PER_CASTER_AURA);
  const same=a=>root(a.spell)===group&&a.effect===aura.effect&&(!perCaster||a.caster===aura.caster);

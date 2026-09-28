@@ -14,12 +14,6 @@ const roster: [string,string,string][] = [
  ['疾风','rogue','melee'],['夜行','rogue','melee'],['赤刃','rogue','melee'],['铁锋','warrior','melee'],['雷恩','warrior','melee'],
 ];
 export const raidSquadNames=['核心小队','磐石卫队','晨光医护队','霜弓支援队','锋刃突击队'];
-export function gearScore(item:Rules,role:string,classId:number) {
- let score=(item.ItemLevel||0)*.1+(item.armor||0)*(role==='tank'?.04:.001);
- for(let n=1;n<=10;n++)score+=(item['stat_value'+n]||0)*({7:role==='tank'?3:1,5:['healer','ranged'].includes(role)&&classId!==3?3:0,6:role==='healer'?2:0,3:classId===3||classId===4?3:.2,4:classId===1?2:.1}[item['stat_type'+n] as number]||0);
- if(item.class===2)score+=((item.dmg_min1||0)+(item.dmg_max1||0))*500/Math.max(1,item.delay)*(['tank','melee'].includes(role)||classId===3?4:.1);
- return score;
-}
 function equipDemo(c:Rules) {
  const role=combatRole(c),pool=raidLoadouts[`${c.classId}:${role}`].map(id=>items[id]).filter(i=>canEquip(c,i));
  c.equipment={};

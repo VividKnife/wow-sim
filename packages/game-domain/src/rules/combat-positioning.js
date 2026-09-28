@@ -12,7 +12,7 @@ export function holdsBackline(s,c){return usesPartyPositioning(s,c)&&isBackline(
 // Short-range reactions may fire when an enemy gets close, but must not drag
 // a backline caster into melee. Longer-range spells keep their actual range.
 export function mayApproachForSpell(s,c,target,sp){
- return commandOrder(s,c)?.spellId===sp.Id||!holdsBackline(s,c)||sp.range>20||distance(c,target)<=sp.range;
+ return sp.Id!=null&&commandOrder(s,c)?.spellId===sp.Id||!holdsBackline(s,c)||sp.range>20||distance(c,target)<=sp.range;
 }
 // A moving target needs room to travel while the caster stands still. Only
 // recent observed motion counts; stationary, incoming and ground targets keep

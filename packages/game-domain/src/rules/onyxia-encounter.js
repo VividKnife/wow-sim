@@ -25,7 +25,7 @@ export function onyxiaTick(s,actors,hurt){
  if(r.phase===2&&boss.hp/boss.maxHp<=.4){r.phase=3;boss.airborne=false;boss.threat={};r.nextFear=s.clock;r.nextSpecial=s.clock+5000;r.breath=null;r.fires=[];raidNotice(s,'奥妮克希亚落地！坦克重新建立仇恨，准备抵抗恐惧。');}
  if(r.phase===2){
   if(s.clock>=r.nextWhelps){r.nextWhelps=s.clock+30000;
-   for(let i=0;i<8;i++){const e=raidEnemy(s,`ony-whelp-${s.clock}-${i}`,'奥妮克希亚雏龙',11262,1200,80,120);e.rank=0;e.level=56;e.summonedBy=boss.id;e.position=15;e.positionY=i%2?22:-22;e.target=living.find(c=>combatRole(c)==='tank'&&!c.raidMainTank)?.id||s.id;s.combat.enemies.push(e);}
+   for(let i=0;i<8;i++){const e=raidEnemy(s,`ony-whelp-${s.clock}-${i}`,'奥妮克希亚雏龙',11262);e.summonedBy=boss.id;e.position=15;e.positionY=i%2?22:-22;e.target=living.find(c=>combatRole(c)==='tank'&&!c.raidMainTank)?.id||s.id;s.combat.enemies.push(e);}
    raidNotice(s,'两侧巢穴涌出雏龙，副坦接住增援。');
   }
   if(s.clock>=r.nextSpecial){r.nextSpecial=s.clock+5000;const target=living[roll(s,0,living.length-1)];if(target){for(const c of living.filter(c=>distance(c,target)<=5))hit(c,700,'火球术',18392);boss.threat[target.id]=0;}raidAnimation(s,boss);}

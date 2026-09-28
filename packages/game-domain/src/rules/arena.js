@@ -84,12 +84,12 @@ function arenaUnits(team,map,initialize=true){
 }
 function simulateTeam(arena,index){
  const team=arena.teams[index],actors=arenaUnits(team,arena.map),enemies=arenaUnits(arena.teams[1-index],arena.map),root=team.members[0];
- const injected={party:team.members.slice(1),arenaActors:actors,arenaAllActors:[...actors,...enemies],combat:{id:arena.id,startedAt:3000,pvp:true,area:arena.map,enemies,participantIds:actors.map(c=>c.id),projectiles:team.projectiles,pendingSpawns:[],damage:{},healing:{},casts:0,metrics:arena.metrics,projectileSequence:team.projectileSequence||0},clock:arena.clock,rngState:arena.rngState,logs:arena.logs,logSequence:arena.logSequence,groundEffects:team.groundEffects,settings:{},activity:{type:'arenaCombat'},totals:{deaths:0},bag:root.arenaBag,pending:[],quests:{},completed:{},journey:[],journeySequence:0};
+ const injected={party:team.members.slice(1),arenaActors:actors,arenaAllActors:[...actors,...enemies],combat:{policy:team.combatPolicy,id:arena.id,startedAt:3000,pvp:true,area:arena.map,enemies,participantIds:actors.map(c=>c.id),projectiles:team.projectiles,pendingSpawns:[],damage:{},healing:{},casts:0,metrics:arena.metrics,projectileSequence:team.projectileSequence||0},clock:arena.clock,rngState:arena.rngState,logs:arena.logs,logSequence:arena.logSequence,groundEffects:team.groundEffects,settings:{},activity:{type:'arenaCombat'},totals:{deaths:0},bag:root.arenaBag,pending:[],quests:{},completed:{},journey:[],journeySequence:0};
  const old=new Map(Object.keys(injected).map(key=>[key,{present:Object.hasOwn(root,key),value:root[key]}]));Object.assign(root,injected);
  try{
   for(const c of actors){c.time=arena.clock;const st=stats(c);c.maxHp=st.maxHp;c.maxMana=st.maxMana;}
   recoveryTick(root,arena.clock%2000===0);arenaTacticalTick(root,team,enemies);combatTick(root,{pvpTeam:true});
-  arena.rngState=root.rngState;arena.logSequence=root.logSequence;team.projectiles=root.combat.projectiles;team.projectileSequence=root.combat.projectileSequence;team.groundEffects=root.groundEffects;
+  arena.rngState=root.rngState;arena.logSequence=root.logSequence;team.combatPolicy=root.combat.policy;team.projectiles=root.combat.projectiles;team.projectileSequence=root.combat.projectileSequence;team.groundEffects=root.groundEffects;
  }finally{for(const [key,previous]of old)if(previous.present)root[key]=previous.value;else delete root[key];}
 }
 function finishArena(s,winner,reason){
