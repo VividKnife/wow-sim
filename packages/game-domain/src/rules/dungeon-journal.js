@@ -1,3 +1,4 @@
+import {groupRows} from '../../../sim-core/src/collections.js';
 import reference from '../../../game-data/data/dungeon-journal.json' with {type:'json'};
 import {itemDetails} from './item-details.js';
 import {nameOf,items,icon,table,spells} from './catalog.js';
@@ -11,7 +12,7 @@ import {creatureVisual} from '../../../game-data/creature-visuals.js';
 // only display data, once per content version rather than on each game tick.
 const lootDungeons=new Map();
 const lootBosses=new Map();
-const bossAI=Object.groupBy(table('creature_ai_scripts'),row=>row.creature_id);
+const bossAI=groupRows(table('creature_ai_scripts'),row=>row.creature_id);
 function bossGuide(entry){
  const guide=dungeonBossGuides[entry];
  const ids=[...new Set([...(guide?.spells||[]),...(bossAI[entry]||[]).flatMap(row=>[1,2,3].filter(n=>row[`action${n}_type`]===11).map(n=>row[`action${n}_param1`]))])];

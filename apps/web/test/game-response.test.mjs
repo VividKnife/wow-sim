@@ -44,6 +44,12 @@ test('sync notices distinguish expired rules, database contention, timeouts and 
  assert.match(syncErrorMessage({status:401}),/重新登录/);
  assert.equal(syncErrorMessage(null),'');
 });
+test('local engine failures are never described as a server connection failure',()=>{
+ for(const code of ['LOCAL_WORKER','LOCAL_WORKER_FAILED']){
+  const message='冒险引擎恢复失败，请刷新页面重新加载。';
+  assert.equal(syncErrorMessage({code,message}),message);
+ }
+});
 test('invalid success payloads cannot replace a valid saved-game view',async()=>{
  for(const value of [null,[],{}, {protocolVersion:1,contentVersion:'abc',snapshot:null,revision:'3'},{protocolVersion:2,contentVersion:'abc',snapshot:null,revision:3},{protocolVersion:1,contentVersion:'',snapshot:null,revision:3},{protocolVersion:1,contentVersion:'abc',revision:3}])await assert.rejects(readGameResponse(Response.json(value)),/存档响应.*重试/);
 });

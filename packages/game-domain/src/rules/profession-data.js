@@ -1,3 +1,4 @@
+import {groupRows} from '../../../sim-core/src/collections.js';
 import reference from '../../../game-data/data/professions-reference.json' with {type:'json'};
 export const professionSkillIds={herbalism:182,mining:186,skinning:393,fishing:356,alchemy:171,blacksmithing:164,leatherworking:165,tailoring:197,engineering:202,enchanting:333,cooking:185,firstaid:129};
 export const professions=[
@@ -17,7 +18,7 @@ export const supplementalItems=scrolls.map(r=>({entry:r.id,name:r.name,enchant:r
 for(const r of scrolls)professionNames[r.id]=r.name;
 export const potions=reference.potions;
 export const bandages=reference.bandages;
-export const disenchantLoot=Object.groupBy(reference.disenchant,r=>r.entry);
+export const disenchantLoot=groupRows(reference.disenchant,r=>r.entry);
 export const materialIds=new Set(recipes.flatMap(r=>r.materials.map(m=>m.id)).concat(reference.disenchant.map(r=>r.item)));
 export const specializationKnown=(p,id)=>!id||p?.specialization===id||specializations.find(x=>x.id===p?.specialization)?.parent===id;
 export function enchantFits(def,item,slot){return !!(def&&item&&def.slots.includes(slot)&&(def.class<0||def.class===item.class)&&(!def.subclassMask||def.subclassMask<0||def.subclassMask&(1<<item.subclass))&&(!def.inventoryMask||def.inventoryMask&(1<<item.InventoryType)));}
