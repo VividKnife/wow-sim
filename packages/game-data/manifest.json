@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "c7166e9a9d591f182f66fefbf2786184e3c037d1503ec2a8e88a6b72647c7e4a",
+  "contentVersion": "2ade345aaf680afbc66115cde03d7ae6ae8c5eda6b0576fde1cc9c83bacd88fa",
   "bundles": {
     "buff-tooltips-zhCN.json": {
       "sha256": "aa751e89eb2dcce2355b1467c958faa75e5e3f827628915cd1dd55982a84af94",
@@ -361,8 +361,8 @@
       "bytes": 5824
     },
     "../game-domain/src/rules/combat-observation.js": {
-      "sha256": "be48e5e1c507dff1bc4b1b3ae9fb169099dab252824105a6e082e659bd3e86a0",
-      "bytes": 3822
+      "sha256": "671834d9872593916861c3012e8e8d4d54499f6764eac75304e174b21a7383f3",
+      "bytes": 3848
     },
     "../game-domain/src/rules/combat-policy.js": {
       "sha256": "e5d7dcd6592d24efb4b6d21d02b56e8fb0ab2b6c9f9371c6ffbd3ecb9703b5a3",
@@ -389,8 +389,8 @@
       "bytes": 8756
     },
     "../game-domain/src/rules/combat.js": {
-      "sha256": "9229aca8cf8481456ca11c610bee9dab8e95b8b41f47540729c9d38f12f51240",
-      "bytes": 60735
+      "sha256": "8f2a1959969b667fc158fc63f8d14884c428af6b81355919a0df2ecda621fe1c",
+      "bytes": 61012
     },
     "../game-domain/src/rules/companion-combat.js": {
       "sha256": "813b972f155a61ecbc7f885b9d0ee76e31d90c6b70a57f62b894cb2603e39525",
