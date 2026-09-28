@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "2ade345aaf680afbc66115cde03d7ae6ae8c5eda6b0576fde1cc9c83bacd88fa",
+  "contentVersion": "5875b69457f677228845bb6957323bbf45b7612d33a2b2a8da5f05e6ad5caed1",
   "bundles": {
     "buff-tooltips-zhCN.json": {
       "sha256": "aa751e89eb2dcce2355b1467c958faa75e5e3f827628915cd1dd55982a84af94",
@@ -473,8 +473,8 @@
       "bytes": 1106
     },
     "../game-domain/src/rules/gold-raid-npcs.js": {
-      "sha256": "491341c0a2a04864f520e0421b40e2424f7a09a5ee6298338d586fe66e6179da",
-      "bytes": 7566
+      "sha256": "c06cc14903f41596b59e341f96f5ec6c5d379dd6e17764d1fb364c6c1ed55ce3",
+      "bytes": 7653
     },
     "../game-domain/src/rules/gold-raid-reagents.js": {
       "sha256": "5bc88254d7d08fa14daa49615cfdaacf37069073b8fc2189dc3f23de022dea11",
@@ -505,8 +505,8 @@
       "bytes": 9051
     },
     "../game-domain/src/rules/item-bis.js": {
-      "sha256": "e11a25030b062b6813d5f9c0235b28ba6d7b6282829b96bf7070117d577efb8c",
-      "bytes": 1569
+      "sha256": "029c4d1360f449ef97492e313d4630075b28602158df9cf571eb8c043d9ef57f",
+      "bytes": 1850
     },
     "../game-domain/src/rules/item-details.js": {
       "sha256": "4f97f726496494f96fc14e72bedf65ed5a85ab8988c8ed52357fc19ffd701d86",

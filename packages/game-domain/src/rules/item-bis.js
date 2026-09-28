@@ -7,6 +7,11 @@ import {combatRole,dominantTalentTree} from './combat-roles.js';
 // Missing phases are deliberately not extended into the next content tier.
 export const BIS_PHASES=data.phases;
 export const CURRENT_BIS_PHASE=1;
+/**
+ * @typedef {{phase: number, label: string, name: string, sourceUrl: string}} BisPhase
+ * @typedef {{spec: string, classId: number, role: string, name: string, icon: string, phases: BisPhase[], sourceName: string}} BisMembership
+ */
+/** @type {Map<number, BisMembership[]>} */
 const byItem=new Map();
 for(const source of [data,healers])for(const row of source.entries){
  // Random suffixes are not represented in current item instances. Do not label the base item as BiS.
