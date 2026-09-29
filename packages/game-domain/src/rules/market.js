@@ -1,6 +1,8 @@
 import {items,nameOf,table} from './catalog.js';
 import {materialIds,recipes,potions,bandages} from './profession-data.js';
 import {marketReference,classMarketSupplies} from '../../../game-data/market-reference.js';
+import {itemAvailableInPhase,itemContentPhase,CURRENT_CONTENT_PHASE} from './content-phase.js';
+import {marketSubcategory,marketSlot} from './market-categories.js';
 import {marketAvailability} from '../../../sim-core/src/market-stock.js';
 
 const crafted=Object.groupBy(recipes,r=>r.item);
@@ -13,7 +15,8 @@ export const marketEligible=i=>!!(i&&i.Quality>0&&i.Quality<=4&&![1,4].includes(
 // supplies. Never turn the entire world loot table (including raid loot) into a shop.
 const candidates=new Set([...materialIds,...recipes.flatMap(r=>[r.item,...r.tools,...r.recipeItems]),...Object.keys(potions).map(Number),...Object.keys(bandages).map(Number),...classMarketSupplies,4496,4498,
  ...table('npc_vendor').map(r=>r.item).filter(id=>[0,1,5,6,11].includes(items[id]?.class))]);
-export const marketIds=[...candidates].filter(id=>marketEligible(items[id])).sort((a,b)=>a-b);
+const allMarketIds=[...candidates].filter(id=>marketEligible(items[id])).sort((a,b)=>a-b);
+export const marketIds=allMarketIds.filter(id=>itemAvailableInPhase(id));
 const marketSet=new Set(marketIds);
 const priceCache=new Map();
 function fallback(i){
@@ -45,10 +48,10 @@ function supply(id){
  if(materialIds.has(id))return {capacity:price>=10000?40:200,restockMs:price>=10000?1800000:300000};
  return {capacity:40,restockMs:900000};
 }
-const offers=marketIds.map(id=>({id,...marketPrice(id),...supply(id),category:marketCategory(items[id]),enchant:items[id].enchant||null}));
+const offers=allMarketIds.map(id=>({id,...marketPrice(id),...supply(id),category:marketCategory(items[id]),subcategory:marketSubcategory(items[id]),slot:marketSlot(items[id]),phase:itemContentPhase(id),enchant:items[id].enchant||null}));
 const offerById=new Map(offers.map(row=>[row.id,row]));
-export const marketView=()=>offers;
-export const marketOffer=id=>offerById.get(id);
+export const marketView=(phase=CURRENT_CONTENT_PHASE)=>offers.filter(row=>row.phase<=phase);
+export const marketOffer=id=>itemAvailableInPhase(id)?offerById.get(id):undefined;
 export {marketAvailability};
 
 /** Preflight the whole replenishment request before spending or reserving. */
@@ -56,6 +59,7 @@ export function reserveMarket(s,requests){
  const totals=new Map();
  for(const {id,count} of requests){
   if(!Number.isSafeInteger(count)||count<1)throw new Error('购买数量必须是正整数');
+  if(!itemAvailableInPhase(id))throw new Error(nameOf('items',id)+'将在 P'+itemContentPhase(id)+' 开放，当前为 P'+CURRENT_CONTENT_PHASE);
   if(!marketSet.has(id))throw new Error('拍卖行没有这件商品：'+nameOf('items',id)+'；绑定材料或工具需自行获取');
   totals.set(id,(totals.get(id)||0)+count);
  }

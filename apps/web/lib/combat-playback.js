@@ -22,9 +22,14 @@ export function playbackPerspective(baseState, baseView, snapshot, endClock) {
  const self=player.id===baseState.id;
  const shared=Object.fromEntries(['clock','wallAt','combat','lastCombat','logs','logSequence'].filter(key=>key in player).map(key=>[key,player[key]]));
  const stats=actor.stats||baseView.stats;
+ const unit=view.battleView.units[baseState.id];
  return {
   state:{...baseState,...(self?player:{}),...shared,...Object.fromEntries(['hp','mana','rage','energy','power','form','stance','cast'].filter(key=>key in actor).map(key=>[key,actor[key]])),id:baseState.id,playbackUntil:endClock},
-  data:{...baseView,...view,stats,characterAttributes:actor.characterAttributes||baseView.characterAttributes,resource:view.battleView.units[baseState.id]?.resource,battleView:{...view.battleView,playerId:baseState.id}},
+  // Effects belong to the selected actor and the current frame. Reusing the
+  // slower overview would retain consumed/dispelled buffs between refreshes.
+  data:{...baseView,...view,stats,characterAttributes:actor.characterAttributes||baseView.characterAttributes,resource:unit?.resource,
+   ...(unit?.effects?{playerBuffs:unit.effects.filter(effect=>effect.kind==='buff'),itemBuffs:[]}:{}),
+   battleView:{...view.battleView,playerId:baseState.id}},
  };
 }
 

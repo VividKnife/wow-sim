@@ -9,11 +9,11 @@ import {spellInfo} from '../../../packages/game-domain/src/rules/character.js';
 import {startCombat,combatTick,hurtPlayer} from '../../../packages/game-domain/src/rules/combat.js';
 import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
 
-function scenario(classId,template,count=1,extra=[]){
- let s=createGame('模板实战',743,0,{classId,raceId:classDefinitions.find(c=>c.id===classId).races[0]});s.level=20;
- s.learned=[...new Set([...s.learned,...classAbilities[classId].filter(a=>a.requiredLevel<=20&&['trainer','weapon'].includes(a.acquisition)).map(a=>a.spellId),...extra])];
+function scenario(classId,template,count=1,extra=[],level=20){
+ let s=createGame('模板实战',743,0,{classId,raceId:classDefinitions.find(c=>c.id===classId).races[0]});s.level=level;
+ s.learned=[...new Set([...s.learned,...classAbilities[classId].filter(a=>a.requiredLevel<=level&&['trainer','weapon'].includes(a.acquisition)).map(a=>a.spellId),...extra])];
  s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s=recruitForTest(s,{type:'recruit',id:'warrior'},0);
- const p=strategyPresets(s).find(p=>p.id===String(template));s.rules=p.rules;s.strategyPolicy={...p.policy,pullDelaySeconds:0}; // Rotation tests start after the configurable pull hold.
+ const p=strategyPresets(s).find(p=>p.id===`${level}-${template}`);s.rules=p.rules;s.strategyPolicy={...p.policy,pullDelaySeconds:0}; // Rotation tests start after the configurable pull hold.
  startCombat(s,Array(count).fill(636),true);s.position=5;s.positionY=0;
  const tank=s.party[0];tank.position=28;tank.positionY=0;tank.rules=[];tank.nextAction=tank.nextSwing=1e6;
  for(const [i,e] of s.combat.enemies.entries()){e.position=30;e.positionY=i;e.hp=e.maxHp=100000;e.threat={[tank.id]:10000};e.target=tank.id;e.rootUntil=e.nextSpell=e.nextAttack=1e6;e.cast=null;}
@@ -138,4 +138,38 @@ test('destruction channels Rain of Fire into a pack and protects a sheep in its 
  assert.equal(casts(s)[0],'Rain of Fire');assert.ok(s.cast?.extendedChannel);
  assert.equal(new Set(s.logs.filter(l=>l.actorId===s.id&&l.periodic&&spells[l.spellId]?.SpellName==='Rain of Fire').map(l=>l.targetId)).size,3);
  const safe=scenario(9,301,4);safe.combat.enemies[3].polyUntil=10000;const rule=safe.rules.find(r=>spells[r.spell].SpellName==='Rain of Fire');assert.equal(strategyAllows(safe,safe,safe.combat.enemies[0],spellInfo(safe,rule.spell),rule),false);
+});
+
+test('level-40 arms prioritizes Execute over Mortal Strike for a dying target',()=>{
+ for(const [hp,want] of [[100000,'Mortal Strike'],[15000,'Execute']]){
+  const s=scenario(1,161,1,[12294],40),e=s.combat.enemies[0];
+  s.rules=s.rules.filter(r=>['Execute','Mortal Strike','Heroic Strike'].includes(spells[r.spell].SpellName));
+  s.stance='battle';s.rage=1000;s.position=27;e.hp=hp;
+  combatTick(s);assert.equal(casts(s)[0],want);
+ }
+});
+test('level-60 combat rogue saves four points and spends five on Eviscerate',()=>{
+ for(const combo of [4,5]){
+  const s=scenario(4,181,1,[],60),e=s.combat.enemies[0];
+  s.rules=s.rules.filter(r=>['Eviscerate','Sinister Strike'].includes(spells[r.spell].SpellName));
+  s.combo=combo;s.comboTarget=e.id;s.energy=100;s.position=27;
+  combatTick(s);assert.equal(casts(s)[0],combo===5?'Eviscerate':'Sinister Strike');
+ }
+});
+test('demonology maintains Soul Link once and continues its damage rotation',()=>{
+ for(const level of [40,60]){
+  const s=scenario(9,303,1,[688,19028],level);
+  tick(s,20000);
+  assert.equal(casts(s).filter(name=>name==='Soul Link').length,1);
+  assert.ok(casts(s).includes('Corruption'));
+  assert.ok(s.talentProcs.soulLink.until>s.clock);
+ }
+});
+test('subtlety Premeditation awards combo points on the enemy before the opener',()=>{
+ const s=scenario(4,183,1,[14183],40),e=s.combat.enemies[0];
+ s.rules=s.rules.filter(r=>spells[r.spell].SpellName==='Premeditation');
+ s.stealthed=true;s.position=27;
+ combatTick(s);
+ assert.equal(casts(s)[0],'Premeditation');
+ assert.equal(s.comboTarget,e.id);assert.equal(s.combo,2);
 });

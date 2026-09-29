@@ -1,6 +1,8 @@
+import {raidHealingMode,selectRaidHealing} from './raid-healing-policy.js';
 import {observePolicyChanges,stepCombatPolicy,flushQueuedCombatIntent,queueManualCombatIntent,invalidatePolicyIntents} from './combat-policy.js';
 import {combatInputReadyReason,combatInputTargetReason,pendingCombatInput,inputWaiting,inputResult,pruneCombatInputs} from './combat-input.js';
 import {mightSetBonuses} from './might-set.js';
+import {weaponEnhancementStats} from './weapon-enhancement-stats.js';
 import {spellResistance,mitigateSpellDamage} from './spell-mitigation.js';
 import {binarySpell} from '../../../sim-core/src/spell-resistance.js';
 import {markCombatEngaged} from './combat-engagement.js';
@@ -303,7 +305,7 @@ function melee(s,c,e){if(e.airborne)return;if(c.pvp&&!arenaSight(c,e)){moveTowar
 function offhand(s,c,e){if(c.pvp&&!arenaSight(c,e))return;if(c.talentProcs?.spiritOfRedemption?.until>s.clock)return;
  const weapon=itemsForWeapon(c.equipment?.[17]?.id);if(!weapon||weapon.class!==2||!c.learned.includes(674)||hasAura(c,67,s.clock)||distance(c,e)>5||(c.nextOffhand||0)>s.clock||s.combat.command?.holdFire)return;
  c.offhandStartedAt=s.clock;c.nextOffhand=s.clock+(weapon.delay||2000)*attackTimeMultiplier(c,s.clock)/(1+talentModifiers(c).meleeHastePct);onTalentEvent(s,c,{type:'swing'},{rng,stats});const attack=weaponAttack(s,c,e,{hand:'off'});if(!attack.landed)return;
- const raw=(roll(s,weapon.dmg_min1||1,weapon.dmg_max1||2)+stats(c).attackPower/14*(weapon.delay||2000)/1000)*.5*talentOffhandMultiplier(c)*attack.multiplier;
+ const raw=(roll(s,weapon.dmg_min1||1,weapon.dmg_max1||2)+stats(c).attackPower/14*(weapon.delay||2000)/1000+(weaponEnhancementStats(c,17,s.clock).weaponDamage||0))*.5*talentOffhandMultiplier(c)*attack.multiplier;
  recordDamage(s,c,e,raw*(1-armorReduction(effectiveArmor(e,s.clock)-talentArmorPenetration(c),c.level)),'副手攻击',1,{school:0,hand:'off',critical:attack.critical,glancing:attack.glancing,outcome:attack.outcome});classMeleeProc(s,c,e,{damage:recordDamage,healAmount,stats,rng,lands:spellLands,actors:combatMembers(s)},17);
 }
 let itemLookup;
@@ -408,7 +410,9 @@ export function selectCombatPolicy(s,c,{regular=true,urgent=false}={}){
  if(c===s&&future!==s)c=future;
  if(combatRole(c)==='healer'&&actors.some(a=>a.hp>0&&a.hp<stats(a).maxHp*.85)){
   const rules=c.rules?.filter(r=>classAbilityKind(spells[r.spell])==='heal'||['Power Word: Shield','Inner Focus',"Nature's Swiftness",'Divine Favor'].includes(spells[r.spell]?.SpellName));
-  const heal=rules?.length?selectConfigured(future,c,e,targets,actors,rules):c.classId===5&&c!==s?selectCompanion(future,c,targets,actors,null,null,null):!c.rules&&selectClass(future,c,e,actors,null);
+  const raidMode=raidHealingMode(future,c);
+  const support=raidMode&&rules?.filter(r=>classAbilityKind(spells[r.spell])!=='heal');
+  const heal=raidMode?(support?.length&&selectConfigured(future,c,e,targets,actors,support))||selectRaidHealing(future,c,e,actors):rules?.length?selectConfigured(future,c,e,targets,actors,rules):c.classId===5&&c!==s?selectCompanion(future,c,targets,actors,null,null,null):!c.rules&&selectClass(future,c,e,actors,null);
   if(heal)return heal;
  }
 

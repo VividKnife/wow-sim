@@ -12,16 +12,16 @@ import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/co
 import {distance} from '../../../packages/sim-core/src/geometry.js';
 import {MAX_STRATEGY_RULES} from '../../../packages/sim-core/src/strategy-config.js';
 
-function trained(classId=8){
+function trained(classId=8,level=20){
  const definition=classDefinitions.find(c=>c.id===classId);
- const s=createGame('策略测试',731,0,{classId,raceId:definition.races[0]});s.level=20;
- s.learned=[...new Set([...s.learned,...(classAbilities[classId]||[]).filter(a=>a.requiredLevel<=20&&['trainer','weapon'].includes(a.acquisition)).map(a=>a.spellId)])];
+ const s=createGame('策略测试',731,0,{classId,raceId:definition.races[0]});s.level=level;
+ s.learned=[...new Set([...s.learned,...(classAbilities[classId]||[]).filter(a=>a.requiredLevel<=level&&['trainer','weapon'].includes(a.acquisition)).map(a=>a.spellId)])];
  s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;return s;
 }
 test('every class and talent branch has an applicable level-20 template using only learned highest active ranks',()=>{
  let count=0;
  for(const definition of classDefinitions){
-  const s=trained(definition.id),options=strategyPresets(s),allowed=strategySpellIds(s);
+  const s=trained(definition.id),options=strategyPresets(s).filter(p=>p.level===20),allowed=strategySpellIds(s);
   assert.ok(options.length>=3,definition.name);
   assert.equal(options.filter(p=>p.recommended).length,1);
   for(const preset of options){
@@ -36,9 +36,92 @@ test('every class and talent branch has an applicable level-20 template using on
 test('recommendation follows allocated talent points and covers the extra bear tank variant',()=>{
  for(const tree of classTalentTrees){
   const s=trained(tree.classId);s.talents={[tree.talents[0].id]:5};
-  assert.equal(strategyPresets(s).find(p=>p.recommended).id,String(tree.id));
+  assert.equal(strategyPresets(s).find(p=>p.recommended).id,`20-${tree.id}`);
  }
- assert.equal(strategyPresets(trained(11)).find(p=>p.id==='281-bear').role,'tank');
+ assert.equal(strategyPresets(trained(11)).find(p=>p.id==='20-281-bear').role,'tank');
+});
+test('all 84 milestone templates validate, apply, and use highest learned ranks',()=>{
+ for(const level of [20,40,60]){
+  let count=0;
+  for(const definition of classDefinitions){
+   const s=trained(definition.id,level);
+   // Include optional active talents to exercise every branch's rules.
+   s.learned=[...new Set([...s.learned,...classAbilities[definition.id].filter(a=>a.requiredLevel<=level&&a.acquisition==='talent').map(a=>a.spellId)])];
+   const options=strategyPresets(s),highest=new Map(strategySpellIds(s).map(id=>[spells[id].SpellName,id]));
+   assert.equal(new Set(options.map(p=>p.id)).size,options.length);
+   assert.equal(options.length,definition.id===11?12:9);
+   assert.equal(options.filter(p=>p.recommended).length,1);
+   assert.equal(options.find(p=>p.recommended).level,level);
+   for(const preset of options){
+    validateRules(s,preset.rules);
+    assert.ok(preset.rules.length>0,preset.name);
+    assert.ok(preset.rules.every(r=>r.spell===highest.get(spells[r.spell].SpellName)));
+    assert.ok(preset.rules.every(r=>spells[r.spell].SpellLevel<=level));
+    if(preset.level!==level)continue;
+    count++;
+    const changed=act(s,{type:'strategy',rules:preset.rules,policy:preset.policy,autoBuffs:preset.autoBuffs,potions:preset.potions},0);
+    assert.deepEqual(changed.rules,preset.rules);
+    assert.deepEqual(changed.talents,s.talents);
+    assert.deepEqual(changed.learned,s.learned);
+    assert.equal(combatRole(changed),preset.role);
+   }
+  }
+  assert.equal(count,28);
+ }
+});
+test('recommendations switch at level 40 and 60 for every talent branch',()=>{
+ for(const tree of classTalentTrees){
+  const s=trained(tree.classId);s.talents={[tree.talents[0].id]:5};
+  for(const [level,milestone] of [[1,20],[20,20],[39,20],[40,40],[59,40],[60,60]]){
+   s.level=level;
+   const recommended=strategyPresets(s).filter(p=>p.recommended);
+   assert.equal(recommended.length,1);
+   assert.equal(recommended[0].id,`${milestone}-${tree.id}`);
+  }
+ }
+});
+test('advanced templates add learned core abilities and exclude mutually exclusive fallbacks',()=>{
+ const cases=[
+  [1,'161','Mortal Strike'],[1,'164','Bloodthirst'],[1,'163','Shield Slam'],
+  [2,'382','Divine Favor'],[2,'383','Holy Shield'],[2,'381','Sanctity Aura','Retribution Aura'],
+  [3,'361','Bestial Wrath'],[3,'363','Trueshot Aura'],[3,'362','Counterattack'],
+  [4,'182','Cold Blood'],[4,'181','Adrenaline Rush'],[4,'183','Premeditation'],
+  [5,'201','Greater Heal','Heal'],[5,'202','Greater Heal','Heal'],[5,'203','Shadowform'],
+  [7,'261','Elemental Mastery'],[7,'263','Windfury Weapon','Rockbiter Weapon'],[7,'262','Mana Tide Totem'],
+  [8,'41','Combustion'],[8,'61','Ice Barrier'],[8,'81','Arcane Power'],
+  [9,'302','Dark Pact'],[9,'303','Soul Link'],[9,'301','Conflagrate'],
+  [11,'283','Moonkin Form'],[11,'281','Ferocious Bite'],[11,'282','Swiftmend'],[11,'281-bear','Dire Bear Form','Bear Form'],
+ ];
+ for(const [classId,branch,core,fallback] of cases){
+  const s=trained(classId,40);
+  const abilities=classAbilities[classId].filter(a=>a.requiredLevel<=40&&a.acquisition==='talent');
+  s.learned.push(...abilities.map(a=>a.spellId));
+  if(fallback)s.learned.push(...classAbilities[classId].filter(a=>a.requiredLevel<=40&&spells[a.spellId].SpellName===fallback).map(a=>a.spellId));
+  const options=strategyPresets(s),names=level=>options.find(p=>p.id===`${level}-${branch}`).rules.map(r=>spells[r.spell].SpellName);
+  assert.ok(!names(20).includes(core),`${branch}: ${core} is not part of the level-20 rotation`);
+  for(const level of [40,60]){
+   assert.ok(names(level).includes(core),`${level}-${branch}: ${core}`);
+   if(fallback)assert.ok(!names(level).includes(fallback),`${level}-${branch}: ${fallback}`);
+  }
+  s.learned=s.learned.filter(id=>spells[id].SpellName!==core);
+  const without=strategyPresets(s).find(p=>p.id===`40-${branch}`).rules.map(r=>spells[r.spell].SpellName);
+  assert.ok(!without.includes(core));
+  if(fallback)assert.ok(without.includes(fallback),`${branch}: restore learned ${fallback}`);
+ }
+});
+test('level-60 priorities differ from level 40 and presets do not share mutable conditions',()=>{
+ for(const definition of classDefinitions){
+  const s=trained(definition.id,60),options=strategyPresets(s);
+  for(const p of options.filter(p=>p.level===60)){
+   assert.notDeepEqual(p.rules,options.find(other=>other.id===p.id.replace('60-','40-')).rules,p.name);
+  }
+ }
+ const s=trained(3,60),options=strategyPresets(s);
+ const row=options.find(p=>p.id==='40-361').rules.find(r=>r.and?.length);
+ const original=structuredClone(options.find(p=>p.id==='60-361'));
+ row.and[0].value=99;
+ assert.deepEqual(options.find(p=>p.id==='60-361'),original);
+ assert.deepEqual(strategyPresets(s).find(p=>p.id==='60-361'),original);
 });
 test('skill picker excludes unlearned skills, passives and talent nodes but retains learned active talent spells',()=>{
  const s=trained();
@@ -142,7 +225,7 @@ test('templates and role settings round-trip through service persistence and ins
  assert.equal(snap.state.party.find(c=>c.id===priest.id).strategyPolicy.role,'healer');
  const response=buildGameResponse(snap.state,snap.account.revision);
  const projected=response.snapshot.view.strategyMembers.find(c=>c.id===priest.id);
- assert.equal(projected.presets.length,3);assert.equal(projected.policy.role,'healer');
+ assert.equal(projected.presets.length,9);assert.equal(projected.policy.role,'healer');
  assert.deepEqual(projected.rules,expandedRules);
  assert.deepEqual(projected.strategyProfiles[0].rules,expandedRules);
  assert.ok(projected.skills.every(s=>s.known&&s.icon));

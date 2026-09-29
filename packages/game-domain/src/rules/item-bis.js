@@ -6,7 +6,8 @@ import {combatRole,dominantTalentTree} from './combat-roles.js';
 // Membership in an authored loadout, not an item-level or stat-score ranking.
 // Missing phases are deliberately not extended into the next content tier.
 export const BIS_PHASES=data.phases;
-export const CURRENT_BIS_PHASE=1;
+import {CURRENT_CONTENT_PHASE} from './content-phase.js';
+export const CURRENT_BIS_PHASE=CURRENT_CONTENT_PHASE;
 const byItem=new Map();
 for(const source of [data,healers])for(const row of source.entries){
  // Random suffixes are not represented in current item instances. Do not label the base item as BiS.

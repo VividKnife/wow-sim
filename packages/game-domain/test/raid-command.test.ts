@@ -110,3 +110,51 @@ test('25-player camp buff order covers the assembled raid and resumes from a che
  const before=actors.map(c=>stats(c).sta);for(const c of actors)restoreRaidMember(c,s);
  assert.deepEqual(actors.map(c=>stats(c).sta),before);
 });
+
+test('healing orders persist for this encounter, reject stale orders and clear queued healer decisions',()=>{
+ const s=start(fixture()),healer=s.party.find((c:Rules)=>combatRole(c)==='healer')!;
+ assert.equal(raidCommandView(s)!.live!.healingMode,'normal');
+ s.combat.policy={slots:{[healer.id]:{generation:2,queued:{intent:{}},inflight:s.clock}},timeline:[],receipts:[],metrics:{}};
+ assert.throws(()=>raidCommandAction(s,{type:'raidOrder',order:'conserveMana',encounterId:'old'}),/已变化/);
+ raidCommandAction(s,{type:'raidOrder',order:'conserveMana',encounterId:s.combat.id});
+ assert.equal(s.combat.policy.slots[healer.id].queued,null);
+ assert.equal(s.combat.policy.slots[healer.id].generation,3);
+ assert.equal(raidCommandView(JSON.parse(JSON.stringify(s)))!.live!.healingMode,'conserve');
+ assert.match(s.combat.raidEncounter.command.events.at(-1).text,/节约蓝量/);
+ raidCommandAction(s,{type:'raidOrder',order:'normalHealing',encounterId:s.combat.id});
+ assert.equal(raidCommandView(s)!.live!.healingMode,'normal');
+ raidCommandAction(s,{type:'raidOrder',order:'conserveMana',encounterId:s.combat.id});
+ s.combat=null;start(s);assert.equal(raidCommandView(s)!.live!.healingMode,'normal');
+});
+
+test('mana conservation reduces automatic healing for all healer classes while preserving rescue, tank safety and explicit casts',async()=>{
+ const {selectClass}=await import('../src/rules/class-mechanics.js');
+ const {strategyAllows}=await import('../src/rules/combat-strategy.js');
+ const s=start(fixture()),actors=[s,...s.party],enemy=s.combat.enemies[0];
+ for(const actor of actors)actor.hp=stats(actor).maxHp;
+ const target=actors.find((c:Rules)=>combatRole(c)==='ranged')!,tank=actors.find((c:Rules)=>combatRole(c)==='tank')!;
+ for(const [classId,base] of [[2,635],[5,2060],[7,1064],[11,5185]]){
+  const healer:Rules={...structuredClone(actors.find((c:Rules)=>combatRole(c)==='healer')!),id:`test-healer-${classId}`,classId,raceId:classId===7?2:classId===11?4:1,talents:{},learned:[base],strategyPolicy:{role:'healer'},raidReservedSpells:[]};
+  healer.hp=stats(healer).maxHp;healer.mana=stats(healer).maxMana;
+  assert.ok(knownRank(healer,base));
+  healer.position=target.position=tank.position=enemy.position;healer.positionY=target.positionY=tank.positionY=enemy.positionY;
+  const rules=[{spell:base,enabled:true,condition:'always',value:0}];
+  target.hp=stats(target).maxHp*.75;
+  raidCommandAction(s,{type:'raidOrder',order:'normalHealing',encounterId:s.combat.id});
+  assert.equal(selectClass(s,healer,enemy,actors,null,rules)?.targetId,target.id);
+  raidCommandAction(s,{type:'raidOrder',order:'conserveMana',encounterId:s.combat.id});
+  assert.ok(!selectClass(s,healer,enemy,actors,null,rules));
+  const exact=[{...rules[0],spell:knownRank(healer,base)}];
+  assert.equal(selectClass(s,healer,enemy,actors,null,exact,{target} as any)?.targetId,target.id);
+  target.hp=stats(target).maxHp*.25;
+  assert.equal(selectClass(s,healer,enemy,actors,null,rules)?.targetId,target.id);
+  target.hp=stats(target).maxHp;tank.hp=stats(tank).maxHp*.75;
+  assert.equal(selectClass(s,healer,enemy,actors,null,rules)?.targetId,tank.id);
+  tank.hp=stats(tank).maxHp;
+ }
+ const priest=actors.find((c:Rules)=>c.classId===5&&combatRole(c)==='healer')!;
+ const smite=spellInfo(priest,knownRank(priest,585));priest.strategyPolicy={...priest.strategyPolicy,waitForTank:false};
+ assert.equal(strategyAllows(s,priest,enemy,smite),false);
+ raidCommandAction(s,{type:'raidOrder',order:'normalHealing',encounterId:s.combat.id});
+ assert.equal(strategyAllows(s,priest,enemy,smite),true);
+});

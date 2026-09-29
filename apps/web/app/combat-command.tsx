@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- Game spell icons. */
 import {useEffect,useState,type ReactNode} from 'react';
-import {Swords,Flame,Footprints,Hand,Crosshair,RotateCcw,Pause,Play,Flag,ChevronDown,X} from 'lucide-react';
+import {Swords,Flame,Footprints,Hand,Crosshair,RotateCcw,Pause,Play,Flag,ChevronDown,X,Droplets,HeartPulse} from 'lucide-react';
 import ClassIcon from './class-icon';
 import CombatSpellOrder from './combat-spell-order';
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
@@ -15,7 +15,8 @@ export function CommandPreparation({state:s,busy,send}:Pick<GameProps,'state'|'b
 }
 type Props=GameProps&{memberId:string;targetId:string;onMemberChange:(id:string)=>void;onTargetChange:(id:string)=>void;onOrder:(body:any,targeted?:boolean)=>void;pending:any;onCancel:()=>void;canLead:boolean;active:boolean;embedded?:boolean};
 type Slot={key:string;label:string;icon:ReactNode;run:()=>void;pressed?:boolean;disabled?:boolean;detail:string;cooldown?:number};
-export default function CombatCommand({state:s,data:d,busy,memberId,targetId,onMemberChange,onTargetChange,onOrder,pending,onCancel,canLead,active,embedded}:Props){
+export default function CombatCommand({state:s,data:d,busy,send,memberId,targetId,onMemberChange,onTargetChange,onOrder,pending,onCancel,canLead,active,embedded}:Props){
+ const [hidden,setHidden]=useState(false);
  const [more,setMore]=useState(false),[targetsOpen,setTargetsOpen]=useState(false),[captainOpen,setCaptainOpen]=useState(false),[hint,setHint]=useState('');
  const battle=s.combat,view=d.combatCommand,command=battle?.command;
  const members=view?.members||[],member=members.find((m:any)=>m.id===memberId)||members[0];
@@ -37,11 +38,12 @@ export default function CombatCommand({state:s,data:d,busy,memberId,targetId,onM
   {key:'single',label:'单体',icon:<Swords/>,pressed:command?.mode==='single',disabled:locked,detail:'全队使用单体输出，保护其他目标',run:()=>request('mode',{mode:'single'})},
   {key:'aoe',label:'范围',icon:<Flame/>,pressed:command?.mode==='aoe',disabled:locked||!members.some((m:any)=>m.canAoe),detail:'全队优先已学群攻，保留治疗职责与控场保护',run:()=>request('mode',{mode:'aoe'})},
   {key:'hold',label:command?.holdFire?'开火':'停火',icon:<Hand/>,pressed:!!command?.holdFire,disabled:locked,detail:'停止主动伤害；治疗、控制继续；不会清除已有持续伤害',run:()=>request('holdFire',{enabled:!command?.holdFire})},
+  ...(d.raidCommand?.live?[{key:'healing',label:d.raidCommand.live.healingMode==='conserve'?'正常治疗':'节约蓝量',icon:d.raidCommand.live.healingMode==='conserve'?<HeartPulse/>:<Droplets/>,pressed:d.raidCommand.live.healingMode==='conserve',disabled:locked,detail:d.raidCommand.live.healingMode==='conserve'?'正常治疗：优先高 HPS 技能，提高每秒治疗量':'节约蓝量：优先高 HPM 技能，提高每点法力治疗量；低血量优先快速救急',run:()=>{send({type:'raidOrder',order:d.raidCommand.live.healingMode==='conserve'?'normalHealing':'conserveMana',encounterId:battle.id});}}]:[]),
   {key:'auto',label:'自动',icon:<RotateCcw/>,disabled:locked,detail:'全队取消临时打法、集火及任务，恢复原策略',run:()=>request('mode',{mode:'auto'})},
  ];
  useEffect(()=>{setMore(false);setHint('');},[memberId,battle?.id]);
  useEffect(()=>{
-  if(!active||!view)return;
+  if(!active||!view||hidden)return;
   const key=(e:KeyboardEvent)=>{
    const node=e.target as HTMLElement;
    if(e.defaultPrevented||e.repeat||e.isComposing||e.ctrlKey||e.metaKey||node.closest?.('input,textarea,[contenteditable=true],[role=combobox],[role=listbox]'))return;
@@ -57,6 +59,7 @@ export default function CombatCommand({state:s,data:d,busy,memberId,targetId,onM
   window.addEventListener('keydown',key,true);return()=>window.removeEventListener('keydown',key,true);
  });
  if(!battle||!view||!member)return null;
+ if(hidden)return <section className="combat-command command-hotbar command-hotbar-collapsed" aria-label="队伍指挥"><button type="button" className="command-pause" aria-expanded={false} onClick={()=>setHidden(false)}>显示队伍指挥</button></section>;
  const button=(slot:Slot,i:number,team=false)=><button type="button" key={slot.key} className="command-slot" aria-label={`${team?'全队':member.name}：${slot.label}`} title={slot.detail} disabled={slot.disabled} aria-pressed={!!slot.pressed} onClick={slot.run} onPointerEnter={()=>setHint(slot.detail)} onFocus={()=>setHint(slot.detail)}>{i<8&&<kbd>{team?'⇧':embedded?'Alt+':''}{i+1}</kbd>}<span className="command-slot-icon">{slot.icon}</span>{!!slot.cooldown&&<span className="command-slot-cooldown">{slot.cooldown}</span>}<span className="command-slot-name">{slot.label}</span></button>;
  const taskLabel=tasks.map((o:any)=>`${skills.find((x:any)=>x.spellId===o.spellId)?.name||kindNames[o.kind]} → ${enemies.find((e:any)=>e.id===o.targetId)?.name||'目标失效'}`).join(' · ');
  return <>
@@ -67,7 +70,7 @@ export default function CombatCommand({state:s,data:d,busy,memberId,targetId,onM
   </aside>
   <section className="combat-command command-hotbar" aria-label="队伍指挥" onPointerLeave={()=>setHint('')}>
    {members.length>5?<GameSelect aria-label="选择受令队员" value={member.id} onValueChange={onMemberChange}>{members.map((m:any)=><GameSelectOption key={m.id} value={m.id}>{m.name}</GameSelectOption>)}</GameSelect>:<div className={`command-member-picker ${embedded?'command-members-mobile':''}`} aria-label="选择受令队员">{members.map((m:any)=><button key={m.id} type="button" aria-pressed={member.id===m.id} onClick={()=>onMemberChange(m.id)}><ClassIcon classId={m.classId} size={20}/>{m.name}</button>)}</div>}
-   <header className="command-hotbar-heading"><div><ClassIcon classId={member.classId} size={25}/><strong>{member.name}</strong><span>{taskLabel||(mode==='aoe'?'范围输出':mode==='single'?'单体输出':'按原策略行动')}</span></div><button type="button" className="command-pause" disabled={locked} onClick={()=>request(command?.paused?'resume':'pause')}>{command?.paused?<Play size={13}/>:<Pause size={13}/>}<span>{command?.paused?'继续战斗':'战术暂停'}</span></button></header>
+   <header className="command-hotbar-heading"><button type="button" className="command-pause" aria-expanded={true} onClick={()=>{setHidden(true);setHint('');onCancel();}}>隐藏队伍指挥</button><div><ClassIcon classId={member.classId} size={25}/><strong>{member.name}</strong><span>{taskLabel||(mode==='aoe'?'范围输出':mode==='single'?'单体输出':'按原策略行动')}</span></div><button type="button" className="command-pause" disabled={locked} onClick={()=>request(command?.paused?'resume':'pause')}>{command?.paused?<Play size={13}/>:<Pause size={13}/>}<span>{command?.paused?'继续战斗':'战术暂停'}</span></button></header>
    <div className="command-hotbar-rows"><div className="command-personal" role="group" aria-label={`${member.name}职业快捷栏`}>{(more?slots:slots.slice(0,8)).map((slot,i)=>button(slot,i))}{slots.length>8&&<button type="button" className="command-more" aria-expanded={more} onClick={()=>setMore(!more)}>{more?'收起':'更多'}<ChevronDown size={14}/></button>}</div><div className={`command-captain ${captainOpen?'is-open':''}`}><button type="button" className="command-captain-title" aria-expanded={captainOpen} onClick={()=>setCaptainOpen(!captainOpen)}><Flag size={13}/><span>队长指挥</span></button><div className="command-captain-slots" role="group" aria-label="队长快捷栏">{captain.map((slot,i)=>button(slot,i,true))}</div></div></div>
    <details className="combat-spell-details"><summary>指定技能与目标</summary><CombatSpellOrder battle={battle} view={view} memberId={member.id} locked={locked||dead} request={request}/></details>
    <div className="command-feedback" role="status">{pending?<><span>{pending.label||'下达指令'} → 点击敌人或上方目标列表</span><button type="button" onClick={onCancel}>取消 · Esc</button></>:<span>{!canLead?'由队长发布指令':hint||(command?.paused?'战术暂停 · 时间冻结，布置完成后继续':`实时指挥 · F1–F5 选队员 · ${embedded?'Alt+':''}1–8 技能 · Shift+数字 队长命令`)}</span>}</div>

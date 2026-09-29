@@ -7,6 +7,7 @@ import {beginSpellTiming,spellReady} from './spell-timing.js';
 import {classEffect} from './class-mechanics.js';
 import {startRecovery} from './recovery.js';
 import {combatRole} from './combat-roles.js';
+import {raidConsumableChecks,useRaidConsumable} from './raid-consumables.js';
 
 // Assign responsibilities first, then combine compatible assignments into
 // reagent-consuming group casts. One blessing per paladin and recipient.
@@ -41,6 +42,8 @@ export function beginPartyBuffs(s){
  if(s.goldRaid)s.goldRaid.autoAdvance=false;
  s.activity={type:'partyBuffs',startedAt:s.clock,completed:0,queue:requests(s).filter(r=>r.targets.some(target=>!covered(s,{...r,target}))).map(({c,targets,sp,fallback})=>({caster:c.id,targets:targets.map(t=>t.id),spell:sp.Id,fallback}))};
  s.activity.remaining=s.activity.queue.length;
+ s.activity.consumableQueue=[s,...s.party].flatMap(c=>raidConsumableChecks(s,c).filter(r=>r.status==='missing').map(r=>({member:c.id,kind:r.kind,slot:r.slot})));
+ s.activity.completedItems=0;
  log(s,'团长指令：全团补 Buff，各职业按已学技能分工。','buff');
 }
 export function partyBuffTick(s){
@@ -50,7 +53,15 @@ export function partyBuffTick(s){
  s.activity.queue=s.activity.queue.filter(r=>members.some(c=>c.id===r.caster&&c.hp>0)&&r.targets.some(id=>members.some(c=>c.id===id&&c.hp>0)));
  const pending=s.activity.queue.map(row=>({row,c:members.find(c=>c.id===row.caster),targets:members.filter(c=>row.targets.includes(c.id)&&c.hp>0)})).map(r=>({...r,sp:spellInfo(r.c,r.row.spell)}));
  s.activity.remaining=pending.length;
- if(!pending.length){log(s,'全团补 Buff 完成。','buff');s.activity={type:'idle',reason:'全团补 Buff 完成'};return true;}
+ if(!pending.length){
+  while(s.activity.consumableQueue.length){
+   const request=s.activity.consumableQueue.shift(),c=members.find(c=>c.id===request.member);
+   if(c&&useRaidConsumable(s,c,request)){s.activity.completedItems++;return true;}
+  }
+  const gaps=members.some(c=>raidConsumableChecks(s,c).some(r=>!['ready','dead'].includes(r.status)));
+  const reason=gaps?'本轮补 Buff 完成，部分消耗品仍未补齐，请查看检查列表':'全团补 Buff 完成';
+  log(s,reason+'。','buff');s.activity={type:'idle',reason};return true;
+ }
  const longPending=pending.some(r=>r.sp.durationMs>=600000&&r.targets.some(target=>!covered(s,{...r,target})));
  for(const request of pending){
   const {c,targets,sp,row}=request;const target=targets[0];
@@ -131,10 +142,14 @@ export function partyBuffCheckView(s){
     else{status='missing';reason=active?`等待 ${c.name} 施放`:`由 ${c.name} 补充`;}
    }
    if(target.hp>0){total++;if(isPresent)present++;else if(status==='unavailable')unavailable.set(family,{name:nameOf('spells',roots.find(id=>spells[id].SpellName===family)||sp.Id),reason});else missing++;}
-   return {name:nameOf('spells',roots.find(id=>spells[id].SpellName===family)||sp.Id),spellId:sp.Id,status,reason,caster:c?.name||null,remaining:isPresent?Math.max(0,(existing?.until||s.clock)-s.clock):0};
+   return {name:nameOf('spells',roots.find(id=>spells[id].SpellName===family)||sp.Id),spellId:sp.Id,itemId:null,status,reason,caster:c?.name||null,remaining:isPresent?Math.max(0,(existing?.until||s.clock)-s.clock):0};
   });
+  for(const entry of raidConsumableChecks(s,target)){
+   entries.push(entry);
+   if(target.hp>0){total++;if(entry.status==='ready')present++;else missing++;}
+  }
   return {id:target.id,name:target.name,classId:target.classId,squad:buffSquad(s,target)+1,dead:target.hp<=0,missing:entries.filter(e=>e.status!=='ready').length,entries};
  });
  const last=[...s.logs].reverse().find(l=>l.kind==='buff'&&l.spellId&&l.at>=s.activity.startedAt);
- return {active,completed:active?s.activity.completed:0,remainingCasts:active?s.activity.queue.length:plan.filter(r=>r.targets.some(target=>!covered(s,{...r,target}))).length,missing,present,total,unavailable:[...unavailable.values()],members,lastCast:active&&last?last.text:null};
+ return {active,completed:active?s.activity.completed:0,completedItems:active?s.activity.completedItems:0,remainingItems:active?s.activity.consumableQueue.length:members.flatMap(m=>m.entries).filter(e=>e.itemId&&e.status==='missing').length,remainingCasts:active?s.activity.queue.length:plan.filter(r=>r.targets.some(target=>!covered(s,{...r,target}))).length,missing,present,total,unavailable:[...unavailable.values()],members,lastCast:active&&last?last.text:null};
 }

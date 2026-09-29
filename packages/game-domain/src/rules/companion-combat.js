@@ -1,4 +1,6 @@
+import {raidHealingThreshold} from './raid-healing.js';
 import {combatRole} from './combat-roles.js';
+import {weaponEnhancementStats} from './weapon-enhancement-stats.js';
 import {mightSetBonuses} from './might-set.js';
 import {commandOrder,commandProtected} from './combat-command.js';
 import {weaponAttack} from './weapon-attacks.js';
@@ -36,7 +38,7 @@ export function effectiveArmor(e,clock){if(e.pvp)return Math.max(0,stats(e).armo
 export function weaponDamage(s,c,normalized=false){
  const weapon=!hasAura(c,67,s.clock)&&items[c.equipment[16]?.id],speed=c.form==='cat'?1:c.form==='bear'?2.5:normalized?(weapon?.subclass===15?1.7:weapon?.InventoryType===17?3.3:2.4):(weapon?.delay||2000)/1000;
  const power=stats(c).attackPower*(c.racialBuff?.kind==='bloodfury'&&c.racialBuff.until>s.clock?1.25:1);
- return (c.form?roll(s,c.level,c.level*2):roll(s,Math.floor(weapon?.dmg_min1||1),Math.ceil(weapon?.dmg_max1||2)))+power/14*speed+(c.form?0:stats(c).weaponDamage||0);
+ return (c.form?roll(s,c.level,c.level*2):roll(s,Math.floor(weapon?.dmg_min1||1),Math.ceil(weapon?.dmg_max1||2)))+power/14*speed+(c.form?0:stats(c).weaponDamage||0)+(weapon?weaponEnhancementStats(c,16,s.clock).weaponDamage||0:0);
 }
 function announce(s,c,e,sp){const timing=beginSpellTiming(c,sp,s.clock);s.combat.casts++;log(s,`${c.name} 施放 ${nameOf('spells',sp.Id)}`,'cast',{actorId:c.id,targetId:e.id,spellId:sp.Id,duration:sp.castMs});return timing;}
 function physical(s,c,e,sp,amount,damage){
@@ -54,17 +56,17 @@ export function resolveHeal(s,c,target,sp,{effect=1,coefficient=1}={}){
  onTalentEvent(s,c,{type:'heal',target,spell:sp,amount,critical},{stats,rng,actors:[]});
  log(s,`${c.name} 的${nameOf('spells',sp.Id)}为 ${target.name} 恢复 ${amount} 点生命`,'heal',{actorId:c.id,targetId:target.id,spellId:sp.Id,amount,overheal:raw-amount,critical});
 }
-const injuredAllies=actors=>actors.filter(a=>a.hp>0&&a.hp<stats(a).maxHp*.85).sort((a,b)=>a.hp/stats(a).maxHp-b.hp/stats(b).maxHp);
+const injuredAllies=(s,c,actors)=>actors.filter(a=>a.hp>0&&a.hp<stats(a).maxHp*raidHealingThreshold(s,c,a,.85)).sort((a,b)=>a.hp/stats(a).maxHp-b.hp/stats(b).maxHp);
 function readyPriestSpell(s,c,base){
  const id=knownRank(c,base),sp=id&&spellInfo(c,id);
  return sp&&c.mana>=sp.mana&&spellReady(c,sp,s.clock,{ignoreGcd:!!c.cast})&&!(sp.School>0&&(c.silenceUntil>s.clock||hasAura(c,27,s.clock)))&&!((c.schoolLockouts?.[sp.School]||0)>s.clock)?sp:null;
 }
 const affordableHeals=(s,c)=>[2050,2054,2061].map(id=>readyPriestSpell(s,c,id)).filter(Boolean);
-function selfShield(s,c){return c.hp<stats(c).maxHp*.85&&!(c.weakenedSoulUntil>s.clock)&&!(c.absorb?.amount>0&&c.absorb.until>s.clock)&&readyPriestSpell(s,c,17);}
+function selfShield(s,c){return c.hp<stats(c).maxHp*raidHealingThreshold(s,c,c,.85)&&!(c.weakenedSoulUntil>s.clock)&&!(c.absorb?.amount>0&&c.absorb.until>s.clock)&&readyPriestSpell(s,c,17);}
 function attackingPriest(s,c){return s.combat.enemies.filter(e=>e.hp>0&&!e.removed&&!e.controlledBy&&!protectedTarget(e,s.clock)&&e.target===c.id);}
 export function selectPriestRescue(s,c,actors){
  if(c===s||c.classId!==5||!c.cast||c.cast.commanded||c.cast.until<=s.clock)return;
- const damage=spells[c.cast.spell]?.SpellName==='Smite'&&injuredAllies(actors).length&&affordableHeals(s,c).length;
+ const damage=spells[c.cast.spell]?.SpellName==='Smite'&&injuredAllies(s,c,actors).length&&affordableHeals(s,c).length;
  const danger=c.cast.friendly&&c.hp<stats(c).maxHp*.4&&attackingPriest(s,c).length&&selfShield(s,c);
  if(!damage&&!danger)return;
  return {kind:'cancel',spellId:c.cast.spell,startedAt:c.cast.startedAt};
@@ -81,7 +83,7 @@ function selectPriest(s,c,enemies,actors,api,rules,input=null){
  if(!input){const defense=selectPriestDefense(s,c,actors,api);if(defense)return defense;}
  // The controlled priest already evaluates configured healing rules in decideClass.
  // Only party AI has an independent emergency-healing policy.
- const target=!rules&&c!==s&&injuredAllies(actors)[0];
+ const target=!rules&&c!==s&&injuredAllies(s,c,actors)[0];
  if(target){
   if(distance(c,target)>40){return {kind:'move',mode:'toward',targetId:target.id,range:40};}
   const deficit=stats(target).maxHp-target.hp,emergency=target.hp/stats(target).maxHp<.3;

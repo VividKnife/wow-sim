@@ -2,6 +2,7 @@ import {addRaidField,raidFieldsTick} from './raid-battlefield.js';
 import {rectangleField,sectorField} from '../../../sim-core/src/encounter-geometry.js';
 import {raidEnemy} from './molten-core-content.js';
 import {raidNotice,raidAnimation} from './molten-core-mechanics.js';
+import {raidFearWardTick} from './raid-support.js';
 import {raidCommandTick} from './raid-command.js';
 import {combatRole} from './combat-roles.js';
 import {roll} from './character.js';
@@ -17,6 +18,7 @@ export function onyxiaTick(s,actors,hurt){
  if(!boss||boss.hp<=0){for(const e of s.combat.enemies)if(e.summonedBy===r.bossId)e.hp=0;return;}
  r.phase??=1;r.nextWhelps??=s.clock;r.nextBreath??=s.clock+20000;r.nextTail??=s.clock+18000;
  raidCommandTick(s,actors);
+ raidFearWardTick(s,living);
  const hit=(c,n,label,id)=>hurt(s,boss,c,n,label,{spellId:id,school:id===19983?0:2});
  const adds=s.combat.enemies.filter(e=>e.summonedBy===boss.id&&e.hp>0);
  for(const c of living)c.raidTargetId=(combatRole(c)==='tank'&&!c.raidMainTank||['tank','melee'].includes(combatRole(c))&&r.phase===2||r.tactics.focusAdds)&&adds.length?adds[0].id:boss.id;

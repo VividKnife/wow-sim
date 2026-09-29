@@ -4,6 +4,9 @@ import {createGame,act,advance,view} from '../src/rules/engine.js';
 import {items,table} from '../src/rules/catalog.js';
 import {addItem,countItem} from '../src/rules/character.js';
 import {marketPrice,marketView,marketOffer,marketAvailability,marketEligible} from '../src/rules/market.js';
+import {itemContentPhase} from '../src/rules/content-phase.js';
+import {recipes} from '../src/rules/profession-data.js';
+import {reserveMarket} from '../src/rules/market.js';
 import {buyMarket} from '../src/rules/inventory.js';
 import {projectClientSnapshot} from '../src/rules/client-snapshot.ts';
 import {rebaseSimulation} from '../src/context.ts';
@@ -92,4 +95,40 @@ test('durable crafting reservations and direct purchases share payer stock acros
  service=new GameService(store,options);snapshot=await service.snapshot('auction-market');assert.equal(available(snapshot.state,2589).available,197);
  now+=300000;snapshot=await service.snapshot('auction-market');
  assert.equal(marketAvailability(snapshot.state.marketStock,snapshot.state.marketClock,marketOffer(2589)!).available,200,'idle snapshot shows replenishment without needing another transaction');
+});
+
+test('phase release gates products, recipes, materials and synthetic enchants on the server',()=>{
+ const expected=new Map([[22385,5],[22388,5],[19682,4],[19726,4],[19169,3],[18562,3],[20749,5],[20725,5],[925080,5],[22682,6],[22652,6]]);
+ for(const [id,phase] of expected){
+  assert.equal(itemContentPhase(id),phase,String(id));
+  assert.equal(marketOffer(id),undefined,String(id));
+  assert.ok(!marketView(phase-1).some(row=>row.id===id));
+  assert.ok(marketView(phase).some(row=>row.id===id),`unlocks ${id} at P${phase}`);
+  const s=fresh(),before=structuredClone(s);
+  assert.throws(()=>buyMarket(s,id,1),new RegExp(`P${phase}`));assert.deepEqual(s,before);
+ }
+ // Early low IDs and late high IDs are not a proxy for release phases.
+ for(const id of [12640,18510,21099,21340,21177,13468])assert.ok(marketOffer(id),`P1 available ${id}`);
+ for(const recipe of recipes)for(const id of recipe.recipeItems){
+  assert.ok(itemContentPhase(id)>=itemContentPhase(recipe.item),`recipe ${id} precedes product ${recipe.item}`);
+ }
+ for(let phase=1;phase<6;phase++)assert.ok(marketView(phase).length<marketView(phase+1).length);
+});
+
+test('future goods cannot be sold or supplied through profession auto-buy',()=>{
+ const s=fresh();addItem(s,22385,1);const item=s.bag.find(i=>i.id===22385)!;
+ assert.equal(view(s).inventoryActions[item.uid].tradable,false);
+ const before=structuredClone(s);
+ assert.throws(()=>act(s,{type:'auctionSell',uid:item.uid},0));assert.deepEqual(s,before);
+ assert.throws(()=>reserveMarket(s,[{id:2589,count:1},{id:20725,count:1}]),/P5/);assert.deepEqual(s,before);
+});
+
+test('auction categories distinguish armor slots, professions, herbs and enchant slots',()=>{
+ const row=(id:number)=>marketView(6).find(row=>row.id===id)!;
+ assert.equal(row(22385).subcategory,'板甲');assert.equal(row(22385).slot,'腿部');
+ assert.equal(row(22388).subcategory,'锻造');assert.equal(row(13468).subcategory,'草药');
+ assert.equal(row(13463).subcategory,'草药');assert.equal(row(2589).subcategory,'布料');
+ assert.equal(row(920014).subcategory,'背部');assert.equal(row(920034).subcategory,'武器');
+ assert.equal(row(8928).subcategory,'盗贼毒药');
+ for(const r of marketView())assert.ok(r.subcategory,`missing child category ${r.id}`);
 });

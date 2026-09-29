@@ -13,7 +13,7 @@ function fixture(){
  const s:Rules=createGame('补给测试',9101,0);s.level=60;
  s.party=[5,8,11,2,2].map((classId,index)=>{const c=createNpcMember(s,roles.find(r=>r.classId===classId)!.id,{role:classId===8?'ranged':'healer'});c.id='buff-'+index;return c;});
  // Kings is a talent: only the assigned paladin has it.
- s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.party[3].learned.push(20217);s.goldRaid={active:true,phase:'camp',rules:{supportBonus:10,dpsBonus:10}};
+ s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.party[3].learned.push(20217);s.goldRaid={active:true,phase:'camp',auctions:[],rules:{supportBonus:10,dpsBonus:10}};
  return s;
 }
 test('real potions restore one resource and share item-template two-minute cooldown across recovery',()=>{

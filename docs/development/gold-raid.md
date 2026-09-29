@@ -61,3 +61,17 @@ node --test packages/game-domain/test/molten-core-route.test.ts packages/game-do
 机制资料参考社区模拟器 CMaNGOS 的 [熔火之心脚本](https://github.com/cmangos/mangos-classic/tree/master/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/molten_core)，尤其是[炎魔阶段](https://raw.githubusercontent.com/cmangos/mangos-classic/master/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/molten_core/boss_ragnaros.cpp)和[管理者投降](https://raw.githubusercontent.com/cmangos/mangos-classic/master/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/molten_core/boss_majordomo_executus.cpp)（2026-09-22查阅）。实现独立编写，目标数、时间和数值为本作配置。
 
 
+
+### 战中治疗口令与指挥面板
+
+团长可在首领战的战中口令栏或主战场队长快捷栏发布“节约蓝量”或“正常治疗”。每场战斗默认正常治疗，口令随当前战斗保存，并写入执行记录与复盘；过期战斗 ID 不能下令。
+
+节蓝模式只影响治疗职责成员的自动决策：坦克生命低于 80%、其他成员低于 60% 时才允许按原策略治疗（原策略若更严格则继续遵循），停止耗蓝伤害技能。救急、驱散、预留技能口令和手动指定施法继续可用；已开始的治疗读条继续完成。恢复正常治疗后取消这些额外限制，并优先高 HPS 治疗。切换口令会使治疗成员尚未执行的策略队列失效，重新计算下一动作。
+
+开荒指挥台、战中口令栏和队伍指挥快捷栏均可隐藏并重新展开。隐藏仅改变本地界面，不暂停战斗、不撤销已发布口令；隐藏队伍快捷栏时取消待选目标指令并停用其快捷键。
+
+牧师的防护恐惧结界采用全种族 20 级可学的游戏规则，玩家训练和 NPC 技能获取使用同一能力目录。玛格曼达与奥妮克希亚共享主坦防恐执行逻辑，按指挥名单主备顺序检查存活、控制、距离、法力和冷却；结界抵挡一次恐惧后消耗。奥妮克希亚在升空阶段也维持结界，以覆盖落地时的首次恐惧。
+
+治疗口令同时决定技能选择：正常治疗按预计有效 HPS 排序，节约蓝量按预计有效 HPM 排序，不再仅按原技能列表的先后顺序选治疗。候选技能须已学会、启用并满足配置条件、资源和冷却要求；未配置技能列表时，比较所有已学治疗技能的最高等级。预测使用当前治疗加成、天赋修正后的耗蓝与施法时间，直接治疗包含暴击期望，持续治疗按持续时间摊入 HPS，HPM 计入完整持续治疗；两者扣除预计过量治疗。群疗只计算实际距离内存活目标，治疗链计算三个目标及跳跃衰减。预测不消耗随机数、不改变实际结算。
+
+目标低于 30% 生命时，两种模式都优先能立即开始施放且更快生效的直接治疗，再按对应效率排序。手动指令不参与自动排序，圣疗和战复保留独立策略与预留安排。HPS/HPM 是依据当前装备、天赋和伤势计算的优先级，同一个技能在不同场面下可能同时最优，不给职业技能写死统一标签。

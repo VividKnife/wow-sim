@@ -79,8 +79,11 @@ for (const spell of clientRules.mageTalentSpells) spells[spell.Id]??=spell;
 for (const item of clientRules.humanMageStartingItems) items[item.itemId]??=item.source;
 export const classDefinitions=classReference.classDefinitions;
 export const raceDefinitions=classReference.raceDefinitions;
-export const classAbilities=classReference.classAbilities;
-export const classContentManifest=classReference.classContentManifest;
+// Game adaptation: all priests can learn Fear Ward at level 20. Keep the
+// imported Classic source records intact while sharing one acquisition policy.
+const priestAbility=a=>a.spellId===6346?{...a,raceIds:[...classDefinitions.find(c=>c.id===5).races]}:a;
+export const classAbilities={...classReference.classAbilities,5:classReference.classAbilities[5].map(priestAbility)};
+export const classContentManifest={...classReference.classContentManifest,entries:classReference.classContentManifest.entries.map(priestAbility)};
 export const classEnchantments=classReference.classEnchantments;
 export const preciseSpellFamilyFlags=classReference.preciseSpellFamilyFlags;
 export const classQuestSources=classReference.classQuestSources;
