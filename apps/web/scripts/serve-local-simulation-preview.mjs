@@ -1,3 +1,4 @@
+import {GET as handleSimulationContent} from '../app/api/simulation-content/[version]/[pack]/route.ts';
 // Isolated in-memory saves. Real domain service + browser Worker + production UI.
 import {createServer} from 'vite';
 import react from '@vitejs/plugin-react';
@@ -35,6 +36,10 @@ const api={name:'local-simulation-preview',configureServer(server){server.middle
   const activeService=accountId===commandFixture.save.id?commandFixture.service:service;
   res.setHeader('content-type','application/json');res.setHeader('cache-control','no-store');
   let data;
+  if(url.pathname.startsWith('/api/simulation-content/')){
+   const [,version,pack]=url.pathname.match(/^\/api\/simulation-content\/([^/]+)\/([^/]+)$/)||[];
+   const response=await handleSimulationContent(new Request(url),{params:Promise.resolve({version,pack})});res.statusCode=response.status;response.headers.forEach((value,key)=>res.setHeader(key,value));res.end(Buffer.from(await response.arrayBuffer()));return;
+  }
   if(url.pathname.startsWith('/api/model-viewer/')){
    const response=await handleModelRequest(new Request(url,{method:req.method}));
    res.statusCode=response.status;response.headers.forEach((value,key)=>res.setHeader(key,value));res.end(Buffer.from(await response.arrayBuffer()));return;
@@ -55,7 +60,7 @@ const api={name:'local-simulation-preview',configureServer(server){server.middle
   res.end(JSON.stringify(data));
  })().catch(error=>{console.warn('Local simulation preview request failed:',req.method,req.url,error.message);res.statusCode=error.status||500;res.end(JSON.stringify({error:error.message,code:error.code}));});
  });}};
-const server=await createServer({configFile:false,root:app+'test/browser',publicDir:app+'public',plugins:[react(),api],resolve:{alias:{'@':app}},css:{postcss:{plugins:[tailwind()]}},server:{hmr:false,host:'127.0.0.1',port:Number(process.env.PREVIEW_PORT||5192),strictPort:true,fs:{allow:[fileURLToPath(new URL('../../../',import.meta.url))]}}});
+const server=await createServer({configFile:false,root:app+'test/browser',publicDir:app+'public',plugins:[react(),api],resolve:{alias:{'@':app,[fileURLToPath(new URL('../../../packages/game-domain/src/rules/runtime-content.js',import.meta.url))]:fileURLToPath(new URL('../../../packages/game-domain/src/rules/runtime-content.browser.js',import.meta.url))}},css:{postcss:{plugins:[tailwind()]}},server:{hmr:false,host:'127.0.0.1',port:Number(process.env.PREVIEW_PORT||5192),strictPort:true,fs:{allow:[fileURLToPath(new URL('../../../',import.meta.url))]}}});
 await server.listen();
 console.log('Local simulation: http://127.0.0.1:5192/local-simulation.html?saveId=preview:raid');
 console.log('Arena: http://127.0.0.1:5192/local-simulation.html?saveId=preview:arena');

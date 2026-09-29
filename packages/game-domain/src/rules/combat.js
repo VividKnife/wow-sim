@@ -1,6 +1,9 @@
+import {isContentPending} from './runtime-content.js';
+import {raidHealingMode,selectRaidHealing} from './raid-healing-policy.js';
 import {observePolicyChanges,stepCombatPolicy,flushQueuedCombatIntent,queueManualCombatIntent,invalidatePolicyIntents} from './combat-policy.js';
 import {combatInputReadyReason,combatInputTargetReason,pendingCombatInput,inputWaiting,inputResult,pruneCombatInputs} from './combat-input.js';
 import {mightSetBonuses} from './might-set.js';
+import {weaponEnhancementStats} from './weapon-enhancement-stats.js';
 import {spellResistance,mitigateSpellDamage} from './spell-mitigation.js';
 import {binarySpell} from '../../../sim-core/src/spell-resistance.js';
 import {markCombatEngaged} from './combat-engagement.js';
@@ -114,7 +117,7 @@ export function recordDamage(s,c,target,amount,label,threatMultiplier=1,detail={
  if(dealt>0&&melee&&!target.pvp)triggerMeleeProcs(s,target,c,label==='近战攻击'?8:32,combatMembers(s),hurtPlayer);
  if(target.capturePhase==='fighting'&&target.hp/target.maxHp<.01){target.capturePhase='weakened';target.captureUntil=s.clock+29500;target.stunUntil=s.clock+30000;target.cast=null;target.dots=[];log(s,'裂隙怒灵已经虚弱，使用收容箱进行捕获！','quest');}
  onTalentEvent(s,c,{type:'damage',target,spell:sp,amount:dealt,critical:detail.critical,periodic:detail.periodic,melee,comboBuilder:['Sinister Strike','Backstab','Ambush','Ghostly Strike','Hemorrhage'].includes(sp?.SpellName),talentProc:detail.talentProc},{damage:recordDamage,healAmount,stats,rng,actors:combatMembers(s)});
- if(target.hp===0){for(const claim of target.soulShardClaims||[]){const claimant=combatMembers(s).find(a=>a.id===claim.caster);if(claimant===s&&claim.until>=s.clock&&(!claim.channel||claimant.cast?.spell===claim.spell)&&killXp(s.level,target.level)>0){try{receive(s,claim.item,1);}catch{log(s,'背包已满，无法保存灵魂碎片','bag');}}}target.soulShardClaims=[];onTalentEvent(s,c,{type:'kill',target,spell:sp},{damage:recordDamage,healAmount,stats,rng,actors:combatMembers(s)});target.dead=true;target.cast=null;const tap=ranks(c)['Spirit Tap']||0;if(tap&&rng(s)<.2*tap)c.spiritTapUntil=s.clock+15000;log(s,target.name+' 被击败','kill');}
+ if(target.hp===0){for(const claim of target.soulShardClaims||[]){const claimant=combatMembers(s).find(a=>a.id===claim.caster);if(claimant===s&&claim.until>=s.clock&&(!claim.channel||claimant.cast?.spell===claim.spell)&&killXp(s.level,target.level)>0){try{receive(s,claim.item,1);}catch(error){if(isContentPending(error))throw error;log(s,'背包已满，无法保存灵魂碎片','bag');}}}target.soulShardClaims=[];onTalentEvent(s,c,{type:'kill',target,spell:sp},{damage:recordDamage,healAmount,stats,rng,actors:combatMembers(s)});target.dead=true;target.cast=null;const tap=ranks(c)['Spirit Tap']||0;if(tap&&rng(s)<.2*tap)c.spiritTapUntil=s.clock+15000;log(s,target.name+' 被击败','kill');}
 }
 function spellLands(s,c,e,sp){
  if(e.pvp&&!pvpAbilityAllowed(c,e,sp,s.clock))return false;
@@ -257,7 +260,7 @@ function executeCombatInput(s,c){
  const sp=spellInfo(c,input.spellId);
  if(inputWaiting(s,c,sp))return true;
  try{commandCombatCast(s,c,input.spellId,input.targetId);inputResult(s,input,'started');}
- catch(error){inputResult(s,input,'rejected',error.message);}
+ catch(error){if(isContentPending(error))throw error;inputResult(s,input,'rejected',error.message);}
  return true;
 }
 export function selectMage(s,c,focus,rules=c.rules||defaultRules,input=null){
@@ -303,7 +306,7 @@ function melee(s,c,e){if(e.airborne)return;if(c.pvp&&!arenaSight(c,e)){moveTowar
 function offhand(s,c,e){if(c.pvp&&!arenaSight(c,e))return;if(c.talentProcs?.spiritOfRedemption?.until>s.clock)return;
  const weapon=itemsForWeapon(c.equipment?.[17]?.id);if(!weapon||weapon.class!==2||!c.learned.includes(674)||hasAura(c,67,s.clock)||distance(c,e)>5||(c.nextOffhand||0)>s.clock||s.combat.command?.holdFire)return;
  c.offhandStartedAt=s.clock;c.nextOffhand=s.clock+(weapon.delay||2000)*attackTimeMultiplier(c,s.clock)/(1+talentModifiers(c).meleeHastePct);onTalentEvent(s,c,{type:'swing'},{rng,stats});const attack=weaponAttack(s,c,e,{hand:'off'});if(!attack.landed)return;
- const raw=(roll(s,weapon.dmg_min1||1,weapon.dmg_max1||2)+stats(c).attackPower/14*(weapon.delay||2000)/1000)*.5*talentOffhandMultiplier(c)*attack.multiplier;
+ const raw=(roll(s,weapon.dmg_min1||1,weapon.dmg_max1||2)+stats(c).attackPower/14*(weapon.delay||2000)/1000+(weaponEnhancementStats(c,17,s.clock).weaponDamage||0))*.5*talentOffhandMultiplier(c)*attack.multiplier;
  recordDamage(s,c,e,raw*(1-armorReduction(effectiveArmor(e,s.clock)-talentArmorPenetration(c),c.level)),'副手攻击',1,{school:0,hand:'off',critical:attack.critical,glancing:attack.glancing,outcome:attack.outcome});classMeleeProc(s,c,e,{damage:recordDamage,healAmount,stats,rng,lands:spellLands,actors:combatMembers(s)},17);
 }
 let itemLookup;
@@ -408,7 +411,9 @@ export function selectCombatPolicy(s,c,{regular=true,urgent=false}={}){
  if(c===s&&future!==s)c=future;
  if(combatRole(c)==='healer'&&actors.some(a=>a.hp>0&&a.hp<stats(a).maxHp*.85)){
   const rules=c.rules?.filter(r=>classAbilityKind(spells[r.spell])==='heal'||['Power Word: Shield','Inner Focus',"Nature's Swiftness",'Divine Favor'].includes(spells[r.spell]?.SpellName));
-  const heal=rules?.length?selectConfigured(future,c,e,targets,actors,rules):c.classId===5&&c!==s?selectCompanion(future,c,targets,actors,null,null,null):!c.rules&&selectClass(future,c,e,actors,null);
+  const raidMode=raidHealingMode(future,c);
+  const support=raidMode&&rules?.filter(r=>classAbilityKind(spells[r.spell])!=='heal');
+  const heal=raidMode?(support?.length&&selectConfigured(future,c,e,targets,actors,support))||selectRaidHealing(future,c,e,actors):rules?.length?selectConfigured(future,c,e,targets,actors,rules):c.classId===5&&c!==s?selectCompanion(future,c,targets,actors,null,null,null):!c.rules&&selectClass(future,c,e,actors,null);
   if(heal)return heal;
  }
 

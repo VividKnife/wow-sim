@@ -7,7 +7,7 @@ import './molten-core-demo.css';
 const classes:Record<number,string>={1:'战',2:'圣',3:'猎',4:'贼',5:'牧',8:'法'};
 const colors:Record<number,string>={1:'#c69b6d',2:'#f48cba',3:'#aad372',4:'#fff468',5:'#eeeeee',8:'#66d8ef'};
 const roles:Record<string,string>={tank:'坦克',healer:'治疗',melee:'近战',ranged:'远程'};
-const tacticLabels:Record<string,[string,string]>={focusAdds:['优先清理护卫','副坦牵制护卫，输出集火后转首领。'],dispel:['优先驱散末日与诅咒','牧师处理魔法，法师处理诅咒；消耗实际法力和公共冷却。'],tranquilize:['安排宁神射击','猎人保留宁神射击，应对玛格曼达的狂暴。'],fearWard:['保护主坦免受恐惧','矮人牧师轮流维持防护恐惧结界。'],avoidFire:['自动撤离火区','取消读条并移动，牺牲输出时间换取生存。']};
+const tacticLabels:Record<string,[string,string]>={focusAdds:['优先清理护卫','副坦牵制护卫，输出集火后转首领。'],dispel:['优先驱散末日与诅咒','牧师处理魔法，法师处理诅咒；消耗实际法力和公共冷却。'],tranquilize:['安排宁神射击','猎人保留宁神射击，应对玛格曼达的狂暴。'],fearWard:['保护主坦免受恐惧','牧师轮流维持防护恐惧结界。'],avoidFire:['自动撤离火区','取消读条并移动，牺牲输出时间换取生存。']};
 const seconds=(ms:number)=>`${Math.floor(ms/60000)}:${String(Math.floor(ms/1000)%60).padStart(2,'0')}`;
 const percent=(value:number,max:number)=>Math.max(0,Math.min(100,Math.round(value/Math.max(1,max)*100)));
 function App(){

@@ -1,5 +1,6 @@
 import {groupRows} from '../../../sim-core/src/collections.js';
-import source from '../../../game-data/data/molten-core-loot.json' with {type:'json'};
+import {runtime} from './runtime-content.js';
+const source=runtime.raidLootSource;
 import {items,creatures,creatureLoot,referenceLoot} from './catalog.js';
 import {canEquip,rng} from './character.js';
 import {meetsCondition,needsQuestItem} from './quests.js';

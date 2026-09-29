@@ -25,3 +25,16 @@ test('recorded combat uses only low frequency heartbeat polls',()=>{
  assert.equal(combatPollDelay(recording,false),2000);
  assert.equal(combatPollDelay(null,true),200);
 });
+
+test('buffs follow the selected actor and never retain removed overview effects',()=>{
+ const snapshot=structuredClone(recording.initial);
+ snapshot.view.battleView.units.hero.effects=[{spellId:17,name:'护盾',kind:'buff',until:5000}];
+ snapshot.view.battleView.units.helper.effects=[{spellId:324,name:'闪电之盾',kind:'buff',charges:2,until:5000},{spellId:589,kind:'debuff'}];
+ const base={id:'helper'},overview={playerBuffs:[{spellId:1459}],itemBuffs:[{spell:3164}]};
+ let result=playbackPerspective(base,overview,snapshot,1000);
+ assert.deepEqual(result.data.playerBuffs.map(b=>b.spellId),[324]);
+ assert.equal(result.data.playerBuffs[0].charges,2);assert.deepEqual(result.data.itemBuffs,[]);
+ snapshot.view.battleView.units.helper.effects=[];
+ result=playbackPerspective(base,overview,snapshot,1000);
+ assert.deepEqual(result.data.playerBuffs,[]);assert.deepEqual(result.data.itemBuffs,[]);
+});

@@ -1,3 +1,4 @@
+import {runtime} from './runtime-content.js';
 import {groupRows} from '../../../sim-core/src/collections.js';
 import {grantHunterTrainingLinks} from './pet-knowledge.js';
 import {queueCombatLoot} from './loot.js';
@@ -73,21 +74,7 @@ export function questProgress(s,id){const q=quests[id],progress=s.quests[id];if(
  const details=hasChinese(locale?.detailsZhCN)?locale.detailsZhCN:description;
  return{scenes:questScenes(s,id),id:q.entry,name,level:q.QuestLevel,minLevel:q.MinLevel,description:questText(description,s,className,raceName),details:questText(details,s,className,raceName),objectives,complete:!!progress&&objectives.every(o=>o.count>=o.required)&&s.money>=Math.max(0,-q.RewOrReqMoney),xp:questXp[id]?.[s.level-1]||0,money:q.RewOrReqMoney,available:questAvailable(s,q),active:!!progress,completed:!!s.completed[id],canAccept:questAvailable(s,q)&&atEndpoint(s,q,'starts'),canTurnIn:!!progress&&atEndpoint(s,q,'ends'),startLocations:[...new Set((questLinks[id]?.starts||[]).flatMap(endpointNodes))],endLocations:[...new Set((questLinks[id]?.ends||[]).flatMap(endpointNodes))],giver:(questLinks[id]?.starts||[]).map(e=>e.type==='creature'?nameOf('npcs',e.id):e.type==='item'?nameOf('items',e.id):objectTemplates[e.id]?.name).filter(Boolean).join(' / '),choices:[1,2,3,4,5,6].filter(n=>q['RewChoiceItemId'+n]).map(n=>({id:q['RewChoiceItemId'+n],count:q['RewChoiceItemCount'+n]})),rewards:[1,2,3,4].filter(n=>q['RewItemId'+n]).map(n=>({id:q['RewItemId'+n],count:q['RewItemCount'+n]})),repeatable:!!(q.SpecialFlags&1),expiresAt:progress?.expiresAt||0,waitUntil:s.questWaits?.[id]||0};
 }
-const sourceCache=new Map();
-function addSource(item,locations){if(!item)return;const set=sourceCache.get(item)||new Set();for(const location of locations)if(location)set.add(location);sourceCache.set(item,set);}
-function lootItems(rows,seen=new Set()){
- const result=new Set();for(const row of rows||[]){if(row.mincountOrRef>0)result.add(row.item);else if(row.mincountOrRef<0&&!seen.has(-row.mincountOrRef)){const next=new Set(seen);next.add(-row.mincountOrRef);for(const id of lootItems(referenceLoot[-row.mincountOrRef],next))result.add(id);}}return result;
-}
-for(const c of Object.values(creatures))for(const id of lootItems(creatureLoot[c.LootId]))addSource(id,creatureLocations[c.Entry]||[]);
-for(const o of Object.values(objectTemplates))if([3,25].includes(o.type))for(const id of lootItems(objectLoot[o.data1]))addSource(id,objectLocations[o.entry]||[]);
-for(const r of table('npc_vendor'))addSource(r.item,creatureLocations[r.entry]||[]);
-for(const q of Object.values(quests))for(const prefix of ['RewItemId','RewChoiceItemId'])for(let n=1;n<=6;n++)addSource(q[prefix+n],(questLinks[q.entry]?.ends||[]).flatMap(endpointNodes));
-const supplyLocations=Object.values(nodes).filter(n=>n.kind==='city').map(n=>n.id);
-for(const id of new Set([...marketIds,...recipes.map(r=>r.item)]))addSource(id,supplyLocations);
-for(const [id,action]of Object.entries({...questItemActions,...questFishingSources}))addSource(+id,action.locations);
-addSource(6265,Object.keys(nodes).filter(n=>monsterIdsAt(n).length)); // Drain Soul.
-addSource(12731,['upper-blackrock-spire']); // The Beast's rare skinning reward.
-export function itemSources(id){if(+id===7206)return ['mirror'];if(+id===7292)return ['bluerecluse'];return [...(sourceCache.get(+id)||[])];}
+export function itemSources(id){return [...(runtime.itemSourceIndex[id]||[])];}
 const dedicatedEvents={62:['fargodeep'],76:['jasper'],155:['sentinel','moonbrook'],1861:['mirror'],1920:['magetower'],434:['keep']};
 const sceneLocation=q=>q.PointX||q.PointY?[nearestNode(q.PointX,q.PointY,q.PointMapId)].filter(Boolean):[...new Set((questLinks[q.entry]?.ends||[]).flatMap(endpointNodes))];
 export const eventNodes=id=>dedicatedEvents[id]||(quests[id]?sceneLocation(quests[id]):[]);

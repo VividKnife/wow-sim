@@ -3,7 +3,7 @@
 import {mkdirSync,writeFileSync,appendFileSync,existsSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {createGame,act,advance,stats,shop} from '../../../packages/game-domain/src/rules/engine.js';
-import {quests,items,creatures,creatureLoot,monsterIdsAt,nodes,route,abilities,trainerNodes,spells,talents} from '../../../packages/game-domain/src/rules/catalog.js';
+import {quests,items,creatures,creatureLoot,monsterIdsAt,nodes,route,classAbilities,trainerNodes,spells,talents} from '../../../packages/game-domain/src/rules/catalog.js';
 import {questProgress,gatherables} from '../../../packages/game-domain/src/rules/quests.js';
 import {canEquip,slotOf,countItem,knownRank,spellInfo,bagCapacity} from '../../../packages/game-domain/src/rules/character.js';
 import {protectedItem} from '../../../packages/game-domain/src/rules/inventory.js';
@@ -54,7 +54,7 @@ function supplies(){
 }
 function train(){if(!trainerNodes.includes(s.location))return;
  const priority=['Conjure Water','Fireball','Conjure Food','Frostbolt','Frost Nova','Fire Blast','Frost Armor','Arcane Intellect'];
- for(const name of priority)for(const a of abilities.filter(a=>a.name===name&&a.requiredLevel<=s.level&&!s.learned.includes(a.spellId)).sort((a,b)=>a.requiredLevel-b.requiredLevel))if(s.money>=a.costCopper)command({type:'train',id:a.spellId});
+ for(const name of priority)for(const a of classAbilities[8].filter(a=>a.name===name&&a.requiredLevel<=s.level&&!s.learned.includes(a.spellId)).sort((a,b)=>a.requiredLevel-b.requiredLevel))if(s.money>=a.costCopper)command({type:'train',id:a.spellId});
 }
 function talentsAndBuffs(){
  for(const name of ['Improved Fireball','Ignite','Improved Fire Blast']){const t=Object.values(talents).find(t=>t.name===name);if(!t)continue;while(Object.values(s.talents).reduce((a,b)=>a+b,0)<s.level-9&&(s.talents[t.id]||0)<t.maxRank){try{command({type:'talent',id:t.id});}catch{break;}}}
@@ -97,7 +97,7 @@ try{
   }
   const available=local.filter(q=>q.available&&!q.repeatable&&!blocked.has(q.id)&&q.level<=s.level+1).flatMap(q=>q.startLocations).filter(n=>n!==s.location);
   if(available.length){travel(nearest(available));continue;}
-  const affordable=abilities.some(a=>a.requiredLevel<=s.level&&!s.learned.includes(a.spellId)&&s.money>=a.costCopper&&['Fireball','Conjure Water','Conjure Food'].includes(a.name));
+  const affordable=classAbilities[8].some(a=>a.requiredLevel<=s.level&&!s.learned.includes(a.spellId)&&s.money>=a.costCopper&&['Fireball','Conjure Water','Conjure Food'].includes(a.name));
   if(affordable&&!trainerNodes.includes(s.location)){travel(nearest(trainerNodes));continue;}
   const grind=Object.keys(nodes).flatMap(to=>monsterIdsAt(to).filter(id=>!creatures[id].Rank&&creatures[id].MaxLevel<=s.level&&creatures[id].MinLevel>=s.level-2).map(id=>({to,id}))).sort((a,b)=>route(s.location,a.to).duration-route(s.location,b.to).duration||creatures[b.id].MinLevel-creatures[a.id].MinLevel)[0];
   if(!grind)throw new Error('No safe experience target');travel(grind.to);fight(grind.id);

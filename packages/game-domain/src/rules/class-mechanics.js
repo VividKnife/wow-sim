@@ -1,3 +1,5 @@
+import {damagingInput} from './combat-input.js';
+import {raidHealingThreshold,conservingRaidMana} from './raid-healing.js';
 import {resolveSpellDamage} from './spell-resolution.js';
 import {setCombatPosition} from './combat-area.js';
 import {pvpApplyControl,pvpAbilityAllowed} from './pvp-runtime.js';
@@ -105,12 +107,17 @@ export function selectClass(s,c,e,actors,api,rules=c.rules||defaultClassRules(c.
   if(!id||!spellReady(c,spells[id],s.clock))continue;
   const sp=spellInfo(c,id);if(input&&sp)sp.commanded=true;if(!sp||!supportedSpellNames.has(sp.SpellName)||coreHandled.has(sp.SpellName))continue;
   const name=sp.SpellName;if(sp.School>0&&(c.silenceUntil>s.clock||hasAura(c,27,s.clock))||(c.schoolLockouts?.[sp.School]||0)>s.clock)continue;if(!ruleMatches(s,c,e,rule,sp,decisionStats))continue;
+  if(!input&&conservingRaidMana(s,c)&&sp.mana>0&&(damagingInput(sp)||['Searing Totem','Fire Nova Totem','Magma Totem'].includes(name)))continue;
   if(consumesHunterAmmo(c,name)&&ammoCount(c)<1)continue;
   if(c.talentProcs?.spiritOfRedemption?.until>s.clock&&!['heal','dispel'].includes(classAbilityKind(sp)))continue;
   if(c.classId===8&&!['Cold Snap'].includes(name)&&!extendedSpellNames.has(name)&&!talentActiveNames.has(name)&&!racialActiveNames.has(name))continue;
   const prepared=prepareClassAbility(s,c,e,sp,actors,decisionStats,input);if(prepared===null)continue;
   let target=prepared?.target||e;if(racialActiveNames.has(name)){if(racialAbilityBlocked(s,c,sp))continue;target=c;}if(talentActiveNames.has(name)&&!prepared)target=c;const healing=heals.has(name)||hots.has(name)||name==='Power Word: Shield';
-  if(healing&&!input){target=actors.filter(a=>a.hp>0&&a.hp<decisionStats(a).maxHp*.85).sort((a,b)=>a.hp/decisionStats(a).maxHp-b.hp/decisionStats(b).maxHp)[0];if(!target)continue;}
+  if(healing&&!input){target=actors.filter(a=>a.hp>0&&a.hp<decisionStats(a).maxHp*raidHealingThreshold(s,c,a,.85)).sort((a,b)=>a.hp/decisionStats(a).maxHp-b.hp/decisionStats(b).maxHp)[0];if(!target)continue;}
+  if(!input&&conservingRaidMana(s,c)&&classAbilityKind(sp)==='heal'&&name!=='Rebirth'){
+   const recipients=['Tranquility','Holy Nova','Prayer of Healing'].includes(name)?actors.filter(a=>distance(c,a)<=(sp.radius||30)):[target];
+   if(!recipients.some(a=>a.hp>0&&a.hp<decisionStats(a).maxHp*raidHealingThreshold(s,c,a,.9)))continue;
+  }
   if(!input&&hots.has(name)&&target.hots?.some(h=>h.name===name&&h.until>s.clock+1500))continue;
   if(name==='Power Word: Shield'&&(target.weakenedSoulUntil||0)>s.clock)continue;
   if(buffs.has(name)){if(name.startsWith('Blessing of ')&&(c.partyBlessingPrepared||0)>s.clock)continue;target=c;if(c.classBuffs?.some(b=>b.name===name&&b.until>s.clock+3000))continue;}
@@ -166,6 +173,7 @@ export function executeClassAbility(s,c,target,sp,actors,api,input=null){
    // every mana spell made these AI templates spend every other GCD reshifting.
    if((sp.StancesNot&mask)||!['shadow','moonkin'].includes(c.form)&&(!mask||!(sp.Stances&mask)))c.form=null;
   }
+  if(!input&&conservingRaidMana(s,c)&&sp.mana>0&&(damagingInput(sp)||['Searing Totem','Fire Nova Totem','Magma Totem'].includes(name)))return false;
   if(consumesHunterAmmo(c,name))consumeHunterAmmo(c);
   const talentCast=beginTalentCast(s,c,sp),timing=beginSpellTiming(c,sp,s.clock,{channel:name==='Tame Beast'||!!prepared?.channel,pool});if(c===s||input)for(const r of reagents)consume(c,r.id,r.count);
   s.combat.casts++;log(s,`${c.name} 施放 ${nameOf('spells',id)}`,'cast',{actorId:c.id,targetId:target.id,spellId:id,school:sp.School,duration:sp.castMs});

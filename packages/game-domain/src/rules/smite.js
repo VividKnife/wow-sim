@@ -1,12 +1,12 @@
 import {boundedCombatPoint} from './combat-area.js';
-import reference from '../../../game-data/data/deadmines-reference.json' with {type:'json'};
+import {runtime} from './runtime-content.js';
 import {creatures} from './catalog.js';
 import {log} from './character.js';
 import {castEnemySpell} from './enemy-spells.js';
 import {distance} from '../../../sim-core/src/geometry.js';
 import {moveToward} from './combat-space.js';
 
-const {smiteChest:chest,smiteSpawn:spawn}=reference.scriptObjects;
+const {smiteChest:chest,smiteSpawn:spawn}=runtime.smiteObjects;
 const chestDistance=Math.hypot(chest.position_x-spawn.position_x,chest.position_y-spawn.position_y,chest.position_z-spawn.position_z);
 const runSpeed=7*creatures[646].SpeedRun;
 // Project the source chest distance onto the encounter axis; no navmesh is available.

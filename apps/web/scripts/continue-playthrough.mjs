@@ -19,7 +19,7 @@ const files=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory(
 writeFileSync(resolve(out,'source-manifest.json'),JSON.stringify(Object.fromEntries(files(runtime).map(p=>[relative(runtime,p).replaceAll('\\','/'),hash(readFileSync(p))])),null,2));
 const moduleAt=name=>import(pathToFileURL(resolve(runtime,'packages/game-domain/src/rules',name)).href);
 const {act,advance,stats,shop,view}=await moduleAt('engine.js');
-const {items,spells,quests,abilities,monsterIdsAt,creatureLoot,creatures,nodes}=await moduleAt('catalog.js');
+const {items,spells,quests,monsterIdsAt,creatureLoot,creatures,nodes}=await moduleAt('catalog.js');
 const {questProgress,gatherables}=await moduleAt('quests.js');
 const {questTools}=await moduleAt('quest-tools.js');
 const {countItem,knownRank,spellInfo,bagCapacity,canEquip,slotOf}=await moduleAt('character.js');

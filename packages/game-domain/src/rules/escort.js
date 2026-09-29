@@ -1,19 +1,11 @@
+import {runtime} from './runtime-content.js';
 import reference from '../../../game-data/data/escort-reference.json' with {type:'json'};
-import {creatures,spawns,monsterIdsAt} from './catalog.js';
+import {creatures} from './catalog.js';
 import {enemy,roll,log} from './character.js';
 import {startCombat} from './combat.js';
 import {stopRecovery} from './recovery.js';
 
 export const escortPath=reference.rows;
-const hostile=new Set(['sentinel','moonbrook'].flatMap(monsterIdsAt));
-// 2D encounter approximation: source spawns within 18 horizontal yards of a
-// source waypoint. Alternative entries share one GUID and are rolled once.
-const nearby=new Map();
-for(const spawn of spawns){
- if(spawn.map!==0||!hostile.has(spawn.id))continue;
- let best=Infinity,index=0;escortPath.forEach((p,i)=>{const d=Math.hypot(p.PositionX-spawn.position_x,p.PositionY-spawn.position_y);if(d<best){best=d;index=i;}});
- if(best>18)continue;const row=nearby.get(spawn.guid)||{guid:spawn.guid,index,entries:[]};if(!row.entries.includes(spawn.id))row.entries.push(spawn.id);nearby.set(spawn.guid,row);
-}
 function moveNext(s){
  const escort=s.escort,to=escortPath[escort.index+1],from=escortPath[escort.index];
  if(!to){s.quests[155].event=true;s.location='moonbrook';s.escortLast={outcome:'arrived',at:s.clock};delete s.escort;s.activity={type:'idle'};log(s,'迪菲亚叛徒指出了秘密入口。返回哨兵岭向格里安·斯托曼报告。','quest');return;}
@@ -26,7 +18,7 @@ export function beginEscort(s){
  if([s,...s.party].some(c=>c.hp<=0))throw new Error('请先复活倒下的成员。');
  const profile={...enemy(s,467,'escort-467'),creatureType:creatures[467].CreatureType,family:creatures[467].Family};
  const npc={...profile,escortNpc:true,classId:0,name:'迪菲亚叛徒',equipment:{},learned:[],talents:{},buffs:{},cooldowns:{},lastManaUse:0,time:s.clock,rage:0,energy:0};
- s.escort={quest:155,npc,index:0,startedAt:s.clock,encounters:[...nearby.values()].map(row=>({...row,entry:row.entries[roll(s,0,row.entries.length-1)],done:false}))};
+ s.escort={quest:155,npc,index:0,startedAt:s.clock,encounters:runtime.escortNearby.map(row=>({...row,entry:row.entries[roll(s,0,row.entries.length-1)],done:false}))};
  stopRecovery(s);log(s,'开始护送迪菲亚叛徒。途中请保护他的安全。','quest');moveNext(s);
 }
 function fail(s,reason){s.escortLast={outcome:'failed',at:s.clock,reason};delete s.escort;s.activity={type:s.hp>0?'idle':'dead',reason};log(s,reason,'quest');}

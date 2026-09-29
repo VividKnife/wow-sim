@@ -1,3 +1,4 @@
+import {conservingRaidMana} from './raid-healing.js';
 import {commandOrder,commandProtected,commandDamageMode,commandDamageSpell} from './combat-command.js';
 import {classResource} from '../../../sim-core/src/class-combat.js';
 import {spells,spellChain} from './catalog.js';
@@ -88,6 +89,7 @@ export function strategyAllows(s,c,e,sp,rule,center){
  if(s.combat?.command?.holdFire&&(!sp.Id||commandDamageSpell(sp)))return false;
  // Explicit casts skip AI targeting preferences, but still obey stop-damage.
  if(sp.commanded)return true;
+ if(conservingRaidMana(s,c)&&sp.mana>0&&commandDamageSpell(sp))return false;
  const order=commandOrder(s,c);
  const orderedControl=order&&order.kind!=='kite'&&order.targetId===e?.id&&order.spellId===sp.Id;
  if(orderedControl)return !rule||ruleMatches(s,c,e,rule,sp);

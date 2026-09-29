@@ -1,3 +1,4 @@
+import {auctionContentError} from './auction-content.js';
 // Display data only: never import the simulation engine or its catalogs here.
 // HTTP handles persistent versioned caching; this bounded memory cache coalesces
 // concurrent readers and forgets failed requests so retry remains possible.
@@ -20,6 +21,10 @@ export function createContentLoader(fetchImpl=(...args)=>fetch(...args)) {
    const data=await response.json();
    if(!response.ok)throw new Error(data?.error||'游戏内容暂时无法加载，请重试。');
    if(data?.contentVersion!==version||data?.pack!==name)throw new Error('游戏内容已更新，请刷新页面。');
+   if(name==='market'){
+    const error=auctionContentError(data);
+    if(error)throw new Error(error);
+   }
    if(name==='items'&&(!data.items||!Array.isArray(data.missing)||ids.some(id=>!Object.hasOwn(data.items,id)&&!data.missing.includes(id))))throw new Error('物品资料不完整，请重试。');
    return data;
   })();

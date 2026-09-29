@@ -1,3 +1,4 @@
+import {trimBattleHistory} from '../../../sim-core/src/battle-history.js';
 import {finishJourneyBattle} from './journey.js';
 import {battlePresentation} from './battle-presentation.js';
 import {nodes} from './catalog.js';
@@ -84,6 +85,6 @@ export function finishCombat(s){
  finishJourneyBattle(s,battle);
  s.battleHistory??=[];
  if(battle.journeyId)s.battleHistory.push(JSON.parse(JSON.stringify({battle,location:nodes[s.location],view:battlePresentation(s),logs:s.logs.filter(event=>event.encounterId===battle.id)})));
- if(s.battleHistory.length>20)s.battleHistory.splice(0,s.battleHistory.length-20);
+ trimBattleHistory(s.battleHistory);
  return battle;
 }

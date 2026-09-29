@@ -15,16 +15,7 @@ import {Bank,Auction} from './storage-market';
 import {spellbookSkills} from '@/lib/spell-ranks.js';
 import {spellbookSkillLines} from './spellbook-skill-lines';
 import './character.css';
-
-const talentName=(talent:any)=>talent.nameZhCN||talent.name||talent.nameEn||'未知天赋';
-const treeId=(tree:any)=>Number(tree.id??tree.tree??tree.tabId);
-const treeLabels:Record<string,string>={Arms:'武器',Fury:'狂怒',Protection:'防护',Holy:'神圣',Retribution:'惩戒','Beast Mastery':'野兽掌握',Marksmanship:'射击',Survival:'生存',Assassination:'刺杀',Combat:'战斗',Subtlety:'敏锐',Discipline:'戒律',Shadow:'暗影',Elemental:'元素',Enhancement:'增强',Restoration:'恢复',Arcane:'奥术',Fire:'火焰',Frost:'冰霜',Affliction:'痛苦',Demonology:'恶魔学识',Destruction:'毁灭',Balance:'平衡','Feral Combat':'野性战斗'};
-const treeName=(tree:any)=>tree.nameZhCN||treeLabels[tree.name||tree.nameEn]||tree.name||tree.nameEn||`天赋系 ${treeId(tree)}`;
-const effectText=(talent:any)=>{
- const effects=talent.rankEffects||talent.effects||[];
- const effect=effects[Math.min(Math.max(0,(talent.rank||1)-1),Math.max(0,effects.length-1))];
- return effect?.descriptionZhCN||effect?.descriptionEn||effect?.description||talent.description||'效果说明暂未收录。';
-};
+import TalentTree from './talent-tree';
 
 function SpellDetails({details}: {details?: {facts:string[];effects:string[];restrictions:string[]}}){
  if(!details)return null;
@@ -59,11 +50,9 @@ function Spellbook({state:s,data:d,busy,send}:GameProps){
 }
 
 export default function Character({state:s,data:d,busy,send,roster,section:controlledSection,onSectionChange}:GameProps&{section?:string;onSectionChange?:(section:string)=>void}){
- const [localSection,setLocalSection]=useState('装备与背包'),[tree,setTree]=useState<number>(0);
+ const [localSection,setLocalSection]=useState('装备与背包');
  const section=controlledSection??localSection,setSection=onSectionChange??setLocalSection;
  const used=Object.values(s.talents||{}).reduce((n:any,v:any)=>n+Number(v||0),0) as number;
- const trees=d.talentTrees||[],selectedTree=trees.some((item:any)=>treeId(item)===tree)?tree:treeId(trees[0]||{});
- const talents=d.talents||[];
  return <section className="armory-page"><div className="section-heading armory-page-heading"><div><h1>{s.name}</h1><small>{s.level} 级 {d.raceName} · {d.className}</small></div><nav className="filterbar character-sections" aria-label="角色功能">{['装备与背包','法术书','天赋','策略','坐骑','生活职业','银行','拍卖行'].map(t=><button type="button" aria-pressed={section===t} className={section===t?'active':''} onClick={()=>setSection(t)} key={t}>{t}{t==='天赋'&&Math.max(0,Math.min(60,s.level)-9-used)>0&&<span className="section-count" aria-label={`${Math.max(0,Math.min(60,s.level)-9-used)} 点可用天赋`}>{Math.max(0,Math.min(60,s.level)-9-used)}</span>}</button>)}</nav></div>
  {section==='策略'&&<Strategy state={s} data={d} busy={busy} send={send} currentCharacterOnly/>}
  {section==='坐骑'&&<Mounts state={s} data={d} busy={busy} send={send}/>}
@@ -72,6 +61,7 @@ export default function Character({state:s,data:d,busy,send,roster,section:contr
  {section==='银行'&&<Bank state={s} data={d} busy={busy} send={send}/>}
  {section==='拍卖行'&&<Auction state={s} data={d} busy={busy} send={send}/>}
  {section==='法术书'&&<Spellbook state={s} data={d} busy={busy} send={send}/>}
- {section==='天赋'&&<section className="panel talent-panel"><div className="section-heading"><div><h2>{d.className}天赋 <small>可用 {Math.max(0,Math.min(60,s.level)-9-used)} 点 · 已投入 {used} 点</small></h2><small>10 级起每级获得 1 点；深入一层前需要在同系投入足够点数。</small></div><div className="talent-actions"><div className="filterbar">{trees.map((item:any)=><button key={treeId(item)} onClick={()=>setTree(treeId(item))} className={selectedTree===treeId(item)?'active':''}>{treeName(item)}</button>)}</div><Button variant="outline" disabled={busy||!d.canResetTalents} title={!d.canResetTalents?(d.talentResetBlockedReason||'需在训练地点拥有已投入的天赋点，并备足重置费用。'):undefined} onClick={()=>send({type:'resetTalents'})}>{d.talentResetCost===0?'免费重置天赋':'重置天赋'}{d.talentResetCost>0?` · ${money(d.talentResetCost)}`:''}</Button></div></div><div className="talent-grid">{talents.filter((t:any)=>Number(t.tree??t.treeId??t.tabId)===selectedTree).map((t:any)=><details style={{gridRow:Number(t.row??0)+1,gridColumn:Number(t.col??0)+1}} className={'talent '+(!t.canLearn&&t.rank<t.maxRank?'locked':'')+(t.supported===false?' unsupported':'')} key={t.id}><summary><Icon src={t.icon} name={talentName(t)} size={48}/><strong>{talentName(t)}</strong><span>{t.rank} / {t.maxRank}</span></summary><div className="talent-detail"><h3>{talentName(t)}</h3><p>{effectText(t)}</p><small>需要同系 {t.requiredTreePoints||0} 点</small>{t.supported===false&&<small className="support-note">参考节点；当前战斗系统尚未实现此效果。</small>}{t.blockedReason&&<small className="blocked-reason">{t.blockedReason}</small>}<Button disabled={busy||!t.canLearn} title={t.blockedReason||undefined} onClick={()=>send({type:'talent',id:t.id})}>投入 1 点</Button></div></details>)}{!talents.some((t:any)=>Number(t.tree??t.treeId??t.tabId)===selectedTree)&&<div className="talent-tree-empty">这个天赋系暂无可用节点。</div>}</div></section>}
+ {section==='天赋'&&<TalentTree key={s.id} title={`${d.className}天赋`} trees={d.talentTrees||[]} nodes={d.talents||[]} available={Math.max(0,Math.min(60,s.level)-9-used)} busy={busy} onLearn={id=>send({type:'talent',id})} actions={<><Button variant="outline" disabled={busy||!d.canResetTalents} onClick={()=>send({type:'resetTalents'})}>{d.talentResetCost===0?'免费重置天赋':'重置天赋'}{d.talentResetCost>0?` · ${money(d.talentResetCost)}`:''}</Button><small>{d.talentResetBlockedReason||'重置后返还全部已投入的天赋点。'}</small></>}/>}
+
  </section>;
 }

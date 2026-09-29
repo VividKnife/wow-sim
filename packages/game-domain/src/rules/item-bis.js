@@ -6,7 +6,8 @@ import {combatRole,dominantTalentTree} from './combat-roles.js';
 // Membership in an authored loadout, not an item-level or stat-score ranking.
 // Missing phases are deliberately not extended into the next content tier.
 export const BIS_PHASES=data.phases;
-export const CURRENT_BIS_PHASE=1;
+import {CURRENT_CONTENT_PHASE} from './content-phase.js';
+export const CURRENT_BIS_PHASE=CURRENT_CONTENT_PHASE;
 /**
  * @typedef {{phase: number, label: string, name: string, sourceUrl: string}} BisPhase
  * @typedef {{spec: string, classId: number, role: string, name: string, icon: string, phases: BisPhase[], sourceName: string}} BisMembership

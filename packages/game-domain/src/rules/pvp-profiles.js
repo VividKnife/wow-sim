@@ -78,6 +78,6 @@ export function pvpConfiguration(s){
  return{locked:['countdown','combat'].includes(s.arena?.phase),members:[s,...s.party].filter(c=>!c.npcPlayer).map(c=>({
   id:c.id,name:c.name,classId:c.classId,level:c.level,revision:c.pvpProfile?.revision||0,automatic:!c.pvpProfile,profile:effectivePvpProfile(c),budget:pvpTalentBudget(c),
   presets:pvpPresets.filter(p=>p.classId===c.classId).map(p=>({id:p.id,name:p.name,description:p.description,profile:recommendedPvpProfile(c,p.id)})),
-  skills:skillCatalog(c),trees:classTalentTrees.filter(t=>t.classId===c.classId).map(tree=>({id:tree.id,name:tree.name,talents:Object.values(talents).filter(t=>t.tree===tree.id).map(t=>({id:t.id,name:t.nameZhCN||t.name,row:t.row,col:t.col,maxRank:t.maxRank,requiredTreePoints:t.requiredTreePoints,prerequisites:t.prerequisites||[],supported:supportedTalentNames.has(t.name),icon:icon('talents',t.id),descriptions:(t.rankEffects||[]).map(r=>r.descriptionZhCN||r.descriptionEn)}))}))
+  skills:skillCatalog(c),trees:classTalentTrees.filter(t=>t.classId===c.classId).map(tree=>({id:tree.id,name:tree.name,background:tree.background,talents:Object.values(talents).filter(t=>t.tree===tree.id).map(t=>({id:t.id,name:t.nameZhCN||t.name,row:t.row,col:t.col,maxRank:t.maxRank,requiredTreePoints:t.requiredTreePoints,prerequisites:t.prerequisites||[],supported:supportedTalentNames.has(t.name),icon:icon('talents',t.id),descriptions:(t.rankEffects||[]).map(r=>r.descriptionZhCN||r.descriptionEn)}))}))
  }))};
 }

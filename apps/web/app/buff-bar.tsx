@@ -3,6 +3,8 @@ import {useState,useRef,useEffect} from 'react';
 import {Popover} from 'radix-ui';
 import {Icon,type GameProps} from './game-ui';
 import {hudBuffs,buffDuration,buffRemaining} from '@/lib/player-buffs.js';
+import {useLocalCombat} from '@/lib/local-combat-store';
+import {useCombatPlayback} from '@/lib/use-combat-playback';
 import './buff-bar.css';
 
 type Buff={id:string|number;name:string;icon?:string;detail:string;dispel?:string;until?:number;permanent:boolean;stacks?:number;charges?:number};
@@ -18,8 +20,10 @@ function BuffIcon({buff,clock}:{buff:Buff;clock:number}) {
   <header><strong>{buff.name}</strong>{buff.dispel&&<span>{buff.dispel}</span>}</header>{buff.detail&&<p>{buff.detail}</p>}{!buff.permanent&&<small>{buffRemaining((buff.until||0)-clock)}</small>}
  </Popover.Content></Popover.Portal></Popover.Root>;
 }
-export default function BuffBar({state,data,classic=false}:Pick<GameProps,'state'|'data'>&{classic?:boolean}) {
- const buffs=hudBuffs(state,data) as Buff[];
+export default function BuffBar({state,data,playback,contentVersion,classic=false}:Pick<GameProps,'state'|'data'|'playback'|'contentVersion'>&{classic?:boolean}) {
+ const local=useLocalCombat(state,data,true);
+ const {state:s,data:d}=useCombatPlayback(local.state,local.data,playback,contentVersion,true);
+ const buffs=hudBuffs(s,d) as Buff[];
  if(!buffs.length)return null;
- return <><section className={`hud-buffs${classic?' cu-buffs':''}`} aria-label="角色增益">{buffs.map(buff=><BuffIcon key={buff.id} buff={buff} clock={state.clock}/>)}</section></>;
+ return <><section className={`hud-buffs${classic?' cu-buffs':''}`} aria-label="角色增益">{buffs.map(buff=><BuffIcon key={buff.id} buff={buff} clock={s.clock}/>)}</section></>;
 }

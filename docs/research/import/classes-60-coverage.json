@@ -51255,7 +51255,11 @@
           "requiredLevel": 20,
           "acquisition": "classQuest",
           "raceIds": [
-            3
+            1,
+            3,
+            4,
+            5,
+            8
           ],
           "previousSpellId": 0,
           "originalQuestIds": [

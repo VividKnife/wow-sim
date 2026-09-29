@@ -32,7 +32,7 @@ export class LocalSimulationClient {
   private capture:((state:any)=>void)|null=null;
   private captureReject:((reason:Error)=>void)|null=null;
   private captureId:string|null=null;
-  private captureProgress:((wallAt:number)=>void)|null=null;
+  private captureProgress:((wallAt:number,loading?:boolean)=>void)|null=null;
   private failure:Error|null=null;
   private failed=false;
   private suspended=false;
@@ -43,7 +43,7 @@ export class LocalSimulationClient {
   private reconcileNeeded=false;
   private reconciling=false;
   private backgroundQueued=false;
-  private actions=new Map<string,{resolve:()=>void;reject:(error:Error)=>void;progress:(wallAt:number)=>void}>();
+  private actions=new Map<string,{resolve:()=>void;reject:(error:Error)=>void;progress:(wallAt:number,loading?:boolean)=>void}>();
   constructor(private options:Options) {}
   private prepareWorker() {
     if(this.worker)return;
@@ -62,6 +62,7 @@ export class LocalSimulationClient {
     }
     worker.onmessage=({data})=>{
       if (worker!==this.worker || data.generation!==this.session?.session.id || this.suspended) return;
+      if(data.type==='contentLoading'){this.options.onStatus('正在加载当前冒险所需的资料…');this.captureProgress?.(0,true);for(const action of this.actions.values())action.progress(0,true);}
       if (data.type==='ready') {
         this.workerReady=true;
         this.starting?.resolve();
@@ -157,8 +158,8 @@ export class LocalSimulationClient {
     await new Promise<void>((resolve,reject)=>{
       let timeout:ReturnType<typeof setTimeout>,lastProgress=-Infinity;
       const finish=(error?:Error)=>{clearTimeout(timeout);this.actions.delete(requestId);if(error)reject(error);else resolve();};
-      const arm=()=>{clearTimeout(timeout);timeout=setTimeout(()=>this.breakWorker('本地战斗操作响应超时'),15000);};
-      this.actions.set(requestId,{resolve:()=>finish(),reject:finish,progress:wallAt=>{if(wallAt>lastProgress){lastProgress=wallAt;arm();}}});
+      const arm=(loading=false)=>{clearTimeout(timeout);timeout=setTimeout(()=>this.breakWorker('本地战斗操作响应超时'),loading?SIMULATION_STARTUP_TIMEOUT_MS:15000);};
+      this.actions.set(requestId,{resolve:()=>finish(),reject:finish,progress:(wallAt,loading)=>{if(loading||wallAt>lastProgress){if(!loading)lastProgress=wallAt;arm(loading);}}});
       arm();this.worker!.postMessage({type:'command',generation,requestId,command});
     });
     return true;
@@ -276,12 +277,12 @@ export class LocalSimulationClient {
         const requestId=crypto.randomUUID();let lastProgress=-Infinity;
         let timeout:ReturnType<typeof setTimeout>;
         const cleanup=()=>{clearTimeout(timeout);this.capture=null;this.captureReject=null;this.captureProgress=null;this.captureId=null;};
-        const arm=()=>{clearTimeout(timeout);timeout=setTimeout(()=>this.breakWorker('本地战斗引擎响应超时'),15000);};
+        const arm=(loading=false)=>{clearTimeout(timeout);timeout=setTimeout(()=>this.breakWorker('本地战斗引擎响应超时'),loading?SIMULATION_STARTUP_TIMEOUT_MS:15000);};
         this.captureId=requestId;
         this.capture=s=>{cleanup();resolve(s);};this.captureReject=e=>{cleanup();reject(e);};
         // Long offline fights may take several slices. Renew only on actual
         // simulation progress, so a hung Worker still times out.
-        this.captureProgress=wallAt=>{if(wallAt>lastProgress){lastProgress=wallAt;arm();}};
+        this.captureProgress=(wallAt,loading)=>{if(loading||wallAt>lastProgress){if(!loading)lastProgress=wallAt;arm(loading);}};
         arm();this.worker!.postMessage({type:'checkpoint',pause,requestId,generation:this.session.session.id});
       });
       this.pending={type:'checkpoint',ownerId:this.session.ownerId,characterId:this.session.characterId,contentVersion:this.session.contentVersion,

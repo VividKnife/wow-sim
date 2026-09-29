@@ -53,3 +53,17 @@ test('parallel auction rows render eligibility, caps, money, deadlines and recen
  assert.doesNotMatch(html,/<select|<option|NaN|推进一轮|为谁竞拍/);
  assert.equal((html.match(/role="progressbar"/g)||[]).length,5);
 });
+
+test('raid command panel renders hide controls and the current healing order',async()=>{
+ const {beginMoltenCoreBattle}=await import('../../../packages/game-domain/src/rules/molten-core-battle.js');
+ const {raidCommandAction}=await import('../../../packages/game-domain/src/rules/raid-command.js');
+ const state=createMoltenCoreDemo().state;state.party=[];state.growthPolicy='player';enterGoldRaid(state);
+ for(const type of ['goldPublish','goldRecommend','goldLaunch'])goldRaidAction(state,{type});
+ beginMoltenCoreBattle(state,'lucifron',state.goldRaid.tactics);
+ raidCommandAction(state,{type:'raidOrder',order:'conserveMana',encounterId:state.combat.id});
+ const html=render(buildGameResponse(state,1).snapshot);
+ for(const label of ['隐藏开荒指挥台','隐藏团队指挥','节约蓝量','正常治疗'])assert.ok(html.includes(label),label);
+ assert.match(html,/aria-pressed="true"[^>]*disabled=""[^>]*>节约蓝量/);
+ // Radix emits a hidden select for form semantics; visible choices use GameSelect.
+ assert.doesNotMatch(html,/<select(?![^>]*aria-hidden="true")/);
+});

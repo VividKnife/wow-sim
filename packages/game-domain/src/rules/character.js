@@ -9,6 +9,7 @@ import {armorWithAuras} from '../../../sim-core/src/combat-auras.js';
 import {enchants,professionSkillIds,specializationKnown} from './profession-data.js';
 import {talentModifiers,talentCombatDefense,modifySpell} from './talent-effects.js';
 import {memoizeDerived} from './derived-cache.js';
+import {weaponEnhancementStats} from './weapon-enhancement-stats.js';
 export const clone=x=>JSON.parse(JSON.stringify(x));
 export const LEVEL_CAP=60;
 // Content tables are immutable during play. Index their first matching rows once;
@@ -108,7 +109,7 @@ export function refreshPetStats(owner,pet,{heal=false}={}){
 const cachedStats=memoizeDerived([
  'time','classId','raceId','level','form','stance','petUnit','escortNpc','kind','entry',
  'maxHp','maxMana','armor','petStatBase','ownerPetModifiers','ownerMasterDemonologist',
- 'equipment','learned','talents','buffs','itemBuffs','classBuffs','auras',
+ 'equipment','learned','talents','buffs','itemBuffs','classBuffs','auras','weaponEnchants','weaponEnchant',
  'talentBuffs','talentProcs','racialBuff','racialEffects','spiritTapUntil',
  ['pet','hp'],['pet','kind']
 ],calculateStats);
@@ -136,7 +137,7 @@ function calculateStats(c){
  let enchantHealth=0,enchantMana=0,enchantDodge=0;
  for(const e of Object.values(c.equipment||{})){if(e.durability===0&&items[e.id]?.MaxDurability)continue;for(const [key,value]of Object.entries(enchants[e.enchant]?.stats||{})){if(key==='health')enchantHealth+=value;else if(key==='mana')enchantMana+=value;else if(key==='dodge')enchantDodge+=value/100;else if(key in result)result[key]+=value;}}
  for(const a of Object.values(c.buffs||{})){if(a.until<=c.time)continue;if(a.kind==='int')result.int+=a.amount;if(a.kind==='armor')result.armor+=a.amount;if(a.kind==='sta')result.sta+=a.amount;}
- for(const buff of c.itemBuffs||[]){if(buff.until<=(c.time||0))continue;for(const [key,value]of Object.entries(buff.stats)){if(key==='health')enchantHealth+=value;else if(key in result)result[key]+=value;}}
+ for(const buff of c.itemBuffs||[]){if(buff.until<=(c.time||0))continue;for(const [key,value]of Object.entries(buff.stats)){if(key==='health')enchantHealth+=value;else if(key==='mana')enchantMana+=value;else if(key in result)result[key]+=value;}}
  let attackPowerFlat=0,rangedAttackPowerFlat=0;
  for(const buff of c.classBuffs||[]){if(buff.until<=(c.time||0))continue;for(const [key,value]of Object.entries(buff.stats||{})){if(key==='attackPower')attackPowerFlat+=value;else if(key==='rangedAttackPower')rangedAttackPowerFlat+=value;else if(key in result)result[key]+=value;}if(buff.armorPct)result.armor*=1+buff.armorPct;}
  const mods=talentModifiers(c);
@@ -156,6 +157,8 @@ function calculateStats(c){
  result.maxHp+=enchantHealth;if(result.maxMana)result.maxMana+=enchantMana;
  const agility=agilityChances(c.classId,c.level,result.agi);result.baseMana=classBase.basemana;result.crit=agility.crit+(mods.crit||0);result.dodge=agility.dodge+(mods.dodge||0)+enchantDodge;result.parry=(mods.parry||0)+(c.learned?.some(id=>[3127,18848].includes(id))?.05:0);result.hit=mods.hit||0;result.spellHit=mods.spellHit||0;
  const statAuras=[...equipmentAuras,...liveAuras];
+ for(const slot of [16,17])result.crit+=weaponEnhancementStats(c,slot).crit||0;
+ for(const buff of c.itemBuffs||[])if(buff.until>(c.time||0))result.crit+=buff.stats.crit||0;
  for(const a of statAuras){
   if(a.type===13){if((a.misc&126)===126)result.spellPower+=a.amount;else for(let school=1;school<=6;school++)if(a.misc&(1<<school))result['schoolPower'+(1<<school)]=(result['schoolPower'+(1<<school)]||0)+a.amount;}
   if(a.type===135)result.healing+=a.amount;

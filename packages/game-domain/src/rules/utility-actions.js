@@ -69,7 +69,7 @@ export function finishUtilitySpell(s){
 }
 
 // Only expose item effects that the imported spell data can actually execute.
-const buffFamily=(id,values)=>`${items[id].subclass}:${Object.keys(values).sort().join(',')}`;
+const buffFamily=(id,values)=>items[id].name.startsWith('Flask of ')?'flask':`${items[id].subclass}:${Object.keys(values).sort().join(',')}`;
 const itemCooldown=(s,id)=>Math.max(0,(s.itemCooldowns?.['item:'+id]||0)-s.clock,(s.itemCooldowns?.['category:'+items[id].spellcategory_1]||0)-s.clock);
 function itemEffect(s,id){
  if(id===6948)return {kind:'hearth',label:'使用炉石'};
@@ -85,6 +85,9 @@ function itemEffect(s,id){
   if(aura===29&&misc>=0&&misc<=4)values[['str','agi','sta','int','spi'][misc]]=amount;
   else if(aura===22&&misc===1)values.armor=amount;
   else if(aura===34)values.health=amount;
+  else if(aura===35&&misc===0)values.mana=amount;
+  else if(aura===13&&(misc&126)===126)values.spellPower=amount;
+  else if(aura===52)values.crit=amount/100;
   else return null;
  }
  return Object.keys(values).length&&sp.durationMs>0?{kind:'buff',label:'使用增益物品',sp,values}:null;
@@ -102,8 +105,8 @@ export function itemUseView(s,instance){
  const st=stats(s);
  if(!reason&&['food','health'].includes(effect.kind)&&s.hp>=st.maxHp)reason='生命已满';
  if(!reason&&['water','mana'].includes(effect.kind)&&s.mana>=st.maxMana)reason='法力已满';
- const names={str:'力量',agi:'敏捷',sta:'耐力',int:'智力',spi:'精神',armor:'护甲',health:'生命上限'};
- const description=effect.kind==='buff'?Object.entries(effect.values).map(([k,v])=>`${names[k]} +${v}`).join('、')+` · 持续 ${Math.ceil(effect.sp.durationMs/60000)} 分钟`:['food','water'].includes(effect.kind)?`坐下${effect.label} · 持续 ${effect.sp.durationMs/1000} 秒`:effect.kind==='hearth'?`返回 ${hearthstoneView(s).destinationName}`:`恢复 ${effect.min}—${effect.max} ${effect.kind==='health'?'生命':'法力'}`;
+ const names={str:'力量',agi:'敏捷',sta:'耐力',int:'智力',spi:'精神',armor:'护甲',health:'生命上限',mana:'法力上限',spellPower:'法术伤害',crit:'暴击'};
+ const description=effect.kind==='buff'?Object.entries(effect.values).map(([k,v])=>`${names[k]} +${k==='crit'?`${v*100}%`:v}`).join('、')+` · 持续 ${Math.ceil(effect.sp.durationMs/60000)} 分钟`:['food','water'].includes(effect.kind)?`坐下${effect.label} · 持续 ${effect.sp.durationMs/1000} 秒`:effect.kind==='hearth'?`返回 ${hearthstoneView(s).destinationName}`:`恢复 ${effect.min}—${effect.max} ${effect.kind==='health'?'生命':'法力'}`;
  return {canUse:!reason,reason,label:effect.label,description,remaining:effect.kind==='hearth'?hearthstoneView(s).remaining:['health','mana'].includes(effect.kind)?Math.max(0,(s.potionReady||0)-s.clock):itemCooldown(s,instance.id)};
 }
 
@@ -126,7 +129,7 @@ export function useBagItem(s,uid,slot){
   rest.until=Math.max(rest.foodUntil,rest.waterUntil);s.rest=rest;s.totals[effect.kind]++;
  }else{
   stopRecovery(s);
-  if(effect.kind==='buff'){s.itemBuffs=(s.itemBuffs||[]).filter(b=>buffFamily(b.item,b.stats)!==buffFamily(instance.id,effect.values)&&b.until>s.clock);s.itemBuffs.push({spell:effect.sp.Id,item:instance.id,stats:effect.values,until:s.clock+effect.sp.durationMs});}
+  if(effect.kind==='buff'){s.itemBuffs=(s.itemBuffs||[]).filter(b=>buffFamily(b.item,b.stats)!==buffFamily(instance.id,effect.values)&&b.until>s.clock);s.itemBuffs.push({spell:effect.sp.Id,item:instance.id,stats:effect.values,until:s.clock+effect.sp.durationMs,persistThroughDeath:buffFamily(instance.id,effect.values)==='flask'});}
   else drinkPotion(s,s,instance.id);
  }
  log(s,'使用 '+nameOf('items',instance.id),effect.kind==='buff'?'buff':'rest');

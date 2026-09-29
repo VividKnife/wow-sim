@@ -10,6 +10,7 @@ import ActivityProgress from './activity-progress';
 import ClassicActionBar from './classic-action-bar';
 import BuffBar from './buff-bar';
 import WorldScene from './world-scene';
+import SceneUiToggle from './scene-ui-toggle';
 import LiveDamageMeter from './live-damage-meter';
 import LiveRaidFrames from './live-raid-frames';
 import JourneyLog from './journey-log';
@@ -32,6 +33,7 @@ type Props=GameProps&{canLead:boolean;panel:string|null;onPanelChange:(panel:str
 export default function ClassicGame(props:Props){
  const {state:s,data:d,busy,send,panel,onPanelChange,onStyleChange,onObserve,renderPanel,overview,status,utilities,activityLabel}=props;
  const [commandMemberId,setCommandMemberId]=useState(s.id);
+ const [uiHidden,setUiHidden]=useState(false);
  const [chatExpanded,setChatExpanded]=useState(false);
  const {ref:chatRef,style:chatStyle,handle:chatHandle,reset:resetChat}=useHudDrag();
  const {ref:meterRef,style:meterStyle,handle:meterHandle,reset:resetMeter}=useHudDrag();
@@ -39,6 +41,7 @@ export default function ClassicGame(props:Props){
  const open=(id:string)=>{focus.current=document.activeElement instanceof HTMLElement?document.activeElement:null;onPanelChange(id);};
  useEffect(()=>{
   const keydown=(event:KeyboardEvent)=>{
+   if(uiHidden){if(event.key==='Escape'){event.preventDefault();setUiHidden(false);}return;}
    if(event.key==='Escape'&&!event.defaultPrevented&&!event.repeat&&!panel&&!props.modalBattleOpen&&!document.querySelector('[role=dialog][data-state=open],[role=listbox]')){event.preventDefault();focus.current=document.activeElement instanceof HTMLElement?document.activeElement:null;onPanelChange('settings');return;}
    if(event.defaultPrevented||event.altKey||event.metaKey||event.ctrlKey||event.repeat||panel||props.modalBattleOpen)return;
    const target=event.target as HTMLElement;
@@ -47,7 +50,7 @@ export default function ClassicGame(props:Props){
    if(item){event.preventDefault();focus.current=document.activeElement instanceof HTMLElement?document.activeElement:null;onPanelChange(item.id);}
   };
   window.addEventListener('keydown',keydown);return()=>window.removeEventListener('keydown',keydown);
- },[panel,props.modalBattleOpen,onPanelChange]);
+ },[panel,props.modalBattleOpen,onPanelChange,uiHidden]);
  const battling=!!s.combat;
  const members=(d.goldRaid?.active)&&d.battleView?.actors?.length?d.battleView.actors.filter((u:Model)=>!u.petUnit&&!u.totemUnit&&!u.escortNpc):[{...s,stats:d.stats},...(d.party||[])];
  const quests=d.quests.filter((q:Model)=>q.active),available=d.quests.filter((q:Model)=>q.canAccept).length;
@@ -70,10 +73,11 @@ export default function ClassicGame(props:Props){
  })}</div>;
  const damageMeter=<LiveDamageMeter state={s} data={d} playback={props.playback} contentVersion={props.contentVersion} empty={<div className="cu-meter-empty"><Swords size={22}/><h3>伤害统计</h3><p>尚无战斗记录。战斗中可实时查看成员伤害、DPS 与技能明细。</p><button className="cu-gold-button" onClick={()=>open('activities')}>查看野外活动</button></div>}/>;
  const generalLogs=chatChannelLogs(s.logs,'general'),combatLogs=chatChannelLogs(s.logs,'combat');
- return <div className="classic-game">
+ return <div className={`classic-game${uiHidden?' scene-ui-hidden':''}`}>
   <section className={`cu-viewport ${battling?'cu-in-combat':''} ${travelling?'cu-is-travelling':''}`} aria-label="经典游戏主界面">
-   <div className="cu-world" inert={!!panel||props.modalBattleOpen}><WorldScene {...props} commandMemberId={commandMemberId} onCommandMemberChange={setCommandMemberId} animationPaused={!!panel||props.modalBattleOpen}/></div>
-   <div className="cu-shade"/><BuffBar state={s} data={d} classic/>
+   <div className="cu-world" inert={!!panel||props.modalBattleOpen}><WorldScene {...props} uiHidden={uiHidden} commandMemberId={commandMemberId} onCommandMemberChange={setCommandMemberId} animationPaused={!!panel||props.modalBattleOpen}/></div>
+   <SceneUiToggle hidden={uiHidden} onToggle={()=>setUiHidden(value=>!value)}/>
+   <div className="cu-shade"/><BuffBar state={s} data={d} playback={props.playback} contentVersion={props.contentVersion} classic/>
    <button className="cu-player" onClick={()=>open('character')} aria-label="查看角色"><span className="cu-portrait cu-class-portrait"><ClassIcon classId={s.classId} size="100%"/><b>{s.level}</b></span><span className="cu-player-bars"><strong><span>{s.name}</span><small>{d.raceName} · {d.className}</small></strong><Vital label="生命" value={s.hp} max={d.stats.maxHp}/>{resource.max>0&&<Vital label={resource.name} value={resource.value} max={resource.max} tone={resource.name==='怒气'?'rage':resource.name==='能量'?'energy':'mana'}/>}</span></button>
    <div className="cu-zone-title"><small>{battling?'战斗中':travelling?`${presentation.region} · 旅途中`:presentation.region}</small><h1>{presentation.name}{travelling?'附近':''}</h1><p>{destination?`前往 ${destination}`:instanceStatus||activityLabel}</p></div>
    <button className="cu-minimap" onClick={()=>open('map')} aria-label={instance?"打开副本地图":"打开世界地图"}><span className="cu-map-circle" style={map?.image?{backgroundImage:`url(${map.image})`,backgroundSize:'100%',backgroundPosition:'center'}:undefined}>{at&&map?.image?<i style={{left:Math.min(88,Math.max(12,at[0]))+'%',top:Math.min(88,Math.max(12,at[1]))+'%'}}>▲</i>:<i>✦</i>}<small>N</small></span><span>{presentation.name}</span><em>{instance?'副本地图':'地图'} · M</em></button>
@@ -95,7 +99,7 @@ export default function ClassicGame(props:Props){
    </aside>
    {(!battling||!d.combatCommand)&&<div className="cu-actions" aria-label="场景操作">{s.dungeon&&!battling&&<label className="cu-command-toggle"><input type="checkbox" checked={!!s.settings.commandCombat} disabled={busy||!props.canLead} onChange={e=>void send({type:'combatCommand',order:'prepare',enabled:e.target.checked})}/>指挥战斗</label>}<button title={stop.disabled?(instance?'当前没有正在推进的副本路线。':'当前无需停止；地面旅行可在地图中改道。'):stop.label} disabled={busy||stop.disabled||!!instance&&!props.canLead} onClick={()=>void send(stop.command)}><Square size={14}/><span>{battling?'战后停止':'停止'}</span></button>{actions?<>{(['revive','recover'] as const).map(key=><button key={key} disabled={busy||!props.canLead||actions[key].disabled} title={actions[key].reason} onClick={()=>void send(actions[key].command)}><Icon name={key==='revive'?'spell_holy_resurrection':'inv_drink_07'}/><span>{actions[key].label}</span></button>)}<button className="cu-fight-button" disabled={!battling&&(busy||!props.canLead||actions.advance.disabled)} title={actions.advance.reason} onClick={()=>battling?onObserve():void send(actions.advance.command)}><Swords size={17}/><span>{battling?'战斗详情':actions.advance.label}</span></button></>:<><button onClick={()=>open('map')}><Footprints size={16}/><span>移动</span></button><button disabled={busy||!!s.combat||s.activity.type==='mount'||(s.mounted?!d.mounts?.canDismount:false)} title={s.mounted?d.mounts?.dismountReason:ownMount?'召唤已拥有的坐骑':'查看坐骑与骑术'} onClick={()=>s.mounted?void send({type:'dismount'}):ownMount?void send({type:'mount',id:ownMount.id}):open('mounts')}><Icon name="ability_mount_ridinghorse"/><span>{s.activity.type==='mount'?'召唤中':s.mounted?'下马':'骑乘'}</span></button><button className="cu-fight-button" onClick={()=>battling?onObserve():open('activities')}><Swords size={17}/><span>{battling?'战斗详情':'野外活动'}</span></button></>}</div>}
    {['gather','professionGather'].includes(s.activity.type)&&<div className="cu-gather-progress"><ActivityProgress state={s} data={d}/></div>}
-   <ClassicActionBar key={s.id} {...props} blocked={!!panel||props.modalBattleOpen}/>
+   <ClassicActionBar key={s.id} {...props} blocked={uiHidden||!!panel||props.modalBattleOpen}/>
    <footer className="cu-bottom-ui">{travelling&&<div className="cu-travel-progress"><ActivityProgress state={s} data={{map:d.map}}/></div>}<div className="cu-xp" role="progressbar" aria-label="经验值" aria-valuemin={0} aria-valuemax={s.level>=60?1:d.nextXp||1} aria-valuenow={s.level>=60?1:s.xp}><i style={{width:(s.level>=60?100:percent(s.xp,d.nextXp))+'%'}}/><span>等级 {s.level} <b>{s.level>=60?'已达等级上限':`经验 ${fmt(s.xp)} / ${fmt(d.nextXp)}`}</b></span></div><nav className="cu-menu" aria-label="游戏菜单">{menus.map(item=><button key={item.id} ref={item.id==='nearby'?home:undefined} onClick={()=>open(item.id)} title={`${item.name} (${item.key})`} aria-label={item.name} aria-haspopup="dialog"><span className="cu-icon-frame"><Icon name={item.icon}/><kbd>{item.key}</kbd>{item.id==='quests'&&quests.some((q:Model)=>q.complete)&&<i/>}</span><span>{item.name}</span></button>)}<button onClick={()=>open('raid')} aria-label="团队副本" aria-haspopup="dialog"><span className="cu-icon-frame"><Icon name="inv_misc_head_dragon_01"/></span><span>团本</span></button><button onClick={()=>open('settings')} aria-label="设置" title="设置 (Esc)" aria-haspopup="dialog"><span className="cu-icon-frame"><Icon name="inv_misc_gear_01"/><kbd>Esc</kbd></span><span>设置</span></button></nav></footer>
   </section>
   <div className="cu-status-area">{status}</div>

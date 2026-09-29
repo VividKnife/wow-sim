@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats,questProgress} from '../../../packages/game-domain/src/rules/engine.js';
 import {countItem} from '../../../packages/game-domain/src/rules/character.js';
-import {abilities,monsterIdsAt} from '../../../packages/game-domain/src/rules/catalog.js';
+import {classAbilities,monsterIdsAt} from '../../../packages/game-domain/src/rules/catalog.js';
 function finish(s){return advance(s,s.wallAt+s.activity.endsAt-s.clock).state;}
 function command(s,action){return act(s,action,s.wallAt);}
-function prepared(){let s=createGame('封印学徒',8,0);s.level=20;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.learned=[...new Set(abilities.filter(a=>a.requiredLevel<=20).map(a=>a.spellId))];s.location='magetower';s=command(s,{type:'accept',id:1920});for(const id of [105174,105175])s=finish(command(s,{type:'gather',id}));s=finish(command(s,{type:'travel',to:'bluerecluse'}));return s;}
+function prepared(){let s=createGame('封印学徒',8,0);s.level=20;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.learned=[...new Set(classAbilities[8].filter(a=>a.requiredLevel<=20).map(a=>a.spellId))];s.location='magetower';s=command(s,{type:'accept',id:1920});for(const id of [105174,105175])s=finish(command(s,{type:'gather',id}));s=finish(command(s,{type:'travel',to:'bluerecluse'}));return s;}
 function manifest(s){s=finish(command(s,{type:'useQuestItem',id:7308}));for(let n=0;n<1000&&s.combat?.enemies[0].capturePhase!=='weakened'&&s.hp>0;n++)s=advance(s,s.wallAt+100).state;assert.ok(s.hp>0,'prepared mage must survive the encounter');assert.equal(s.combat?.enemies[0].capturePhase,'weakened');return s;}
 test('rift spawns require the quest tools and survive lethal damage for capture, without kill rewards',()=>{
  let s=prepared();assert.ok(!monsterIdsAt('bluerecluse').includes(6492));assert.throws(()=>command(s,{type:'useQuestItem',id:7247}),/裂隙/);
