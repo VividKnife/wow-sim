@@ -121,3 +121,5 @@ button.armory-slot:hover,button.armory-slot:focus-visible,.armory-slot.selected{
 .armory-attributes>summary::after{content:'＋';font-size:17px}.armory-attributes[open]>summary::after{content:'−'}
 .armory-attributes>summary small{margin-left:auto;color:#a69e8a;font-size:11px}
 .armory-attributes[open]>summary{margin-bottom:12px}
+
+.spellbook-icon{display:inline-flex;flex:0 0 40px;padding:0;border:0;border-radius:4px;background:none;cursor:help}.spellbook-icon:focus-visible{outline:2px solid #ffe39a;outline-offset:3px}

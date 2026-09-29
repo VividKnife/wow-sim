@@ -25,7 +25,7 @@ const actorKeys=['serverBuffs','npcPlayer','growthPolicy','serverBuffs','id','na
 const enemyKeys=['modelAnimation',...actorKeys,'minDamage','maxDamage','attackTime','spells','threat','smite','capturePhase','captureUntil'];
 const combatKeys=['lootGold','area','ground','id','runId','routeId','encounterId','startedAt','endedAt','dungeon','pull','command','participantIds','metrics','projectiles','actorsSnapshot'];
 const dungeonKeys=['id','runId','cursor','position','startedAt','completedAt','metrics'];
-const activityKeys=['completed','remaining','type','reason','to','from','startedAt','endsAt','target','quest','spell','mount','caster','targets','routeId','journeySession','auto','flight','stopAtNext'];
+const activityKeys=['completed','remaining','type','reason','paused','stopQueued','to','from','startedAt','endsAt','target','quest','spell','mount','caster','targets','routeId','journeySession','auto','flight','stopAtNext'];
 
 function copy(value: unknown): any {
   // Keep in-memory Worker snapshots identical to their JSON representation.

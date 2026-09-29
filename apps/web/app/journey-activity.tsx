@@ -4,9 +4,18 @@ import {Eye,Moon} from 'lucide-react';
 import {Bar,duration,type GameProps} from './game-ui';
 import ActivityProgress from './activity-progress';
 
-type Props=GameProps&{hideTravelProgress?:boolean;hideGatherProgress?:boolean;activityLabel:string;onObserve:()=>void};
-export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,onObserve,hideTravelProgress=false,hideGatherProgress=false}:Props){
+type Props=GameProps&{hideTravelProgress?:boolean;hideGatherProgress?:boolean;activityLabel:string;onObserve:()=>void;onOpenBag?:()=>void};
+export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,onObserve,onOpenBag,hideTravelProgress=false,hideGatherProgress=false}:Props){
  if(!s.combat)return <>
+  {(s.activity.reason||s.activity.type==='hunt')&&<section className="activity-strip journey-activity" role="status">
+   <strong>{s.activity.paused?(s.bag.length>=d.bagCapacity?'因背包满暂停':'等待拾取战利品'):activityLabel}</strong>
+   <p>{s.activity.reason||'按已保存策略自动狩猎。'}{s.activity.paused&&' 清出空间并领取战利品后，将自动恢复原目标；也可停止狩猎。'}</p>
+   <span>背包 {s.bag.length}/{d.bagCapacity} · 待拾取 {s.pending.length} 组</span>
+   <div className="action-row">
+    {s.activity.paused&&<><Button disabled={busy} onClick={onOpenBag}>整理背包 / 丢弃灰色物品</Button>{s.pending.length>0&&<Button disabled={busy} onClick={()=>send({type:'loot'})}>拾取战利品</Button>}</>}
+    {s.activity.type==='hunt'&&<Button variant="outline" disabled={busy} onClick={()=>send({type:'stop'})}>停止狩猎</Button>}
+   </div>
+  </section>}
   {!(hideGatherProgress&&['gather','professionGather'].includes(s.activity.type))&&<ActivityProgress state={s} data={d} running hideTravel={hideTravelProgress}/>}
   {s.hp<=0&&<div className="action-row" aria-label="复活角色">
    <Button onClick={()=>send({type:'revive'})} disabled={busy||s.activity.type==='revive'}>{s.activity.type==='revive'?'跑尸中…':'释放灵魂 · 跑尸'}</Button>
@@ -36,7 +45,7 @@ export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,
       {d.canSoulstoneRevive&&<Button onClick={()=>send({type:'soulstoneRevive'})} disabled={busy}>灵魂石复活</Button>}
       {d.reincarnation&&<Button title={d.reincarnation.reason} onClick={()=>send({type:'reincarnate'})} disabled={busy||!d.reincarnation.canUse}>复生</Button>}
      </>:<Button variant="outline" onClick={()=>send({type:'stop'})} disabled={busy||stopped||s.activity.flight&&s.activity.stopAtNext}>
-      {s.activity.flight?(s.activity.stopAtNext?'已申请下一站停靠':'下一飞行点停靠'):s.combat?'本场结束后停止':'停止'}
+      {s.activity.flight?(s.activity.stopAtNext?'已申请下一站停靠':'下一飞行点停靠'):s.activity.stopQueued?'已排队：本场结束后停止':s.combat?'本场结束后停止':'停止'}
      </Button>}
     </div>
    </div>
