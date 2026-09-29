@@ -85,8 +85,8 @@ export const table=name=>runtime.tables[name]||[];
 export const localize=(kind,id)=>runtime.text[kind]?.[id]?.localized;
 /** @type {any} */
 export const nameOf=(kind,id)=>runtime.text[kind]?.[id]?.name||(kind==='items'?'物品 '+id:String(id));
-/** @type {(kind:string,id:any)=>string|undefined} */
-export const icon=(kind,id)=>runtime.text[kind]?.[id]?.icon;
+/** @type {(kind:string,id:any)=>string|null} */
+export const icon=(kind,id)=>runtime.text[kind]?.[id]?.icon??null;
 /** @type {(rows:any[],key:string)=>Record<string,any[]>} */
 export const groupBy=(rows,key)=>groupRows(rows,r=>r[key]);
 /** @type {(node:string)=>number[]} */

@@ -1,3 +1,4 @@
+import {isContentPending} from './runtime-content.js';
 import {raidHealingMode,selectRaidHealing} from './raid-healing-policy.js';
 import {observePolicyChanges,stepCombatPolicy,flushQueuedCombatIntent,queueManualCombatIntent,invalidatePolicyIntents} from './combat-policy.js';
 import {combatInputReadyReason,combatInputTargetReason,pendingCombatInput,inputWaiting,inputResult,pruneCombatInputs} from './combat-input.js';
@@ -116,7 +117,7 @@ export function recordDamage(s,c,target,amount,label,threatMultiplier=1,detail={
  if(dealt>0&&melee&&!target.pvp)triggerMeleeProcs(s,target,c,label==='近战攻击'?8:32,combatMembers(s),hurtPlayer);
  if(target.capturePhase==='fighting'&&target.hp/target.maxHp<.01){target.capturePhase='weakened';target.captureUntil=s.clock+29500;target.stunUntil=s.clock+30000;target.cast=null;target.dots=[];log(s,'裂隙怒灵已经虚弱，使用收容箱进行捕获！','quest');}
  onTalentEvent(s,c,{type:'damage',target,spell:sp,amount:dealt,critical:detail.critical,periodic:detail.periodic,melee,comboBuilder:['Sinister Strike','Backstab','Ambush','Ghostly Strike','Hemorrhage'].includes(sp?.SpellName),talentProc:detail.talentProc},{damage:recordDamage,healAmount,stats,rng,actors:combatMembers(s)});
- if(target.hp===0){for(const claim of target.soulShardClaims||[]){const claimant=combatMembers(s).find(a=>a.id===claim.caster);if(claimant===s&&claim.until>=s.clock&&(!claim.channel||claimant.cast?.spell===claim.spell)&&killXp(s.level,target.level)>0){try{receive(s,claim.item,1);}catch{log(s,'背包已满，无法保存灵魂碎片','bag');}}}target.soulShardClaims=[];onTalentEvent(s,c,{type:'kill',target,spell:sp},{damage:recordDamage,healAmount,stats,rng,actors:combatMembers(s)});target.dead=true;target.cast=null;const tap=ranks(c)['Spirit Tap']||0;if(tap&&rng(s)<.2*tap)c.spiritTapUntil=s.clock+15000;log(s,target.name+' 被击败','kill');}
+ if(target.hp===0){for(const claim of target.soulShardClaims||[]){const claimant=combatMembers(s).find(a=>a.id===claim.caster);if(claimant===s&&claim.until>=s.clock&&(!claim.channel||claimant.cast?.spell===claim.spell)&&killXp(s.level,target.level)>0){try{receive(s,claim.item,1);}catch(error){if(isContentPending(error))throw error;log(s,'背包已满，无法保存灵魂碎片','bag');}}}target.soulShardClaims=[];onTalentEvent(s,c,{type:'kill',target,spell:sp},{damage:recordDamage,healAmount,stats,rng,actors:combatMembers(s)});target.dead=true;target.cast=null;const tap=ranks(c)['Spirit Tap']||0;if(tap&&rng(s)<.2*tap)c.spiritTapUntil=s.clock+15000;log(s,target.name+' 被击败','kill');}
 }
 function spellLands(s,c,e,sp){
  if(e.pvp&&!pvpAbilityAllowed(c,e,sp,s.clock))return false;
@@ -259,7 +260,7 @@ function executeCombatInput(s,c){
  const sp=spellInfo(c,input.spellId);
  if(inputWaiting(s,c,sp))return true;
  try{commandCombatCast(s,c,input.spellId,input.targetId);inputResult(s,input,'started');}
- catch(error){inputResult(s,input,'rejected',error.message);}
+ catch(error){if(isContentPending(error))throw error;inputResult(s,input,'rejected',error.message);}
  return true;
 }
 export function selectMage(s,c,focus,rules=c.rules||defaultRules,input=null){

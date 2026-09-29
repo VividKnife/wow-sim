@@ -5,9 +5,10 @@ import {fileURLToPath} from 'node:url';
 import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {createContext,runInContext} from 'node:vm';
-import {createGame,act,advanceOwned} from '../../../packages/game-domain/src/rules/engine.js';
+import {createGame,act,advanceOwned,view} from '../../../packages/game-domain/src/rules/engine.js';
 import {projectLocalCheckpoint} from '../../../packages/game-domain/src/rules/local-checkpoint.js';
 import {createMoltenCoreDemo,startMoltenCoreBoss} from '../../../packages/game-domain/src/molten-core-demo.ts';
+import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
 import manifest from '../../../packages/game-data/manifest.json' with {type:'json'};
 import version from '../../../packages/game-data/runtime/version.json' with {type:'json'};
 
@@ -39,6 +40,7 @@ for(const scenario of ['solo','raid'])test(`real browser engine: ${scenario} loa
  const snapshot=messages.find(m=>m.type==='checkpoint').state;
  const expected=advanceOwned(structuredClone(state),1000).state;
  assert.deepEqual(snapshot,projectLocalCheckpoint(expected));
+ assert.deepEqual(messages.find(m=>m.type==='full').snapshot,structuredClone(projectClientSnapshot(expected,view(expected))));
  assert.equal(requests[0].pack,'boot');
  assert.ok(requests.length<Math.ceil(version.totalNodes/version.shardSize),'a solo start must not fetch every shard');
  assert.equal(new Set(requests.map(r=>r.pack)).size,requests.length,'no cache eviction/retry download loop');

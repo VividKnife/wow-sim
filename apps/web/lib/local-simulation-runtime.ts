@@ -48,6 +48,19 @@ function currentTarget(){return Math.max(state.wallAt,Math.min(deadline,Math.flo
 function checkpoint(requestId:string){
   scope.postMessage({type:'checkpoint',generation,requestId,state:projectLocalCheckpoint(state)});
 }
+// A periodic capture can also encounter a newly acquired content reference.
+// Its projection is read-only; retry against the latest committed state.
+function captureCurrent(requestId:string,requestedGeneration=generation){
+  if(generation!==requestedGeneration||!state)return;
+  try{checkpoint(requestId);}catch(error){
+    if(isContentPending(error)){
+      scope.postMessage({type:'contentLoading',generation});
+      resolveContent(error).then(()=>captureCurrent(requestId,requestedGeneration)).catch(failure=>{
+        if(generation===requestedGeneration)scope.postMessage({type:'error',generation,code:'LOCAL_CONTENT',error:failure instanceof Error?failure.message:'冒险资料加载失败'});
+      });
+    }else scope.postMessage({type:'error',generation,error:error instanceof Error?error.message:'保存冒险进度失败'});
+  }
+}
 function boundaryKey(){return [state.combat?.id,state.activity.type,state.arena?.id,state.arena?.phase,state.battleground?.id,state.battleground?.phase].join(':');}
 function publish(force=false, command=false) {
   const now=performance.now();
@@ -81,9 +94,9 @@ function tick() {
   beginContentScope();
   const previous=state,previousActions=[...actions],previousCheckpoint=commandCheckpoint;
   const previousGeneration=generation;
-  state={...structuredClone({...state,battleHistory:[]}),battleHistory:[...(state.battleHistory||[])]};batch=[];
   const tickStarted=performance.now();
   try {
+    state={...structuredClone({...state,battleHistory:[]}),battleHistory:[...(state.battleHistory||[])]};batch=[];
     // A manual command waits for one fixed instant, not a moving wall clock.
     // Continue bounded catch-up even when the tab is hidden or a retry stopped it.
     const action=actions[0];
@@ -132,7 +145,7 @@ function tick() {
       running=true;loading=true;scope.postMessage({type:'contentLoading',generation});
       resolveContent(error).then(()=>{loading=false;if(generation===previousGeneration&&running)tick();else if(running)tick();}).catch(failure=>{
         endContentScope();loading=false;if(generation!==previousGeneration){if(running)tick();return;}running=false;
-        scope.postMessage({type:'error',generation,error:failure instanceof Error?failure.message:'冒险资料加载失败'});
+        scope.postMessage({type:'error',generation,code:'LOCAL_CONTENT',error:failure instanceof Error?failure.message:'冒险资料加载失败'});
       });return;
     }
     endContentScope();running=false;
@@ -189,7 +202,7 @@ host.onmessage=({data})=>{
       clearTimeout(timer);commandCheckpoint={requestId:data.requestId,target:currentTarget()};running=true;tick();return;
     }
     // Capture an immutable copy while the exclusively owned state keeps moving.
-    checkpoint(data.requestId);
+    captureCurrent(data.requestId);
   } else if (data.type==='ack' && data.generation===generation) {
     remapItemReferences(state,new Map(data.itemIds));deadline=data.deadline;
   } else if (data.type==='resume' && state && data.generation===generation) {

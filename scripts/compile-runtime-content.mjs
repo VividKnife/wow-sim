@@ -3,11 +3,13 @@ import {tmpdir} from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
 import {createHash} from 'node:crypto';
-import {gzipSync} from 'node:zlib';
+import {gzipSync,gunzipSync} from 'node:zlib';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {build} from '../apps/web/node_modules/esbuild/lib/main.js';
 import {packContent} from './content-source/pack.mjs';
 
+// Gzip's OS header differs between macOS and Linux; normalize the transport.
+const gzip=value=>{const output=gzipSync(value,{level:9});output[9]=255;return output;};
 const root=fileURLToPath(new URL('..',import.meta.url));
 const temporary=await fs.mkdtemp(path.join(tmpdir(),'wow-content-'));
 try {
@@ -86,13 +88,15 @@ try {
    state.level=60;probe.__contentEngine.view(state);
   }
   const nodes=Object.fromEntries([...ids].filter(id=>!used.has(id)).sort((a,b)=>a-b).map(id=>[id,packed.nodes[id]]));
-  outputs.set(`class-${cls.id}.json.gz`,gzipSync(JSON.stringify({version,nodes}),{level:9}));
+  outputs.set(`class-${cls.id}.json.gz`,gzip(JSON.stringify({version,nodes})));
+  // End the job so WeakRef dereferences in the previous VM can be collected.
+  await new Promise(resolve=>setImmediate(resolve));
  }
- outputs.set('boot.json.gz',gzipSync(JSON.stringify(boot),{level:9}));
- for(let start=0;start<packed.nodes.length;start+=shardSize)outputs.set(`${start/shardSize}.json.gz`,gzipSync(JSON.stringify({version,start,nodes:packed.nodes.slice(start,start+shardSize)}),{level:9}));
+ outputs.set('boot.json.gz',gzip(JSON.stringify(boot)));
+ for(let start=0;start<packed.nodes.length;start+=shardSize)outputs.set(`${start/shardSize}.json.gz`,gzip(JSON.stringify({version,start,nodes:packed.nodes.slice(start,start+shardSize)})));
  outputs.set('../version.json',Buffer.from(JSON.stringify({version,shardSize,totalNodes:packed.nodes.length})+'\n'));
  if(!process.argv.includes('--check'))await fs.mkdir(browser,{recursive:true});
- for(const [name,content]of outputs){const filename=path.join(browser,name);if(process.argv.includes('--check')){if(!(await fs.readFile(filename)).equals(content))throw new Error('Browser content is stale: '+name);}else await fs.writeFile(filename,content);}
+ for(const [name,content]of outputs){const filename=path.join(browser,name);if(process.argv.includes('--check')){const actual=await fs.readFile(filename);const equal=name.endsWith('.gz')?gunzipSync(actual).equals(gunzipSync(content)):actual.equals(content);if(!equal)throw new Error('Browser content is stale: '+name);}else await fs.writeFile(filename,content);}
  if(!process.argv.includes('--check'))for(const name of await fs.readdir(browser))if(!outputs.has(name))await fs.unlink(path.join(browser,name));
  console.log(`Browser boot: ${used.size} records, ${outputs.get('boot.json.gz').length} gzip bytes; ${Math.ceil(packed.nodes.length/shardSize)} on-demand shards`);
  const destination=path.join(root,'packages/game-data/runtime/catalog.json');

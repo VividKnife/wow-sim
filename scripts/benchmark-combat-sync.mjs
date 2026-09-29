@@ -2,11 +2,11 @@ import {createNpcMember} from '../packages/game-domain/src/rules/party.js';
 // In-memory fixture only. No connection to player accounts or saved games.
 import {createGame,act,advance,stats} from '../packages/game-domain/src/rules/engine.js';
 import {startCombat} from '../packages/game-domain/src/rules/combat.js';
-import {abilities} from '../packages/game-domain/src/rules/catalog.js';
+import {classAbilities} from '../packages/game-domain/src/rules/catalog.js';
 import {buildGameResponse} from '../packages/game-domain/src/rules/server-response.js';
 
 let state=createGame('性能采样',283,0);
-state.level=20;state.learned=abilities.filter(a=>a.requiredLevel<=20).map(a=>a.spellId);
+state.level=20;state.learned=classAbilities[8].filter(a=>a.requiredLevel<=20).map(a=>a.spellId);
 state.hp=stats(state).maxHp;state.mana=stats(state).maxMana;
 state.completed[900001]=1;state.location='stormwind';
  for(const id of ['warrior','priest','rogue','mage'])createNpcMember(state,id);

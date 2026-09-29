@@ -19,6 +19,12 @@ test('compiled tables and public catalog values preserve source merge order and 
  }
 });
 
+test('unknown catalog entries retain empty values and fallback labels',()=>{
+ for(const kind of ['items','spells','npcs','quests','objects','talents']){
+  assert.equal(runtime.icon(kind,-1),source.icon(kind,-1));assert.equal(runtime.nameOf(kind,-1),source.nameOf(kind,-1));assert.equal(runtime.localize(kind,-1),source.localize(kind,-1));
+ }
+});
+
 test('precompiled spatial lookup retains all faction-neutral routes and monsters',()=>{
  for(const node of Object.keys(runtime.nodes))assert.deepEqual(runtime.monsterIdsAt(node),source.monsterIdsAt(node));
  for(const [from,to]of [['northshire','orgrimmar'],['stormwind','ironforge'],['orgrimmar','stormwind']])assert.deepEqual(runtime.route(from,to),source.route(from,to));

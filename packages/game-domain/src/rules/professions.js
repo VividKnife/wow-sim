@@ -1,3 +1,4 @@
+import {isContentPending} from './runtime-content.js';
 import {groupRows} from '../../../sim-core/src/collections.js';
 import {reserveMarket,marketOffer,marketAvailability} from './market.js';
 import {racialModifiers} from './racial-effects.js';
@@ -51,7 +52,7 @@ function resourceDefs(location){const t=terrain[location];const west=nodes[locat
  return [...resources,...(sourceResources.get(location)||[]).filter(r=>!resources.some(existing=>existing.item===r.item))];
 }
 export function resourceView(s){return resourceDefs(s.location).map(r=>{const readyAt=s.resourceCooldowns?.[r.id]||0;return{...r,readyAt,available:readyAt<=s.clock&&skill(s,r.profession)>=r.required,learned:skill(s,r.profession)>0};});}
-function roomForResource(s,r){const copy=clone(s);try{receive(copy,r.item,3);return true;}catch{return false;}}
+function roomForResource(s,r){const copy=clone(s);try{receive(copy,r.item,3);return true;}catch(error){if(isContentPending(error))throw error;return false;}}
 export function beginGather(s,id,auto=false){const r=resourceView(s).find(r=>r.id===id);if(!r||!r.available)throw new Error('资源尚未刷新、熟练度不足或不在当前区域');if(!roomForResource(s,r))throw new Error('背包空间不足，请预留采集空间');s.rest=null;s.activity={type:'professionGather',target:id,auto,startedAt:s.clock,endsAt:s.clock+3000};}
 export function finishGather(s){const a=s.activity,r=resourceView(s).find(r=>r.id===a.target);s.activity={type:'idle'};if(!r?.available||!roomForResource(s,r)){s.activity.reason='无法继续采集，请检查资源与背包空间。';return;}const count=roll(s,1,3);receive(s,r.item,count);s.resourceCooldowns[r.id]=s.clock+300000;
  // Fish pools gate access, not skill gains: all current pools accept skill 1.

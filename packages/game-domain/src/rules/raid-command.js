@@ -1,3 +1,4 @@
+import {isContentPending} from './runtime-content.js';
 import {invalidatePolicyIntents} from './combat-policy.js';
 import {commandCombatCast} from './combat.js';
 import {combatInputReadyReason} from './combat-input.js';
@@ -81,7 +82,7 @@ function executeCooldown(s,key){
  // Emergency assignments explicitly cancel the current cast, then use the
  // same validation and settlement as player and team input. Restore on failure.
  const cast=actor.cast,nextAction=actor.nextAction;actor.cast=null;actor.nextAction=s.clock;
- try{commandCombatCast(s,actor,sp.Id,target.id);}catch(error){actor.cast=cast;actor.nextAction=nextAction;return error.message;}
+ try{commandCombatCast(s,actor,sp.Id,target.id);}catch(error){if(isContentPending(error))throw error;actor.cast=cast;actor.nextAction=nextAction;return error.message;}
  s.combat.raidEncounter.command.used[key]=(s.combat.raidEncounter.command.used[key]||0)+1;
  record(s,`${actor.name} 执行${raidCooldowns[key].name} → ${target.name}`,key,actor.id);return '';
 }

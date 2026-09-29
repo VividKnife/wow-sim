@@ -2,10 +2,10 @@ import {createNpcMember} from '../../../packages/game-domain/src/rules/party.js'
 // Combat fixtures only: grants level/spells, keeps starting gear. Not a normal 1–20 playthrough.
 import {createGame,act,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
 import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
-import {abilities} from '../../../packages/game-domain/src/rules/catalog.js';
+import {classAbilities} from '../../../packages/game-domain/src/rules/catalog.js';
 for(const entry of [644,1763,643,647,645,639]){
  let s=createGame('Benchmark',283,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
- s.learned=[...new Set([...s.learned,...abilities.filter(a=>a.requiredLevel<=18).map(a=>a.spellId)])];
+ s.learned=[...new Set([...s.learned,...classAbilities[8].filter(a=>a.requiredLevel<=18).map(a=>a.spellId)])];
  for(const id of ['warrior','priest','rogue','mage'])createNpcMember(s,id);
  startCombat(s,[entry],true);const casts=new Set();let next=1000;
  while(s.combat&&next<=180000){
