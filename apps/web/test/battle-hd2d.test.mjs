@@ -91,3 +91,19 @@ test('auto framing preserves actor readability and distance ratios across room s
   if(reference)assert.ok(Math.abs(pixels-reference)<1e-9);reference=pixels;
  }
 });
+
+test('solo camera follows the hero from behind, ignoring pets and target selection',()=>{
+ const hero={id:'hero',classId:3,hp:100,position:0,positionY:0,combatFacing:0,target:'enemy'},enemy={id:'enemy',foe:true,hp:100,position:30,positionY:0},pet={id:'pet',petUnit:true,classId:1,hp:100,position:20,positionY:4};
+ const units=[hero,enemy,pet],size={width:1200,height:600},layout=sceneLayout([hero,pet],[enemy],1);
+ const pose=hd.soloCameraPose(layout,units,'hero',size),p=hd.unitPoint(layout,'hero');
+ assert.ok(pose.position[0]<p[0]);assert.ok(pose.target[0]>p[0]);assert.ok(pose.position[1]>pose.target[1]);
+ const turned=hd.soloCameraPose(layout,[{...hero,combatFacing:Math.PI},enemy,pet],'hero',size);assert.ok(turned.position[0]>p[0]);
+ const grouped=hd.soloCameraPose(layout,[...units,{id:'friend',classId:5,hp:0}],'hero',size);assert.equal(grouped,null,'dead party members still retain group framing');
+ assert.equal(hd.soloCameraPose(layout,units,'missing',size),null);
+});
+test('solo camera scales with yards, respects zoom and is stable with no target',()=>{
+ const hero={id:'hero',classId:8,hp:100,position:0,positionY:0},size={width:600,height:800};
+ const a=sceneLayout([hero],[],1),b=sceneLayout([hero],[],2),p=hd.unitPoint(a,'hero');
+ const first=hd.soloCameraPose(a,[hero],'hero',size),zoomed=hd.soloCameraPose(b,[hero],'hero',size);
+ assert.ok(first.position.every(Number.isFinite));assert.ok(Math.abs(zoomed.position[0]-p[0])<Math.abs(first.position[0]-p[0]));
+});

@@ -168,10 +168,25 @@ test('completed encounter settles loot once, releases local execution and allows
     await f.service.command('a',{type:'leaveInstance',instanceId:f.base.ownerId,requestId:'leave'});
     assert.equal((await f.service.snapshot('a')).instanceId,null);
 });
-test('new rule versions cannot acquire an activity created with old rules',async()=>{
-    const f=await fixture();
+for (const kind of ['personal','instance']) for (const type of ['claim','checkpoint']) test(`${kind}: outdated ${type} automatically recovers and retries without duplicating assets`,async()=>{
+    const f=await fixture(kind), session=await f.claim();
     const updated=new GameService(f.store,{contentVersion:'new',now:f.now});
-    await assert.rejects(updated.localSimulation('a',{...f.base,contentVersion:'new',type:'claim',requestId:'version'}),{code:'CONTENT_VERSION'});
+    const assets=()=>f.store.read(async tx=>({items:await tx.list('items'),wallets:await tx.list('wallets'),ledger:await tx.list('ledger')}));
+    const before=await assets();
+    const input={...f.base,contentVersion:'new',type,requestId:'version',sessionId:session.session.id,sequence:1,state:{invalid:true}};
+    const recovered=await updated.localSimulation('a',input);
+    assert.equal(recovered.recovered,true);
+    assert.equal(recovered.active,false);
+    assert.deepEqual(await updated.localSimulation('a',input),recovered);
+    assert.deepEqual(await assets(),before);
+    const snapshot=await updated.snapshot('a');
+    assert.equal(snapshot.state.activity.type,'idle');
+    assert.equal(snapshot.localSimulation,null);
+    assert.equal(snapshot.instanceId,null);
+    assert.deepEqual(await f.store.read(tx=>tx.list('actor_leases')),[]);
+    await assert.rejects(updated.localSimulation('a',{...input,requestId:'late'}),{code:'LOCAL_UNAVAILABLE'});
+    const started=await updated.command('a',{type:'hunt',id:299,requestId:'restart'});
+    assert.ok(started.localSimulation);
 });
 
 for(const kind of ['personal','instance'])test(`${kind}: routine saves retain one small receipt and no per-tick settlement/outbox rows`,async()=>{

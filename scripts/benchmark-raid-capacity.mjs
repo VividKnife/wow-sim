@@ -1,5 +1,5 @@
 // In-memory research fixture: no database, saved accounts, or production changes.
-// 40-person fixtures bypass recruitment capacity, retaining the current rules.
+// Both sizes use fixed 40-player encounter strength.
 import assert from 'node:assert/strict';
 import {cpus} from 'node:os';
 import {createHash} from 'node:crypto';
@@ -43,32 +43,12 @@ function fixture(roster,size,boss){
  const s=createMoltenCoreDemo().state;
  if(roster==='gold'){
   s.party=[];
-  enterGoldRaid(s);goldRaidAction(s,{type:'goldPublish'});goldRaidAction(s,{type:'goldRecommend'});
-  const extras=s.goldRaid.applicants.filter(c=>!s.goldRaid.selected.includes(c.id));
+  enterGoldRaid(s);goldRaidAction(s,{type:'goldPublish'});goldRaidAction(s,{type:'goldRecommend',composition:{size,tanks:size===40?3:2,healers:size===40?8:5}});
   goldRaidAction(s,{type:'goldLaunch'});
-  if(size===40){
-   for(const [role,count] of [['tank',1],['healer',3],['damage',11]]){
-    const candidates=extras.filter(c=>role==='damage'?!['tank','healer'].includes(combatRole(c)):combatRole(c)===role).slice(0,count);
-    assert.equal(candidates.length,count,`insufficient ${role} applicants`);
-    s.party.push(...candidates);
-   }
-   s.goldRaid.seats=[s,...s.party].map(c=>({id:c.id,name:c.name,role:combatRole(c),core:!c.goldNpc}));
-  }
   for(const c of s.party){stockGoldReagents(s,c);prepareGoldNpc(s,c);}
   s.goldRaid.phase='combat';s.goldRaid.activeBoss=boss;
  }else if(roster==='demo'){
-  if(size===40){
-   // Add one tank, three healers, eleven damage dealers with existing loadouts.
-   const original=[s,...s.party];
-   const extra=[original[1],...original.filter(c=>combatRole(c)==='healer').slice(0,3),...original.filter(c=>!['tank','healer'].includes(combatRole(c))).slice(0,11)];
-   for(const [i,source]of extra.entries()){
-    const c=structuredClone(source===s?{...s,party:[]}:source);
-    c.id=`capacity-extra-${i}`;c.name+=` ${i}`;c.raidMainTank=false;
-    for(const e of Object.values(c.equipment))e.uid=`${c.id}:${e.uid}`;
-    if(c.pet){c.pet.id=`${c.id}:pet`;c.pet.ownerId=c.id;}
-    s.party.push(c);
-   }
-  }
+  if(size===25)s.party=s.party.slice(0,24);
  }else throw new Error(`unknown roster: ${roster}`);
  assert.equal(s.party.length+1,size);
  assert.equal(new Set([s,...s.party].map(c=>c.id)).size,size);

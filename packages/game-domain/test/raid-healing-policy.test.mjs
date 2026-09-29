@@ -3,7 +3,7 @@ import {projectCombatObservation} from '../src/rules/combat-observation.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {newCharacter,stats,spellInfo} from '../src/rules/character.js';
-import {raidHealMetrics,selectRaidHealing} from '../src/rules/raid-healing-policy.js';
+import {raidHealMetrics,selectRaidHealing,projectRaidHealingTargets} from '../src/rules/raid-healing-policy.js';
 
 function fixture(classId,ids){
  const c=newCharacter('治疗',classId,60,classId===7?2:classId===11?4:1);
@@ -89,4 +89,38 @@ test('live policy and worker observation follow the same HPS/HPM order',()=>{
   assert.deepEqual(selectCombatPolicy(observation,observation.party[0]),local);
   assert.equal(observation.combat.raidEncounter.command.plan,undefined,'private encounter plans stay private');
  }
+});
+
+test('conservation leaves safe GCDs idle instead of falling through to filler casts',()=>{
+ const {s,c,target}=fixture(2,[19943,25292,20217]);Object.assign(s,target);s.hp=9000;s.combat.participantIds=[s.id,c.id];
+ s.combat.raidEncounter.command.healingMode='conserve';c.target='enemy';
+ const before=structuredClone(c);
+ for(let at=10000;at<18000;at+=200){s.clock=at;assert.equal(selectCombatPolicy(s,c),null);}
+ assert.deepEqual(c,before,'waiting neither spends mana nor starts GCDs');
+ s.hp=2000;assert.equal(selectCombatPolicy(s,c)?.kind,'cast','danger immediately interrupts waiting');
+});
+
+test('conservation cancels automatic healed-target casts but respects manual casts',()=>{
+ const {s,c,target}=fixture(2,[25292]);Object.assign(s,target);s.hp=9000;s.combat.participantIds=[s.id,c.id];s.combat.raidEncounter.command.healingMode='conserve';c.target='enemy';
+ c.cast={spell:25292,target:s.id,startedAt:9000,until:11500,policyControlled:true};
+ assert.deepEqual(selectCombatPolicy(s,c),{kind:'cancel',spellId:25292,startedAt:9000});
+ c.cast.commanded=true;assert.notEqual(selectCombatPolicy(s,c)?.kind,'cancel');
+ c.cast.commanded=false;s.hp=2000;assert.notEqual(selectCombatPolicy(s,c)?.kind,'cancel');
+});
+
+test('observed incoming heals prevent duplicate mana spending and survive worker projection',()=>{
+ const {s,c,target}=fixture(2,[25292]);Object.assign(s,target);s.hp=7500;
+ const other={...structuredClone(c),id:'other',cast:{spell:25292,target:s.id,startedAt:8000,until:10500,policyControlled:true}};
+ s.party=[c,other];c.target='enemy';s.combat.participantIds=[s.id,c.id,other.id];s.combat.raidEncounter.command.healingMode='conserve';
+ assert.equal(selectCombatPolicy(s,c),null);
+ const observation=projectCombatObservation(s);assert.equal(selectCombatPolicy(observation,observation.party[0]),null);
+ other.cast=null;assert.equal(selectCombatPolicy(s,c)?.kind,'cast');
+});
+test('incoming chain healing reserves each recipient separately, never the whole group on one ally',()=>{
+ const {s,c,target,actors}=fixture(7,[10623]);const near={...target,id:'near',position:5};
+ c.cast={spell:10623,target:target.id,until:s.clock+1000};
+ const group=[...actors,near],expected=raidHealMetrics(s,c,spellInfo(c,10623),target,group).directByTarget;
+ const projected=projectRaidHealingTargets(s,c,group);
+ assert.equal(projected[1].hp,target.hp+expected.tank);assert.equal(projected[2].hp,near.hp+expected.near);
+ assert.ok(expected.tank>expected.near);assert.equal(target.hp,5000);
 });

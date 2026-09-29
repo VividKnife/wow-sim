@@ -1,7 +1,7 @@
 import {stockGoldReagents} from './gold-raid-reagents.js';
 import {buffFamily,buffSquad,groupBuffRequests,buffReagents} from './group-buffs.js';
 import {marketPrice} from './inventory.js';
-import {knownRank,spellInfo,stats,log} from './character.js';
+import {spellInfo,stats,log} from './character.js';
 import {nameOf,spells,items} from './catalog.js';
 import {beginSpellTiming,spellReady} from './spell-timing.js';
 import {classEffect} from './class-mechanics.js';
@@ -11,20 +11,23 @@ import {raidConsumableChecks,useRaidConsumable} from './raid-consumables.js';
 
 // Assign responsibilities first, then combine compatible assignments into
 // reagent-consuming group casts. One blessing per paladin and recipient.
+// Divine Spirit and Prayer of Spirit share a source chain, but are distinct
+// casts. Select the single-target family here; groupBuffRequests owns upgrades.
+const buffRank=(c,root)=>c.learned.filter(id=>spells[id]?.SpellName===spells[root]?.SpellName).sort((a,b)=>spells[b].SpellLevel-spells[a].SpellLevel)[0];
 function requests(s){
  const members=[s,...s.party].filter(c=>c.hp>0),result=[],load=new Map(),assigned=new Map();
- const add=(c,target,root)=>{const id=knownRank(c,root);if(id){result.push({c,target,sp:spellInfo(c,id)});load.set(c.id,(load.get(c.id)||0)+1);}};
+ const add=(c,target,root)=>{const id=buffRank(c,root);if(id){result.push({c,target,sp:spellInfo(c,id)});load.set(c.id,(load.get(c.id)||0)+1);}};
  for(const target of members){
   for(const [classId,root]of [[8,1459],[5,1243],[5,14752],[5,976],[11,1126],[11,467]]){
    if(root===467&&combatRole(target)!=='tank')continue;
-   const casters=members.filter(c=>c.classId===classId&&knownRank(c,root)).sort((a,b)=>spellInfo(b,knownRank(b,root)).SpellLevel-spellInfo(a,knownRank(a,root)).SpellLevel||(load.get(a.id)||0)-(load.get(b.id)||0)||a.id.localeCompare(b.id));
+   const casters=members.filter(c=>c.classId===classId&&buffRank(c,root)).sort((a,b)=>spellInfo(b,buffRank(b,root)).SpellLevel-spellInfo(a,buffRank(a,root)).SpellLevel||(load.get(a.id)||0)-(load.get(b.id)||0)||a.id.localeCompare(b.id));
    const key=`${root}:${buffSquad(s,target)}`,caster=assigned.get(key)||casters[0];
    if(caster){assigned.set(key,caster);add(caster,target,root);}
   }
   const used=new Set(),paladins=members.filter(c=>c.classId===2).sort((a,b)=>a.id.localeCompare(b.id));
   const roots=[20217,stats(target).maxMana&&![1,3,4].includes(target.classId)&&combatRole(target)!=='melee'?19742:19740,combatRole(target)==='tank'?20911:1038,19977];
   for(const root of roots){
-   const c=paladins.filter(c=>!used.has(c.id)&&knownRank(c,root)).sort((a,b)=>spellInfo(b,knownRank(b,root)).SpellLevel-spellInfo(a,knownRank(a,root)).SpellLevel)[0];
+   const c=paladins.filter(c=>!used.has(c.id)&&buffRank(c,root)).sort((a,b)=>spellInfo(b,buffRank(b,root)).SpellLevel-spellInfo(a,buffRank(a,root)).SpellLevel)[0];
    if(c){used.add(c.id);add(c,target,root);}
   }
  }
@@ -54,6 +57,10 @@ export function partyBuffTick(s){
  const pending=s.activity.queue.map(row=>({row,c:members.find(c=>c.id===row.caster),targets:members.filter(c=>row.targets.includes(c.id)&&c.hp>0)})).map(r=>({...r,sp:spellInfo(r.c,r.row.spell)}));
  s.activity.remaining=pending.length;
  if(!pending.length){
+  // Earlier short buffs may expire while other casters drink or finish their
+  // assignments. Recheck actual coverage before declaring preparation done.
+  const expired=requests(s).filter(r=>r.targets.some(target=>!covered(s,{...r,target})));
+  if(expired.length){s.activity.queue=expired.map(({c,targets,sp,fallback})=>({caster:c.id,targets:targets.map(t=>t.id),spell:sp.Id,fallback}));s.activity.remaining=expired.length;return true;}
   while(s.activity.consumableQueue.length){
    const request=s.activity.consumableQueue.shift(),c=members.find(c=>c.id===request.member);
    if(c&&useRaidConsumable(s,c,request)){s.activity.completedItems++;return true;}

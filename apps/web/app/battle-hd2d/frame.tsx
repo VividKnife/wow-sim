@@ -5,7 +5,7 @@ import {PerspectiveCamera,Vector3} from 'three';
 import {OrbitControls} from '@react-three/drei';
 import type {OrbitControls as OrbitControlsInstance} from 'three-stdlib';
 import {createSceneMotion} from '@/lib/battle-scene.js';
-import {renderClock,CAMERA_TILT,cameraFit} from '@/lib/battle-hd2d.js';
+import {renderClock,CAMERA_TILT,cameraFit,soloCameraPose} from '@/lib/battle-hd2d.js';
 import type {BattleScene,BattleLayout} from '@/lib/battle-hd2d-types';
 
 export type Frame={scene:BattleScene;layout:BattleLayout;clock:number;wall:number;seconds:number};
@@ -39,6 +39,15 @@ export function CameraRig({manual,onManual}:{manual:boolean;onManual:()=>void}){
  useFrame((_,delta)=>{
   const f=frame.current;
   if(manual)return;
+  const solo=soloCameraPose(f.layout,f.scene.units,f.scene.playerId,size);
+  if(solo){
+   const blend=f.scene.reducedMotion||encounter.current!==f.scene.encounterId?1:1-Math.exp(-delta*4);
+   target.lerp(desired.set(solo.target[0],solo.target[1],solo.target[2]),blend);
+   camera.position.lerp(desired.set(solo.position[0],solo.position[1],solo.position[2]),blend);
+   camera.lookAt(target);
+   if(controls.current){controls.current.target.copy(target);controls.current.update();}
+   encounter.current=f.scene.encounterId;return;
+  }
   // Fit the camera once per simulation sample/resize. Its interpolation below
   // still runs every display frame without allocating vectors or actor arrays.
   let entry=cached.current;

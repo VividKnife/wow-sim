@@ -23,8 +23,8 @@ function Preparation({bossId,info,props}:{bossId:string;info:any;props:GameProps
  const locked=busy||r.locked,tanks=r.members.filter((m:any)=>m.role==='tank'),last=r.attempts.filter((a:any)=>a.bossId===bossId).at(-1);
  const assign=(job:string,index:number,id:string)=>{const ids=[...(plan.jobs[job]||[])];ids[index]=id==='none'?'':id;change('jobs',{...plan.jobs,[job]:ids.filter(Boolean)});};
  return <div className="raid-preparation"><div className="raid-plan-grid">
- <Choice label="主坦 · 首领" value={plan.mainTank} options={tanks} disabled={locked} onChange={(v:string)=>{setPlan((p:any)=>({...p,mainTank:v,offTank:p.offTank===v?p.mainTank:p.offTank,cooldowns:{...p.cooldowns,wall:{...p.cooldowns.wall,actorId:r.cooldowns.find((c:any)=>c.id==='wall').candidates.some((c:any)=>c.id===v)?v:''}}}));}}/>
- <Choice label="副坦 · 小怪" value={plan.offTank} options={tanks.filter((m:any)=>m.id!==plan.mainTank)} disabled={locked} onChange={(v:string)=>change('offTank',v)}/>
+ <Choice label="主坦 · 首领" value={plan.mainTank||'none'} options={[{id:'none',name:'不安排'},...tanks]} disabled={locked} onChange={(v:string)=>{setPlan((p:any)=>({...p,mainTank:v==='none'?'':v,offTank:p.offTank===v?p.mainTank:p.offTank,cooldowns:{...p.cooldowns,wall:{...p.cooldowns.wall,actorId:r.cooldowns.find((c:any)=>c.id==='wall').candidates.some((c:any)=>c.id===v)?v:''}}}));}}/>
+ <Choice label="副坦 · 小怪" value={plan.offTank||'none'} options={[{id:'none',name:'不安排'},...tanks.filter((m:any)=>m.id!==plan.mainTank)]} disabled={locked} onChange={(v:string)=>change('offTank',v==='none'?'':v)}/>
  <Choice label="默认集火" value={plan.focus} options={[{id:'adds',name:'先清小怪 · 降低场面压力'},{id:'boss',name:'集中首领 · 副坦牵制小怪'}]} disabled={locked} onChange={(v:string)=>change('focus',v)}/>
  <Choice label="开场站位" value={plan.formation} options={[{id:'spread',name:'分散 · 减少爆炸波及'},{id:'compact',name:'紧凑 · 更易覆盖治疗'}]} disabled={locked} onChange={(v:string)=>change('formation',v)}/>
  <Choice label="火区躲避纪律" value={plan.movement} options={[{id:'early',name:'提前撤离 · 取消当前读条'},{id:'finishCast',name:'贪读条 · 落地前继续施法'}]} disabled={locked} onChange={(v:string)=>change('movement',v)}/>

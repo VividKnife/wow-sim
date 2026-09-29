@@ -1,4 +1,4 @@
-# 熔火之心25人战斗实验Demo
+# 熔火之心40人战斗实验Demo
 
 2026-09-22更新：共享首领列表现已扩展至十名，独立Demo可依次测试十首领；正式公会团和金团的十五组小怪与地图路线见[完整副本说明](gold-raid.md)。以下双首领数据保留为最初验证记录，不代表当前完整内容。
 
@@ -28,11 +28,11 @@
 - `apps/web/scripts/serve-molten-core-demo.mjs`：本机API与Vite预览服务。
 - `apps/web/test/browser/molten-core-demo.tsx`：独立试玩页面。
 
-首领钩子只作用于带有 `raidEncounter` 的战斗。普通小队容量未扩充；独立Demo的25人运行态不写入正式账号角色。没有接入主游戏副本入口、正式装备掉落、每周锁定、公会招募升级、阵容编辑或联机。战场为位置示意图，尚未接入主游戏角色模型渲染。
+首领钩子只作用于带有 `raidEncounter` 的战斗。普通小队容量未扩充；独立Demo的40人运行态不写入正式账号角色。没有接入主游戏副本入口、正式装备掉落、每周锁定、公会招募升级、阵容编辑或联机。战场为位置示意图，尚未接入主游戏角色模型渲染。
 
 ## 改编与资料
 
-这是本作25人改编，首领血量、伤害、施法间隔、目标数量和180秒硬狂暴均为试玩参数，未采用40人乘25/40的统一缩放。职业技能取现有规则数据；猎人的宁神射击在Demo中直接授予。没有实现原版首领的全部技能及副本小怪路线，例如护卫的精神控制。
+当前采用40人预设和固定原始生命/近战；法术与阶段来源、模拟差异见[团本校准](raid-calibration.md)。
 
 机制名称与基本应对参考 CMaNGOS 的 [Lucifron脚本](https://github.com/cmangos/mangos-classic/blob/master/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/molten_core/boss_lucifron.cpp) 和 [Magmadar脚本](https://github.com/cmangos/mangos-classic/blob/master/src/game/AI/ScriptDevAI/scripts/eastern_kingdoms/molten_core/boss_magmadar.cpp)（查阅于2026-09-20）。这些是社区模拟器资料，不是暴雪官方参数认证；此Demo未复制其实现。
 
@@ -45,6 +45,4 @@ cd apps/web
 npx tsc --noEmit --incremental false
 ```
 
-76项定向测试通过，覆盖25人合法配装、解锁与重试、实际资源消耗与驱散、JSON检查点分段确定性、两首领完整击杀、奖励仅发一次，以及错误战术导致团灭且保留前一首领进度。固定种子60325下，默认配置鲁西弗隆82秒击杀／1人倒下，玛格曼达75.9秒击杀／无阵亡；关闭宁神、防恐与避火后，玛格曼达87.6秒团灭。这些是单一预设和种子的回归结果，不代表普遍胜率或最终平衡。
-
-浏览器完成双首领通关、2倍速度、暂停后刷新恢复、继续、撤退及重建远征检查；检查1280px桌面与390px手机布局。根目录和Web TypeScript检查、统一下拉组件检查通过。
+旧25人版本的通关时长不适用于当前40人规则。当前三档装备挑战记录见[40人挑战](../research/classic-40-raid-challenges.md)。

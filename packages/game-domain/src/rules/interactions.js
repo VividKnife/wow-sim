@@ -2,6 +2,7 @@ import {creatures,creatureLocations,questLinks,endpointNodes,objectTemplates,nam
 import {canTrainAt} from './city.js';
 import {classSupplyShop} from './class-acquisition.js';
 import {runtime} from './runtime-content.js';
+import {merchantType} from './merchant-types.js';
 
 
 const vendors=new Map();
@@ -31,5 +32,6 @@ export function localInteractions(s,quests){
  }
  const supplies=classSupplyShop(s),trainer=[...result.values()].find(n=>n.roles.includes('trainer'));
  if(trainer&&supplies.length){role(trainer,'shop');trainer.stockIds=[...new Set([...trainer.stockIds,...supplies.map(i=>i.id)])];}
+ for(const npc of result.values())if(npc.roles.includes('shop'))npc.merchantType=merchantType(creatures[npc.entry]);
  return [...result.values()].sort((a,b)=>Number(b.roles.includes('quests'))-Number(a.roles.includes('quests'))||a.name.localeCompare(b.name));
 }

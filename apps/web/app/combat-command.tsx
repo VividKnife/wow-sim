@@ -6,6 +6,7 @@ import ClassIcon from './class-icon';
 import CombatSpellOrder from './combat-spell-order';
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
 import {GameProps} from './game-ui';
+import {useCommandHidden} from '@/lib/use-command-hidden';
 import './combat-command.css';
 
 export const combatMarks:Record<string,string>={skull:'☠ 骷髅',cross:'✕ 十字',moon:'☾ 月亮',square:'■ 方块',star:'★ 星星',diamond:'◆ 菱形'};
@@ -16,7 +17,7 @@ export function CommandPreparation({state:s,busy,send}:Pick<GameProps,'state'|'b
 type Props=GameProps&{memberId:string;targetId:string;onMemberChange:(id:string)=>void;onTargetChange:(id:string)=>void;onOrder:(body:any,targeted?:boolean)=>void;pending:any;onCancel:()=>void;canLead:boolean;active:boolean;embedded?:boolean};
 type Slot={key:string;label:string;icon:ReactNode;run:()=>void;pressed?:boolean;disabled?:boolean;detail:string;cooldown?:number};
 export default function CombatCommand({state:s,data:d,busy,send,memberId,targetId,onMemberChange,onTargetChange,onOrder,pending,onCancel,canLead,active,embedded}:Props){
- const [hidden,setHidden]=useState(false);
+ const [hidden,setHidden]=useCommandHidden();
  const [more,setMore]=useState(false),[targetsOpen,setTargetsOpen]=useState(false),[captainOpen,setCaptainOpen]=useState(false),[hint,setHint]=useState('');
  const battle=s.combat,view=d.combatCommand,command=battle?.command;
  const members=view?.members||[],member=members.find((m:any)=>m.id===memberId)||members[0];
@@ -43,7 +44,7 @@ export default function CombatCommand({state:s,data:d,busy,send,memberId,targetI
  ];
  useEffect(()=>{setMore(false);setHint('');},[memberId,battle?.id]);
  useEffect(()=>{
-  if(!active||!view||hidden)return;
+  if(!active||!battle||members.length<2||hidden)return;
   const key=(e:KeyboardEvent)=>{
    const node=e.target as HTMLElement;
    if(e.defaultPrevented||e.repeat||e.isComposing||e.ctrlKey||e.metaKey||node.closest?.('input,textarea,[contenteditable=true],[role=combobox],[role=listbox]'))return;
@@ -58,7 +59,7 @@ export default function CombatCommand({state:s,data:d,busy,send,memberId,targetI
   };
   window.addEventListener('keydown',key,true);return()=>window.removeEventListener('keydown',key,true);
  });
- if(!battle||!view||!member)return null;
+ if(!battle||!view||!member||members.length<2)return null;
  if(hidden)return <section className="combat-command command-hotbar command-hotbar-collapsed" aria-label="队伍指挥"><button type="button" className="command-pause" aria-expanded={false} onClick={()=>setHidden(false)}>显示队伍指挥</button></section>;
  const button=(slot:Slot,i:number,team=false)=><button type="button" key={slot.key} className="command-slot" aria-label={`${team?'全队':member.name}：${slot.label}`} title={slot.detail} disabled={slot.disabled} aria-pressed={!!slot.pressed} onClick={slot.run} onPointerEnter={()=>setHint(slot.detail)} onFocus={()=>setHint(slot.detail)}>{i<8&&<kbd>{team?'⇧':embedded?'Alt+':''}{i+1}</kbd>}<span className="command-slot-icon">{slot.icon}</span>{!!slot.cooldown&&<span className="command-slot-cooldown">{slot.cooldown}</span>}<span className="command-slot-name">{slot.label}</span></button>;
  const taskLabel=tasks.map((o:any)=>`${skills.find((x:any)=>x.spellId===o.spellId)?.name||kindNames[o.kind]} → ${enemies.find((e:any)=>e.id===o.targetId)?.name||'目标失效'}`).join(' · ');

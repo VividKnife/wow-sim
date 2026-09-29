@@ -1,0 +1,6824 @@
+{
+  "gear": "fullEpic",
+  "tanks": 3,
+  "healers": 8,
+  "seed": 60325,
+  "method": "40 real characters; finite buff reagents, standard flasks and weapon stones; actual partyBuffs then goldRecover. Shared 120 Major Mana/120 Major Healing Potions with normal inventory and cooldowns. No boss edits or injected combat healing/mana. Published raidPlan; orders through raidCommandAction/combatCommandAction. Druid replaces one paladin for Mark/Thorns/Innervate; one priest uses legal 21 Discipline for Divine Spirit.",
+  "buffs": {
+    "present": 362,
+    "total": 362,
+    "unavailable": [],
+    "preparedAt": 94000
+  },
+  "inputs": [
+    {
+      "id": "mc-member-1",
+      "classId": 8,
+      "role": "ranged",
+      "stats": {
+        "str": 50,
+        "agi": 56,
+        "sta": 305,
+        "int": 446,
+        "spi": 286,
+        "armor": 1166.75,
+        "maxHp": 4230,
+        "maxMana": 7683,
+        "spellPower": 460,
+        "healing": 310,
+        "weaponDamage": 0,
+        "manaRegen": 11,
+        "threat": 0,
+        "schoolPower4": 23,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 37,
+          "4": 53,
+          "5": 97,
+          "6": 53
+        },
+        "regenCasting": 0.1,
+        "baseMana": 1273,
+        "crit": 0.027999999999999997,
+        "dodge": 0.0605,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.027999999999999997,
+        "blockValue": 0,
+        "spellCrit": 0.1199458806025665,
+        "attackPower": 40,
+        "rangedAttackPower": 46
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16914,
+          "name": "灵风头冠",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16797,
+          "name": "奥术师衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16798,
+          "name": "奥术师长袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19136,
+          "name": "燃魔腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16915,
+          "name": "灵风短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16800,
+          "name": "奥术师便鞋",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16799,
+          "name": "奥术师护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 18808,
+          "name": "眠火手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-1",
+      "classId": 1,
+      "role": "tank",
+      "stats": {
+        "str": 307,
+        "agi": 123,
+        "sta": 524,
+        "int": 98,
+        "spi": 119,
+        "armor": 9051.25,
+        "maxHp": 7949,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 9,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 78,
+          "3": 27,
+          "4": 37,
+          "5": 90,
+          "6": 42
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.14150000000000001,
+        "dodge": 0.1015,
+        "parry": 0.1,
+        "hit": 0.03,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0.15000000000000002,
+        "blockValuePct": 0,
+        "defense": 371,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.14150000000000001,
+        "blockValue": 96.35,
+        "spellCrit": 0.0016333333333333332,
+        "attackPower": 996,
+        "rangedAttackPower": 173
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16963,
+          "name": "愤怒头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 17065,
+          "name": "稳固之力勋章",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16868,
+          "name": "力量肩铠",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16865,
+          "name": "力量胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16864,
+          "name": "力量腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16962,
+          "name": "愤怒腿铠",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 18806,
+          "name": "熔火胫甲",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16861,
+          "name": "力量护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16863,
+          "name": "力量护手",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 18879,
+          "name": "沉重的黑铁戒指",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17107,
+          "name": "龙血斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 17106,
+          "name": "玛利斯达尔防御者",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-2",
+      "classId": 1,
+      "role": "tank",
+      "stats": {
+        "str": 307,
+        "agi": 123,
+        "sta": 524,
+        "int": 98,
+        "spi": 119,
+        "armor": 9051.25,
+        "maxHp": 7949,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 9,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 78,
+          "3": 27,
+          "4": 37,
+          "5": 90,
+          "6": 42
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.14150000000000001,
+        "dodge": 0.1015,
+        "parry": 0.1,
+        "hit": 0.03,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0.15000000000000002,
+        "blockValuePct": 0,
+        "defense": 371,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.14150000000000001,
+        "blockValue": 96.35,
+        "spellCrit": 0.0016333333333333332,
+        "attackPower": 996,
+        "rangedAttackPower": 173
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16963,
+          "name": "愤怒头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 17065,
+          "name": "稳固之力勋章",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16868,
+          "name": "力量肩铠",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16865,
+          "name": "力量胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16864,
+          "name": "力量腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16962,
+          "name": "愤怒腿铠",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 18806,
+          "name": "熔火胫甲",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16861,
+          "name": "力量护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16863,
+          "name": "力量护手",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 18879,
+          "name": "沉重的黑铁戒指",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17107,
+          "name": "龙血斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 17106,
+          "name": "玛利斯达尔防御者",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-3",
+      "classId": 1,
+      "role": "tank",
+      "stats": {
+        "str": 307,
+        "agi": 123,
+        "sta": 524,
+        "int": 98,
+        "spi": 119,
+        "armor": 9051.25,
+        "maxHp": 7949,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 9,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 78,
+          "3": 27,
+          "4": 37,
+          "5": 90,
+          "6": 42
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.14150000000000001,
+        "dodge": 0.1015,
+        "parry": 0.1,
+        "hit": 0.03,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0.15000000000000002,
+        "blockValuePct": 0,
+        "defense": 371,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.14150000000000001,
+        "blockValue": 96.35,
+        "spellCrit": 0.0016333333333333332,
+        "attackPower": 996,
+        "rangedAttackPower": 173
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16963,
+          "name": "愤怒头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 17065,
+          "name": "稳固之力勋章",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16868,
+          "name": "力量肩铠",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16865,
+          "name": "力量胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16864,
+          "name": "力量腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16962,
+          "name": "愤怒腿铠",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 18806,
+          "name": "熔火胫甲",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16861,
+          "name": "力量护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16863,
+          "name": "力量护手",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 18879,
+          "name": "沉重的黑铁戒指",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17107,
+          "name": "龙血斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 17106,
+          "name": "玛利斯达尔防御者",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-4",
+      "classId": 5,
+      "role": "healer",
+      "stats": {
+        "str": 58,
+        "agi": 57,
+        "sta": 331,
+        "int": 471,
+        "spi": 345,
+        "armor": 1160.75,
+        "maxHp": 4517,
+        "maxMana": 10221,
+        "spellPower": 192.25,
+        "healing": 460.25,
+        "weaponDamage": 0,
+        "manaRegen": 19,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 71,
+          "3": 27,
+          "4": 53,
+          "5": 84,
+          "6": 43
+        },
+        "regenCasting": 0.15,
+        "baseMana": 1436,
+        "crit": 0.0285,
+        "dodge": 0.058499999999999996,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.0285,
+        "blockValue": 0,
+        "spellCrit": 0.10922051325341889,
+        "attackPower": 48,
+        "rangedAttackPower": 47
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16921,
+          "name": "卓越之环",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16816,
+          "name": "预言衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16815,
+          "name": "预言法袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16817,
+          "name": "预言束带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16922,
+          "name": "卓越护腿",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16811,
+          "name": "预言之靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16819,
+          "name": "预言臂甲",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16812,
+          "name": "预言手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-5",
+      "classId": 11,
+      "role": "healer",
+      "stats": {
+        "str": 86,
+        "agi": 89,
+        "sta": 371,
+        "int": 407,
+        "spi": 315,
+        "armor": 1812.75,
+        "maxHp": 5013,
+        "maxMana": 9069,
+        "spellPower": 94,
+        "healing": 436,
+        "weaponDamage": 0,
+        "manaRegen": 18,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 54,
+          "3": 37,
+          "4": 43,
+          "5": 77,
+          "6": 43
+        },
+        "regenCasting": 0.15,
+        "baseMana": 1244,
+        "crit": 0.044500000000000005,
+        "dodge": 0.062000000000000006,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.044500000000000005,
+        "blockValue": 0,
+        "spellCrit": 0.1013488212673466,
+        "attackPower": 332,
+        "rangedAttackPower": 79
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16900,
+          "name": "怒风头巾",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 18810,
+          "name": "狂野肩铠",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16833,
+          "name": "塞纳里奥胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 14553,
+          "name": "怜悯",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16901,
+          "name": "怒风腿甲",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16829,
+          "name": "塞纳里奥长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16830,
+          "name": "塞纳里奥护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16831,
+          "name": "塞纳里奥手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-6",
+      "classId": 5,
+      "role": "healer",
+      "stats": {
+        "str": 58,
+        "agi": 57,
+        "sta": 331,
+        "int": 471,
+        "spi": 345,
+        "armor": 1160.75,
+        "maxHp": 4517,
+        "maxMana": 10221,
+        "spellPower": 192.25,
+        "healing": 460.25,
+        "weaponDamage": 0,
+        "manaRegen": 19,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 71,
+          "3": 27,
+          "4": 53,
+          "5": 84,
+          "6": 43
+        },
+        "regenCasting": 0.15,
+        "baseMana": 1436,
+        "crit": 0.0285,
+        "dodge": 0.058499999999999996,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.0285,
+        "blockValue": 0,
+        "spellCrit": 0.10922051325341889,
+        "attackPower": 48,
+        "rangedAttackPower": 47
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16921,
+          "name": "卓越之环",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16816,
+          "name": "预言衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16815,
+          "name": "预言法袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16817,
+          "name": "预言束带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16922,
+          "name": "卓越护腿",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16811,
+          "name": "预言之靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16819,
+          "name": "预言臂甲",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16812,
+          "name": "预言手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-7",
+      "classId": 5,
+      "role": "healer",
+      "stats": {
+        "str": 58,
+        "agi": 57,
+        "sta": 331,
+        "int": 471,
+        "spi": 345,
+        "armor": 1160.75,
+        "maxHp": 4517,
+        "maxMana": 10221,
+        "spellPower": 192.25,
+        "healing": 460.25,
+        "weaponDamage": 0,
+        "manaRegen": 19,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 71,
+          "3": 27,
+          "4": 53,
+          "5": 84,
+          "6": 43
+        },
+        "regenCasting": 0.15,
+        "baseMana": 1436,
+        "crit": 0.0285,
+        "dodge": 0.058499999999999996,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.0285,
+        "blockValue": 0,
+        "spellCrit": 0.10922051325341889,
+        "attackPower": 48,
+        "rangedAttackPower": 47
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16921,
+          "name": "卓越之环",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16816,
+          "name": "预言衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16815,
+          "name": "预言法袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16817,
+          "name": "预言束带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16922,
+          "name": "卓越护腿",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16811,
+          "name": "预言之靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16819,
+          "name": "预言臂甲",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16812,
+          "name": "预言手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-8",
+      "classId": 2,
+      "role": "healer",
+      "stats": {
+        "str": 164,
+        "agi": 89,
+        "sta": 400,
+        "int": 382,
+        "spi": 246,
+        "armor": 3465.75,
+        "maxHp": 5201,
+        "maxMana": 8962,
+        "spellPower": 99,
+        "healing": 457,
+        "weaponDamage": 0,
+        "manaRegen": 13,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 62,
+          "3": 27,
+          "4": 33,
+          "5": 60,
+          "6": 33
+        },
+        "regenCasting": 0,
+        "baseMana": 1512,
+        "crit": 0.044500000000000005,
+        "dodge": 0.052000000000000005,
+        "parry": 0.05,
+        "hit": 0.03,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0.05,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 305,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.044500000000000005,
+        "blockValue": 0,
+        "spellCrit": 0.10804333271340898,
+        "attackPower": 488,
+        "rangedAttackPower": 79
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 18870,
+          "name": "生命赐予者头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 18810,
+          "name": "狂野肩铠",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16853,
+          "name": "秩序之源胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 14553,
+          "name": "怜悯",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 18875,
+          "name": "火蜥蜴鳞片短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 18824,
+          "name": "岩浆长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16857,
+          "name": "秩序之源护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16860,
+          "name": "秩序之源护手",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 17103,
+          "name": "碧空之歌",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 19142,
+          "name": "火焰符文魔典",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-9",
+      "classId": 5,
+      "role": "healer",
+      "stats": {
+        "str": 58,
+        "agi": 57,
+        "sta": 331,
+        "int": 471,
+        "spi": 345,
+        "armor": 1160.75,
+        "maxHp": 4517,
+        "maxMana": 10221,
+        "spellPower": 192.25,
+        "healing": 460.25,
+        "weaponDamage": 0,
+        "manaRegen": 19,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 71,
+          "3": 27,
+          "4": 53,
+          "5": 84,
+          "6": 43
+        },
+        "regenCasting": 0.15,
+        "baseMana": 1436,
+        "crit": 0.0285,
+        "dodge": 0.058499999999999996,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.0285,
+        "blockValue": 0,
+        "spellCrit": 0.10922051325341889,
+        "attackPower": 48,
+        "rangedAttackPower": 47
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16921,
+          "name": "卓越之环",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16816,
+          "name": "预言衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16815,
+          "name": "预言法袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16817,
+          "name": "预言束带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16922,
+          "name": "卓越护腿",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16811,
+          "name": "预言之靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16819,
+          "name": "预言臂甲",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16812,
+          "name": "预言手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-10",
+      "classId": 2,
+      "role": "healer",
+      "stats": {
+        "str": 164,
+        "agi": 89,
+        "sta": 400,
+        "int": 382,
+        "spi": 246,
+        "armor": 3465.75,
+        "maxHp": 5201,
+        "maxMana": 8962,
+        "spellPower": 99,
+        "healing": 457,
+        "weaponDamage": 0,
+        "manaRegen": 13,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 62,
+          "3": 27,
+          "4": 33,
+          "5": 60,
+          "6": 33
+        },
+        "regenCasting": 0,
+        "baseMana": 1512,
+        "crit": 0.044500000000000005,
+        "dodge": 0.052000000000000005,
+        "parry": 0.05,
+        "hit": 0.03,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0.05,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 305,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.044500000000000005,
+        "blockValue": 0,
+        "spellCrit": 0.10804333271340898,
+        "attackPower": 488,
+        "rangedAttackPower": 79
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 18870,
+          "name": "生命赐予者头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 18810,
+          "name": "狂野肩铠",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16853,
+          "name": "秩序之源胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 14553,
+          "name": "怜悯",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 18875,
+          "name": "火蜥蜴鳞片短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 18824,
+          "name": "岩浆长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16857,
+          "name": "秩序之源护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16860,
+          "name": "秩序之源护手",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 17103,
+          "name": "碧空之歌",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 19142,
+          "name": "火焰符文魔典",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-11",
+      "classId": 5,
+      "role": "healer",
+      "stats": {
+        "str": 58,
+        "agi": 57,
+        "sta": 331,
+        "int": 471,
+        "spi": 345,
+        "armor": 1160.75,
+        "maxHp": 4517,
+        "maxMana": 10221,
+        "spellPower": 192.25,
+        "healing": 460.25,
+        "weaponDamage": 0,
+        "manaRegen": 19,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 71,
+          "3": 27,
+          "4": 53,
+          "5": 84,
+          "6": 43
+        },
+        "regenCasting": 0.15,
+        "baseMana": 1436,
+        "crit": 0.0285,
+        "dodge": 0.058499999999999996,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.0285,
+        "blockValue": 0,
+        "spellCrit": 0.10922051325341889,
+        "attackPower": 48,
+        "rangedAttackPower": 47
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16921,
+          "name": "卓越之环",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16816,
+          "name": "预言衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16815,
+          "name": "预言法袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16817,
+          "name": "预言束带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16922,
+          "name": "卓越护腿",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16811,
+          "name": "预言之靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16819,
+          "name": "预言臂甲",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16812,
+          "name": "预言手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19140,
+          "name": "灼烧指环",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-12",
+      "classId": 8,
+      "role": "ranged",
+      "stats": {
+        "str": 50,
+        "agi": 56,
+        "sta": 305,
+        "int": 446,
+        "spi": 286,
+        "armor": 1166.75,
+        "maxHp": 4230,
+        "maxMana": 7683,
+        "spellPower": 460,
+        "healing": 310,
+        "weaponDamage": 0,
+        "manaRegen": 11,
+        "threat": 0,
+        "schoolPower4": 23,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 37,
+          "4": 53,
+          "5": 97,
+          "6": 53
+        },
+        "regenCasting": 0.1,
+        "baseMana": 1273,
+        "crit": 0.027999999999999997,
+        "dodge": 0.0605,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.027999999999999997,
+        "blockValue": 0,
+        "spellCrit": 0.1199458806025665,
+        "attackPower": 40,
+        "rangedAttackPower": 46
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16914,
+          "name": "灵风头冠",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16797,
+          "name": "奥术师衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16798,
+          "name": "奥术师长袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19136,
+          "name": "燃魔腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16915,
+          "name": "灵风短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16800,
+          "name": "奥术师便鞋",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16799,
+          "name": "奥术师护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 18808,
+          "name": "眠火手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-13",
+      "classId": 4,
+      "role": "melee",
+      "stats": {
+        "str": 191,
+        "agi": 432,
+        "sta": 392,
+        "int": 90,
+        "spi": 124,
+        "armor": 2499.75,
+        "maxHp": 6463,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 33,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.31896551724137934,
+        "dodge": 0.3079310344827586,
+        "parry": 0.1,
+        "hit": 0.09000000000000001,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 310,
+        "offhandWeaponSkill": 305,
+        "rangedWeaponSkill": 305,
+        "rangedCrit": 0.31896551724137934,
+        "blockValue": 0,
+        "spellCrit": 0.0015,
+        "attackPower": 945,
+        "rangedAttackPower": 482
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16908,
+          "name": "血牙头巾",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16823,
+          "name": "夜幕杀手护肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16820,
+          "name": "夜幕杀手胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16827,
+          "name": "夜幕杀手腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16909,
+          "name": "血牙短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16824,
+          "name": "夜幕杀手长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16825,
+          "name": "夜幕杀手护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16826,
+          "name": "夜幕杀手手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-14",
+      "classId": 3,
+      "role": "ranged",
+      "stats": {
+        "str": 90,
+        "agi": 422,
+        "sta": 406,
+        "int": 191,
+        "spi": 177,
+        "armor": 3827.75,
+        "maxHp": 6547,
+        "maxMana": 4305,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 43,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 1720,
+        "crit": 0.20962264150943405,
+        "dodge": 0.18564528301886793,
+        "parry": 0.05,
+        "hit": 0.07,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.25962264150943404,
+        "blockValue": 0,
+        "spellCrit": 0.0031833333333333336,
+        "attackPower": 834,
+        "rangedAttackPower": 954
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16939,
+          "name": "巨龙追猎者头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16848,
+          "name": "巨人追猎者肩饰",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16845,
+          "name": "巨人追猎者胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16851,
+          "name": "巨人追猎者腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16938,
+          "name": "巨龙追猎者腿甲",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16849,
+          "name": "巨人追猎者长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 18812,
+          "name": "真龙护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16852,
+          "name": "巨人追猎者手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18805,
+          "name": "熔火犬牙",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-15",
+      "classId": 4,
+      "role": "melee",
+      "stats": {
+        "str": 191,
+        "agi": 432,
+        "sta": 392,
+        "int": 90,
+        "spi": 124,
+        "armor": 2499.75,
+        "maxHp": 6463,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 33,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.31896551724137934,
+        "dodge": 0.3079310344827586,
+        "parry": 0.1,
+        "hit": 0.09000000000000001,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 310,
+        "offhandWeaponSkill": 305,
+        "rangedWeaponSkill": 305,
+        "rangedCrit": 0.31896551724137934,
+        "blockValue": 0,
+        "spellCrit": 0.0015,
+        "attackPower": 945,
+        "rangedAttackPower": 482
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16908,
+          "name": "血牙头巾",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16823,
+          "name": "夜幕杀手护肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16820,
+          "name": "夜幕杀手胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16827,
+          "name": "夜幕杀手腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16909,
+          "name": "血牙短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16824,
+          "name": "夜幕杀手长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16825,
+          "name": "夜幕杀手护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16826,
+          "name": "夜幕杀手手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-16",
+      "classId": 8,
+      "role": "ranged",
+      "stats": {
+        "str": 50,
+        "agi": 56,
+        "sta": 305,
+        "int": 446,
+        "spi": 286,
+        "armor": 1166.75,
+        "maxHp": 4230,
+        "maxMana": 7683,
+        "spellPower": 460,
+        "healing": 310,
+        "weaponDamage": 0,
+        "manaRegen": 11,
+        "threat": 0,
+        "schoolPower4": 23,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 37,
+          "4": 53,
+          "5": 97,
+          "6": 53
+        },
+        "regenCasting": 0.1,
+        "baseMana": 1273,
+        "crit": 0.027999999999999997,
+        "dodge": 0.0605,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.027999999999999997,
+        "blockValue": 0,
+        "spellCrit": 0.1199458806025665,
+        "attackPower": 40,
+        "rangedAttackPower": 46
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16914,
+          "name": "灵风头冠",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16797,
+          "name": "奥术师衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16798,
+          "name": "奥术师长袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19136,
+          "name": "燃魔腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16915,
+          "name": "灵风短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16800,
+          "name": "奥术师便鞋",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16799,
+          "name": "奥术师护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 18808,
+          "name": "眠火手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-17",
+      "classId": 3,
+      "role": "ranged",
+      "stats": {
+        "str": 90,
+        "agi": 422,
+        "sta": 406,
+        "int": 191,
+        "spi": 177,
+        "armor": 3827.75,
+        "maxHp": 6547,
+        "maxMana": 4305,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 43,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 1720,
+        "crit": 0.20962264150943405,
+        "dodge": 0.18564528301886793,
+        "parry": 0.05,
+        "hit": 0.07,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.25962264150943404,
+        "blockValue": 0,
+        "spellCrit": 0.0031833333333333336,
+        "attackPower": 834,
+        "rangedAttackPower": 954
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16939,
+          "name": "巨龙追猎者头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16848,
+          "name": "巨人追猎者肩饰",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16845,
+          "name": "巨人追猎者胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16851,
+          "name": "巨人追猎者腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16938,
+          "name": "巨龙追猎者腿甲",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16849,
+          "name": "巨人追猎者长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 18812,
+          "name": "真龙护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16852,
+          "name": "巨人追猎者手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18805,
+          "name": "熔火犬牙",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-18",
+      "classId": 8,
+      "role": "ranged",
+      "stats": {
+        "str": 50,
+        "agi": 56,
+        "sta": 305,
+        "int": 446,
+        "spi": 286,
+        "armor": 1166.75,
+        "maxHp": 4230,
+        "maxMana": 7683,
+        "spellPower": 460,
+        "healing": 310,
+        "weaponDamage": 0,
+        "manaRegen": 11,
+        "threat": 0,
+        "schoolPower4": 23,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 37,
+          "4": 53,
+          "5": 97,
+          "6": 53
+        },
+        "regenCasting": 0.1,
+        "baseMana": 1273,
+        "crit": 0.027999999999999997,
+        "dodge": 0.0605,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.027999999999999997,
+        "blockValue": 0,
+        "spellCrit": 0.1199458806025665,
+        "attackPower": 40,
+        "rangedAttackPower": 46
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16914,
+          "name": "灵风头冠",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16797,
+          "name": "奥术师衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16798,
+          "name": "奥术师长袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19136,
+          "name": "燃魔腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16915,
+          "name": "灵风短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16800,
+          "name": "奥术师便鞋",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16799,
+          "name": "奥术师护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 18808,
+          "name": "眠火手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-19",
+      "classId": 4,
+      "role": "melee",
+      "stats": {
+        "str": 191,
+        "agi": 432,
+        "sta": 392,
+        "int": 90,
+        "spi": 124,
+        "armor": 2499.75,
+        "maxHp": 6463,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 33,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.31896551724137934,
+        "dodge": 0.3079310344827586,
+        "parry": 0.1,
+        "hit": 0.09000000000000001,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 310,
+        "offhandWeaponSkill": 305,
+        "rangedWeaponSkill": 305,
+        "rangedCrit": 0.31896551724137934,
+        "blockValue": 0,
+        "spellCrit": 0.0015,
+        "attackPower": 945,
+        "rangedAttackPower": 482
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16908,
+          "name": "血牙头巾",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16823,
+          "name": "夜幕杀手护肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16820,
+          "name": "夜幕杀手胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16827,
+          "name": "夜幕杀手腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16909,
+          "name": "血牙短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16824,
+          "name": "夜幕杀手长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16825,
+          "name": "夜幕杀手护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16826,
+          "name": "夜幕杀手手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-20",
+      "classId": 8,
+      "role": "ranged",
+      "stats": {
+        "str": 50,
+        "agi": 56,
+        "sta": 305,
+        "int": 446,
+        "spi": 286,
+        "armor": 1166.75,
+        "maxHp": 4230,
+        "maxMana": 7683,
+        "spellPower": 460,
+        "healing": 310,
+        "weaponDamage": 0,
+        "manaRegen": 11,
+        "threat": 0,
+        "schoolPower4": 23,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 37,
+          "4": 53,
+          "5": 97,
+          "6": 53
+        },
+        "regenCasting": 0.1,
+        "baseMana": 1273,
+        "crit": 0.027999999999999997,
+        "dodge": 0.0605,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.027999999999999997,
+        "blockValue": 0,
+        "spellCrit": 0.1199458806025665,
+        "attackPower": 40,
+        "rangedAttackPower": 46
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16914,
+          "name": "灵风头冠",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16797,
+          "name": "奥术师衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16798,
+          "name": "奥术师长袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19136,
+          "name": "燃魔腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16915,
+          "name": "灵风短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16800,
+          "name": "奥术师便鞋",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16799,
+          "name": "奥术师护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 18808,
+          "name": "眠火手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-21",
+      "classId": 8,
+      "role": "ranged",
+      "stats": {
+        "str": 50,
+        "agi": 56,
+        "sta": 305,
+        "int": 446,
+        "spi": 286,
+        "armor": 1166.75,
+        "maxHp": 4230,
+        "maxMana": 7683,
+        "spellPower": 460,
+        "healing": 310,
+        "weaponDamage": 0,
+        "manaRegen": 11,
+        "threat": 0,
+        "schoolPower4": 23,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 37,
+          "4": 53,
+          "5": 97,
+          "6": 53
+        },
+        "regenCasting": 0.1,
+        "baseMana": 1273,
+        "crit": 0.027999999999999997,
+        "dodge": 0.0605,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.027999999999999997,
+        "blockValue": 0,
+        "spellCrit": 0.1199458806025665,
+        "attackPower": 40,
+        "rangedAttackPower": 46
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16914,
+          "name": "灵风头冠",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16797,
+          "name": "奥术师衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16798,
+          "name": "奥术师长袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19136,
+          "name": "燃魔腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16915,
+          "name": "灵风短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16800,
+          "name": "奥术师便鞋",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16799,
+          "name": "奥术师护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 18808,
+          "name": "眠火手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-22",
+      "classId": 8,
+      "role": "ranged",
+      "stats": {
+        "str": 50,
+        "agi": 56,
+        "sta": 305,
+        "int": 446,
+        "spi": 286,
+        "armor": 1166.75,
+        "maxHp": 4230,
+        "maxMana": 7683,
+        "spellPower": 460,
+        "healing": 310,
+        "weaponDamage": 0,
+        "manaRegen": 11,
+        "threat": 0,
+        "schoolPower4": 23,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 37,
+          "4": 53,
+          "5": 97,
+          "6": 53
+        },
+        "regenCasting": 0.1,
+        "baseMana": 1273,
+        "crit": 0.027999999999999997,
+        "dodge": 0.0605,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.027999999999999997,
+        "blockValue": 0,
+        "spellCrit": 0.1199458806025665,
+        "attackPower": 40,
+        "rangedAttackPower": 46
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16914,
+          "name": "灵风头冠",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16797,
+          "name": "奥术师衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16798,
+          "name": "奥术师长袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19136,
+          "name": "燃魔腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16915,
+          "name": "灵风短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16800,
+          "name": "奥术师便鞋",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16799,
+          "name": "奥术师护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 18808,
+          "name": "眠火手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-23",
+      "classId": 3,
+      "role": "ranged",
+      "stats": {
+        "str": 90,
+        "agi": 422,
+        "sta": 406,
+        "int": 191,
+        "spi": 177,
+        "armor": 3827.75,
+        "maxHp": 6547,
+        "maxMana": 4305,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 43,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 1720,
+        "crit": 0.20962264150943405,
+        "dodge": 0.18564528301886793,
+        "parry": 0.05,
+        "hit": 0.07,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.25962264150943404,
+        "blockValue": 0,
+        "spellCrit": 0.0031833333333333336,
+        "attackPower": 834,
+        "rangedAttackPower": 954
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16939,
+          "name": "巨龙追猎者头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16848,
+          "name": "巨人追猎者肩饰",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16845,
+          "name": "巨人追猎者胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16851,
+          "name": "巨人追猎者腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16938,
+          "name": "巨龙追猎者腿甲",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16849,
+          "name": "巨人追猎者长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 18812,
+          "name": "真龙护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16852,
+          "name": "巨人追猎者手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18805,
+          "name": "熔火犬牙",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-24",
+      "classId": 3,
+      "role": "ranged",
+      "stats": {
+        "str": 90,
+        "agi": 422,
+        "sta": 406,
+        "int": 191,
+        "spi": 177,
+        "armor": 3827.75,
+        "maxHp": 6547,
+        "maxMana": 4305,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 43,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 1720,
+        "crit": 0.20962264150943405,
+        "dodge": 0.18564528301886793,
+        "parry": 0.05,
+        "hit": 0.07,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.25962264150943404,
+        "blockValue": 0,
+        "spellCrit": 0.0031833333333333336,
+        "attackPower": 834,
+        "rangedAttackPower": 954
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16939,
+          "name": "巨龙追猎者头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16848,
+          "name": "巨人追猎者肩饰",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16845,
+          "name": "巨人追猎者胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16851,
+          "name": "巨人追猎者腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16938,
+          "name": "巨龙追猎者腿甲",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16849,
+          "name": "巨人追猎者长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 18812,
+          "name": "真龙护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16852,
+          "name": "巨人追猎者手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18805,
+          "name": "熔火犬牙",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-25",
+      "classId": 4,
+      "role": "melee",
+      "stats": {
+        "str": 191,
+        "agi": 432,
+        "sta": 392,
+        "int": 90,
+        "spi": 124,
+        "armor": 2499.75,
+        "maxHp": 6463,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 33,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.31896551724137934,
+        "dodge": 0.3079310344827586,
+        "parry": 0.1,
+        "hit": 0.09000000000000001,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 310,
+        "offhandWeaponSkill": 305,
+        "rangedWeaponSkill": 305,
+        "rangedCrit": 0.31896551724137934,
+        "blockValue": 0,
+        "spellCrit": 0.0015,
+        "attackPower": 945,
+        "rangedAttackPower": 482
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16908,
+          "name": "血牙头巾",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16823,
+          "name": "夜幕杀手护肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16820,
+          "name": "夜幕杀手胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16827,
+          "name": "夜幕杀手腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16909,
+          "name": "血牙短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16824,
+          "name": "夜幕杀手长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16825,
+          "name": "夜幕杀手护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16826,
+          "name": "夜幕杀手手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-26",
+      "classId": 4,
+      "role": "melee",
+      "stats": {
+        "str": 191,
+        "agi": 432,
+        "sta": 392,
+        "int": 90,
+        "spi": 124,
+        "armor": 2499.75,
+        "maxHp": 6463,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 33,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.31896551724137934,
+        "dodge": 0.3079310344827586,
+        "parry": 0.1,
+        "hit": 0.09000000000000001,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 310,
+        "offhandWeaponSkill": 305,
+        "rangedWeaponSkill": 305,
+        "rangedCrit": 0.31896551724137934,
+        "blockValue": 0,
+        "spellCrit": 0.0015,
+        "attackPower": 945,
+        "rangedAttackPower": 482
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16908,
+          "name": "血牙头巾",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16823,
+          "name": "夜幕杀手护肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16820,
+          "name": "夜幕杀手胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16827,
+          "name": "夜幕杀手腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16909,
+          "name": "血牙短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16824,
+          "name": "夜幕杀手长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16825,
+          "name": "夜幕杀手护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16826,
+          "name": "夜幕杀手手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-27",
+      "classId": 4,
+      "role": "melee",
+      "stats": {
+        "str": 191,
+        "agi": 432,
+        "sta": 392,
+        "int": 90,
+        "spi": 124,
+        "armor": 2499.75,
+        "maxHp": 6463,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 33,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.31896551724137934,
+        "dodge": 0.3079310344827586,
+        "parry": 0.1,
+        "hit": 0.09000000000000001,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 310,
+        "offhandWeaponSkill": 305,
+        "rangedWeaponSkill": 305,
+        "rangedCrit": 0.31896551724137934,
+        "blockValue": 0,
+        "spellCrit": 0.0015,
+        "attackPower": 945,
+        "rangedAttackPower": 482
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16908,
+          "name": "血牙头巾",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16823,
+          "name": "夜幕杀手护肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16820,
+          "name": "夜幕杀手胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16827,
+          "name": "夜幕杀手腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16909,
+          "name": "血牙短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16824,
+          "name": "夜幕杀手长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16825,
+          "name": "夜幕杀手护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16826,
+          "name": "夜幕杀手手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-28",
+      "classId": 1,
+      "role": "melee",
+      "stats": {
+        "str": 355,
+        "agi": 155,
+        "sta": 467,
+        "int": 84,
+        "spi": 119,
+        "armor": 4997.75,
+        "maxHp": 7379,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 49,
+          "3": 27,
+          "4": 37,
+          "5": 89,
+          "6": 32
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.20750000000000002,
+        "dodge": 0.0875,
+        "parry": 0.07,
+        "hit": 0.05,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0.1,
+        "blockValuePct": 0,
+        "defense": 333,
+        "weaponSkill": 305,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.20750000000000002,
+        "blockValue": 0,
+        "spellCrit": 0.0014000000000000002,
+        "attackPower": 1092,
+        "rangedAttackPower": 205
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16963,
+          "name": "愤怒头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16868,
+          "name": "力量肩铠",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16865,
+          "name": "力量胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19137,
+          "name": "冲击束带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 14554,
+          "name": "踏云腿甲",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16862,
+          "name": "力量马靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 19146,
+          "name": "稳固护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16863,
+          "name": "力量护手",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17107,
+          "name": "龙血斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17069,
+          "name": "速射强弓",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-29",
+      "classId": 1,
+      "role": "melee",
+      "stats": {
+        "str": 355,
+        "agi": 155,
+        "sta": 467,
+        "int": 84,
+        "spi": 119,
+        "armor": 4997.75,
+        "maxHp": 7379,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 49,
+          "3": 27,
+          "4": 37,
+          "5": 89,
+          "6": 32
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.20750000000000002,
+        "dodge": 0.0875,
+        "parry": 0.07,
+        "hit": 0.05,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0.1,
+        "blockValuePct": 0,
+        "defense": 333,
+        "weaponSkill": 305,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.20750000000000002,
+        "blockValue": 0,
+        "spellCrit": 0.0014000000000000002,
+        "attackPower": 1092,
+        "rangedAttackPower": 205
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16963,
+          "name": "愤怒头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16868,
+          "name": "力量肩铠",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16865,
+          "name": "力量胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19137,
+          "name": "冲击束带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 14554,
+          "name": "踏云腿甲",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16862,
+          "name": "力量马靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 19146,
+          "name": "稳固护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16863,
+          "name": "力量护手",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17107,
+          "name": "龙血斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17069,
+          "name": "速射强弓",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-30",
+      "classId": 8,
+      "role": "ranged",
+      "stats": {
+        "str": 50,
+        "agi": 56,
+        "sta": 305,
+        "int": 446,
+        "spi": 286,
+        "armor": 1166.75,
+        "maxHp": 4230,
+        "maxMana": 7683,
+        "spellPower": 460,
+        "healing": 310,
+        "weaponDamage": 0,
+        "manaRegen": 11,
+        "threat": 0,
+        "schoolPower4": 23,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 37,
+          "4": 53,
+          "5": 97,
+          "6": 53
+        },
+        "regenCasting": 0.1,
+        "baseMana": 1273,
+        "crit": 0.027999999999999997,
+        "dodge": 0.0605,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.027999999999999997,
+        "blockValue": 0,
+        "spellCrit": 0.1199458806025665,
+        "attackPower": 40,
+        "rangedAttackPower": 46
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16914,
+          "name": "灵风头冠",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16797,
+          "name": "奥术师衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16798,
+          "name": "奥术师长袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19136,
+          "name": "燃魔腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16915,
+          "name": "灵风短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16800,
+          "name": "奥术师便鞋",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16799,
+          "name": "奥术师护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 18808,
+          "name": "眠火手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-31",
+      "classId": 4,
+      "role": "melee",
+      "stats": {
+        "str": 191,
+        "agi": 432,
+        "sta": 392,
+        "int": 90,
+        "spi": 124,
+        "armor": 2499.75,
+        "maxHp": 6463,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 33,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.31896551724137934,
+        "dodge": 0.3079310344827586,
+        "parry": 0.1,
+        "hit": 0.09000000000000001,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 310,
+        "offhandWeaponSkill": 305,
+        "rangedWeaponSkill": 305,
+        "rangedCrit": 0.31896551724137934,
+        "blockValue": 0,
+        "spellCrit": 0.0015,
+        "attackPower": 945,
+        "rangedAttackPower": 482
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16908,
+          "name": "血牙头巾",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16823,
+          "name": "夜幕杀手护肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16820,
+          "name": "夜幕杀手胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16827,
+          "name": "夜幕杀手腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16909,
+          "name": "血牙短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16824,
+          "name": "夜幕杀手长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16825,
+          "name": "夜幕杀手护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16826,
+          "name": "夜幕杀手手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-32",
+      "classId": 3,
+      "role": "ranged",
+      "stats": {
+        "str": 90,
+        "agi": 422,
+        "sta": 406,
+        "int": 191,
+        "spi": 177,
+        "armor": 3827.75,
+        "maxHp": 6547,
+        "maxMana": 4305,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 43,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 1720,
+        "crit": 0.20962264150943405,
+        "dodge": 0.18564528301886793,
+        "parry": 0.05,
+        "hit": 0.07,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.25962264150943404,
+        "blockValue": 0,
+        "spellCrit": 0.0031833333333333336,
+        "attackPower": 834,
+        "rangedAttackPower": 954
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16939,
+          "name": "巨龙追猎者头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16848,
+          "name": "巨人追猎者肩饰",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16845,
+          "name": "巨人追猎者胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16851,
+          "name": "巨人追猎者腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16938,
+          "name": "巨龙追猎者腿甲",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16849,
+          "name": "巨人追猎者长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 18812,
+          "name": "真龙护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16852,
+          "name": "巨人追猎者手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18805,
+          "name": "熔火犬牙",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-33",
+      "classId": 8,
+      "role": "ranged",
+      "stats": {
+        "str": 50,
+        "agi": 56,
+        "sta": 305,
+        "int": 446,
+        "spi": 286,
+        "armor": 1166.75,
+        "maxHp": 4230,
+        "maxMana": 7683,
+        "spellPower": 460,
+        "healing": 310,
+        "weaponDamage": 0,
+        "manaRegen": 11,
+        "threat": 0,
+        "schoolPower4": 23,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 37,
+          "4": 53,
+          "5": 97,
+          "6": 53
+        },
+        "regenCasting": 0.1,
+        "baseMana": 1273,
+        "crit": 0.027999999999999997,
+        "dodge": 0.0605,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.027999999999999997,
+        "blockValue": 0,
+        "spellCrit": 0.1199458806025665,
+        "attackPower": 40,
+        "rangedAttackPower": 46
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16914,
+          "name": "灵风头冠",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16797,
+          "name": "奥术师衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16798,
+          "name": "奥术师长袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19136,
+          "name": "燃魔腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16915,
+          "name": "灵风短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16800,
+          "name": "奥术师便鞋",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16799,
+          "name": "奥术师护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 18808,
+          "name": "眠火手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-34",
+      "classId": 4,
+      "role": "melee",
+      "stats": {
+        "str": 191,
+        "agi": 432,
+        "sta": 392,
+        "int": 90,
+        "spi": 124,
+        "armor": 2499.75,
+        "maxHp": 6463,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 33,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.31896551724137934,
+        "dodge": 0.3079310344827586,
+        "parry": 0.1,
+        "hit": 0.09000000000000001,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 310,
+        "offhandWeaponSkill": 305,
+        "rangedWeaponSkill": 305,
+        "rangedCrit": 0.31896551724137934,
+        "blockValue": 0,
+        "spellCrit": 0.0015,
+        "attackPower": 945,
+        "rangedAttackPower": 482
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16908,
+          "name": "血牙头巾",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16823,
+          "name": "夜幕杀手护肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16820,
+          "name": "夜幕杀手胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16827,
+          "name": "夜幕杀手腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16909,
+          "name": "血牙短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16824,
+          "name": "夜幕杀手长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16825,
+          "name": "夜幕杀手护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16826,
+          "name": "夜幕杀手手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-35",
+      "classId": 3,
+      "role": "ranged",
+      "stats": {
+        "str": 90,
+        "agi": 422,
+        "sta": 406,
+        "int": 191,
+        "spi": 177,
+        "armor": 3827.75,
+        "maxHp": 6547,
+        "maxMana": 4305,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 43,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 1720,
+        "crit": 0.20962264150943405,
+        "dodge": 0.18564528301886793,
+        "parry": 0.05,
+        "hit": 0.07,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.25962264150943404,
+        "blockValue": 0,
+        "spellCrit": 0.0031833333333333336,
+        "attackPower": 834,
+        "rangedAttackPower": 954
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16939,
+          "name": "巨龙追猎者头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16848,
+          "name": "巨人追猎者肩饰",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16845,
+          "name": "巨人追猎者胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16851,
+          "name": "巨人追猎者腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16938,
+          "name": "巨龙追猎者腿甲",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16849,
+          "name": "巨人追猎者长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 18812,
+          "name": "真龙护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16852,
+          "name": "巨人追猎者手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18805,
+          "name": "熔火犬牙",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-36",
+      "classId": 8,
+      "role": "ranged",
+      "stats": {
+        "str": 50,
+        "agi": 56,
+        "sta": 305,
+        "int": 446,
+        "spi": 286,
+        "armor": 1166.75,
+        "maxHp": 4230,
+        "maxMana": 7683,
+        "spellPower": 460,
+        "healing": 310,
+        "weaponDamage": 0,
+        "manaRegen": 11,
+        "threat": 0,
+        "schoolPower4": 23,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 37,
+          "4": 53,
+          "5": 97,
+          "6": 53
+        },
+        "regenCasting": 0.1,
+        "baseMana": 1273,
+        "crit": 0.027999999999999997,
+        "dodge": 0.0605,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.027999999999999997,
+        "blockValue": 0,
+        "spellCrit": 0.1199458806025665,
+        "attackPower": 40,
+        "rangedAttackPower": 46
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16914,
+          "name": "灵风头冠",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16797,
+          "name": "奥术师衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16798,
+          "name": "奥术师长袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19136,
+          "name": "燃魔腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16915,
+          "name": "灵风短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16800,
+          "name": "奥术师便鞋",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16799,
+          "name": "奥术师护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 18808,
+          "name": "眠火手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-37",
+      "classId": 4,
+      "role": "melee",
+      "stats": {
+        "str": 191,
+        "agi": 432,
+        "sta": 392,
+        "int": 90,
+        "spi": 124,
+        "armor": 2499.75,
+        "maxHp": 6463,
+        "maxMana": 0,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 33,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 0,
+        "crit": 0.31896551724137934,
+        "dodge": 0.3079310344827586,
+        "parry": 0.1,
+        "hit": 0.09000000000000001,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 310,
+        "offhandWeaponSkill": 305,
+        "rangedWeaponSkill": 305,
+        "rangedCrit": 0.31896551724137934,
+        "blockValue": 0,
+        "spellCrit": 0.0015,
+        "attackPower": 945,
+        "rangedAttackPower": 482
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16908,
+          "name": "血牙头巾",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16823,
+          "name": "夜幕杀手护肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16820,
+          "name": "夜幕杀手胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16827,
+          "name": "夜幕杀手腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16909,
+          "name": "血牙短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16824,
+          "name": "夜幕杀手长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16825,
+          "name": "夜幕杀手护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16826,
+          "name": "夜幕杀手手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18816,
+          "name": "毁灭之刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-38",
+      "classId": 3,
+      "role": "ranged",
+      "stats": {
+        "str": 90,
+        "agi": 422,
+        "sta": 406,
+        "int": 191,
+        "spi": 177,
+        "armor": 3827.75,
+        "maxHp": 6547,
+        "maxMana": 4305,
+        "spellPower": 0,
+        "healing": 0,
+        "weaponDamage": 0,
+        "manaRegen": 0,
+        "threat": 0,
+        "schoolPower4": 0,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 43,
+          "4": 37,
+          "5": 84,
+          "6": 37
+        },
+        "regenCasting": 0,
+        "baseMana": 1720,
+        "crit": 0.20962264150943405,
+        "dodge": 0.18564528301886793,
+        "parry": 0.05,
+        "hit": 0.07,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.25962264150943404,
+        "blockValue": 0,
+        "spellCrit": 0.0031833333333333336,
+        "attackPower": 834,
+        "rangedAttackPower": 954
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16939,
+          "name": "巨龙追猎者头盔",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18205,
+          "name": "艾斯卡达尔的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16848,
+          "name": "巨人追猎者肩饰",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16845,
+          "name": "巨人追猎者胸甲",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 16851,
+          "name": "巨人追猎者腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16938,
+          "name": "巨龙追猎者腿甲",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16849,
+          "name": "巨人追猎者长靴",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 18812,
+          "name": "真龙护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 16852,
+          "name": "巨人追猎者手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 17063,
+          "name": "埃古雷亚指环",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 18821,
+          "name": "迅击戒指",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17102,
+          "name": "环雾披风",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18805,
+          "name": "熔火犬牙",
+          "quality": 4
+        },
+        {
+          "slot": 17,
+          "id": 18832,
+          "name": "残忍利刃",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17072,
+          "name": "爆击猎枪",
+          "quality": 4
+        }
+      ]
+    },
+    {
+      "id": "challenge-39",
+      "classId": 8,
+      "role": "ranged",
+      "stats": {
+        "str": 50,
+        "agi": 56,
+        "sta": 305,
+        "int": 446,
+        "spi": 286,
+        "armor": 1166.75,
+        "maxHp": 4230,
+        "maxMana": 7683,
+        "spellPower": 460,
+        "healing": 310,
+        "weaponDamage": 0,
+        "manaRegen": 11,
+        "threat": 0,
+        "schoolPower4": 23,
+        "schoolPower16": 0,
+        "schoolPower32": 0,
+        "resistances": {
+          "1": 27,
+          "2": 67,
+          "3": 37,
+          "4": 53,
+          "5": 97,
+          "6": 53
+        },
+        "regenCasting": 0.1,
+        "baseMana": 1273,
+        "crit": 0.027999999999999997,
+        "dodge": 0.0605,
+        "parry": 0,
+        "hit": 0,
+        "spellHit": 0,
+        "spellPenetration": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        },
+        "maxEnergy": 100,
+        "maxRage": 1000,
+        "block": 0,
+        "blockValuePct": 0,
+        "defense": 300,
+        "weaponSkill": 300,
+        "offhandWeaponSkill": 300,
+        "rangedWeaponSkill": 300,
+        "rangedCrit": 0.027999999999999997,
+        "blockValue": 0,
+        "spellCrit": 0.1199458806025665,
+        "attackPower": 40,
+        "rangedAttackPower": 46
+      },
+      "equipment": [
+        {
+          "slot": 1,
+          "id": 16914,
+          "name": "灵风头冠",
+          "quality": 4
+        },
+        {
+          "slot": 2,
+          "id": 18814,
+          "name": "火焰之王的项圈",
+          "quality": 4
+        },
+        {
+          "slot": 3,
+          "id": 16797,
+          "name": "奥术师衬肩",
+          "quality": 4
+        },
+        {
+          "slot": 5,
+          "id": 16798,
+          "name": "奥术师长袍",
+          "quality": 4
+        },
+        {
+          "slot": 6,
+          "id": 19136,
+          "name": "燃魔腰带",
+          "quality": 4
+        },
+        {
+          "slot": 7,
+          "id": 16915,
+          "name": "灵风短裤",
+          "quality": 4
+        },
+        {
+          "slot": 8,
+          "id": 16800,
+          "name": "奥术师便鞋",
+          "quality": 4
+        },
+        {
+          "slot": 9,
+          "id": 16799,
+          "name": "奥术师护腕",
+          "quality": 4
+        },
+        {
+          "slot": 10,
+          "id": 18808,
+          "name": "眠火手套",
+          "quality": 4
+        },
+        {
+          "slot": 11,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 12,
+          "id": 19147,
+          "name": "法术能量之戒",
+          "quality": 4
+        },
+        {
+          "slot": 13,
+          "id": 18815,
+          "name": "纯焰精华",
+          "quality": 4
+        },
+        {
+          "slot": 14,
+          "id": 17082,
+          "name": "烈焰碎片",
+          "quality": 4
+        },
+        {
+          "slot": 15,
+          "id": 17078,
+          "name": "萨菲隆斗篷",
+          "quality": 4
+        },
+        {
+          "slot": 16,
+          "id": 18842,
+          "name": "统御法杖",
+          "quality": 4
+        },
+        {
+          "slot": 18,
+          "id": 17077,
+          "name": "赤红震荡者",
+          "quality": 4
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "mode": "conserve",
+      "won": true,
+      "seconds": 208.9,
+      "alive": 14,
+      "bossRemaining": 0,
+      "phases": [
+        {
+          "phase": 1,
+          "at": 0,
+          "bossHp": 1099230,
+          "alive": 40
+        },
+        {
+          "phase": 2,
+          "at": 40.9,
+          "bossHp": 710651,
+          "alive": 39
+        },
+        {
+          "phase": 3,
+          "at": 92.6,
+          "bossHp": 438267,
+          "alive": 35
+        }
+      ],
+      "orders": [
+        {
+          "at": 0,
+          "order": "conserveMana"
+        }
+      ],
+      "healers": [
+        {
+          "name": "艾琳·4",
+          "casts": 77,
+          "cancels": 18,
+          "idleMs": 127200,
+          "fullRegenMs": 40100,
+          "alive": false,
+          "mana": 242.40000000000256,
+          "maxMana": 9576
+        },
+        {
+          "name": "激活与野性印记",
+          "casts": 50,
+          "cancels": 25,
+          "idleMs": 43900,
+          "fullRegenMs": 41000,
+          "alive": false,
+          "mana": 859.2000000000049,
+          "maxMana": 8514
+        },
+        {
+          "name": "晨星·6",
+          "casts": 99,
+          "cancels": 26,
+          "idleMs": 126400,
+          "fullRegenMs": 64100,
+          "alive": true,
+          "mana": 239.20000000000354,
+          "maxMana": 10221
+        },
+        {
+          "name": "白露·7",
+          "casts": 38,
+          "cancels": 9,
+          "idleMs": 33800,
+          "fullRegenMs": 25800,
+          "alive": false,
+          "mana": 2965.0000000000023,
+          "maxMana": 9576
+        },
+        {
+          "name": "圣烛·8",
+          "casts": 55,
+          "cancels": 25,
+          "idleMs": 31800,
+          "fullRegenMs": 19800,
+          "alive": false,
+          "mana": 108.6,
+          "maxMana": 8437
+        },
+        {
+          "name": "晨祷·9",
+          "casts": 74,
+          "cancels": 16,
+          "idleMs": 129200,
+          "fullRegenMs": 74000,
+          "alive": false,
+          "mana": 187.00000000000307,
+          "maxMana": 9576
+        },
+        {
+          "name": "星烛·10",
+          "casts": 53,
+          "cancels": 22,
+          "idleMs": 28000,
+          "fullRegenMs": 15200,
+          "alive": false,
+          "mana": 6502.800000000005,
+          "maxMana": 8437
+        },
+        {
+          "name": "雪露·11",
+          "casts": 78,
+          "cancels": 25,
+          "idleMs": 130100,
+          "fullRegenMs": 71600,
+          "alive": false,
+          "mana": 766.4000000000025,
+          "maxMana": 9576
+        }
+      ],
+      "review": {
+        "bossRemaining": 0,
+        "healerMana": 17,
+        "firstDeath": {
+          "name": "远征勇士2·31",
+          "at": 134100,
+          "role": "melee",
+          "cause": "顺劈斩"
+        },
+        "plan": {
+          "mainTank": "challenge-1",
+          "offTank": "challenge-2",
+          "focus": "boss",
+          "formation": "spread",
+          "movement": "early",
+          "dispelPolicy": "assigned",
+          "jobs": {
+            "magic": [
+              "challenge-4",
+              "challenge-6"
+            ],
+            "curse": [
+              "mc-member-1",
+              "challenge-12"
+            ],
+            "tranquilize": [
+              "challenge-14",
+              "challenge-17"
+            ],
+            "ward": [
+              "challenge-4",
+              "challenge-6"
+            ]
+          },
+          "cooldowns": {
+            "wall": {
+              "actorId": "challenge-1",
+              "trigger": "automatic"
+            },
+            "rescue": {
+              "actorId": "challenge-8",
+              "trigger": "automatic"
+            },
+            "mana": {
+              "actorId": "challenge-5",
+              "trigger": "automatic"
+            }
+          }
+        },
+        "events": [
+          {
+            "at": 94000,
+            "text": "团长下令：治疗节约蓝量",
+            "key": "healing"
+          },
+          {
+            "at": 143700,
+            "text": "加瑞克·1 执行盾墙 → 加瑞克·1",
+            "key": "wall",
+            "actorId": "challenge-1"
+          },
+          {
+            "at": 162300,
+            "text": "激活与野性印记 执行激活 → 晨星·6",
+            "key": "mana",
+            "actorId": "challenge-5"
+          },
+          {
+            "at": 191100,
+            "text": "圣烛·8 执行圣疗术 → 加瑞克·1",
+            "key": "rescue",
+            "actorId": "challenge-8"
+          }
+        ],
+        "used": {
+          "wall": 1,
+          "mana": 1,
+          "rescue": 1
+        },
+        "failures": {
+          "doom": 0,
+          "fire": 22,
+          "feared": 0
+        },
+        "suggestions": [
+          "火区受伤：改为提前撤离、分散站位；金团优先招募执行机制更稳定的成员。",
+          "治疗法力不足：安排激活；减少全员驱散占用，先清治疗小怪以缩短战斗。"
+        ],
+        "unused": []
+      },
+      "failures": {
+        "doom": 0,
+        "fire": 22,
+        "feared": 0
+      },
+      "wallMs": 68705
+    },
+    {
+      "mode": "normal",
+      "won": false,
+      "seconds": 201.3,
+      "alive": 0,
+      "bossRemaining": 29.71,
+      "phases": [
+        {
+          "phase": 1,
+          "at": 0,
+          "bossHp": 1099230,
+          "alive": 40
+        },
+        {
+          "phase": 2,
+          "at": 43.5,
+          "bossHp": 710393,
+          "alive": 38
+        },
+        {
+          "phase": 3,
+          "at": 95,
+          "bossHp": 438096,
+          "alive": 26
+        }
+      ],
+      "orders": [],
+      "healers": [
+        {
+          "name": "艾琳·4",
+          "casts": 56,
+          "cancels": 4,
+          "idleMs": 59900,
+          "fullRegenMs": 29500,
+          "alive": false,
+          "mana": 328.20000000000323,
+          "maxMana": 9576
+        },
+        {
+          "name": "激活与野性印记",
+          "casts": 24,
+          "cancels": 1,
+          "idleMs": 9000,
+          "fullRegenMs": 4400,
+          "alive": false,
+          "mana": 3383.8000000000015,
+          "maxMana": 8514
+        },
+        {
+          "name": "晨星·6",
+          "casts": 95,
+          "cancels": 7,
+          "idleMs": 122400,
+          "fullRegenMs": 55800,
+          "alive": false,
+          "mana": 750.8000000000033,
+          "maxMana": 9576
+        },
+        {
+          "name": "白露·7",
+          "casts": 53,
+          "cancels": 5,
+          "idleMs": 42900,
+          "fullRegenMs": 17500,
+          "alive": false,
+          "mana": 41.40000000000282,
+          "maxMana": 9576
+        },
+        {
+          "name": "圣烛·8",
+          "casts": 45,
+          "cancels": 2,
+          "idleMs": 4900,
+          "fullRegenMs": 4100,
+          "alive": false,
+          "mana": 2619.200000000003,
+          "maxMana": 8437
+        },
+        {
+          "name": "晨祷·9",
+          "casts": 51,
+          "cancels": 5,
+          "idleMs": 40000,
+          "fullRegenMs": 12100,
+          "alive": false,
+          "mana": 116.40000000000268,
+          "maxMana": 9576
+        },
+        {
+          "name": "星烛·10",
+          "casts": 50,
+          "cancels": 4,
+          "idleMs": 5700,
+          "fullRegenMs": 3800,
+          "alive": false,
+          "mana": 4182.200000000005,
+          "maxMana": 8437
+        },
+        {
+          "name": "雪露·11",
+          "casts": 64,
+          "cancels": 4,
+          "idleMs": 72400,
+          "fullRegenMs": 34100,
+          "alive": false,
+          "mana": 278.6000000000031,
+          "maxMana": 9576
+        }
+      ],
+      "review": {
+        "bossRemaining": 30,
+        "healerMana": 17,
+        "firstDeath": {
+          "name": "疾风·25",
+          "at": 134100,
+          "role": "melee",
+          "cause": "顺劈斩"
+        },
+        "plan": {
+          "mainTank": "challenge-1",
+          "offTank": "challenge-2",
+          "focus": "boss",
+          "formation": "spread",
+          "movement": "early",
+          "dispelPolicy": "assigned",
+          "jobs": {
+            "magic": [
+              "challenge-4",
+              "challenge-6"
+            ],
+            "curse": [
+              "mc-member-1",
+              "challenge-12"
+            ],
+            "tranquilize": [
+              "challenge-14",
+              "challenge-17"
+            ],
+            "ward": [
+              "challenge-4",
+              "challenge-6"
+            ]
+          },
+          "cooldowns": {
+            "wall": {
+              "actorId": "challenge-1",
+              "trigger": "automatic"
+            },
+            "rescue": {
+              "actorId": "challenge-8",
+              "trigger": "automatic"
+            },
+            "mana": {
+              "actorId": "challenge-5",
+              "trigger": "automatic"
+            }
+          }
+        },
+        "events": [
+          {
+            "at": 143500,
+            "text": "激活与野性印记 执行激活 → 激活与野性印记",
+            "key": "mana",
+            "actorId": "challenge-5"
+          },
+          {
+            "at": 153900,
+            "text": "加瑞克·1 执行盾墙 → 加瑞克·1",
+            "key": "wall",
+            "actorId": "challenge-1"
+          }
+        ],
+        "used": {
+          "mana": 1,
+          "wall": 1
+        },
+        "failures": {
+          "doom": 0,
+          "fire": 11,
+          "feared": 0
+        },
+        "suggestions": [
+          "火区受伤：改为提前撤离、分散站位；金团优先招募执行机制更稳定的成员。",
+          "治疗法力不足：安排激活；减少全员驱散占用，先清治疗小怪以缩短战斗。"
+        ],
+        "unused": [
+          "圣疗术"
+        ]
+      },
+      "failures": {
+        "doom": 0,
+        "fire": 11,
+        "feared": 0
+      },
+      "wallMs": 79991
+    }
+  ]
+}

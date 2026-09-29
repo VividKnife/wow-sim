@@ -134,6 +134,9 @@ function calculateStats(c){
   for(const [key,value]of metadata.attributes)result[key]+=value;
   equipmentAuras.push(...metadata.auras);
  }
+ // Equipped MOD_POWER_REGEN effects are mana per five seconds. Spell buffs
+ // such as Wisdom use their separate periodic effects and must not be counted twice.
+ result.manaRegen+=equipmentAuras.filter(a=>a.type===85&&a.misc===0).reduce((n,a)=>n+a.amount,0);
  let enchantHealth=0,enchantMana=0,enchantDodge=0;
  for(const e of Object.values(c.equipment||{})){if(e.durability===0&&items[e.id]?.MaxDurability)continue;for(const [key,value]of Object.entries(enchants[e.enchant]?.stats||{})){if(key==='health')enchantHealth+=value;else if(key==='mana')enchantMana+=value;else if(key==='dodge')enchantDodge+=value/100;else if(key in result)result[key]+=value;}}
  for(const a of Object.values(c.buffs||{})){if(a.until<=c.time)continue;if(a.kind==='int')result.int+=a.amount;if(a.kind==='armor')result.armor+=a.amount;if(a.kind==='sta')result.sta+=a.amount;}

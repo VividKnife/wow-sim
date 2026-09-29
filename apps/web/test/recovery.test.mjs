@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats} from '../../../packages/game-domain/src/rules/engine.js';
 import {addItem,newCharacter} from '../../../packages/game-domain/src/rules/character.js';
+import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
+import {finishCombat} from '../../../packages/game-domain/src/rules/combat-metrics.js';
 import {healthRegen,startRecovery} from '../../../packages/game-domain/src/rules/recovery.js';
 
 for(const disabled of [false,true])test(`hunting waits for natural recovery and continues without supplies (disabled=${disabled})`,()=>{
@@ -56,4 +58,37 @@ test('each class uses its pinned spirit health formula and sitting multiplier',(
   const c=newCharacter('精神恢复',classId,18);assert.equal(stats(c).spi,spirit);
   assert.equal(healthRegen(c),standing);assert.equal(healthRegen(c,true),sitting);
  }
+});
+
+function undeadRecovery(){
+ const s=createGame('食尸恢复',42,0,{raceId:5,classId:8});s.hp=1;s.mana=0;s.position=0;s.positionY=0;
+ s.recentCorpses=[{hp:0,creatureType:7,position:3,positionY:0,location:s.location,dungeonRun:null,until:120000}];
+ return s;
+}
+test('automatic recovery prioritizes Cannibalize, commits cooldown and waits for its channel',()=>{
+ const s=undeadRecovery(),food=s.totals.food;assert.equal(startRecovery(s),true);
+ assert.ok(s.cannibalize);assert.equal(s.rest,undefined);assert.equal(s.totals.food,food);assert.equal(s.totals.water,0);
+ assert.equal(s.cooldowns[20577],120000);
+ const before=s.hp,after=advance(s,2000).state;assert.ok(after.hp>=before+Math.round(stats(s).maxHp*.07));
+ assert.equal(startRecovery(after),true);assert.equal(after.totals.food,food);
+ const finished=advance(after,10000).state;assert.equal(finished.cannibalize,null);
+ startRecovery(finished);assert.ok(finished.rest,'remaining resources use ordinary supplies during cooldown');
+});
+for(const reason of ['beast','far','expired','elsewhere','disabled','cooldown','other race'])test(`automatic Cannibalize rejects ${reason} and falls back to normal recovery`,()=>{
+ const s=undeadRecovery(),corpse=s.recentCorpses[0];
+ if(reason==='beast')corpse.creatureType=1;if(reason==='far')corpse.position=6;
+ if(reason==='expired')corpse.until=0;if(reason==='elsewhere')corpse.location='elsewhere';
+ if(reason==='disabled')s.settings.autoFood=false;if(reason==='cooldown')s.cooldowns[20577]=120000;if(reason==='other race')s.raceId=1;
+ assert.equal(startRecovery(s),true);assert.ok(!s.cannibalize);assert.ok(s.rest);
+});
+test('movement interrupts automatic Cannibalize before the next healing tick',()=>{
+ const s=undeadRecovery();startRecovery(s);s.position=1;
+ const after=advance(s,100).state;assert.equal(after.cannibalize,null);assert.equal(after.hp,1);
+});
+
+test('a completed encounter supplies nearby corpses for automatic recovery',()=>{
+ const s=undeadRecovery();delete s.recentCorpses;startCombat(s,[299]);
+ const enemy=s.combat.enemies[0];enemy.hp=0;enemy.creatureType=6;enemy.position=s.position;enemy.positionY=s.positionY;
+ finishCombat(s);assert.equal(s.combat,null);assert.equal(s.recentCorpses.length,1);
+ assert.equal(startRecovery(s),true);assert.ok(s.cannibalize);
 });

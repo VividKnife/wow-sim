@@ -4,7 +4,7 @@ import {characterAttributes} from './character-attributes.js';
 const playerKeys = [
   'serverBuffs','id','name','classId','raceId','gender','growthPolicy','level','xp','hp','mana','rage','energy','power','form','stance','money','clock','wallAt',
   'activity','rest','location','visited','flightPoints','hearth','hearthReady','equipment','bag','bags','pending','bank','bankUpgrades',
-  'auctions','marketHistory','marketStock','marketClock','party','pet','escort','combat','lastCombat','dungeon','cast','groundEffects','learned','talents','quests',
+  'auctions','marketHistory','marketStock','marketClock','party','pet','escort','combat','recentCorpses','lastCombat','dungeon','cast','groundEffects','learned','talents','quests',
   'completed','reputation','rules','settings','potions','mounts','riding','mounted','professions','professionCooldowns','resourceCooldowns',
   'journey','logs','logSequence','totals','soulstone','bandageReady','nextPull','ammunition','ammoPolicy','ammoRestockPrompt'
 ] as const;

@@ -2,10 +2,11 @@ import {beginSpellTiming,finishSpellTiming,spellReady} from './spell-timing.js';
 import {items,spells} from './catalog.js';
 import {stats,spellInfo,takeItem,log,effectRange,knownRank} from './character.js';
 import {combatMembers} from './combat-members.js';
+import {activateRacial,racialAbilityBlocked} from './racial-effects.js';
 import {talentModifiers} from './talent-effects.js';
 
 export const recoveryMembers=s=>combatMembers(s).filter(c=>!c.escortNpc&&!c.petUnit);
-export function stopRecovery(s){for(const c of [s,...s.party])c.rest=null;}
+export function stopRecovery(s){for(const c of [s,...s.party]){c.rest=null;c.cannibalize=null;}}
 const resurrectionRoots={2:7328,5:2006,7:2008};
 const resurrectionSpell=c=>{const first=resurrectionRoots[c.classId];return first&&knownRank(c,first)};
 export function resurrectionFor(s,targetId,casterId){
@@ -29,10 +30,16 @@ export function finishResurrection(s){
  log(s,target.name+' 接受复活，重新站了起来。','info');
 }
 export function startRecovery(s,minimumMana={},members=recoveryMembers(s)){let needed=false;
+ if(s.combat)return false;
  for(const c of members){
-  if(c.hp<=0)continue;if(c.rest){needed=true;continue;}
+  if(c.hp<=0)continue;if(c.cannibalize){needed=true;continue;}if(c.rest){needed=true;continue;}
   const st=stats(c),foodNeeded=c.hp<st.maxHp*s.settings.health/100,waterNeeded=c.mana<Math.max(st.maxMana*s.settings.mana/100,minimumMana[c.id]||0);
   if(!foodNeeded&&!waterNeeded)continue;needed=true;
+  const racial=c.raceId===5&&foodNeeded&&s.settings.autoFood&&c.learned?.includes(20577)?spellInfo(c,20577):null;
+  if(racial&&spellReady(c,racial,s.clock)&&racialAbilityBlocked(s,c,racial)===null){
+   beginSpellTiming(c,racial,s.clock,{channel:true});activateRacial(s,c,racial,{stats});
+   log(s,c.name+' 开始食尸恢复生命。','rest',{actorId:c.id,spellId:20577});continue;
+  }
   const find=aura=>s.bag.find(i=>items[i.id]?.RequiredLevel<=c.level&&spells[items[i.id]?.spellid_1]?.EffectApplyAuraName1===aura);
   const food=foodNeeded&&s.settings.autoFood?find(84):null,water=waterNeeded&&s.settings.autoWater?find(85):null;
   // Keep the activity pending while passive regeneration restores missing resources.

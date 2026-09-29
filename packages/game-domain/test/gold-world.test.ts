@@ -23,12 +23,12 @@ function eligible(s:Rules){for(const seat of s.goldRaid.seats)s.goldRaid.contrib
 test('only NPC grouping and gold raids remain exposed; raid-ready owns a single hero',async()=>{
  const service=new GameService(new MemoryStore(),{contentVersion:'test',now:()=>100000,seed:()=>42});
  const save=await service.createSave('unified',{name:'团长',classId:8,raceId:1,raidReady:true},'save');
- const snapshot=await service.snapshot(save.id);assert.equal(snapshot.roster.length,1);assert.equal(snapshot.state!.npcWorld.residents.length,50);
+ const snapshot=await service.snapshot(save.id);assert.equal(snapshot.roster.length,1);assert.equal(snapshot.state!.npcWorld.residents.length,72);
  assert.ok(!('candidates' in view(snapshot.state)));assert.ok(!('guildRaid' in view(snapshot.state)));
  for(const type of ['recruit','createCompanion','hireMercenary','raidStart'])await assert.rejects(service.command(save.id,{type,id:'mage',classId:8,requestId:type}),/尚未支持/);
  await service.command(save.id,{type:'enterDungeon',contentId:'molten-core-gold',requestId:'enter'});
  for(const type of ['goldPublish','goldRecommend','goldLaunch'])await service.command(save.id,{type,requestId:type});
- const launched=await service.snapshot(save.id);assert.equal(launched.instance!.roster.length,25);assert.equal(launched.instance!.roster.filter(r=>r.controller==='npc').length,24);
+ const launched=await service.snapshot(save.id);assert.equal(launched.instance!.roster.length,40);assert.equal(launched.instance!.roster.filter(r=>r.controller==='npc').length,39);
  await service.command(save.id,{type:'goldSettle',requestId:'settle'});await service.command(save.id,{type:'leaveInstance',requestId:'leave'});
  for(const contentId of ['molten-core','onyxias-lair'])await assert.rejects(service.command(save.id,{type:'enterDungeon',contentId,requestId:contentId}),/未知的副本/);
 });
@@ -38,7 +38,7 @@ test('all recruitment preferences select unique persistent residents with comple
  friend.goldProfile.friend=true;
  for(const priority of ['balanced','progress','buyers','friends']){
   goldRaidAction(s,{type:'goldRecommend',priority});const selected=s.goldRaid.selected.map((id:string)=>s.goldRaid.applicants.find((c:Rules)=>c.id===id));
-  assert.equal(new Set(selected.map((c:Rules)=>c.id)).size,24);
+  assert.equal(new Set(selected.map((c:Rules)=>c.id)).size,39);
   assert.ok(selected.every((c:Rules)=>s.npcWorld.residents.some((p:Rules)=>p.id===c.id&&p.unit.name===c.name)));
   assert.ok(selected.filter((c:Rules)=>combatRole(c)==='tank').length>=2);assert.ok(selected.filter((c:Rules)=>combatRole(c)==='healer').length>=5);
   for(const classId of [3,5])assert.ok(selected.some((c:Rules)=>c.classId===classId));

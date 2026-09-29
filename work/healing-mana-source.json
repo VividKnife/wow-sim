@@ -1,0 +1,1248 @@
+{
+  "commit": "22b51464f1625f6ef6275771de1f5466c6f5d19e",
+  "sha256": "4f92db520868ab4e566726f68b5b2e380ae781209beaf22237b4f7f04600d0c0",
+  "spells": [
+    {
+      "Id": 139,
+      "SpellName": "Renew",
+      "SpellLevel": 8,
+      "ManaCost": 30,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 331,
+      "SpellName": "Healing Wave",
+      "SpellLevel": 1,
+      "ManaCost": 25,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 332,
+      "SpellName": "Healing Wave",
+      "SpellLevel": 6,
+      "ManaCost": 45,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 547,
+      "SpellName": "Healing Wave",
+      "SpellLevel": 12,
+      "ManaCost": 80,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 596,
+      "SpellName": "Prayer of Healing",
+      "SpellLevel": 30,
+      "ManaCost": 410,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 635,
+      "SpellName": "Holy Light",
+      "SpellLevel": 1,
+      "ManaCost": 35,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 639,
+      "SpellName": "Holy Light",
+      "SpellLevel": 6,
+      "ManaCost": 60,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 647,
+      "SpellName": "Holy Light",
+      "SpellLevel": 14,
+      "ManaCost": 110,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 740,
+      "SpellName": "Tranquility",
+      "SpellLevel": 30,
+      "ManaCost": 375,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 774,
+      "SpellName": "Rejuvenation",
+      "SpellLevel": 4,
+      "ManaCost": 25,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 913,
+      "SpellName": "Healing Wave",
+      "SpellLevel": 18,
+      "ManaCost": 155,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 939,
+      "SpellName": "Healing Wave",
+      "SpellLevel": 24,
+      "ManaCost": 200,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 959,
+      "SpellName": "Healing Wave",
+      "SpellLevel": 32,
+      "ManaCost": 265,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 996,
+      "SpellName": "Prayer of Healing",
+      "SpellLevel": 40,
+      "ManaCost": 560,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 1026,
+      "SpellName": "Holy Light",
+      "SpellLevel": 22,
+      "ManaCost": 190,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 1042,
+      "SpellName": "Holy Light",
+      "SpellLevel": 30,
+      "ManaCost": 275,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 1058,
+      "SpellName": "Rejuvenation",
+      "SpellLevel": 10,
+      "ManaCost": 40,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 1064,
+      "SpellName": "Chain Heal",
+      "SpellLevel": 40,
+      "ManaCost": 260,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 1430,
+      "SpellName": "Rejuvenation",
+      "SpellLevel": 16,
+      "ManaCost": 75,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 2050,
+      "SpellName": "Lesser Heal",
+      "SpellLevel": 1,
+      "ManaCost": 30,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 2052,
+      "SpellName": "Lesser Heal",
+      "SpellLevel": 4,
+      "ManaCost": 45,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 2053,
+      "SpellName": "Lesser Heal",
+      "SpellLevel": 10,
+      "ManaCost": 75,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 2054,
+      "SpellName": "Heal",
+      "SpellLevel": 16,
+      "ManaCost": 155,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 2055,
+      "SpellName": "Heal",
+      "SpellLevel": 22,
+      "ManaCost": 205,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 2060,
+      "SpellName": "Greater Heal",
+      "SpellLevel": 40,
+      "ManaCost": 370,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 2061,
+      "SpellName": "Flash Heal",
+      "SpellLevel": 20,
+      "ManaCost": 125,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 2090,
+      "SpellName": "Rejuvenation",
+      "SpellLevel": 22,
+      "ManaCost": 105,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 2091,
+      "SpellName": "Rejuvenation",
+      "SpellLevel": 28,
+      "ManaCost": 135,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 3472,
+      "SpellName": "Holy Light",
+      "SpellLevel": 38,
+      "ManaCost": 365,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 3627,
+      "SpellName": "Rejuvenation",
+      "SpellLevel": 34,
+      "ManaCost": 160,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 5185,
+      "SpellName": "Healing Touch",
+      "SpellLevel": 1,
+      "ManaCost": 25,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 5186,
+      "SpellName": "Healing Touch",
+      "SpellLevel": 8,
+      "ManaCost": 55,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 5187,
+      "SpellName": "Healing Touch",
+      "SpellLevel": 14,
+      "ManaCost": 110,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 5188,
+      "SpellName": "Healing Touch",
+      "SpellLevel": 20,
+      "ManaCost": 185,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 5189,
+      "SpellName": "Healing Touch",
+      "SpellLevel": 26,
+      "ManaCost": 270,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 6063,
+      "SpellName": "Heal",
+      "SpellLevel": 28,
+      "ManaCost": 255,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 6064,
+      "SpellName": "Heal",
+      "SpellLevel": 34,
+      "ManaCost": 305,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 6074,
+      "SpellName": "Renew",
+      "SpellLevel": 14,
+      "ManaCost": 65,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 6075,
+      "SpellName": "Renew",
+      "SpellLevel": 20,
+      "ManaCost": 105,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 6076,
+      "SpellName": "Renew",
+      "SpellLevel": 26,
+      "ManaCost": 140,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 6077,
+      "SpellName": "Renew",
+      "SpellLevel": 32,
+      "ManaCost": 170,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 6078,
+      "SpellName": "Renew",
+      "SpellLevel": 38,
+      "ManaCost": 205,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 6778,
+      "SpellName": "Healing Touch",
+      "SpellLevel": 32,
+      "ManaCost": 335,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 8004,
+      "SpellName": "Lesser Healing Wave",
+      "SpellLevel": 20,
+      "ManaCost": 105,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 8005,
+      "SpellName": "Healing Wave",
+      "SpellLevel": 40,
+      "ManaCost": 340,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 8008,
+      "SpellName": "Lesser Healing Wave",
+      "SpellLevel": 28,
+      "ManaCost": 145,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 8010,
+      "SpellName": "Lesser Healing Wave",
+      "SpellLevel": 36,
+      "ManaCost": 185,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 8903,
+      "SpellName": "Healing Touch",
+      "SpellLevel": 38,
+      "ManaCost": 405,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 8910,
+      "SpellName": "Rejuvenation",
+      "SpellLevel": 40,
+      "ManaCost": 195,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 8918,
+      "SpellName": "Tranquility",
+      "SpellLevel": 40,
+      "ManaCost": 505,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 8936,
+      "SpellName": "Regrowth",
+      "SpellLevel": 12,
+      "ManaCost": 120,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 8938,
+      "SpellName": "Regrowth",
+      "SpellLevel": 18,
+      "ManaCost": 205,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 8939,
+      "SpellName": "Regrowth",
+      "SpellLevel": 24,
+      "ManaCost": 280,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 8940,
+      "SpellName": "Regrowth",
+      "SpellLevel": 30,
+      "ManaCost": 350,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 8941,
+      "SpellName": "Regrowth",
+      "SpellLevel": 36,
+      "ManaCost": 420,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9472,
+      "SpellName": "Flash Heal",
+      "SpellLevel": 26,
+      "ManaCost": 155,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9473,
+      "SpellName": "Flash Heal",
+      "SpellLevel": 32,
+      "ManaCost": 185,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9474,
+      "SpellName": "Flash Heal",
+      "SpellLevel": 38,
+      "ManaCost": 215,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9750,
+      "SpellName": "Regrowth",
+      "SpellLevel": 42,
+      "ManaCost": 510,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9758,
+      "SpellName": "Healing Touch",
+      "SpellLevel": 44,
+      "ManaCost": 495,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9839,
+      "SpellName": "Rejuvenation",
+      "SpellLevel": 46,
+      "ManaCost": 235,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9840,
+      "SpellName": "Rejuvenation",
+      "SpellLevel": 52,
+      "ManaCost": 280,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9841,
+      "SpellName": "Rejuvenation",
+      "SpellLevel": 58,
+      "ManaCost": 335,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9856,
+      "SpellName": "Regrowth",
+      "SpellLevel": 48,
+      "ManaCost": 615,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9857,
+      "SpellName": "Regrowth",
+      "SpellLevel": 54,
+      "ManaCost": 740,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9858,
+      "SpellName": "Regrowth",
+      "SpellLevel": 60,
+      "ManaCost": 880,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9862,
+      "SpellName": "Tranquility",
+      "SpellLevel": 50,
+      "ManaCost": 695,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9863,
+      "SpellName": "Tranquility",
+      "SpellLevel": 60,
+      "ManaCost": 925,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9888,
+      "SpellName": "Healing Touch",
+      "SpellLevel": 50,
+      "ManaCost": 600,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 9889,
+      "SpellName": "Healing Touch",
+      "SpellLevel": 56,
+      "ManaCost": 720,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10328,
+      "SpellName": "Holy Light",
+      "SpellLevel": 46,
+      "ManaCost": 465,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10329,
+      "SpellName": "Holy Light",
+      "SpellLevel": 54,
+      "ManaCost": 580,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10395,
+      "SpellName": "Healing Wave",
+      "SpellLevel": 48,
+      "ManaCost": 440,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10396,
+      "SpellName": "Healing Wave",
+      "SpellLevel": 56,
+      "ManaCost": 560,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10466,
+      "SpellName": "Lesser Healing Wave",
+      "SpellLevel": 44,
+      "ManaCost": 235,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10467,
+      "SpellName": "Lesser Healing Wave",
+      "SpellLevel": 52,
+      "ManaCost": 305,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10468,
+      "SpellName": "Lesser Healing Wave",
+      "SpellLevel": 60,
+      "ManaCost": 380,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10622,
+      "SpellName": "Chain Heal",
+      "SpellLevel": 46,
+      "ManaCost": 315,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10623,
+      "SpellName": "Chain Heal",
+      "SpellLevel": 54,
+      "ManaCost": 405,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10915,
+      "SpellName": "Flash Heal",
+      "SpellLevel": 44,
+      "ManaCost": 265,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10916,
+      "SpellName": "Flash Heal",
+      "SpellLevel": 50,
+      "ManaCost": 315,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10917,
+      "SpellName": "Flash Heal",
+      "SpellLevel": 56,
+      "ManaCost": 380,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10927,
+      "SpellName": "Renew",
+      "SpellLevel": 44,
+      "ManaCost": 250,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10928,
+      "SpellName": "Renew",
+      "SpellLevel": 50,
+      "ManaCost": 305,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10929,
+      "SpellName": "Renew",
+      "SpellLevel": 56,
+      "ManaCost": 365,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10960,
+      "SpellName": "Prayer of Healing",
+      "SpellLevel": 50,
+      "ManaCost": 770,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10961,
+      "SpellName": "Prayer of Healing",
+      "SpellLevel": 60,
+      "ManaCost": 1030,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10963,
+      "SpellName": "Greater Heal",
+      "SpellLevel": 46,
+      "ManaCost": 455,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10964,
+      "SpellName": "Greater Heal",
+      "SpellLevel": 52,
+      "ManaCost": 545,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 10965,
+      "SpellName": "Greater Heal",
+      "SpellLevel": 58,
+      "ManaCost": 655,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 15237,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 20,
+      "ManaCost": 185,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 15430,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 28,
+      "ManaCost": 290,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 15431,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 36,
+      "ManaCost": 400,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 17137,
+      "SpellName": "Flash Heal",
+      "SpellLevel": 20,
+      "ManaCost": 125,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 17138,
+      "SpellName": "Flash Heal",
+      "SpellLevel": 20,
+      "ManaCost": 125,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 17843,
+      "SpellName": "Flash Heal",
+      "SpellLevel": 20,
+      "ManaCost": 125,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 18562,
+      "SpellName": "Swiftmend",
+      "SpellLevel": 1,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 20,
+      "PowerType": 0
+    },
+    {
+      "Id": 19750,
+      "SpellName": "Flash of Light",
+      "SpellLevel": 20,
+      "ManaCost": 35,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 19939,
+      "SpellName": "Flash of Light",
+      "SpellLevel": 26,
+      "ManaCost": 50,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 19940,
+      "SpellName": "Flash of Light",
+      "SpellLevel": 34,
+      "ManaCost": 70,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 19941,
+      "SpellName": "Flash of Light",
+      "SpellLevel": 42,
+      "ManaCost": 90,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 19942,
+      "SpellName": "Flash of Light",
+      "SpellLevel": 50,
+      "ManaCost": 115,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 19943,
+      "SpellName": "Flash of Light",
+      "SpellLevel": 58,
+      "ManaCost": 140,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 19968,
+      "SpellName": "Holy Light",
+      "SpellLevel": 1,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 19980,
+      "SpellName": "Holy Light",
+      "SpellLevel": 1,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 19981,
+      "SpellName": "Holy Light",
+      "SpellLevel": 1,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 19982,
+      "SpellName": "Holy Light",
+      "SpellLevel": 1,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 19993,
+      "SpellName": "Flash of Light",
+      "SpellLevel": 20,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 20694,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 0,
+      "ManaCost": 315,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 21791,
+      "SpellName": "Tranquility",
+      "SpellLevel": 20,
+      "ManaCost": 200,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 22009,
+      "SpellName": "Greater Heal",
+      "SpellLevel": 32,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 23455,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 20,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 23458,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 28,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 23459,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 36,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 23858,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 0,
+      "ManaCost": 315,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 25292,
+      "SpellName": "Holy Light",
+      "SpellLevel": 60,
+      "ManaCost": 660,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 25297,
+      "SpellName": "Healing Touch",
+      "SpellLevel": 60,
+      "ManaCost": 800,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 25299,
+      "SpellName": "Rejuvenation",
+      "SpellLevel": 60,
+      "ManaCost": 360,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 25314,
+      "SpellName": "Greater Heal",
+      "SpellLevel": 60,
+      "ManaCost": 710,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 25315,
+      "SpellName": "Renew",
+      "SpellLevel": 60,
+      "ManaCost": 410,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 25316,
+      "SpellName": "Prayer of Healing",
+      "SpellLevel": 60,
+      "ManaCost": 1070,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 25357,
+      "SpellName": "Healing Wave",
+      "SpellLevel": 60,
+      "ManaCost": 620,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 25817,
+      "SpellName": "Tranquility",
+      "SpellLevel": 20,
+      "ManaCost": 200,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 27606,
+      "SpellName": "Renew",
+      "SpellLevel": 56,
+      "ManaCost": 365,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 27608,
+      "SpellName": "Flash Heal",
+      "SpellLevel": 56,
+      "ManaCost": 380,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 27624,
+      "SpellName": "Lesser Healing Wave",
+      "SpellLevel": 60,
+      "ManaCost": 380,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 27799,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 44,
+      "ManaCost": 520,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 27800,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 52,
+      "ManaCost": 635,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 27801,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 60,
+      "ManaCost": 750,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 27803,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 44,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 27804,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 52,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 27805,
+      "SpellName": "Holy Nova",
+      "SpellLevel": 60,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 28716,
+      "SpellName": "Rejuvenation",
+      "SpellLevel": 0,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 28719,
+      "SpellName": "Healing Touch",
+      "SpellLevel": 0,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 28744,
+      "SpellName": "Regrowth",
+      "SpellLevel": 0,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 28807,
+      "SpellName": "Renew",
+      "SpellLevel": 0,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 28809,
+      "SpellName": "Greater Heal",
+      "SpellLevel": 0,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    },
+    {
+      "Id": 28849,
+      "SpellName": "Lesser Healing Wave",
+      "SpellLevel": 0,
+      "ManaCost": 0,
+      "ManaCostPerlevel": 0,
+      "ManaCostPercentage": 0,
+      "PowerType": 0
+    }
+  ]
+}

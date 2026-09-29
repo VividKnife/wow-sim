@@ -210,3 +210,36 @@ test('cancelling a stuck cannon refunds its consumed powder once and preserves t
     assert.equal(after.state.dungeonSaves?.deadmines.interactions[encounter.id], undefined);
     assert.equal([...after.state.bag, ...after.state.pending].filter(i => i.id === powder).reduce((n, i) => n + i.count, 0), 1);
 });
+
+for (const online of [false,true]) test(`snapshot automatically recovers expired shared instances before presence catch-up (online=${online})`,async()=>{
+    const f=await fixture();
+    await f.service.createAccount('b',{name:'Guest',classId:8,raceId:1},'create');
+    const id=(await f.service.command('a',{type:'createInstance',requestId:'form'})).instanceId!;
+    await f.service.command('b',{type:'joinInstance',instanceId:id,requestId:'join'});
+    await f.service.command('a',{type:'startInstance',instanceId:id,requestId:'start'});
+    const oldLease=await f.service.acquireInstanceLease(id,'worker');
+    const before=await f.service.snapshot('a');
+    assert.equal(before.instanceId,id,'current activities are not cancelled');
+    f.service.contentVersion='v2';f.time(10_000_000);
+    const result=await f.service.snapshot('b',undefined,online);
+    assert.equal(result.instanceId,null);assert.equal(result.state.activity.type,'idle');
+    assert.equal(result.localSimulation,null);
+    const leader=await f.service.snapshot('a');
+    assert.equal(leader.instanceId,null);assert.ok(leader.revision>before.revision);
+    assert.deepEqual(await f.store.read(tx=>tx.list('actor_leases')),[]);
+    await assert.rejects(f.service.advanceInstance(id,'worker',oldLease.epoch),/租约已失效/);
+    const rows=await f.store.read(tx=>tx.list('characters'));
+    await f.service.snapshot('b',undefined,online);
+    assert.deepEqual(await f.store.read(tx=>tx.list('characters')),rows);
+});
+
+test('a normal command automatically releases an outdated personal activity and starts fresh',async()=>{
+    const f=await fixture();
+    await f.service.command('a',{type:'hunt',id:299,requestId:'hunt',localClientId:'old-browser'});
+    f.service.contentVersion='v2';
+    const result=await f.service.command('a',{type:'travel',to:'goldshire',requestId:'travel'});
+    assert.equal(result.state.activity.type,'travel');
+    const activities=await f.store.read(tx=>tx.list<Activity>('activities'));
+    assert.equal(activities.find(a=>a.contentVersion==='v1')?.status,'cancelled');
+    assert.equal(activities.find(a=>a.contentVersion==='v2')?.status,'running');
+});

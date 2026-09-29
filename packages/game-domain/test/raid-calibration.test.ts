@@ -21,16 +21,16 @@ import {resolveSpellDamage} from '../src/rules/spell-resolution.js';
 const actor=(classId=8)=>{const s:any=createGame('校准',147,0,{classId,raceId:classId===7?2:classId===11?4:1});s.level=60;s.equipment={};s.rules=[];s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;return s;};
 const close=(a:number,b:number)=>assert.ok(Math.abs(a-b)<1e-9,`${a} != ${b}`);
 
-test('every supported boss and summoned add uses source defenses and fixed 25/40 health scaling',()=>{
+test('every supported boss and summoned add uses source defenses and unscaled 40-player health',()=>{
  for(const boss of [...moltenCoreBosses,onyxiaBoss]){
   const e:any=raidEnemy({clock:123},'boss',boss.name,boss.entry);
-  assert.equal(e.hp,Math.round(e.sourceHp*25/40));assert.equal(e.hp,boss.hp);
+  assert.equal(e.hp,e.sourceHp);assert.equal(e.hp,boss.hp);
   assert.equal(e.level,63);assert.notEqual(e.armor,3200);assert.equal(e.nextAttack,123);
   assert.equal(e.scaling.meleeDamage,1);close(e.low,e.sourceLow);close(e.high,e.sourceHigh);
  }
  const onyxia=raidCreatureStats(10184),lucifron=raidCreatureStats(12118);
- assert.equal(onyxia.sourceHp,1099230);assert.equal(onyxia.hp,687019);assert.equal(onyxia.armor,4691);
- assert.equal(lucifron.hp,219863);assert.equal(lucifron.armor,3795);assert.equal(lucifron.resistances[5],186);
+ assert.equal(onyxia.sourceHp,1099230);assert.equal(onyxia.hp,1099230);assert.equal(onyxia.armor,4691);
+ assert.equal(lucifron.hp,351780);assert.equal(lucifron.armor,3795);assert.equal(lucifron.resistances[5],186);
  close(lucifron.sourceLow,(33.1092+252/14)*2*16);
  close(lucifron.sourceHigh,(33.1092*1.5+252/14)*2*16);
  assert.equal(raidCreatureStats(12119).level,62);assert.notEqual(raidCreatureStats(11262).rank,3);

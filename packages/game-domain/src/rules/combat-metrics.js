@@ -81,6 +81,7 @@ export function finishCombat(s){
   dungeon.metrics.partial=!!(dungeon.metrics.partial||battle.metrics.partial);
   dungeon.metrics.segments++;battle.metricsAggregated=true;
  }
+ s.recentCorpses=battle.enemies.filter(e=>e.hp<=0).map(e=>({entry:e.entry,creatureType:e.creatureType,hp:0,position:e.position,positionY:e.positionY,location:s.location,dungeonRun:s.dungeon?.runId??null,until:s.clock+120000}));
  s.lastCombat=battle;s.combat=null;
  finishJourneyBattle(s,battle);
  s.battleHistory??=[];

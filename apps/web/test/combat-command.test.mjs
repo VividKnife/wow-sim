@@ -20,6 +20,16 @@ function group(classId=8){
  return s;
 }
 function order(s,order,extra={}){return act(s,{type:'combatCommand',order,encounterId:s.combat?.id,...extra},s.wallAt);}
+test('solo encounters do not wait for a hidden team commander even with preparation enabled',()=>{
+ for(const withPet of [false,true]){
+  const s=createGame('单人指挥',747,0,{classId:3,raceId:3});s.level=20;s.hp=stats(s).maxHp;s.settings.commandCombat=true;
+  if(withPet)s.pet={id:'solo-pet',name:'宠物',petUnit:true,hp:100,maxHp:100,level:20,classId:1};
+  startCombat(s,[299]);
+  assert.equal(view(s).combatCommand.members.length,1);
+  assert.ok(!s.combat.command?.paused);
+  assert.ok(advance(s,1000).state.clock>0);
+ }
+});
 test('live commands do not pause; output modes stay temporary and single target blocks damage AoE',()=>{
  let s=group();delete s.combat.command;s.learned.push(1449);s.strategyPolicy={waitForTank:false};
  s=order(s,'focus',{targetId:s.combat.enemies[0].id});assert.equal(s.combat.command.paused,false);assert.equal(s.combat.command.marks[s.combat.enemies[0].id],'skull');

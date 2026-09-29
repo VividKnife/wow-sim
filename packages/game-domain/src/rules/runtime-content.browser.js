@@ -1,3 +1,4 @@
+import {fetchContentJson} from '../../../sim-core/src/content-request.js';
 import {openPackedContent} from '../../../sim-core/src/packed-content.js';
 import version from '../../../game-data/runtime/version.json' with {type:'json'};
 
@@ -17,9 +18,7 @@ class ContentRequired extends Error {constructor(id){super('正在加载冒险�
 export const isContentPending=error=>error instanceof ContentRequired;
 const endpoint=name=>`/api/simulation-content/${version.version}/${name}`;
 async function fetchContent(name){
- const response=await fetch(endpoint(name),{cache:'force-cache',signal:AbortSignal.timeout(20000)});
- if(!response.ok)throw new Error(response.status===409?'游戏资料已更新，请刷新页面':'冒险资料加载失败，请检查网络后重试');
- const data=await response.json();
+ const data=await fetchContentJson(endpoint(name));
  if(data.version!==version.version)throw new Error('游戏资料版本不一致，请刷新页面');
  return data;
 }
@@ -27,14 +26,14 @@ export function initializeContent(){
  return initializing??=fetchContent('boot').then(data=>{
   bundle=data;bootIds=new Set(Object.keys(data.nodes));
   store=openPackedContent(bundle,{onRead:id=>pinned?.add(Math.floor(id/version.shardSize)),missing:id=>{throw new ContentRequired(id);}});runtime=store.root;
- });
+ }).catch(error=>{initializing=undefined;throw error;});
 }
 // Nine finite prefetch profiles contain only records touched by ordinary views
 // for that class. Unusual equipment, quests and encounters still use shards.
 export async function prepareContentForState(state){
  const ids=[...new Set([state,...(state?.party||[])].map(actor=>actor?.classId).filter(id=>[1,2,3,4,5,7,8,9,11].includes(id)))];
  await Promise.all(ids.map(id=>{
-  if(!classes.has(id))classes.set(id,fetchContent(`class-${id}`).then(data=>{
+  if(!classes.has(id))classes.set(id,Promise.all([fetchContent(`class-${id}`),initializeContent()]).then(([data])=>{
    for(const [key,row]of Object.entries(data.nodes)){if(!Number.isSafeInteger(+key)||+key<0||+key>=version.totalNodes||typeof row!=='string')throw new Error('职业资料无效');bundle.nodes[key]=row;bootIds.add(key);}
   }).catch(error=>{classes.delete(id);throw error;}));
   return classes.get(id);

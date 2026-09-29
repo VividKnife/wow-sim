@@ -14,12 +14,12 @@ before(async()=>{
 });
 after(async()=>{await unlink(outfile);await rmdir(directory);});
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
-function harness(t,{lag=0,itemIds=[],claimError=null,ready=true,device,channels=false}={}){
+function harness(t,{lag=0,itemIds=[],claimError=null,ready=true,device,channels=false,recoverOn=null}={}){
  const savedWindow=globalThis.window,savedWorker=globalThis.Worker,savedChannel=globalThis.MessageChannel;
  globalThis.MessageChannel=channels?class {port1={};port2={};}:undefined;
  if(device)t.mock.getter(globalThis,'navigator',()=>device);
- const requests=[],workers=[],statuses=[];
- let pendingReply=null,failNext=false,generation=0;
+ const requests=[],workers=[],statuses=[],automaticRecovery=!!recoverOn;
+ let pendingReply=null,failNext=false,generation=0,refreshes=0;
  const initial={id:'hero',clock:0,wallAt:0,bag:[]};
  let canonical=structuredClone(initial);
  const result=(sequence=0)=>({ownerId:'activity',state:structuredClone(canonical),contentVersion:'fixture',serverNow:canonical.wallAt+lag,deadline:999999,active:true,session:{id:`session-${generation}`,sequence}});
@@ -38,6 +38,7 @@ function harness(t,{lag=0,itemIds=[],claimError=null,ready=true,device,channels=
  t.mock.method(globalThis,'fetch',async(url,options)=>{
   assert.match(url,/saveId=one/);
   const body=JSON.parse(options.body);requests.push(body);
+  if(body.type===recoverOn){recoverOn=null;return Response.json({recovered:true,active:false,itemIds:[],serverNow:0});}
   if(body.type==='claim'){if(claimError){const error=claimError;claimError=null;return Response.json(error,{status:409});}generation++;return Response.json(result());}
   if(body.type==='release')return Response.json({});
   if(failNext){failNext=false;return Response.json({error:'retry'},{status:503});}
@@ -48,9 +49,9 @@ function harness(t,{lag=0,itemIds=[],claimError=null,ready=true,device,channels=
   return response;
  });
  t.mock.timers.enable({apis:['setTimeout']});
- const client=new Client({onFull:()=>{},onStatus:message=>statuses.push(message),refresh:async()=>{}});
+ const client=new Client({onFull:()=>{},onStatus:message=>statuses.push(message),refresh:async()=>{refreshes++;if(automaticRecovery)client.observe(null,'fixture','hero');}});
  t.after(()=>{client.dispose();globalThis.window=savedWindow;globalThis.Worker=savedWorker;globalThis.MessageChannel=savedChannel;});
- return {client,workers,requests,statuses,setReady:value=>{ready=value;},hold:()=>{pendingReply={};return ()=>{pendingReply.resolve();pendingReply=null;};},fail:()=>{failNext=true;}};
+ return {client,workers,requests,statuses,get refreshes(){return refreshes;},setReady:value=>{ready=value;},hold:()=>{pendingReply={};return ()=>{pendingReply.resolve();pendingReply=null;};},fail:()=>{failNext=true;}};
 }
 test('iPhone startup creates one Worker even when MessageChannel is available',async t=>{
  const h=harness(t,{channels:true,device:{userAgent:'iPhone EdgiOS',maxTouchPoints:5,hardwareConcurrency:8}});
@@ -300,4 +301,39 @@ test('encounter boundaries coalesce while a background upload is still in flight
  deliver();await flush();
  assert.equal(h.requests.filter(r=>r.type==='checkpoint').length,1);
  t.mock.timers.tick(10000);await flush();assert.equal(h.requests.filter(r=>r.type==='checkpoint').length,2);
+});
+
+for (const recoverOn of ['claim','checkpoint']) test(`${recoverOn}: automatic recovery refreshes the UI and allows a new adventure`,async t=>{
+ const h=harness(t,{recoverOn});
+ h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ if(recoverOn==='checkpoint'){t.mock.timers.tick(10000);await flush();}
+ assert.equal(h.refreshes,1);assert.equal(h.client.active,false);assert.equal(h.client.blocked,false);
+ assert.equal(h.client.latest,null);
+ const count=h.requests.length;
+ t.mock.timers.tick(60000);await flush();assert.equal(h.requests.length,count);
+ h.client.observe({ownerId:'new-activity',sessionId:null},'fixture','hero');await flush();
+ assert.equal(h.client.active,true);assert.equal(h.client.blocked,false);
+});
+
+test('a snapshot that automatically ended the activity discards the old Worker without uploading it',async t=>{
+ const h=harness(t);
+ h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ assert.equal(h.client.active,true);
+ h.client.observe(null,'fixture','hero');await flush();
+ assert.equal(h.client.active,false);assert.equal(h.client.blocked,false);
+ assert.equal(h.requests.filter(r=>r.type==='checkpoint').length,0);
+ assert.equal(h.statuses.at(-1),'');
+ assert.ok(h.workers[0].messages.some(m=>m.type==='stop'));
+});
+
+test('transient content failure replaces the Worker and recovers committed progress',async t=>{
+ const h=harness(t);h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ const old=h.workers[0];old.state.clock=old.state.wallAt=9000;
+ t.mock.timers.tick(10000);await flush();
+ old.onmessage({data:{type:'error',generation:old.generation,code:'LOCAL_CONTENT_NETWORK',error:'冒险资料下载超时'}});
+ assert.equal(old.terminated,true);assert.match(h.statuses.at(-1),/资料下载暂时中断/);
+ t.mock.timers.tick(1000);await flush();
+ assert.equal(h.workers.length,2);assert.equal(h.client.blocked,false);
+ assert.equal(h.workers[1].state.clock,9000);
+ assert.equal(await h.client.act({type:'cast',characterId:'hero'}),true);
 });

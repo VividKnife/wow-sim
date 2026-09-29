@@ -24,13 +24,14 @@ export function RecoveryControls({state:s,data:d,busy,send}:GameProps){
 
 export default function Dungeon(props:GameProps){
  const {state:s,data:d,busy,send}=props,dm=d.dungeon;if(!dm)return null;
+ const travelTime=d.map?.find((location:any)=>location.id===dm.entrance)?.travel;
  if(!dm.active)return <section className="panel dungeon-entry" aria-label={`${dm.name}入口`}>
   <div className="section-heading"><div><div className="eyebrow">{dm.zone} · 五人地下城</div><h2>{dm.name}</h2></div><span className="dungeon-sigil" aria-hidden="true">⚔</span></div>
   <p>{dm.description}</p>
   <div className="dungeon-requirements"><span>最低等级 {dm.minimumLevel}</span><span>建议 {dm.recommendedLevel} 级挑战</span><span>小队 {dm.groupSize??s.party.length+1} / 5 人</span></div>
   {dm.saved&&<p className="dungeon-notice">已保存路线进度 {dm.progress} / {dm.total}；再次进入会接续本次冒险。</p>}
   {dm.saved&&<details className="dungeon-notice"><summary>重新挑战副本</summary><p>重置会清除本次路线、怪物和机关进度。已获得的装备及任务进度保留；下次进入从头开始。每小时最多进入五个新副本。</p><Button variant="outline" disabled={busy||!dm.canReset} onClick={()=>send({type:'resetDungeon',contentId:dm.id})}>清除旧路线并重置</Button>{dm.resetReason&&<p>{dm.resetReason}</p>}</details>}
-  <div className="action-row">{dm.atEntrance?<Button disabled={busy||!dm.canEnter} onClick={()=>send({type:'enterDungeon',contentId:dm.id})}>{dm.saved?'重返':'进入'}{dm.name}</Button>:<Button variant="outline" disabled={busy||!!s.combat||!['idle','hunt'].includes(s.activity.type)||s.hp<=0} onClick={()=>send({type:'travel',to:dm.entrance})}>前往{dm.name}入口</Button>}</div>
+  <div className="action-row">{dm.atEntrance?<Button disabled={busy||!dm.canEnter} onClick={()=>send({type:'enterDungeon',contentId:dm.id})}>{dm.saved?'重返':'进入'}{dm.name}</Button>:<><Button variant="outline" disabled={busy||!!s.combat||!['idle','hunt'].includes(s.activity.type)||s.hp<=0} onClick={()=>send({type:'travel',to:dm.entrance})}>前往{dm.name}入口</Button><small className="self-center">{travelTime!=null?`预计到达：${duration(travelTime)}`:'暂无可达路线'}</small></>}</div>
   {dm.entryReason&&<p className="footnote">{dm.entryReason}</p>}
   <p className="footnote">开始推进后，小队会连续迎战、休整并完成机关；牧师存活时战后自动复活队友，牧师倒下、背包已满或拾取受阻时暂停。</p>
   {dm.atEntrance&&d.recovery.fallen.length>0&&<RecoveryControls {...props}/>}

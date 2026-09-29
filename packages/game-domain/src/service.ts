@@ -8,7 +8,7 @@ import { startActivity, recall, restoreReservation, settleActivity } from './act
 import { randomUUID, randomBytes, createHash } from 'node:crypto';
 import {remapItemReferences} from '../../sim-core/src/item-identities.js';
 import { removeInvalidSave } from './account-reset.ts';
-import { unstuck } from './unstuck.ts';
+import { unstuck, recoverExpiredActivities } from './unstuck.ts';
 import { validAccountPresence } from './context.ts';
 import {simulationInterval} from './simulation-cadence.ts';
 import {prepareCombatPlan, combatRecording, invalidateCombatPlan, combatExecutionMode} from './combat-execution.ts';
@@ -73,6 +73,7 @@ export class GameService {
     request(id: unknown) { requireThat(typeof id === 'string' && id.length > 0 && id.length <= 160, 'INVALID_REQUEST', '需要有效的 requestId', 400); }
     async receipt(tx: Transaction, accountId: string, requestId: string, command: Rules) { await tx.insert('receipts', { id: `${accountId}:${requestId}`, accountId, requestId, fingerprint: JSON.stringify(command), createdAt: this.now() }); }
     async snapshot(accountId: string, characterId?: string, online = false) {
+        await recoverExpiredActivities.call(this, accountId);
         if (online) await this.refreshPresence(accountId);
         const readSnapshot = () => this.store.read(async (tx) => {
             const a = await account(tx, accountId);
@@ -191,6 +192,7 @@ export class GameService {
             localCheckpoint.clientId===command.localClientId && localCheckpoint.sessionId===command.localSessionId,
             'LOCAL_STATE','操作与检查点会话不一致',400);
         const receiptCommand=localCheckpoint?{...command,localCheckpointHash:createHash('sha256').update(JSON.stringify(localCheckpoint)).digest('hex')}:command;
+        if (command.type !== 'unstuck') await recoverExpiredActivities.call(this, accountId);
         const selectedLease = await this.store.read(async tx => {
             const a = await account(tx, accountId);
             const c = await owned(tx, accountId, command.characterId || a.primaryCharacterId);

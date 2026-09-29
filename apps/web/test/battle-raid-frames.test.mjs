@@ -14,12 +14,12 @@ before(async()=>{
  LiveFrames=(await import(pathToFileURL(directory+'/live.mjs').href)).default;
 });
 after(async()=>{if(directory)await rm(directory,{recursive:true,force:true});});
-const units=()=>Array.from({length:25},(_,i)=>({id:String(i),name:'成员'+i,classId:8,hp:i===6?0:600,maxHp:1000}));
+const units=()=>Array.from({length:40},(_,i)=>({id:String(i),name:'成员'+i,classId:8,hp:i===6?0:600,maxHp:1000}));
 const render=(members,views={})=>renderToStaticMarkup(createElement(Frames,{units:members,views,selectedId:'2',onSelect:()=>{},clock:1000,live:true}));
-test('raid groups keep all 25 members in stable five-person columns and exclude summons and enemies',()=>{
+test('raid groups keep all 40 members in stable five-person columns and exclude summons and enemies',()=>{
  const members=units(),html=render([...members,{id:'pet',name:'宠物',petUnit:true},{id:'totem',name:'图腾',totemUnit:true},{id:'enemy',name:'敌人',foe:true}]);
- assert.equal((html.match(/role="group"/g)||[]).length,5);assert.equal((html.match(/<button /g)||[]).length,25);
- assert.match(html,/24\/25/);assert.match(html,/死亡/);assert.match(html,/aria-pressed="true" aria-label="成员2/);
+ assert.equal((html.match(/role="group"/g)||[]).length,8);assert.equal((html.match(/<button /g)||[]).length,40);
+ assert.match(html,/39\/40/);assert.match(html,/死亡/);assert.match(html,/aria-pressed="true" aria-label="成员2/);
  assert.doesNotMatch(html,/宠物|图腾|敌人/);assert.ok(html.indexOf('成员5')<html.indexOf('成员6')&&html.indexOf('成员6')<html.indexOf('成员7'));
 });
 test('frames use authoritative health and resource values and hide expired effects',()=>{

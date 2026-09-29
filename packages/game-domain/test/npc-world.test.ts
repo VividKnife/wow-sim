@@ -32,11 +32,11 @@ async function fixture(){
  return {store,hero,command,snapshot:()=>service.snapshot('npc-world-test'),restart:()=>{service=new GameService(store,options);},elapse:(ms:number)=>{now+=ms;},service:()=>service};
 }
 
-test('50 distinct persistent residents balance all nine classes; recommendations preserve friends',()=>{
- const s=world();assert.equal(s.npcWorld.residents.length,50);assert.equal(new Set(s.npcWorld.residents.map((p:Rules)=>p.id)).size,50);
- assert.equal(new Set(s.npcWorld.residents.map((p:Rules)=>p.unit.name)).size,50);
+test('72 distinct persistent residents balance all nine classes; recommendations preserve friends',()=>{
+ const s=world();assert.equal(s.npcWorld.residents.length,72);assert.equal(new Set(s.npcWorld.residents.map((p:Rules)=>p.id)).size,72);
+ assert.equal(new Set(s.npcWorld.residents.map((p:Rules)=>p.unit.name)).size,72);
  const classes=Object.values(s.npcWorld.residents.reduce((counts:Rules,p:Rules)=>{counts[p.unit.classId]=(counts[p.unit.classId]||0)+1;return counts;},{})) as number[];
- assert.equal(classes.length,9);assert.ok(classes.every(n=>n===5||n===6));
+ assert.equal(classes.length,9);assert.ok(classes.every(n=>n===8));
  const v=view(s).npcWorld;assert.equal(v.selected.length,4);assert.equal(v.selected.filter((p:Rules)=>p.role==='tank').length,1);assert.equal(v.selected.filter((p:Rules)=>p.role==='healer').length,1);
  const friend=v.residents.find((p:Rules)=>p.role==='tank');const next=act(s,{type:'npcFriend',id:friend.id,friend:true},0);const recommended=act(next,{type:'npcRecommend'},0);
  assert.ok(recommended.npcWorld.selection.includes(friend.id));assert.deepEqual(recommended.party,[]);
@@ -137,9 +137,9 @@ test('automatic group rolls do not disarm dungeon auto advance between encounter
  const result=advance(s,100).state;assert.equal(result.groupLoot.pending.length,0);assert.equal(result.dungeon.autoAdvance,true);
 });
 
-test('six-person batches cover roles, never repeat the previous batch and eventually introduce all 50',()=>{
+test('six-person batches cover roles, never repeat the previous batch and eventually introduce all 72',()=>{
  let s=world();const seen=new Set<string>();let previous:string[]=[];
- for(let turn=0;turn<12;turn++){
+ for(let turn=0;turn<24;turn++){
   if(turn)s=act(s,{type:'npcRefresh'},turn*NPC_REFRESH_MS);
   const board=view(s).npcWorld.board!;assert.equal(board.ids.length,6);assert.equal(new Set(board.ids).size,6);
   assert.ok(board.ids.every((id:string)=>!previous.includes(id)));board.ids.forEach((id:string)=>seen.add(id));
@@ -147,7 +147,7 @@ test('six-person batches cover roles, never repeat the previous batch and eventu
   assert.equal(batch.filter((p:Rules)=>p.role==='tank').length,1);assert.equal(batch.filter((p:Rules)=>p.role==='healer').length,1);
   assert.equal(board.remaining,NPC_REFRESH_MS);assert.equal(board.sequence,turn+1);previous=board.ids;
  }
- assert.equal(seen.size,50);
+ assert.equal(seen.size,72);
 });
 
 test('refresh cooldown is authoritative and browsing never rerolls gear, friends, selection or adventure randomness',()=>{

@@ -23,8 +23,8 @@ function rosterIds(value: unknown): asserts value is string[] { requireThat(Arra
 export async function createInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) {
     const contentId = cmd.contentId ?? (cmd.type === 'enterDungeon' ? dungeonIdFor(c.rules) : 'northshire-skirmish');
     requireThat(typeof contentId === 'string' && Object.hasOwn(instanceContents, contentId), 'CONTENT', '未知的副本内容', 400);
-    const capacity = cmd.capacity ?? (['molten-core-gold','onyxias-lair-gold'].includes(contentId) ? 25 : 5);
-    if(['molten-core-gold','onyxias-lair-gold'].includes(contentId))requireThat(capacity===25&&c.kind==='hero','RAID_ENTRY','团队副本需要主角发起25人金团');
+    const capacity = cmd.capacity ?? (['molten-core-gold','onyxias-lair-gold'].includes(contentId) ? 40 : 5);
+    if(['molten-core-gold','onyxias-lair-gold'].includes(contentId))requireThat(capacity===40&&c.kind==='hero','RAID_ENTRY','团队副本需要主角发起40人金团');
     requireThat([5, 10, 20, 25, 40].includes(capacity), 'CAPACITY', '副本席位必须为 5、10、20、25 或 40', 400);
     const a = await account(tx, c.accountId), party = await tx.get<Party>('parties', a.partyId);
     const npcDraft = c.kind === 'hero' && Object.hasOwn(dungeonDefinitions,contentId) ? c.rules.npcWorld?.selection : null;

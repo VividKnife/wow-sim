@@ -15,14 +15,14 @@ import {buildGameResponse} from '../src/rules/server-response.js';
 import type {Rules} from '../src/model.ts';
 function fixture(){const s=createMoltenCoreDemo().state;s.party=s.party.slice(0,4);s.growthPolicy='player';enterGoldRaid(s);for(const type of ['goldPublish','goldRecommend'])goldRaidAction(s,{type});
  // These scenarios exercise Shield Wall, so explicitly recruit warrior tanks.
- const g=s.goldRaid,warriors=g.applicants.filter((c:Rules)=>combatRole(c)==='tank'&&c.classId===1).slice(0,2);
- g.selected=[...warriors.map((c:Rules)=>c.id),...g.selected.filter((id:string)=>combatRole(g.applicants.find((c:Rules)=>c.id===id))!=='tank')].slice(0,24);
+ const g=s.goldRaid,warriors=g.applicants.filter((c:Rules)=>combatRole(c)==='tank'&&c.classId===1).slice(0,3);
+ g.selected=[...warriors.map((c:Rules)=>c.id),...g.selected.filter((id:string)=>combatRole(g.applicants.find((c:Rules)=>c.id===id))!=='tank')].slice(0,39);
  goldRaidAction(s,{type:'goldLaunch'});return s;}
 function start(s:Rules,id='magmadar'){for(const c of [s,...s.party])restoreRaidMember(c,s);beginMoltenCoreBattle(s,id,s.goldRaid.tactics);return s;}
 
 test('plans validate actors, lock in combat and survive serialization per boss',()=>{
  const s=fixture(),plan=raidPlan(s,'magmadar');
- assert.throws(()=>raidCommandAction(s,{type:'raidPlan',bossId:'magmadar',plan:{...plan,offTank:plan.mainTank}}),/两名不同/);
+ assert.throws(()=>raidCommandAction(s,{type:'raidPlan',bossId:'magmadar',plan:{...plan,offTank:plan.mainTank}}),/不能重复/);
  const wrong=structuredClone(plan);wrong.jobs.magic=[s.id];assert.throws(()=>raidCommandAction(s,{type:'raidPlan',bossId:'magmadar',plan:wrong}),/已掌握/);
  plan.movement='finishCast';plan.cooldowns.wall.trigger='manual';
  raidCommandAction(s,{type:'raidPlan',bossId:'magmadar',plan});
@@ -71,9 +71,9 @@ test('assigned dispellers are exclusive and leaving the mechanic unassigned prod
  const priest=[s,...s.party].find(c=>c.classId===5)!;assert.equal(assignedRaidSupport(s,priest,'magic'),false);
  const r=s.combat.raidEncounter;r.nextDoom=s.clock;r.nextCurse=Infinity;r.nextShock=Infinity;
  const hurt=(_s:Rules,_a:Rules,t:Rules,n:number)=>{t.hp=Math.max(0,t.hp-n);};
- moltenCoreTick(s,[s,...s.party],hurt);s.clock+=9000;moltenCoreTick(s,[s,...s.party],hurt);
- assert.equal(r.failures.doom,7);
- const b={...s.combat,endedAt:s.clock};const review=raidAttemptReview(s,b)!;assert.equal(review.failures.doom,7);assert.match(review.suggestions[0],/末日漏驱散/);
+ moltenCoreTick(s,[s,...s.party],hurt);const marked=[s,...s.party].filter(c=>c.auras.some((a:Rules)=>a.raidDoom)).length;assert.ok(marked>7);s.clock+=10000;moltenCoreTick(s,[s,...s.party],hurt);
+ assert.equal(r.failures.doom,marked);
+ const b={...s.combat,endedAt:s.clock};const review=raidAttemptReview(s,b)!;assert.equal(review.failures.doom,marked);assert.match(review.suggestions[0],/末日漏驱散/);
 });
 
 test('published tank and movement choices change actual initial targets and danger avoidance',()=>{
@@ -96,12 +96,12 @@ test('automatic traversal pauses before a boss and wipe review preserves the pla
  assert.deepEqual(s.goldRaid.attempts.at(-1).review,review);
 });
 
-test('25-player camp buff order covers the assembled raid and resumes from a checkpoint',()=>{
+test('40-player camp buff order covers the assembled raid and resumes from a checkpoint',()=>{
  const original=fixture();let s=act(original,{type:'partyBuffs'},original.wallAt);
  s=advance(s,s.wallAt+1000).state;s=JSON.parse(JSON.stringify(s));
  s=advance(s,s.wallAt+600000,{stopWhen:(state:Rules)=>state.activity.type==='idle'}).state;
  assert.equal(s.activity.type,'idle',JSON.stringify(s.activity));
- const actors=[s,...s.party];assert.equal(actors.length,25);
+ const actors=[s,...s.party];assert.equal(actors.length,40);
  for(const c of actors){
   assert.ok(c.classBuffs.some((b:Rules)=>b.name==='Power Word: Fortitude'&&b.until>s.clock),c.name);
   if(stats(c).maxMana)assert.ok(c.buffs.int?.until>s.clock,c.name+' 智慧');

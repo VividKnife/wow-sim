@@ -100,7 +100,10 @@ export class LocalSimulationClient {
       if(data.type==='commandResult') {
         if(data.error)action?.reject(new Error(data.error));else action?.resolve();
       }
-      if (data.type==='error') this.fail(Object.assign(new Error(data.error),{code:data.code}));
+      if (data.type==='error') {
+        if(data.code==='LOCAL_CONTENT_NETWORK')this.breakWorker('冒险资料下载暂时中断');
+        else this.fail(Object.assign(new Error(data.error),{code:data.code}));
+      }
     };
     worker.onerror=(event)=>{
       if(worker!==this.worker)return;
@@ -176,7 +179,10 @@ export class LocalSimulationClient {
       void this.enqueue(async()=>{this.clear();await this.claim();}).catch(error=>this.report(error));
     } else if(changed && !this.commandPending) {
       void this.enqueue(async()=>{
-        if(this.session&&!this.blocked)await this.checkpoint();
+        // An authoritative snapshot can end an expired activity. Do not upload
+        // its discarded timeline or let that rejection block the fresh state.
+        if(this.session&&!this.blocked&&this.session.contentVersion===contentVersion&&
+          (manifest||this.session.characterId!==characterId))await this.checkpoint();
         this.clear();this.failed=false;this.failure=null;this.workerFailure=null;this.recoveryAttempts=0;this.reconcileNeeded=false;
         await this.claim();
       }).catch(error=>this.report(error));
@@ -210,6 +216,7 @@ export class LocalSimulationClient {
     const desired=this.desired;
     const result=await this.request({...desired,type:'claim',clientId:this.clientId,requestId:crypto.randomUUID()});
     if(this.stopped)return;
+    if(result.recovered){this.clear();await this.options.refresh();return;}
     this.syncStatus='';this.session={...result,characterId:desired.characterId};this.observedSession=result.session.id;this.snapshot=null;this.behindMs=result.serverNow-result.state.wallAt;
     await this.start();
   }
@@ -292,6 +299,7 @@ export class LocalSimulationClient {
     const submitted=this.pending;
     const result=await this.request(submitted);
     if(this.pending!==submitted)return;
+    if(result.recovered){this.clear();await this.options.refresh();return;}
     for(const [from,to] of result.itemIds)this.itemIds.set(from,to);
     while(this.itemIds.size>4096)this.itemIds.delete(this.itemIds.keys().next().value!);
     this.pending=null;

@@ -1,16 +1,16 @@
 import {raidCreatureStats} from './raid-scaling.js';
-// Authored 25-player encounters and routes; not a literal Classic spawn table.
+// 40-player encounters and routes; not a literal Classic spawn table.
 export const moltenCoreBosses=[
  {id:'lucifron',entry:12118,name:'鲁西弗隆',subtitle:'诅咒与末日',description:'副坦接住两名护卫，优先击杀护卫。法师解除诅咒，牧师驱散末日。'},
  {id:'magmadar',entry:11982,name:'玛格曼达',subtitle:'狂暴与熔岩',description:'猎人宁神射击，牧师保护主坦免受恐惧，团队离开熔岩炸弹。'},
  {id:'gehennas',entry:12259,name:'基赫纳斯',subtitle:'火雨与诅咒',description:'清理两名烈焰行者，解除降低治疗效果的诅咒，并撤出火雨。'},
- {id:'garr',entry:12057,name:'加尔',subtitle:'熔岩之誓',description:'副坦牵制四名火誓者，逐个击破。火誓者死亡爆炸并强化加尔。'},
+ {id:'garr',entry:12057,name:'加尔',subtitle:'熔岩之誓',description:'副坦牵制八名火誓者，逐个击破。火誓者死亡爆炸并强化加尔。'},
  {id:'baron-geddon',entry:12056,name:'迦顿男爵',subtitle:'活体炸弹',description:'驱散燃烧法力的点燃，被活体炸弹点名后远离队友；地狱火期间撤离。'},
  {id:'shazzrah',entry:12264,name:'沙斯拉尔',subtitle:'奥术传送',description:'解除放大奥术伤害的诅咒。首领传送到后排后坦克重新接怪。'},
  {id:'sulfuron',entry:12098,name:'萨弗隆先驱者',subtitle:'烈焰祭司',description:'优先清理四名会治疗首领的烈焰祭司，驱散暗言术：痛。'},
  {id:'golemagg',entry:11988,name:'焚化者古雷曼格',subtitle:'熔火巨人',description:'副坦牵制两只熔岩犬，输出集中攻击首领；首领倒下后熔岩犬随之消散。'},
  {id:'majordomo',entry:12018,name:'管理者埃克索图斯',subtitle:'烈焰议会',description:'前八名首领符文熄灭后现身。击败四名精英与四名医师，迫使管理者投降。'},
- {id:'ragnaros',entry:11502,name:'拉格纳罗斯',subtitle:'炎魔之王',description:'沿螺旋岩岸站位，避开熔池与熔岩爆发；击退可能将坦克推入岩浆。炎魔潜入熔岩时击败六名烈焰之子，迫使其重新现身。'},
+ {id:'ragnaros',entry:11502,name:'拉格纳罗斯',subtitle:'炎魔之王',description:'沿螺旋岩岸站位，避开熔池与熔岩爆发；击退可能将坦克推入岩浆。炎魔潜入熔岩时击败八名烈焰之子，迫使其重新现身。'},
 ].map(b=>({...b,...raidCreatureStats(b.entry),reward:b.name+'战功'}));
 
 import {onyxiaBoss,onyxiaRoute,onyxiaMap} from './onyxia-content.js';
