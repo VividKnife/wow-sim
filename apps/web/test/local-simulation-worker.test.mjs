@@ -20,7 +20,7 @@ before(async()=>{
   'client-snapshot.ts':'export const projectClientSnapshot=(player,view)=>({player,view});export const createCombatFrameProjector=()=>()=>({view:{}});',
   'manifest.json':'export default {contentVersion:"fixture"};',
  };
- const bundle=await build({absWorkingDir:fileURLToPath(new URL('../',import.meta.url)),entryPoints:['lib/local-simulation.worker.ts'],write:false,bundle:true,format:'iife',platform:'browser',logLevel:'silent',plugins:[{name:'worker-fixtures',setup(build){
+ const bundle=await build({absWorkingDir:fileURLToPath(new URL('../',import.meta.url)),entryPoints:['lib/local-simulation-runtime.ts'],write:false,bundle:true,format:'iife',platform:'browser',logLevel:'silent',plugins:[{name:'worker-fixtures',setup(build){
   build.onResolve({filter:/\.(js|ts|json)$/},args=>{const name=args.path.split('/').at(-1);if(fixtures[name])return {path:name,namespace:'fixture'};});
   build.onLoad({filter:/.*/,namespace:'fixture'},args=>({contents:fixtures[args.path],loader:'js'}));
  }}]});source=bundle.outputFiles[0].text;

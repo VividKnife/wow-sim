@@ -31,7 +31,7 @@ test('every legal race/class starts at its source homeland with local quests and
   const s:Rules=createGame('家园',19,0,{raceId:race.id,classId:cls.id}),home=racialHomes[race.id as keyof typeof racialHomes];
   assert.equal(s.location,home.start);assert.equal(s.hearth,home.start);assert.deepEqual(s.visited,[home.start]);assert.equal(s.teamId,race.faction==='Horde'?67:469);
   const source=table('playercreateinfo').find((r:Rules)=>r.race===race.id&&r.class===cls.id);
-  assert.equal(nodes[s.location].map,source.map);
+  assert.ok(source);assert.equal(nodes[s.location].map,source.map);
   assert.ok(Math.hypot(nodes[s.location].x-source.position_x,nodes[s.location].y-source.position_y)<500);
   assert.ok(view(s).quests.some(q=>q.canAccept),`${race.name}/${cls.name}: opening quest`);
   assert.ok(monsterIdsAt(s.location).some(id=>creatures[id].MinLevel<=3),race.name);

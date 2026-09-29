@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "91910aea615a6a2844a8db951509efc14c34133b8466ffeba056bbec2910a4ca",
+  "contentVersion": "63b23c7bc27a1c9402fb316d81843af4cf1429c64f57bcbd0e54bfa9ad3500df",
   "bundles": {
     "buff-tooltips-zhCN.json": {
       "sha256": "aa751e89eb2dcce2355b1467c958faa75e5e3f827628915cd1dd55982a84af94",
@@ -217,6 +217,302 @@
     "world-visuals.json": {
       "sha256": "a8d3d3cc444b1568ed3e510932f07c1fcc763c85b1dc4003fe5ee5c3a028a549",
       "bytes": 316513
+    },
+    "runtime/browser/0.json.gz": {
+      "sha256": "58b0d5139df113a8c89ddcf1acb8fd82cac1d8c1669fa48c7458317bd6fc51ef",
+      "bytes": 84651
+    },
+    "runtime/browser/1.json.gz": {
+      "sha256": "ae822a95b1a91d008070a0f7cd1d18e1237747fc564b214248787c527a8e2f23",
+      "bytes": 66609
+    },
+    "runtime/browser/10.json.gz": {
+      "sha256": "f213927c476238826342c8a097c26edeabba608acbbce03722f8a2d700a611ba",
+      "bytes": 78515
+    },
+    "runtime/browser/11.json.gz": {
+      "sha256": "2483cf82246769285625b7341bd05d4f65da7db20d0099ae48ff88ff22932096",
+      "bytes": 76176
+    },
+    "runtime/browser/12.json.gz": {
+      "sha256": "c6f8722b95b2d443679c9c9274618a9e2f78f0a207d8db0b075b7bdc96b82c5e",
+      "bytes": 76841
+    },
+    "runtime/browser/13.json.gz": {
+      "sha256": "792c2a18e4d5800918652ab07c1a670b5cf3277dd80ff52b70e72c2ef55d55cd",
+      "bytes": 76728
+    },
+    "runtime/browser/14.json.gz": {
+      "sha256": "274c3e50538fc9b64498cb448aa84a72bc47aaf856d81ef2e119deeac61c83dc",
+      "bytes": 78609
+    },
+    "runtime/browser/15.json.gz": {
+      "sha256": "a33de44fe02a962ae3f4d8ab993109fa792e50e61543cc6ce434168fa5b93393",
+      "bytes": 84716
+    },
+    "runtime/browser/16.json.gz": {
+      "sha256": "c0d35ba8a14a74a7929ec71d2354ff938eaf4ed070bde7ba293e25a0f929e531",
+      "bytes": 83173
+    },
+    "runtime/browser/17.json.gz": {
+      "sha256": "b1effa5a8ecc2ec8e97e6316224b6818e91aff63ed124a8a26a3dda884115e70",
+      "bytes": 78163
+    },
+    "runtime/browser/18.json.gz": {
+      "sha256": "f33ed006823ab764b18449825dba8fa737dcb0865337e98973b02b401980457c",
+      "bytes": 78278
+    },
+    "runtime/browser/19.json.gz": {
+      "sha256": "8415a8b5c1a32f750e23ddc9c980eedea30ad2a2376cf131a7eaaa140a98dc4d",
+      "bytes": 81339
+    },
+    "runtime/browser/2.json.gz": {
+      "sha256": "def6f886e90b20525bc5c8d08373778a97ec81b74ec6f0ce3e34044805b40e82",
+      "bytes": 84361
+    },
+    "runtime/browser/20.json.gz": {
+      "sha256": "4c388f92135bb343bf326e1db9fa8ad1630036424dd88487a1f75554563ef3e3",
+      "bytes": 80756
+    },
+    "runtime/browser/21.json.gz": {
+      "sha256": "b2f0adf043ec4cc4be5a48d5c16ad7a240a5fec8a3e06d58e228e6aeb7ab8c2a",
+      "bytes": 84568
+    },
+    "runtime/browser/22.json.gz": {
+      "sha256": "a1adc1e489cfc58773e2fcc2e6b4add27840a2188ebc0020e3271078ef637df5",
+      "bytes": 97419
+    },
+    "runtime/browser/23.json.gz": {
+      "sha256": "dc65501cb8309a88b350aae44a18fba5eacf9322a5024f6430cf44bad9758ec1",
+      "bytes": 351439
+    },
+    "runtime/browser/24.json.gz": {
+      "sha256": "f4a2ff29cae1d05a08a4a34f2e84adc7939bf1c582506a65ba3bcdedcbf3e029",
+      "bytes": 279649
+    },
+    "runtime/browser/25.json.gz": {
+      "sha256": "e301133272ab21cd6d436b75c8c9ca5df390ad49145039368b60709cdcd20b81",
+      "bytes": 258430
+    },
+    "runtime/browser/26.json.gz": {
+      "sha256": "30d866c4ee513b3326316189a9b0b2f88b2f52da69e5e07662a05ad3e025de7a",
+      "bytes": 201232
+    },
+    "runtime/browser/27.json.gz": {
+      "sha256": "5cee31d9de667999bf6f6ad94303485b2d1d40ce2c863ae7f92b2b0a761b5000",
+      "bytes": 125532
+    },
+    "runtime/browser/28.json.gz": {
+      "sha256": "fafd61f9cea0d08eefc693f3d9634bec96e5c351d1f898b78e91e9bb06c30142",
+      "bytes": 185632
+    },
+    "runtime/browser/29.json.gz": {
+      "sha256": "99e562993a0ada46091194853eb1c938f5aa7dee23c226eb517978fa662fcbbc",
+      "bytes": 186330
+    },
+    "runtime/browser/3.json.gz": {
+      "sha256": "d48e0f1f4ea38bc3bc41b6b2d31602b7e570d8583548000e5c0384d44629a46c",
+      "bytes": 134819
+    },
+    "runtime/browser/30.json.gz": {
+      "sha256": "6c998fc93aa7f3bd2c32edf5dbd93655cc424bd901c949ca29520be13a7a069f",
+      "bytes": 175232
+    },
+    "runtime/browser/31.json.gz": {
+      "sha256": "9188744033325ddda9feacc6087e0140cd677964f97c19ea793b1f3743b1e2ed",
+      "bytes": 164165
+    },
+    "runtime/browser/32.json.gz": {
+      "sha256": "0a3840c056923ac053244005a80f7a9cd6875cc2a6a56e429db2fe96346ee85a",
+      "bytes": 162996
+    },
+    "runtime/browser/33.json.gz": {
+      "sha256": "e5204854017ff6161288a1900958ebc7f74748e68b86af5b5b1a64ef8e7b6ed1",
+      "bytes": 135553
+    },
+    "runtime/browser/34.json.gz": {
+      "sha256": "313e36b81c92c4558875ab386faf9e1afc5d7576276e6f5bfbb842054afa67d6",
+      "bytes": 136322
+    },
+    "runtime/browser/35.json.gz": {
+      "sha256": "303ed40137819847459f456af9dc4a60e5a80276c53ac6198e638b70810c36bd",
+      "bytes": 210941
+    },
+    "runtime/browser/36.json.gz": {
+      "sha256": "a260fefdf7840838f82cb2b32e0f20524473f3affc1fc9f897f4cf07d46d0184",
+      "bytes": 491391
+    },
+    "runtime/browser/37.json.gz": {
+      "sha256": "688a662cd87a162f569618fc0ae5f6e8615b0e2e8650a7711486dc320c61c06f",
+      "bytes": 741507
+    },
+    "runtime/browser/38.json.gz": {
+      "sha256": "e1cfd7944ef0ec0883c9c126e5d0ae9d2443a6544235a682d0e2d9964a52e833",
+      "bytes": 51813
+    },
+    "runtime/browser/39.json.gz": {
+      "sha256": "0fc17949aad8e592bd067c48d06e3e59fdd0b11e2f4babc1d444bafdf91abf1d",
+      "bytes": 52572
+    },
+    "runtime/browser/4.json.gz": {
+      "sha256": "f1515bc337c09476c6a8ee22b4ef5be348633e21188277b2f6e358685f13f2a8",
+      "bytes": 82914
+    },
+    "runtime/browser/40.json.gz": {
+      "sha256": "7919122c38dc9802f962fa1f820b89f1d6dbcd018c2d9e54d5944e3bfac3534d",
+      "bytes": 57063
+    },
+    "runtime/browser/41.json.gz": {
+      "sha256": "0bfdae28638f074a823f4bdd796fc54e50559722b2fdbfc85667374aaa65a038",
+      "bytes": 133374
+    },
+    "runtime/browser/42.json.gz": {
+      "sha256": "26f9902bed70088c29eaeecf32e742f6aa2baf933f350c50801307b6e74e4a85",
+      "bytes": 206971
+    },
+    "runtime/browser/43.json.gz": {
+      "sha256": "1a7bb534ad8f753f267de21c414ec7cfa604eee2b3555fe43880cdae4c1861cc",
+      "bytes": 256096
+    },
+    "runtime/browser/44.json.gz": {
+      "sha256": "3d6a4ea04d8fc3f1f6e76a643e95333bbc10bd733c03b4f09ef771419136aadb",
+      "bytes": 607877
+    },
+    "runtime/browser/45.json.gz": {
+      "sha256": "87a5f99e08e0d0a5eed6b29d27ada6f231ad47198915a46a4789ae02c9649033",
+      "bytes": 128741
+    },
+    "runtime/browser/46.json.gz": {
+      "sha256": "2197025ddcf1525f72d3baaac9ac26559ed8a304795d08ec6d5253c25319f2b8",
+      "bytes": 57772
+    },
+    "runtime/browser/47.json.gz": {
+      "sha256": "612d550d6cd11948a78d29a8c9f066bb44e1ab05eb8a5357bced12bacf3d88f2",
+      "bytes": 99284
+    },
+    "runtime/browser/48.json.gz": {
+      "sha256": "e8001b2310a324313dfe4bdf9b9f34d2a077b8fae7e47054229e617038214e55",
+      "bytes": 94091
+    },
+    "runtime/browser/49.json.gz": {
+      "sha256": "d6e24e3dc6de223fc3a07b09ca037d70ae77dceec52cb3bbeb1c2c55a5148c49",
+      "bytes": 209763
+    },
+    "runtime/browser/5.json.gz": {
+      "sha256": "f3e67521d172f0c1c5f0fd3fd2692dba8d026217066ea4b253b21a515d294707",
+      "bytes": 81686
+    },
+    "runtime/browser/50.json.gz": {
+      "sha256": "21a444fd56d7ad669475f17a5efebc7a65010a32e91ea7545547fb87d35ea048",
+      "bytes": 86083
+    },
+    "runtime/browser/51.json.gz": {
+      "sha256": "35c832bc7f9c96d64c52c7cf24a99112d525baac05bd4b7115759eaac7f57b76",
+      "bytes": 79542
+    },
+    "runtime/browser/52.json.gz": {
+      "sha256": "d32c6cd07c9498e16c19c9d7c4d5a3a886d10fe6cd52cf13d3ac557fa9cd4ead",
+      "bytes": 162264
+    },
+    "runtime/browser/53.json.gz": {
+      "sha256": "50cd105cd81f7a651012bb8daeece74a6b67743d32fa8dbf944abe68974b3a3d",
+      "bytes": 156119
+    },
+    "runtime/browser/54.json.gz": {
+      "sha256": "d765040ce2b0d1acbd3575445ffd3d952509d40b9dff05c71b0f55378a8adb0a",
+      "bytes": 67897
+    },
+    "runtime/browser/55.json.gz": {
+      "sha256": "d1b9e0cce8cb026b8f2992017e4faee407802d952a9bd2da1f286bbe90a14553",
+      "bytes": 371729
+    },
+    "runtime/browser/56.json.gz": {
+      "sha256": "10afef8ef5d6af964269acb2db34e4ad4ac8748c74d1bb278c8e8e2c28333157",
+      "bytes": 434522
+    },
+    "runtime/browser/57.json.gz": {
+      "sha256": "33cd91db3364e75c8f5e5c6fc7dd75f8311323b359b09c1acafc71e563179d38",
+      "bytes": 302493
+    },
+    "runtime/browser/58.json.gz": {
+      "sha256": "4888c8a6cd3df9d36e8deda35805d454d2885a093b5b0432a4b50d57662c3f94",
+      "bytes": 127460
+    },
+    "runtime/browser/59.json.gz": {
+      "sha256": "a6146975db410b784840a9f9a6e349cae328f6f49e984e5956d5c35368791a00",
+      "bytes": 141563
+    },
+    "runtime/browser/6.json.gz": {
+      "sha256": "75c101edd868b6603201a17a08f78dcac50aef7bcbff9756c3723cf617230f5e",
+      "bytes": 85798
+    },
+    "runtime/browser/60.json.gz": {
+      "sha256": "8766b4453bb87c46a51575634a70b4ea6008867f89e0c2f855c0c0a02db5841d",
+      "bytes": 176194
+    },
+    "runtime/browser/61.json.gz": {
+      "sha256": "74a78874fb3299ef63984bfddc495d7b2d7768aa879ec9a087e82aa6120736d4",
+      "bytes": 78331
+    },
+    "runtime/browser/7.json.gz": {
+      "sha256": "d4c20b83c417780eee122d4b1719b5bda87dedb516e529277f2457630a378a55",
+      "bytes": 80984
+    },
+    "runtime/browser/8.json.gz": {
+      "sha256": "3dc6e743f1f93d60924cec67f788f785784f0bb5d975cd489599fda0f3518b05",
+      "bytes": 79702
+    },
+    "runtime/browser/9.json.gz": {
+      "sha256": "cc6842d14873c9b1a35dacacd2f919727fab168eaf0559d14874e31f75ed3218",
+      "bytes": 77412
+    },
+    "runtime/browser/boot.json.gz": {
+      "sha256": "a54aa85d692bbf83027bf118d8e114a088fa1b5666651a176ebf3a9a746025ef",
+      "bytes": 3784020
+    },
+    "runtime/browser/class-1.json.gz": {
+      "sha256": "c3fef04edcb4a3abeabf543d4a657f450868424c5d632eedb7e85cb396b65f46",
+      "bytes": 1101781
+    },
+    "runtime/browser/class-11.json.gz": {
+      "sha256": "1b3cba5850cb6a3a23142db8b733e5df26ce215085cc177e4d0804a22ba03cf4",
+      "bytes": 1094454
+    },
+    "runtime/browser/class-2.json.gz": {
+      "sha256": "ed001f14c632c7dbf14a668af82447e5b66d6831135659ae83a781c143ea513c",
+      "bytes": 1089472
+    },
+    "runtime/browser/class-3.json.gz": {
+      "sha256": "93aa53ec8b26c13e20f42cbe4bc7b5521455dddd5773c49c725564547756edfb",
+      "bytes": 1098038
+    },
+    "runtime/browser/class-4.json.gz": {
+      "sha256": "54bd24e7f63a5c0b6e1b7bb14ea6d4a362af267b3bdd7397aeddc2144f6673a5",
+      "bytes": 1101051
+    },
+    "runtime/browser/class-5.json.gz": {
+      "sha256": "1d882ba5b08ea03ca137f9f883191fcafa5329f821a6c40be1a803c69004020d",
+      "bytes": 1103000
+    },
+    "runtime/browser/class-7.json.gz": {
+      "sha256": "a0b724bb9ecc239372b4a885b0c956568cff1880ded2c6a9bf5b724f05e9308c",
+      "bytes": 1094310
+    },
+    "runtime/browser/class-8.json.gz": {
+      "sha256": "fd005d601625b9f7d853326b10f18b76c5ed9f3a3ad86d5395314a686d0baff0",
+      "bytes": 1100746
+    },
+    "runtime/browser/class-9.json.gz": {
+      "sha256": "7aee765ebff28596509e2349092c53fa974b894172c364ad0e616ae3f296ad98",
+      "bytes": 1100528
+    },
+    "runtime/catalog.json": {
+      "sha256": "75751cc2698211614ed254086cf3e5e63f7907bf640e3e1a5289eb2d67ac9f80",
+      "bytes": 49753182
+    },
+    "runtime/version.json": {
+      "sha256": "b007f5dc3e715d24405cb954110a4d00fe9384ead6364ca589eed79c5982ba25",
+      "bytes": 116
     }
   },
   "rules": {
@@ -269,8 +565,8 @@
       "bytes": 340
     },
     "../game-domain/src/rules/catalog.js": {
-      "sha256": "bcd9496962619d3a95010a38e4ad93ed92d648eae2124f6cb8d52169022202e6",
-      "bytes": 28201
+      "sha256": "869b614d6626bd5301b9e4fd2ed4ab455c37ed785e8ceb4c84e7c4c5ddfb45a7",
+      "bytes": 8317
     },
     "../game-domain/src/rules/character-attributes.js": {
       "sha256": "3a16b8f013df64dccf486f55e1bf25a23cc4c0029825460e469d72766f9821b9",
@@ -361,8 +657,8 @@
       "bytes": 626
     },
     "../game-domain/src/rules/combat-metrics.js": {
-      "sha256": "9580dbc992ea180c55acff19ed0768d5f126f6a3f70e48ee0ab2dd41cacfabac",
-      "bytes": 5824
+      "sha256": "75807d5d93146a32c39890f1e5cfa04a0adad47e1fd078c38734680730a77c53",
+      "bytes": 5853
     },
     "../game-domain/src/rules/combat-observation.js": {
       "sha256": "c7a58f0bc0d20799b6da6b4fe575320a2feae5c83d8b9cf403cac3632ee75b1c",
@@ -429,8 +725,8 @@
       "bytes": 3442
     },
     "../game-domain/src/rules/dungeon-journal.js": {
-      "sha256": "481c2cf5f80c3139f73b969aa296f52b52d61a68455983b14158c5c4d444472a",
-      "bytes": 2962
+      "sha256": "852b06646d0237590f92ff67a5f236b2c592aec9740bd169ba708ad8886d54d0",
+      "bytes": 386
     },
     "../game-domain/src/rules/dungeon-map.js": {
       "sha256": "bf6cdc47f92ba10f68834abf833c17fcfeece2c24a174553adcbc34b55cd8bc0",
@@ -441,8 +737,8 @@
       "bytes": 1055
     },
     "../game-domain/src/rules/dungeon-registry.js": {
-      "sha256": "d4915b660370b5f6ab0372075fab329d99a0a18dc0042b8c7412b6fe613c8134",
-      "bytes": 3942
+      "sha256": "506247adc537fc60259add9f82f8b96b698eec6c3665afba97a1bb80f8bc1268",
+      "bytes": 609
     },
     "../game-domain/src/rules/dungeon-view.js": {
       "sha256": "67367fdfa50743925e0c800633dced99f31b158cab1d184a5c1b5a10d677b66f",
@@ -473,8 +769,8 @@
       "bytes": 41930
     },
     "../game-domain/src/rules/escort.js": {
-      "sha256": "fe83090625db214a05be1cf2120a87e4826904d093f899bb4b77c6e45a1e8e6a",
-      "bytes": 4238
+      "sha256": "9ca668febef11d49b5233ad0dc0204114bb164aa9e02458e0159a466d5252dcb",
+      "bytes": 3591
     },
     "../game-domain/src/rules/experience.js": {
       "sha256": "8ec735a50450a9ef00d5e75e62c0aed4f9d0d0cc5d5814c39cb7376bcdc0496b",
@@ -505,8 +801,8 @@
       "bytes": 2479
     },
     "../game-domain/src/rules/interactions.js": {
-      "sha256": "229e09bea66e19edcddf7f65e0eb70eda46ae7d99849641dc3f99a5b0e0643df",
-      "bytes": 2950
+      "sha256": "d890c68aab7dec93d95a87ab3f687f66ce5fded3f78a7e1f169e4f7cc7613985",
+      "bytes": 2808
     },
     "../game-domain/src/rules/inventory.js": {
       "sha256": "e1063111ccd76b415561f1a7d6935ec1e369b84c184ef9e214fb473ead9c5dc8",
@@ -625,8 +921,8 @@
       "bytes": 3432
     },
     "../game-domain/src/rules/professions.js": {
-      "sha256": "457cc145cb2da66b8ca7a087f7d8c1a48323e4aa35cfcf75d09fccf85c036905",
-      "bytes": 14845
+      "sha256": "56a097261a0d9cc42f33432be9047645ceff8e89662b3a51e26cfebb524ccbbe",
+      "bytes": 14775
     },
     "../game-domain/src/rules/pvp-presets.js": {
       "sha256": "65516abaa843f018abf32b03a2c1f8101ec689a8a8db8248085b425d755803af",
@@ -649,8 +945,8 @@
       "bytes": 2821
     },
     "../game-domain/src/rules/quests.js": {
-      "sha256": "92729f936085b4fd963616e7445302e4d1dfb8579c03a091896d26d772311797",
-      "bytes": 24705
+      "sha256": "84b94f02028e13e9fec64eabc980d1024d9860aef26efe9dd63430be90df8a61",
+      "bytes": 23087
     },
     "../game-domain/src/rules/racial-effects.js": {
       "sha256": "07897b8a6fefcfd0924a893d1fc4e657b65e0c2d14b7f1214c3eb6eb475557a6",
@@ -685,8 +981,8 @@
       "bytes": 1053
     },
     "../game-domain/src/rules/raid-rewards.js": {
-      "sha256": "31d435628a0729a801e271c172aaf8f9b586c4690589b844fe8fde2fd065b8aa",
-      "bytes": 4201
+      "sha256": "4dcf159635c4a4cd60cc21553d4d6ace0ffe6333126328ba4ccbdfca4b41eb57",
+      "bytes": 4197
     },
     "../game-domain/src/rules/raid-scaling.js": {
       "sha256": "135e7f0ef05aa3e112347d375ea073f3becb3c5e05ac222a119d1d3d9b71d876",
@@ -700,13 +996,25 @@
       "sha256": "02bf1d250f1c4b8bc6d600914bcc11a1b53944c981f17fe04483ddc296cc83ae",
       "bytes": 5593
     },
+    "../game-domain/src/rules/runtime-content.browser.js": {
+      "sha256": "9828b927d039605f351091a7694fc05b57327445451e088322eb02a3cc014d68",
+      "bytes": 3636
+    },
+    "../game-domain/src/rules/runtime-content.d.ts": {
+      "sha256": "2d8db71d368536bcb206cca00ab1ea57af14ce31f6248c6ec94b82a6b1bd1528",
+      "bytes": 532
+    },
+    "../game-domain/src/rules/runtime-content.js": {
+      "sha256": "8e912e03f52405725d1fdcbd875738fcdf3229baa238f82a98f8b01907080968",
+      "bytes": 494
+    },
     "../game-domain/src/rules/server-response.js": {
       "sha256": "865ad5c29ff2b99ed47448a1328d157a7b4c3a4d4986a13c6fad9138e5889e9a",
       "bytes": 2140
     },
     "../game-domain/src/rules/smite.js": {
-      "sha256": "1f0dd219879f69e4ec691e02fda3951364f3c184f1211335e8d6087952857578",
-      "bytes": 3023
+      "sha256": "f67101b4c1b8b1ed295dbb1d055169a59b1b236845b12e53b59d374822a90711",
+      "bytes": 2973
     },
     "../game-domain/src/rules/spell-aura-lifecycle.js": {
       "sha256": "fa33968044b0bf6eb5598837bfbd5dd3b93095e40b7425c0cacc4d9bb70a4b7b",
@@ -792,6 +1100,10 @@
       "sha256": "843bc0c70bee8626953f479901db01a3c84afdc94857327c7085849bb5201a4a",
       "bytes": 1493
     },
+    "../sim-core/src/battle-history.js": {
+      "sha256": "51a075f7f19ce025ecdd72e133d59c51c09eed0ca03c1209a28b466b904734ff",
+      "bytes": 641
+    },
     "../sim-core/src/class-combat.js": {
       "sha256": "60f7d7e5ee0566b0fc8ee166d17364f91561f87ef1bb4d3fe9a7c488c2679d43",
       "bytes": 2176
@@ -839,6 +1151,10 @@
     "../sim-core/src/market-stock.js": {
       "sha256": "c213ba19c4dff7af04e9042fbb327aaa7133039f29e9bfd0e2c29803137618e2",
       "bytes": 686
+    },
+    "../sim-core/src/packed-content.js": {
+      "sha256": "6761a6c6ea588a79a22c88930b16cdf1f43b3913642186638f63a41770a8781b",
+      "bytes": 2109
     },
     "../sim-core/src/pvp-control.js": {
       "sha256": "9108a52d68e8e030350ab5323c20df92379a56e869dc1a34c8901a3a0aa1edd1",

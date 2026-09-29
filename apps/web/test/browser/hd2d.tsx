@@ -5,13 +5,13 @@ import React,{useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {createGame,act,advance,stats,view} from '../../../../packages/game-domain/src/rules/engine.js';
 import {startCombat} from '../../../../packages/game-domain/src/rules/combat.js';
-import {abilities} from '../../../../packages/game-domain/src/rules/catalog.js';
+import {classAbilities} from '../../../../packages/game-domain/src/rules/catalog.js';
 import {projectClientSnapshot} from '../../../../packages/game-domain/src/rules/client-snapshot';
 import Battle from '../../app/battle';
 import '../../app/globals.css';
 
 function fixture(ground='grass',group=true){
- let s:any=createGame('艾琳 · 霜语',283,0);s.level=20;s.learned=abilities.filter(a=>a.requiredLevel<=20).map(a=>a.spellId);s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
+ let s:any=createGame('艾琳 · 霜语',283,0);s.level=20;s.learned=classAbilities[8].filter((a:any)=>a.requiredLevel<=20).map((a:any)=>a.spellId);s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
  s.location='stormwind';
  if(group)for(const id of ['warrior','priest','rogue','mage'])createNpcMember(s,id);
  s.location='goldshire';

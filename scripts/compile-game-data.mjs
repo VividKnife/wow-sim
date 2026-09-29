@@ -17,6 +17,15 @@ for(const name of names){
  }
  bundles[name]={sha256:digest(bytes),bytes:bytes.length};
 }
+// Pin compiled data and browser shards along with their source version.
+async function includeRuntime(directory='runtime/'){
+ for(const entry of await readdir(new URL(directory,root),{withFileTypes:true})){
+  const name=directory+entry.name;
+  if(entry.isDirectory()){await includeRuntime(name+'/');continue;}
+  const bytes=await readFile(new URL(name,root));bundles[name]={sha256:digest(bytes),bytes:bytes.length};
+ }
+}
+await includeRuntime();
 // Some current encounter, travel, and profession definitions remain registered in
 // code. Pin those rules too: a running activity must never silently use a newer
 // definition merely because its JSON input happened not to change.

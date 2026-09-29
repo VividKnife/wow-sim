@@ -32,6 +32,7 @@ jobs:
       - run: npm run content:measure
       - run: node --test apps/web/test/content-packs.test.mjs apps/web/test/client-snapshot.test.mjs
       - run: node --test apps/web/test/local-simulation-boot.test.mjs apps/web/test/local-simulation-client.test.mjs apps/web/test/local-simulation-worker.test.mjs apps/web/test/simulation-resources.test.mjs apps/web/test/game-response.test.mjs packages/sim-core/test/collections.test.mjs
+      - run: node --test packages/sim-core/test/packed-content.test.mjs packages/game-domain/test/runtime-content.test.mjs apps/web/test/simulation-content-route.test.ts
       - run: npm run typecheck
       - run: node --test apps/web/test/account-store.test.ts apps/web/test/game-backend.test.mjs apps/game-server/test/*.test.ts apps/game-worker/test/*.test.ts
       - run: npm --prefix apps/web run build

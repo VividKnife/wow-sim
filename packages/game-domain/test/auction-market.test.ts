@@ -116,7 +116,7 @@ test('phase release gates products, recipes, materials and synthetic enchants on
 });
 
 test('future goods cannot be sold or supplied through profession auto-buy',()=>{
- const s=fresh();addItem(s,22385,1);const item=s.bag.find(i=>i.id===22385)!;
+ const s=fresh();addItem(s,22385,1);const item=s.bag.find((i:Rules)=>i.id===22385)!;
  assert.equal(view(s).inventoryActions[item.uid].tradable,false);
  const before=structuredClone(s);
  assert.throws(()=>act(s,{type:'auctionSell',uid:item.uid},0));assert.deepEqual(s,before);

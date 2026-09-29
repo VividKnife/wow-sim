@@ -3,7 +3,7 @@ import {reserveMarket,marketOffer,marketAvailability} from './market.js';
 import {racialModifiers} from './racial-effects.js';
 import {questFishingSources} from '../../../game-data/world-quest-content.js';
 import {items,nodes,nameOf,creatures,objectTemplates,objectLocations,objectLoot} from './catalog.js';
-import classReference from '../../../game-data/data/classes-reference.json' with {type:'json'};
+import {classLocks} from './catalog.js';
 import {addItem,clone,log,roll,rng,stats,slotOf,countItem} from './character.js';
 import {professions,recipes,enchants,professionRanks,specializations,specializationKnown,disenchantLoot,bandages,enchantFits,professionReference} from './profession-data.js';
 import {quantity,usableCount,consume,receive,marketPrice,protectedItem} from './inventory.js';
@@ -30,7 +30,7 @@ export function professionView(s){return{professions:professions.map(p=>({...p,.
 const terrain={northwood:'forest',vineyard:'farm',echo:'mine',fargodeep:'mine',jasper:'mine',mirror:'lake',crystal:'lake',stonefield:'farm',maclure:'farm',logging:'forest',brackwell:'farm',forestedge:'forest',furlbrow:'farm',saldean:'farm',jansen:'mine',alexton:'farm',moonbrook:'hills',daggerhills:'hills',coastnorth:'coast',coast:'coast',lighthouse:'coast',silverstream:'mine'};
 const sourceResources=new Map();
 for(const object of Object.values(objectTemplates)){
- const lock=classReference.classLocks[object.data0]?.requirements.find(r=>r.type===2&&[2,3].includes(r.index));
+ const lock=classLocks[object.data0]?.requirements.find(r=>r.type===2&&[2,3].includes(r.index));
  if(object.type!==3||!lock)continue;
  const loot=(objectLoot[object.data1]||[]).filter(r=>r.mincountOrRef>0&&r.ChanceOrQuestChance>0&&!r.condition_id&&items[r.item]).sort((a,b)=>b.ChanceOrQuestChance-a.ChanceOrQuestChance)[0];
  if(!loot)continue;

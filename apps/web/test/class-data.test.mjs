@@ -45,7 +45,6 @@ test('each class exposes sourced starting spells and every trainer rank through 
    if(a.previousSpellId)assert.ok(rows.some(old=>old.spellId===a.previousSpellId),`class ${classId} unreachable previous rank ${a.previousSpellId} for ${a.spellId}`);
   }
  }
- assert.deepEqual(catalog.abilities,catalog.classAbilities[8]);
 });
 
 test('shared-route class quest adaptations expose core class unlocks without a fee',()=>{
