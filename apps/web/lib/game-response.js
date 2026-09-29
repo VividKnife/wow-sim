@@ -3,6 +3,7 @@ import {assertGameResponse} from '../../../packages/contracts/src/game.ts';
 const responseError=(message,status,code)=>Object.assign(new Error(message),{status,code});
 export function syncErrorMessage(error){
  if(!error)return '';
+ if(['LOCAL_WORKER','LOCAL_WORKER_FAILED'].includes(error.code))return error.message;
  if(error.status===401)return '登录已过期，请重新登录。';
  if(error.code==='CONTENT_VERSION')return error.message;
  if(error.code==='DATABASE_BUSY')return '游戏状态正在更新，正在稍后重试。';

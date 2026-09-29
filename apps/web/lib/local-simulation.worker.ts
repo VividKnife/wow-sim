@@ -145,7 +145,11 @@ scope.onmessage=({data})=>{
     }
     displayStream.reset();policyStream.reset();displayBaseline=true;eventThrough=0;policyRequests.clear();policyPort?.postMessage({type:'reset'});
     policyCpuMs=policyErrors=policyTimeouts=0;lastPolicyError='';policyTransfers.packets=policyTransfers.numericBytes=policyTransfers.maxNumericBytes=0;
-    profile=!!data.profile;generation=data.generation;state=data.state;origin=data.serverNow;deadline=data.deadline;started=performance.now();
+    profile=!!data.profile;generation=data.generation;state=data.state;deadline=data.deadline;started=performance.now();
+    // Messages can wait for a cold Worker to download and initialize. Include
+    // that delay in the server-anchored clock, without using the device clock.
+    const startupDelay=Number.isFinite(data.sentAt)?Math.max(0,performance.timeOrigin+started-data.sentAt):0;
+    origin=data.serverNow+startupDelay;
     lastFull=lastFrame=lastRaid=0;overview=raidView=null;running=true;
     // Startup acknowledgement does not depend on visibility or expensive views.
     scope.postMessage({type:'ready',generation});tick();

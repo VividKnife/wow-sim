@@ -67,7 +67,9 @@ export function npcAuctionLoadout(c,s,lotId){
  projected.bag.push(...projected.raidCollection);
  return projected;
 }
-export function npcBidValuation(c,item,rare,s,{variation=1,lotId}={}){
+/** @param {{variation?: number, lotId?: string}} [options] */
+export function npcBidValuation(c,item,rare,s,options={}){
+ const {variation=1,lotId}=options;
  const p=c.goldProfile,profile=personalities[p.personality],projected=npcAuctionLoadout(c,s,lotId);
  const reject=reason=>({limit:0,reason,bis:false});
  if(!canReceiveRaidLoot(c,item)||!canReceiveEquipment(projected,item))return reject('不符合领取条件或已达持有上限');

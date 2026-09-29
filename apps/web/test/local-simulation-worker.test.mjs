@@ -26,7 +26,7 @@ before(async()=>{
  }}]});source=bundle.outputFiles[0].text;
 });
 
-function runtime({now=0,wallAt=0,serverNow=100000,deadline=200000,visible=true,extra={},computeMs=0}={}){
+function runtime({now=0,wallAt=0,serverNow=100000,deadline=200000,visible=true,extra={},computeMs=0,sentAt}={}){
  const frames=new CombatStreamReceiver();
  const messages=[],timers=new Map(),steps=[],views=[],delays=[];let id=0,time=now,patch={};
  const sandbox={actFixture:(state,command)=>{if(command.invalid)throw new Error('invalid order');return {...state,order:command.order};},performance:{now:()=>time},structuredClone,postMessage:message=>{if(message.type==='frame'){const decoded=frames.apply(message.packet);message={...message,snapshot:decoded.snapshot};sandbox.onmessage({data:{type:'frameAck',generation:message.generation,sequence:message.packet.sequence,buffer:message.packet.buffer}});}messages.push(structuredClone(message));},setTimeout:(fn,delay)=>{delays.push(delay);timers.set(++id,fn);return id;},clearTimeout:key=>timers.delete(key),viewFixture:state=>{views.push(state.clock);return {clock:state.clock};},advanceFixture:(state,target,{maxTicks})=>{
@@ -37,10 +37,18 @@ function runtime({now=0,wallAt=0,serverNow=100000,deadline=200000,visible=true,e
  runInNewContext(source,sandbox);
  const send=data=>sandbox.onmessage({data});
  const initial={id:'hero',clock:wallAt,wallAt,activity:{type:'battlegroundCombat'},...extra};
- send({type:'visibility',visible,watching:true});send({type:'start',contentVersion:'fixture',generation:'session',state:initial,serverNow,deadline});
+ sandbox.performance.timeOrigin=1_000_000;
+ send({type:'visibility',visible,watching:true});send({type:'start',contentVersion:'fixture',generation:'session',state:initial,serverNow,deadline,sentAt});
  const run=()=>{const first=timers.entries().next().value;if(!first)return false;timers.delete(first[0]);first[1]();return true;};
  return {messages,steps,views,delays,send,run,clock:value=>{time=value;},change:value=>{patch=value;},pending:()=>timers.size};
 }
+
+test('cold worker loading time is included in catch-up and still respects the offline deadline',()=>{
+ const r=runtime({now:30000,serverNow:100000,sentAt:1_000_000,visible:false});
+ assert.equal(r.steps[0].target,130000);
+ const capped=runtime({now:30000,serverNow:100000,sentAt:1_000_000,deadline:110000,visible:false});
+ assert.equal(capped.steps[0].target,110000);
+});
 
 test('watching a fight streams frames without rebuilding the full overview every second',()=>{
  for(const extra of [{combat:{id:'boss'},goldRaid:{}},{arena:{phase:'combat'}},{battleground:{phase:'countdown'}}]){

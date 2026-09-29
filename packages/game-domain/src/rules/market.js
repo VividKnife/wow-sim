@@ -1,3 +1,4 @@
+import {groupRows} from '../../../sim-core/src/collections.js';
 import {items,nameOf,table} from './catalog.js';
 import {materialIds,recipes,potions,bandages} from './profession-data.js';
 import {marketReference,classMarketSupplies} from '../../../game-data/market-reference.js';
@@ -5,7 +6,7 @@ import {itemAvailableInPhase,itemContentPhase,CURRENT_CONTENT_PHASE} from './con
 import {marketSubcategory,marketSlot} from './market-categories.js';
 import {marketAvailability} from '../../../sim-core/src/market-stock.js';
 
-const crafted=Object.groupBy(recipes,r=>r.item);
+const crafted=groupRows(recipes,r=>r.item);
 const vendors=new Map();
 for(const r of table('npc_vendor')){const i=items[r.item];if(i?.BuyPrice>0)vendors.set(i.entry,i.BuyPrice/Math.max(1,i.BuyCount));}
 const supplies=new Set(classMarketSupplies);

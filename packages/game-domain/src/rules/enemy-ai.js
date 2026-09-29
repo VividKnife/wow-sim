@@ -1,10 +1,11 @@
+import {groupRows} from '../../../sim-core/src/collections.js';
 import {distance,point} from '../../../sim-core/src/geometry.js';
 import {lookup,spells,table} from './catalog.js';
 import {roll,rng,log} from './character.js';
 import {hasSpellAura,controlled} from '../../../sim-core/src/combat-auras.js';
 import {castEnemySpell,enemySpellInfo,tickEnemySpell} from './enemy-spells.js';
 
-const scripts=Object.groupBy(table('creature_ai_scripts'),row=>row.creature_id);
+const scripts=groupRows(table('creature_ai_scripts'),row=>row.creature_id);
 const alive=u=>u.hp>0&&!u.removed;
 function behindVictim(s,e,victim){
  // This 2D combat model has no persistent facing angle: an actor faces its

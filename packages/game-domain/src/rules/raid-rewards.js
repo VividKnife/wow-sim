@@ -1,10 +1,11 @@
+import {groupRows} from '../../../sim-core/src/collections.js';
 import source from '../../../game-data/data/molten-core-loot.json' with {type:'json'};
 import {items,creatures,creatureLoot,referenceLoot} from './catalog.js';
 import {canEquip,rng} from './character.js';
 import {meetsCondition,needsQuestItem} from './quests.js';
 import {moltenCoreRoute,moltenCoreTrash} from './molten-core-content.js';
 
-const tables=Object.fromEntries(Object.entries(source.tables).filter(([key])=>key.endsWith('_loot_template')).map(([key,rows])=>[key,Object.groupBy(rows,r=>r.entry)]));
+const tables=Object.fromEntries(Object.entries(source.tables).filter(([key])=>key.endsWith('_loot_template')).map(([key,rows])=>[key,groupRows(rows,r=>r.entry)]));
 const references=tables.reference_loot_template;
 function possible(rows,group=0){return [...new Set((rows||[]).filter(r=>!group||r.groupid===group).flatMap(r=>r.mincountOrRef<0?possible(references[-r.mincountOrRef],r.groupid):[r.item]))];}
 export const raidLoot=Object.fromEntries(Object.entries(source.bossSources).map(([id,s])=>[id,possible(tables[s.table][s.entry])]));
