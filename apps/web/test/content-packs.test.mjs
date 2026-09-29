@@ -37,6 +37,19 @@ test('item and market packs contain only their requested scope',()=>{
  for(const ids of ['', '0','-1','1.5','118,x','9007199254740992',Array(201).fill('118').join(',')])assert.throws(()=>contentPack(catalog,new URLSearchParams({pack:'items',ids})),error=>error.status===400);
  for(const pack of ['all','boss:unknown:1','boss:stockades:1696:extra'])assert.throws(()=>contentPack(catalog,query(pack)),error=>error.status===404);
 });
+test('outdated auction catalogs fail explicitly and can retry after the server updates',async()=>{
+ const market=contentPack(catalog,query('market'));
+ for(const field of ['phase','subcategory','slot','buy','restockMs']){
+  const stale=structuredClone(market);delete stale.market[0][field];
+  let calls=0;
+  const loader=createContentLoader(async()=>Response.json(calls++===0?stale:market));
+  await assert.rejects(loader.pack(catalog.contentVersion,'market'),/拍卖行数据与当前客户端不一致/);
+  const fresh=await loader.pack(catalog.contentVersion,'market');
+  assert.ok(fresh.market.length>0);
+  assert.ok(fresh.market.every(row=>Number.isInteger(row.phase)&&row.subcategory));
+  assert.equal(calls,2,'invalid catalogs must not remain cached');
+ }
+});
 test('snapshot and workshop references hydrate equipment, inventory, rewards and recipe materials',async()=>{
  const state=createGame('加载测试',23,0);
  const snapshot=projectClientSnapshot(state,view(state));

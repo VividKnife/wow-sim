@@ -5,7 +5,7 @@ import {createRoot} from 'react-dom/client';
 import {createGame,act,advance,stats,view} from '../../../../packages/game-domain/src/rules/engine.js';
 import {dungeonRoute,enterDungeon} from '../../../../packages/game-domain/src/rules/dungeon.js';
 import {clientContent} from '../../../../packages/game-domain/src/rules/client-content.js';
-import {abilities} from '../../../../packages/game-domain/src/rules/catalog.js';
+import {classAbilities} from '../../../../packages/game-domain/src/rules/catalog.js';
 import {addItem} from '../../../../packages/game-domain/src/rules/character.js';
 import {projectClientSnapshot} from '../../../../packages/game-domain/src/rules/client-snapshot';
 import DungeonPage from '../../app/dungeon-page';
@@ -16,7 +16,7 @@ import Escort from '../../app/escort';
 import '../../app/globals.css';
 
 function fixture(scenario:string){
- let s:any=createGame('测试法师',283,0);s.level=18;s.learned=abilities.filter(a=>a.requiredLevel<=18).map(a=>a.spellId);const attributes:any=stats(s);s.hp=attributes.maxHp;s.mana=attributes.maxMana;
+ let s:any=createGame('测试法师',283,0);s.level=18;s.learned=classAbilities[8].filter((a:any)=>a.requiredLevel<=18).map((a:any)=>a.spellId);const attributes:any=stats(s);s.hp=attributes.maxHp;s.mana=attributes.maxMana;
  for(const id of ['warrior','priest','rogue','mage'])s=recruitForTest(s,{type:'recruit',id},0);
  addItem(s,1113,20);addItem(s,2288,20);s.location='deadmines';
  if(scenario==='outdoor'){s.location='lighthouse';return act(s,{type:'hunt',id:391},0);}

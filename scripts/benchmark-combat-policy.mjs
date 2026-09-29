@@ -14,7 +14,7 @@ const arg=(name,fallback)=>process.argv.find(x=>x.startsWith(`--${name}=`))?.sli
 const duration=Number(arg('duration','15000')),mode=arg('mode','both');
 const scratch=resolve('.cache/combat-policy');mkdirSync(scratch,{recursive:true});
 const banner="import {parentPort} from 'node:worker_threads';globalThis.self=globalThis;globalThis.postMessage=(message,transfer)=>parentPort.postMessage(message,transfer);parentPort.on('message',data=>globalThis.onmessage?.({data}));";
-await build({entryPoints:['apps/web/lib/local-simulation.worker.ts','apps/web/lib/combat-policy.worker.ts'],outdir:scratch,bundle:true,format:'esm',platform:'node',banner:{js:banner},logLevel:'silent',outExtension:{'.js':'.mjs'}});
+await build({entryPoints:['apps/web/lib/local-simulation-runtime.ts','apps/web/lib/combat-policy-runtime.ts'],outdir:scratch,bundle:true,format:'esm',platform:'node',banner:{js:banner},logLevel:'silent',outExtension:{'.js':'.mjs'}});
 let initial;
 const fixture=arg('fixture','');
 if(fixture)initial=JSON.parse(readFileSync(fixture,'utf8'));
@@ -30,7 +30,7 @@ for(const enemy of initial.combat.enemies)enemy.hp=enemy.maxHp=enemy.maxHp*100;
 if(initial.combat.pull){initial.combat.pull.startsAt=initial.clock;initial.combat.pull.engagedAt=initial.clock;}
 const summary=xs=>{const a=[...xs].sort((a,b)=>a-b);return {count:a.length,mean:a.reduce((n,x)=>n+x,0)/a.length,p95:a[Math.max(0,Math.ceil(a.length*.95)-1)],max:a.at(-1)};};
 async function run(dual){
- const combat=new Worker(resolve(scratch,'local-simulation.worker.mjs')),policy=dual?new Worker(resolve(scratch,'combat-policy.worker.mjs')):null;
+ const combat=new Worker(resolve(scratch,'local-simulation-runtime.mjs')),policy=dual?new Worker(resolve(scratch,'combat-policy-runtime.mjs')):null;
  const stream=new CombatStreamReceiver(),tick=[],latency=[],bytes=[],stateCloneBytes=[],consumer=[],lag=[];let active=0,samples=0,alive=40,policyMs=0,lastMetrics,policyErrors=0,policyTimeouts=0,lastPolicyError='',policyTransfers,frames=0,sequence=0,start=0,cpu;
  const pending=new Map();let interval;
  if(policy){const {port1,port2}=new MessageChannel();combat.postMessage({type:'policyPort',port:port1},[port1]);policy.postMessage({type:'connect',port:port2},[port2]);}

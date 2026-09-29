@@ -4,13 +4,13 @@ import React,{Profiler,useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {createGame,act,advance,stats,view} from '../../../../packages/game-domain/src/rules/engine.js';
 import {startCombat} from '../../../../packages/game-domain/src/rules/combat.js';
-import {abilities} from '../../../../packages/game-domain/src/rules/catalog.js';
+import {classAbilities} from '../../../../packages/game-domain/src/rules/catalog.js';
 import {projectClientSnapshot} from '../../../../packages/game-domain/src/rules/client-snapshot';
 import Battle from '../../app/battle';
 import Strategy from '../../app/strategy';
 import '../../app/globals.css';
 function fixture(group=true){
- let s:any=createGame('测试法师',283,0);s.level=20;s.learned=abilities.filter(a=>a.requiredLevel<=20).map(a=>a.spellId);const st:any=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;
+ let s:any=createGame('测试法师',283,0);s.level=20;s.learned=classAbilities[8].filter((a:any)=>a.requiredLevel<=20).map((a:any)=>a.spellId);const st:any=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;
  for(const id of ['warrior','priest','rogue','mage'])createNpcMember(s,id);
  s.rules=[{spell:10,condition:'enemyCountAtLeast',value:3,enabled:true},{spell:116,condition:'always',value:0,enabled:true}];
  s.party.find((c:any)=>c.classId===8).rules=[{spell:133,condition:'always',value:0,enabled:true}];

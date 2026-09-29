@@ -2,6 +2,7 @@ import {capitals} from '../../../game-data/world-content.js';
 import {items,nameOf,quests} from './catalog.js';
 import {bagCapacity,clone,makeItem,log} from './character.js';
 import {materialIds} from './profession-data.js';
+import {itemAvailableInPhase} from './content-phase.js';
 import {marketPrice,reserveMarket} from './market.js';
 export {marketPrice,marketView} from './market.js';
 
@@ -11,7 +12,7 @@ export const quantity=(n,max=100)=>{if(!Number.isInteger(n)||n<1||n>max)throw ne
 export const protectedItem=i=>!!(i.locked||i.issued||items[i.id]?.class===12||items[i.id]?.bonding===4||i.id===6948);
 export const discardBlockedReason=(s,i)=>i.locked?'请先解锁物品':i.issued?'配发物品不能丢弃':i.id===6948?'炉石不能丢弃':Object.keys(s.quests).some(id=>quests[id]?.SrcItemId===i.id||[1,2,3,4].some(n=>quests[id]?.['ReqItemId'+n]===i.id||quests[id]?.['ReqSourceId'+n]===i.id))?'正在进行的任务需要这件物品':null;
 export const bankable=i=>!i.issued&&i.id!==6948&&items[i.id]?.class!==12&&items[i.id]?.bonding!==4;
-export const tradable=i=>!protectedItem(i)&&!i.bound&&!i.ownerId&&items[i.id]?.bonding!==1&&items[i.id]?.bonding!==4;
+export const tradable=i=>itemAvailableInPhase(i.id)&&!protectedItem(i)&&!i.bound&&!i.ownerId&&items[i.id]?.bonding!==1&&items[i.id]?.bonding!==4;
 export const transferBlockedReason=i=>i.locked?'请先解锁物品':i.issued?'配发物品不能转移':i.id===6948?'炉石不能转移':items[i.id]?.class===12||items[i.id]?.bonding===4?'任务物品不能转移':null;
 export const usableCount=(s,id)=>s.inventoryCounts?s.inventoryCounts[id]||0:s.bag.filter(i=>i.id===id&&!i.locked&&!i.issued).reduce((n,i)=>n+i.count,0);
 export function consume(s,id,count){if(usableCount(s,id)<count)throw new Error('缺少未锁定材料：'+nameOf('items',id));for(const i of [...s.bag]){if(i.id!==id||i.locked||i.issued)continue;const used=Math.min(i.count,count);i.count-=used;count-=used;if(!i.count)s.bag.splice(s.bag.indexOf(i),1);if(!count)break;}}

@@ -1,3 +1,4 @@
+import {isContentPending} from './runtime-content.js';
 import {beginPartyBuffs,partyBuffTick,partyBuffCheckView} from './party-buffs.js';
 import {combatCommandAction,combatCommandView} from './combat-command.js';
 import {raidCommandAction,raidCommandView} from './raid-command.js';
@@ -169,7 +170,7 @@ export function advanceOwned(s,now,options={}){
  settleAuctions(s);s.wallAt=now;progressNpcWorld(s);return{state:s,complete:true};
 }
 function ensureIdle(s){if(s.combat||!['idle','hunt'].includes(s.activity.type))throw new Error('请先结束当前活动。');}
-function reachableTravelTime(s,to){try{return s.activity.type==='travel'&&!s.activity.flight?(s.activity.to===to?Math.max(0,s.activity.endsAt-s.clock):redirectedTravel(s,to).duration):travelRoute(s,to).duration;}catch{return null;}}
+function reachableTravelTime(s,to){try{return s.activity.type==='travel'&&!s.activity.flight?(s.activity.to===to?Math.max(0,s.activity.endsAt-s.clock):redirectedTravel(s,to).duration):travelRoute(s,to).duration;}catch(error){if(isContentPending(error))throw error;return null;}}
 export function shop(s){const vendors=table('npc_vendor').filter(r=>(creatureLocations[r.entry]||[]).includes(s.location));const unique=new Map();for(const r of vendors){const item=items[r.item];if(item&&item.RequiredLevel<=LEVEL_CAP&&!unique.has(item.entry))unique.set(item.entry,{id:item.entry,name:nameOf('items',item.entry),price:item.BuyPrice,count:item.BuyCount||1,icon:icon('items',item.entry),quality:item.Quality});}for(const row of classSupplyShop(s))if(!unique.has(row.id))unique.set(row.id,row);return[...unique.values()];}
 const trainingAbilities=classId=>{const rows=new Map((classAbilities[classId]||[]).map(a=>[a.spellId,a]));if(classId===3)for(const a of petTrainerAbilities)rows.set(a.spellId,{...a,...rows.get(a.spellId),petSpellId:a.petSpellId});return [...rows.values()];};
 const allAbilities=()=>Object.keys(classAbilities).flatMap(id=>trainingAbilities(+id));

@@ -1,3 +1,4 @@
+import {isContentPending} from './runtime-content.js';
 import {items,nameOf} from './catalog.js';
 import {makeItem,bagCapacity,log} from './character.js';
 import {put} from './inventory.js';
@@ -30,7 +31,7 @@ export function collectLoot(s,uids){
   while(remaining>0){
    const count=Math.min(remaining,max);
    try{put(s.bag,{...instance,count,uid:remaining===item.count?item.uid:'i'+(s.itemSequence+1)},bagCapacity(s));}
-   catch{break;}
+   catch(error){if(isContentPending(error))throw error;break;}
    if(remaining!==item.count)s.itemSequence++;
    remaining-=count;
   }

@@ -1,7 +1,11 @@
+import {classDefinitions,classAbilities} from '../src/rules/catalog.js';
+import {newCharacter,spellInfo} from '../src/rules/character.js';
+import {companionSkills} from '../src/rules/party.js';
+import {raidCommandView} from '../src/rules/raid-command.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createMoltenCoreDemo} from '../src/molten-core-demo.ts';
-import {advance} from '../src/rules/engine.js';
+import {advance,createGame,act} from '../src/rules/engine.js';
 import {enterGoldRaid,leaveGoldRaid,goldRaidAction,goldRaidView,settleGoldRaid,goldAuctionStep,finishGoldRun} from '../src/rules/gold-raid.js';
 import {raidRoutePlan,raidMapView} from '../src/rules/molten-core-content.js';
 import {raidLoot} from '../src/rules/raid-rewards.js';
@@ -55,4 +59,48 @@ test('service enters and leaves an Onyxia gold instance after settlement',async(
 test('configured 25-player raid completes Onyxia through the real combat engine',()=>{
  let s=start();s.settings.autoLoot=true;for(let n=0;n<370&&s.combat;n++)s=advance(s,s.wallAt+1000).state;
  assert.equal(s.combat,null);assert.equal(s.goldRaid.attempts.at(-1)?.won,true,JSON.stringify({attempt:s.goldRaid.attempts.at(-1),phase:s.lastCombat?.raidEncounter?.phase,boss:s.lastCombat?.enemies[0]?.hp,events:s.lastCombat?.raidEncounter?.events?.slice(-5)}));assert.ok(s.goldRaid.cleared.includes('onyxia'));
+});
+
+test('every priest race learns Fear Ward from level 20',()=>{
+ for(const race of classDefinitions.find((c:Rules)=>c.id===5)!.races){
+  const c=newCharacter('牧师',5,19,race);
+  assert.ok(!companionSkills(c).includes(6346));c.level=20;
+  assert.ok(companionSkills(c).includes(6346),`race ${race}`);
+  assert.ok(classAbilities[5].find((a:Rules)=>a.spellId===6346).raceIds.includes(race));
+  const player=createGame('牧师',1,0,{classId:5,raceId:race});player.level=20;player.location='stormwind';
+  assert.ok(act(player,{type:'train',id:6346},0).learned.includes(6346));
+ }
+ assert.ok(!companionSkills(newCharacter('法师',8,60,1)).includes(6346));
+});
+
+test('Onyxia assigns priests and consumes main tank Fear Ward on landing fear',()=>{
+ const s=start(),r=s.combat.raidEncounter,boss=s.combat.enemies[0],actors=[s,...s.party];
+ const priests=actors.filter((c:Rules)=>c.classId===5);
+ assert.ok(priests.length>=2);
+ const candidates=raidCommandView(s)!.jobs.find((j:Rules)=>j.id==='ward')!.candidates;
+ for(const p of priests)assert.ok(candidates.some((c:Rules)=>c.id===p.id));
+ const tank=actors.find((c:Rules)=>c.id===r.command.plan.mainTank);
+ r.command.plan.jobs.ward=priests.slice(0,2).map((p:Rules)=>p.id);
+ for(const p of priests){p.position=tank.position;p.positionY=tank.positionY;p.cast=null;p.nextAction=0;p.cooldowns={};p.globalCooldowns={};p.categoryCooldowns={};p.mana=10000;p.auras=[];}
+ // An unavailable primary must yield to the assigned backup.
+ priests[0].hp=0;
+ const backup=priests[1],mana=backup.mana,cost=spellInfo(backup,6346).mana;
+ const assigned=[...r.command.plan.jobs.ward];r.command.plan.jobs.ward=[];
+ onyxiaTick(s,actors,()=>{});assert.equal(r.support.wards,0);
+ r.command.plan.jobs.ward=assigned;backup.mana=0;
+ onyxiaTick(s,actors,()=>{});assert.equal(r.support.wards,0);
+ backup.mana=mana;backup.position=tank.position+100;
+ onyxiaTick(s,actors,()=>{});assert.equal(r.support.wards,0);
+ backup.position=tank.position;
+ onyxiaTick(s,actors,()=>{});
+ assert.equal(r.support.wards,1);assert.equal(backup.mana,mana-cost);
+ assert.ok(tank.auras.some((a:Rules)=>a.spell===6346&&a.caster===backup.id));
+ onyxiaTick(s,actors,()=>{});assert.equal(r.support.wards,1);
+ r.phase=2;boss.hp=boss.maxHp*.39;
+ onyxiaTick(s,actors,()=>{});
+ assert.equal(r.phase,3);assert.ok(!tank.auras.some((a:Rules)=>a.until>s.clock&&(a.spell===6346||a.type===7)));
+ assert.ok(backup.auras.some((a:Rules)=>a.type===7));
+ // The next roar lands during the ward's 30-second cooldown.
+ s.clock=r.nextFear;onyxiaTick(s,actors,()=>{});
+ assert.equal(r.support.wards,1);assert.ok(tank.auras.some((a:Rules)=>a.type===7));
 });

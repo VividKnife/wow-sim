@@ -84,8 +84,8 @@ test('policy cadence is bounded and does not consume the combat RNG for idle dec
  assert.ok(policyState(s).metrics.evaluations<=51);assert.equal(s.rngState,rng);
 });
 test('policy observation excludes inventory, history and hidden encounter plans',()=>{
- const s=fixture();s.bag=[{id:118,count:2,uid:'secret'}];s.combat.pendingSpawns=[{secret:'future'}];s.combat.raidEncounter={command:{secret:'boss-plan'}};
- const o=projectCombatObservation(s);assert.equal(o.bag,undefined);assert.equal(o.logs,undefined);assert.equal(o.rngState,undefined);assert.equal(o.combat.pendingSpawns,undefined);assert.deepEqual(o.combat.raidEncounter,{command:true});assert.equal(o.inventoryCounts[118],2);assert.ok(!JSON.stringify(o).includes('secret'));
+ const s=fixture();s.bag=[{id:118,count:2,uid:'secret'}];s.combat.pendingSpawns=[{secret:'future'}];s.combat.raidEncounter={command:{healingMode:'conserve',secret:'boss-plan'}};
+ const o=projectCombatObservation(s);assert.equal(o.bag,undefined);assert.equal(o.logs,undefined);assert.equal(o.rngState,undefined);assert.equal(o.combat.pendingSpawns,undefined);assert.deepEqual(o.combat.raidEncounter,{command:{healingMode:'conserve'}});assert.equal(o.inventoryCounts[118],2);assert.ok(!JSON.stringify(o).includes('secret'));
 });
 test('a normalized received input stream settles identically across coarse and fine replay',()=>{
  const initial=fixture();initial.rules=[];

@@ -11,7 +11,7 @@ import {waitingRaidBoss} from '@/lib/boss-presentation.js';
 import type {GameProps} from './game-ui';
 import './world-scene.css';
 
-export default function WorldScene(props:GameProps&{onObserve?:()=>void;animationPaused?:boolean;canLead?:boolean;commandMemberId?:string;onCommandMemberChange?:(id:string)=>void}){
+export default function WorldScene(props:GameProps&{uiHidden?:boolean;onObserve?:()=>void;animationPaused?:boolean;canLead?:boolean;commandMemberId?:string;onCommandMemberChange?:(id:string)=>void}){
  const {state:s,data:d}=props,scene=worldSceneState(s,d),presentation=scenePresentation(s,d);
  const waitingBoss=waitingRaidBoss(s,d);
  const container=useRef<HTMLElement>(null);

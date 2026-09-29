@@ -1,0 +1,22 @@
+.scene-ui-toggle{position:absolute;top:10px;right:14px;z-index:60;display:flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:7px 11px;border:1px solid #b9a16a80;border-radius:6px;background:#101b18cc;color:#e9d7ac;font-size:12px;cursor:pointer;box-shadow:0 2px 8px #0004}
+.scene-ui-toggle:hover{background:#29362dee;border-color:#ead29a}
+.scene-ui-toggle:focus-visible{outline:2px solid #ffe19a;outline-offset:3px}
+.scene-ui-hidden .battle-3d-controls,.scene-ui-hidden .hd2d-scene-title,.scene-ui-hidden .hd2d-scene-caption,.scene-ui-hidden .hd2d-unit-label,.scene-ui-hidden .hd2d-damage,.scene-ui-hidden .world-battle-expand{display:none}
+.classic-game.scene-ui-hidden .cu-viewport{position:fixed;inset:0;z-index:100;height:100dvh;min-height:0;border:0}
+.classic-game.scene-ui-hidden .cu-viewport>:not(.cu-world):not(.scene-ui-toggle){display:none}
+.classic-game.scene-ui-hidden .cu-world{inset:0}
+.classic-game.scene-ui-hidden .world-scene-combat{inset:0;border:0;border-radius:0}
+.classic-game.scene-ui-hidden .cu-status-area{display:none}
+.battle-dialog>.scene-ui-toggle{top:12px;right:14px}
+.battle-dialog:has(>.scene-ui-toggle) .battle-heading{padding-right:120px}
+.battle-dialog.scene-ui-hidden[data-slot]{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;padding:0;border:0;border-radius:0;overflow:hidden;gap:0}
+.battle-dialog.scene-ui-hidden>:not(.battle-room):not(.scene-ui-toggle):not(.battle-heading){display:none}
+/* Retain the dialog's accessible title without showing the header. */
+.battle-dialog.scene-ui-hidden .battle-heading{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);pointer-events:none}
+.battle-dialog.scene-ui-hidden .battle-room{position:absolute;inset:0}
+.battle-dialog.scene-ui-hidden .hd2d-field{height:100%;border:0}
+
+.battle-dialog.scene-ui-hidden .battle-heading button{display:none}
+.classic-game-root:has(.scene-ui-hidden)>.experience-notifications,.classic-game-root:has(.scene-ui-hidden)>.level-up-notification{display:none}
+.classic-game .scene-ui-toggle{position:fixed;top:10px;right:14px}
+@media(max-width:800px){.classic-game .scene-ui-toggle{min-height:40px}}

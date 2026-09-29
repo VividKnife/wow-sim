@@ -1,3 +1,5 @@
+import {isContentPending} from './runtime-content.js';
+import {invalidatePolicyIntents} from './combat-policy.js';
 import {commandCombatCast} from './combat.js';
 import {combatInputReadyReason} from './combat-input.js';
 import {items} from './catalog.js';
@@ -38,6 +40,11 @@ export function raidCommandAction(s,a){
  }
  require(a.type==='raidOrder'&&s.combat?.raidEncounter?.command&&a.encounterId===s.combat.id,'当前战斗已变化，请重新下令。');
  const command=s.combat.raidEncounter.command;
+ if(a.order==='conserveMana'||a.order==='normalHealing'){
+  command.healingMode=a.order==='conserveMana'?'conserve':'normal';
+  invalidatePolicyIntents(s,members(s).filter(c=>combatRole(c)==='healer').map(c=>c.id));
+  record(s,`团长下令：${command.healingMode==='conserve'?'治疗节约蓝量':'正常治疗'}`,'healing');return;
+ }
  if(a.order==='focusAdds'||a.order==='focusBoss'){
   require(s.clock>=(command.focusReadyAt||0),'集火口令每5秒只能切换一次。');
   if(s.combat.command)s.combat.command.focusId=null;
@@ -50,7 +57,7 @@ export function raidCommandAction(s,a){
 function record(s,text,key,actorId){const c=s.combat.raidEncounter.command;c.events.push({at:s.clock,text,key,actorId});c.events=c.events.slice(-40);raidNotice(s,text,'raid-command',{actorId});}
 export function initRaidCommand(s,bossId){
  const enc=s.combat.raidEncounter,plan=raidPlan(s,bossId);
- enc.command={plan,events:[],used:{},dead:[],firstDeath:null,focusReadyAt:0};
+ enc.command={plan,events:[],used:{},dead:[],firstDeath:null,focusReadyAt:0,healingMode:'normal'};
  enc.tactics.focusAdds=plan.focus==='adds';enc.tactics.dispel=true;enc.tactics.tranquilize=true;enc.tactics.fearWard=true;enc.tactics.avoidFire=true;
  for(const c of members(s))c.raidReservedSpells=Object.entries(raidCooldowns).filter(([key])=>plan.cooldowns[key].actorId===c.id).map(([,j])=>j.spell);
 }
@@ -75,7 +82,7 @@ function executeCooldown(s,key){
  // Emergency assignments explicitly cancel the current cast, then use the
  // same validation and settlement as player and team input. Restore on failure.
  const cast=actor.cast,nextAction=actor.nextAction;actor.cast=null;actor.nextAction=s.clock;
- try{commandCombatCast(s,actor,sp.Id,target.id);}catch(error){actor.cast=cast;actor.nextAction=nextAction;return error.message;}
+ try{commandCombatCast(s,actor,sp.Id,target.id);}catch(error){if(isContentPending(error))throw error;actor.cast=cast;actor.nextAction=nextAction;return error.message;}
  s.combat.raidEncounter.command.used[key]=(s.combat.raidEncounter.command.used[key]||0)+1;
  record(s,`${actor.name} 执行${raidCooldowns[key].name} → ${target.name}`,key,actor.id);return '';
 }
@@ -127,6 +134,6 @@ export function raidCommandView(s){
   jobs:Object.entries(raidJobs).map(([id,j])=>({id,...j,candidates:eligible(s,j.spell).map(c=>({id:c.id,name:c.name}))})),
   cooldowns:Object.entries(raidCooldowns).map(([id,j])=>({id,...j,candidates:eligible(s,j.spell).map(c=>({id:c.id,name:c.name})),...(command?{reason:cooldownContext(s,id).reason,remaining:cooldownContext(s,id).remaining,actorId:command.plan.cooldowns[id].actorId,trigger:command.plan.cooldowns[id].trigger,used:command.used[id]||0}:{})})),
   locked:!!s.combat||!!r.recoverUntil||!!r.autoAdvance||!!s.goldRaid?.active&&r.phase!=='camp',
-  live:command?{bossId:enc.id,encounterId:s.combat.id,focusAdds:enc.tactics.focusAdds,focusReadyAt:command.focusReadyAt,events:command.events.slice(-5)}:null,
+  live:command?{bossId:enc.id,encounterId:s.combat.id,focusAdds:enc.tactics.focusAdds,focusReadyAt:command.focusReadyAt,healingMode:command.healingMode,events:command.events.slice(-5)}:null,
   attempts:r.attempts.filter(a=>a.review).slice(-20)};
 }

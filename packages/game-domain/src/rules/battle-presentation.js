@@ -27,11 +27,12 @@ export function effectsFor(actor,clock){
   result.set(key,{...prior,...(id?spellDetail(id):{spellId:null,name:fallback,icon:null}),kind:a.positive===false?'debuff':kind,routine:routine||(kind==='buff'&&a.positive!==false&&(spells[id]?.durationMs||0)>=120000&&detail===''),until:Math.max(prior.until||0,until),charges:a.charges>0&&a.charges<100000?a.charges:prior.charges,stacks:a.stacks??prior.stacks,amount:a.amount??prior.amount,detail,caster:a.caster||null});
  };
  for(const a of Object.values(actor.buffs||{}))add(a,'','','buff',true);
+ for(const a of actor.itemBuffs||[])add(a,'','','buff',true);
  for(const a of [...(actor.classBuffs||[]),...(actor.talentBuffs||[]),...(actor.auras||[])])add(a);
  for(const a of actor.dots||[])add(a,'持续伤害','','debuff');
  for(const a of actor.hots||[])add(a,'持续治疗');
  for(const a of actor.periodicClass||[])add(a,[8,161].includes(a.type)?'持续治疗':'资源恢复');
- add(actor.absorb,'吸收剩余');add(actor.manaShield,'法力护盾剩余');add(actor.seal,'圣印');add(actor.judgement,'审判','','debuff');if(actor.reactiveClass?.charges!==0)add(actor.reactiveClass,'护盾充能');add(actor.soulstone,'灵魂石','','buff',true);
+ if(actor.absorb?.amount>0)add(actor.absorb,'吸收剩余');if(actor.manaShield?.amount>0)add(actor.manaShield,'法力护盾剩余');add(actor.seal,'圣印');add(actor.judgement,'审判','','debuff');if(actor.reactiveClass?.charges!==0)add(actor.reactiveClass,'护盾充能');add(actor.soulstone,'灵魂石','','buff',true);
  for(const [slot,label]of [[16,'主手'],[17,'副手']]){const a=actor.weaponEnchants?.[slot]||(slot===16?actor.weaponEnchant:null);if(a&&a.charges!==0&&(!a.weaponUid||actor.equipment?.[slot]?.uid===a.weaponUid))add(a,label+'强化','','buff',true);}
  for(const [key,id,label]of [['weakenedSoulUntil',6788,'虚弱灵魂'],['sprintUntil',2983,'疾跑'],['innervateUntil',29166,'激活'],['hawkHasteUntil',6150,'强化雄鹰守护'],['feignUntil',5384,'假死']])add({spell:id,until:actor[key]},'战斗效果',label,key==='weakenedSoulUntil'?'debuff':'buff');
  for(const [key,a]of Object.entries(actor.talentProcs||{})){const normalized=key.toLowerCase(),id=(actor.learned||[]).find(id=>learnedSpellKey(id)===normalized)||namedSpells.get(normalized);if(id)add({...a,spell:id},'天赋触发');}
@@ -47,9 +48,7 @@ export function effectsFor(actor,clock){
 
 // Main HUD only lists positive effects, independent of combat history.
 export function playerBuffs(actor) {
- const positive={};
- for(const key of ['serverBuffs','buffs','classBuffs','talentBuffs','hots','absorb','manaShield','seal','soulstone','weaponEnchants','weaponEnchant','equipment','talentProcs','learned','racialBuff','totemWeaponEnchant','lightwell','stealthed','form'])positive[key]=actor[key];
- return effectsFor(positive,actor.clock);
+ return effectsFor(actor,actor.clock).filter(effect=>effect.kind==='buff');
 }
 
 export function battlePresentation(s){

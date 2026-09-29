@@ -26,7 +26,7 @@ export function projectCombatObservation(s,controlledIds=combatMembers(s).filter
   combat:{...pick(s.combat,['id','startedAt','pvp','area','pull','participantIds','controlTargetId','stealthUsers','engagedMemberIds']),
    command:s.combat.command?pick(s.combat.command,['focusId','holdFire','orders','mode','memberModes']):null,
    enemies:s.combat.enemies.map(e=>actorView(e,false)),
-   ...(s.combat.raidEncounter?{raidEncounter:{command:!!s.combat.raidEncounter.command}}:{})},
+   ...(s.combat.raidEncounter?{raidEncounter:{command:s.combat.raidEncounter.command?pick(s.combat.raidEncounter.command,['healingMode']):null}}:{})},
   groundEffects:(s.groundEffects||[]).map(e=>pick(e,['caster','spell','until','radius','position','positionY'])),
  };
  if(s.arenaActors)result.arenaActors=members.map(c=>actorView(c,owned.has(c.id)));

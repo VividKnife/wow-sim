@@ -4,38 +4,21 @@ import {onyxiaTick} from './onyxia-encounter.js';
 // Authored 25-player adaptation. Boss scripts use the existing combat damage,
 // aura, movement, resource and cooldown systems; no parallel combat calculator.
 import {goldNpcTick} from './gold-raid-npcs.js';
-import {rng,spellInfo,knownRank} from './character.js';
+import {rng} from './character.js';
+import {ready,supportCast,supportActor,raidFearWardTick} from './raid-support.js';
 import {combatRole} from './combat-roles.js';
 import {distance} from '../../../sim-core/src/geometry.js';
-import {controlled,addCombatAura} from '../../../sim-core/src/combat-auras.js';
-import {beginSpellTiming,spellReady} from './spell-timing.js';
+import {addCombatAura} from '../../../sim-core/src/combat-auras.js';
 import {dispelSpellAuras,applySpellAura} from './spell-aura-lifecycle.js';
 import {consumeHunterAmmo} from './ammunition.js';
 
 export {moltenCoreBosses} from './molten-core-content.js';
 import {extendedMoltenCoreTick,raidNotice,raidAnimation} from './molten-core-mechanics.js';
 export const defaultRaidTactics = {focusAdds:true,dispel:true,tranquilize:true,fearWard:true,avoidFire:true};
-function ready(s,c,id,target) {
- const spell=knownRank(c,id),sp=spell&&spellInfo(c,spell);
- if(!sp||c.hp<=0||c.cast||controlled(c,s.clock)||c.silenceUntil>s.clock||c.nextAction>s.clock||!spellReady(c,sp,s.clock)||c.mana<sp.mana||distance(c,target)>sp.range)return null;
- return sp;
-}
-function supportCast(s,c,sp,target,apply,label) {
- const timing=beginSpellTiming(c,{...sp,castMs:0},s.clock);
- if(!timing.committed)return false;
- apply();c.nextAction=Math.max(c.nextAction,s.clock+1500);
- raidNotice(s,`${c.name}：${label} → ${target.name}`,'raid-support',{actorId:c.id,targetId:target.id,spellId:sp.Id});
- return true;
-}
 function randomTargets(s,actors,count) {
  const pool=actors.filter(c=>c.hp>0&&!c.petUnit&&!c.totemUnit),chosen=[];
  while(pool.length&&chosen.length<count)chosen.push(pool.splice(Math.floor(rng(s)*pool.length),1)[0]);
  return chosen;
-}
-function supportActor(s,living,job,spell,target){
- const ids=s.combat.raidEncounter.command?.plan.jobs[job];
- const candidates=ids?ids.map(id=>living.find(c=>c.id===id)).filter(Boolean):living;
- return candidates.find(c=>c.raidEvadingAt!==s.clock&&ready(s,c,spell,target));
 }
 export function moltenCoreTick(s,actors,hurt) {
  const raid=s.combat?.raidEncounter;if(!raid)return;
@@ -49,7 +32,6 @@ export function moltenCoreTick(s,actors,hurt) {
  raidCommandTick(s,actors);
  const adds=s.combat.enemies.filter(e=>e.id!==boss.id&&e.hp>0).sort((a,b)=>Number(!!b.raidHealer)-Number(!!a.raidHealer)||Number(b.trashType==='priest')-Number(a.trashType==='priest'));
  const focus=raid.tactics.focusAdds;
- const tanks=living.filter(c=>combatRole(c)==='tank');
  for(const c of living){
   c.raidTargetId=combatRole(c)==='tank'?((c.raidMainTank&&!raid.submerged)||!adds.length?boss.id:adds[0].id):((focus||raid.submerged)&&adds.length?adds[0].id:boss.id);
  }
@@ -94,6 +76,7 @@ export function moltenCoreTick(s,actors,hurt) {
   }
  }
  raidFieldsTick(s,actors,boss,hurt);
+ if(raid.id==='magmadar')raidFearWardTick(s,living);
  for(const c of living){
   if(c.raidEvadingAt===s.clock)continue;
   if(raid.tactics.dispel&&[5,8].includes(c.classId)&&assignedRaidSupport(s,c,c.classId===5?'magic':'curse')){
@@ -104,11 +87,6 @@ export function moltenCoreTick(s,actors,hurt) {
   if(raid.tactics.tranquilize&&c.classId===3&&boss.enraged&&c===supportActor(s,living,'tranquilize',19801,boss)){
    const sp=ready(s,c,19801,boss);
    if(sp&&consumeHunterAmmo(c,'Tranquilizing Shot')&&supportCast(s,c,sp,boss,()=>{dispelSpellAuras(boss,[9],1,s);boss.enraged=false;raid.support.tranquilizes++;},'宁神射击'))continue;
-  }
-  const tank=tanks.find(a=>a.raidMainTank)||tanks[0];
-  if(raid.id==='magmadar'&&raid.tactics.fearWard&&c.classId===5&&tank&&c===supportActor(s,living,'ward',6346,tank)&&!tank.auras?.some(a=>a.spell===6346&&a.until>s.clock)){
-   const sp=ready(s,c,6346,tank);
-   if(sp)supportCast(s,c,sp,tank,()=>{applySpellAura(tank,{spell:6346,effect:1,type:77,misc:5,amount:1,positive:true,consumeOnImmune:true,until:s.clock+180000,caster:c.id},s.clock);raid.support.wards++;},'防护恐惧结界');
   }
  }
  if(boss.enraged&&!boss.auras?.some(a=>a.dispel===9&&a.until>s.clock))boss.enraged=false;

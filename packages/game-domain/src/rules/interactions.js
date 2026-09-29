@@ -1,9 +1,9 @@
 import {creatures,creatureLocations,questLinks,endpointNodes,objectTemplates,nameOf,table,classDefinitions,flightNodes} from './catalog.js';
 import {canTrainAt} from './city.js';
 import {classSupplyShop} from './class-acquisition.js';
-import portraits from '../../../game-data/data/npc-models-manifest.json' with {type:'json'};
+import {runtime} from './runtime-content.js';
 
-const assets=new Map(portraits.assets.map(asset=>[asset.id,'/'+asset.path]));
+
 const vendors=new Map();
 for(const row of table('npc_vendor')){if(!vendors.has(row.entry))vendors.set(row.entry,[]);vendors.get(row.entry).push(row.item);}
 const locals=new Map();
@@ -11,7 +11,7 @@ for(const [id,locations]of Object.entries(creatureLocations))for(const location 
 
 export function localInteractions(s,quests){
  const result=new Map();
- const get=(type,id)=>{const key=type+':'+id;if(!result.has(key))result.set(key,{key,entry:type==='creature'?id:null,name:type==='creature'?nameOf('npcs',id):type==='item'?nameOf('items',id):objectTemplates[id]?.name||'任务物件',portrait:type==='creature'?assets.get(portraits.entries[id]?.assetId)||null:null,roles:[],accepts:[],turnIns:[],stockIds:[]});return result.get(key);};
+ const get=(type,id)=>{const key=type+':'+id;if(!result.has(key))result.set(key,{key,entry:type==='creature'?id:null,name:type==='creature'?nameOf('npcs',id):type==='item'?nameOf('items',id):objectTemplates[id]?.name||'任务物件',portrait:type==='creature'?runtime.npcPortraits[id]||null:null,roles:[],accepts:[],turnIns:[],stockIds:[]});return result.get(key);};
  const role=(npc,kind)=>{if(!npc.roles.includes(kind))npc.roles.push(kind);};
  for(const q of quests)for(const [kind,eligible,field]of [['starts',q.canAccept,'accepts'],['ends',q.canTurnIn,'turnIns']]){
   if(!eligible)continue;

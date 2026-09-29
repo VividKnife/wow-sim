@@ -1,9 +1,10 @@
+import {isContentPending} from './runtime-content.js';
 import {groupRows} from '../../../sim-core/src/collections.js';
 import {reserveMarket,marketOffer,marketAvailability} from './market.js';
 import {racialModifiers} from './racial-effects.js';
 import {questFishingSources} from '../../../game-data/world-quest-content.js';
 import {items,nodes,nameOf,creatures,objectTemplates,objectLocations,objectLoot} from './catalog.js';
-import classReference from '../../../game-data/data/classes-reference.json' with {type:'json'};
+import {classLocks} from './catalog.js';
 import {addItem,clone,log,roll,rng,stats,slotOf,countItem} from './character.js';
 import {professions,recipes,enchants,professionRanks,specializations,specializationKnown,disenchantLoot,bandages,enchantFits,professionReference} from './profession-data.js';
 import {quantity,usableCount,consume,receive,marketPrice,protectedItem} from './inventory.js';
@@ -30,7 +31,7 @@ export function professionView(s){return{professions:professions.map(p=>({...p,.
 const terrain={northwood:'forest',vineyard:'farm',echo:'mine',fargodeep:'mine',jasper:'mine',mirror:'lake',crystal:'lake',stonefield:'farm',maclure:'farm',logging:'forest',brackwell:'farm',forestedge:'forest',furlbrow:'farm',saldean:'farm',jansen:'mine',alexton:'farm',moonbrook:'hills',daggerhills:'hills',coastnorth:'coast',coast:'coast',lighthouse:'coast',silverstream:'mine'};
 const sourceResources=new Map();
 for(const object of Object.values(objectTemplates)){
- const lock=classReference.classLocks[object.data0]?.requirements.find(r=>r.type===2&&[2,3].includes(r.index));
+ const lock=classLocks[object.data0]?.requirements.find(r=>r.type===2&&[2,3].includes(r.index));
  if(object.type!==3||!lock)continue;
  const loot=(objectLoot[object.data1]||[]).filter(r=>r.mincountOrRef>0&&r.ChanceOrQuestChance>0&&!r.condition_id&&items[r.item]).sort((a,b)=>b.ChanceOrQuestChance-a.ChanceOrQuestChance)[0];
  if(!loot)continue;
@@ -51,7 +52,7 @@ function resourceDefs(location){const t=terrain[location];const west=nodes[locat
  return [...resources,...(sourceResources.get(location)||[]).filter(r=>!resources.some(existing=>existing.item===r.item))];
 }
 export function resourceView(s){return resourceDefs(s.location).map(r=>{const readyAt=s.resourceCooldowns?.[r.id]||0;return{...r,readyAt,available:readyAt<=s.clock&&skill(s,r.profession)>=r.required,learned:skill(s,r.profession)>0};});}
-function roomForResource(s,r){const copy=clone(s);try{receive(copy,r.item,3);return true;}catch{return false;}}
+function roomForResource(s,r){const copy=clone(s);try{receive(copy,r.item,3);return true;}catch(error){if(isContentPending(error))throw error;return false;}}
 export function beginGather(s,id,auto=false){const r=resourceView(s).find(r=>r.id===id);if(!r||!r.available)throw new Error('资源尚未刷新、熟练度不足或不在当前区域');if(!roomForResource(s,r))throw new Error('背包空间不足，请预留采集空间');s.rest=null;s.activity={type:'professionGather',target:id,auto,startedAt:s.clock,endsAt:s.clock+3000};}
 export function finishGather(s){const a=s.activity,r=resourceView(s).find(r=>r.id===a.target);s.activity={type:'idle'};if(!r?.available||!roomForResource(s,r)){s.activity.reason='无法继续采集，请检查资源与背包空间。';return;}const count=roll(s,1,3);receive(s,r.item,count);s.resourceCooldowns[r.id]=s.clock+300000;
  // Fish pools gate access, not skill gains: all current pools accept skill 1.

@@ -7,14 +7,14 @@ import tailwind from '@tailwindcss/postcss';
 import {fileURLToPath} from 'node:url';
 import {createGame,act,stats,view} from '../../../packages/game-domain/src/rules/engine.js';
 import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
-import {abilities} from '../../../packages/game-domain/src/rules/catalog.js';
+import {classAbilities} from '../../../packages/game-domain/src/rules/catalog.js';
 import {simulateCombatRecording,playbackManifest} from '../../../packages/game-domain/src/combat-playback.ts';
 import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
 const app=fileURLToPath(new URL('../',import.meta.url)),port=Number(process.env.PREVIEW_PORT||5176);
 let fixture;
 function reset(){
  let state=createGame('回放测试法师',283,0);state.level=20;
- state.learned=abilities.filter(a=>a.requiredLevel<=20).map(a=>a.spellId);state.hp=stats(state).maxHp;state.mana=stats(state).maxMana;
+ state.learned=classAbilities[8].filter(a=>a.requiredLevel<=20).map(a=>a.spellId);state.hp=stats(state).maxHp;state.mana=stats(state).maxMana;
  for(const id of ['warrior','priest','rogue','mage'])createNpcMember(state,id);
  startCombat(state,[636,636,1729],true);
  const result=simulateCombatRecording(state,{id:crypto.randomUUID(),contentVersion:'fixture'});
