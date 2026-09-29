@@ -58,7 +58,20 @@ export function healthRegen(c,sitting=false){
  const [factor,offset]={1:[1.26,-22.6],2:[.25,0],3:[.43,-5.5],4:[.84,-13],5:[.15,1.4],7:[.28,-3.6],8:[.11,1],9:[.12,1.5],11:[.11,1]}[c.classId]||[0,0];
  return Math.floor(Math.max(0,stats(c).spi*factor+offset)*2*(sitting?1.5:1)*((c.raceId||1)===8?1.1:1));
 }
+// CMaNGOS Classic Pet::RegenerateAll / Creature::RegenerateHealth:
+// independent 4s pet tick, 13% maximum health for player-controlled creatures.
+function petHealthRecoveryTick(s){
+ for(const owner of [s,...(s.party||[])]){
+  const pet=owner.pet;if(!pet||s.clock<pet.nextHealthRegen)continue;
+  pet.nextHealthRegen=s.clock+4000;
+  // Consume combat/death ticks too, so they cannot become a healing backlog.
+  if(s.combat||pet.hp<=0||pet.until&&pet.until<=s.clock)continue;
+  pet.time=s.clock;const maxHp=stats(pet).maxHp;
+  pet.hp=Math.min(maxHp,pet.hp+Math.floor(maxHp*.13));
+ }
+}
 export function recoveryTick(s,regenTick){
+ petHealthRecoveryTick(s);
  for(const c of recoveryMembers(s)){
   c.time=s.clock;if(c.hp<=0)continue;const st=stats(c);
   if(regenTick){

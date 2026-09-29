@@ -8,18 +8,11 @@ type Props={action:ReturnType<typeof import('@/lib/classic-action-bar.js').quick
 const seconds=(ms:number)=>`${Number((ms/1000).toFixed(1))} 秒`;
 const rankName=(rank:string)=>rank.replace(/^Rank\s*/,'等级 ').replace('Racial Passive','种族被动').replace('Racial','种族技能').replace('Passive','被动');
 
-export default function ClassicActionTooltip({action,binding,data:d,state:s,shortcut,children,disabled}:Props){
- const [kind,rawId]=(binding||'').split(':'),id=Number(rawId);
- const spell=kind==='spell'?d.skills?.find((skill:GameProps['data'])=>skill.spellId===id):null;
- const item=kind==='item'?d.items?.[id]:null;
- const uid=action?.command&&'uid' in action.command?action.command.uid:undefined;
- const instance=item?s.bag?.find((entry:GameProps['state'])=>entry.uid===uid)||s.bag?.find((entry:GameProps['state'])=>entry.id===id):null;
- const racialDescription=spell?d.raceTraits?.find((trait:GameProps['data'])=>trait.id===id||trait.name===spell.name)?.description:undefined;
+export function SpellTooltipContent({spell,data:d,fallbackName='未找到技能'}:{spell:GameProps['data'];data:GameProps['data'];fallbackName?:string}){
+ const racialDescription=spell?d.raceTraits?.find((trait:GameProps['data'])=>trait.id===spell.spellId||trait.name===spell.name)?.description:undefined;
  const details=spell?.details,cost=spell?.powerCost??spell?.manaCost;
- const automatic=action&&'automatic' in action&&action.automatic;
- return <Tooltip.Root open={disabled?false:undefined}><Tooltip.Trigger asChild>{children}</Tooltip.Trigger><Tooltip.Portal><Tooltip.Content className="cu-action-tooltip" side="top" align="start" sideOffset={10} collisionPadding={12}>
-  {item?<ItemTooltip item={item} instance={instance}/>:<>
-   <header><strong>{spell?.name||action?.name||(binding?'未找到技能':'空栏位')}</strong>{spell?.rank&&<small>{rankName(spell.rank)}</small>}</header>
+ return <>
+   <header><strong>{spell?.name||fallbackName}</strong>{spell?.rank&&<small>{rankName(spell.rank)}</small>}</header>
    {spell&&<>
     <div className="cu-tooltip-facts"><span>{cost>0?`${cost} ${spell.powerName||'法力'}`:'无资源消耗'}</span><span>{spell.channelMs?`${seconds(spell.channelMs)} 引导`:spell.cast?`${seconds(spell.cast)}施法`:'瞬发'}</span></div>
     {details?.facts?.map((fact:string)=><div key={fact}>{fact}</div>)}
@@ -27,6 +20,19 @@ export default function ClassicActionTooltip({action,binding,data:d,state:s,shor
     {racialDescription&&<p className="cu-tooltip-description">{racialDescription}</p>}
     {!!details?.restrictions?.length&&<div className="cu-tooltip-restrictions">{details.restrictions.map((restriction:string)=><p key={restriction}>{restriction}</p>)}</div>}
    </>}
+ </>;
+}
+
+export default function ClassicActionTooltip({action,binding,data:d,state:s,shortcut,children,disabled}:Props){
+ const [kind,rawId]=(binding||'').split(':'),id=Number(rawId);
+ const spell=kind==='spell'?d.skills?.find((skill:GameProps['data'])=>skill.spellId===id):null;
+ const item=kind==='item'?d.items?.[id]:null;
+ const uid=action?.command&&'uid' in action.command?action.command.uid:undefined;
+ const instance=item?s.bag?.find((entry:GameProps['state'])=>entry.uid===uid)||s.bag?.find((entry:GameProps['state'])=>entry.id===id):null;
+ const automatic=action&&'automatic' in action&&action.automatic;
+ return <Tooltip.Root open={disabled?false:undefined}><Tooltip.Trigger asChild>{children}</Tooltip.Trigger><Tooltip.Portal><Tooltip.Content className="cu-action-tooltip" side="top" align="start" sideOffset={10} collisionPadding={12}>
+  {item?<ItemTooltip item={item} instance={instance}/>:<>
+   <SpellTooltipContent spell={spell} data={d} fallbackName={action?.name||(binding?'未找到技能':'空栏位')}/>
   </>}
   {action?.description&&<p className="cu-tooltip-description">{action.description}</p>}
   {action&&action.remaining>0&&<p className="cu-tooltip-cooldown">冷却剩余：{seconds(action.remaining)}</p>}

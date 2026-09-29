@@ -363,3 +363,6 @@ body:has(.classic-game-root) .battle-effects-control{display:none}
  .classic-game .cu-viewport:has(.cu-buffs) .cu-zone-title{top:192px}
 }
 @media(max-width:380px){.cu-player-hud{width:195px}}
+
+/* Recovery controls remain reachable on narrow screens. */
+.cu-actions{max-width:calc(100% - 24px);flex-wrap:wrap;justify-content:center;width:max-content}
