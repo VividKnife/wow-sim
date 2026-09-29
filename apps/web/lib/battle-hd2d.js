@@ -24,6 +24,16 @@ export function cameraFit(layout,units,size){
  const headroom=Math.max(...units.filter(u=>!u.removed).map(u=>actorHeight(layout,u)))*1.5+4*metric;
  return{x:(Math.min(...xs)+Math.max(...xs))/2,z:(Math.min(...zs)+Math.max(...zs))/2,zoom:manual*Math.min(size.width/Math.max(44*metric,Math.max(...xs)-Math.min(...xs)+10*metric),size.height/Math.max(24*metric,(Math.max(...zs)-Math.min(...zs))*CAMERA_TILT+headroom))};
 }
+// Solo play follows the hero from behind; pets and totems are not party members.
+export function soloCameraPose(layout,units,playerId,size){
+ const hero=units.find(u=>u.id===playerId&&!u.removed);
+ if(!hero||units.some(u=>u.id!==playerId&&!u.foe&&u.classId&&!u.petUnit&&!u.totemUnit&&!u.removed))return null;
+ const p=unitPoint(layout,hero.id),enemy=units.find(u=>u.id===hero.target&&u.hp>0&&!u.removed),q=enemy&&unitPoint(layout,enemy.id);
+ const angle=hero.combatFacing??(q?Math.atan2(q[2]-p[2],q[0]-p[0]):0),x=Math.cos(angle),z=Math.sin(angle);
+ const metric=actorScale(layout),height=actorHeight(layout,hero),zoom=layout.zoom||1;
+ const distance=Math.max(height*2,metric*12/zoom)*Math.max(1,Math.min(1.6,size.height/Math.max(1,size.width)));
+ return{target:[p[0]+x*metric*3,height*.85,p[2]+z*metric*3],position:[p[0]-x*distance,height*.85+distance*.42,p[2]-z*distance]};
+}
 const themes={
  onyxia:{id:'onyxia',name:'奥妮克希亚的巢穴',texture:'cave',sky:'#211a23',floor:'#68514c',rock:'#392e35',leaf:'#735636',light:'#ffc295',ambient:'#b59aab',accent:'#ff924b',fog:78},
  arena:{id:'arena',name:'竞技场',texture:'cave',sky:'#202a30',floor:'#827861',rock:'#625b4c',leaf:'#617363',light:'#ffe0ad',ambient:'#bbc9ca',accent:'#dec492',fog:78},

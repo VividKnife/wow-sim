@@ -34,3 +34,21 @@ test('dead members are identified separately and inspection remains available af
  const check=partyBuffCheckView(s)!;assert.equal(check.members[2].dead,true);assert.ok(check.members[2].entries.every(e=>e.status==='dead'));assert.equal(check.missing,4+check.members.filter(m=>!m.dead).flatMap(m=>m.entries).filter(e=>e.itemId&&e.status!=='ready').length);assert.equal(check.active,false);
  s.combat={};assert.equal(partyBuffCheckView(s),null);
 });
+test('preparation requeues an expired buff before reporting completion',()=>{
+ const {s,priest}=fixture();beginPartyBuffs(s);priest.mana=stats(priest).maxMana;partyBuffTick(s);
+ assert.equal(s.activity.queue.length,0);
+ s.clock=3600001;priest.time=s.clock;priest.mana=stats(priest).maxMana;
+ partyBuffTick(s);assert.equal(s.activity.type,'partyBuffs');assert.equal(s.activity.remaining,1);
+ partyBuffTick(s);assert.equal(partyBuffCheckView(s)!.present,5);
+});
+test('Divine Spirit uses one group cast with candles and single casts without them',()=>{
+ for(const candles of [0,1]){
+  const {s,priest}=fixture();priest.npcPlayer=false;priest.bag=candles?[{id:17029,count:1,uid:'candle'}]:[];
+  // The prayer appears first and shares first_spell=14752 in ClassicDB.
+  priest.learned=[14752,27681,27841];priest.mana=stats(priest).maxMana;
+  beginPartyBuffs(s);assert.equal(s.activity.queue.length,candles?1:5);assert.ok(s.activity.queue.every((r:Rules)=>r.spell===(candles?27681:27841)));
+  partyBuffTick(s);assert.equal(partyBuffCheckView(s)!.present,candles?5:1);
+  assert.equal(s.activity.queue.length,candles?0:4);
+  if(candles){for(let n=0;n<10&&s.activity.type==='partyBuffs';n++){s.clock+=2000;partyBuffTick(s);}assert.equal(s.activity.type,'idle');}
+ }
+});

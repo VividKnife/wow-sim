@@ -1,3 +1,4 @@
+import {unstuck} from './unstuck.ts';
 import {createHash} from 'node:crypto';
 import type {ReadView, Transaction} from '../../persistence/src/store.ts';
 import type {GameService} from './service.ts';
@@ -79,9 +80,15 @@ export async function localSimulation(this: GameService, accountId:string, input
             return previous.result;
         }
         const now = this.now();
-        const {owner, table} = await ownerFor(this, tx, accountId, input.characterId);
-        requireThat(owner.contentVersion === this.contentVersion, 'CONTENT_VERSION', '此活动的规则版本已过期，请使用“脱离卡死”结束旧活动');
+        const {owner, table, c} = await ownerFor(this, tx, accountId, input.characterId);
         requireThat(input.ownerId === owner.id, 'LOCAL_STALE', '活动已更新，请重新同步');
+        if (owner.contentVersion !== this.contentVersion) {
+            await unstuck.call(this, tx, c, now, input.requestId, true);
+            await bump(tx, accountId);
+            const result = {recovered:true, active:false, itemIds:[], serverNow:now};
+            await tx.insert('receipts', {id:receiptId, accountId, fingerprint, result, createdAt:now});
+            return result;
+        }
         const local = owner.localSimulation;
         if (input.type === 'release') {
             requireThat(local && local.id === input.sessionId && local.clientId === input.clientId, 'LOCAL_STALE', '本地执行权已更新，请重新同步');

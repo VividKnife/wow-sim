@@ -354,3 +354,12 @@ body:has(.classic-game-root) .battle-effects-control{display:none}
  .cu-raid-hud .raid-frame-aura{width:8px;height:8px}
  .cu-raid-hud .raid-frames>footer{display:none}
 }
+
+/* Keep mobile auras attached to the player frame as its height changes. */
+.cu-player-hud{display:contents}
+@media(max-width:800px){
+ .cu-player-hud{display:block;position:absolute;top:40px;left:13px;width:220px;z-index:4}
+ .classic-game .cu-player-hud .cu-player{position:static;width:100%}
+ .classic-game .cu-viewport:has(.cu-buffs) .cu-zone-title{top:192px}
+}
+@media(max-width:380px){.cu-player-hud{width:195px}}

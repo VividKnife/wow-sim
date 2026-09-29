@@ -9,6 +9,7 @@ export type BattleEffect={id:string|number;kind:string;shownAt:number;actorId?:s
 export type BattleProjectile={id:string|number;spellId?:number;spell?:number;actorId?:string;targetId?:string;from:BattlePoint;to:BattlePoint;startedAt:number;landsAt:number;school?:number;visual?:string;presentationOnly?:boolean};
 export type BattleGroundEffect={points?:BattlePoint[];label?:string;armedAt?:number;mechanic?:boolean;terrain?:boolean;followId?:string;id?:string|number;spellId?:number;spell?:number;actorId?:string;startedAt?:number;until:number;center:BattlePoint;radius?:number;school?:number};
 export type BattleScene={
+ playerId?:string;
  encounterId?:string;live?:boolean;paused?:boolean;sampledAt?:number;endClock?:number;ground?:string;
  layout:BattleLayout;units:BattleUnitData[];projectiles:BattleProjectile[];effects:BattleEffect[];groundEffects:BattleGroundEffect[];
  clock:number;selectedId:string;range:number;lowEffects:boolean;reducedMotion:boolean;

@@ -5,3 +5,5 @@
 .gold-entry .gold-pills{gap:8px 20px;padding:12px 0;border-block:1px solid #5c5037}.gold-entry .gold-pills span{padding:0;border:0;background:none;color:#c8b88f}.gold-entry h2{font-size:26px}.gold-entry .eyebrow{margin-bottom:12px}
 
 .gold-entry-raids{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:20px 0}.gold-entry-raids article{padding:20px;border:1px solid #665537;border-radius:8px;background:#171d20}.gold-entry-raids small{display:block;margin-top:10px}
+
+.gold-composition{display:grid;gap:12px;margin:16px 0;padding:14px;border:1px solid #69563c;border-radius:8px}.gold-composition-inputs{display:flex;flex-wrap:wrap;align-items:end;gap:14px}.gold-composition-inputs label{display:grid;gap:6px;flex:1;min-width:100px}.gold-composition-inputs input{width:100%;max-width:150px;padding:8px;border:1px solid #69563c;border-radius:4px;background:#171511;color:#f2e3c5}.gold-composition-warning{color:#d9b56e;font-size:.85rem}

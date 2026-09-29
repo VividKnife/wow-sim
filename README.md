@@ -6,7 +6,7 @@
 
 前端内容采用基础目录、按 ID 物品包、市场包和首领掉落包按需加载；容量检查运行 `npm run content:measure`。加载边界、缓存及后续区域扩展约束见 [前端内容加载](docs/development/content-loading.md)。
 
-已有可玩的网页、确定性战斗引擎、多角色账号、独立资产与活动、共享实例。九职业成长到 60 级；世界包含 309 个地点、六大主城与八种族出生地，联盟和部落可互访全部主城与副本。28 个经典地下城分区均可进入，包含厄运之槌；熔火之心与奥妮克希亚采用本作 25 人模式，分别保存每周进度和奖励。
+已有可玩的网页、确定性战斗引擎、多角色账号、独立资产与活动、共享实例。九职业成长到 60 级；世界包含 309 个地点、六大主城与八种族出生地，联盟和部落可互访全部主城与副本。28 个经典地下城分区均可进入，包含厄运之槌；熔火之心与奥妮克希亚采用40 人固定难度模式，分别保存每周进度和奖励。
 
 地下城手册提供对应背景图、原版地图纹理、首领模型与掉落资料。世界源数据包含 3,837 条任务记录，不能等同于全部任务已逐条完成原版脚本。路线和战斗采用节点式改编；当前覆盖、验证与尚缺机制见 [1—60 级 P1 内容](docs/development/world-1-60-p1.md)。
 
@@ -95,9 +95,9 @@ console.log(result.state.world.location); // camp
 ## 资料与规划
 
 - [战场与实时指挥](docs/development/battlegrounds.md)：20级开放战歌峡谷，10v10夺旗、护旗、追旗、守家与分组调度。
-- [60级金团副本](docs/development/gold-raid.md)：由主角邀请24名持久NPC，挑战熔火之心与奥妮克希亚，公开竞拍并保存周进度。
-- [熔火之心25人试玩](docs/development/molten-core-demo.md)：运行 `npm run demo:molten-core`，打开 `http://127.0.0.1:5189/molten-core-demo.html`，单人率领公会挑战鲁西弗隆和玛格曼达。
-- [60级团本设计与编队原型](docs/design/level-60-raids.md)：25人、2坦5疗18输出基线、公会补位与可选合作；附独立沙盘，尚未接入正式团本。
+- [60级金团副本](docs/development/gold-raid.md)：由主角邀请最多39名持久NPC，挑战熔火之心与奥妮克希亚，公开竞拍并保存周进度。
+- [熔火之心40人试玩](docs/development/molten-core-demo.md)：运行 `npm run demo:molten-core`，打开 `http://127.0.0.1:5189/molten-core-demo.html`，单人率领公会挑战鲁西弗隆和玛格曼达。
+- [60级团本设计与编队原型](docs/design/level-60-raids.md)：40人容量、自由坦奶配额与推荐阵容；旧沙盘单独保留。
 - [重构后架构复核](docs/superpowers/specs/2026-09-16-post-refactor-architecture-review.md)：最终目标对照、新复现问题与下一轮收口门槛。
 - [基础架构重构交付记录](docs/development/foundation-refactor.md)：当前模块边界、验证结果、测量和交付限制。
 - [游戏运行说明](docs/development/game-runtime.md)：PostgreSQL、Node API、worker 与 Web 的本地配置。
@@ -112,7 +112,7 @@ console.log(result.state.world.location); // camp
 
 ## 后续开发
 
-18级开放「冒险者大厅」：从50位持久 NPC 玩家中选择四人组成副本小队，支持好友、装备成长与需求/贪婪分装。60级金团邀请同一居民池中的24名冒险者，装备、钱包与参团经历持续保存；旧队友招募和公会团已移除。见 [NPC 玩家与副本组队](docs/development/npc-world.md) 与 [金团设计](docs/design/gold-raids.md)。
+18级开放「冒险者大厅」：从72位持久 NPC 玩家中选择四人组成副本小队，支持好友、装备成长与需求/贪婪分装。60级金团邀请同一居民池中的最多39名冒险者，装备、钱包与参团经历持续保存；旧队友招募和公会团已移除。见 [NPC 玩家与副本组队](docs/development/npc-world.md) 与 [金团设计](docs/design/gold-raids.md)。
 
 后续世界内容可沿用当前职业系统，逐步扩展区域、原版任务链与副本。职业清单保留来源和执行路径，便于增加内容时检查依赖。
 

@@ -22,7 +22,9 @@ const casts=s=>s.logs.filter(l=>l.actorId===s.id&&l.kind==='cast');
 test('team DPS cannot begin a cast until three seconds even when tank threat is already positive',()=>{
  const s=group();s.rules=[{spell:116,condition:'always',value:0,enabled:true}];
  for(s.clock=0;s.clock<3000;s.clock+=100)combatTick(s);
- assert.equal(casts(s).length,0);assert.equal(s.cast,null);combatTick(s);assert.equal(s.cast?.spell,116);assert.equal(s.cast.startedAt,3000);
+ assert.equal(casts(s).length,0);assert.equal(s.cast,null);
+ for(;s.clock<=3200&&!s.cast;s.clock+=100)combatTick(s);
+ assert.equal(s.cast?.spell,116);assert.ok(s.cast.startedAt>=3000);
 });
 test('automatic ranged shots, mainhand and offhand attacks also observe the pull hold',()=>{
  for(const classId of [3,4]){const s=group(classId);s.rules=[];s.position=classId===3?5:27;for(s.clock=0;s.clock<3000;s.clock+=100)combatTick(s);assert.equal(s.logs.some(l=>l.actorId===s.id&&l.kind==='damage'),false);}

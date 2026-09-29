@@ -14,7 +14,7 @@ const bosses=arg('bosses','lucifron,magmadar').split(','),seeds=arg('seeds','603
 const profiles=arg('profiles','baseline,t1').split(','),output=arg('output','docs/research/t1-tank-benchmark.json');
 const template=createMoltenCoreDemo().state;
 const report={contentVersion:JSON.parse(readFileSync(new URL('../packages/game-data/manifest.json',import.meta.url))).contentVersion,
- scaling:raidScaling,method:'25 players: 2 warrior tanks, 5 healers, 18 damage. Only tank gear differs between baseline and T1; both use the regular NPC tank strategy. Other actors retain demo gear and rules. Independent fresh pulls; no consumable/world-buff injection.',results:[]};
+ scaling:raidScaling,method:'40 players: 3 tanks, 8 healers, 29 damage. Only tank gear differs between baseline and T1; both use the regular NPC tank strategy. Other actors retain demo gear and rules. Independent fresh pulls; no consumable/world-buff injection.',results:[]};
 assert.equal(raidScaling.meleeDamage,1);
 for(const seed of seeds)for(const profile of profiles)for(const boss of bosses){
  const s=structuredClone(template);s.rngState=seed;

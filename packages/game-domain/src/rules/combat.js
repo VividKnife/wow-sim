@@ -1,5 +1,5 @@
 import {isContentPending} from './runtime-content.js';
-import {raidHealingMode,selectRaidHealing} from './raid-healing-policy.js';
+import {raidHealingMode,selectRaidHealing,cancelWastefulRaidHeal} from './raid-healing-policy.js';
 import {observePolicyChanges,stepCombatPolicy,flushQueuedCombatIntent,queueManualCombatIntent,invalidatePolicyIntents} from './combat-policy.js';
 import {combatInputReadyReason,combatInputTargetReason,pendingCombatInput,inputWaiting,inputResult,pruneCombatInputs} from './combat-input.js';
 import {mightSetBonuses} from './might-set.js';
@@ -7,7 +7,7 @@ import {weaponEnhancementStats} from './weapon-enhancement-stats.js';
 import {spellResistance,mitigateSpellDamage} from './spell-mitigation.js';
 import {binarySpell} from '../../../sim-core/src/spell-resistance.js';
 import {markCombatEngaged} from './combat-engagement.js';
-import {commandAvailable,commandOrder,commandSkillReason,commandDamageSpell,commandDamageRules} from './combat-command.js';
+import {commandAvailable,commandActors,commandOrder,commandSkillReason,commandDamageSpell,commandDamageRules} from './combat-command.js';
 import {beginJourneyBattle} from './journey.js';
 import {pvpApplyControl,pvpAbilityAllowed,pvpTriggeredControl} from './pvp-runtime.js';
 import {breakPvpControls,syncPvpDiminishing} from '../../../sim-core/src/pvp-control.js';
@@ -78,7 +78,7 @@ export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombat
  dismount(s);if(s.activity.type==='mount')s.activity={type:'idle'};
  s.groundEffects=[]; // A new encounter establishes a new local coordinate frame.
  s.combat={id:'encounter-'+(s.encounterSequence=(s.encounterSequence||0)+1),startedAt:s.clock,dungeon,area,ground,participantIds:combatMembers(s,null).map(c=>c.id),projectiles:[],enemies:prepared||ids.map((id,i)=>enemy(s,id,'enemy-'+i)),damage:{},healing:{},casts:0,pendingSpawns:[]};
- for(const c of combatMembers(s)){c.target=null;c.policyMovement=null;c.rest=null;c.cast=null;c.nextAction=s.clock;c.nextSwing=s.clock;c.position=combatRole(c)==='tank'?20:combatRole(c)==='melee'?18:0;c.positionY=c.id===s.id||c.classId===1?0:c.classId===4?2:c.classId===5?-4:4;c.time=s.clock;c.nextPowerRegen=s.clock+2000;c.combo=0;c.comboTarget=null;c.queuedStrike=null;}
+ for(const c of combatMembers(s)){c.target=null;c.policyMovement=null;c.rest=null;c.cannibalize=null;c.cast=null;c.nextAction=s.clock;c.nextSwing=s.clock;c.position=combatRole(c)==='tank'?20:combatRole(c)==='melee'?18:0;c.positionY=c.id===s.id||c.classId===1?0:c.classId===4?2:c.classId===5?-4:4;c.time=s.clock;c.nextPowerRegen=s.clock+2000;c.combo=0;c.comboTarget=null;c.queuedStrike=null;}
  const pullTank=combatMembers(s).find(c=>!c.petUnit&&!c.totemUnit&&!c.escortNpc&&c.hp>0&&combatRole(c)==='tank');
  for(const [i,e] of s.combat.enemies.entries()){if(pullTank&&!e.target&&!e.controlledBy)e.target=pullTank.id;const spawn=dungeon?{position:30+Math.floor(i/3)*2,positionY:i===0?0:(i%2?1:-1)*Math.ceil(i/2)*2}:personalEnemyPosition(s,i,openingRange);e.position=spawn.position;e.positionY=spawn.positionY;e.nextAttack=s.clock;e.nextSpell=s.clock+6000;}
  for(const unit of [...combatMembers(s),...s.combat.enemies])setCombatPosition(s,unit,unit);
@@ -86,7 +86,7 @@ export function startCombat(s, ids, dungeon=false,prepared=null,area=sceneCombat
  if(s.classId===4&&combatMembers(s).length===1){
   const player=point(s);for(const e of s.combat.enemies){const p=point(e);e.combatFacing=Math.atan2(p.y-player.y,p.x-player.x);}
  }
- if(s.settings.commandCombat&&commandAvailable(s))s.combat.command={paused:true,marks:{},orders:[],focusId:null,holdFire:false};
+ if(s.settings.commandCombat&&commandAvailable(s)&&commandActors(s).length>1)s.combat.command={paused:true,marks:{},orders:[],focusId:null,holdFire:false};
  initializeMetrics(s);
  for(const e of s.combat.enemies)initializeSmite(s,e,combatMembers(s),hurtPlayer);
  beginJourneyBattle(s);
@@ -101,6 +101,9 @@ export function recordDamage(s,c,target,amount,label,threatMultiplier=1,detail={
  const stance=stanceModifiers(c);amount*=stance.damage;threatMultiplier*=stance.threat;
  if(schoolImmune(target,detail.school??sp?.School??0,s.clock))return;
  if(target.hp<=0||target.removed||['weakened','captured'].includes(target.capturePhase))return;
+ const reflection=target.raidReflection;
+ if(reflection?.until>s.clock&&!detail.periodic&&reflection.magical&&school>0&&rng(s)<.5){hurtPlayer(s,target,c,amount,'魔法反射',{school,spellId:20619});return;}
+ if(reflection?.until>s.clock&&!reflection.magical&&school===0&&distance(c,target)<=6)hurtPlayer(s,target,c,100,'伤害反射',{school:0,spellId:21075});
  let dealt;
  if(target.pvp){
   if(c.pvpBlockedHit?.targetId===target.id&&c.pvpBlockedHit.at===s.clock){amount=Math.max(0,amount-c.pvpBlockedHit.amount);delete c.pvpBlockedHit;}
@@ -174,7 +177,7 @@ export function executeCombatIntent(s,c,intent,{manual=false}={}){
  const actors=combatMembers(s),target=intent?.kind==='move'&&intent.destination?intent.destination:[...actors,...s.combat.enemies].find(a=>a.id===intent?.targetId);
  if(intent?.kind==='cancel'){
   if(!c.cast||c.cast.spell!==intent.spellId||c.cast.startedAt!==intent.startedAt)return {accepted:false,reason:'cast'};
-  cancelInvalidCast(s,c,c.cast,'strategy');return {accepted:true};
+  cancelInvalidCast(s,c,c.cast,cancelWastefulRaidHeal(s,c,actors)?'healCovered':'strategy');return {accepted:true};
  }
  if(intent?.kind==='racial'){if(intent.raceId!==c.raceId||!selectRacialReaction(s,c))return {accepted:false,reason:'racial'};executeRacialReaction(s,c,s.combat.enemies);return {accepted:true};}
  if(controlled(c,s.clock))return {accepted:false,reason:'controlled'};
@@ -388,6 +391,7 @@ export function selectCombatPolicy(s,c,{regular=true,urgent=false}={}){
  if(c.petUnit)return selectPetPolicy(s,c);
  const actors=combatMembers(s),targets=s.combat.enemies.filter(aliveEnemy),e=companionTarget(s,c,targets);
  if(!e)return null;
+ if(cancelWastefulRaidHeal(s,c,actors))return {kind:'cancel',spellId:c.cast.spell,startedAt:c.cast.startedAt};
  const potion=selectStrategyPotion(s,c);if(potion)return potion;
  const rescue=selectPriestRescue(s,c,actors);if(rescue)return rescue;
  if(c.cast?.policyControlled&&!c.cast.commanded&&!c.cast.friendly&&!actors.some(a=>a.id===c.cast.target)&&spells[c.cast.spell]?.SpellName!=='Blizzard'&&!strategyAllows(s,c,targets.find(t=>t.id===c.cast.target),spellInfo(c,c.cast.spell),undefined,c.cast.center))return {kind:'cancel',spellId:c.cast.spell,startedAt:c.cast.startedAt};
@@ -417,6 +421,9 @@ export function selectCombatPolicy(s,c,{regular=true,urgent=false}={}){
   if(heal)return heal;
  }
 
+ // Conservation intentionally leaves GCDs unused. Do not fall through to
+ // filler heals, seals, buffs or damage that continually restart the five-second rule.
+ if(raidHealingMode(future,c)==='conserve')return selectConfigured(future,c,e,targets,actors,(c.rules||[]).filter(r=>classAbilityKind(spells[r.spell])==='dispel'))||attackIntent;
  const area=commandDamageRules(s,c);
  return (area.length&&selectConfigured(future,c,e,targets,actors,area))||selectConfigured(future,c,e,targets,actors)||attackIntent;
 }
@@ -448,7 +455,7 @@ function executeCombatOrder(s,c,actors,api){
 function cancelInvalidCast(s,c,cast,reason){
  c.cast=null;c.nextAction=s.clock;invalidatePolicyIntents(s,[c.id]);
  if(reason==='range')c.castRangeFailure={target:cast.target,until:s.clock+10000};
- const labels={target:'目标失效',range:'目标超出射程',strategy:'保护控场或等待坦克',resource:'资源不足',emptyArea:'暴风雪范围内已无敌人',damage:'受到直接攻击伤害'};
+ const labels={target:'目标失效',range:'目标超出射程',strategy:'保护控场或等待坦克',healCovered:'目标血量已安全，停止治疗节省法力',resource:'资源不足',emptyArea:'暴风雪范围内已无敌人',damage:'受到直接攻击伤害'};
  log(s,`${cast.channel?'引导中止':'施法取消'}：${labels[reason]}`,'cancel',{actorId:c.id,targetId:cast.target,spellId:cast.spell,reason});
 }
 export function combatTick(s,{pvpTeam=false}={}){
@@ -463,6 +470,12 @@ export function combatTick(s,{pvpTeam=false}={}){
  if(battle.pull&&battle.pull.engagedAt==null&&!opener)battle.pull.engagedAt=s.clock;
  for(const e of battle.enemies){const template=creatures[e.entry];e.moveSpeed??=7*(template?.SpeedRun||1);e.walkSpeed??=2.5*(template?.SpeedWalk||1);}
  const classApi={damage:recordDamage,cast:releaseSpell,heal:resolveHeal,healAmount,lands:spellLands,summonInfernal,doomRitual:beginDoomRitual,rng,stats,actors};
+ if(battle.raidEncounter&&s.clock>=battle.raidEncounter.attemptEndsAt){
+  battle.abandoned=true;battle.raidEncounter.timedOut=true;
+  log(s,'本次模拟达到15分钟预算，结束尝试；这不是首领狂暴。','raid');
+  for(const c of actors){c.cast=null;c.inCombat=false;}
+  s.activity={type:'idle'};finishCombat(s);return;
+ }
  if(battle.raidEncounter)moltenCoreTick(s,actors,hurtPlayer);
  if(!battle.pull||battle.pull.engagedAt!=null){
   tickPolymorph(s);tickPlayerEffects(s,actors);if(!pvpTeam){tickEnemyProjectiles(s,actors,hurtPlayer);tickEnemyAuras(s,actors,hurtPlayer);}

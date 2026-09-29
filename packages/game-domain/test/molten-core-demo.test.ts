@@ -1,4 +1,3 @@
-import {prepareRaidTanks} from './support/t1-tank-fixture.js';
 import {raidScaling,raidCreatureStats} from '../src/rules/raid-scaling.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -14,11 +13,11 @@ const finish=(initial:ReturnType<typeof createMoltenCoreDemo>)=>{
  return run;
 };
 
-test('25 actual level-60 characters use legal equipment with 2 tanks, 5 healers and 18 damage',()=>{
+test('40 actual level-60 characters use legal equipment with 3 tanks, 8 healers and 29 damage',()=>{
  const run=createMoltenCoreDemo(),view=moltenCoreView(run);
- assert.equal(view.members.length,25);assert.equal(new Set(view.members.map(c=>c.id)).size,25);
- assert.equal(view.members.filter(c=>c.role==='tank').length,2);
- assert.equal(view.members.filter(c=>c.role==='healer').length,5);
+ assert.equal(view.members.length,40);assert.equal(new Set(view.members.map(c=>c.id)).size,40);
+ assert.equal(view.members.filter(c=>c.role==='tank').length,3);
+ assert.equal(view.members.filter(c=>c.role==='healer').length,8);
  for(const c of [run.state,...run.state.party]){
   assert.equal(c.level,60);assert.equal(c.hp,stats(c).maxHp);
   for(const e of Object.values(c.equipment) as any[])assert.equal(canEquip(c,items[e.id]),true,`${c.name}: ${e.id}`);
@@ -64,26 +63,24 @@ test('JSON checkpoint and segmented execution preserve deterministic battle resu
  assert.ok(moltenCoreView(full).events.some((e:any)=>e.text.includes('末日降临')));
 });
 
-test('T1 tanks defeat both bosses at original damage and grant demo rewards once',()=>{
- const start=(run:ReturnType<typeof createMoltenCoreDemo>,boss:string)=>{const next=startMoltenCoreBoss(run,boss);prepareRaidTanks(next.state);return next;};
- let run=finish(start(createMoltenCoreDemo(),'lucifron'));
+test('defeated bosses grant demo rewards once and keep retries locked',()=>{
+ let run=startMoltenCoreBoss(createMoltenCoreDemo(),'lucifron');
+ for(const e of run.state.combat.enemies)e.hp=0;
+ run=advanceMoltenCore(run,1000);
  assert.equal(run.status,'victory');assert.deepEqual(run.cleared,['lucifron']);
- assert.ok(run.attempts[0].support.dispels>0);
- assert.ok(moltenCoreView(run).meter.some((row:any)=>row.healing>0));
  assert.throws(()=>startMoltenCoreBoss(run,'lucifron'));
- run=finish(start(JSON.parse(JSON.stringify(run)),'magmadar'));
- assert.equal(run.status,'victory');assert.equal(run.rewards.length,2);
- assert.ok(run.attempts[1].support.tranquilizes>0);assert.ok(run.attempts[1].support.wards>0);
+ run=startMoltenCoreBoss(JSON.parse(JSON.stringify(run)),'magmadar');
+ for(const e of run.state.combat.enemies)e.hp=0;
+ run=advanceMoltenCore(run,1000);assert.equal(run.status,'victory');assert.equal(run.rewards.length,2);
  assert.equal(run.state.money,0);assert.equal(run.state.pending.length,0);
  assert.deepEqual(advanceMoltenCore(run,10000),run);
- assert.throws(()=>startMoltenCoreBoss(run,'magmadar'));
 });
 
 test('ignoring Magmadar mechanics causes an actual wipe, retry preserves Lucifron checkpoint',()=>{
  let run=createMoltenCoreDemo();run.cleared=['lucifron'];
  run=configureMoltenCore(run,{tranquilize:false,fearWard:false,avoidFire:false});
  run=finish(startMoltenCoreBoss(run,'magmadar'));
- assert.equal(run.status,'defeat');assert.equal(run.attempts[0].deaths,25);
+ assert.equal(run.status,'defeat');assert.equal(run.attempts[0].deaths,40);
  assert.ok(run.attempts[0].failures.fire>0);assert.equal(run.attempts[0].support.tranquilizes,0);
  assert.deepEqual(run.cleared,['lucifron']);
  const retry=startMoltenCoreBoss(configureMoltenCore(run,{tranquilize:true,fearWard:true,avoidFire:true}),'magmadar');

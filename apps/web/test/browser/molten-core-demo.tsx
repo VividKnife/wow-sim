@@ -25,8 +25,8 @@ function App(){
  const area=data.area||{minX:-20,maxX:50,minY:-25,maxY:25},w=area.maxX-area.minX,h=area.maxY-area.minY;
  const px=(x:number)=>70+(x-area.minX)/w*860,py=(y:number)=>40+(y-area.minY)/h*310;
  return <main className="mc-demo">
-  <header className="mc-header"><div><p className="mc-eyebrow">BLACKROCK MOUNTAIN / GUILD EXPEDITION</p><h1>熔火之心 <span>25人远征</span></h1><p>60级核心小队＋20名公会战友 · 十首领战斗实验</p></div><div className="mc-progress"><b>{data.cleared.length}<small> / {data.bosses.length}</small></b><span>首领已击败</span></div></header>
-  <p className="mc-demo-note">独立试玩 · 本作25人改编数值 · 预设60级蓝装队伍 · 进度仅保存在本机Demo，刷新可恢复</p>
+  <header className="mc-header"><div><p className="mc-eyebrow">BLACKROCK MOUNTAIN / GUILD EXPEDITION</p><h1>熔火之心 <span>40人远征</span></h1><p>60级团长＋39名团队成员 · 十首领战斗实验</p></div><div className="mc-progress"><b>{data.cleared.length}<small> / {data.bosses.length}</small></b><span>首领已击败</span></div></header>
+  <p className="mc-demo-note">独立试玩 · 原始首领数值 · 模拟场地 · 预设60级蓝装队伍 · 进度仅保存在本机Demo，刷新可恢复</p>
   {error&&<p className="mc-error" role="alert">{error}</p>}
   <nav className="mc-route" aria-label="首领路线">{data.bosses.map((boss:any,i:number)=>{const cleared=data.cleared.includes(boss.id),locked=i>0&&!data.cleared.includes(data.bosses[i-1].id);return <section key={boss.id} className={`${cleared?'cleared':''} ${data.activeBoss===boss.id?'active':''}`}><span className="mc-boss-number">0{i+1}</span><div><h2>{boss.name}</h2><p>{boss.subtitle}</p><small>{cleared?'已击败':locked?'击败上一首领后解锁':fighting&&data.activeBoss===boss.id?'交战中':'可以挑战'}</small></div><button disabled={busy||fighting||locked||cleared} onClick={()=>void send({type:'start',bossId:boss.id})}>{cleared?'✓ 完成':locked?'未解锁':data.status==='defeat'&&data.activeBoss===boss.id?'重新挑战':'开始挑战'}</button></section>;})}</nav>
   <div className="mc-layout"><div className="mc-main">

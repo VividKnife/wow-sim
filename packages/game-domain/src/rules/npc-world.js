@@ -7,7 +7,7 @@ import {dungeonJournal} from './dungeon-journal.js';
 
 export const npcCommands=['npcVisit','npcRefresh','npcFriend','npcGroup','npcRecommend','npcLootPolicy'];
 export const NPC_BATCH_SIZE=6,NPC_REFRESH_MS=5*60*1000;
-// Nine classes rotate evenly: five classes have six residents, four have five.
+// Eight residents per class provide enough alternatives for 40-player raid compositions.
 const names=[
  '盾墙还有三秒','圣光不加班','风行者的箭袋','潜行摸个箱','奶你一口先', '石蹄听雷','面包管够','糖在包里','月爪·林歌',
  '格雷恩·铁砧','洛瑞安·晨誓','短弓与长路','背后有只贼','塞蕾娜·白烛', '莫戈·雷语','诺兰·霜纹','维萨·暮契','熊德不迷路',
@@ -15,6 +15,9 @@ const names=[
  '布洛克·石盾','审判之后喝茶','林深见兽','影步拾荒者','祈祷别空蓝', '卡鲁·风鼓','米瑞尔·蓝焰','鸦羽契约','咕咕借过',
  '拉稳再开打','曦光守誓人','弹药还剩两组','黑巷无声','伊莲·晨祷', '风怒又触发了','传送门收摊','小鬼别开怪','橡木与月光',
  '凯恩·赤铁','圣印未熄','荒野巡哨','消失等冷却','最后一口大奶',
+ '雷雨将至','冰霜与面包','午夜契约','月下橡树',
+ '黑铁壁垒','晨曦圣印','猎鹰归来','影牙','晨露祷言','石环图腾','霜火之心','灰烬灵魂','山林守望',
+ '不动如山','圣光长明','箭无虚发','无声匕首','白羽医者','雷鸣回响','奥术星河','暗火之誓','翡翠之梦',
 ];
 const styles=[{id:'steady',name:'稳健派',quote:'等坦克接稳，我们慢慢打。'},{id:'keen',name:'热心派',quote:'缺人喊我，任务也可以一起做。'},{id:'collector',name:'装备控',quote:'有提升才需求，装备到手就毕业。'}];
 const cadence=20*60*1000,maxCatchup=2*60*60*1000;
@@ -229,6 +232,6 @@ export function recordNpcRaid(s,completed=false){
     note(p,`战斗经验提升，已重新安排${fresh.npcBuild.name}的天赋与策略。`);
    }
    note(p,`金团结算：与你击败${s.goldRaid.cleared.length}名首领，分红${((s.goldRaid.settlement?.rows.find(r=>r.id===c.id)?.total||0)/10000).toFixed(2)}金。装备与余额已保存。`);
-  }else if(!completed){p.runs++;note(p,'与你组成25人金团，独立竞拍并按公告分金。');}
+  }else if(!completed){p.runs++;note(p,'与你组成40人上限金团，独立竞拍并按公告分金。');}
  }
 }

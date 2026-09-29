@@ -1,3 +1,4 @@
+import {fetchContentJson} from '../../../packages/sim-core/src/content-request.js';
 import {auctionContentError} from './auction-content.js';
 // Display data only: never import the simulation engine or its catalogs here.
 // HTTP handles persistent versioned caching; this bounded memory cache coalesces
@@ -17,9 +18,7 @@ export function createContentLoader(fetchImpl=(...args)=>fetch(...args)) {
   const key=params.toString();
   if(requests.has(key))return requests.get(key);
   const pending=(async()=>{
-   const response=await fetchImpl(`/api/game/content?${key}`,{signal:AbortSignal.timeout(15000)});
-   const data=await response.json();
-   if(!response.ok)throw new Error(data?.error||'游戏内容暂时无法加载，请重试。');
+   const data=await fetchContentJson(`/api/game/content?${key}`,{fetchImpl,timeoutMs:15000});
    if(data?.contentVersion!==version||data?.pack!==name)throw new Error('游戏内容已更新，请刷新页面。');
    if(name==='market'){
     const error=auctionContentError(data);

@@ -40,6 +40,12 @@ test('nearby people shows all five category tabs and city service NPCs',()=>{
  assert.match(html,/aria-label="人物分类"/);
  for(const label of ['全部','任务','训练师','商人','旅店'])assert.match(html,new RegExp(`>${label}<\\/button>`));
  assert.match(html,new RegExp(merchant.name));
+ for(const [entry,label] of [[1303,'草药商'],[1257,'材料商'],[6740,'旅店老板'],[1289,'武器商'],[1291,'护甲商']]){
+  const npc=p.data.interactions.find(n=>n.entry===entry);
+  assert.equal(npc.merchantType,label);
+  assert.ok(html.includes(`<strong>${npc.name}</strong><small>${label}</small>`));
+ }
+ assert.doesNotMatch(html,/旅店老板 · 旅店老板/);
 });
 test('NPC quest exclamation turns green at five levels below the player',()=>{
  const p=props(createGame('勇士',42,0));p.state.level=10;

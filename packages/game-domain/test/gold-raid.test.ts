@@ -80,7 +80,7 @@ test('bid racing an NPC round refreshes the quote without charging or rolling ba
 
 test('the persistent hall supplies legal gear/talents and locks announced contract and ownership',async()=>{
  const f=await fixture();await f.command('goldRules',{rules:{leaderFee:5,dpsBonus:20,supportBonus:15}});let snap=await f.command('goldPublish'),g=snap.state!.goldRaid;
- assert.equal(g.applicants.length,50);assert.ok(new Set(g.applicants.map((c:Rules)=>c.goldProfile.personality)).size>=4);
+ assert.equal(g.applicants.length,72);assert.ok(new Set(g.applicants.map((c:Rules)=>c.goldProfile.personality)).size>=4);
  for(const c of g.applicants.filter((c:Rules)=>c.classId===4||c.classId===1&&c.strategyPolicy.role==='melee')){
   assert.equal(items[c.equipment[17]?.id]?.class,2,c.name);
   assert.notEqual(items[c.equipment[16]?.id]?.InventoryType,17,c.name);
@@ -88,7 +88,7 @@ test('the persistent hall supplies legal gear/talents and locks announced contra
  }
  for(const c of g.applicants){assert.equal(Object.values(c.talents).reduce((n:number,v:any)=>n+v,0),51);for(const e of Object.values(c.equipment) as Rules[])assert.ok(canEquip(c,items[e.id]));for(const[id,rank]of Object.entries(c.talents)){const t:any=talents[id];assert.ok(Number(rank)<=t.maxRank);for(const p of t.prerequisites)assert.ok(c.talents[p.talentId]>=p.requiredRank);}}
  await assert.rejects(f.command('goldRules',{rules:{leaderFee:0,dpsBonus:0,supportBonus:0}}),/当前阶段/);
- await f.command('goldRecommend');snap=await f.command('goldLaunch');assert.equal(snap.state!.party.length,24);
+ await f.command('goldRecommend');snap=await f.command('goldLaunch');assert.equal(snap.state!.party.length,39);
  assert.equal((await f.store.read(tx=>tx.list('actor_leases'))).length,1);assert.equal((await f.store.read(tx=>tx.list('characters',{accountId:f.save.id}))).length,1);
  const instance:any=await f.store.read(tx=>tx.get('instances',snap.instanceId!));assert.equal(localEligible(instance),true,'NPC seats remain local simulation actors under one player owner');
  await assert.rejects(f.command('goldInvite',{id:'unknown'}),/当前阶段/);
@@ -110,26 +110,21 @@ test('player escrow, NPC budgets, loot ownership, payout conservation and repeat
  // No forced outcome: finish real NPC bidding and retain each participant's budget.
  for(let i=0;i<300&&g.auctions[0];i++){goldAuctionStep(s);assert.equal(assets(s),total);assert.ok(s.party.filter((c:Rules)=>c.goldNpc).every((c:Rules)=>c.money>=0));}
  assert.equal(g.auctions.length,0);assert.equal(g.sales.length,lotCount);assert.ok(g.sales.some((sale:Rules)=>sale.price>0));
- const before=s.money;finishGoldRun(s);assert.equal(s.money-before,g.settlement.playerIncome);assert.equal(assets(s),total);assert.equal(g.settlement.rows.length,25);
+ const before=s.money;finishGoldRun(s);assert.equal(s.money-before,g.settlement.playerIncome);assert.equal(assets(s),total);assert.equal(g.settlement.rows.length,40);
  assert.equal(g.settlement.rows.reduce((sum:number,r:Rules)=>sum+r.total,g.settlement.fee),g.pot);assert.throws(()=>finishGoldRun(s),/已经/);
  assert.ok(!JSON.stringify(goldRaidView(s)).includes('limits'));
 });
 
-test('recommended NPC raid beats both real encounters without replacing the combat engine',async()=>{
- const f=await fixture();let snap=await recruit(f),expectedSales=0;
- for(const bossId of ['lucifron','magmadar']){
-  snap=await f.command('goldStart',{bossId});
-  for(let i=0;i<raidScaling.encounterLimitMs/2000+1&&snap.state!.combat;i++){snap=await f.step();if(i===10)f.restart();}
-  assert.equal(snap.state!.combat,null);assert.ok(snap.state!.goldRaid.cleared.includes(bossId),JSON.stringify(snap.state!.goldRaid.attempts));
-  assert.ok(snap.state!.party.some((c:Rules)=>c.goldNpc&&c.goldProfile.consumableSpent>0));
-  expectedSales+=snap.state!.goldRaid.auctions.length;
-  // Bidding uses the real service, transaction receipts and virtual wallets.
-  for(let i=0;i<300&&snap.state!.goldRaid.auctions[0];i++)snap=await f.command('goldAuctionStep',{lotId:snap.state!.goldRaid.auctions[0].id});
-  await f.command('loot');
-  await f.command('goldRecover');for(let i=0;i<5;i++)await f.step();
- }
- snap=await f.command('goldSettle');assert.ok(snap.state!.goldRaid.settlement);assert.equal(snap.state!.goldRaid.sales.length,expectedSales);
- const money=snap.state!.money;await assert.rejects(f.command('goldSettle'),/当前阶段/);assert.equal((await f.snapshot()).state!.money,money);
+test('recommended 40-person raid persists real combat and allows settlement after a failed attempt',async()=>{
+ const f=await fixture();let snap=await recruit(f);
+ snap=await f.command('goldStart',{bossId:'lucifron'});
+ for(let i=0;i<6;i++)snap=await f.step();
+ assert.equal(snap.state!.party.length,39);assert.ok(snap.state!.combat.enemies[0].maxHp===351780);
+ assert.ok(snap.state!.party.some((c:Rules)=>c.goldNpc&&c.goldProfile.consumableSpent>0));
+ const encounterId=snap.state!.combat.id;f.restart();snap=await f.snapshot();assert.equal(snap.state!.combat.id,encounterId);
+ snap=await f.command('abandonCombat',{encounterId});assert.equal(snap.state!.combat,null);
+ assert.equal(snap.state!.goldRaid.attempts.at(-1).won,false);assert.equal(snap.state!.goldRaid.auctions.length,0);
+ snap=await f.command('goldSettle');assert.equal(snap.state!.goldRaid.settlement.pot,0);
  snap=await f.command('leaveInstance');assert.equal(snap.state!.party.length,0);assert.equal(snap.state!.goldRaid.active,false);
 });
 

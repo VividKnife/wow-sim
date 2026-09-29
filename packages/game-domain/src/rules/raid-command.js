@@ -18,7 +18,7 @@ export const raidJobs={magic:{name:'末日 / 魔法驱散',spell:527},curse:{nam
 export const raidCooldowns={wall:{name:'盾墙',spell:871,hint:'主坦承伤，或生命低于45%时；需要战士持盾且姿态正确。'},rescue:{name:'圣疗术',spell:633,hint:'主坦生命低于25%时救急；施法者耗尽法力。'},mana:{name:'激活',spell:29166,hint:'为法力最低的治疗回蓝；治疗法力低于25%时触发。'}};
 const eligible=(s,spell)=>members(s).filter(c=>knownRank(c,spell));
 export function recommendedRaidPlan(s,bossId){
- const tanks=members(s).filter(c=>combatRole(c)==='tank');
+ const tanks=members(s).filter(c=>combatRole(c)==='tank').sort((a,b)=>Number(!!knownRank(b,871))-Number(!!knownRank(a,871)));
  return {mainTank:tanks[0]?.id||'',offTank:tanks[1]?.id||'',focus:bossId==='golemagg'?'boss':'adds',formation:'spread',movement:'early',dispelPolicy:'assigned',
   jobs:Object.fromEntries(Object.entries(raidJobs).map(([key,j])=>[key,eligible(s,j.spell).slice(0,2).map(c=>c.id)])),
   cooldowns:Object.fromEntries(Object.entries(raidCooldowns).map(([key,j])=>[key,{actorId:(key==='wall'?tanks.filter(c=>knownRank(c,j.spell)):eligible(s,j.spell))[0]?.id||'',trigger:'automatic'}]))};
@@ -30,7 +30,7 @@ export function raidCommandAction(s,a){
   require(!s.combat&&!r.recoverUntil&&!r.autoAdvance&&(!s.goldRaid?.active||r.phase==='camp'),'请在停止推进的营地发布指挥。');
   require(raidBossesFor(r.raidId).some(b=>b.id===a.bossId),'未知首领。');
   const p=a.plan,actors=members(s),tank=id=>actors.some(c=>c.id===id&&combatRole(c)==='tank');
-  require(p&&tank(p.mainTank)&&tank(p.offTank)&&p.mainTank!==p.offTank,'主坦、副坦必须是两名不同的坦克。');
+  require(p&&typeof p.mainTank==='string'&&typeof p.offTank==='string'&&(!p.mainTank||tank(p.mainTank))&&(!p.offTank||tank(p.offTank))&&(!p.offTank||p.mainTank!==p.offTank),'指定的坦克必须在团内，主坦与副坦不能重复。');
   require(['adds','boss'].includes(p.focus)&&['spread','compact'].includes(p.formation)&&['early','finishCast'].includes(p.movement)&&['assigned','all'].includes(p.dispelPolicy),'作战纪律无效。');
   for(const [key,j]of Object.entries(raidJobs)){const ids=p.jobs?.[key];require(Array.isArray(ids)&&ids.length<=2&&new Set(ids).size===ids.length&&ids.every(id=>eligible(s,j.spell).some(c=>c.id===id)),`${j.name}需要指定已掌握技能的成员，主备不能重复。`);}
   for(const [key,j]of Object.entries(raidCooldowns)){const slot=p.cooldowns?.[key];require(slot&&(key==='wall'?['automatic','manual','frenzy','fear']:['automatic','manual']).includes(slot.trigger)&&typeof slot.actorId==='string'&&(!slot.actorId||eligible(s,j.spell).some(c=>c.id===slot.actorId)),`${j.name}安排无效。`);if(key==='wall'&&slot.actorId)require(slot.actorId===p.mainTank,'盾墙应安排给主坦。');}
@@ -121,7 +121,7 @@ export function raidAttemptReview(s,b){
  if(e.failures.feared)suggestions.push('多人恐惧：检查防恐负责人是否存活、能否覆盖主坦；为主坦预留盾墙应对空档。');
  if(c.firstDeath?.role==='tank')suggestions.push('坦克最先倒下：为主坦安排盾墙和圣疗，避免都留到同一低血量时刻。');
  if(mana<20)suggestions.push('治疗法力不足：安排激活；减少全员驱散占用，先清治疗小怪以缩短战斗。');
- if(b.endedAt>=e.enrageAt)suggestions.push('触发狂暴时限：检查集火目标是否正确；先清治疗小怪，古雷曼格集中首领。');
+ if(e.timedOut)suggestions.push('达到模拟时长预算（非首领狂暴）：检查集火目标是否正确；先清治疗小怪，古雷曼格集中首领。');
  if(!suggestions.length)suggestions.push('机制处理暂未出现明显缺口。结合伤害与治疗统计，检查阵容和关键技能是否在需要时执行。');
  return {bossRemaining:remaining,healerMana:mana,firstDeath:c.firstDeath,plan:structuredClone(c.plan),events:structuredClone(c.events),used:{...c.used},failures:{...e.failures},suggestions,unused:Object.entries(c.plan.cooldowns).filter(([key,slot])=>slot.actorId&&!c.used[key]).map(([key])=>raidCooldowns[key].name)};
 }

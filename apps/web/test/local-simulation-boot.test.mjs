@@ -41,7 +41,7 @@ for(const scenario of ['solo','raid'])test(`real browser engine: ${scenario} loa
  const expected=advanceOwned(structuredClone(state),1000).state;
  assert.deepEqual(snapshot,projectLocalCheckpoint(expected));
  assert.deepEqual(messages.find(m=>m.type==='full').snapshot,structuredClone(projectClientSnapshot(expected,view(expected))));
- assert.equal(requests[0].pack,'boot');
+ assert.equal(requests.filter(r=>r.pack==='boot').length,1);
  assert.ok(requests.length<Math.ceil(version.totalNodes/version.shardSize),'a solo start must not fetch every shard');
  assert.equal(new Set(requests.map(r=>r.pack)).size,requests.length,'no cache eviction/retry download loop');
  console.log(`Cold ${scenario} worker:`,JSON.stringify({jsBytes:bundle.outputFiles[0].contents.length,requests:requests.length,gzipBytes:requests.reduce((n,r)=>n+r.bytes,0)}));
@@ -95,4 +95,24 @@ test('boot failure reports to a start that arrives after the failed download',as
  scope.onmessage({data:{type:'start',state:createGame('离线',97,0),generation:'late'}});
  await waitFor(()=>messages.some(m=>m.type==='error'),'late start was left hanging');
  assert.equal(messages[0].generation,'late');assert.equal(messages[0].code,'LOCAL_CONTENT');
+});
+
+test('class download starts before boot finishes and safely joins boot initialization',async()=>{
+ const bundle=await buildWorker(),messages=[],requests=[];
+ let release;const bootGate=new Promise(resolve=>{release=resolve;});
+ const scope=createContext({performance,structuredClone,TextEncoder,TextDecoder,crypto,AbortSignal,setTimeout:()=>1,clearTimeout:()=>{},postMessage:message=>messages.push(structuredClone(message)),fetch:async url=>{
+  const pack=url.split('/').at(-1);requests.push(pack);
+  if(pack==='boot')await bootGate;
+  const body=await readFile(root+`packages/game-data/runtime/browser/${pack}.json.gz`);
+  return {ok:true,json:async()=>JSON.parse(gunzipSync(body))};
+ }});
+ scope.self=scope;runInContext(bundle.outputFiles[0].text,scope,{timeout:120000});
+ const state=createGame('并行下载',98,0);
+ scope.onmessage({data:{type:'start',state:structuredClone(state),contentVersion:manifest.contentVersion,generation:'parallel',serverNow:0,deadline:0}});
+ try{await waitFor(()=>requests.includes(`class-${state.classId}`),'class download waited for boot');}
+ finally{release();}
+ await waitFor(()=>messages.some(m=>m.type==='full'||m.type==='error'),'parallel boot never finished');
+ assert.deepEqual(messages.filter(m=>m.type==='error'),[]);
+ assert.equal(requests.filter(name=>name==='boot').length,1);
+ assert.deepEqual(messages.find(m=>m.type==='full').snapshot,structuredClone(projectClientSnapshot(state,view(state))));
 });

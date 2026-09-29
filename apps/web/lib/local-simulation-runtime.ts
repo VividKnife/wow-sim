@@ -56,7 +56,7 @@ function captureCurrent(requestId:string,requestedGeneration=generation){
     if(isContentPending(error)){
       scope.postMessage({type:'contentLoading',generation});
       resolveContent(error).then(()=>captureCurrent(requestId,requestedGeneration)).catch(failure=>{
-        if(generation===requestedGeneration)scope.postMessage({type:'error',generation,code:'LOCAL_CONTENT',error:failure instanceof Error?failure.message:'冒险资料加载失败'});
+        if(generation===requestedGeneration)scope.postMessage({type:'error',generation,code:(failure as {code?:string})?.code||'LOCAL_CONTENT',error:failure instanceof Error?failure.message:'冒险资料加载失败'});
       });
     }else scope.postMessage({type:'error',generation,error:error instanceof Error?error.message:'保存冒险进度失败'});
   }
@@ -145,7 +145,7 @@ function tick() {
       running=true;loading=true;scope.postMessage({type:'contentLoading',generation});
       resolveContent(error).then(()=>{loading=false;if(generation===previousGeneration&&running)tick();else if(running)tick();}).catch(failure=>{
         endContentScope();loading=false;if(generation!==previousGeneration){if(running)tick();return;}running=false;
-        scope.postMessage({type:'error',generation,code:'LOCAL_CONTENT',error:failure instanceof Error?failure.message:'冒险资料加载失败'});
+        scope.postMessage({type:'error',generation,code:(failure as {code?:string})?.code||'LOCAL_CONTENT',error:failure instanceof Error?failure.message:'冒险资料加载失败'});
       });return;
     }
     endContentScope();running=false;

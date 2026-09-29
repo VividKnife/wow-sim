@@ -13,7 +13,8 @@ const roster: [string,string,string][] = [
  ['寒川','mage','ranged'],['银霜','mage','ranged'],['奥兰','mage','ranged'],['鹰眼','hunter','ranged'],['林歌','hunter','ranged'],
  ['疾风','rogue','melee'],['夜行','rogue','melee'],['赤刃','rogue','melee'],['铁锋','warrior','melee'],['雷恩','warrior','melee'],
 ];
-export const raidSquadNames=['核心小队','磐石卫队','晨光医护队','霜弓支援队','锋刃突击队'];
+roster.push(['坚盾','warrior','tank'],['晨祷','priest','healer'],['星烛','paladin','healer'],['雪露','priest','healer'],...Array.from({length:11},(_,i):[string,string,string]=>[`远征勇士${i+1}`,['mage','rogue','hunter'][i%3],['ranged','melee','ranged'][i%3]]));
+export const raidSquadNames=['核心小队','磐石卫队','晨光医护队','霜弓支援队','锋刃突击队','星光医护队','远征先锋队','秘法支援队'];
 function equipDemo(c:Rules) {
  const role=combatRole(c),pool=raidLoadouts[`${c.classId}:${role}`].map(id=>items[id]).filter(i=>canEquip(c,i));
  c.equipment={};

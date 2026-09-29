@@ -67,11 +67,12 @@ test('deep breath covers the whole lane, damages its far end, and clears on land
 });
 test('bomb markers follow actors, and client projection preserves authoritative lava points',()=>{
  const s=start('baron-geddon'),r=s.combat.raidEncounter;r.bombs=[{actorId:s.id,at:s.clock+7000}];s.position=12;s.positionY=-8;
- const marker=raidFieldPresentation(s.combat,[s],s.clock)[0];assert.equal(marker.radius,9);assert.deepEqual(marker.center,{x:12,y:-8});
+ const marker=raidFieldPresentation(s.combat,[s],s.clock)[0];assert.equal(marker.radius,10);assert.deepEqual(marker.center,{x:12,y:-8});
  const lava=start(),presentation=battlePresentation(lava),snapshot=projectClientSnapshot(lava,{battleView:presentation});
  assert.deepEqual((snapshot.view.battleView as Rules).groundEffects[0].points,lava.combat.raidEncounter.fires[0].points);
 });
-test('Garr explosions, Geddon inferno and Shazzrah pulse publish damage fields',()=>{
+test('Garr explosions and source-timed inferno publish fields; Shazzrah explosion hits immediately',()=>{
  const g=start('garr');g.combat.enemies[1].hp=0;moltenCoreTick(g,[g,...g.party],noDamage);assert.ok(g.combat.raidEncounter.fires.some((f:Rules)=>f.label==='火誓者爆炸'&&f.armedAt>g.clock));
- for(const [id,label] of [['baron-geddon','地狱火'],['shazzrah','魔爆术']]){const s=start(id);s.clock=s.combat.raidEncounter.nextPulse;moltenCoreTick(s,[s,...s.party],noDamage);assert.ok(s.combat.raidEncounter.fires.some((f:Rules)=>f.label===label&&f.followId===s.combat.enemies[0].id));}
+ const s=start('baron-geddon');s.clock=s.combat.startedAt+45000;moltenCoreTick(s,[s,...s.party],noDamage);assert.ok(s.combat.raidEncounter.fires.some((f:Rules)=>f.label==='地狱火'&&f.followId===s.combat.enemies[0].id&&f.damageRamp===250));
+ const z=start('shazzrah');z.clock=z.combat.startedAt+6000;z.position=z.combat.enemies[0].position;z.positionY=z.combat.enemies[0].positionY;const hits:string[]=[];moltenCoreTick(z,[z,...z.party],(_s:Rules,_b:Rules,c:Rules,_n:number,label:string)=>{if(label==='魔爆术')hits.push(c.id);});assert.ok(hits.includes(z.id));
 });

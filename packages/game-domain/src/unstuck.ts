@@ -1,6 +1,6 @@
 import {emergencyGoldExit} from './rules/gold-raid.js';
 import {resolveGroupLoot} from './rules/group-loot.js';
-import type {Transaction} from '../../persistence/src/store.ts';
+import type {ReadView, Transaction} from '../../persistence/src/store.ts';
 import type {GameService} from './service.ts';
 import {type Activity, type ActorLease, type Character, type Instance, requireThat} from './model.ts';
 import {bump, characterRules, clone, context, owned, persistAssets} from './context.ts';
@@ -9,9 +9,34 @@ import {log, stats} from './rules/character.js';
 import {dungeonRoute} from './rules/dungeon.js';
 import {receive} from './rules/inventory.js';
 
+// Recover on account access, not in background workers: an old worker in a
+// rolling deployment must never cancel activities created by the new release.
+export async function recoverExpiredActivities(this: GameService, accountId: string) {
+    const expired = async (tx: ReadView) => {
+        const result: ActorLease[] = [];
+        for (const lease of await tx.list<ActorLease>('actor_leases', {accountId})) {
+            const owner = await tx.get<Activity | Instance>(lease.kind === 'instance' ? 'instances' : 'activities', lease.ownerId);
+            if (owner && owner.contentVersion !== this.contentVersion) result.push(lease);
+        }
+        return result;
+    };
+    if (!(await this.store.read(expired)).length) return;
+    await this.store.transaction(async tx => {
+        let changed = false;
+        for (const lease of await expired(tx)) {
+            // Shared parties have several leases; cancellation releases them all.
+            if (!await tx.get('actor_leases', lease.actorId)) continue;
+            const c = await owned(tx, accountId, lease.actorId);
+            await unstuck.call(this, tx, c, this.now(), `expired:${lease.ownerId}`, true);
+            changed = true;
+        }
+        if (changed) await bump(tx, accountId);
+    });
+}
+
 // Emergency cancellation uses committed characters/assets, never advance() or a
 // predicted combat result. It remains usable when the old runner is unavailable.
-export async function unstuck(this: GameService, tx: Transaction, actor: Character, now: number, requestId: string) {
+export async function unstuck(this: GameService, tx: Transaction, actor: Character, now: number, requestId: string, automatic = false) {
     const lease = await tx.get<ActorLease>('actor_leases', actor.id);
     const owner = !lease ? null : lease.kind === 'instance'
         ? await tx.get<Instance>('instances', lease.ownerId)
@@ -97,13 +122,13 @@ export async function unstuck(this: GameService, tx: Transaction, actor: Charact
             s.mana = Math.ceil(st.maxMana * .5);
         }
         if (s.pet) { s.pet.cast = null; s.pet.target = null; }
-        log(s, '已脱离卡死，结束当前活动。已保存的成长和物品保留，未结算收益不补发。');
+        log(s, automatic ? '活动规则已更新，已自动脱离卡死并结束旧活动。已保存的成长和物品保留，未结算收益不补发。' : '已脱离卡死，结束当前活动。已保存的成长和物品保留，未结算收益不补发。');
         c.rules = characterRules(s);
         await tx.put('characters', c);
         if (lease) await this.release(tx, c.id, lease.ownerId);
         accounts.add(c.accountId);
     }
-    if (owner) delete owner.resumeEventAt;
+    if (owner) { delete owner.resumeEventAt; delete owner.localSimulation; }
     if (lease?.kind === 'instance') {
         await tx.delete('instance_leases', lease.ownerId);
 

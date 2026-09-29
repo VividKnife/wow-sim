@@ -4,7 +4,7 @@ const activeRaces={'Blood Fury':2,Stoneform:3,Shadowmeld:4,'Will of the Forsaken
 export const racialActiveNames=new Set(Object.keys(activeRaces));
 export const racialPassiveNames=new Set(['Endurance','Nature Resistance','Cultivation','Regeneration','Beast Slaying','Throwing Specialization','Bow Specialization','Gun Specialization','Sword Specialization','Mace Specialization','Axe Specialization','Hardiness','Shadow Resistance','Quickness','Wisp Spirit','Expansive Mind','Arcane Resistance','Engineering Specialization','Frost Resistance','The Human Spirit','Diplomacy','Shadowmeld Passive','Command','Underwater Breathing']);
 const near=(a,b,d)=>Math.hypot((a.position||0)-(b.position||0),(a.positionY||0)-(b.positionY||0))<=d;
-const corpseNear=(s,c)=>(s.combat?.enemies||s.recentCorpses||[]).some(e=>e.hp<=0&&[6,7].includes(e.creatureType||creatures[e.entry]?.CreatureType)&&near(c,e,5));
+const corpseNear=(s,c)=>(s.combat?.enemies||s.recentCorpses||[]).some(e=>(s.combat||e.until>s.clock&&e.location===s.location&&e.dungeonRun===(s.dungeon?.runId??null))&&e.hp<=0&&[6,7].includes(e.creatureType||creatures[e.entry]?.CreatureType)&&near(c,e,5));
 export function racialModifiers(c){
  const race=c.raceId||1,result={weaponSkillBySubclass:{},resistances:{},stunResistance:0,professionSkill:{},diplomacyPct:0,stealthLevel:0,stealthDetection:0,underwaterBreathingPct:0,ghostSpeedPct:0,meleeHastePct:0,castHastePct:0};
  if(race===1){result.weaponSkillBySubclass={4:5,5:5,7:5,8:5};result.diplomacyPct=.1;}
@@ -36,6 +36,6 @@ export function activateRacial(s,c,sp,api={}){
 }
 export function tickRacialEffects(s,c,api={}){
  if(c.shadowmeld&&(!c.stealthed||c.position!==c.shadowmeld.position||(c.positionY||0)!==c.shadowmeld.positionY)){c.shadowmeld=null;c.stealthed=false;}
- const cannibal=c.cannibalize;if(cannibal){if(c.hp<=0||c.position!==cannibal.position||(c.positionY||0)!==cannibal.positionY){c.cannibalize=null;return;}while(cannibal.next<=s.clock&&cannibal.next<=cannibal.until){const amount=(api.stats?.(c)?.maxHp||c.maxHp||0)*.07;if(api.healAmount)api.healAmount(s,c,c,amount,cannibal.spell,'食尸');else c.hp=Math.min(c.maxHp||Infinity,c.hp+Math.round(amount));cannibal.next+=2000;}if(cannibal.until<=s.clock)c.cannibalize=null;}
+ const cannibal=c.cannibalize;if(cannibal){if(c.hp<=0||(!s.combat&&!['idle','hunt'].includes(s.activity?.type))||(c.position||0)!==cannibal.position||(c.positionY||0)!==cannibal.positionY){c.cannibalize=null;return;}while(cannibal.next<=s.clock&&cannibal.next<=cannibal.until){const amount=(api.stats?.(c)?.maxHp||c.maxHp||0)*.07;if(api.healAmount)api.healAmount(s,c,c,amount,cannibal.spell,'食尸');else c.hp=Math.min(c.maxHp||Infinity,c.hp+Math.round(amount));cannibal.next+=2000;}if(cannibal.until<=s.clock)c.cannibalize=null;}
 }
 

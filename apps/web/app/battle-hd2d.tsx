@@ -27,7 +27,7 @@ export default function BattleHD2D({scene:input,skills,onSelect,active}:{scene:B
   setBattleCanvas(()=>lazy(()=>import('./battle-hd2d/scene')));setLost(false);setReady(false);setGeneration(n=>n+1);
  },[scene]);
  const theme=groundTheme(scene.ground);
- return <><div className="battle-3d-controls"><span>拖动旋转 · 滚轮缩放 · 右键平移</span><BattleAudio scene={scene} skills={skills} active={active}/></div><div className={`hd2d-field ${scene.reducedMotion?'reduced-motion':''}`} data-renderer={ready&&!lost?'three':'loading'} data-ground={theme.id}>
+ return <><div className="battle-3d-controls"><span>拖动旋转 · 滚轮缩放 · 右键平移</span><button type="button" onClick={()=>setManual(false)}>重置视角</button><BattleAudio scene={scene} skills={skills} active={active}/></div><div className={`hd2d-field ${scene.reducedMotion?'reduced-motion':''}`} data-renderer={ready&&!lost?'three':'loading'} data-ground={theme.id}>
   <div className="hd2d-scene" aria-label="3D 战场">
    {active&&!lost&&supported&&<SceneError key={generation} onError={onLost}><Suspense fallback={null}><BattleCanvas scene={scene} skills={skills} onSelect={onSelect} visible={visible} onReady={onReady} onLoading={onLoading} onLost={onLost} manual={manual} onManual={onManual}/></Suspense></SceneError>}
    {!ready&&!lost&&supported!==false&&<div className="hd2d-loading hd2d-loading-progress" role="status">正在准备战场与角色素材…</div>}
