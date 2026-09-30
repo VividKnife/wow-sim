@@ -68,7 +68,7 @@ export async function localSimulation(this: GameService, accountId:string, input
     this.request(input.requestId);
     requireThat(typeof input.clientId === 'string' && input.clientId.length > 0 && input.clientId.length <= 100, 'LOCAL_CLIENT', '本地会话标识无效', 400);
     requireThat(input.contentVersion === this.contentVersion, 'CONTENT_VERSION', '游戏规则已更新，请刷新页面', 409);
-    requireThat(['claim','checkpoint','release'].includes(input.type), 'LOCAL_ACTION', '本地操作无效', 400);
+    requireThat(['claim','checkpoint','release','handoff'].includes(input.type), 'LOCAL_ACTION', '本地操作无效', 400);
     // A hash bounds receipt storage even for a large checkpoint. Retrying after a
     // lost response returns exactly the canonical IDs from the first commit.
     const fingerprint = createHash('sha256').update(JSON.stringify(input)).digest('hex');
@@ -90,11 +90,15 @@ export async function localSimulation(this: GameService, accountId:string, input
             return result;
         }
         const local = owner.localSimulation;
-        if (input.type === 'release') {
+        if (input.type === 'release' || input.type === 'handoff') {
             requireThat(local && local.id === input.sessionId && local.clientId === input.clientId, 'LOCAL_STALE', '本地执行权已更新，请重新同步');
             resetLocalSession(owner);
             owner.nextEventAt = PAUSED_EVENT_AT;
             owner.localSimulation!.receiptId = receiptId;
+            if (input.type === 'handoff') {
+                delete owner.localSimulation;
+                owner.nextEventAt = now;
+            }
             await tx.put(table, owner);
             await bump(tx, accountId);
             const result = {released:true, serverNow:now};
