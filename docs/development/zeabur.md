@@ -4,6 +4,16 @@
 
 游戏地址：https://wow-sim.zeabur.app ，登录入口：https://wow-sim.zeabur.app/login 。
 
+## 日常发布：只需 push main
+
+基础设施、R2 secrets 和 Zeabur GitHub 集成完成首次配置后，日常只需提交代码并 `git push origin main`。无需手动上传资源、更新部署分支或在 Zeabur 点击 Redeploy。
+
+自动流程为：代码与浏览器检查 → 构建并保存前端产物 → 上传 R2 → 更新精简部署分支 → Zeabur 重建三个服务 → 等待线上版本并执行只读检查。开发分支与 PR 只验证，不发布生产环境。生成的 `codex/zeabur-deploy` 分支不触发此工作流。
+
+Actions 的 `verify-deployment` 最多等待 20 分钟，核对线上 commit、buildId、资源版本和构建模式，并检查登录页面、未登录 API 响应、静态入口资源的 MIME/CORS 与 R2 发布完成标记。结果及版本写入 Actions Summary；等待超时或检查失败会令工作流失败。连续 push 时，旧运行会标记为 superseded，由新 main 的工作流负责发布验收。
+
+此检查不会创建测试账号或修改玩家数据，也不验证 worker 的部署版本或完整登录后玩法。需要完整端到端验证时仍可运行 `verify-online.mjs`。CI 检查失败会阻止发布，需要修复代码后再次 push；自动部署不绕过检查，也不会自动回滚。
+
 | 已配置服务 | Zeabur Service ID |
 | --- | --- |
 | wow-sim（Web） | `6aaab302a91f86e0dd4fc7b1` |
@@ -74,9 +84,9 @@ game-api 在客户端接受 gzip 时异步压缩 JSON；Web 网关直接转发�
 
 1. 配置 PostgreSQL、API、worker；在 API 设置 APP_ORIGIN，在 Web 设置内网 GAME_SERVER_URL 与原有域名。
 2. 修改规则或数据后运行 `npm run data:compile`，提交 manifest。
-3. Push main；GitHub Actions 验证成功后更新精简部署分支，由 Zeabur 原生 GitHub 集成触发三个代码服务重建。
-4. 核对部署分支提交、三个服务的构建/启动日志，以及 `/__deployment.json` 中的原始 main SHA。
-5. 打开 HTTPS 网站，注册、创建角色、执行操作、刷新恢复；退出后 `/api/game` 返回 401；重新登录恢复角色，另一账号不能访问该角色。
+3. Push main；GitHub Actions 验证成功后更新精简部署分支，由 Zeabur 原生 GitHub 集成触发三个代码服务重建，随后自动等待线上版本并检查 Web/API/CDN。
+4. Actions 全绿表示流水线与上述线上检查通过。失败时先查看失败 job；若是 `verify-deployment`，再核对三个服务的构建/启动日志及部署分支配置。
+5. 大范围功能变更按需执行完整线上 E2E（见 [R2 验收说明](r2-assets.md#线上发布验收)）；不是日常部署的手动前置步骤。
 
 CI 在 push/PR 运行验证，在 main push 或 main 手动工作流验证成功后发布部署分支。跨服务发布不是原子操作；内容版本更新前应结束旧版本活动，否则旧活动会停止结算。
 

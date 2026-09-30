@@ -17,7 +17,7 @@
 
 ## 发布顺序
 
-GitHub Actions：验证 → **构建一次并保存 artifact** → 上传 public 与同一 artifact 到 R2 → 发布包含对应 HTML 的部署分支 → Zeabur 部署。
+GitHub Actions：验证 → **构建一次并保存 artifact** → 上传 public 与同一 artifact 到 R2 → 发布包含对应 HTML 的部署分支 → Zeabur 部署 → 自动等待线上 buildId 并检查 Web/API/CDN。日常只需 push main；详细检查范围见 [Zeabur 持续部署](zeabur.md#日常发布只需-push-main)。
 
 `publish-r2-assets.mjs` 先上传所有对象，最后写 `__release.json` 和本地 `.r2-upload.json` 回执。发布脚本校验源 commit、public tree、构建模式和产物摘要；缺少匹配上传回执时拒绝 R2 部署。生成分支不重新构建前端，也不包含 public、JS/CSS 或引擎压缩包。game-api 的 `packages/DEPLOYMENT.json` 和 Web 的元数据来自同一 artifact。
 
