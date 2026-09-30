@@ -9,7 +9,7 @@ import type {GameProps} from './game-ui';
 import UnstuckControl from './unstuck-control';
 import AccountMenu from './account-menu';
 
-export default function GameSettings({state:s,busy,send,onClose}:{state:GameProps['state'];busy:boolean;send:GameProps['send'];onClose:()=>void}){
+export default function GameSettings({state:s,busy,send,onClose,engineMode,engineSwitchPending,onSwitchEngine}:{engineMode?:'local'|'cloud';engineSwitchPending?:boolean;onSwitchEngine?:()=>Promise<void>;state:GameProps['state'];busy:boolean;send:GameProps['send'];onClose:()=>void}){
  const [music,setMusic]=useAudioPreference('musicEnabled'),[musicVolume,setMusicVolume]=useAudioPreference('musicVolume');
  const [effects,setEffects]=useAudioPreference('effectsEnabled'),[effectsVolume,setEffectsVolume]=useAudioPreference('effectsVolume');
  const [lowEffects,setLowEffects]=useLowEffects();
@@ -37,7 +37,10 @@ export default function GameSettings({state:s,busy,send,onClose}:{state:GameProp
    <p className="cu-settings-hint">进入新战斗时使用此比例；战斗中仍可用滚轮或战斗窗口按钮自由缩放。</p>
    <p className="cu-settings-hint">适用于野外、副本和竞技场战斗，不影响战斗计算与伤害统计。</p>
   </fieldset></Tabs.Content>
-  <Tabs.Content value="gameplay"><header className="settings-section-heading"><h3>游戏</h3><p>设置战利品拾取方式和角色恢复选项。</p></header><fieldset><legend>战利品</legend>
+  <Tabs.Content value="gameplay"><header className="settings-section-heading"><h3>游戏</h3><p>设置战利品拾取方式和角色恢复选项。</p></header>{onSwitchEngine&&<fieldset><legend>战斗引擎（临时体验）</legend>
+   <div className="cu-setting-toggle"><span>当前选择：{engineMode==='cloud'?'云端引擎':'本地引擎'}<small>本地在当前设备计算，云端由服务器计算；多人活动始终使用云端。</small></span><button type="button" className="cu-gold-button" disabled={busy} onClick={()=>void onSwitchEngine()}>{engineSwitchPending?'正在同步并切换…':`切换到${engineMode==='cloud'?'本地':'云端'}引擎`}</button></div>
+   <p className="cu-settings-hint">切换前会保存当前进度，无需退出战斗。选择保存在当前浏览器。</p>
+  </fieldset>}<fieldset><legend>战利品</legend>
    <label className="cu-setting-toggle"><span>自动拾取<small>战后自动收取战利品，背包已满时保留掉落</small></span><input type="checkbox" checked={!!s.settings.autoLoot} disabled={busy||saving} aria-label="自动拾取" onChange={async e=>{const next=e.target.checked;setSaving(true);setNotice('');try{const ok=await send({type:'settings',autoLoot:next});setNotice(ok?'拾取设置已保存':'保存失败，请重试。');}finally{setSaving(false);}}}/></label>
    <label className="cu-setting-toggle"><span>跳过灰色物品<small>自动拾取时忽略粗糙品质物品，仍可手动拾取；不会阻塞继续战斗</small></span><input type="checkbox" checked={!!s.settings.autoLootIgnoreGray} disabled={!s.settings.autoLoot||busy||saving} aria-label="跳过灰色物品" onChange={async e=>{const next=e.target.checked;setSaving(true);setNotice('');try{const ok=await send({type:'settings',autoLootIgnoreGray:next});setNotice(ok?'拾取过滤已保存':'保存失败，请重试。');}finally{setSaving(false);}}}/></label>
    <p className="cu-settings-notice" role="status">{saving?'正在保存…':notice}</p>

@@ -5,7 +5,7 @@ import {GameService} from '../src/service.ts';
 import {act,advance} from '../src/rules/engine.js';
 import {LOCAL_LEASE_MS} from '../src/local-simulation.ts';
 
-test('25-player gold raid runs locally, checkpoints NPCs, and recovers without server simulation',async()=>{
+test('40-player gold raid runs locally, checkpoints NPCs, and recovers without server simulation',async()=>{
  const store=new MemoryStore();let now=Date.UTC(2026,8,22);
  const service=new GameService(store,{contentVersion:'test',now:()=>now,seed:()=>283});
  const save=await service.createSave('raider',{name:'恢复团长',classId:8,raceId:1,raidReady:true},'recovery');
@@ -15,7 +15,7 @@ test('25-player gold raid runs locally, checkpoints NPCs, and recovers without s
  const base={ownerId:started.instanceId,characterId:started.state.id,clientId:'browser',contentVersion:'test'};
  assert.ok(started.localSimulation);
  let session=await service.localSimulation(save.id,{...base,type:'claim',requestId:'claim'});
- assert.equal(session.state.party.length,24);
+ assert.equal(session.state.party.length,39);
  now+=1000;assert.deepEqual(await service.work(),{activities:0,instances:0,errors:[]});
  const live=advance(session.state,now).state;
  const retreated=act(live,{type:'abandonCombat',encounterId:live.combat.id},live.wallAt);
@@ -225,4 +225,21 @@ for(const kind of ['personal','instance'])test(`${kind}: compact ACK returns can
  assert.deepEqual(await f.store.read(tx=>tx.list('ledger')),ledger);
  const persisted=(await f.service.snapshot('a')).state;
  assert.ok(persisted.pending.some((item:any)=>item.uid===to&&item.count===2));
+});
+
+for(const kind of ['personal','instance'])test(`${kind}: cloud handoff resumes server execution and permits returning to local`,async()=>{
+ const f=await fixture(kind),session=await f.claim();
+ f.time(2000);const live=advance(session.state,f.now()).state;
+ await upload(f,session,live);
+ const request={...f.base,type:'handoff',sessionId:session.session.id,requestId:'handoff'};
+ const response=await f.service.localSimulation('a',request);
+ assert.deepEqual(await f.service.localSimulation('a',request),response);
+ const table=kind==='personal'?'activities':'instances';
+ const owner=await f.store.read(tx=>tx.get<any>(table,f.base.ownerId));
+ assert.equal(owner.localSimulation,undefined);assert.equal(owner.nextEventAt,2000);
+ await assert.rejects(upload(f,session,live),{code:'LOCAL_STALE'});
+ f.time(3000);await f.service.work();
+ const cloud=await f.service.snapshot('a');assert.ok(cloud.state.clock>=live.clock);
+ const resumed=await f.claim();assert.notEqual(resumed.session.id,session.session.id);
+ assert.ok(resumed.state.clock>=live.clock);
 });

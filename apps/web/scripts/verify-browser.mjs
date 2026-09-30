@@ -72,6 +72,28 @@ try{
   await loot.getByRole('button',{name:'Close',exact:true}).click();
   await page.locator('[data-slot="dialog-overlay"]').waitFor({state:'detached'});
  }
+ const engineRequests=[];
+ page.on('request',request=>{if(request.method()==='POST'&&request.url().includes('/api/game'))engineRequests.push({url:request.url(),body:request.postDataJSON()});});
+ await page.getByRole('button',{name:'设置',exact:true}).click();
+ await page.getByRole('tab',{name:'游戏',exact:true}).click();
+ await page.getByRole('button',{name:'切换到云端引擎',exact:true}).click();
+ await page.getByRole('button',{name:'切换到本地引擎',exact:true}).waitFor();
+ assert.ok(engineRequests.some(r=>r.body.type==='handoff'),'switch must hand execution to the server');
+ await page.getByRole('checkbox',{name:'自动拾取',exact:true}).click();
+ await page.getByText('拾取设置已保存',{exact:true}).waitFor();
+ const cloudCommand=engineRequests.find(r=>r.body.type==='settings');
+ assert.ok(cloudCommand);assert.equal(cloudCommand.body.localClientId,undefined);
+ await page.reload();
+ await page.getByRole('button',{name:'设置',exact:true}).click();
+ await page.getByRole('tab',{name:'游戏',exact:true}).click();
+ await page.getByRole('button',{name:'切换到本地引擎',exact:true}).click();
+ await page.getByRole('button',{name:'切换到云端引擎',exact:true}).waitFor();
+ for(let attempt=0;attempt<60&&!engineRequests.some(r=>r.body.type==='claim');attempt++)await new Promise(r=>setTimeout(r,500));
+ assert.ok(engineRequests.some(r=>r.body.type==='claim'),'local switch must reclaim execution');
+ await page.setViewportSize({width:390,height:844});
+ await page.screenshot({path:output+'/engine-settings-mobile.png',fullPage:true});
+ await page.setViewportSize({width:1440,height:1000});
+ await page.getByRole('button',{name:/返回游戏/}).click();
  await page.getByRole('button',{name:'打开世界地图',exact:true}).click();
  await page.getByRole('button',{name:'关闭窗口',exact:true}).click();
  await page.screenshot({path:output+'/desktop.png',fullPage:true});

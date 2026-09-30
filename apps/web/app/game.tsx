@@ -46,6 +46,9 @@ export default function Game(){
  const [characterSection,setCharacterSection]=useState('装备与背包');
  const [connectionError,setConnectionError]=useState('');
  const [localStatus,setLocalStatus]=useState('');
+ const [engineMode,setEngineMode]=useState<'local'|'cloud'>(()=>{try{return localStorage.getItem('wow-sim:engine-mode')==='cloud'?'cloud':'local';}catch{return 'local';}});
+ const [engineSwitchPending,setEngineSwitchPending]=useState(false);
+ const engineSwitching=useRef(false);
  const localClient=useRef<LocalSimulationClient|null>(null);
  const battleVisible=useRef(false);
  const[game,setGame]=useState<any>(null),[error,setError]=useState(''),[busy,setBusy]=useState(false),[loading,setLoading]=useState(true),[signedIn,setSignedIn]=useState(true),[selectedCharacter,setSelectedCharacter]=useState('');const [battleOpen,setBattleOpen]=useState(false);const manualPending=useRef(0),lastRevision=useRef(-1),selectedCharacterRef=useRef('');
@@ -77,6 +80,7 @@ export default function Game(){
   local?.observe(merged.localSimulation,merged.contentVersion,actorId);return true;
  },[]);
  useEffect(()=>{
+  if(engineMode==='cloud')return;
   const refresh=async()=>{const id=selectedCharacterRef.current;await apply(await readGameResponse(await saveFetch(`/api/game?${new URLSearchParams(id?{characterId:id}:{})}`)));};
   const client=new LocalSimulationClient({refresh,onStatus:setLocalStatus,onFull:snapshot=>{
    // Only the one-second overview reaches Game. Battle subscribes directly to
@@ -97,14 +101,14 @@ export default function Game(){
   const hide=()=>client.release();window.addEventListener('pagehide',hide);
   const baseline=acceptedResponse.current;if(baseline)client.observe(baseline.localSimulation,baseline.contentVersion,selectedCharacterRef.current);
   return()=>{window.removeEventListener('pagehide',hide);client.dispose();localClient.current=null;};
- },[apply]);
- useEffect(()=>{const update=()=>localClient.current?.visibility(!document.hidden,battleOpen||inlineBattle||interfaceStyle==='classic'||activeTab==='pvp');update();document.addEventListener('visibilitychange',update);window.addEventListener('pageshow',update);return()=>{document.removeEventListener('visibilitychange',update);window.removeEventListener('pageshow',update);};},[battleOpen,inlineBattle,activeTab,interfaceStyle]);
+ },[apply,engineMode]);
+ useEffect(()=>{const update=()=>localClient.current?.visibility(!document.hidden,battleOpen||inlineBattle||interfaceStyle==='classic'||activeTab==='pvp');update();document.addEventListener('visibilitychange',update);window.addEventListener('pageshow',update);return()=>{document.removeEventListener('visibilitychange',update);window.removeEventListener('pageshow',update);};},[battleOpen,inlineBattle,activeTab,interfaceStyle,engineMode]);
  const pollEtags=useRef(new Map<string,string>());
  const queue=useRef<ReturnType<typeof createCommandQueue>|null>(null);
  if(!queue.current)queue.current=createCommandQueue(async(command:any)=>{if(localClient.current?.canAct(command))return localClient.current.act(command);const execute=async(credentials:any,prepare=(value:any)=>value)=>{const response=await saveFetch('/api/game',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...prepare(command),...credentials}),signal:AbortSignal.timeout(15000)});await apply(await readGameResponse(response));return true;};return localClient.current&&command.type!=='unstuck'?localClient.current.command(execute,true):execute({});});
- const send=useCallback(async(body:any)=>{manualPending.current++;setBusy(true);setError('');try{const characterId=selectedCharacterRef.current;const success=await queue.current!({...body,...(characterId?{characterId}:{}),requestId:crypto.randomUUID()});if(success){setConnectionError('');playQuestSound(body);}if(success&&body.type==='enterDungeon'){const tab=acceptedResponse.current?.snapshot?.view?.goldRaid?.active?'raid':'dungeon';setActiveTab(tab);if(classicActive.current)setClassicPanel(tab);}if(success&&classicActive.current&&['hunt','travel','navigateQuest','goldStart','raidStart','dungeonNext','dungeonNavigate','raidNavigate','goldNavigate'].includes(body.type))setClassicPanel(null);if(success&&!classicActive.current&&opensBattleDialog(body,inlineBattleRef.current))setBattleOpen(true);return success;}catch(e:any){if(e.status===401){setSignedIn(false);setConnectionError('');setError('');return false;}if(body.type==='goldBid'&&e.status>=400&&e.status<500){try{const id=selectedCharacterRef.current;await apply(await readGameResponse(await saveFetch(`/api/game?${new URLSearchParams(id?{characterId:id}:{})}`)));}catch{/* Keep the original rejection when refresh is unavailable. */}}setError(gameErrorMessage(e));return false;}finally{manualPending.current--;setBusy(manualPending.current>0);}},[]);
+ const send=useCallback(async(body:any)=>{if(engineSwitching.current)return false;manualPending.current++;setBusy(true);setError('');try{const characterId=selectedCharacterRef.current;const success=await queue.current!({...body,...(characterId?{characterId}:{}),requestId:crypto.randomUUID()});if(success){setConnectionError('');playQuestSound(body);}if(success&&body.type==='enterDungeon'){const tab=acceptedResponse.current?.snapshot?.view?.goldRaid?.active?'raid':'dungeon';setActiveTab(tab);if(classicActive.current)setClassicPanel(tab);}if(success&&classicActive.current&&['hunt','travel','navigateQuest','goldStart','raidStart','dungeonNext','dungeonNavigate','raidNavigate','goldNavigate'].includes(body.type))setClassicPanel(null);if(success&&!classicActive.current&&opensBattleDialog(body,inlineBattleRef.current))setBattleOpen(true);return success;}catch(e:any){if(e.status===401){setSignedIn(false);setConnectionError('');setError('');return false;}if(body.type==='goldBid'&&e.status>=400&&e.status<500){try{const id=selectedCharacterRef.current;await apply(await readGameResponse(await saveFetch(`/api/game?${new URLSearchParams(id?{characterId:id}:{})}`)));}catch{/* Keep the original rejection when refresh is unavailable. */}}setError(gameErrorMessage(e));return false;}finally{manualPending.current--;setBusy(manualPending.current>0);}},[]);
  useEffect(()=>{let cancelled=false;saveFetch('/api/game').then(readGameResponse).then(d=>cancelled?false:apply(d)).catch(e=>{if(cancelled)return;if(e.status===401)setSignedIn(false);else setError(gameErrorMessage(e));}).finally(()=>!cancelled&&setLoading(false));return()=>{cancelled=true}},[apply]);
- const selectCharacter=useCallback(async(characterId:string)=>{if(!characterId||characterId===selectedCharacterRef.current)return;setBusy(true);setError('');try{const select=async()=>{pollEtags.current.clear();selectedCharacterRef.current=characterId;setSelectedCharacter(characterId);lastRevision.current=-1;const response=await saveFetch(`/api/game?characterId=${encodeURIComponent(characterId)}`);await apply(await readGameResponse(response));};if(localClient.current)await localClient.current.command(select);else await select();}catch(e:any){setError(e.message||'连接失败，请稍后重试。');}finally{setBusy(false);}},[apply]);
+ const selectCharacter=useCallback(async(characterId:string)=>{if(engineSwitching.current||!characterId||characterId===selectedCharacterRef.current)return;setBusy(true);setError('');try{const select=async()=>{pollEtags.current.clear();selectedCharacterRef.current=characterId;setSelectedCharacter(characterId);lastRevision.current=-1;const response=await saveFetch(`/api/game?characterId=${encodeURIComponent(characterId)}`);await apply(await readGameResponse(response));};if(localClient.current)await localClient.current.command(select);else await select();}catch(e:any){setError(e.message||'连接失败，请稍后重试。');}finally{setBusy(false);}},[apply]);
  useEffect(()=>{
   if(!game?.state||!signedIn)return;
   let cancelled=false;
@@ -135,13 +139,30 @@ export default function Game(){
   const visible=()=>{if(document.visibilityState==='visible')void poller.refresh();};
   document.addEventListener('visibilitychange',visible);
   return()=>{cancelled=true;poller.stop();document.removeEventListener('visibilitychange',visible);};
- },[!!game?.state,signedIn,selectedCharacter,battleOpen,apply]);
+ },[!!game?.state,signedIn,selectedCharacter,battleOpen,apply,engineMode]);
+
+ const switchEngine=async()=>{
+  if(engineSwitching.current||busy)return;
+  engineSwitching.current=true;setEngineSwitchPending(true);setError('');
+  const next=engineMode==='local'?'cloud':'local';
+  try{
+   if(next==='cloud'){
+    await localClient.current?.handoffToCloud();
+    localClient.current=null;
+   }
+   pollEtags.current.clear();setLocalStatus('');setEngineMode(next);
+   try{localStorage.setItem('wow-sim:engine-mode',next);}catch{/* Current session still uses the selected engine. */}
+   const id=selectedCharacterRef.current;
+   await apply(await readGameResponse(await saveFetch(`/api/game?${new URLSearchParams(id?{characterId:id}:{})}`)));
+  }catch(e:any){setError(gameErrorMessage(e));}
+  finally{engineSwitching.current=false;setEngineSwitchPending(false);}
+ };
 
  const priorRaidActive=useRef(false);
  useEffect(()=>{const active=!!(game?.view?.goldRaid?.active);if(active&&!priorRaidActive.current)setActiveTab('raid');priorRaidActive.current=active;},[game?.view?.goldRaid?.active]);
  const lastDungeonBattle=useRef<string|null>(null);
  useEffect(()=>{const b=game?.state?.combat,key=b?.dungeon?`${b.runId}:${b.startedAt}`:null;if(key&&key!==lastDungeonBattle.current){if(classicActive.current){setBattleOpen(false);setClassicPanel(null);}else setBattleOpen(true);}lastDungeonBattle.current=key;},[game?.state?.combat?.runId,game?.state?.combat?.startedAt,!!game?.state?.combat]);
- const s=game?.state,d=game?.view,props={roster:game?.roster,state:s,data:d,busy,revision:game?.revision,playback:game?.playback,contentVersion:game?.contentVersion,simulationStatus:localStatus,send};const labels:any={battlegroundPrepare:'战场准备',battlegroundCombat:'战歌峡谷夺旗战',arenaPrepare:'竞技场准备',arenaCombat:'竞技场战斗',goldRecovery:'金团休整',stockadesQuestEvent:'调查暴风城密谋',classChannel:'引导职业技能',classSpell:'施放职业技能',mount:'召唤坐骑',escortMove:'跟随迪菲亚叛徒',teleport:'传送中',hearth:'炉石返回中',dungeonCannon:'点燃火炮',resurrect:'复活队友',idle:'等待行动',hunt:s?.combat?'战斗中':s?.activity.paused?'狩猎已暂停':s?.rest?'补给恢复':'自动狩猎',travel:'旅行中',conjure:'制造补给',professionGather:'自动采集资源',gather:s?.activity.target==null?'等待采集目标刷新':'采集中',questItem:'使用任务物品',dead:'角色已死亡',revive:'返回尸体'};
+ const s=game?.state,d=game?.view,props={roster:game?.roster,state:s,data:d,busy:busy||engineSwitchPending,revision:game?.revision,playback:game?.playback,contentVersion:game?.contentVersion,simulationStatus:localStatus,send};const labels:any={battlegroundPrepare:'战场准备',battlegroundCombat:'战歌峡谷夺旗战',arenaPrepare:'竞技场准备',arenaCombat:'竞技场战斗',goldRecovery:'金团休整',stockadesQuestEvent:'调查暴风城密谋',classChannel:'引导职业技能',classSpell:'施放职业技能',mount:'召唤坐骑',escortMove:'跟随迪菲亚叛徒',teleport:'传送中',hearth:'炉石返回中',dungeonCannon:'点燃火炮',resurrect:'复活队友',idle:'等待行动',hunt:s?.combat?'战斗中':s?.activity.paused?'狩猎已暂停':s?.rest?'补给恢复':'自动狩猎',travel:'旅行中',conjure:'制造补给',professionGather:'自动采集资源',gather:s?.activity.target==null?'等待采集目标刷新':'采集中',questItem:'使用任务物品',dead:'角色已死亡',revive:'返回尸体'};
  const journeyOverview=s&&d?<JourneyActivity {...props} hideTravelProgress={interfaceStyle==='classic'} hideGatherProgress={interfaceStyle==='classic'} activityLabel={labels[s.activity.type]||s.activity.type} onObserve={()=>setBattleOpen(true)} onOpenBag={()=>{setCharacterSection('装备与背包');if(interfaceStyle==='classic')setClassicPanel('bag');else setActiveTab('character');}}/>:null;
  const accountPanel=s&&d?<details className="panel account-drawer" open={interfaceStyle==='classic'?true:undefined}><summary><span>角色与后台活动</span><small>角色切换 · 生产与采集</small></summary> {<section className="panel account-overview" aria-label="账号角色与活动"><div className="section-heading"><div><h2>账号队伍</h2></div>{game.roster?.length>1&&<CharacterPicker label="当前角色" roster={game.roster} value={selectedCharacter||s.id} disabled={busy} onChange={id=>void selectCharacter(id)}/>}</div>{game.activities?.length>0&&<div className="activity-roster">{game.activities.map((activity:any)=>{const actor=game.roster?.find((member:any)=>member.id===activity.actorId);return <div key={activity.id}><strong>{actor?.name||activity.actorId}</strong><span>{activity.type} · {activity.status}{activity.location?` · ${activity.location}`:''}</span>{activity.nextEventAt&&activity.nextEventAt<Number.MAX_SAFE_INTEGER&&<small>下次结算 {new Date(activity.nextEventAt).toLocaleTimeString()}</small>}{['craft','gather'].includes(activity.type)&&['running','returning'].includes(activity.status)&&<Button size="sm" variant="outline" disabled={busy||activity.status==='returning'} onClick={()=>send({type:'recall',activityId:activity.id})}>{activity.status==='returning'?'召回中':'召回'}</Button>}</div>})}</div>}</section>}
   <AccountControls game={game} busy={busy} send={send}/>
@@ -166,7 +187,7 @@ export default function Game(){
   if(panel==='pvp')return <Suspense fallback={<p role="status">正在加载界面…</p>}><Pvp {...props}/></Suspense>;
   if(panel==='log')return <JourneyLog {...props} onObserve={()=>setBattleOpen(true)}/>;
   if(panel==='account')return accountPanel;
-  if(panel==='settings')return <GameSettings state={s} busy={busy} send={send} onClose={()=>setClassicPanel(null)}/>;
+  if(panel==='settings')return <GameSettings state={s} busy={busy||engineSwitchPending} engineMode={engineMode} engineSwitchPending={engineSwitchPending} onSwitchEngine={switchEngine} send={send} onClose={()=>setClassicPanel(null)}/>;
   return null;
  };
  if(interfaceStyle==='classic')return <main className="classic-game-root" data-interface="classic"><ExperienceNotifications key={s.id} state={s}/><LevelUpNotification key={`level-${s.id}`} state={s}/><ClassicGame {...props} canLead={!game.instance||game.instance.leaderId===s.id} panel={classicPanel} onPanelChange={openClassic} renderPanel={renderClassicPanel} onStyleChange={toggleInterface} modalBattleOpen={battleOpen} onObserve={()=>{setClassicPanel(null);setBattleOpen(true);}} activityLabel={labels[s.activity.type]||s.activity.type} overview={journeyOverview} status={status} utilities={<ZoneMusic location={d.location} dungeon={!!s.dungeon} active={signedIn} controls={false}/>}/>{battleOpen&&(s.combat||s.lastCombat)&&<Suspense fallback={<p role="status">正在加载界面…</p>}><Battle {...props} canLead={!game.instance||game.instance.leaderId===s.id} open={battleOpen} onOpenChange={setBattleOpen}/></Suspense>} {overlays}</main>;

@@ -41,7 +41,7 @@ function harness(t,{lag=0,itemIds=[],claimError=null,ready=true,device,channels=
   const body=JSON.parse(options.body);requests.push(body);
   if(body.type===recoverOn){recoverOn=null;return Response.json({recovered:true,active:false,itemIds:[],serverNow:0});}
   if(body.type==='claim'){if(claimError){const error=claimError;claimError=null;return Response.json(error,{status:409});}generation++;return Response.json(result());}
-  if(body.type==='release')return Response.json({});
+  if(body.type==='release'||body.type==='handoff'){if(failNext){failNext=false;return Response.json({error:'retry'},{status:503});}return Response.json({});}
   if(failNext){failNext=false;return Response.json({error:'retry'},{status:503});}
   canonical=structuredClone(body.state);
   const {state,...ack}=result(body.sequence);
@@ -337,4 +337,26 @@ test('transient content failure replaces the Worker and recovers committed progr
  assert.equal(h.workers.length,2);assert.equal(h.client.blocked,false);
  assert.equal(h.workers[1].state.clock,9000);
  assert.equal(await h.client.act({type:'cast',characterId:'hero'}),true);
+});
+
+test('cloud handoff saves the latest state before releasing and never reclaims',async t=>{
+ const h=harness(t);h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ h.workers[0].state.clock=1234;
+ await h.client.handoffToCloud();
+ assert.deepEqual(h.requests.map(r=>r.type),['claim','checkpoint','handoff']);
+ assert.equal(h.requests[1].state.clock,1234);
+ assert.equal(h.client.active,false);assert.ok(h.workers[0].terminated);
+ h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');
+ t.mock.timers.tick(60000);await flush();assert.equal(h.requests.length,3);
+});
+test('uncertain cloud handoff retries the same receipt without uploading or reclaiming',async t=>{
+ const h=harness(t);h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');await flush();
+ const release=h.hold();const switching=h.client.handoffToCloud();await flush();
+ h.fail();release();await assert.rejects(switching,/retry/);
+ assert.equal(h.client.canAct({type:'cast'}),false);
+ await assert.rejects(h.client.command(async()=>{}),/切换/);
+ h.client.observe({ownerId:'activity',sessionId:null},'fixture','hero');
+ await h.client.handoffToCloud();
+ assert.deepEqual(h.requests.map(r=>r.type),['claim','checkpoint','handoff','handoff']);
+ assert.deepEqual(h.requests[2],h.requests[3]);
 });

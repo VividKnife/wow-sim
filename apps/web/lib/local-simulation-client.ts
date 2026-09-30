@@ -31,6 +31,7 @@ export class LocalSimulationClient {
   private timer:ReturnType<typeof setTimeout>|undefined;
   private tail:Promise<any>=Promise.resolve();
   private stopped=false;
+  private handoffRequest:any=null;
   private commandPending=0;
   private capture:((state:any)=>void)|null=null;
   private captureReject:((reason:Error)=>void)|null=null;
@@ -148,7 +149,7 @@ export class LocalSimulationClient {
     this.options.onStatus(error.message);
   }
   get active() {return !!this.session;}
-  get blocked() {return this.failed||!!this.workerFailure||this.reconcileNeeded;}
+  get blocked() {return this.failed||!!this.workerFailure||this.reconcileNeeded||!!this.handoffRequest;}
   get presenting() {return !!this.session&&!this.commandPending&&!this.blocked;}
   get latest() {return this.presenting?this.snapshot:null;}
   get ownerId() {return this.session?.ownerId;}
@@ -171,7 +172,7 @@ export class LocalSimulationClient {
     return true;
   }
   observe(manifest:any, contentVersion:string, characterId:string) {
-    if(this.stopped)return;
+    if(this.stopped||this.handoffRequest)return;
     const changed=this.desired?.ownerId!==manifest?.ownerId || this.desired?.characterId!==characterId || this.desired?.contentVersion!==contentVersion;
     this.desired=manifest?{...manifest,contentVersion,characterId}:null;
     if(this.reconciling)return;
@@ -315,6 +316,7 @@ export class LocalSimulationClient {
     else if(retry&&pause)await this.checkpoint(true);
   }
   async command<T>(execute:(credentials:any,prepare:(command:any)=>any)=>Promise<T>,combineCheckpoint=false):Promise<T> {
+    if(this.handoffRequest)throw new Error('引擎切换结果尚未确认，请再次点击切换到云端引擎');
     this.commandPending++;
     try{return await this.enqueue(async()=>{
       clearTimeout(this.timer);
@@ -343,6 +345,28 @@ export class LocalSimulationClient {
         else if(this.session)this.resume();
         else void this.enqueue(()=>this.claim()).catch(error=>this.report(error));
       }
+    }
+  }
+  /** Commit the latest timeline before returning execution to the cloud. */
+  async handoffToCloud() {
+    this.commandPending++;
+    try {await this.enqueue(async()=>{
+      clearTimeout(this.timer);
+      if(!this.handoffRequest){
+        await this.reconcileCommand();
+        if(this.workerFailure)await this.recoverWorker();
+        if(!this.session&&this.desired)await this.claim();
+        if(this.failed)throw this.failure||new Error('本地引擎已停止，请刷新后重试');
+        await this.checkpoint(true);
+        if(this.session)this.handoffRequest={type:'handoff',ownerId:this.session.ownerId,characterId:this.session.characterId,
+          contentVersion:this.session.contentVersion,clientId:this.clientId,sessionId:this.session.session.id,requestId:crypto.randomUUID()};
+      }
+      if(this.handoffRequest)await this.request(this.handoffRequest);
+      this.stopped=true;this.desired=null;this.clear();this.dispose();
+    });}finally{
+      this.commandPending--;
+      // An uncertain handoff must be retried with the same receipt before resuming.
+      if(!this.stopped&&!this.handoffRequest)this.resume();
     }
   }
   private report(error:any) {
