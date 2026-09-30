@@ -19,7 +19,8 @@ const metadata=JSON.parse(await readFile(root+'dist/__deployment.json','utf8'));
 assert.equal(metadata.assetMode,'r2','Run an R2 build before this test');
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(process.env.PLAYWRIGHT_MODULE).href:'playwright');
 const db=new PGlite(),accounts=new AccountStore({query:async(text,values)=>text.includes('CREATE TABLE')?(await db.exec(text),{rows:[]}):db.query(text,values)});
-let game,web,browser;
+let game,web,browser,page;
+const output=resolve(process.env.WEB_QA_OUTPUT||'/tmp/wow-vite-qa');await mkdir(output,{recursive:true});
 try{
  await accounts.initialize();
  const credentials={username:'browser_smoke',password:'browser-smoke-password'};
@@ -47,7 +48,7 @@ try{
    await route.fulfill({status:200,headers:{'access-control-allow-origin':origin,'content-type':type},body});
   }catch(error){failed.push(url.href+': '+error.message);await route.fulfill({status:404});}
  });
- const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
+ page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
  page.on('response',async response=>{if(response.url().includes('/api/game/local')){const data=await response.json().catch(()=>({}));if(response.status()>=400)apiFailures.push(data);else if(response.request().postDataJSON()?.type==='checkpoint')checkpoints.push(data);}});
  const originAssets=[];page.on('request',req=>{const url=new URL(req.url());if(url.origin===origin&&!['/','/login','/model-viewer/index.html'].includes(url.pathname)&&!url.pathname.startsWith('/api/'))originAssets.push(url.pathname);});
  await page.goto(origin+'/login');await page.getByLabel('账号名称',{exact:true}).fill(credentials.username);await page.getByLabel('账号密码',{exact:true}).fill(credentials.password);
@@ -64,12 +65,14 @@ try{
  for(let attempt=0;attempt<80&&!checkpoints.length;attempt++)await new Promise(r=>setTimeout(r,500));
  assert.ok(checkpoints.length,'local engine must commit a checkpoint');
  assert.deepEqual(apiFailures,[]);
+ if(process.env.WEB_QA_DELAY)await new Promise(r=>setTimeout(r,Number(process.env.WEB_QA_DELAY)));
+ const loot=page.getByRole('dialog').filter({has:page.getByRole('heading',{name:'战利品',exact:true})});
+ if(await loot.isVisible())await loot.getByRole('button',{name:'Close',exact:true}).click();
  await page.getByRole('button',{name:'打开世界地图',exact:true}).click();
  await page.getByRole('button',{name:'关闭窗口',exact:true}).click();
- const output=resolve(process.env.WEB_QA_OUTPUT||'/tmp/wow-vite-qa');await mkdir(output,{recursive:true});
  await page.screenshot({path:output+'/desktop.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});await page.screenshot({path:output+'/mobile.png',fullPage:true});
  assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);assert.deepEqual(originAssets,[],'only HTML and API may hit Zeabur');
  await writeFile(output+'/result.json',JSON.stringify({requests,errors,originAssets,failed,apiFailures,checkpoints:checkpoints.length},null,2));
  console.log(`Browser smoke passed: login, save, ${requests.length} CDN loads, boot/class packs, desktop/mobile. Screenshots: ${output}`);
-}finally{await browser?.close();if(web)await new Promise(r=>web.close(r));await game?.close();await db.close();}
+}catch(error){if(page){await page.screenshot({path:output+'/failure.png',fullPage:true}).catch(()=>{});console.error((await page.locator('body').innerText().catch(()=>'')));}throw error;}finally{await browser?.close();if(web)await new Promise(r=>web.close(r));await game?.close();await db.close();}

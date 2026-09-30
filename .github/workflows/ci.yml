@@ -45,6 +45,13 @@ jobs:
         run: node apps/web/scripts/verify-browser.mjs
         env:
           WEB_QA_OUTPUT: ${{ runner.temp }}/wow-vite-qa
+      - name: Save browser evidence
+        if: always() && env.WEB_ASSET_MODE == 'r2'
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-evidence
+          path: ${{ runner.temp }}/wow-vite-qa
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         with:
           name: web-build
