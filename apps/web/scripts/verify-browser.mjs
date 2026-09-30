@@ -27,6 +27,7 @@ try{
  const {user}=await accounts.register(credentials.username,credentials.password);
  const service=new GameService(new MemoryStore(),{contentVersion:CONTENT_VERSION,seed:()=>60325});
  const save=await service.createSave(user.id,{name:'静态法师',classId:8,raceId:1},'create-fixture');
+ await service.command(save.id,{type:'settings',autoLoot:true,requestId:'auto-loot-fixture',localClientId:'fixture-bootstrap'});
  await service.command(save.id,{type:'hunt',id:299,requestId:'hunt-fixture',localClientId:'fixture-bootstrap'});
  const reserve=createServer();reserve.listen(0,'127.0.0.1');await once(reserve,'listening');const port=reserve.address().port;await new Promise(r=>reserve.close(r));
  const origin=`http://127.0.0.1:${port}`;
@@ -67,7 +68,10 @@ try{
  assert.deepEqual(apiFailures,[]);
  if(process.env.WEB_QA_DELAY)await new Promise(r=>setTimeout(r,Number(process.env.WEB_QA_DELAY)));
  const loot=page.getByRole('dialog').filter({has:page.getByRole('heading',{name:'战利品',exact:true})});
- if(await loot.isVisible())await loot.getByRole('button',{name:'Close',exact:true}).click();
+ if(await loot.isVisible()){
+  await loot.getByRole('button',{name:'Close',exact:true}).click();
+  await page.locator('[data-slot="dialog-overlay"]').waitFor({state:'detached'});
+ }
  await page.getByRole('button',{name:'打开世界地图',exact:true}).click();
  await page.getByRole('button',{name:'关闭窗口',exact:true}).click();
  await page.screenshot({path:output+'/desktop.png',fullPage:true});

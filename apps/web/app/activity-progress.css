@@ -18,5 +18,4 @@
 .quartz-cast-time{flex:none;font-size:11px;font-weight:500;white-space:nowrap;text-shadow:0 1px 2px #000,1px 0 #000}
 .quartz-castbar.is-channel .quartz-cast-fill{background:linear-gradient(180deg,#dbffdf66,transparent 45%,#102e2466 52%,#06150e55),linear-gradient(90deg,#2d7757,#65bb88)}
 .quartz-castbar.is-channel .quartz-cast-spark{background:#d4ffe4;box-shadow:0 0 5px #8cf9bd}
-.quartz-castbar.is-pending .quartz-cast-spark{opacity:0}
 @media(prefers-reduced-motion:reduce){.quartz-cast-fill,.quartz-cast-spark{transition:none}}

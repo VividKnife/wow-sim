@@ -31,11 +31,13 @@ export function skillUseView(s,id){
  const conjure=['Conjure Food','Conjure Water'].includes(sp.SpellName),to=teleports[id];
  if(!conjure&&!to&&!mageBuffs.has(sp.SpellName))return null;
  const remaining=Math.max(0,cooldownUntil(s,sp)-s.clock,gcdUntil(s,sp)-s.clock);
- let reason=unavailable(s)||(!s.learned.includes(id)?'尚未学习这个法术':'')||(s.mana<sp.mana?'法力不足':'')||(remaining?'技能尚未冷却':'');
+ let reason=unavailable(s)||(!s.learned.includes(id)?'尚未学习这个法术':'')||(s.mana<sp.mana?'法力不足':'');
  if(!reason&&to&&s.location===to&&!s.dungeon)reason='你已经在目的地';
  if(!reason&&conjure&&bagRoom(s,sp.EffectItemType1)<conjuredCount(s,sp))reason='背包空间不足';
  if(!reason){const missing=reagents(sp).find(r=>usableCount(s,r.id)<r.count);if(missing)reason='缺少未锁定材料：'+nameOf('items',missing.id)+' ×'+missing.count;}
- return {canUse:!reason,reason,remaining,castMs:sp.castMs,label:conjure?'制造':to?'传送':'施放',description:to?`传送至${nodes[to].name} · ${reagents(sp).map(r=>nameOf('items',r.id)+' ×'+r.count).join('、')}`:conjure?`制造 ${nameOf('items',sp.EffectItemType1)} ×${conjuredCount(s,sp)}`:'对自己施放'};
+ const canUseAfterCooldown=!reason;
+ if(!reason&&remaining)reason='技能尚未冷却';
+ return {canUse:!reason,canUseAfterCooldown,reason,remaining,castMs:sp.castMs,label:conjure?'制造':to?'传送':'施放',description:to?`传送至${nodes[to].name} · ${reagents(sp).map(r=>nameOf('items',r.id)+' ×'+r.count).join('、')}`:conjure?`制造 ${nameOf('items',sp.EffectItemType1)} ×${conjuredCount(s,sp)}`:'对自己施放'};
 }
 
 export function beginUtilitySpell(s,id,targetId){

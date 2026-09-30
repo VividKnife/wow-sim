@@ -46,3 +46,31 @@ test('combat monitoring uses live cooldowns while utility actions keep their exi
  assert.equal(actions[0].remaining,5000);assert.equal(actions[0].canUse,false);assert.equal(actions[0].command,null);
  assert.equal(actions.find(a=>a.key==='spell:1459').canUse,true);
 });
+
+test('GCD expires locally without another snapshot, while other restrictions stay blocked',async()=>{
+ const {actionAfterElapsed}=await import('../lib/classic-action-bar.js');
+ const {skillUseView}=await import('../../../packages/game-domain/src/rules/utility-actions.js');
+ for(const [classId,spellId] of [[5,1243],[8,168]]){
+  let s=createGame('冷却',37,0,{raceId:1,classId});s.level=20;
+  if(!s.learned.includes(spellId))s.learned.push(spellId);
+  s.mana=stats(s).maxMana;
+  s=act(s,{type:'cast',id:spellId},0);
+  const use=skillUseView(s,spellId);
+  assert.equal(use.remaining,1500);assert.equal(use.canUse,false);assert.equal(use.canUseAfterCooldown,true);
+  assert.equal(actionAfterElapsed(use,1400).canUse,false);
+  const ready=actionAfterElapsed(use,1500);assert.equal(ready.remaining,0);assert.equal(ready.canUse,true);assert.equal(ready.reason,'');
+  assert.equal(actionAfterElapsed(use,6000).canUse,true);
+  assert.equal(use.remaining,1500,'display projection never mutates engine state');
+  s.mana=0;
+  const blocked=skillUseView(s,spellId);assert.equal(blocked.canUseAfterCooldown,false);
+  assert.equal(actionAfterElapsed(blocked,6000).canUse,false);assert.match(blocked.reason,/不足/);
+ }
+});
+
+test('long spell cooldowns are not cleared at GCD duration',async()=>{
+ const {actionAfterElapsed}=await import('../lib/classic-action-bar.js');
+ const use={canUse:false,canUseAfterCooldown:true,remaining:30000,reason:'技能尚未冷却'};
+ assert.equal(actionAfterElapsed(use,1500).remaining,28500);assert.equal(actionAfterElapsed(use,1500).canUse,false);
+ assert.equal(actionAfterElapsed(use,30000).canUse,true);
+ assert.equal(actionAfterElapsed({...use,canUseAfterCooldown:false,reason:'缺少材料'},30000).reason,'缺少材料');
+});
