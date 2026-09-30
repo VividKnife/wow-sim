@@ -67,3 +67,9 @@ node apps/web/scripts/verify-browser.mjs
 ```
 
 浏览器验证使用独立内存存档、PGlite 认证及模拟 CDN 响应，不使用线上数据库或上传线上资源；检查真实跨域 module Worker、职业包、检查点提交、桌面/手机截图，以及没有静态请求回到入口。线上仍需核对实际 R2 CORS、gzip 元数据、CDN 命中和当前发布版本。
+
+### 线上发布验收
+
+完成发布后运行 `WEB_QA_COMMIT=<线上源提交> node apps/web/scripts/verify-online.mjs`。默认目标为 `https://wow-sim.zeabur.app`，可用 `WEB_QA_ORIGIN` 覆盖。此脚本会在目标环境创建独立测试账号和法师存档，执行登录、狩猎、经验落盘、检查点、地图、桌面/手机截图、刷新和退出验证；不访问现有玩家存档。报告与截图默认保存到 `/tmp/wow-online-qa`（可用 `WEB_QA_OUTPUT` 覆盖）。测试数据保留在独立账号中，测试会话退出后失效，密码不写入报告。
+
+流量校验只统计 HTTP(S) 请求；跨域 Worker 的 `blob:` 引导及模型纹理 Blob 位于浏览器内存，不产生 Zeabur 流量。主动退出后的在途游戏请求返回 401 属于会话撤销的预期结果。

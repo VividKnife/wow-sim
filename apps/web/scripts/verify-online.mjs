@@ -35,7 +35,7 @@ assert.equal(hunt.status, 200, await hunt.clone().text());
 const requests = [], errors = [], failures = [], checkpoints = [], packResponses = [];
 const browser = await chromium.launch({headless: true, ...(process.env.CHROME_PATH ? {executablePath: process.env.CHROME_PATH} : {})});
 await mkdir(output, {recursive: true});
-let success = false;
+let success = false, loggingOut = false;
 try {
   const context = await browser.newContext({viewport: {width: 1440, height: 1000}});
   const page = await context.newPage();
@@ -43,7 +43,7 @@ try {
   context.on('request', request => requests.push(request.url()));
   context.on('response', async response => {
     const url = new URL(response.url());
-    if (response.status() >= 400 && !url.pathname.endsWith('/api/auth/session')) failures.push({url: response.url(), status: response.status(), body: (await response.text().catch(() => '')).slice(0, 300)});
+    if (response.status() >= 400 && !url.pathname.endsWith('/api/auth/session') && !(loggingOut && response.status() === 401 && url.pathname.startsWith('/api/game'))) failures.push({url: response.url(), status: response.status(), body: (await response.text().catch(() => '')).slice(0, 300)});
     if (url.pathname.includes('/simulation-content/')) packResponses.push({url: response.url(), status: response.status(), headers: await response.allHeaders()});
     if (url.pathname === '/api/game/local' && response.request().postDataJSON()?.type === 'checkpoint' && response.ok()) checkpoints.push(await response.json());
   });
@@ -58,6 +58,12 @@ try {
   await page.getByText('部署验证法师', {exact: true}).first().waitFor({timeout: 90000});
   for (let n = 0; n < 180 && !checkpoints.length; n++) await new Promise(resolve => setTimeout(resolve, 500));
   assert.ok(checkpoints.length, 'real browser engine did not submit a checkpoint');
+  // A lease checkpoint can precede the first frame; require a completed fight
+  // and loaded character/background before checking the visual interface.
+  await page.locator('.world-scene:not(.is-combat) .character-model.model-ready').waitFor({timeout: 120000});
+  await page.waitForFunction(() => [...document.querySelectorAll('.world-scene-photograph')].some(image => image.complete && image.naturalWidth > 0), {}, {timeout: 60000});
+  const progressed = await (await request(gamePath, {cookie})).json();
+  assert.ok(progressed.snapshot.player.xp > 0 || progressed.snapshot.player.level > 1, 'combat did not persist experience');
   assert.ok(packResponses.some(item => /\/boot\.json\.gz/.test(item.url)), 'missing boot pack');
   assert.ok(packResponses.some(item => /\/class-8\.json\.gz/.test(item.url)), 'missing class pack');
   assert.ok(packResponses.some(item => /\/\d+\.json\.gz/.test(item.url)), 'missing lazy numeric shard');
@@ -74,13 +80,14 @@ try {
   await page.getByText('部署验证法师', {exact: true}).first().waitFor({timeout: 60000});
   await page.setViewportSize({width: 1440, height: 1000});
   await page.goto(origin + '/');
+  loggingOut = true;
   await page.getByRole('button', {name: '退出账号', exact: true}).click();
   await page.waitForURL(origin + '/login');
   const browserSession = await context.request.get(origin + '/api/auth/session');
   assert.equal(browserSession.status(), 401);
   const restored = await request(gamePath, {cookie});
   assert.equal((await restored.json()).snapshot.player.id, initialPlayerId);
-  const originAssets = requests.filter(value => { const url = new URL(value); return url.origin === origin && !['/', '/login', '/model-viewer/index.html'].includes(url.pathname) && !url.pathname.startsWith('/api/'); });
+  const originAssets = requests.filter(value => { const url = new URL(value); return ['http:', 'https:'].includes(url.protocol) && url.origin === origin && !['/', '/login', '/model-viewer/index.html'].includes(url.pathname) && !url.pathname.startsWith('/api/'); });
   assert.deepEqual(originAssets, [], 'static traffic returned to Zeabur');
   assert.deepEqual(errors, []); assert.deepEqual(failures, []);
   success = true;
