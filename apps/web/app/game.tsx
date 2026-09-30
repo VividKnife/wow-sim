@@ -47,6 +47,7 @@ export default function Game(){
  const [connectionError,setConnectionError]=useState('');
  const [localStatus,setLocalStatus]=useState('');
  const [engineMode,setEngineMode]=useState<'local'|'cloud'>(()=>{try{return localStorage.getItem('wow-sim:engine-mode')==='cloud'?'cloud':'local';}catch{return 'local';}});
+ const engineModeRef=useRef(engineMode);
  const [engineSwitchPending,setEngineSwitchPending]=useState(false);
  const engineSwitching=useRef(false);
  const localClient=useRef<LocalSimulationClient|null>(null);
@@ -74,7 +75,7 @@ export default function Game(){
    // A Worker overview may have advanced while the HTTP snapshot was hydrating.
    const current=previous?.contentVersion===data.contentVersion&&previous.state?.id===actorId&&preserveLocal&&local?.presenting&&previous.state.clock>(live||merged.snapshot)?.player?.clock;
    const snapshot=current?{player:previous.state,view:previous.view}:live||merged.snapshot;
-   return {...merged,playback:local?.active?null:merged.playback,state:snapshot?.player||null,
+   return {...merged,playback:local?.active||(engineModeRef.current==='local'&&merged.localSimulation)?null:merged.playback,state:snapshot?.player||null,
     view:snapshot?{...content,...snapshot.view,items:{...content.items,...(current?previous.view.items:{})}}:null};
   });
   local?.observe(merged.localSimulation,merged.contentVersion,actorId);return true;
@@ -150,6 +151,8 @@ export default function Game(){
     await localClient.current?.handoffToCloud();
     localClient.current=null;
    }
+   engineModeRef.current=next;
+   if(next==='local')setGame((previous:any)=>previous?{...previous,playback:null}:previous);
    pollEtags.current.clear();setLocalStatus('');setEngineMode(next);
    try{localStorage.setItem('wow-sim:engine-mode',next);}catch{/* Current session still uses the selected engine. */}
    const id=selectedCharacterRef.current;
