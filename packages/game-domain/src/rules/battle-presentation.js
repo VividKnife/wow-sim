@@ -1,3 +1,6 @@
+import {activeServerBuffs} from './experience.js';
+import {combatInputSkills,combatInputReadyReason} from './combat-input.js';
+import {aliveEnemy} from './combat-space.js';
 import {buffTooltip} from './buff-tooltip.js';
 import {raidFieldPresentation} from './raid-battlefield.js';
 import {cooldownUntil,globalCooldownRemaining} from './spell-timing.js';
@@ -7,6 +10,7 @@ import {stats,spellInfo} from './character.js';
 import {spells,items,nameOf,icon} from './catalog.js';
 import {effectiveSpeed} from './combat-space.js';
 import {ammoCount} from './ammunition.js';
+import {isPositiveSpellAura} from './spell-aura-lifecycle.js';
 
 const formNames={bear:'熊形态',cat:'猎豹形态',moonkin:'枭兽形态',travel:'旅行形态',aquatic:'水栖形态',wolf:'幽魂之狼',shadow:'暗影形态'};
 const petModes={passive:'被动',defensive:'防御',aggressive:'主动',follow:'跟随',stay:'停留',attack:'攻击指定目标'};
@@ -18,7 +22,7 @@ const elements={earth:'大地',fire:'火焰',water:'水流',air:'空气'};
 const spellDetail=id=>({...buffTooltip(id),spellId:Number(id),name:Number(id)===992100?'金团战斗药剂':nameOf('spells',Number(id)),icon:Number(id)===992100?'/icons/assets/inv_potion_25.png':icon('spells',Number(id))});
 const effectEnd=a=>a?.until??(a?.remaining>0&&a?.interval>0?a.next+(a.remaining-1)*a.interval:0);
 export function effectsFor(actor,clock){
- const result=new Map((actor.serverBuffs||[]).map(buff=>[buff.id,{spellId:null,name:buff.name,icon:buff.icon,detail:buff.description,until:null,kind:'buff',routine:true}]));
+ const result=new Map(activeServerBuffs(actor).map(buff=>[buff.id,{id:buff.id,gm:buff.gm,startsAt:buff.startsAt,spellId:null,name:buff.name,icon:buff.icon,detail:buff.description,until:buff.until??null,kind:'buff',routine:true}]));
  // Long maintenance auras are routine; dedicated healing, shields and proc
  // stores keep their combat significance regardless of duration.
  const add=(a,detail='',fallback='',kind='buff',routine=false)=>{
@@ -28,13 +32,22 @@ export function effectsFor(actor,clock){
  };
  for(const a of Object.values(actor.buffs||{}))add(a,'','','buff',true);
  for(const a of actor.itemBuffs||[])add(a,'','','buff',true);
- for(const a of [...(actor.classBuffs||[]),...(actor.talentBuffs||[]),...(actor.auras||[])])add(a);
+ for(const a of [...(actor.classBuffs||[]),...(actor.talentBuffs||[])])add(a);
+ for(const a of actor.auras||[])add(a,'','',(a.positive??(spells[a.spell??a.spellId]?isPositiveSpellAura(a):true))?'buff':'debuff');
  for(const a of actor.dots||[])add(a,'持续伤害','','debuff');
+ for(const a of actor.movementSlows||[])add(a,'移动速度降低','减速','debuff');
  for(const a of actor.hots||[])add(a,'持续治疗');
  for(const a of actor.periodicClass||[])add(a,[8,161].includes(a.type)?'持续治疗':'资源恢复');
  if(actor.absorb?.amount>0)add(actor.absorb,'吸收剩余');if(actor.manaShield?.amount>0)add(actor.manaShield,'法力护盾剩余');add(actor.seal,'圣印');add(actor.judgement,'审判','','debuff');if(actor.reactiveClass?.charges!==0)add(actor.reactiveClass,'护盾充能');add(actor.soulstone,'灵魂石','','buff',true);
  for(const [slot,label]of [[16,'主手'],[17,'副手']]){const a=actor.weaponEnchants?.[slot]||(slot===16?actor.weaponEnchant:null);if(a&&a.charges!==0&&(!a.weaponUid||actor.equipment?.[slot]?.uid===a.weaponUid))add(a,label+'强化','','buff',true);}
- for(const [key,id,label]of [['weakenedSoulUntil',6788,'虚弱灵魂'],['sprintUntil',2983,'疾跑'],['innervateUntil',29166,'激活'],['hawkHasteUntil',6150,'强化雄鹰守护'],['feignUntil',5384,'假死']])add({spell:id,until:actor[key]},'战斗效果',label,key==='weakenedSoulUntil'?'debuff':'buff');
+ add({spell:6788,until:actor.weakenedSoulUntil},'暂时无法再次受到真言术：盾的保护。','虚弱灵魂','debuff');
+ for(const [key,id,label]of [['sprintUntil',2983,'疾跑'],['innervateUntil',29166,'激活'],['hawkHasteUntil',6150,'强化雄鹰守护'],['feignUntil',5384,'假死']])add({spell:id,until:actor[key]},'战斗效果',label);
+ // Some scripted controls store only an expiry. Keep them visible without
+ // inventing a spell identity, and avoid duplicating an equivalent aura.
+ for(const [key,type,label,detail]of [['stunUntil',12,'昏迷','无法移动或行动。'],['rootUntil',26,'定身','无法移动。'],['polyUntil',5,'变形','无法行动。'],['silenceUntil',27,'沉默','无法施放法术。']]){
+  if(!(actor.auras||[]).some(a=>a.type===type&&a.until>clock&&a.until>=actor[key]))add({until:actor[key]},detail,label,'debuff');
+ }
+ if(actor.controlledBy)add({spell:actor.controlSpell,until:actor.controlUntil,caster:actor.controlledBy},'受到他人控制。','精神控制','debuff');
  for(const [key,a]of Object.entries(actor.talentProcs||{})){const normalized=key.toLowerCase(),id=(actor.learned||[]).find(id=>learnedSpellKey(id)===normalized)||namedSpells.get(normalized);if(id)add({...a,spell:id},'天赋触发');}
  for(const [key,a]of Object.entries(actor.racialEffects||{})){const id=namedSpells.get(key==='forsaken'?'willoftheforsaken':key);if(id)add({...a,spell:id},'种族能力');}
  if(actor.racialBuff)add({...actor.racialBuff,spell:namedSpells.get(actor.racialBuff.kind)},'种族能力');
@@ -46,9 +59,9 @@ export function effectsFor(actor,clock){
  return [...grouped.values()];
 }
 
-// Main HUD only lists positive effects, independent of combat history.
-export function playerBuffs(actor) {
- return effectsFor(actor,actor.clock).filter(effect=>effect.kind==='buff');
+// The HUD reads current effects, including debuffs, independently of combat history.
+export function playerEffects(actor) {
+ return effectsFor(actor,actor.clock);
 }
 
 export function battlePresentation(s){
@@ -64,6 +77,11 @@ export function battlePresentation(s){
   units[actor.id]={id:actor.id,spellId:actor.spell||null,className:meta?.name||mode,color:meta?.color||'#9fc6aa',portrait:meta?{src:'/icons/atlases/ui-charactercreate-classes.png',frame:meta.frame}:null,mode,resource,secondaryResource:actor.classId===11&&['bear','cat'].includes(actor.form)?{name:'法力',value:actor.mana||0,max:derived?.maxMana||0,tone:'mana'}:null,
    hp:actor.hp,maxHp:derived?.maxHp??actor.maxHp??0,level:actor.level,combo:actor.classId===4||actor.classId===11&&actor.form==='cat'?{value:comboTarget?Math.min(5,actor.combo||0):0,max:5,targetId:comboTarget?.id||null,targetName:comboTarget?.name||'未积累连击点'}:null,
    movement:{speed:actor.hp>0&&!actor.totemUnit?effectiveSpeed(actor,clock):0,baseSpeed:effectiveSpeed({...actor,rootUntil:0,stunUntil:0,polyUntil:0,slowUntil:0,movementSlows:[],auras:[]},clock)},
+   quickCasts:live&&actor.id===s.id?combatInputSkills(actor).map(skill=>{
+    const target=skill.targetKind==='enemy'?(battle.enemies.find(e=>e.id===actor.target&&aliveEnemy(e)&&!e.controlledBy)||battle.enemies.find(e=>aliveEnemy(e)&&!e.controlledBy)):actor;
+    const reason=battle.pull&&(clock<battle.pull.startsAt||battle.pull.engagedAt==null)?'请等待开怪':combatInputReadyReason(s,actor,spellInfo(actor,skill.spellId),target);
+    return {spellId:skill.spellId,targetId:target?.id,reason};
+   }):[],queuedSpellId:live&&battle.policy?.slots?.[actor.id]?.queued?.manual?battle.policy.slots[actor.id].queued.intent.spellId:null,
    effects,cooldowns,totems,cast,globalCooldown:globalCooldownRemaining(actor,clock),canCommand:live&&s.hp>0&&actor.hp>0&&actor.petUnit&&!actor.totemUnit&&actor.ownerId===s.id&&s.pet?.id===actor.id,petMode:petModes[actor.mode]||'防御',happiness:actor.kind==='beast'?((actor.happiness??166500)>=666000?'快乐':(actor.happiness??166500)>=333000?'满足':'不开心'):null,loyalty:actor.loyalty||null,
    controlled,ownerName:all.find(a=>a.id===(actor.ownerId||actor.controlledBy))?.name||null,controlUntil:controlled?actor.controlUntil:null,shards:actor.classId===9&&actor.id===s.id?(live?s.bag.filter(i=>i.id===6265).reduce((n,i)=>n+i.count,0):actor.soulShardCount||0):null,
    attack:actor.classId===3&&actor.learned?.includes(75)&&items[actor.equipment?.[18]?.id]&&actor.equipment[18].durability!==0&&ammoCount(actor)>0?{kind:'ranged',label:'自动射击',startedAt:actor.rangedStartedAt,until:actor.nextRanged,minRange:8,range:35}:null,

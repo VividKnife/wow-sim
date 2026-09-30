@@ -51,7 +51,7 @@ test('countdown survives serialization and chunked runner ticks',()=>{
 });
 
 test('retry starts a fresh countdown and low resources do not delay room entry',()=>{
- let s=room();s=act(s,{type:'abandonCombat',encounterId:s.combat.id},0);s=act(s,{type:'revive'},0);s=advance(s,10000).state;
+ let s=room();s=act(s,{type:'abandonCombat',encounterId:s.combat.id},0);s=act(s,{type:'revive'},0);s=advance(s,30000).state;
  s.hp=1;s.mana=0;s=act(s,{type:'dungeonNext'},s.wallAt);
  assert.equal(s.combat.pull.startsAt,s.clock+3000);assert.equal(s.combat.pull.engagedAt,null);assert.equal(s.rest,null);
 });

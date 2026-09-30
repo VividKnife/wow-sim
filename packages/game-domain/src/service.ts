@@ -1,3 +1,5 @@
+import {applyGmBuffs} from './gm-buffs.ts';
+import {claimGmGift,giftInbox} from './gm.ts';
 import {experienceMultiplier, applyExperienceBuff} from './rules/experience.js';
 import {localSimulation, localManifest, guardLocalCommand, resetLocalSession, reserveLocalSimulation} from './local-simulation.ts';
 import {advancePersonal, advanceInstance} from './background-simulation.ts';
@@ -36,6 +38,7 @@ type Options = {
 };
 export class GameService {
     localSimulation = localSimulation;
+    gmInbox(accountId:string){return giftInbox(this.store,accountId);}
     listSaves = listSaves;
     resolveSave = resolveSave;
     createSave = createSave;
@@ -105,6 +108,9 @@ export class GameService {
             // Free characters do not tick while idle. Expose the effective market
             // clock without mutating or persisting a read-only snapshot.
             state.marketClock = !lease ? state.clock + Math.max(0, now - state.wallAt) : state.clock;
+            // Views show the current wall-time window even when an idle simulation
+            // has no reason to tick. This projection never persists into simulation.
+            await applyGmBuffs(tx,state,accountId,instance?new Map(instance.roster.map(row=>[row.characterId,row.accountId])):undefined,now);
             const roster = await Promise.all((await tx.list<Character>('characters', { accountId })).map(async row => {
                 const inventory = await context(tx, row, now, false);
                 return { id: row.id, characterId: row.id, name: row.rules.name, classId: row.rules.classId, raceId: row.rules.raceId, gender: row.rules.gender, level: row.rules.level, kind: row.kind, talentSummary: talentSummary(row.rules), professions: row.rules.professions,
@@ -293,11 +299,11 @@ export class GameService {
         const lease = await tx.get<ActorLease>('actor_leases', c.id);
         const existing = lease?.kind === 'activity' ? await tx.get<Activity>('activities', lease.ownerId) : null;
         requireThat(!lease || existing?.type === 'personal', 'ACTOR_BUSY', '角色正在执行后台订单');
-        if (existing && existing.actorId !== c.id && ['talent', 'resetTalents'].includes(cmd.type)) {
+        if (existing && existing.actorId !== c.id && ['talent', 'resetTalents', 'claimGmGift'].includes(cmd.type)) {
             await this.settleActivity(tx, existing, now);
             const leader = await owned(tx, c.accountId, existing.actorId);
             const shared = await this.personalContext(tx, leader, now);
-            requireThat(!shared.combat && ['idle', 'hunt'].includes(shared.activity.type) && !shared.escort,
+            requireThat(cmd.type==='claimGmGift'||(!shared.combat && ['idle', 'hunt'].includes(shared.activity.type) && !shared.escort),
                 'ACTOR_BUSY', '请先结束队伍当前战斗或活动，再调整天赋');
             c = await owned(tx, c.accountId, c.id);
             const selected = await context(tx, c, now, false);
@@ -305,7 +311,7 @@ export class GameService {
             selected.wallAt = shared.wallAt;
             // Apply at the settled party time. A follower must not advance a second
             // simulation or replace/release the leader's activity and leases.
-            const result = act(selected, cmd, selected.wallAt);
+            const result = cmd.type==='claimGmGift'?await claimGmGift(tx,c,selected,cmd.id,now):act(selected, cmd, selected.wallAt);
             const key = `command:${c.accountId}:${cmd.requestId}`;
             await persistCharacter(tx, c, result, result.wallAt, key, this.id);
             await invalidateCombatPlan(tx, existing);
@@ -344,7 +350,7 @@ export class GameService {
             requireThat(!await tx.get('reward_claims', rewardKey), 'ALREADY_CLAIMED', '已领取任务奖励');
             rewardPlan = questProgress(s, action.id)!;
         }
-        s = act(s, action, now);
+        s = action.type==='claimGmGift'?await claimGmGift(tx,c,s,action.id,now):act(s, action, now);
         const key = rewardKey || `command:${c.accountId}:${cmd.requestId}`;
         if (rewardPlan)
             await this.claimEquipmentRewards(tx, c, s, action, rewardPlan, now, key);

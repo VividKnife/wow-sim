@@ -22,7 +22,7 @@ export default function AdventureHall({state:s,data:d,busy,send,compact=false}:G
  const [filter,setFilter]=useState('all'),[profession,setProfession]=useState('all'),[query,setQuery]=useState(''),[scope,setScope]=useState('board'),[page,setPage]=useState(0),[profile,setProfile]=useState<string|null>(null),[expanded,setExpanded]=useState(!compact);
  const seconds=useRefreshClock(w?.board?.remaining||0,w?.board?.sequence||0);
  useEffect(()=>setPage(0),[filter,profession,query,scope]);
- if(!w?.unlocked)return <section className="panel"><h2>冒险者大厅</h2><p>主角达到18级后，可结识 NPC 玩家，组建五人副本小队，满级后继续相约金团。</p></section>;
+ if(!w?.unlocked)return <section className="panel"><h2>冒险者大厅</h2><p>主角达到10级后，可结识 NPC 玩家，组建五人副本小队，满级后继续相约金团。</p></section>;
  const selected=w.selected||[],ids=selected.map((c:any)=>c.id),locked=busy||w.locked;
  const residents=w.residents||[],boardIds=w.board?.ids||[];
  const pools:Record<string,any[]>={board:boardIds.map((id:string)=>residents.find((p:any)=>p.id===id)).filter(Boolean),friends:residents.filter((p:any)=>p.friend),recent:residents.filter((p:any)=>p.runs>0).sort((a:any,b:any)=>b.runs-a.runs),selected:residents.filter((p:any)=>ids.includes(p.id))};

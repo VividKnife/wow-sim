@@ -10,7 +10,8 @@ test('24-hour late gather worker stops at each due resource event without replay
  await store.transaction(async tx=>{const c=(await tx.get<Character>('characters',id))!;c.rules.location='northwood';c.rules.professions={herbalism:{skill:1,cap:75}};await tx.put('characters',c);});
  await service.command('a',{type:'gatherAll',requestId:'gather'});now=86401000;
  assert.deepEqual((await service.work()).errors,[]);const snapshot=await service.snapshot('a');
- assert.equal(snapshot.activities[0].status,'completed');assert.equal(snapshot.activities[0].settledUntil,7000);assert.equal(snapshot.state.wallAt,7000);
+ const gathered=Object.values(snapshot.state.resourceStocks).reduce((sum:number,stock:any)=>sum+stock.total,0);
+ assert.equal(snapshot.activities[0].status,'completed');assert.equal(snapshot.activities[0].settledUntil,1000+gathered*3000);assert.equal(snapshot.state.wallAt,1000+gathered*3000);
  assert.equal(snapshot.state.bag.some((item:any)=>item.id===2447),true);assert.equal(snapshot.state.bag.some((item:any)=>item.id===765),true);
  const later=await service.command('a',{type:'sync',requestId:'sync'});assert.equal(later.state.wallAt,now);
 });

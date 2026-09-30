@@ -22,7 +22,11 @@ export function quickActions(s,d,mode='peace'){
  });
  if(mode==='combat'){
   const unit=d.battleView?.units?.[s.id];
-  const combat=(d.strategyMembers?.find(member=>member.id===s.id)?.skills||[]).filter(sp=>sp.known).map(sp=>({key:`spell:${sp.spellId}`,name:sp.name,icon:sp.icon,kind:'自动战斗技能',automatic:true,canUse:false,reason:s.combat?'由战斗策略自动释放':'进入战斗后由策略自动释放',description:'可在策略中调整施放条件',remaining:Math.max(0,(unit?.cooldowns?.find(cd=>cd.spellId===sp.spellId)?.readyAt||0)-(s.clock||0)),command:null}));
+  const combat=(d.strategyMembers?.find(member=>member.id===s.id)?.skills||[]).filter(sp=>sp.known).map(sp=>{
+   const input=unit?.quickCasts?.find(input=>input.spellId===sp.spellId),manual=!!input;
+   const reason=input?.reason||(manual?'':s.combat?'此技能由战斗策略自动释放':'进入战斗后可使用');
+   return {key:`spell:${sp.spellId}`,name:sp.name,icon:sp.icon,kind:manual?'战斗技能':'自动战斗技能',automatic:!manual,combatSkill:true,queued:unit?.queuedSpellId===sp.spellId,canUse:manual&&!reason,reason,description:manual?'点击优先施放；读条或公共冷却期间排队，再次选择会替换待施放技能。':'可在策略中调整施放条件',remaining:Math.max(0,(unit?.cooldowns?.find(cd=>cd.spellId===sp.spellId)?.readyAt||0)-(s.clock||0)),command:manual?{type:'cast',id:sp.spellId,target:input.targetId}:null};
+  });
   return [...combat,...spells.filter(action=>!combat.some(skill=>skill.key===action.key)),...items];
  }
  return [...items.filter(i=>i.key==='item:6948'),...spells,...items.filter(i=>i.key!=='item:6948')];

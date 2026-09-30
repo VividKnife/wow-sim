@@ -46,7 +46,7 @@ test('Stockades service entry, worker, exit and restart preserve the selected co
  await game.send({type:'dungeonPause'});
  for(let i=0;i<120&&(await game.snapshot()).state.combat;i++)await game.work(1000);
  const settled=await game.snapshot();assert.equal(settled.state.combat,null);
- if(settled.state.hp<=0){await game.send({type:'revive'});for(let i=0;i<12;i++)await game.work(1000);}
+ if(settled.state.hp<=0){await game.send({type:'revive'});for(let i=0;i<30;i++)await game.work(1000);}
  await game.send({type:'leaveDungeon'});game.restart();
  const saved=await game.snapshot();assert.equal(saved.state.dungeonSaves.stockades.runId,runId);
  const returned=await game.send({type:'enterDungeon',contentId:'stockades'});

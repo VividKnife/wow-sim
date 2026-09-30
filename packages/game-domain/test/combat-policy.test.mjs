@@ -95,15 +95,15 @@ test('a normalized received input stream settles identically across coarse and f
  assert.deepEqual(run(1000),run(25));
 });
 
-test('manual casts have a 300ms replaceable queue and stop-cast fences late policy replies',async()=>{
+test('manual casts wait through the full GCD in a replaceable queue and stop-cast fences late policy replies',async()=>{
  const {commandCombatCast}=await import('../src/rules/combat.js');
  const {combatCommandAction}=await import('../src/rules/combat-command.js');
- const s=fixture();s.globalCooldowns={133:300};const old=envelope(s,{kind:'cast',spellId:133,targetId:s.combat.enemies[0].id});
+ const s=fixture();s.globalCooldowns={133:1500};const old=envelope(s,{kind:'cast',spellId:133,targetId:s.combat.enemies[0].id});
  commandCombatCast(s,s,133,s.combat.enemies[0].id);assert.equal(policyState(s).slots[s.id].queued.manual,true);
  assert.equal(receiveCombatIntent(s,old).reason,'controller');
- s.clock=300;combatTick(s);assert.equal(s.cast.startedAt,300);assert.equal(s.cast.commanded,true);
+ s.clock=1500;combatTick(s);assert.equal(s.cast.startedAt,1500);assert.equal(s.cast.commanded,true);
  combatCommandAction(s,{order:'stopCast',encounterId:s.combat.id,memberId:s.id});assert.equal(s.cast,null);assert.equal(policyState(s).slots[s.id].queued,null);
- const t=fixture();t.globalCooldowns={133:301};const before=structuredClone(t);assert.throws(()=>commandCombatCast(t,t,133,t.combat.enemies[0].id));assert.deepEqual(t,before);
+ const t=fixture();t.globalCooldowns={133:1500};commandCombatCast(t,t,133,t.combat.enemies[0].id);assert.equal(policyState(t).slots[t.id].queued.manual,true);
 });
 
 test('accepted policy damage continues through projectile settlement in a recorded replay',()=>{
@@ -125,3 +125,28 @@ test('pause rejects late policy output without mutation and resume fences the ol
  assert.equal(receiveCombatIntent(s,old).reason,'controller');
  assert.equal(s.cast,null);
 });
+
+ test('manual queue survives a long cast and pushback, replaces the next skill and resumes policy',async()=>{
+ const {commandCombatCast}=await import('../src/rules/combat.js');
+ const s=fixture();s.learned.push(116,11366);const target=s.combat.enemies[0];
+ commandCombatCast(s,s,11366,target.id);
+ const original=s.cast;
+ commandCombatCast(s,s,133,target.id);
+ commandCombatCast(s,s,116,target.id);
+ assert.equal(s.cast,original);
+ assert.equal(policyState(s).slots[s.id].queued.intent.spellId,116);
+ s.cast.until+=2000;
+ for(s.clock=100;s.clock<original.until;s.clock+=100){combatTick(s);assert.equal(s.cast.spell,11366);}
+ combatTick(s);
+ assert.equal(s.cast.spell,116);assert.equal(s.cast.commanded,true);
+ assert.equal(policyState(s).slots[s.id].queued,null);
+ });
+ test('manual queued spell rechecks target and resources at GCD release',async()=>{
+ const {commandCombatCast}=await import('../src/rules/combat.js');
+ for(const failure of ['mana','target']){
+ const s=fixture();s.rules=[];s.globalCooldowns={133:1500};
+ commandCombatCast(s,s,133,s.combat.enemies[0].id);
+ if(failure==='mana')s.mana=0;else {s.combat.enemies.push({...structuredClone(s.combat.enemies[0]),id:'other'});s.combat.enemies[0].removed=true;}
+ s.clock=1500;combatTick(s);assert.equal(s.cast,null);assert.equal(policyState(s).slots[s.id].queued,null);
+ }
+ });

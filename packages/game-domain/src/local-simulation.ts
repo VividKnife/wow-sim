@@ -1,3 +1,5 @@
+import {isDeepStrictEqual} from 'node:util';
+import {applyGmBuffs,buffSnapshot,restoreBuffSnapshot} from './gm-buffs.ts';
 import {unstuck} from './unstuck.ts';
 import {createHash} from 'node:crypto';
 import type {ReadView, Transaction} from '../../persistence/src/store.ts';
@@ -8,7 +10,7 @@ import {invalidateCombatPlan} from './combat-execution.ts';
 import {PAUSED_EVENT_AT} from './presence.ts';
 import {projectLocalCheckpoint, itemIdentityChanges} from './rules/local-checkpoint.js';
 
-export type LocalSession = {id:string; clientId:string; expiresAt:number; sequence:number; lastSeenAt:number; receiptId?:string};
+export type LocalSession = {id:string; clientId:string; expiresAt:number; sequence:number; lastSeenAt:number; receiptId?:string; buffs?:Record<string,Rules[]>};
 export const LOCAL_LEASE_MS = 30_000;
 type Owner = Activity | Instance;
 export function localEligible(owner: Owner | null | undefined) {
@@ -30,7 +32,8 @@ async function ownerFor(service: GameService, tx: ReadView, accountId: string, c
     return {owner, table, c} as const;
 }
 async function stateFor(service: GameService, tx: ReadView, owner: Owner) {
-    return 'roster' in owner ? structuredClone(owner.simulation!) : service.personalContext(tx, await owned(tx, owner.accountId, owner.actorId), owner.settledUntil);
+    if('roster' in owner)return applyGmBuffs(tx,structuredClone(owner.simulation!),owner.creatorAccountId,new Map(owner.roster.map(row=>[row.characterId,row.accountId])));
+    return service.personalContext(tx, await owned(tx, owner.accountId, owner.actorId), owner.settledUntil);
 }
 export function resetLocalSession(owner: Owner) {
     if (owner.localSimulation) {
@@ -131,9 +134,11 @@ export async function localSimulation(this: GameService, accountId:string, input
             requireThat(local && local.id === input.sessionId && local.clientId === input.clientId, 'LOCAL_STALE', '本地执行权已更新，请重新同步');
             requireThat(Number.isSafeInteger(input.sequence) && input.sequence === local.sequence+1, 'LOCAL_SEQUENCE', '检查点顺序无效');
             const next = input.state;
+            if(local.buffs)restoreBuffSnapshot(state,local.buffs);
             validateCheckpoint(state, next, Math.min(now, local.lastSeenAt+this.offlineLimitMs));
             // Enforce storage policy server-side too, even for an unfiltered upload.
             state = projectLocalCheckpoint(next);
+            await applyGmBuffs(tx,state,accountId,'roster' in owner?new Map(owner.roster.map(row=>[row.characterId,row.accountId])):undefined);
             const key = `local:${owner.id}:${local.id}:${input.sequence}`;
             if ('roster' in owner) {
                 owner.simulation = state;
@@ -161,9 +166,12 @@ export async function localSimulation(this: GameService, accountId:string, input
         await bump(tx, accountId);
         // Re-read personal assets: newly looted item IDs are assigned on commit.
         state = await stateFor(this, tx, owner);
+        owner.localSimulation!.buffs=buffSnapshot(state);
         const oldReceipt = local?.receiptId;
         owner.localSimulation!.receiptId = receiptId;
-        const result:Rules = {ownerId:owner.id, session:owner.localSimulation,
+        const {buffs:_buffs,...publicSession}=owner.localSimulation!;
+        const buffUpdate=input.type==='checkpoint'&&!isDeepStrictEqual(buffSnapshot(input.state),buffSnapshot(state))?{serverBuffs:buffSnapshot(state)}:{};
+        const result:Rules = {ownerId:owner.id, session:publicSession,...buffUpdate,
             ...(input.type==='claim'?{state:projectLocalCheckpoint(state)}:{itemIds:[...itemIdentityChanges(input.state,state)]}), serverNow:now,
             contentVersion:this.contentVersion, deadline:now+this.offlineLimitMs, active:owner.status === 'running'};
         await tx.insert('receipts', {id:receiptId, accountId, fingerprint, result, createdAt:now});
@@ -180,7 +188,7 @@ function validateCheckpoint(previous:Rules, next:Rules, until:number) {
     requireThat(next && typeof next === 'object' && !Array.isArray(next), 'LOCAL_STATE', '检查点状态无效', 400);
     requireThat(next.id === previous.id && Array.isArray(next.party) && next.party.length === previous.party.length &&
         next.party.every((p:Rules,i:number) => p?.id === previous.party[i].id), 'LOCAL_ROSTER', '检查点参战者不一致', 400);
-    requireThat([next,...next.party].every((actor:Rules,i:number) => JSON.stringify(actor.serverBuffs || []) === JSON.stringify([previous,...previous.party][i].serverBuffs || [])), 'LOCAL_STATE', '经验增益由服务器配置，请重新同步', 400);
+    requireThat([next,...next.party].every((actor:Rules,i:number) => isDeepStrictEqual(actor.serverBuffs || [],[previous,...previous.party][i].serverBuffs || [])), 'LOCAL_STATE', '服务器增益配置已变化，请重新同步', 400);
     requireThat(Number.isSafeInteger(next.wallAt) && next.wallAt >= previous.wallAt && next.wallAt <= until &&
         Number.isSafeInteger(next.clock) && next.clock>=previous.clock && Number.isSafeInteger(next.commandPausedMs||0) && (next.commandPausedMs||0)>=(previous.commandPausedMs||0) && next.clock-previous.clock+(next.commandPausedMs||0)-(previous.commandPausedMs||0) === next.wallAt-previous.wallAt, 'LOCAL_TIME', '检查点时间无效，请重新同步');
     requireThat(Number.isInteger(next.rngState) && next.rngState > 0 && next.rngState <= 0xffffffff &&

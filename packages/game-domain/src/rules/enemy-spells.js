@@ -101,7 +101,7 @@ function applySpell(s,e,target,sp,actors,hurt,ancestors=[]){
     const interval=sp['EffectAmplitude'+n]||0;
     if(auraType===36)unit.auras=(unit.auras||[]).filter(a=>a.type!==36&&!a.stancePassive);
     addCombatAura(unit,{spell:sp.Id,effect:n,type:sp['EffectApplyAuraName'+n],amount,misc:sp['EffectMiscValue'+n],trigger:sp['EffectTriggerSpell'+n],school:sp.School,
-     dispel:sp.Dispel,mechanic:sp.Mechanic||sp['EffectMechanic'+n],caster:e.id,casterName:e.name,until:sp.durationMs===Number.MAX_SAFE_INTEGER?sp.durationMs:s.clock+sp.durationMs,interval,next:interval?s.clock+interval:0},s.clock);
+     positive:!actors.includes(unit),dispel:sp.Dispel,mechanic:sp.Mechanic||sp['EffectMechanic'+n],caster:e.id,casterName:e.name,until:sp.durationMs===Number.MAX_SAFE_INTEGER?sp.durationMs:s.clock+sp.durationMs,interval,next:interval?s.clock+interval:0},s.clock);
     // The NPC stance spells use the same Classic stance passives as warriors.
     // Parent ownership lets a stance change remove its passive modifiers too.
     const passive=auraType===36?({7164:7376,7165:21156})[sp.Id]:null;

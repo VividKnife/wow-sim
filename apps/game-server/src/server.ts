@@ -1,3 +1,5 @@
+import type {GmService} from '../../../packages/game-domain/src/gm.ts';
+import {AdminStore, ADMIN_SESSION_SECONDS} from './admin-store.ts';
 import {createServer, type IncomingMessage, type ServerResponse} from 'node:http';
 import {createHash} from 'node:crypto';
 import {WebSocketServer, type WebSocket} from 'ws';
@@ -29,6 +31,7 @@ export type GameSnapshot = {
 };
 
 export interface GameServiceLike {
+  gmInbox?(accountId:string):Promise<unknown>;
   localSimulation?(accountId:string, input:Record<string,any>):Promise<unknown>;
   listSaves?: (userId:string)=>Promise<unknown>;
   createSave?: (userId:string,input:{name:string;classId:number;raceId:number;gender?:'male'|'female';boost?:boolean;raidReady?:boolean},requestId:string)=>Promise<unknown>;
@@ -45,6 +48,8 @@ type Content = ReturnType<typeof clientContent>;
 export type GameServerOptions = {
   service: GameServiceLike;
   accounts: Accounts;
+  admin?: AdminStore;
+  gm?: GmService;
   appOrigin: string;
   secureCookies?: boolean;
   trustProxyHops?: number;
@@ -185,6 +190,56 @@ export function createGameServer(options: GameServerOptions) {
       if(!['GET','HEAD','OPTIONS'].includes(request.method||'')&&!sameOrigin(request,origin)){
         json(response,403,{error:'请求来源无效'});return;
       }
+      if(url.pathname.startsWith('/api/admin/')){
+        const admin=options.admin;
+        if(!admin){json(response,503,{error:'管理服务尚未配置'});return;}
+        const token=request.headers.cookie?.split(';').map(value=>value.trim()).find(value=>value.startsWith('wow_admin='))?.slice(10);
+        const route=url.pathname.slice('/api/admin/'.length);
+        const cookie=(value:string)=>`wow_admin=${value}; Path=/api/admin; HttpOnly; SameSite=Strict; Max-Age=${value?ADMIN_SESSION_SECONDS:0}${options.secureCookies?'; Secure':''}`;
+        if(route==='session'&&request.method==='GET'){
+          json(response,200,{admin:await admin.session(token),setupRequired:await admin.setupRequired()});return;
+        }
+        if(['register','login'].includes(route)&&request.method==='POST'){
+          const body=await readJson(request,4096);
+          const address=options.trustProxyHops===0?request.socket.remoteAddress||'local':clientAddress(new Request(url,{headers:{'x-forwarded-for':request.headers['x-forwarded-for']?.toString()||''}}),options.trustProxyHops);
+          const result=await admin.authenticate(route as 'register'|'login',body,address);
+          json(response,200,{admin:result.admin},{'set-cookie':cookie(result.token)});return;
+        }
+        const user=await admin.session(token);
+        if(!user){json(response,401,{error:'请先登录管理员账号。'});return;}
+        if(route==='logout'&&request.method==='POST'){
+          await admin.logout(token);json(response,200,{ok:true},{'set-cookie':cookie('')});return;
+        }
+        if(route==='gm'||route==='gm-items'){
+          if(!options.gm){json(response,503,{error:'发放服务尚未配置'});return;}
+          if(route==='gm-items'&&request.method==='GET'){
+            const search=url.searchParams.get('search')||'';
+            if(search.length>100){json(response,400,{error:'搜索内容过长'});return;}
+            json(response,200,{items:options.gm.searchItems(search)});return;
+          }
+          if(route==='gm'&&request.method==='GET'){json(response,200,await options.gm.list());return;}
+          if(route==='gm'&&request.method==='POST'){
+            const body=await readJson(request);
+            if(body.scope==='player'&&(typeof body.userId!=='string'||!await admin.playerExists(body.userId))){json(response,400,{error:'请选择有效的玩家账号'});return;}
+            json(response,200,await options.gm.execute(user.id,body));return;
+          }
+        }
+        if(route==='moderate'&&request.method==='POST'){
+          json(response,200,await admin.moderate(user.id,await readJson(request,4096)));return;
+        }
+        if(request.method==='GET'){
+          if(route==='overview'){json(response,200,await admin.overview());return;}
+          if(route==='save'){
+            const id=url.searchParams.get('id');
+            if(!id||id.length>200){json(response,400,{error:'存档标识无效'});return;}
+            json(response,200,await admin.save(id));return;
+          }
+          const page=Number(url.searchParams.get('page')??0),search=url.searchParams.get('search')??'';
+          if(!Number.isSafeInteger(page)||page<0||page>100000||search.length>100){json(response,400,{error:'查询参数无效'});return;}
+          json(response,200,await admin.list(route,search,page));return;
+        }
+        json(response,404,{error:'接口不存在'});return;
+      }
       if(url.pathname==='/api/auth/session'&&request.method==='GET'){
         const user=await options.accounts.session(sessionToken(request));
         json(response,user?200:401,user?{user}:{error:'请先登录。'});return;
@@ -259,7 +314,7 @@ export function createGameServer(options: GameServerOptions) {
         const selectedCharacterId = characterId(url);
         const snapshot = await readGame(options.service, accountId, selectedCharacterId);
         const scope = url.searchParams.get('scope') === 'combat' ? 'combat' : 'full';
-        const etag = '"' + createHash('sha256').update(JSON.stringify([accountId, selectedCharacterId || snapshot.state?.id, snapshot.revision, snapshot.instanceId, snapshot.instance?.sequence, getContent().contentVersion, scope])).digest('hex') + '"';
+        const etag = '"' + createHash('sha256').update(JSON.stringify([accountId, selectedCharacterId || snapshot.state?.id, snapshot.revision, snapshot.instanceId, snapshot.instance?.sequence, getContent().contentVersion, scope, snapshot.state?.serverBuffs, snapshot.state?.party?.map((actor:any)=>actor.serverBuffs)])).digest('hex') + '"';
         if (request.headers['if-none-match']?.replace(/^W\//,'') === etag) {
           response.writeHead(304, {etag: acceptsGzip(request.headers['accept-encoding'])?'W/'+etag:etag, vary:'Accept-Encoding', 'cache-control': 'private, no-cache'});
           response.end();
@@ -267,6 +322,9 @@ export function createGameServer(options: GameServerOptions) {
         }
         json(response, 200, gameResponse(snapshot, scope), {etag: acceptsGzip(request.headers['accept-encoding'])?'W/'+etag:etag, vary:'Accept-Encoding', 'cache-control': 'private, no-cache'});
         return;
+      }
+      if(url.pathname==='/api/game/gm-inbox'&&request.method==='GET'&&options.service.gmInbox){
+        json(response,200,{gifts:await options.service.gmInbox(await selectedAccount(request,url))});return;
       }
       if (url.pathname === '/api/game/local' && request.method === 'POST' && options.service.localSimulation) {
         const accountId = await selectedAccount(request, url);
@@ -362,10 +420,11 @@ export function createGameServer(options: GameServerOptions) {
       const activeSubscription = subscriptionId;
       const activeCharacter = selectedCharacter;
       try {
+        await accountFrom(_request,options.accounts);
         const snapshot = await options.service.snapshot(accountId, activeCharacter, true);
         if (activeSubscription !== subscriptionId) return;
         const sequence = snapshot.instance?.sequence ?? 0;
-        const key = `${snapshot.revision}:${sequence}:${activeCharacter || ''}`;
+        const key = `${snapshot.revision}:${sequence}:${activeCharacter || ''}:${JSON.stringify(snapshot.state?.serverBuffs||[])}`;
         if (force || key !== lastKey) {
           const next = {type: 'snapshot', sequence, ...gameResponse(snapshot)} as GameSnapshotEvent;
           const event = !force && deliveryMode === 'delta' && baseline &&

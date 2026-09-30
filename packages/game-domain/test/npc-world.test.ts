@@ -13,6 +13,14 @@ import {localEligible} from '../src/local-simulation.ts';
 import type {Rules} from '../src/model.ts';
 
 function world(){let s:Rules=createGame('旅人',1729,0);s.level=24;s.location='deadmines';const st=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;s=act(s,{type:'npcVisit'},0);return act(s,{type:'npcRecommend'},0);}
+test('adventure hall unlocks at level 10',()=>{
+ let s:Rules=createGame('旅人',1729,0);s.level=9;
+ assert.equal(view(s).partyUnlocked,false);assert.equal(view(s).npcWorld.unlocked,false);
+ assert.throws(()=>act(s,{type:'npcVisit'},0),/10级/);
+ s.level=10;
+ assert.equal(view(s).partyUnlocked,true);assert.equal(view(s).npcWorld.unlocked,true);
+ s=act(s,{type:'npcVisit'},0);assert.equal(view(s).npcWorld.ready,true);
+});
 test('level-60 damage warriors and rogues start with two usable weapons while tanks keep shields',()=>{
  let s:Rules=createGame('旅人',1729,0);s.level=60;s=act(s,{type:'npcVisit'},0);
  const fighters=s.npcWorld.residents.map((p:Rules)=>p.unit).filter((c:Rules)=>[1,4].includes(c.classId));

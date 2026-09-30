@@ -204,11 +204,11 @@ export function executeCombatIntent(s,c,intent,{manual=false}={}){
  }
  if(intent?.kind!=='cast'||!c.learned.includes(intent.spellId))return {accepted:false,reason:'spell'};
  const sp=spellInfo(c,intent.spellId);if(!sp||!target||target.removed||target.hp<=0&&sp.SpellName!=='Rebirth')return {accepted:false,reason:'target'};
- const friendly=actors.includes(target),kind=classAbilityKind(sp),name=sp.SpellName;
+ const friendly=actors.includes(target),kind=classAbilityKind(sp),name=sp.SpellName,trap=name.endsWith('Trap');
  const either=['Dispel Magic','Holy Shock'].includes(name);
- const friendlySpell=['heal','buff','enchant','summon','dispel'].includes(kind)&&name!=='Purge'&&!['Tame Beast','Inferno'].includes(name)||['Cold Snap','Fade','Feign Death','Blink','Evocation'].includes(name)||racialActiveNames.has(name)||talentActiveNames.has(name)&&!['damage','control'].includes(kind);
+ const friendlySpell=trap||['heal','buff','enchant','summon','dispel'].includes(kind)&&name!=='Purge'&&!['Tame Beast','Inferno'].includes(name)||['Cold Snap','Fade','Feign Death','Blink','Evocation'].includes(name)||racialActiveNames.has(name)||talentActiveNames.has(name)&&!['damage','control'].includes(kind);
  const alliedBuff=/^(Blessing of |Greater Blessing of |Power Word: |Prayer of |Mark of the Wild|Gift of the Wild|Thorns|Fear Ward|Power Infusion|Innervate|Divine Intervention|Arcane Intellect|Arcane Brilliance|Dampen Magic|Amplify Magic|Divine Spirit|Shadow Protection)/.test(name);
- const selfOnly=(kind==='buff'&&!alliedBuff)||kind==='enchant'||kind==='summon'&&!['Tame Beast','Inferno'].includes(name)||['Cold Snap','Fade','Feign Death','Blink','Evocation'].includes(name)||racialActiveNames.has(name);
+ const selfOnly=trap||(kind==='buff'&&!alliedBuff)||kind==='enchant'||kind==='summon'&&!['Tame Beast','Inferno'].includes(name)||['Cold Snap','Fade','Feign Death','Blink','Evocation'].includes(name)||racialActiveNames.has(name);
  if(selfOnly&&target!==c)return {accepted:false,reason:'self-only'};
  if(!either&&(friendlySpell?!friendly:friendly)||!friendly&&!aliveEnemy(target)&&name!=='Rebirth')return {accepted:false,reason:'target-kind'};
  const independent=!sp.StartRecoveryTime&&!sp.castMs&&!sp.ChannelInterruptFlags;

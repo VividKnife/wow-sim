@@ -205,6 +205,10 @@ host.onmessage=({data})=>{
     captureCurrent(data.requestId);
   } else if (data.type==='ack' && data.generation===generation) {
     remapItemReferences(state,new Map(data.itemIds));deadline=data.deadline;
+    if(data.serverBuffs){
+      for(const actor of [state,...state.party||[]])actor.serverBuffs=data.serverBuffs[actor.id]||[];
+      lastFull=-Infinity;
+    }
   } else if (data.type==='resume' && state && data.generation===generation) {
     if(!running){running=true;tick();}
   } else if (data.type==='visibility') {

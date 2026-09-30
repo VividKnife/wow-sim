@@ -28,7 +28,7 @@ export function playbackPerspective(baseState, baseView, snapshot, endClock) {
   // Effects belong to the selected actor and the current frame. Reusing the
   // slower overview would retain consumed/dispelled buffs between refreshes.
   data:{...baseView,...view,stats,characterAttributes:actor.characterAttributes||baseView.characterAttributes,resource:unit?.resource,
-   ...(unit?.effects?{playerBuffs:unit.effects.filter(effect=>effect.kind==='buff'),itemBuffs:[]}:{}),
+   ...(unit?.effects?{playerEffects:unit.effects,itemBuffs:[]}:{}),
    battleView:{...view.battleView,playerId:baseState.id}},
  };
 }

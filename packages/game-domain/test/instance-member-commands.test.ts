@@ -17,7 +17,7 @@ test('only the leader can abandon a shared battle and retries cannot repeat the 
  assert.equal(after.sequence,before.sequence+1);assert.equal(after.simulation!.totals.deaths,before.simulation!.totals.deaths+1);
  await f.service.command('a',command);assert.deepEqual(await f.instance(),after);
  for(const account of ['a','b']){const snapshot=await f.service.snapshot(account);assert.equal(snapshot.state.hp,0);assert.equal(snapshot.state.combat,null);}
- await f.service.command('a',{type:'revive',requestId:'revive'});f.time(11000);await f.service.work(11000);
+ await f.service.command('a',{type:'revive',requestId:'revive'});f.time(31000);await f.service.work(31000);
  assert.ok([(await f.instance())!.simulation!,...(await f.instance())!.simulation!.party].every((c:Rules)=>c.hp>0));
 });
 test('visitor manual cast spends only its own mana and retains the shared leader root and rules',async()=>{const f=await fixture(),before=(await f.instance())!.simulation!,enemy=before.combat.enemies[0].id,guest=before.party.find((c:Rules)=>c.id===f.guest);await f.service.command('b',{type:'cast',id:133,target:enemy,requestId:'cast'});const after=(await f.instance())!.simulation!,caster=after.party.find((c:Rules)=>c.id===f.guest);assert.equal(after.id,f.leader);assert.equal(after.mana,before.mana);assert.deepEqual(after.bag,before.bag);assert.equal(after.cast,before.cast);assert.equal(caster.mana,guest.mana);assert.ok(caster.cast.timing.cost>0);assert.equal(caster.cast.timing.committed,false);assert.equal(caster.cast.spell,133);assert.equal(caster.cast.target,enemy);assert.deepEqual(caster.rules,guest.rules);assert.deepEqual(caster.learned,guest.learned);assert.equal(after.logs.at(-1).actorId,f.guest);

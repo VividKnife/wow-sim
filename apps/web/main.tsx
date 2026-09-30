@@ -2,6 +2,7 @@ import {Component, lazy, Suspense, useEffect, useState, type ReactNode} from 're
 import {createRoot} from 'react-dom/client';
 import './app/globals.css';
 import './app/journey.css';
+const Admin=lazy(()=>import('./app/admin'));
 const Login=lazy(()=>import('./app/login/page'));
 const Game=lazy(()=>import('./app/game'));
 const Saves=lazy(()=>import('./app/saves'));
@@ -29,4 +30,4 @@ function App(){
  if(!user)return <p role="status">正在连接艾泽拉斯…</p>;
  return <><AccountMenu username={user.username}/>{new URLSearchParams(location.search).get('saveId')?<Game/>:<Saves/>}</>;
 }
-createRoot(document.getElementById('root')!).render(<LoadBoundary><Suspense fallback={<p role="status">正在加载冒险界面…</p>}><App/></Suspense></LoadBoundary>);
+createRoot(document.getElementById('root')!).render(<LoadBoundary><Suspense fallback={<p role="status">正在加载冒险界面…</p>}>{location.pathname.replace(/\/$/,'')==='/admin'?<Admin/>:<App/>}</Suspense></LoadBoundary>);

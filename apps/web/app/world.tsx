@@ -28,9 +28,9 @@ export default function World({state:s,data:d,busy,revision,send,overview,onOpen
  if(surface==='quests')return questPanel;
  if(surface==='map')return <WorldMap state={s} data={d} busy={busy} send={send}/>;
  if(surface==='nearby')return <div className="classic-local-services"><LocalNpcs key={'npcs:'+s.id+':'+s.location} state={s} data={d} busy={busy} send={send}/>{d.city&&<City key={'city:'+s.id+':'+s.location} state={s} data={d} busy={busy} revision={revision} send={send}/>}</div>;
- if(s.dungeon&&surface==='full')return <div className="world-main"><PlayerHud state={s} data={d}/>{overview}<section className="panel"><h2>{s.dungeon?'正在探索'+d.dungeon.name:d.dungeon.name}</h2><p>在地下城页面查看小队准备、路线进度与遭遇。</p><Button onClick={onOpenDungeon} disabled={!onOpenDungeon}>打开地下城 →</Button></section></div>;
+ if(s.dungeon&&surface==='full')return <div className="world-main"><PlayerHud state={s} data={d} playback={playback} contentVersion={contentVersion}/>{overview}<section className="panel"><h2>{s.dungeon?'正在探索'+d.dungeon.name:d.dungeon.name}</h2><p>在地下城页面查看小队准备、路线进度与遭遇。</p><Button onClick={onOpenDungeon} disabled={!onOpenDungeon}>打开地下城 →</Button></section></div>;
  return <div className={'world-layout '+(d.city?'has-city':'')}><section className="world-main">
- {surface==='full'&&<><PlayerHud state={s} data={d}/>
+ {surface==='full'&&<><PlayerHud state={s} data={d} playback={playback} contentVersion={contentVersion}/>
  <WorldScene key={s.id} state={s} data={d} busy={busy} send={send} playback={playback} contentVersion={contentVersion} animationPaused={!sceneActive} onObserve={onObserve}/>
  <header className="location-heading">
   <div className="location-identity"><MapPin size={23} aria-hidden="true"/><div><span>{d.location.region} · {d.city?'城镇':'野外'}</span><h1>{d.location.name}</h1></div></div>

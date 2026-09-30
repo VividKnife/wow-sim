@@ -10,3 +10,4 @@
 .recipe-card,.resource-card{border-radius:3px;background:#1b211d}.profession-list button{border-radius:3px}.profession-list button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media(max-width:1050px){.market-grid{grid-template-columns:1fr}}
 @media(max-width:420px){.market-card{gap:8px}.market-card>button{font-size:11px;padding-inline:8px}.market-card .item-display-name{font-size:12px}}
+.resource-gather-progress{height:7px;overflow:hidden;margin-top:9px;border:1px solid #66573f;border-radius:5px;background:#10120e}.resource-gather-progress span{display:block;width:0;height:100%;background:#d3b66b;animation:resource-gather-fill 3s linear both}@keyframes resource-gather-fill{to{width:100%}}

@@ -9,3 +9,5 @@ Set `DATABASE_URL` and `APP_ORIGIN` (local: `http://127.0.0.1:5173`), then run `
 Production uses secure cookies and `AUTH_TRUST_PROXY_HOPS=1` behind Zeabur ingress. The HTML/API gateway preserves the ingress XFF chain. Keep the API private and prevent direct untrusted access. Local direct connections use `AUTH_TRUST_PROXY_HOPS=0` and the socket address. JSON responses support gzip with weak ETags; conditional requests retain empty 304 bodies. Canonical simulation checkpoints are never rewritten for CDN paths.
 
 Character and hunter-pet XP default to double (`GAME_XP_MULTIPLIER=2`). Values from 0 to 1000, including decimals, are accepted. Configure the same value on API and worker and restart both. Existing activities retain their starting rate. Profession skill and pet loyalty gains are unchanged.
+
+The server also grants a permanent double movement speed buff. It multiplies base movement speed before mount bonuses and halves flight travel time.

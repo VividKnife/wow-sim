@@ -112,7 +112,7 @@ export function selectClass(s,c,e,actors,api,rules=c.rules||defaultClassRules(c.
   if(c.talentProcs?.spiritOfRedemption?.until>s.clock&&!['heal','dispel'].includes(classAbilityKind(sp)))continue;
   if(c.classId===8&&!['Cold Snap'].includes(name)&&!extendedSpellNames.has(name)&&!talentActiveNames.has(name)&&!racialActiveNames.has(name))continue;
   const prepared=prepareClassAbility(s,c,e,sp,actors,decisionStats,input);if(prepared===null)continue;
-  let target=prepared?.target||e;if(racialActiveNames.has(name)){if(racialAbilityBlocked(s,c,sp))continue;target=c;}if(talentActiveNames.has(name)&&!prepared)target=c;const healing=heals.has(name)||hots.has(name)||name==='Power Word: Shield';
+  let target=input?.target||prepared?.target||e;if(racialActiveNames.has(name)){if(racialAbilityBlocked(s,c,sp))continue;target=c;}if(talentActiveNames.has(name)&&!prepared)target=c;const healing=heals.has(name)||hots.has(name)||name==='Power Word: Shield';
   if(healing&&!input){target=actors.filter(a=>a.hp>0&&a.hp<decisionStats(a).maxHp*raidHealingThreshold(s,c,a,.85)).sort((a,b)=>a.hp/decisionStats(a).maxHp-b.hp/decisionStats(b).maxHp)[0];if(!target)continue;}
   if(!input&&conservingRaidMana(s,c)&&classAbilityKind(sp)==='heal'&&name!=='Rebirth'){
    const recipients=['Tranquility','Holy Nova','Prayer of Healing'].includes(name)?actors.filter(a=>distance(c,a)<=(sp.radius||30)):[target];

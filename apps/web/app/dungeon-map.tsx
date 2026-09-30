@@ -8,7 +8,7 @@ import {CommandPreparation} from './combat-command';
 
 const statuses:Record<string,string>={cleared:'已清理',skipped:'已绕过',absent:'本次未出现',current:'下一场',ahead:'未清理'};
 type MapEncounter={description?:string;id:string;name:string;kind:string;status:string;bossIds:number[];path:string[];canNavigate:boolean;navigateReason:string;enemies:{entry:number;name:string}[];quests:{questId:number;questName:string;name:string;count:number;required:number}[]};
-type DungeonMapView={id:string;name:string;route:MapEncounter[];locationId:string;destination:string;path:string[];autoAdvance:boolean;canFullClear:boolean;navigateReason:string;map:{attribution?:string;width:number;height:number;points:Record<string,[number,number]>;floors:{id:number;name:string;image:string|null}[];floorByNode:Record<string,number>;edges:[string,string][]}};
+type DungeonMapView={id:string;name:string;route:MapEncounter[];locationId:string;destination:string;path:string[];autoAdvance:boolean;canFullClear:boolean;navigateReason:string;map:{attribution?:string;width:number;height:number;points:Record<string,[number,number]>;edgePaths?:Record<string,[number,number][]>;floors:{id:number;name:string;image:string|null}[];floorByNode:Record<string,number>;edges:[string,string][]}};
 
 export default function DungeonMap({state:s,data:d,busy,send,raid}:GameProps&{raid?:'gold'}){
  const raidView=raid==='gold'?d.goldRaid:null;
@@ -55,7 +55,7 @@ export default function DungeonMap({state:s,data:d,busy,send,raid}:GameProps&{ra
    {}
    {floor.image&&<img className="atlas-original-map" src={floor.image} alt={`${dm.name} · ${floor.name}副本地图`} width={map.width} height={map.height}/>}
    <svg viewBox={`0 0 ${map.width} ${map.height}`} preserveAspectRatio="none" aria-hidden="true">
-    {map.edges.filter(([a,b])=>map.floorByNode[a]===floor.id&&map.floorByNode[b]===floor.id&&(pairs.has([a,b].sort().join(':'))||!floor.image)).map(([a,b])=><line key={a+':'+b} className="atlas-corridor is-planned" x1={at(a)[0]} y1={at(a)[1]} x2={at(b)[0]} y2={at(b)[1]}/>)}
+    {map.edges.filter(([a,b])=>map.floorByNode[a]===floor.id&&map.floorByNode[b]===floor.id&&(pairs.has([a,b].sort().join(':'))||!floor.image)).map(([a,b])=>{const path=map.edgePaths?.[`${a}:${b}`]||[at(a),at(b)];return <polyline key={a+':'+b} className="atlas-corridor is-planned" points={path.map(([x,y])=>`${x},${y}`).join(' ')}/>;})}
    </svg>
    {floor.id===map.floorByNode.entrance&&<span className={'atlas-entrance '+(dm.locationId==='entrance'?'is-player':'')} style={{left:at('entrance')[0]/map.width*100+'%',top:at('entrance')[1]/map.height*100+'%'}}>{dm.locationId==='entrance'?'小队 · 入口':'入口'}</span>}
    {dm.route.map((r,index)=>{if(map.floorByNode[r.id]!==floor.id)return null;

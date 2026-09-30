@@ -163,3 +163,16 @@ test('a server handoff settles queued live input and then its own later capture 
  const checkpoint=r.messages.findLast(m=>m.type==='checkpoint');
  assert.equal(checkpoint.state.wallAt,101000);assert.equal(checkpoint.state.order,'focus');assert.equal(r.pending(),0);
 });
+
+test('GM buff ACK updates live actors without rewinding clock, inventory or combat',()=>{
+ const f=runtime({extra:{party:[{id:'ally',serverBuffs:[]}],serverBuffs:[],bag:[{uid:'existing',id:2589,count:2}]}});
+ f.clock(1500);f.run();
+ f.send({type:'checkpoint',generation:'session',requestId:'gm-before'});
+ const before=f.messages.find(message=>message.type==='checkpoint'&&message.requestId==='gm-before').state;
+ const buffs={hero:[{id:'gm-buff',gm:true,xpMultiplier:2,until:200000}],ally:[{id:'gm-buff',gm:true,armor:100,until:200000}]};
+ f.send({type:'ack',generation:'session',itemIds:[],deadline:300000,serverBuffs:buffs});
+ f.send({type:'checkpoint',generation:'session',requestId:'gm-after'});
+ const checkpoint=f.messages.find(message=>message.type==='checkpoint'&&message.requestId==='gm-after').state;
+ assert.deepEqual(checkpoint.serverBuffs,buffs.hero);assert.deepEqual(checkpoint.party[0].serverBuffs,buffs.ally);
+ assert.equal(checkpoint.bag[0].count,2);assert.equal(checkpoint.clock,before.clock);
+});

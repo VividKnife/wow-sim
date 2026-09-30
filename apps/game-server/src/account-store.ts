@@ -1,23 +1,23 @@
 import {createHash, randomBytes, randomUUID, scrypt, timingSafeEqual} from 'node:crypto';
 
-type Sql = {query(text: string, values?: any[]): Promise<{rows: any[]}>};
+export type Sql = {query(text: string, values?: any[]): Promise<{rows: any[]}>};
 export type AccountUser = {id: string; username: string};
 export const SESSION_SECONDS = 7 * 24 * 60 * 60;
 const fail = (message: string, status: number) => Object.assign(new Error(message), {status});
-const digest = (value: string) => createHash('sha256').update(value).digest('hex');
-function usernameOf(value: unknown): string {
+export const digest = (value: string) => createHash('sha256').update(value).digest('hex');
+export function usernameOf(value: unknown): string {
   if (typeof value !== 'string' || !/^[a-zA-Z0-9_-]{3,32}$/.test(value)) {
     throw fail('用户名需要 3–32 个字母、数字、下划线或短横线。', 400);
   }
   return value.toLowerCase();
 }
-function passwordOf(value: unknown): string {
+export function passwordOf(value: unknown): string {
   if (typeof value !== 'string' || value.length < 12 || value.length > 128) {
     throw fail('密码需要 12–128 个字符。', 400);
   }
   return value;
 }
-function derive(password: string, salt: string): Promise<Buffer> {
+export function derive(password: string, salt: string): Promise<Buffer> {
   return new Promise((resolve, reject) => scrypt(password, salt, 64,
     {N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024},
     (error, key) => error ? reject(error) : resolve(key)));
@@ -35,6 +35,9 @@ export class AccountStore {
       CREATE TABLE IF NOT EXISTS web_users (
         id text PRIMARY KEY, username text NOT NULL UNIQUE,
         password_hash text NOT NULL, created_at bigint NOT NULL
+      );
+      CREATE TABLE IF NOT EXISTS web_user_blocks (
+        user_id text PRIMARY KEY REFERENCES web_users(id) ON DELETE CASCADE, reason text NOT NULL
       );
       CREATE TABLE IF NOT EXISTS web_sessions (
         token_hash text PRIMARY KEY, user_id text NOT NULL REFERENCES web_users(id) ON DELETE CASCADE,
@@ -97,13 +100,14 @@ export class AccountStore {
     const [salt, hash] = (row?.password_hash ?? `${'0'.repeat(32)}:${'0'.repeat(128)}`).split(':');
     const actual = await derive(password, salt);
     if (!timingSafeEqual(actual, Buffer.from(hash, 'hex')) || !row) throw fail('用户名或密码不正确。', 401);
+    if ((await this.sql.query('SELECT user_id FROM web_user_blocks WHERE user_id=$1', [row.id])).rows.length) throw fail('账号已被封禁，请联系管理员。', 403);
     return this.issue({id: row.id, username: row.username});
   }
 
   async session(token: string | undefined): Promise<AccountUser | null> {
     if (!token || !/^[A-Za-z0-9_-]{43}$/.test(token)) return null;
     const {rows} = await this.sql.query(`SELECT u.id,u.username FROM web_sessions s
-      JOIN web_users u ON u.id=s.user_id WHERE s.token_hash=$1 AND s.expires_at>$2`, [digest(token), this.now()]);
+      JOIN web_users u ON u.id=s.user_id WHERE s.token_hash=$1 AND s.expires_at>$2 AND NOT EXISTS (SELECT 1 FROM web_user_blocks b WHERE b.user_id=u.id)`, [digest(token), this.now()]);
     return rows[0] ?? null;
   }
 

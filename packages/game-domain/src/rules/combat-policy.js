@@ -1,4 +1,6 @@
 import {selectRacialReaction} from './class-mechanics.js';
+import {combatInputReadyReason,inputWaiting} from './combat-input.js';
+import {spellInfo} from './character.js';
 import {spells} from './catalog.js';
 import {stats} from './character.js';
 import {combatMembers} from './combat-members.js';
@@ -61,8 +63,15 @@ export function receiveCombatIntent(s,envelope){
 }
 export function flushQueuedCombatIntent(s,c){
  const slot=slotFor(s,c),queued=slot.queued;if(!queued)return false;
- if(s.clock>queued.expiresAt){slot.queued=null;return false;}
+ if(!queued.manual&&s.clock>queued.expiresAt){slot.queued=null;return false;}
  if(c.cast)return false;
+ if(queued.manual){
+  const sp=spellInfo(c,queued.intent.spellId);
+  if(inputWaiting(s,c,sp))return false;
+  const target=[...combatMembers(s),...s.combat.enemies].find(a=>a.id===queued.intent.targetId);
+  const reason=combatInputReadyReason(s,c,sp,target);
+  if(reason){slot.queued=null;policyState(s).receipts.push({actorId:c.id,at:s.clock,queued:true,accepted:false,reason});return false;}
+ }
  const result=executeCombatIntent(s,c,queued.intent,{manual:queued.manual});
  if(result.reason==='timing')return false;
  slot.queued=null;
@@ -118,6 +127,6 @@ export function invalidatePolicyIntents(s,ids){
 }
 export function queueManualCombatIntent(s,c,intent){
  const sp=spells[intent.spellId],ready=Math.max(c.cast?.until||0,c.nextAction||0,sp?.StartRecoveryCategory?c.globalCooldowns?.[sp.StartRecoveryCategory]||0:0);
- if(ready<=s.clock||ready-s.clock>SPELL_QUEUE_WINDOW)return false;
- invalidatePolicyIntents(s,[c.id]);slotFor(s,c).queued={intent,expiresAt:s.clock+SPELL_QUEUE_WINDOW,manual:true};return true;
+ if(ready<=s.clock)return false;
+ invalidatePolicyIntents(s,[c.id]);slotFor(s,c).queued={intent,manual:true};return true;
 }

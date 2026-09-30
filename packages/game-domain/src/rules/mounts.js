@@ -2,6 +2,7 @@ import {nodes,route,baseTravelSpeed,creatureLocations,spells,nameOf} from './cat
 import {log,spellInfo} from './character.js';
 import {ranks} from './talent-effects.js';
 import {stopRecovery} from './recovery.js';
+import {movementMultiplier} from './experience.js';
 
 // 20 is this game's requested unlock level. Historical reference and explicit
 // price overrides are documented in docs/research/import/mounts-reference.md.
@@ -98,7 +99,8 @@ export function endMount(s){
 export function travelRoute(s,to){
  const m=findMount(s.mounted),canRide=m&&owns(s,m.id)&&(m.classSpell||trained(s)&&!mountEligibility(s,m))&&!outdoorReason(s)&&!s.dungeon&&s.hp>0;
  const pursuit=(ranks(s)['Pursuit of Justice']||0)*.04;const form={wolf:.4,travel:.4,cat:(ranks(s)['Feline Swiftness']||0)*.15}[s.form]||0;
- return route(s.location,to,baseTravelSpeed*(canRide?(1+m.bonus/100)*(1+pursuit):1+Math.max(pursuit,form)));
+ const baseSpeed=baseTravelSpeed*movementMultiplier(s);
+ return route(s.location,to,baseSpeed*(canRide?(1+m.bonus/100)*(1+pursuit):1+Math.max(pursuit,form)),baseSpeed);
 }
 // Paths carry their own segment times. Dismount exactly when entering a
 // restricted leg, including on one-shot offline catch-up and after reloading.

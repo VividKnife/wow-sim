@@ -51,10 +51,21 @@ function resourceDefs(location){const t=terrain[location];const west=nodes[locat
  for(const [item,source]of Object.entries(questFishingSources))if(source.locations.includes(location))resources.push({id:location+':quest-fish-'+item,profession:'fishing',item:+item,required:source.required,name:nameOf('items',+item)+'鱼群'});
  return [...resources,...(sourceResources.get(location)||[]).filter(r=>!resources.some(existing=>existing.item===r.item))];
 }
-export function resourceView(s){return resourceDefs(s.location).map(r=>{const readyAt=s.resourceCooldowns?.[r.id]||0;return{...r,readyAt,available:readyAt<=s.clock&&skill(s,r.profession)>=r.required,learned:skill(s,r.profession)>0};});}
+function initialResourceCount(s,id){
+ const seed=String(s.id||s.createdAt||s.rngState||0)+':'+id;
+ let hash=0;for(const char of seed)hash=(Math.imul(hash,31)+char.charCodeAt(0))|0;
+ return 2+(hash>>>0)%4;
+}
+export function resourceView(s){return resourceDefs(s.location).map(r=>{
+ const readyAt=s.resourceCooldowns?.[r.id]||0,stock=s.resourceStocks?.[r.id];
+ const replenished=stock?.remaining===0&&readyAt<=s.clock;
+ const total=replenished?stock.nextTotal:stock?.total??initialResourceCount(s,r.id);
+ const remaining=replenished?total:stock?.remaining??total;
+ return{...r,readyAt,total,remaining,available:readyAt<=s.clock&&remaining>0&&skill(s,r.profession)>=r.required,learned:skill(s,r.profession)>0};
+});}
 function roomForResource(s,r){const copy=clone(s);try{receive(copy,r.item,3);return true;}catch(error){if(isContentPending(error))throw error;return false;}}
 export function beginGather(s,id,auto=false){const r=resourceView(s).find(r=>r.id===id);if(!r||!r.available)throw new Error('资源尚未刷新、熟练度不足或不在当前区域');if(!roomForResource(s,r))throw new Error('背包空间不足，请预留采集空间');s.rest=null;s.activity={type:'professionGather',target:id,auto,startedAt:s.clock,endsAt:s.clock+3000};}
-export function finishGather(s){const a=s.activity,r=resourceView(s).find(r=>r.id===a.target);s.activity={type:'idle'};if(!r?.available||!roomForResource(s,r)){s.activity.reason='无法继续采集，请检查资源与背包空间。';return;}const count=roll(s,1,3);receive(s,r.item,count);s.resourceCooldowns[r.id]=s.clock+300000;
+export function finishGather(s){const a=s.activity,r=resourceView(s).find(r=>r.id===a.target);s.activity={type:'idle'};if(!r?.available||!roomForResource(s,r)){s.activity.reason='无法继续采集，请检查资源与背包空间。';return;}const count=roll(s,1,3);receive(s,r.item,count);s.resourceStocks??={};const remaining=r.remaining-1;s.resourceStocks[r.id]={total:r.total,remaining,...(remaining===0?{nextTotal:roll(s,2,5)}:{})};if(remaining===0)s.resourceCooldowns[r.id]=s.clock+300000;
  // Fish pools gate access, not skill gains: all current pools accept skill 1.
  // Each completed fishing round trains one point up to the learned rank cap.
  skillUp(s,r.profession,1,r.profession==='fishing'?s.professions.fishing.skill:r.required);log(s,'采集 '+nameOf('items',r.item)+' ×'+count,'loot');

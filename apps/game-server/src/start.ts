@@ -1,3 +1,5 @@
+import {GmService} from '../../../packages/game-domain/src/gm.ts';
+import {AdminStore} from './admin-store.ts';
 import pg from 'pg';
 import {AccountStore} from './account-store.ts';
 import {readFile} from 'node:fs/promises';
@@ -35,12 +37,13 @@ export async function startGameServer(environment: ServerEnvironment = process.e
     await store.initialize();
     const service = new GameService(store, {contentVersion: CONTENT_VERSION, xpMultiplier, offlineLimitMs: offlineLimit(environment.GAME_OFFLINE_LIMIT_MS)});
     const accounts=new AccountStore(pool);await accounts.initialize();
+    const admin=new AdminStore(pool,accounts);await admin.initialize();
     let publicAssetBase='';
     try {const metadata=JSON.parse(await readFile(new URL('../../../packages/DEPLOYMENT.json',import.meta.url),'utf8'));publicAssetBase=metadata.publicAssetBase||'';}
     catch(error){if((error as NodeJS.ErrnoException).code!=='ENOENT')throw error;}
     const trustProxyHops=Number(environment.AUTH_TRUST_PROXY_HOPS??(environment.NODE_ENV==='production'?'1':'0'));
     if(!Number.isSafeInteger(trustProxyHops)||trustProxyHops<0)throw new Error('AUTH_TRUST_PROXY_HOPS must be a nonnegative integer');
-    const game = createGameServer({service,accounts,appOrigin:environment.APP_ORIGIN,secureCookies:environment.NODE_ENV==='production',trustProxyHops,publicAssetBase});
+    const game = createGameServer({service,accounts,admin,gm:new GmService(store),appOrigin:environment.APP_ORIGIN,secureCookies:environment.NODE_ENV==='production',trustProxyHops,publicAssetBase});
     const host = environment.HOST || '127.0.0.1';
     const port = positivePort(environment.PORT);
     await new Promise<void>((resolve, reject) => {

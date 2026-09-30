@@ -27,7 +27,7 @@ test('R2 gateway serves only HTML and API; forwards session and CSRF headers wit
  const web=await createWebServer({dist:dir,backend:`http://127.0.0.1:${api.address().port}`,trustProxy:false});
  web.listen(0,'127.0.0.1');await once(web,'listening');t.after(()=>new Promise(resolve=>web.close(resolve)));
  const origin=`http://127.0.0.1:${web.address().port}`;
- for(const path of ['/','/login','/model-viewer/index.html']){const response=await fetch(origin+path);assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');}
+ for(const path of ['/','/login','/admin','/admin/','/model-viewer/index.html']){const response=await fetch(origin+path);assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');}
  for(const path of ['/assets/game.js','/icons/x.png','/simulation-content/foo','/missing'])assert.equal((await fetch(origin+path)).status,404);
  const response=await fetch(origin+'/api/game?saveId=one',{method:'POST',headers:{origin:'https://game.test',cookie:'wow_session=test'},body:'{"ok":true}'});
  assert.deepEqual(await response.json(),{ok:true});assert.match(response.headers.get('set-cookie'),/HttpOnly/);

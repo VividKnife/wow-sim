@@ -74,3 +74,22 @@ test('long spell cooldowns are not cleared at GCD duration',async()=>{
  assert.equal(actionAfterElapsed(use,30000).canUse,true);
  assert.equal(actionAfterElapsed({...use,canUseAfterCooldown:false,reason:'缺少材料'},30000).reason,'缺少材料');
 });
+
+test('solo hotbar submits the selected spell during GCD and projects the pending selection',async()=>{
+ const {startCombat,combatTick}=await import('../../../packages/game-domain/src/rules/combat.js');
+ const {projectClientSnapshot}=await import('../../../packages/game-domain/src/rules/client-snapshot.ts');
+ const s=createGame('手动快捷栏',37,0);s.level=60;s.learned.push(116);s.mana=stats(s).maxMana;
+ startCombat(s,[636],true);delete s.combat.pull;s.position=0;s.positionY=0;s.nextSwing=999999;
+ Object.assign(s.combat.enemies[0],{hp:100000,maxHp:100000,position:3,positionY:0,nextAttack:999999,nextSpell:999999,rootUntil:999999});
+ s.globalCooldowns={133:1500};
+ const snapshot=projectClientSnapshot(s,view(s));
+ const action=quickActions(snapshot.player,snapshot.view,'combat').find(a=>a.key==='spell:116');
+ assert.equal(action.canUse,true);assert.equal(action.automatic,false);
+ assert.equal(action.command.target,s.combat.enemies[0].id);
+ const next=act(s,action.command,s.wallAt);
+ const pending=projectClientSnapshot(next,view(next));
+ assert.equal(quickActions(pending.player,pending.view,'combat').find(a=>a.key==='spell:116').queued,true);
+ next.clock=1500;combatTick(next);
+ assert.equal(next.cast.spell,116);assert.equal(next.cast.commanded,true);
+ assert.equal(quickActions(next,view(next),'combat').find(a=>a.key==='spell:116').queued,false);
+});
