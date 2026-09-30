@@ -1,4 +1,3 @@
-"use client";
 import {useEffect,useState} from 'react';
 import {UsersRound,Star,Shield,Heart,Swords,Plus,X,BookOpen,Check,RefreshCw,Clock3} from 'lucide-react';
 import {Button} from '@/components/ui/button';

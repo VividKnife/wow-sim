@@ -1,4 +1,3 @@
-'use client';
 import {useState} from 'react';
 import {PartyBuffAudio} from './party-buff-audio';
 import {Button} from '@/components/ui/button';

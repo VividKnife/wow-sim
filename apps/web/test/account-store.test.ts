@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PGlite} from '@electric-sql/pglite';
-import {AccountStore} from '../lib/account-store.ts';
-import {clientAddress} from '../lib/client-address.ts';
+import {AccountStore} from '../../game-server/src/account-store.ts';
+import {clientAddress} from '../../game-server/src/client-address.ts';
 
 test('rate-limit identity ignores attacker-prepended addresses and fails closed without ingress', () => {
   const request = new Request('https://game.example', {headers: {'x-forwarded-for': 'fake, 203.0.113.5'}});

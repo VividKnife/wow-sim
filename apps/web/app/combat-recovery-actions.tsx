@@ -1,4 +1,3 @@
-"use client";
 import {Button} from '@/components/ui/button';
 
 export default function CombatRecoveryActions({state:s,busy,send,canLead=true,onRevive}:{state:any;busy:boolean;send:(command:any)=>Promise<any>;canLead?:boolean;onRevive?:()=>void}){

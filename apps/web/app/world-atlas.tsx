@@ -1,5 +1,4 @@
-'use client';
-/* eslint-disable @next/next/no-img-element -- Original local map textures. */
+
 import atlas from '../../../packages/game-data/data/world-atlas.json';
 import {mapRegions} from '@/lib/world-map.js';
 import {atlasLabels} from '@/lib/world-atlas-layout.js';

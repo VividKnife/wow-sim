@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element -- Inspect the shipped scene assets. */
 import React,{useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import backgrounds from '../../../../packages/game-data/data/scene-backgrounds.json';

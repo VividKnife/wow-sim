@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element -- Standalone Vite preview uses local game assets without the Next image server. */
 import React, {useCallback, useEffect, useMemo, useRef, useState, type CSSProperties} from 'react';
 import {createRoot} from 'react-dom/client';
 import {Dialog} from 'radix-ui';

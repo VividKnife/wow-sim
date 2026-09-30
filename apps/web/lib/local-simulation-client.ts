@@ -1,3 +1,6 @@
+import simulationWorkerUrl from './local-simulation.worker.ts?worker&url';
+import policyWorkerUrl from './combat-policy.worker.ts?worker&url';
+import {assetWorker} from './asset-worker';
 import {CombatStreamReceiver,hydrateCombatFrame} from '../../../packages/sim-core/src/combat-stream.js';
 import {saveFetch} from './save-fetch';
 import {publishLocalCombat} from './local-combat-store';
@@ -48,12 +51,12 @@ export class LocalSimulationClient {
   private prepareWorker() {
     if(this.worker)return;
     this.options.onStatus('正在准备冒险，首次加载可能需要一些时间…');
-    const worker=this.worker=new Worker(new URL('./local-simulation.worker.ts',import.meta.url),{type:'module'});
+    const worker=this.worker=assetWorker(simulationWorkerUrl);
     this.workerReady=false;
     this.frames.reset();this.combatEvents=[];
     if(usePolicyWorker()&&typeof MessageChannel!=='undefined'){
       try{
-        const policy=this.policyWorker=new Worker(new URL('./combat-policy.worker.ts',import.meta.url),{type:'module'});
+        const policy=this.policyWorker=assetWorker(policyWorkerUrl);
         const channel=new MessageChannel();
         worker.postMessage({type:'policyPort',port:channel.port1},[channel.port1]);
         policy.postMessage({type:'connect',port:channel.port2},[channel.port2]);

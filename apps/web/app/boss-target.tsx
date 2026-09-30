@@ -1,4 +1,3 @@
-'use client';
 import {duration} from './game-ui';
 import {combatBosses} from '@/lib/boss-presentation.js';
 import './boss-target.css';

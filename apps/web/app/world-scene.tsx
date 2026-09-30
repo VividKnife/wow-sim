@@ -1,11 +1,11 @@
-'use client';
 import {useEffect,useRef,useState} from 'react';
 import {Compass,Footprints,Maximize2,Pause,Play} from 'lucide-react';
 import {worldSceneState,worldScenery} from '@/lib/world-scene.js';
 import {scenePresentation} from '@/lib/scene-presentation.js';
 import CharacterModel from './character-model';
 import SceneBackdrop from './scene-backdrop';
-import Battle from './battle';
+import {lazy,Suspense} from 'react';
+const Battle=lazy(()=>import('./battle'));
 import RaidBossPreview from './raid-boss-preview';
 import {waitingRaidBoss} from '@/lib/boss-presentation.js';
 import type {GameProps} from './game-ui';
@@ -41,6 +41,6 @@ export default function WorldScene(props:GameProps&{uiHidden?:boolean;onObserve?
    {scene.flying&&<progress className="world-flight-progress" aria-label="飞行航程" max={1} value={scene.flightProgress}/>}
   </div>
   {waitingBoss&&<RaidBossPreview boss={waitingBoss} active={!animationPaused}/>}
-  {scene.combat&&<><div className="world-battle-pending" role="status">正在进入战场…</div><div className="world-scene-combat"><Battle {...props} embedded open={visible&&!animationPaused} onOpenChange={()=>{}}/>{props.onObserve&&<button className="world-battle-expand" onClick={props.onObserve}><Maximize2 size={14}/>展开战斗</button>}</div></>}
+  {scene.combat&&<><div className="world-battle-pending" role="status">正在进入战场…</div><div className="world-scene-combat"><Suspense fallback={<p role="status">正在加载战斗…</p>}><Battle {...props} embedded open={visible&&!animationPaused} onOpenChange={()=>{}}/></Suspense>{props.onObserve&&<button className="world-battle-expand" onClick={props.onObserve}><Maximize2 size={14}/>展开战斗</button>}</div></>}
  </section>;
 }

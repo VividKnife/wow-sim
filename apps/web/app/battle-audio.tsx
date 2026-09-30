@@ -1,4 +1,3 @@
-"use client";
 import {useEffect,useRef,useState} from 'react';
 import {combatSoundForEvent,createCombatAudio} from '@/lib/combat-audio.js';
 import {useAudioPreference} from '@/lib/use-audio-preference';

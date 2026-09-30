@@ -1,4 +1,3 @@
-"use client";
 import {useEffect,useState} from 'react';
 import {Footprints,Navigation} from 'lucide-react';
 import {duration,Icon} from './game-ui';

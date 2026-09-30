@@ -1,4 +1,3 @@
-'use client';
 import {Eye,EyeOff} from 'lucide-react';
 import './scene-ui-toggle.css';
 

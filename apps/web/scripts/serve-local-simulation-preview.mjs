@@ -1,4 +1,4 @@
-import {GET as handleSimulationContent} from '../app/api/simulation-content/[version]/[pack]/route.ts';
+import {simulationFile} from './simulation-files.mjs';
 // Isolated in-memory saves. Real domain service + browser Worker + production UI.
 import {createServer} from 'vite';
 import react from '@vitejs/plugin-react';
@@ -12,7 +12,7 @@ import {clientContent,CONTENT_VERSION} from '../../../packages/game-domain/src/r
 import {contentPack} from '../../../packages/game-domain/src/rules/content-packs.js';
 import {commandServiceFixture} from '../test/support/command-service-fixture.mjs';
 import {reserveLocalSimulation} from '../../../packages/game-domain/src/local-simulation.ts';
-import {handleModelRequest} from '../lib/wowhead-model-assets.js';
+import {handleModelRequest} from '../../game-server/src/wowhead-model-assets.js';
 const commandFixture=await commandServiceFixture({now:()=>Date.now(),contentVersion:CONTENT_VERSION});
 await commandFixture.store.transaction(tx=>reserveLocalSimulation(tx,commandFixture.started.state.id,Date.now()));
 const app=fileURLToPath(new URL('../',import.meta.url));
@@ -30,16 +30,13 @@ if(!process.env.PREVIEW_COMMAND_ONLY){
 let claims=0,checkpoints=0,commands=0,workerCommits=0;
 const work=process.env.PREVIEW_COMMAND_ONLY?null:setInterval(async()=>{const result=await service.work();workerCommits+=result.activities+result.instances;},1000);
 const api={name:'local-simulation-preview',configureServer(server){server.middlewares.use((req,res,next)=>{
- if(!req.url?.startsWith('/api/'))return next();
+ if(!req.url?.startsWith('/api/')&&!req.url?.startsWith('/simulation-content/'))return next();
  void(async()=>{
   const url=new URL(req.url,'http://localhost'),accountId=url.searchParams.get('saveId')||raid.id;
   const activeService=accountId===commandFixture.save.id?commandFixture.service:service;
   res.setHeader('content-type','application/json');res.setHeader('cache-control','no-store');
   let data;
-  if(url.pathname.startsWith('/api/simulation-content/')){
-   const [,version,pack]=url.pathname.match(/^\/api\/simulation-content\/([^/]+)\/([^/]+)$/)||[];
-   const response=await handleSimulationContent(new Request(url),{params:Promise.resolve({version,pack})});res.statusCode=response.status;response.headers.forEach((value,key)=>res.setHeader(key,value));res.end(Buffer.from(await response.arrayBuffer()));return;
-  }
+  if(url.pathname.startsWith('/simulation-content/')){const response=await simulationFile(url.pathname);res.statusCode=response.status;response.headers.forEach((v,k)=>res.setHeader(k,v));res.end(Buffer.from(await response.arrayBuffer()));return;}
   if(url.pathname.startsWith('/api/model-viewer/')){
    const response=await handleModelRequest(new Request(url,{method:req.method}));
    res.statusCode=response.status;response.headers.forEach((value,key)=>res.setHeader(key,value));res.end(Buffer.from(await response.arrayBuffer()));return;

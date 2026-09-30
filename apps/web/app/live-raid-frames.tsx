@@ -1,4 +1,3 @@
-'use client';
 import {useLocalCombat} from '@/lib/local-combat-store';
 import {useCombatPlayback} from '@/lib/use-combat-playback';
 import {classCombatMeta,classResource} from '../../../packages/sim-core/src/class-combat.js';

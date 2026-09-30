@@ -1,4 +1,3 @@
-"use client";
 import {Tooltip} from 'radix-ui';
 import {SpellTooltipContent} from './classic-action-tooltip';
 import {TrainerNavigation} from './trainer-navigation';

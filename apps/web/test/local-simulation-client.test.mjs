@@ -9,12 +9,13 @@ import {SIMULATION_STARTUP_TIMEOUT_MS} from '../lib/simulation-resources.js';
 let Client,directory,outfile;
 before(async()=>{
  const web=fileURLToPath(new URL('../',import.meta.url));directory=await mkdtemp(join(web,'.local-client-test-'));outfile=join(directory,'client.mjs');
- await build({absWorkingDir:web,entryPoints:['lib/local-simulation-client.ts'],outfile,bundle:true,platform:'node',format:'esm',packages:'external',logLevel:'silent'});
+ await build({absWorkingDir:web,entryPoints:['lib/local-simulation-client.ts'],outfile,bundle:true,platform:'node',format:'esm',packages:'external',logLevel:'silent',plugins:[{name:'worker-url',setup(build){build.onResolve({filter:/\?worker&url$/},args=>({path:args.path,namespace:'worker-url'}));build.onLoad({filter:/.*/,namespace:'worker-url'},()=>({contents:'export default "http://preview/worker.js"'}));}}]});
  Client=(await import(pathToFileURL(outfile).href)).LocalSimulationClient;
 });
 after(async()=>{await unlink(outfile);await rmdir(directory);});
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 function harness(t,{lag=0,itemIds=[],claimError=null,ready=true,device,channels=false,recoverOn=null}={}){
+ const savedLocation=globalThis.location;globalThis.location={href:'http://preview/',origin:'http://preview'};
  const savedWindow=globalThis.window,savedWorker=globalThis.Worker,savedChannel=globalThis.MessageChannel;
  globalThis.MessageChannel=channels?class {port1={};port2={};}:undefined;
  if(device)t.mock.getter(globalThis,'navigator',()=>device);
@@ -50,7 +51,7 @@ function harness(t,{lag=0,itemIds=[],claimError=null,ready=true,device,channels=
  });
  t.mock.timers.enable({apis:['setTimeout']});
  const client=new Client({onFull:()=>{},onStatus:message=>statuses.push(message),refresh:async()=>{refreshes++;if(automaticRecovery)client.observe(null,'fixture','hero');}});
- t.after(()=>{client.dispose();globalThis.window=savedWindow;globalThis.Worker=savedWorker;globalThis.MessageChannel=savedChannel;});
+ t.after(()=>{client.dispose();globalThis.window=savedWindow;globalThis.location=savedLocation;globalThis.Worker=savedWorker;globalThis.MessageChannel=savedChannel;});
  return {client,workers,requests,statuses,get refreshes(){return refreshes;},setReady:value=>{ready=value;},hold:()=>{pendingReply={};return ()=>{pendingReply.resolve();pendingReply=null;};},fail:()=>{failNext=true;}};
 }
 test('iPhone startup creates one Worker even when MessageChannel is available',async t=>{

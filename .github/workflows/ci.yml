@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      NEXT_TELEMETRY_DISABLED: '1'
       WEB_ASSET_MODE: ${{ vars.WEB_ASSET_MODE || 'r2' }}
     steps:
       - uses: actions/checkout@v4
@@ -28,14 +27,29 @@ jobs:
       - run: npm ci
       - run: npm --prefix apps/web ci
       - run: npm run data:check
-      - run: node --test scripts/publish-zeabur.test.mjs scripts/publish-r2-assets.test.mjs apps/web/test/static-assets.test.mjs
+      - run: node --test scripts/publish-zeabur.test.mjs scripts/publish-r2-assets.test.mjs apps/web/test/static-web.test.mjs
       - run: npm run content:measure
       - run: node --test apps/web/test/content-packs.test.mjs apps/web/test/client-snapshot.test.mjs
       - run: node --test apps/web/test/local-simulation-boot.test.mjs apps/web/test/local-simulation-client.test.mjs apps/web/test/local-simulation-worker.test.mjs apps/web/test/simulation-resources.test.mjs apps/web/test/game-response.test.mjs packages/sim-core/test/collections.test.mjs
       - run: node --test packages/sim-core/test/packed-content.test.mjs packages/game-domain/test/runtime-content.test.mjs apps/web/test/simulation-content-route.test.ts
       - run: npm run typecheck
-      - run: node --test apps/web/test/account-store.test.ts apps/web/test/game-backend.test.mjs apps/game-server/test/*.test.ts apps/game-worker/test/*.test.ts
+      - run: node --test apps/web/test/account-store.test.ts apps/game-server/test/*.test.ts apps/game-worker/test/*.test.ts
+      - run: npm --prefix apps/web run typecheck
       - run: npm --prefix apps/web run build
+      - run: node scripts/verify-web-build.mjs
+      - name: Install browser for production smoke test
+        if: env.WEB_ASSET_MODE == 'r2'
+        run: npm --prefix apps/web exec -- playwright install --with-deps chromium
+      - name: Verify CDN modules, Workers and checkpoints in browser
+        if: env.WEB_ASSET_MODE == 'r2'
+        run: node apps/web/scripts/verify-browser.mjs
+        env:
+          WEB_QA_OUTPUT: ${{ runner.temp }}/wow-vite-qa
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: apps/web/dist
+          include-hidden-files: true
       - run: node scripts/verify-production.mjs
       - run: docker build -f Dockerfile.runtime -t wow-sim-runtime:ci .
       - run: docker build -t wow-sim-web:ci .
@@ -54,12 +68,21 @@ jobs:
           node-version: '24.11.1'
           cache: npm
       - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: apps/web/dist
       - run: node scripts/publish-r2-assets.mjs --upload
         env:
           R2_ACCOUNT_ID: d4516749783eedab5aabf13adf1d9527
           R2_BUCKET: wow-sim
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uploaded-web-build
+          path: apps/web/dist
+          include-hidden-files: true
   publish-deployment:
     if: always() && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' && needs.validate.result == 'success' && (needs.publish-r2-assets.result == 'success' || (vars.WEB_ASSET_MODE == 'bundled' && needs.publish-r2-assets.result == 'skipped'))
     needs: [validate, publish-r2-assets]
@@ -77,6 +100,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24.11.1'
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ vars.WEB_ASSET_MODE == 'bundled' && 'web-build' || 'uploaded-web-build' }}
+          path: apps/web/dist
       - run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'

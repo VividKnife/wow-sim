@@ -1,4 +1,3 @@
-'use client';
 import {PartyBuffOrder} from './party-buffs';
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';

@@ -1,4 +1,3 @@
-"use client";
 import AdventureHall from './adventure-hall';
 import {RecoveryControls} from './dungeon';
 import AmmoControls from './ammo-controls';

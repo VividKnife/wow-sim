@@ -1,4 +1,3 @@
-'use client';
 import {useEffect,useState,type CSSProperties} from 'react';
 import CharacterModel from './character-model';
 import {contentLoader,referencedItemIds} from '../lib/content-loader.js';

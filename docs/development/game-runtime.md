@@ -1,11 +1,11 @@
 # 游戏运行环境
 
-需要 Node 24.11.1+ 和 PostgreSQL。网页使用 React/Next.js Node 构建；权威游戏服务和活动 worker 是独立进程。
+需要 Node 24.11.1+ 和 PostgreSQL。网页使用 React/Vite 静态构建；权威游戏服务和活动 worker 是独立进程。
 
 | 进程/包 | 职责 | 数据访问 |
 | --- | --- | --- |
-| `apps/web` | UI、独立账号/会话、同源校验、短期令牌签发与 API 代理 | 只访问认证表 |
-| `apps/game-server` | `/game`、`/content`、`/workshop`、`/events`，DTO 投影与权限边界 | 通过 `PostgresStore` |
+| `apps/web` | 静态 HTML、UI 与 API 流式代理 | 不访问数据库 |
+| `apps/game-server` | `/api/auth/*`、`/api/game`、`/api/game/content`、`/api/game/workshop`、`/api/events`，账号会话、DTO 投影与权限边界 | 通过 `PostgresStore` |
 | `apps/game-worker` | 主动结算到期活动与实例 | 通过 `PostgresStore` |
 | `packages/game-domain` | 账号、角色、资产、活动、实例与确定性规则 | 只依赖 `Store` 接口 |
 | `packages/game-data/data` | 编译后的静态内容与版本摘要 | 只读 |
@@ -17,7 +17,7 @@ npm run data:check
 docker compose up -d postgres
 ```
 
-将根 `.env.example` 复制为 `.env`，生成至少 32 字符的随机 `GAME_SERVER_SECRET`。示例数据库账号仅用于本地开发。三个进程分别运行：
+将根 `.env.example` 复制为 `.env`，设置 `APP_ORIGIN=http://127.0.0.1:5173` 与数据库地址。示例数据库账号仅用于本地开发。三个进程分别运行：
 
 ```sh
 npm run game:server:dev
@@ -27,16 +27,11 @@ npm --prefix apps/web run dev
 
 本地开发命令会在导入的规则或内容文件变化时重启 API 和 worker。已经开始的旧版本活动不会自动迁移；读取游戏状态、操作角色或接管本地模拟时，服务端会自动脱离卡死并结束旧活动，无需玩家手动操作。此操作保留已保存的角色、金币和物品，但不补发尚未结算的收益。
 
-API 与 worker 使用根 `.env`。Web 从忽略提交的 `apps/web/.env.local` 读取数据库连接及相同的 `GAME_SERVER_SECRET` 和 `GAME_SERVER_URL`：
+API 与 worker 使用根 `.env`。`APP_ORIGIN` 是浏览器访问的完整 origin，用于 API 的 CSRF 校验；本地默认 `http://127.0.0.1:5173`。`AUTH_TRUST_PROXY_HOPS=0` 用于本地直连；生产经 Zeabur ingress 使用 `1`。
 
-```dotenv
-GAME_SERVER_URL=http://127.0.0.1:8788
-GAME_SERVER_SECRET=与根 .env 完全相同的随机值
-DATABASE_URL=postgresql://wow_sim:wow_sim_local@127.0.0.1:5432/wow_sim
-APP_ORIGIN=http://localhost:5173
-```
+Web 的 `.env.local` 只需按需要设置 `GAME_SERVER_URL=http://127.0.0.1:8788`。R2 模式在构建时设置 WEB_ASSET_MODE 与 R2_ASSET_ORIGIN，见 [静态资源部署](r2-assets.md)。Web 不再读取数据库或持有认证密钥。
 
-Web 验证数据库会话后签发短期账号凭据，Node 服务不会信任客户端自行填写的身份头。Zeabur 同项目部署使用 API 内网 HTTP 地址；跨公网通信需 HTTPS。生产 Web 的 `APP_ORIGIN` 必须与 HTTPS 域名一致，详见 [Zeabur 持续部署](zeabur.md)。
+game-api 验证数据库中的 HttpOnly 会话，不信任客户端自行填写的身份头。Zeabur 同项目部署使用 API 内网 HTTP 地址；跨公网通信需 HTTPS。生产 **game-api** 的 APP_ORIGIN 必须与网站 HTTPS 域名一致，详见 [Zeabur 持续部署](zeabur.md)。
 
 数据库 schema 在进程启动时由事务与 PostgreSQL advisory lock 初始化；资产、执行租约、活动到期索引和业务唯一键独立于模拟快照。Web 没有 D1 绑定、Drizzle 依赖或本地迁移步骤，也没有读取旧 `game_saves` 的回退路径。历史开发账号需要重新创建角色。
 
@@ -52,9 +47,9 @@ Web 验证数据库会话后签发短期账号凭据，Node 服务不会信任�
 
 账号在线时间保存在独立的 `account_presence.lastSeenAt`，普通心跳不写账号主记录。缺少有效 presence 的旧开发存档会在角色列表标记为需要重新创建，仍可删除；不提供旧字段回退或迁移。查询、心跳与结算的边界见 [数据库一致性策略](database-consistency.md)。
 
-worker 关闭后到期活动留在数据库，重新启动继续处理。客户端目前采用 REST 快照轮询；Node `/events` 提供带认证的 WebSocket 快照订阅；`subscribe` 设置 `mode: "delta"` 后，首包为完整投影，后续使用带基础 revision/sequence 的增量事件，重新订阅补全快照。浏览器尚未接入此 WebSocket 身份入口。
+worker 关闭后到期活动留在数据库，重新启动继续处理。客户端目前采用 REST 快照轮询；Node `/api/events` 提供带认证的 WebSocket 快照订阅；`subscribe` 设置 `mode: "delta"` 后，首包为完整投影，后续使用带基础 revision/sequence 的增量事件，重新订阅补全快照。浏览器尚未接入此 WebSocket 身份入口。
 
-战斗窗口打开时，浏览器以 200 毫秒为目标周期串行请求 `/game?scope=combat`。该响应只重新生成战斗所需的 view 字段，保留完整的公开 player 状态；客户端将其与当前角色、相同内容版本的完整快照合并。结束战斗自动返回 `scope: "full"`，关闭窗口立即恢复完整同步。两种 scope 使用不同 ETag；过期请求、切换角色和内容版本不一致时不能覆盖当前画面。请求超时为 8 秒，隐藏页面停止轮询。
+战斗窗口打开时，浏览器以 200 毫秒为目标周期串行请求 `/api/game?scope=combat`。该响应只重新生成战斗所需的 view 字段，保留完整的公开 player 状态；客户端将其与当前角色、相同内容版本的完整快照合并。结束战斗自动返回 `scope: "full"`，关闭窗口立即恢复完整同步。两种 scope 使用不同 ETag；过期请求、切换角色和内容版本不一致时不能覆盖当前画面。请求超时为 8 秒，隐藏页面停止轮询。
 
 worker 默认每 100 毫秒检查到期任务（`GAME_WORKER_INTERVAL_MS=100`）。最近 5 秒仍有请求的账号在战斗中每 200 毫秒结算一次；离线战斗和非战斗活动恢复 1 秒周期。共享实例只要有非佣兵账号在线即使用快速周期，离线时限规则不变。已有部署如果显式设置了 `GAME_WORKER_INTERVAL_MS=1000`，需改为 `100` 并重启 worker；协议与 Web/API 改动应一起发布。
 

@@ -1,13 +1,12 @@
-"use client";
 import {useState} from 'react';
-import dynamic from 'next/dynamic';
+import {lazy,Suspense} from 'react';
 import {Flag,Swords} from 'lucide-react';
 import {Tabs,TabsContent,TabsList,TabsTrigger} from '@/components/ui/tabs';
 import type {GameProps} from './game-ui';
 import './pvp.css';
 
-const Battleground=dynamic(()=>import('./battleground'),{loading:()=> <p role="status">正在加载战场…</p>});
-const Arena=dynamic(()=>import('./arena'),{loading:()=> <p role="status">正在加载竞技场…</p>});
+const Battleground=lazy(()=>import('./battleground'));
+const Arena=lazy(()=>import('./arena'));
 
 export default function Pvp(props:GameProps){
  const [mode,setMode]=useState(['preparing','countdown','combat'].includes(props.data.arena?.match?.phase)?'arena':'battleground');
@@ -17,7 +16,7 @@ export default function Pvp(props:GameProps){
    <TabsTrigger value="battleground"><Flag size={19}/><span><strong>战场</strong><small>20级开放 · 10v10 夺旗</small></span></TabsTrigger>
    <TabsTrigger value="arena"><Swords size={19}/><span><strong>竞技场</strong><small>60级开放 · 小队竞技</small></span></TabsTrigger>
   </TabsList>
-  <TabsContent value="battleground"><Battleground {...props}/></TabsContent>
-  <TabsContent value="arena"><Arena {...props}/></TabsContent>
+  <TabsContent value="battleground"><Suspense fallback={<p role="status">正在加载界面…</p>}><Battleground {...props}/></Suspense></TabsContent>
+  <TabsContent value="arena"><Suspense fallback={<p role="status">正在加载界面…</p>}><Arena {...props}/></Suspense></TabsContent>
  </Tabs>;
 }

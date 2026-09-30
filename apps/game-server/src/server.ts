@@ -1,7 +1,14 @@
 import {createServer, type IncomingMessage, type ServerResponse} from 'node:http';
 import {createHash} from 'node:crypto';
 import {WebSocketServer, type WebSocket} from 'ws';
-import {authenticateAuthorization, validateGameSecret} from './auth.ts';
+import {accountFrom,sessionToken,sessionCookie,sameOrigin,type Accounts} from './session-auth.ts';
+import {clientAddress} from './client-address.ts';
+import {characterPreview} from './character-preview.js';
+import {handleModelRequest} from './wowhead-model-assets.js';
+import {gzip} from 'node:zlib';
+import {Readable} from 'node:stream';
+import {pipeline} from 'node:stream/promises';
+import {publicAssetUrl} from '../../../packages/contracts/src/asset-paths.mjs';
 import {buildGameResponse} from '../../../packages/game-domain/src/rules/server-response.js';
 import {clientContent} from '../../../packages/game-domain/src/rules/client-content.js';
 import {contentPack} from '../../../packages/game-domain/src/rules/content-packs.js';
@@ -37,7 +44,11 @@ export interface GameServiceLike {
 type Content = ReturnType<typeof clientContent>;
 export type GameServerOptions = {
   service: GameServiceLike;
-  secret: string;
+  accounts: Accounts;
+  appOrigin: string;
+  secureCookies?: boolean;
+  trustProxyHops?: number;
+  publicAssetBase?: string;
   content?: () => Content;
   workshop?: typeof workshopView;
   pollIntervalMs?: number;
@@ -47,9 +58,21 @@ const requestIdPattern = /^[\w-]{8,100}$/;
 const maximumBodyBytes = 16_384;
 const maximumSocketBufferBytes = 1_048_576;
 
-function json(response: ServerResponse, status: number, body: unknown, headers: Record<string, string> = {}) {
-  response.writeHead(status, {'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...headers});
-  response.end(JSON.stringify(body));
+const responseContext=new WeakMap<ServerResponse,{request:IncomingMessage;assetBase:string}>();
+function acceptsGzip(value:string='') {
+ const values=new Map(value.toLowerCase().split(',').map(part=>{const [name,...params]=part.trim().split(';');const q=params.find(p=>p.trim().startsWith('q='));return [name.trim(),q?Number(q.trim().slice(2)):1];}));
+ return (values.get('gzip')??values.get('*')??0)>0;
+}
+function json(response:ServerResponse,status:number,body:unknown,headers:Record<string,string>={}) {
+ const context=responseContext.get(response);
+ // Checkpoints are canonical engine state: never rewrite their asset strings.
+ const base=context?.request.url?.split('?')[0]==='/api/game/local'?'':context?.assetBase;
+ const bytes=Buffer.from(JSON.stringify(body,(key,value)=>/^(?:icon|image|src|background|portrait|texture|url|path)$/.test(key)?publicAssetUrl(value,base):value));
+ const compressed=acceptsGzip(context?.request.headers['accept-encoding']);
+ const result:Record<string,string>={'content-type':'application/json; charset=utf-8','cache-control':'no-store',vary:'Accept-Encoding',...headers};
+ if(compressed&&result.etag&&!result.etag.startsWith('W/'))result.etag='W/'+result.etag;
+ if(compressed){gzip(bytes,(error,data)=>{if(error){response.destroy(error);return;}response.writeHead(status,{...result,'content-encoding':'gzip'});response.end(data);});}
+ else {response.writeHead(status,result);response.end(bytes);}
 }
 
 function errorDetails(error: unknown): {status: number; body: {error: string; code?: string}} {
@@ -112,9 +135,6 @@ async function readGame(service: GameServiceLike, accountId: string, selectedCha
   }
 }
 
-async function accountFrom(request: IncomingMessage, secret: string): Promise<string> {
-  return (await authenticateAuthorization(request.headers.authorization, secret)).sub;
-}
 
 function cleanCommand(body: Record<string, any>): Record<string, any> {
   const {accountId: _accountId, userId: _userId, sub: _sub, ...command} = body;
@@ -142,12 +162,13 @@ function closeHttp(server: ReturnType<typeof createServer>): Promise<void> {
 }
 
 export function createGameServer(options: GameServerOptions) {
-  validateGameSecret(options.secret);
+  const origin=new URL(options.appOrigin).origin;
+  if(origin!==options.appOrigin)throw new Error('APP_ORIGIN must be an origin without a path');
   const getContent = options.content ?? clientContent;
   const getWorkshop = options.workshop ?? workshopView;
   const pollIntervalMs = options.pollIntervalMs ?? 1_000;
   const selectedAccount = async (request:IncomingMessage,url:URL) => {
-    const userId=await accountFrom(request,options.secret);
+    const userId=await accountFrom(request,options.accounts);
     const saveId=url.searchParams.get('saveId');
     if(saveId!==null){
       if(!options.service.resolveSave)throw Object.assign(new Error('存档服务不可用'),{status:503});
@@ -159,9 +180,39 @@ export function createGameServer(options: GameServerOptions) {
 
   const server = createServer((request, response) => {
     void (async () => {
-      const url = new URL(request.url || '/', `http://${request.headers.host || 'localhost'}`);
-      if(url.pathname==='/saves'){
-        const userId=await accountFrom(request,options.secret);
+      responseContext.set(response,{request,assetBase:options.publicAssetBase||''});
+      const url = new URL(request.url || '/', origin);
+      if(!['GET','HEAD','OPTIONS'].includes(request.method||'')&&!sameOrigin(request,origin)){
+        json(response,403,{error:'请求来源无效'});return;
+      }
+      if(url.pathname==='/api/auth/session'&&request.method==='GET'){
+        const user=await options.accounts.session(sessionToken(request));
+        json(response,user?200:401,user?{user}:{error:'请先登录。'});return;
+      }
+      if(url.pathname.startsWith('/api/auth/')&&request.method==='POST'){
+        const action=url.pathname.slice('/api/auth/'.length);
+        if(!['login','register','logout'].includes(action)){json(response,404,{error:'接口不存在'});return;}
+        let token='';
+        if(action==='logout')await options.accounts.logout(sessionToken(request));
+        else {
+          if(!request.headers['content-type']?.startsWith('application/json')){json(response,415,{error:'需要 JSON 请求'});return;}
+          const body=await readJson(request,4096);
+          const address=options.trustProxyHops===0?request.socket.remoteAddress||'local':clientAddress(new Request(url,{headers:{'x-forwarded-for':request.headers['x-forwarded-for']?.toString()||''}}),options.trustProxyHops);
+          token=(await options.accounts[action as 'login'|'register'](body.username,body.password,address)).token;
+        }
+        json(response,200,{ok:true},{'set-cookie':sessionCookie(token,options.secureCookies??false)});return;
+      }
+      if(url.pathname==='/api/character-preview'&&request.method==='GET'){
+        try{json(response,200,characterPreview(Number(url.searchParams.get('raceId')),Number(url.searchParams.get('classId')),Number(url.searchParams.get('level'))),{'cache-control':'public, max-age=300'});}
+        catch{json(response,400,{error:'无效的起始配置'});}return;
+      }
+      if(url.pathname.startsWith('/api/model-viewer/')&&request.method==='GET'){
+        const result=await handleModelRequest(new Request(url));
+        response.writeHead(result.status,Object.fromEntries(result.headers));
+        if(result.body)await pipeline(Readable.fromWeb(result.body as any),response);else response.end();return;
+      }
+      if(url.pathname==='/api/saves'){
+        const userId=await accountFrom(request,options.accounts);
         if(request.method==='GET'&&options.service.listSaves){json(response,200,{saves:await options.service.listSaves(userId)});return;}
         if(request.method==='POST'&&options.service.createSave){
           const body=await readJson(request);validateCommand({...body,type:'create'});
@@ -173,7 +224,7 @@ export function createGameServer(options: GameServerOptions) {
           await options.service.deleteSave(userId,id);json(response,200,{deleted:true});return;
         }
       }
-      if (url.pathname === '/content' && request.method === 'GET') {
+      if (url.pathname === '/api/game/content' && request.method === 'GET') {
         const content = getContent();
         const requestedVersion = url.searchParams.get('version');
         if (requestedVersion && requestedVersion !== content.contentVersion) {
@@ -183,17 +234,17 @@ export function createGameServer(options: GameServerOptions) {
         const body = contentPack(content, url.searchParams);
         const etag = '"' + createHash('sha256').update(JSON.stringify(body)).digest('hex') + '"';
         const immutable = requestedVersion === content.contentVersion;
-        if (immutable && request.headers['if-none-match'] === etag) {
-          response.writeHead(304, {etag, 'cache-control': 'public, max-age=31536000, immutable'});
+        if (immutable && request.headers['if-none-match']?.replace(/^W\//,'') === etag) {
+          response.writeHead(304, {etag: acceptsGzip(request.headers['accept-encoding'])?'W/'+etag:etag, vary:'Accept-Encoding', 'cache-control': 'public, max-age=31536000, immutable'});
           response.end();
           return;
         }
         json(response, 200, body, immutable
-          ? {etag, 'cache-control': 'public, max-age=31536000, immutable'}
+          ? {etag: acceptsGzip(request.headers['accept-encoding'])?'W/'+etag:etag, vary:'Accept-Encoding', 'cache-control': 'public, max-age=31536000, immutable'}
           : {'cache-control': 'no-store'});
         return;
       }
-      if (url.pathname === '/game/replay' && request.method === 'GET') {
+      if (url.pathname === '/api/game/replay' && request.method === 'GET') {
         const accountId = await selectedAccount(request, url);
         const id = url.searchParams.get('id');
         if (!id || id.length > 200 || !options.service.combatRecording) {
@@ -203,28 +254,28 @@ export function createGameServer(options: GameServerOptions) {
         json(response, 200, recording, {'cache-control': 'private, no-store'});
         return;
       }
-      if (url.pathname === '/game' && request.method === 'GET') {
+      if (url.pathname === '/api/game' && request.method === 'GET') {
         const accountId = await selectedAccount(request, url);
         const selectedCharacterId = characterId(url);
         const snapshot = await readGame(options.service, accountId, selectedCharacterId);
         const scope = url.searchParams.get('scope') === 'combat' ? 'combat' : 'full';
         const etag = '"' + createHash('sha256').update(JSON.stringify([accountId, selectedCharacterId || snapshot.state?.id, snapshot.revision, snapshot.instanceId, snapshot.instance?.sequence, getContent().contentVersion, scope])).digest('hex') + '"';
-        if (request.headers['if-none-match'] === etag) {
-          response.writeHead(304, {etag, 'cache-control': 'private, no-cache'});
+        if (request.headers['if-none-match']?.replace(/^W\//,'') === etag) {
+          response.writeHead(304, {etag: acceptsGzip(request.headers['accept-encoding'])?'W/'+etag:etag, vary:'Accept-Encoding', 'cache-control': 'private, no-cache'});
           response.end();
           return;
         }
-        json(response, 200, gameResponse(snapshot, scope), {etag, 'cache-control': 'private, no-cache'});
+        json(response, 200, gameResponse(snapshot, scope), {etag: acceptsGzip(request.headers['accept-encoding'])?'W/'+etag:etag, vary:'Accept-Encoding', 'cache-control': 'private, no-cache'});
         return;
       }
-      if (url.pathname === '/game/local' && request.method === 'POST' && options.service.localSimulation) {
+      if (url.pathname === '/api/game/local' && request.method === 'POST' && options.service.localSimulation) {
         const accountId = await selectedAccount(request, url);
         const body = await readJson(request, 8 * 1024 * 1024);
         validateCommand(body);
         json(response, 200, await options.service.localSimulation(accountId, cleanCommand(body)));
         return;
       }
-      if (url.pathname === '/game' && request.method === 'POST') {
+      if (url.pathname === '/api/game' && request.method === 'POST') {
         const accountId = await selectedAccount(request, url);
         const body = await readJson(request, 8 * 1024 * 1024);
         validateCommand(body);
@@ -239,7 +290,7 @@ export function createGameServer(options: GameServerOptions) {
         json(response, 200, gameResponse(result), {'cache-control': 'no-store'});
         return;
       }
-      if (url.pathname === '/workshop' && request.method === 'GET') {
+      if (url.pathname === '/api/game/workshop' && request.method === 'GET') {
         const accountId = await selectedAccount(request, url);
         const current = getContent();
         const requestedVersion = url.searchParams.get('version');
@@ -262,7 +313,7 @@ export function createGameServer(options: GameServerOptions) {
     })().catch((error) => {
       if (response.headersSent) return response.destroy();
       const details = errorDetails(error);
-      json(response, error instanceof Error && /game token|bearer/i.test(error.message) ? 401 : details.status, details.body);
+      json(response, details.status, details.body,details.status===429?{'retry-after':'900'}:{});
     });
   });
 
@@ -270,7 +321,8 @@ export function createGameServer(options: GameServerOptions) {
   server.on('upgrade', (request, socket, head) => {
     void (async () => {
       const url = new URL(request.url || '/', `http://${request.headers.host || 'localhost'}`);
-      if (url.pathname !== '/events') throw new Error('Unknown websocket endpoint');
+      if (!sameOrigin(request,origin)) throw new Error('Invalid websocket origin');
+      if (url.pathname !== '/api/events') throw new Error('Unknown websocket endpoint');
       const accountId = await selectedAccount(request, url);
       webSocketServer.handleUpgrade(request, socket, head, (webSocket) => {
         webSocketServer.emit('connection', webSocket, request, accountId);

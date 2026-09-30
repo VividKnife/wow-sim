@@ -1,4 +1,3 @@
-"use client";
 import {Button} from '@/components/ui/button';
 import {Eye,Moon} from 'lucide-react';
 import {Bar,duration,type GameProps} from './game-ui';

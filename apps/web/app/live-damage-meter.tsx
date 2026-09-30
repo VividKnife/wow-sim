@@ -1,4 +1,3 @@
-'use client';
 import type {ReactNode} from 'react';
 import {useLocalCombat} from '@/lib/local-combat-store';
 import {useCombatPlayback} from '@/lib/use-combat-playback';

@@ -1,4 +1,3 @@
-'use client';
 import {useEffect,useRef,useState,type CSSProperties} from 'react';
 import {createLevelUpObserver,playLevelUpSound} from '@/lib/level-up.js';
 import {useAudioPreference} from '@/lib/use-audio-preference';

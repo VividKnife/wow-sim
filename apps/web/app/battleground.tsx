@@ -1,4 +1,3 @@
-"use client";
 import {useState} from 'react';
 import {Flag,Shield,Swords,Heart,Move,Target,Users,ChevronRight} from 'lucide-react';
 import {Button} from '@/components/ui/button';

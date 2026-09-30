@@ -1,4 +1,3 @@
-'use client';
 import {useState,useRef,useEffect} from 'react';
 import {Popover} from 'radix-ui';
 import {Icon,type GameProps} from './game-ui';

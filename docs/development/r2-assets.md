@@ -1,98 +1,69 @@
-# R2 静态资源实验
+# Vite 静态前端与 R2
 
-采用第二方案：入口 `https://wow-sim.zeabur.app`，public 资源使用
-`https://wow-sim.dota.run`，bucket `wow-sim`，账号
-`d4516749783eedab5aabf13adf1d9527`。Web 的账号认证、API 代理、game-api、worker
-和数据库继续留在 Zeabur。第一方案尚未实施：当前首页使用服务端会话，不能直接作为
-静态 HTML 放到 R2；需要静态化首页及额外的同源 API 路由层。
+入口保持 `https://wow-sim.zeabur.app`。Web 是无依赖 Node HTTP 网关，只返回主页面、登录页、模型查看器的少量 HTML，以及 `/__deployment.json`；`/api/*` 流式转发至 game-api。HTML 不含用户资料，使用 `Cache-Control: no-store`。React、JS/CSS、图标、模型、音频和引擎数据分包从 `https://wow-sim.dota.run` 直接加载，不经过 Zeabur 重定向。
 
-## 工作方式
+账号认证、密码校验、数据库会话、限流及 CSRF 校验归 game-api 管理。浏览器通过 `/api/auth/session` 获取登录状态；API 从 HttpOnly cookie 验证身份，不再使用 Web 签发的共享密钥 JWT。game-worker 和数据库职责保持不变。
 
-- `scripts/publish-r2-assets.mjs` 将指定 Git 提交的 public 文件发布到
-  `public/<public Git tree SHA>/`。该版本只随资源变化，不随代码变化。
-- 上传器检查文件 Git blob、设置 MIME 和一年 immutable 缓存，支持断点续传；全部成功后
-  最后写入 `__release.json`。不删除或覆盖其他版本，也不上传环境变量、存档或数据库。
-- 部署分支生成器把同一个 `publicAssetVersion` 写入 `/__deployment.json`。
-- `apps/web/proxy.ts` 读取部署元数据中的 `assetMode`。`r2` 模式将 public 资源的
-  GET/HEAD 临时 307 跳转到版本目录，响应 `no-store`；不再运行就绪探测或保留本地回退副本。
-  默认域名为 `https://wow-sim.dota.run`，可用 Web 环境变量 `R2_ASSET_ORIGIN` 覆盖。
-- Next.js `/_next/*` 的 JS/CSS、本地战斗 Web Worker，以及 `/model-viewer/*`
-  查看器 HTML/脚本/Service Worker 保留同源（查看器依赖同源 postMessage、API 与 SW scope）。
-- 常规 `r2` 部署分支只保留 public 中约 32 KB 的模型查看器运行文件和部署元数据，
-  构建不下载完整源码归档，Zeabur 镜像不包含图片、GLB、音效和音乐。
-  每个资源首次请求仍需经过 Zeabur 重定向。
-- `bundled` 部署在构建时下载固定 main SHA 的源码归档并提取完整 public；
-  图片、模型、音频直接从 Zeabur 返回。该模式忽略 `R2_ASSET_ORIGIN`，不依赖 R2。
+## 构建与加载
 
-## 发布资源
+- `npm --prefix apps/web run build` 默认构建本地 `bundled` 模式；`WEB_ASSET_MODE=r2 npm --prefix apps/web run build` 构建 R2 模式。`R2_ASSET_ORIGIN` 是构建变量，默认 `https://wow-sim.dota.run`，不能仅修改运行环境来切换已编译 URL。
+- Vite 将登录、游戏、世界、角色、队伍、副本、团本、PvP、战斗拆为动态模块，由 React `lazy()` / `Suspense` 加载。游戏脚本不会在登录页提前加载。
+- public 资源地址为 `public/<public Git tree SHA>/…`；构建资源为 `web/<commit>-<build UUID>/…`。每次构建有独立目录，重复构建同一 commit 也不会覆盖已发布的文件。
+- 两个 Worker 使用 ES module 输出。跨域时通过一个同源 Blob 引导模块静态 import R2 Worker，保留加载期间的消息队列；terminate 时释放 Blob URL。运行模块继续动态 import。
+- 浏览器规则解析器仍使用 boot、9 个职业预取包和按需数字分片，保留请求合并、失败重试、版本检查和内存预算。所有包位于同一构建的 `simulation-content/<规则版本>/<包>.json.gz`；R2 对象必须有 `Content-Type: application/json` 和 `Content-Encoding: gzip`。
+- 构建同时处理源码、CSS、JSON 与压缩规则包内的资源引用。game-api 返回展示数据时使用部署元数据中的 public 前缀；本地模拟的原始检查点不改写，否则会破坏权威状态校验。
+- 构建插件拒绝把完整 catalog / reference 数据打入浏览器或 Worker。`scripts/verify-web-build.mjs` 检查微小 HTML、懒加载模块、Worker 入口大小与完整分包目录。
+- 模型查看器保留同源 iframe HTML，bridge 等模块从 R2 导入，postMessage 校验仍为同源。移除了必须同源提供脚本的查看器 Service Worker，使用 HTTP 缓存。按装备动态查询的第三方外观资料及其受限模型 relay 仍属于 `/api/model-viewer/*`；它们不是仓库内已发布的静态资源。公共展示数据的按需查询仍使用 `/api/game/content`。
 
-使用 Node 24，在仓库根执行 `npm ci`。秘密只通过进程环境传入：
+## 发布顺序
+
+GitHub Actions：验证 → **构建一次并保存 artifact** → 上传 public 与同一 artifact 到 R2 → 发布包含对应 HTML 的部署分支 → Zeabur 部署。
+
+`publish-r2-assets.mjs` 先上传所有对象，最后写 `__release.json` 和本地 `.r2-upload.json` 回执。发布脚本校验源 commit、public tree、构建模式和产物摘要；缺少匹配上传回执时拒绝 R2 部署。生成分支不重新构建前端，也不包含 public、JS/CSS 或引擎压缩包。game-api 的 `packages/DEPLOYMENT.json` 和 Web 的元数据来自同一 artifact。
+
+上传身份仅在 CI 使用，不进入浏览器或 Web 容器：
 
 ```sh
-export R2_ACCOUNT_ID=d4516749783eedab5aabf13adf1d9527
-export R2_BUCKET=wow-sim
-# 配置 R2_ACCESS_KEY_ID 和 R2_SECRET_ACCESS_KEY，勿提交 Git。
-node scripts/publish-r2-assets.mjs --source HEAD            # 只检查清单
-node scripts/publish-r2-assets.mjs --source HEAD --upload   # 实际上传
+npm ci
+npm --prefix apps/web ci
+WEB_ASSET_MODE=r2 npm --prefix apps/web run build
+node scripts/verify-web-build.mjs
+# R2_ACCOUNT_ID、R2_BUCKET、R2_ACCESS_KEY_ID、R2_SECRET_ACCESS_KEY 由环境提供。
+node scripts/publish-r2-assets.mjs --source HEAD --upload
+WEB_ASSET_MODE=r2 node scripts/publish-zeabur.mjs --publish
 ```
 
-也支持 `CLOUDFLARE_API_TOKEN` 替代 `R2_SECRET_ACCESS_KEY`，配合对应的 token ID
-作为 `R2_ACCESS_KEY_ID`，按 Cloudflare 官方算法派生 S3 secret。仅 Object Read & Write
-权限即可上传；修改 CORS 需要 bucket 管理权限。上传源必须与 public 工作区一致，
-避免将未提交修改混入不可变版本。
+上传源必须是与工作区 public 一致的提交。构建输出 `apps/web/dist` 不提交到开发分支，由 CI artifact 传递。旧版本目录保留，避免已打开页面的延迟模块请求失效。上传器不删除其他版本。
 
-R2 CORS 配置：
+## Cloudflare 配置
+
+R2 bucket `wow-sim` 使用自定义域名 `wow-sim.dota.run`，允许入口跨域读取：
 
 ```json
 [{"AllowedOrigins":["https://wow-sim.zeabur.app"],"AllowedMethods":["GET","HEAD"],"AllowedHeaders":["*"],"ExposeHeaders":["ETag","Content-Length","Content-Range","Accept-Ranges"],"MaxAgeSeconds":3600}]
 ```
 
-不要给 API 添加此公共资源 CORS。自定义域名中已缓存且缺少 CORS 的对象需要清理缓存；
-新的版本目录可避免旧缓存。修改 CORS 后验证浏览器的 GLB/纹理/音频读取。
+JS module、Worker 子模块、字体和数据包均需要有效 CORS。静态对象使用一年 immutable 缓存，API 不使用此公共资源 CORS。改变 CORS 后清理已有域名缓存。不要对版本目录配置 SPA HTML fallback；缺失 JS 必须返回 404。
 
-## 自动部署和切换模式
+## 本地与 bundled 模式
 
-GitHub 仓库 **Settings → Secrets and variables → Actions → Variables** 中的
-`WEB_ASSET_MODE` 控制部署模式：
+本地 `vite` 提供资源及静态规则包，代理 `/api` 至 `GAME_SERVER_URL`。`bundled` 生产模式由轻量网关提供本地资源，适合离线于 R2 的验证或部署；同样不包含 Next.js。
 
-| 值 | Zeabur 镜像 | 发布流程 |
-| --- | --- | --- |
-| `r2`（默认） | 应用和同源运行文件 | 验证 → 上传 R2 → 发布 Zeabur 部署分支 |
-| `bundled` | 应用和完整 public | 验证 → 发布 Zeabur 部署分支，不访问 R2 |
+仓库变量 `WEB_ASSET_MODE` 默认为 `r2`。切换至 `bundled` 后手动运行主分支工作流，或 push main；生成部署分支携带 Vite 产物，并在构建容器时下载固定源 SHA 的 public。切换模式必须重新构建发布，不是运行时开关。
 
-每次 push main 自动使用该配置。R2 上传需要 Actions secrets `R2_ACCESS_KEY_ID` 和
-`R2_SECRET_ACCESS_KEY`；上传失败会阻止部署。上传器复用同版本已存在的对象。
-仓库变量未设置时默认 `r2`；其他值会使验证失败。`R2_ASSETS_ENABLED` 已移除。
-
-**恢复全部资源到 Zeabur：**
-
-1. 将仓库变量 `WEB_ASSET_MODE` 改成 `bundled`。
-2. 打开 **Actions → Validate deployment → Run workflow**，选择 `main` 并运行。
-   也可以直接 push 下一次代码提交。
-3. 等待 CI 和 Zeabur 构建发布完成；检查 `/__deployment.json` 的 `assetMode` 为 `bundled`。
-4. 刷新页面，确认图片、GLB、音频直接由 Zeabur 返回 200，登录和 API 正常。
-
-这会重新下载、构建并部署完整资源，即使 R2 不可用也可执行。清空 Web 的域名变量或仅
-重启服务无法恢复未打包的资源。无需改 DNS、数据库或存档。以后恢复 R2 时，将仓库变量
-改回 `r2` 并再次运行工作流；后续 push 继续按所选模式自动发布。
-
-本地手动发布时也使用同一个开关（先完成对应验证和 R2 上传）：
+## 验证
 
 ```sh
-WEB_ASSET_MODE=r2 node scripts/publish-zeabur.mjs --publish
-WEB_ASSET_MODE=bundled node scripts/publish-zeabur.mjs --publish
+npm run typecheck
+npm --prefix apps/web run typecheck
+node --test apps/game-server/test/*.test.ts apps/web/test/account-store.test.ts
+node --test apps/web/test/local-simulation-boot.test.mjs apps/web/test/local-simulation-client.test.mjs
+node --test apps/web/test/static-web.test.mjs scripts/publish-zeabur.test.mjs scripts/publish-r2-assets.test.mjs
+WEB_ASSET_MODE=r2 npm --prefix apps/web run build
+node scripts/verify-web-build.mjs
+node scripts/verify-production.mjs
+# 需要 Playwright；可用 PLAYWRIGHT_MODULE 和 CHROME_PATH 指向已安装运行环境。
+node apps/web/scripts/verify-browser.mjs
 ```
 
-检查 R2 模式时，图片、地图、GLB、音乐应初始 307、最终 R2 200；CORS 允许 Zeabur
-origin，Content-Type 正确，Range 请求返回 206。登录、游戏 API、Worker 始终留在 Zeabur。
-
-验证：
-
-```sh
-node --test apps/web/test/static-assets.test.mjs scripts/publish-r2-assets.test.mjs scripts/publish-zeabur.test.mjs
-npm --prefix apps/web run build
-```
-
-参考：[Cloudflare R2 认证](https://developers.cloudflare.com/r2/api/tokens/)、
-[R2 CORS](https://developers.cloudflare.com/r2/buckets/cors/)、
-[Next.js Proxy](https://nextjs.org/docs/app/api-reference/file-conventions/proxy)。
+浏览器验证使用独立内存存档、PGlite 认证及模拟 CDN 响应，不使用线上数据库或上传线上资源；检查真实跨域 module Worker、职业包、检查点提交、桌面/手机截图，以及没有静态请求回到入口。线上仍需核对实际 R2 CORS、gzip 元数据、CDN 命中和当前发布版本。

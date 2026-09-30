@@ -1,4 +1,3 @@
-"use client";
 import {Component,lazy,Suspense,useCallback,useEffect,useMemo,useState,type ReactNode} from 'react';
 import type {BattleScene,BattleSkill} from '@/lib/battle-hd2d-types';
 import {groundTheme} from '@/lib/battle-hd2d.js';

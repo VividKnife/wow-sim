@@ -1,4 +1,3 @@
-"use client";
 import {useId,useRef,useState,type ReactNode} from 'react';
 import {Tooltip,TooltipContent,TooltipProvider,TooltipTrigger} from '@/components/ui/tooltip';
 import {Icon} from './game-ui';

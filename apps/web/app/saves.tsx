@@ -1,4 +1,3 @@
-'use client';
 import {racialHomes,capitals} from '../../../packages/game-data/world-content.js';
 import {useEffect,useMemo,useState,type CSSProperties} from 'react';
 import {classOptions,classesForRace,raceOptions} from './class-options.js';

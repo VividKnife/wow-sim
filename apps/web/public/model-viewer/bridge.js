@@ -3,20 +3,6 @@
 import {worldCamera} from './world-camera.js';
 import {holdDeathPose,createMotionController} from './motion.js';
 const ROOT='/api/model-viewer/';
-// Narrow scope: only viewer iframe requests are intercepted, never game saves.
-const assetCacheReady=(async()=>{
- if(!('serviceWorker' in navigator))return;
- try{
-  await navigator.serviceWorker.register('/model-viewer/asset-cache-sw.js',{scope:'/model-viewer/',type:'module'});
-  if(navigator.serviceWorker.controller)return;
-  await new Promise(resolve=>{
-   const done=()=>{clearTimeout(timeout);navigator.serviceWorker.removeEventListener('controllerchange',done);resolve();};
-   const timeout=setTimeout(done,2500);
-   navigator.serviceWorker.addEventListener('controllerchange',done);
-   if(navigator.serviceWorker.controller)done();
-  });
- }catch{/* HTTP cache remains available when persistent storage is disabled. */}
-})();
 const host=document.getElementById('viewer'),controls=document.getElementById('controls');
 host.dataset.cacheHits='0';
 function recordCacheHit(headers){if(headers.get('X-Model-Expires'))host.dataset.cacheHits=String(Number(host.dataset.cacheHits)+1);}
@@ -71,7 +57,6 @@ function script(src){return new Promise((resolve,reject)=>{
  document.head.append(tag);
 });}
 function loadDependencies(){return dependencies??=(async()=>{
- await assetCacheReady;
  await script('https://code.jquery.com/jquery-3.7.1.min.js');
  window.jQuery(document).ajaxError((_event,_xhr,settings)=>console.warn('Model request failed',settings.url));
  window.WH={debug:()=>{},WebP:{getImageExtension:()=>'.webp'}};
@@ -88,8 +73,7 @@ async function render(items,revision,raceId,classId,gender,view,mountDisplayId){
  host.dataset.renderCount=String(token);
  const signal=loadController.signal;dispose();pendingAssets=0;assetFailed=false;presentation=view;notify('loading');
  try{
-  await assetCacheReady;
-  if(token!==generation)return;
+   if(token!==generation)return;
   const ids=[...new Set(items.map(item=>item.id))];
   const [appearance]=await Promise.all([
    ids.length?fetch(ROOT+'appearance?items='+ids.join(','),{signal:AbortSignal.any([signal,AbortSignal.timeout(20000)])}).then(response=>{if(!response.ok)throw new Error('Appearance unavailable');return response.json();}):Promise.resolve({items:[]}),

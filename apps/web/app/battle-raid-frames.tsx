@@ -1,4 +1,3 @@
-"use client";
 import type {CSSProperties} from 'react';
 import {Shield,Plus,Swords} from 'lucide-react';
 import {unitCondition,actionProgress} from '@/lib/combat-view.js';
