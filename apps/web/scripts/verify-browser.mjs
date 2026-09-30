@@ -77,7 +77,7 @@ try{
  await page.getByRole('button',{name:'设置',exact:true}).click();
  await page.getByRole('tab',{name:'游戏',exact:true}).click();
  await page.getByRole('button',{name:'切换到云端引擎',exact:true}).click();
- await page.getByRole('button',{name:'切换到本地引擎',exact:true}).waitFor();
+ await page.locator('button.cu-gold-button').filter({hasText:'切换到本地引擎'}).waitFor({timeout:60000});
  assert.ok(engineRequests.some(r=>r.body.type==='handoff'),'switch must hand execution to the server');
  await page.getByRole('checkbox',{name:'跳过灰色物品',exact:true}).click();
  await page.getByText('拾取过滤已保存',{exact:true}).waitFor();
