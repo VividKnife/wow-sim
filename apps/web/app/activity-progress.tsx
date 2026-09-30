@@ -25,11 +25,13 @@ function Progress({label,start,end,clock,running,journey,quartz,icon,channel}:{l
   </div>
  </section>;}
  if(quartz){
+  // The bar describes the cast duration, not transport/overview acknowledgement.
+  if(percent>=100)return null;
   const fill=channel?100-percent:percent,remaining=((total-current)/1000).toFixed(1);
-  return <div className={`quartz-castbar ${channel?'is-channel':''} ${percent>=100?'is-pending':''}`} role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(percent)} aria-valuetext={`${label}，${channel?'引导':'施法'}，剩余 ${remaining} 秒`}>
+  return <div className={`quartz-castbar ${channel?'is-channel':''}`} role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(percent)} aria-valuetext={`${label}，${channel?'引导':'施法'}，剩余 ${remaining} 秒`}>
    <div className="quartz-cast-icon"><Icon src={icon} name={label} size={28}/></div>
    <div className="quartz-cast-track"><div className="quartz-cast-fill" style={{width:`${fill}%`}}/><i className="quartz-cast-spark" style={{left:`${fill}%`}} aria-hidden="true"/>
-    <span className="quartz-cast-name">{label}</span><b className="quartz-cast-time">{percent>=100?'等待完成':`${remaining} / ${(total/1000).toFixed(1)}`}</b>
+    <span className="quartz-cast-name">{label}</span><b className="quartz-cast-time">{`${remaining} / ${(total/1000).toFixed(1)}`}</b>
    </div>
   </div>;
  }

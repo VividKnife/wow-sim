@@ -40,7 +40,7 @@ export function classUtilityUse(s,id,targetId){
  if([3561,3562].includes(id)||['Conjure Food','Conjure Water','Frost Armor','Arcane Intellect'].includes(sp.SpellName))return null;
  const item=createdItem(s,sp),to=destination(s,sp),portal=sp.SpellName.startsWith('Portal:'),kind=classAbilityKind(sp),target=combatMembers(s,null).find(c=>c.id===targetId);
  const ritual=sp.SpellName==='Ritual of Summoning'?ritualUse(s,targetId):sp.SpellName==='Ritual of Doom'?doomRitualUse(s):null,environmental=environmentSpellUse(s,sp,targetId),observation=observationUse(s,sp,targetId),racial=racialActiveNames.has(sp.SpellName);if(environmental&&(sp.Attributes&64))return null;if(!item&&!to&&!racial&&!observation&&!environmental&&!ritual&&!friendlyKinds.has(kind)&&!friendlyChannels.has(sp.SpellName))return null;
- let reason=s.hp<=0?'角色已死亡':s.combat&&!observation?'战斗中请通过战斗策略释放':s.escort?'正在护送':!['idle','hunt'].includes(s.activity.type)?'请先结束当前活动':!s.learned.includes(id)?'尚未学习这个技能':!target&&!observation?'目标不在小队中':!spellReady(s,sp,s.clock)?'技能尚未冷却':(s[pool(sp)]||0)<sp.mana?'资源不足':'';
+ let reason=s.hp<=0?'角色已死亡':s.combat&&!observation?'战斗中请通过战斗策略释放':s.escort?'正在护送':!['idle','hunt'].includes(s.activity.type)?'请先结束当前活动':!s.learned.includes(id)?'尚未学习这个技能':!target&&!observation?'目标不在小队中':(s[pool(sp)]||0)<sp.mana?'资源不足':'';
  if(!reason&&target&&target!==s&&!petChannels.has(sp.SpellName)&&[1,2,3].filter(n=>sp['Effect'+n]).every(n=>sp['EffectImplicitTargetA'+n]===1&&!sp['EffectImplicitTargetB'+n]))reason='此技能只能对自己施放';
  if(!reason&&observation)reason=observation.reason;
  if(!reason&&environmental)reason=environmental.reason;
@@ -64,7 +64,9 @@ export function classUtilityUse(s,id,targetId){
  if(!reason&&sp.SpellName==='Call Pet'&&s.pet?.hp<=0)reason='需要先复活宠物';
  if(!reason&&sp.SpellName==='Call Pet'&&!s.pet&&!s.hunterPet)reason='需要先驯服一只野兽';
  if(!reason){const missing=materials(sp).find(r=>usableCount(s,r.id)<r.count);if(missing)reason='缺少未锁定材料：'+nameOf('items',missing.id)+' ×'+missing.count;}
- return {canUse:!reason,reason,remaining:Math.max(0,cooldownUntil(s,sp)-s.clock,gcdUntil(s,sp)-s.clock),castMs:friendlyChannels.has(sp.SpellName)?sp.durationMs:sp.castMs,label:item?'制造':portal?'开启传送门':to?'传送':'施放',description:item?`制造 ${nameOf('items',item.id)} ×${item.count}`:to?`${portal?'开启通往':'传送至'}${nodes[to]?.name||to}`:observation?.description||environmental?.description||'对自己或指定队友施放',item,to,portal,targetId,kind};
+ const canUseAfterCooldown=!reason;
+ if(!reason&&!spellReady(s,sp,s.clock))reason='技能尚未冷却';
+ return {canUse:!reason,canUseAfterCooldown,reason,remaining:Math.max(0,cooldownUntil(s,sp)-s.clock,gcdUntil(s,sp)-s.clock),castMs:friendlyChannels.has(sp.SpellName)?sp.durationMs:sp.castMs,label:item?'制造':portal?'开启传送门':to?'传送':'施放',description:item?`制造 ${nameOf('items',item.id)} ×${item.count}`:to?`${portal?'开启通往':'传送至'}${nodes[to]?.name||to}`:observation?.description||environmental?.description||'对自己或指定队友施放',item,to,portal,targetId,kind};
 }
 export function beginClassUtility(s,id,targetId){
  const use=classUtilityUse(s,id,targetId);if(!use)return false;if(!use.canUse)throw new Error(use.reason);

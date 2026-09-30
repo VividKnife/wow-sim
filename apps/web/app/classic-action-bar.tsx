@@ -1,16 +1,31 @@
-import {useEffect,useRef,useState} from 'react';
+import {useEffect,useId,useMemo,useRef,useState} from 'react';
 import {Dialog,Tooltip} from 'radix-ui';
 import ClassicActionTooltip from './classic-action-tooltip';
-import {Settings2,X} from 'lucide-react';
-import {actionKeys,actionBarStorageKey,normalizeActionSlots,upgradeActionSlots,quickActions,quickActionChoices,defaultActionSlots,quickActionKey} from '@/lib/classic-action-bar.js';
+import {Settings2,Swords,X} from 'lucide-react';
+import {actionAfterElapsed,actionKeys,actionBarStorageKey,normalizeActionSlots,upgradeActionSlots,quickActions,quickActionChoices,defaultActionSlots,quickActionKey} from '@/lib/classic-action-bar.js';
 import {Icon,type GameProps} from './game-ui';
-import ActivityProgress from './activity-progress';
+import LiveCastBar from './live-cast-bar';
 import './classic-action-bar.css';
 
-export default function ClassicActionBar({state:s,data:d,busy,send,blocked}:{blocked:boolean}&GameProps){
+export default function ClassicActionBar({state:s,data:d,playback,contentVersion,busy,send,blocked}:{blocked:boolean}&GameProps){
+ const [expanded,setExpanded]=useState(false),frameId=useId();
  const mode=s.combat?'combat':'peace';
- const options={peace:quickActions(s,d,'peace'),combat:quickActions(s,d,'combat')};
- const actions=options[mode];
+ const baseActions=useMemo(()=>quickActions(s,d,mode),[s,d,mode]);
+ const clockKey=`${s.id}:${s.clock}`;
+ const [cooldownTime,setCooldownTime]=useState({key:clockKey,elapsed:0});
+ const longestCooldown=Math.max(0,...baseActions.map(action=>action.remaining||0));
+ const ticking=mode==='peace'&&!s.presence?.paused&&longestCooldown>0;
+ useEffect(()=>{
+  if(!ticking)return;
+  const began=performance.now();
+  const timer=setInterval(()=>{
+   const elapsed=performance.now()-began;setCooldownTime({key:clockKey,elapsed});
+   if(elapsed>=longestCooldown)clearInterval(timer);
+  },100);
+  return()=>clearInterval(timer);
+ },[clockKey,ticking,longestCooldown]);
+ const elapsed=ticking&&cooldownTime.key===clockKey?cooldownTime.elapsed:0;
+ const actions=elapsed>0?baseActions.map(action=>actionAfterElapsed(action,elapsed)):baseActions;
  const [profiles,setProfiles]=useState<Record<'peace'|'combat',(string|null)[]>>(()=>({peace:defaultActionSlots(quickActionChoices(s,d,'peace')),combat:defaultActionSlots(quickActionChoices(s,d,'combat').filter(action=>'automatic' in action&&action.automatic))}));
  const resolvedProfiles:Record<'peace'|'combat',(string|null)[]>={peace:upgradeActionSlots(profiles.peace,s,d),combat:upgradeActionSlots(profiles.combat,s,d)};
  const slots=resolvedProfiles[mode];
@@ -60,19 +75,19 @@ export default function ClassicActionBar({state:s,data:d,busy,send,blocked}:{blo
   };
   window.addEventListener('keydown',handle);return()=>window.removeEventListener('keydown',handle);
  });
- const casting=!!s.cast||['hearth','teleport','conjure','classSpell','classChannel','mount'].includes(s.activity.type);
- return <Tooltip.Provider delayDuration={150} skipDelayDuration={100}><section className="cu-quickbar" aria-label={`${mode==='combat'?'战斗':'非战斗'}快捷技能栏`} data-mode={mode}>
-  {casting&&<div className="cu-quickbar-cast"><ActivityProgress state={s} data={d} quartz running={!s.combat?.command?.paused}/></div>}
+ return <Tooltip.Provider delayDuration={150} skipDelayDuration={100}><section className={`cu-quickbar${expanded?'':' cu-quickbar-compact'}`} aria-label={`${mode==='combat'?'战斗':'非战斗'}快捷技能栏`} data-mode={mode}>
+  <LiveCastBar state={s} data={d} playback={playback} contentVersion={contentVersion}/>
+  <button type="button" className="cu-quick-bubble" aria-label="展开动作条" aria-expanded={expanded} aria-controls={frameId} disabled={blocked} onClick={()=>setExpanded(true)}><Swords size={21}/></button>
   <span className="cu-quick-mode" role="status">{mode==='combat'?'战斗':'非战斗'}</span>
-  <div className="cu-quickbar-frame"><div className="cu-quickbar-slots">{slots.map((key,index)=>{
+  <div className="cu-quickbar-frame" id={frameId}><div className="cu-quickbar-slots">{slots.map((key,index)=>{
    const action=actions.find(a=>a.key===key),missing=!!key&&!action;
    return <ClassicActionTooltip key={`${mode}:${index}:${key}`} action={action} binding={key} state={s} data={d} shortcut={actionKeys[index]} disabled={blocked||editing!==null}><button type="button" className={`cu-quick-slot ${action&&'automatic' in action&&action.automatic?'automatic':key&&!action?.canUse?'unavailable':''}`} aria-label={`${index+1} 号栏位：${action?.name||(missing?'不可用':'空栏位')}`} aria-disabled={!!key&&(busy||!action?.canUse)||blocked||!ready} onClick={()=>activate(index)} onContextMenu={e=>{e.preventDefault();if(!blocked&&ready)configure(index);}}>
     {action?<Icon src={action.icon} name={action.name} size={40} showTitle={false}/>:<span className="cu-quick-empty">{missing?'?':'+'}</span>}<kbd>{actionKeys[index]}</kbd>
     {action&&'automatic' in action&&action.automatic&&<em className="cu-quick-auto">自动</em>}
-    {action&&action.remaining>0&&<span className="cu-quick-cooldown">{action.remaining>=60000?`${Math.ceil(action.remaining/60000)}m`:Math.ceil(action.remaining/1000)}</span>}
+    {action&&action.remaining>0&&<span className="cu-quick-cooldown">{action.remaining>=60000?`${Math.ceil(action.remaining/60000)}m`:action.remaining<10000?(Math.ceil(action.remaining/100)/10).toFixed(1):Math.ceil(action.remaining/1000)}</span>}
     {action&&'count' in action&&action.count>1&&<small>{action.count}</small>}
    </button></ClassicActionTooltip>;
-  })}</div><button type="button" className="cu-quick-config" aria-label="配置快捷技能栏" title="配置快捷技能栏" disabled={blocked||!ready} onClick={()=>configure(0)}><Settings2 size={18}/></button></div>
+  })}</div><div className="cu-quick-controls"><button type="button" className="cu-quick-collapse" aria-label="收起动作条" aria-expanded={expanded} aria-controls={frameId} onClick={()=>setExpanded(false)}><X size={18}/></button><button type="button" className="cu-quick-config" aria-label="配置快捷技能栏" title="配置快捷技能栏" disabled={blocked||!ready} onClick={()=>configure(0)}><Settings2 size={18}/></button></div></div>
  </section>
  <Dialog.Root open={editing!==null&&!blocked} onOpenChange={open=>{if(!open){setEditing(null);setSearch('');}}}><Dialog.Portal><Dialog.Overlay className="cu-dialog-overlay"/><Dialog.Content className="cu-dialog cu-quick-dialog"><header className="cu-dialog-header"><div><Dialog.Title>配置快捷技能栏</Dialog.Title><Dialog.Description>进入和离开战斗时自动切换，两套栏位分别保存。手动技能默认对自己施放。</Dialog.Description></div><Dialog.Close className="cu-close" aria-label="关闭快捷栏配置"><X size={20}/></Dialog.Close></header><div className="cu-quick-editor">
   <div className="cu-quick-profiles" role="group" aria-label="选择要配置的技能栏">{(['peace','combat'] as const).map(profile=><button key={profile} aria-pressed={editMode===profile} onClick={()=>{setEditMode(profile);setSearch('');}}>{profile==='combat'?'战斗技能栏':'非战斗技能栏'}{profile===mode?' · 当前':''}</button>)}</div>

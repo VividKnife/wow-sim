@@ -33,7 +33,7 @@
 .enemy .hd2d-health i{background:linear-gradient(90deg,#854e41,#d99476)}
 .hd2d-action{display:block;height:2px;background:#111b1fb3;margin:0 2px}.hd2d-action i{height:100%;display:block;transition:width .1s linear}
 .hd2d-condition{position:absolute;top:100%;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none;font-size:9px;line-height:12px;color:#e8c4f5;text-shadow:0 1px 3px #000}
-.hd2d-skill{display:flex;align-items:center;gap:4px;max-width:150px;position:absolute;bottom:calc(100% + 17px);left:50%;transform:translateX(-50%);pointer-events:none;font-size:10px;white-space:nowrap;line-height:15px;padding:2px 4px;background:#0b1926c9;border-radius:3px}
+.hd2d-skill{display:flex;align-items:center;gap:4px;width:max-content;max-width:150px;position:absolute;bottom:calc(100% + 17px);left:50%;transform:translateX(-50%);pointer-events:none;font-size:10px;white-space:nowrap;line-height:15px;padding:2px 4px;background:#0b1926c9;border-radius:3px}
 .hd2d-unit-label.dead{opacity:.5}
 .hd2d-damage{display:block;white-space:nowrap;pointer-events:none;font:bold 21px Georgia,serif;text-shadow:0 2px 2px #080e16,1px 0 #080e16,-1px 0 #080e16;animation:hd2d-number 1.3s ease-out both}
 .hd2d-damage.critical{font-size:30px}.hd2d-damage.still{animation:none}

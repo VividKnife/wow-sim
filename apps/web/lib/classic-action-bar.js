@@ -5,6 +5,12 @@ export function normalizeActionSlots(value){
  if(!Array.isArray(value))return null;
  return actionKeys.map((_,i)=>typeof value[i]==='string'&&/^(spell|item):\d+$/.test(value[i])?value[i]:null);
 }
+export function actionAfterElapsed(action,elapsedMs=0){
+ const remaining=Math.max(0,(action.remaining||0)-Math.max(0,elapsedMs));
+ // Only the rules engine can declare that time is the sole remaining blocker.
+ const ready=remaining===0&&action.canUseAfterCooldown===true;
+ return {...action,remaining,canUse:action.canUse||ready,reason:ready?'':action.reason};
+}
 export function quickActions(s,d,mode='peace'){
  const uses={...d.skillUses,...d.skillUsesByTarget?.[s.id]};
  const spells=(d.skills||[]).filter(sp=>sp.known&&uses[sp.spellId]).map(sp=>({key:`spell:${sp.spellId}`,name:sp.name,icon:sp.icon,...uses[sp.spellId],kind:'技能',command:{type:'cast',id:sp.spellId,target:s.id}}));
