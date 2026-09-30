@@ -79,8 +79,8 @@ try{
  await page.getByRole('button',{name:'切换到云端引擎',exact:true}).click();
  await page.getByRole('button',{name:'切换到本地引擎',exact:true}).waitFor();
  assert.ok(engineRequests.some(r=>r.body.type==='handoff'),'switch must hand execution to the server');
- await page.getByRole('checkbox',{name:'自动拾取',exact:true}).click();
- await page.getByText('拾取设置已保存',{exact:true}).waitFor();
+ await page.getByRole('checkbox',{name:'跳过灰色物品',exact:true}).click();
+ await page.getByText('拾取过滤已保存',{exact:true}).waitFor();
  const cloudCommand=engineRequests.find(r=>r.body.type==='settings');
  assert.ok(cloudCommand);assert.equal(cloudCommand.body.localClientId,undefined);
  await page.reload();
