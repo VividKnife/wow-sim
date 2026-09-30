@@ -122,3 +122,18 @@ test('mixed riding and tram trips dismount at the same instant across save/advan
  const single=advance(s,s.activity.endsAt).state;
  assert.deepEqual(split,single);assert.equal(single.logs.find(l=>l.text.startsWith('收起坐骑')).at,boundary);
 });
+
+test('accelerated route caches isolate walking speed and returned mutable paths',()=>{
+ const speed=baseTravelSpeed*3;
+ const normal=route('northshire','thelsamar',speed,baseTravelSpeed);
+ const boosted=route('northshire','thelsamar',speed,baseTravelSpeed*2);
+ assert.ok(boosted.duration<normal.duration);
+ const dismount=boosted.path.findIndex(leg=>!leg.riding);
+ assert.ok(dismount>0);
+ assert.ok(boosted.path.slice(dismount).every(leg=>!leg.riding));
+ assert.deepEqual(route('northshire','thelsamar',speed,baseTravelSpeed),normal);
+ const copy=structuredClone(boosted);
+ boosted.path[0].duration=0;boosted.path.pop();
+ assert.deepEqual(route('northshire','thelsamar',speed,baseTravelSpeed*2),copy);
+ assert.deepEqual(route('northshire','northshire',speed),{duration:0,path:[],distance:0});
+});

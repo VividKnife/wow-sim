@@ -1,5 +1,5 @@
 /** One request at a time, bounded latency, and no stale delivery after disposal. */
-export function createSnapshotPoller({request,delay,isVisible=()=>true,onError=(_error)=>{},schedule=setTimeout,cancel=clearTimeout,now=()=>performance.now(),random=Math.random,timeoutMs=8000}){
+export function createSnapshotPoller({request,delay,isVisible=()=>true,onError=(_error)=>{},schedule=setTimeout,cancel=clearTimeout,now=()=>performance.now(),random=Math.random,timeoutMs=8000,stopOnSuccess=false,shouldRetry=(_error)=>true}){
  let stopped=false,running=false,timer,controller,failures=0;
  const refresh=async()=>{
   if(stopped||running)return;
@@ -7,8 +7,8 @@ export function createSnapshotPoller({request,delay,isVisible=()=>true,onError=(
   if(!isVisible())return;
   running=true;controller=new AbortController();const started=now();
   const timeout=schedule(()=>controller.abort(),timeoutMs);
-  try{await request(controller.signal);controller.signal.throwIfAborted();failures=0;if(!stopped)onError(null);}
-  catch(error){failures++;if(!stopped)onError(error);}
+  try{await request(controller.signal);controller.signal.throwIfAborted();failures=0;if(!stopped)onError(null);if(stopOnSuccess)stopped=true;}
+  catch(error){failures++;if(!stopped)onError(error);if(!shouldRetry(error))stopped=true;}
   finally{
    cancel(timeout);running=false;
    // A timeout already consumed the normal interval. Retrying immediately then
