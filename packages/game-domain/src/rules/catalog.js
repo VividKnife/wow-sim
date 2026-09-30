@@ -110,6 +110,7 @@ export function nearestNode(x,y,map=0){
 /** @type {(id:any)=>boolean} */
 export const attackableCreature=id=>{const c=creatures[id];return !!(c&&c.MinLevel>0&&c.MinLevel<=63&&c.ModelId1>0&&![11686,13069,15294].includes(c.ModelId1)&&!c.NpcFlags&&!(c.UnitFlags&0x10102)&&![8,12].includes(c.CreatureType)&&!c.Civilian&&!/Trigger|Doodad|Counter|Marker/i.test(c.Name)&&![1,35,12,11,55,80,84,1078].includes(c.Faction));};
 const routeCache=new Map();
+const ridingRouteCache=new Map();
 const adjacent=groupRows(edges.flatMap(e=>[{node:e.a,edge:e},{node:e.b,edge:e}]),e=>e.node);
 export function route(from,to,speed=baseTravelSpeed,walkingSpeed=baseTravelSpeed){
  if(!nodes[from]||!nodes[to])throw new Error('未知目的地');
@@ -127,18 +128,29 @@ export function route(from,to,speed=baseTravelSpeed,walkingSpeed=baseTravelSpeed
 // Dijkstra over (location, still riding). A forbidden segment dismounts the
 // traveler for the remainder of the trip; we never grant an instant remount.
 function ridingRoute(from,to,speed,walkingSpeed=baseTravelSpeed){
+ const cacheKey=JSON.stringify([from,speed,walkingSpeed]);
+ if(ridingRouteCache.has(cacheKey)){
+  const result=ridingRouteCache.get(cacheKey)[to];
+  if(!result)throw new Error('目前没有连通的路线');
+  return structuredClone(result);
+ }
  const key=(node,riding)=>node+':'+Number(riding),initial={node:from,riding:nodes[from].mountAllowed!==false,cost:0,path:[]};
- const pending=[initial],best=new Map([[key(from,initial.riding),0]]);
+ const pending=[initial],best=new Map([[key(from,initial.riding),0]]),results={};
  while(pending.length){
   pending.sort((a,b)=>a.cost-b.cost);const current=pending.shift();
   if(current.cost!==best.get(key(current.node,current.riding)))continue;
-  if(current.node===to)return {duration:Math.ceil(current.cost),path:current.path,distance:current.path.reduce((sum,e)=>sum+e.distance,0)};
-  for(const e of edges.filter(e=>e.a===current.node||e.b===current.node)){
+  // Settle every destination once for the map and quest estimates. Continue
+  // exploring both riding states: dismounting can change the best onward route.
+  if(!results[current.node])results[current.node]={duration:Math.ceil(current.cost),path:current.path,distance:current.path.reduce((sum,e)=>sum+e.distance,0)};
+  for(const {edge:e} of adjacent[current.node]||[]){
    const next=e.a===current.node?e.b:e.a;
    const riding=current.riding&&e.duration===undefined&&e.mountAllowed!==false&&nodes[next].mountAllowed!==false;
    const duration=e.duration??e.distance/(riding?speed:walkingSpeed)*1000,cost=current.cost+duration,k=key(next,riding);
    if(cost<(best.get(k)??Infinity)){best.set(k,cost);pending.push({node:next,riding,cost,path:[...current.path,{...e,duration,riding}]});}
   }
  }
- throw new Error('目前没有连通的路线');
+ if(ridingRouteCache.size>=64)ridingRouteCache.delete(ridingRouteCache.keys().next().value);
+ ridingRouteCache.set(cacheKey,results);
+ if(!results[to])throw new Error('目前没有连通的路线');
+ return structuredClone(results[to]);
 }

@@ -55,3 +55,18 @@ test('retry jitter spreads clients and preserves a longer normal polling interva
  const slow=createSnapshotPoller({...clock,random:()=>0,delay:()=>10000,request:async()=>{throw new Error('offline');}});
  await flush();assert.equal([...clock.pending.values()][0].at,10000);slow.stop();
 });
+
+test('initial loading retries transient failures and stops after the first successful response',async()=>{
+ const clock=timers(),errors=[];let count=0;
+ const poller=createSnapshotPoller({...clock,random:()=>0,delay:()=>1000,stopOnSuccess:true,onError:e=>errors.push(e),request:async()=>{if(++count<3)throw new Error('offline');}});
+ await flush();await clock.tick(1000);await clock.tick(2000);
+ assert.equal(count,3);assert.equal(errors.at(-1),null);assert.equal(clock.pending.size,0);
+ await poller.refresh();assert.equal(count,3);poller.stop();
+});
+
+test('initial loading stops on an expired session instead of retrying indefinitely',async()=>{
+ const clock=timers(),errors=[];let count=0;
+ const poller=createSnapshotPoller({...clock,delay:()=>1000,stopOnSuccess:true,shouldRetry:e=>e.status!==401,onError:e=>errors.push(e),request:async()=>{count++;throw Object.assign(new Error('expired'),{status:401});}});
+ await flush();await clock.tick(60000);await poller.refresh();
+ assert.equal(count,1);assert.equal(errors[0].status,401);assert.equal(clock.pending.size,0);poller.stop();
+});
