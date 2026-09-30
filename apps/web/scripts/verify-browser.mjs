@@ -77,7 +77,7 @@ try{
  await page.getByRole('button',{name:'设置',exact:true}).click();
  await page.getByRole('tab',{name:'游戏',exact:true}).click();
  await page.getByRole('button',{name:'切换到云端引擎',exact:true}).click();
- await page.locator('button.cu-gold-button').filter({hasText:'切换到本地引擎'}).waitFor({timeout:60000});
+ await page.waitForFunction(()=>[...document.querySelectorAll('button.cu-gold-button')].some(button=>button.textContent?.includes('切换到本地引擎')&&button.getBoundingClientRect().width>0),{},{timeout:60000});
  assert.ok(engineRequests.some(r=>r.body.type==='handoff'),'switch must hand execution to the server');
  await page.getByRole('checkbox',{name:'跳过灰色物品',exact:true}).click();
  await page.getByText('拾取过滤已保存',{exact:true}).waitFor();
@@ -90,7 +90,7 @@ try{
  const localSwitchRequests=[];const trackLocalSwitch=request=>localSwitchRequests.push(request.url());
  page.on('request',trackLocalSwitch);
  await page.getByRole('button',{name:'切换到本地引擎',exact:true}).click();
- await page.getByRole('button',{name:'切换到云端引擎',exact:true}).waitFor();
+ await page.waitForFunction(()=>[...document.querySelectorAll('button.cu-gold-button')].some(button=>button.textContent?.includes('切换到云端引擎')&&button.getBoundingClientRect().width>0),{},{timeout:60000});
  for(let attempt=0;attempt<60&&!engineRequests.some(r=>r.body.type==='claim');attempt++)await new Promise(r=>setTimeout(r,500));
  assert.ok(engineRequests.some(r=>r.body.type==='claim'),'local switch must reclaim execution');
  assert.ok(!localSwitchRequests.some(url=>url.includes('/api/game/replay')),'switching to local must stop requesting cloud playback');
