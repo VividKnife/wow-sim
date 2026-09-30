@@ -4,6 +4,7 @@ import {nodes,trainerNodes,items,flights} from './catalog.js';
 import {capitals} from '../../../game-data/world-content.js';
 import atlas from '../../../game-data/data/world-map-atlas.json' with {type:'json'};
 import {travelRoute} from './mounts.js';
+import {movementMultiplier} from './experience.js';
 import {protectedItem} from './inventory.js';
 import {materialIds} from './profession-data.js';
 
@@ -22,6 +23,6 @@ export function cityView(s){
   junkCount:s.bag.filter(i=>items[i.id]?.Quality===0&&items[i.id]?.SellPrice>0&&!protectedItem(i)).length,
   materialCount:s.bag.filter(i=>materialIds.has(i.id)&&!protectedItem(i)).length,
   departures:(city.id==='stormwind'?[['goldshire','闪金镇','沿着城门大道，回到艾尔文森林。'],['sentinel','哨兵岭','前往西部荒野。'],['ironforge','铁炉堡','经矮人区搭乘矿道地铁。']]:[[city.exit,nodes[city.exit].name,'离开主城，继续区域冒险。']]).map(([to,name,description])=>({to,name,description,travel:travel(to)})),
-  flights:flights.filter(f=>f.a===city.id||f.b===city.id).map(f=>{const to=f.a===city.id?f.b:f.a;return {to,name:nodes[to].name,duration:f.duration,cost:f.cost,unlocked:s.flightPoints.includes(city.id)&&s.flightPoints.includes(to)};}),
+  flights:flights.filter(f=>f.a===city.id||f.b===city.id).map(f=>{const to=f.a===city.id?f.b:f.a;return {to,name:nodes[to].name,duration:Math.ceil(f.duration/movementMultiplier(s)),cost:f.cost,unlocked:s.flightPoints.includes(city.id)&&s.flightPoints.includes(to)};}),
  };
 }

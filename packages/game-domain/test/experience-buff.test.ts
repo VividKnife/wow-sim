@@ -6,6 +6,7 @@ import {experienceMultiplier, applyExperienceBuff} from '../src/rules/experience
 import {createGame, advance} from '../src/rules/engine.js';
 import {gainXp} from '../src/rules/character.js';
 import {questProgress} from '../src/rules/quests.js';
+import {effectiveSpeed} from '../src/rules/combat-space.js';
 
 test('server rate validates input; buff scales XP once, rounds down and can be removed',()=>{
  assert.equal(experienceMultiplier(),2);
@@ -13,9 +14,10 @@ test('server rate validates input; buff scales XP once, rounds down and can be r
  for(const bad of ['', ' ', 'abc', '-1', 'Infinity', '1001'])assert.throws(()=>experienceMultiplier(bad));
  const s=applyExperienceBuff(createGame('Hero',123,0),2.5);
  gainXp(s,s,11);assert.equal(s.xp,27);assert.equal(s.totals.xp,27);
- applyExperienceBuff(s,2.5);assert.equal(s.serverBuffs.length,1);
+ applyExperienceBuff(s,2.5);assert.equal(s.serverBuffs.length,2);
+ assert.equal(effectiveSpeed(s,0),14);
  applyExperienceBuff(s,0);gainXp(s,s,11);assert.equal(s.xp,27);
- applyExperienceBuff(s,1);gainXp(s,s,11);assert.equal(s.xp,38);assert.deepEqual(s.serverBuffs,[]);
+ applyExperienceBuff(s,1);gainXp(s,s,11);assert.equal(s.xp,38);assert.equal(s.serverBuffs[0].movementMultiplier,2);
  gainXp(s,s,10000);assert.ok(s.level>1);
 });
 
@@ -29,6 +31,7 @@ test('new characters receive the default double XP buff in both account creation
  const service=new GameService(new MemoryStore(),{contentVersion:'test',now:()=>1000,seed:()=>283});
  const account=await service.createAccount('account',{name:'Account Hero',classId:8,raceId:1},'create');
  assert.equal(account.state.serverBuffs[0].xpMultiplier,2);
+ assert.equal(account.state.serverBuffs[1].movementMultiplier,2);
  const save=await service.createSave('user',{name:'Save Hero',classId:8,raceId:1},'create');
  assert.equal((await service.snapshot(save.id)).state.serverBuffs[0].xpMultiplier,2);
 });
@@ -53,8 +56,11 @@ for(const kind of ['personal','instance'])test(`${kind}: local simulation receiv
  assert.equal(claim.state.serverBuffs[0].xpMultiplier,2);
  f.time(3000);const next=advance(claim.state,3000).state;
  next.serverBuffs[0].xpMultiplier=10;
- await assert.rejects(f.service.localSimulation('a',{...base,type:'checkpoint',sessionId:claim.session.id,sequence:1,state:next,requestId:'bad'}),/经验增益/);
+ await assert.rejects(f.service.localSimulation('a',{...base,type:'checkpoint',sessionId:claim.session.id,sequence:1,state:next,requestId:'bad'}),/服务器增益/);
  next.serverBuffs[0].xpMultiplier=2;
+ next.serverBuffs[1].movementMultiplier=10;
+ await assert.rejects(f.service.localSimulation('a',{...base,type:'checkpoint',sessionId:claim.session.id,sequence:1,state:next,requestId:'bad-speed'}),/服务器增益/);
+ next.serverBuffs[1].movementMultiplier=2;
  const saved=await f.service.localSimulation('a',{...base,type:'checkpoint',sessionId:claim.session.id,sequence:1,state:next,requestId:'good'});
  assert.equal(saved.state,undefined);
  assert.equal((await f.service.snapshot('a')).state.serverBuffs[0].xpMultiplier,2);

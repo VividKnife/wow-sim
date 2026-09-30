@@ -1,5 +1,5 @@
 import {isContentPending} from './runtime-content.js';
-import {nodes,baseTravelSpeed} from './catalog.js';
+import {nodes,baseTravelSpeed,flightNodes} from './catalog.js';
 import {travelRoute} from './mounts.js';
 
 // Use the same road costs as travel, and never navigate to already credited objectives.
@@ -52,4 +52,21 @@ export function redirectedTravel(s,to){
  }
  const tail=travelRoute({...s,location:from},to);
  return{from,startedAt:s.clock,endsAt:s.clock+tail.duration,path:tail.path,duration:tail.duration};
+}
+
+// Only completed ground legs count; a redirected first leg can start mid-road.
+export function discoverPassedFlightPoints(s){
+ const discover=id=>{
+  if(flightNodes.includes(id)&&!s.flightPoints.includes(id))s.flightPoints.push(id);
+ };
+ const a=s.activity;
+ if(a.type!=='travel'){discover(s.location);return;}
+ if(a.flight)return;
+ let from=a.from,elapsed=Math.max(0,s.clock-a.startedAt);
+ if(!a.path?.[0]?.startProgress)discover(from);
+ for(const leg of a.path||[]){
+  const duration=leg.duration??leg.distance/baseTravelSpeed*1000;
+  if(elapsed<duration)break;
+  elapsed-=duration;from=leg.a===from?leg.b:leg.a;discover(from);
+ }
 }

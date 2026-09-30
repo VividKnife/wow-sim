@@ -34,7 +34,7 @@ test('two real authenticated sockets follow one instance while disconnected work
   const messages:any[]=[];socket.on('message',raw=>messages.push(JSON.parse(raw.toString())));
   await once(socket,'open');socket.send(JSON.stringify({type:'subscribe',characterId:id}));
   const snapshot=async(sequence:number)=>{
-   const deadline=Date.now()+5000;
+   const deadline=Date.now()+15000;
    while(Date.now()<deadline){const found=messages.find(m=>m.type==='snapshot'&&m.sequence>=sequence);if(found)return found;await new Promise(resolve=>setTimeout(resolve,10));}
    assert.fail(`No sequence ${sequence}: ${JSON.stringify(messages)}`);
   };

@@ -1,0 +1,82 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {once} from 'node:events';
+import WebSocket from 'ws';
+import {PGlite} from '@electric-sql/pglite';
+import {AccountStore} from '../src/account-store.ts';
+import {AdminStore} from '../src/admin-store.ts';
+import {createGameServer} from '../src/server.ts';
+import {schemaSql} from '../../../packages/persistence/src/schema.ts';
+
+test('GM bootstrap, isolated auth, moderation, pagination and HTTP protections',async t=>{
+ const db=new PGlite();t.after(()=>db.close());
+ const sql={query:async(text:string,values?:any[])=>text.includes('CREATE TABLE')?(await db.exec(text),{rows:[]}):db.query(text,values)};
+ await db.exec(schemaSql);
+ let now=1000000;
+ const accounts=new AccountStore(sql,()=>now);await accounts.initialize();
+ const admin=new AdminStore(sql,accounts,()=>now);await admin.initialize();
+ assert.equal(await admin.setupRequired(),true);
+ const attempts=await Promise.allSettled([
+  admin.authenticate('register',{username:'master-one',password:'admin-password-123'},'first'),
+  admin.authenticate('register',{username:'master-two',password:'admin-password-123'},'second'),
+ ]);
+ assert.equal(attempts.filter(a=>a.status==='fulfilled').length,1);
+ assert.equal((attempts.find(a=>a.status==='rejected') as PromiseRejectedResult).reason.status,409);
+ const registered=(attempts.find(a=>a.status==='fulfilled') as PromiseFulfilledResult<any>).value;
+ assert.equal(await admin.setupRequired(),false);
+ assert.ok(await admin.session(registered.token));
+ const player=await accounts.register('player-one','player-password-123');
+ assert.equal(await admin.session(player.token),null);
+ assert.equal(await accounts.session(registered.token),null);
+ await assert.rejects(admin.authenticate('login',{username:registered.admin.username,password:'wrong-password-123'},'third'),{status:401});
+ const origin='http://game.test';
+ const game=createGameServer({accounts,admin,appOrigin:origin,trustProxyHops:0,pollIntervalMs:20,service:{snapshot:async()=>({state:null,revision:0,account:null,roster:[],activities:[],instanceId:null}),createAccount:async()=>{throw new Error();},command:async()=>{throw new Error();},work:async()=>({})}});
+ game.server.listen(0,'127.0.0.1');await once(game.server,'listening');t.after(()=>game.close());
+ const address=game.server.address() as {port:number},base=`http://127.0.0.1:${address.port}/api/admin/`;
+ const cookie=`wow_admin=${registered.token}`;
+ assert.equal((await fetch(base+'overview')).status,401);
+ assert.equal((await fetch(base+'overview',{headers:{cookie:`wow_session=${player.token}`}})).status,401);
+ assert.equal((await fetch(base+'moderate',{method:'POST',headers:{cookie,origin:'http://evil.test'},body:'{}'})).status,403);
+ assert.equal((await fetch(base+'players?page=-1',{headers:{cookie}})).status,400);
+ const login=await fetch(base+'login',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({username:registered.admin.username,password:'admin-password-123'})});
+ assert.equal(login.status,200);assert.match(login.headers.get('set-cookie')!,/Path=\/api\/admin; HttpOnly; SameSite=Strict/);
+ assert.equal((await admin.overview()).players,1);
+ assert.equal((await admin.list('players','player',0)).rows.length,1);
+ assert.equal((await admin.list('players',"' OR true --",0)).rows.length,0);
+ await assert.rejects(admin.moderate(registered.admin.id,{action:'ban',target:player.user.id,reason:''}),{status:400});
+ await assert.rejects(admin.moderate(registered.admin.id,{action:'ban',target:'missing',reason:'spam'}),{status:404});
+ const post=async(body:unknown)=>fetch(base+'moderate',{method:'POST',headers:{cookie,origin,'content-type':'application/json'},body:JSON.stringify(body)});
+ assert.equal((await post({action:'ban',target:player.user.id,reason:'违规测试'})).status,200);
+ assert.equal(await accounts.session(player.token),null);
+ await assert.rejects(accounts.login('player-one','player-password-123'),{status:403});
+ assert.equal((await admin.list('players','player',0)).rows[0].blocked_reason,'违规测试');
+ assert.equal((await admin.overview()).blocked,1);
+ await admin.moderate(registered.admin.id,{action:'unban',target:player.user.id,reason:'申诉通过'});
+ const newSession=await accounts.login('player-one','player-password-123');assert.ok(await accounts.session(newSession.token));
+ const socket=new WebSocket(`ws://127.0.0.1:${address.port}/api/events`,{headers:{origin,cookie:`wow_session=${newSession.token}`}});
+ t.after(()=>socket.terminate());await once(socket,'open');
+ const firstMessage=once(socket,'message');socket.send(JSON.stringify({type:'subscribe'}));await firstMessage;
+ const closed=once(socket,'close');
+ await admin.moderate(registered.admin.id,{action:'revoke',target:player.user.id,reason:'账号保护'});
+ assert.equal((await closed)[0],1008);
+
+ assert.equal(await accounts.session(newSession.token),null);
+ assert.equal((await admin.list('audit',player.user.id,0)).rows.length,3);
+ for(let i=0;i<26;i++)await db.query('INSERT INTO web_users VALUES($1,$2,$3,$4)',[`p${i}`,`user${i}`,'unused',now]);
+ assert.equal((await admin.list('players','',0)).hasMore,true);
+ assert.equal((await admin.list('players','',1)).rows.length,2);
+ await db.query(`INSERT INTO accounts(id,data) VALUES('save', $1)`,[JSON.stringify({id:'save',userId:player.user.id,primaryCharacterId:'hero',createdAt:now})]);
+ await db.query(`INSERT INTO characters(id,data) VALUES('hero',$1)`,[JSON.stringify({id:'hero',accountId:'save',rules:{name:'英雄',level:20,classId:8}})]);
+ await db.query(`INSERT INTO wallets(id,data) VALUES('wallet',$1)`,[JSON.stringify({id:'wallet',characterId:'hero',balance:500})]);
+ assert.equal((await admin.save('save')).characters[0].balance,500);
+ assert.equal((await admin.list('saves','英雄',0)).rows[0].username,'player-one');
+ await assert.rejects(admin.save('missing'),{status:404});
+ // A failed audit must roll back the moderation side effect as well.
+ await db.exec(`CREATE OR REPLACE FUNCTION reject_audit() RETURNS trigger AS $$ BEGIN RAISE EXCEPTION 'audit unavailable'; END; $$ LANGUAGE plpgsql; CREATE TRIGGER reject_gm_audit BEFORE INSERT ON gm_audit FOR EACH ROW EXECUTE FUNCTION reject_audit();`);
+ await assert.rejects(admin.moderate(registered.admin.id,{action:'ban',target:player.user.id,reason:'rollback'}));
+ assert.equal((await admin.overview()).blocked,0);
+ await db.exec('DROP TRIGGER reject_gm_audit ON gm_audit');
+ await admin.logout(registered.token);assert.equal(await admin.session(registered.token),null);
+ const session=await admin.authenticate('login',{username:registered.admin.username,password:'admin-password-123'},'last');
+ now+=9*3600000;assert.equal(await admin.session(session.token),null);
+});

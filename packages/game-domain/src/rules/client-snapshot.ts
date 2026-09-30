@@ -5,12 +5,12 @@ const playerKeys = [
   'serverBuffs','id','name','classId','raceId','gender','growthPolicy','level','xp','hp','mana','rage','energy','power','form','stance','money','clock','wallAt',
   'activity','rest','location','visited','flightPoints','hearth','hearthReady','equipment','bag','bags','pending','bank','bankUpgrades',
   'auctions','marketHistory','marketStock','marketClock','party','pet','escort','combat','recentCorpses','lastCombat','dungeon','cast','groundEffects','learned','talents','quests',
-  'completed','reputation','rules','settings','potions','mounts','riding','mounted','professions','professionCooldowns','resourceCooldowns',
+  'completed','reputation','rules','settings','potions','mounts','riding','mounted','professions','professionCooldowns','resourceCooldowns','resourceStocks',
   'journey','logs','logSequence','totals','soulstone','bandageReady','nextPull','ammunition','ammoPolicy','ammoRestockPrompt'
 ] as const;
 
 const viewKeys = [
-  'playerBuffs',
+  'playerEffects',
   'npcWorld','groupLoot',
   'arena','pvp','battleground',
   'partyBuffCheck','combatCommand','raidCommand','goldRaid','partyUnlocked','battleView','reincarnation','canSoulstoneRevive','skillUsesByTarget','environment','trackingKind','trackedTreasures','lockpicking',
@@ -50,7 +50,7 @@ const enemyView=(enemy:any)=>pick(enemy||{},enemyKeys);
 function combatView(combat:any){if(!combat)return combat;const result=pick(combat,combatKeys);result.enemies=Array.isArray(combat.enemies)?combat.enemies.map(enemyView):[];if(Array.isArray(combat.actorsSnapshot))result.actorsSnapshot=combat.actorsSnapshot.map(actorView);return result;}
 const dungeonView=(dungeon:any)=>dungeon?pick(dungeon,dungeonKeys):dungeon;
 const candidateView=(candidate:any)=>pick(candidate||{},['serverBuffs','id','name','classId','role','roles','level','gearCap','canRecruit']);
-const battleUnitKeys=['id','spellId','className','color','portrait','mode','resource','secondaryResource','hp','maxHp','level','combo','effects','cooldowns','totems','cast','globalCooldown','canCommand','petMode','happiness','loyalty','controlled','ownerName','controlUntil','shards','attack','offhand','movement'];
+const battleUnitKeys=['quickCasts','queuedSpellId','id','spellId','className','color','portrait','mode','resource','secondaryResource','hp','maxHp','level','combo','effects','cooldowns','totems','cast','globalCooldown','canCommand','petMode','happiness','loyalty','controlled','ownerName','controlUntil','shards','attack','offhand','movement'];
 function battlePresentationView(battle:any){
  if(!battle)return battle;
  const result=pick(battle,['live','clock','spellIds','playerId','groundEffects']);

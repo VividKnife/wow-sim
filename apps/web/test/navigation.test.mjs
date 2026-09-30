@@ -3,9 +3,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,view} from '../../../packages/game-domain/src/rules/engine.js';
 import {questNavigation,journeyPosition} from '../../../packages/game-domain/src/rules/navigation.js';
-import {nodes,baseTravelSpeed} from '../../../packages/game-domain/src/rules/catalog.js';
+import {nodes,baseTravelSpeed,route} from '../../../packages/game-domain/src/rules/catalog.js';
 import {mapPoints,mapRegion,mapRegions,playerMapPoint} from '../lib/world-map.js';
 import * as worldMap from '../lib/world-map.js';
+import {worldRoads} from '../../../packages/game-data/world-content.js';
 import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
 
 test('public travel route supports continuous sampling through corners and completed legs',()=>{
@@ -131,6 +132,19 @@ test('every playable node can be placed on its region map',()=>{
  for(const n of Object.values(nodes)){
   assert.ok(mapRegions[mapRegion(n.region)],n.id);
   assert.ok(mapPoints[n.id]?.every(v=>Number.isFinite(v)&&v>0&&v<100),n.id);
+ }
+});
+
+test('nearby Tirisfal destinations do not detour through the mill',()=>{
+ assert.ok(worldRoads.some(([a,b])=>a==='brill'&&b==='garrens-haunt'||a==='garrens-haunt'&&b==='brill'));
+ const s=createGame('近路',11,0);s.location='brill';
+ const travel=act(s,{type:'travel',to:'garrens-haunt'},0);
+ assert.deepEqual(travel.activity.path.map(edge=>[edge.a,edge.b]),[['brill','garrens-haunt']]);
+});
+
+test('nearby locations in other regions avoid list-order detours',()=>{
+ for(const [from,to] of [['crossroads','lushwater'],['everlook','winterfall'],['camp-mojache','lower-wilds'],['menethil','bluegill']]){
+  assert.equal(route(from,to).path.length,1,`${from} → ${to}`);
  }
 });
 

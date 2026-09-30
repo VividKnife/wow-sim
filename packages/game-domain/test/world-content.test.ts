@@ -19,7 +19,15 @@ import {resourceView,beginGather,finishGather} from '../src/rules/professions.js
 test('expanded regions expose source herb and ore nodes with their actual skill gates',()=>{
  const s:Rules=createGame('采集',73,0,{raceId:2,classId:7});s.professions={herbalism:{skill:150,cap:225},mining:{skill:50,cap:150}};s.location='brill';
  const resources=resourceView(s);assert.ok(resources.some(r=>r.item===765&&r.required===1));assert.ok(resources.some(r=>r.item===2449&&r.required===15));
- const herb=resources.find(r=>r.item===765)!;const before=countItem(s,765);beginGather(s,herb.id);s.clock+=3000;finishGather(s);assert.ok(countItem(s,765)>before);assert.ok(!resourceView(s).find(r=>r.id===herb.id)?.available);
+ const herb=resources.find(r=>r.item===765)!;const before=countItem(s,765);assert.ok(herb.total>=2&&herb.total<=5);
+ for(let gathered=1;gathered<=herb.total;gathered++){
+  beginGather(s,herb.id);s.clock+=3000;finishGather(s);
+  const current=resourceView(s).find(r=>r.id===herb.id)!;
+  assert.equal(current.remaining,herb.total-gathered);
+  assert.equal(current.available,gathered<herb.total);
+ }
+ assert.ok(countItem(s,765)>before);
+ s.clock+=300000;const refreshed=resourceView(s).find(r=>r.id===herb.id)!;assert.ok(refreshed.available);assert.ok(refreshed.remaining>=2&&refreshed.remaining<=5);
  s.location='astranaar';const tin=resourceView(s).find(r=>r.item===2771)!;assert.equal(tin.required,65);assert.equal(tin.available,false);assert.throws(()=>beginGather(s,tin.id));
  s.location='orgrimmar';assert.equal(resourceView(s).length,0);
 });

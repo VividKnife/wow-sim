@@ -35,8 +35,12 @@ test('auction purchases and NPC settlements are priced and credited once',()=>{
 });
 test('regional nodes deplete and respawn; gathering respects skills and location',()=>{
  let s=learn(fresh(),'herbalism');s.location='northwood';const resource=view(s).resources.find(r=>r.profession==='herbalism');assert.ok(resource);
- s=action(s,{type:'gatherResource',id:resource.id});s=advance(s,3000).state;assert.ok(countItem(s,resource.item)>0);assert.ok(view(s).resources.find(r=>r.id===resource.id).readyAt>s.clock);
- assert.throws(()=>action(s,{type:'gatherResource',id:resource.id}));s=advance(s,303000).state;assert.ok(view(s).resources.find(r=>r.id===resource.id).available);
+ for(let n=1;n<=resource.total;n++){
+  s=action(s,{type:'gatherResource',id:resource.id});s=advance(s,s.wallAt+3000).state;
+  assert.equal(view(s).resources.find(r=>r.id===resource.id).remaining,resource.total-n);
+ }
+ assert.ok(countItem(s,resource.item)>0);assert.ok(view(s).resources.find(r=>r.id===resource.id).readyAt>s.clock);
+ assert.throws(()=>action(s,{type:'gatherResource',id:resource.id}));s=advance(s,s.wallAt+300000).state;assert.ok(view(s).resources.find(r=>r.id===resource.id).available);
  s.location='stormwind';assert.equal(view(s).resources.length,0);
 });
 test('skinning rewards killed beasts once, never humanoids',()=>{
@@ -83,7 +87,7 @@ test('cancelled auctions return exact items and never later pay out',()=>{
  let s=fresh();addItem(s,35);const i=s.bag.find(i=>i.id===35);i.enchant='mana';s=action(s,{type:'auctionSell',uid:i.uid});s=action(s,{type:'auctionCancel',id:i.uid});assert.deepEqual(s.bag.find(x=>x.uid===i.uid),i);const money=s.money;s=advance(s,60000).state;assert.equal(s.money,money);
 });
 test('auto gathering is equivalent when offline time is chunked',()=>{
- let s=learn(fresh(),'herbalism');s.location='northwood';s=action(s,{type:'gatherAll'});const one=advance(s,10000).state;let chunks=s;for(let t=1000;t<=10000;t+=1000)chunks=advance(chunks,t).state;assert.deepEqual(chunks,one);assert.equal(one.activity.type,'idle');assert.ok(countItem(one,2447)>0&&countItem(one,765)>0);
+ let s=learn(fresh(),'herbalism');s.location='northwood';s=action(s,{type:'gatherAll'});const one=advance(s,30000).state;let chunks=s;for(let t=1000;t<=30000;t+=1000)chunks=advance(chunks,t).state;assert.deepEqual(chunks,one);assert.equal(one.activity.type,'idle');assert.ok(countItem(one,2447)>0&&countItem(one,765)>0);
 });
 test('locked materials are not consumed or used to reduce the purchase quote',()=>{
  let s=learn(fresh(),'alchemy');addItem(s,2447,5);s.bag.find(i=>i.id===2447).locked=true;const q=workshopView(s,{profession:'alchemy',search:'spell-2330'}).recipes[0];assert.equal(q.materials.find(m=>m.id===2447).have,0);s=action(s,{type:'craft',id:q.id,count:1,buyMissing:true});assert.equal(countItem(s,2447),5);

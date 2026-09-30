@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats,view} from '../../../packages/game-domain/src/rules/engine.js';
-import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/combat.js';
+import {startCombat,combatTick,executeCombatIntent} from '../../../packages/game-domain/src/rules/combat.js';
 import {combatCommandView,commandDamageRules,commandOrder} from '../../../packages/game-domain/src/rules/combat-command.js';
 import {strategyAllows} from '../../../packages/game-domain/src/rules/combat-strategy.js';
 import {companionTarget} from '../../../packages/game-domain/src/rules/companion-combat.js';
@@ -131,4 +131,11 @@ test('freezing trap prepares at the assigned enemy and actually triggers its con
  for(s.clock=3000;s.clock<11000;s.clock+=100)combatTick(s);
  assert.ok(s.logs.some(l=>l.spellId===1499&&l.kind==='cast'));
  assert.ok(s.combat.enemies[1].auras.some(a=>a.type===12&&a.until>s.clock));
+});
+test('trap placement targets the hunter, never a teammate or enemy directly',()=>{
+ const s=group(3);s.learned.push(1499);delete s.combat.pull;s.combat.command.paused=false;
+ const cast=targetId=>executeCombatIntent(s,s,{kind:'cast',family:'class',spellId:1499,targetId});
+ for(const target of [s.party[0],s.combat.enemies[0]])assert.equal(cast(target.id).reason,'self-only');
+ assert.equal(cast(s.id).accepted,true);assert.equal(s.trap.spell,1499);
+ assert.equal(s.trap.position,s.position);assert.equal(s.trap.positionY,s.positionY);
 });

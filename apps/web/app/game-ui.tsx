@@ -1,7 +1,7 @@
 import {publicAsset} from '../lib/public-asset';
 import {Button} from '@/components/ui/button';
-import {cloneElement,type ReactNode,type ReactElement} from 'react';
-import {Tooltip as TooltipPrimitive} from 'radix-ui';
+import {cloneElement,useState,type ReactNode,type ReactElement} from 'react';
+import {Popover as PopoverPrimitive,Tooltip as TooltipPrimitive} from 'radix-ui';
 import './item-details.css';
 export const money=(c:number)=>`${Math.floor(c/10000)?Math.floor(c/10000)+' 金 ':''}${Math.floor(c%10000/100)?Math.floor(c%10000/100)+' 银 ':''}${c%100} 铜`;
 export const duration=(ms:number)=>{const seconds=Math.max(0,Math.ceil(ms/1000));return seconds>=60?`${Math.floor(seconds/60)}分${seconds%60}秒`:`${seconds}秒`};
@@ -40,18 +40,29 @@ export function ItemTooltip({item,instance,auction=false,details}:{item:any;inst
 
  </div>;
 }
-type ItemDisplayProps={item:any;instance?:any;details?:ReactNode;auction?:boolean;className?:string;focusable?:boolean;size?:number;iconOnly?:boolean;trigger?:ReactElement};
-export function ItemDisplay({item,instance,details,auction,className='',focusable=true,size=40,iconOnly=false,trigger}:ItemDisplayProps){
+type ItemDisplayProps={item:any;instance?:any;details?:ReactNode;auction?:boolean;className?:string;focusable?:boolean;size?:number;iconOnly?:boolean;trigger?:ReactElement;inspectOnClick?:boolean};
+export function ItemDisplay({item,instance,details,auction,className='',focusable=true,size=40,iconOnly=false,trigger,inspectOnClick=false}:ItemDisplayProps){
+ const [inspecting,setInspecting]=useState(false);
+ const [hovering,setHovering]=useState(false);
  if(!item)return null;
- const identity=<span className={`item-display quality-${item.quality??1} ${iconOnly?'item-display-slot ':''}${className}`} tabIndex={!trigger&&focusable?0:undefined}>
+ const identity=<span className={`item-display quality-${item.quality??1} ${iconOnly?'item-display-slot ':''}${className}`} tabIndex={!trigger&&!inspectOnClick&&focusable?0:undefined}>
    <span className="item-display-icon" style={{width:size,height:size}}>{item.icon?<img src={publicAsset(item.icon)} alt="" width={size} height={size}/>:<span className="item-display-fallback" aria-hidden="true">{item.name.slice(0,1)}</span>}</span>
    <strong className="item-display-name">{item.name}</strong>
    {iconOnly&&instance?.count>1&&<span className="item-stack-count" aria-hidden="true">{instance.count}</span>}
    {iconOnly&&instance?.durability===0&&item.maxDurability>0&&<span className="item-slot-broken" aria-label="已损坏">!</span>}
   </span>;
- return <TooltipPrimitive.Provider delayDuration={150}><TooltipPrimitive.Root><TooltipPrimitive.Trigger asChild>{trigger?cloneElement(trigger,undefined,identity):identity}</TooltipPrimitive.Trigger><TooltipPrimitive.Portal><TooltipPrimitive.Content className="item-hover-content" side="top" align="start" sideOffset={8} collisionPadding={12}>
-  <ItemTooltip item={item} instance={instance} details={details} auction={auction}/>
- </TooltipPrimitive.Content></TooltipPrimitive.Portal></TooltipPrimitive.Root></TooltipPrimitive.Provider>;
+ const content=<ItemTooltip item={item} instance={instance} details={details} auction={auction}/>;
+ const target=trigger?cloneElement(trigger,undefined,identity):inspectOnClick?<button type="button" className={`item-details-trigger ${className}`} aria-label={`查看 ${item.name} 物品详情`}>{identity}</button>:identity;
+ const tooltipTrigger=<TooltipPrimitive.Trigger asChild onFocus={inspectOnClick?event=>event.preventDefault():undefined}>{target}</TooltipPrimitive.Trigger>;
+ return <TooltipPrimitive.Provider delayDuration={150}><TooltipPrimitive.Root open={hovering&&!inspecting} onOpenChange={setHovering}>
+  {inspectOnClick?<PopoverPrimitive.Root open={inspecting} onOpenChange={open=>{setInspecting(open);setHovering(false);}}>
+   <PopoverPrimitive.Trigger asChild>{tooltipTrigger}</PopoverPrimitive.Trigger>
+   <PopoverPrimitive.Portal><PopoverPrimitive.Content className="item-hover-content item-inspect-content" aria-label={`${item.name} · 物品详情`} side="top" align="start" sideOffset={8} collisionPadding={12}>
+    <PopoverPrimitive.Close className="item-inspect-close" aria-label="关闭物品详情">×</PopoverPrimitive.Close>{content}
+   </PopoverPrimitive.Content></PopoverPrimitive.Portal>
+  </PopoverPrimitive.Root>:tooltipTrigger}
+  <TooltipPrimitive.Portal><TooltipPrimitive.Content className="item-hover-content" side="top" align="start" sideOffset={8} collisionPadding={12}>{content}</TooltipPrimitive.Content></TooltipPrimitive.Portal>
+ </TooltipPrimitive.Root></TooltipPrimitive.Provider>;
 }
 export function Item({item,instance,details,onEquip,onSell}:{item:any;instance?:any;details?:ReactNode;onEquip?:()=>void;onSell?:()=>void}){
  if(!item)return null;

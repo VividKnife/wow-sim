@@ -1,4 +1,4 @@
-import {battlePresentation,playerBuffs} from '../../../packages/game-domain/src/rules/battle-presentation.js';
+import {battlePresentation,playerEffects} from '../../../packages/game-domain/src/rules/battle-presentation.js';
 import {icon} from '../../../packages/game-domain/src/rules/catalog.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -175,11 +175,11 @@ test('Vanish can still enter stealth after the rogue has engaged',()=>{
 
 test('stealth buff uses the spell icon in the HUD and combat presentation',()=>{
  const s=fixture(4,[1784]);combatTick(s);
- for(const effects of [playerBuffs(s),battlePresentation(s).units[s.id].effects]){
+ for(const effects of [playerEffects(s),battlePresentation(s).units[s.id].effects]){
   const buff=effects.find(a=>a.spellId===1784);assert.ok(buff);assert.equal(buff.icon,icon('spells',1784));assert.ok(buff.icon);assert.equal(buff.until,null);
  }
- s.stealthed=false;assert.ok(!playerBuffs(s).some(a=>a.spellId===1784));
- s.stealthed=true;s.form='cat';assert.equal(playerBuffs(s).find(a=>a.spellId===5215)?.icon,icon('spells',5215));
+ s.stealthed=false;assert.ok(!playerEffects(s).some(a=>a.spellId===1784));
+ s.stealthed=true;s.form='cat';assert.equal(playerEffects(s).find(a=>a.spellId===5215)?.icon,icon('spells',5215));
 });
 
 for(const opener of [53,8676])test(`solo rogue approaches directly from behind for ${opener}`,()=>{

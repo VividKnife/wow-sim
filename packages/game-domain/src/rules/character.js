@@ -1,5 +1,5 @@
 import {mightSetBonuses} from './might-set.js';
-import {scaledXp} from './experience.js';
+import {scaledXp,activeServerBuffs} from './experience.js';
 import {partyUnlocked} from './party-unlock.js';
 import {recordJourneyLog} from './journey.js';
 import {agilityChances,intellectCrit,baseAttackPower} from '../../../sim-core/src/class-stats.js';
@@ -114,7 +114,11 @@ const cachedStats=memoizeDerived([
  ['pet','hp'],['pet','kind']
 ],calculateStats);
 export function stats(c){
- const result=cachedStats(c);
+ const result={...cachedStats(c)};
+ for(const buff of activeServerBuffs(c))if(buff.gm)for(const key of ['maxHp','maxMana','armor','attackPower','rangedAttackPower','spellPower','healing']){
+  if(key==='maxMana'&&!result.maxMana)continue;
+  result[key]=(result[key]||0)+(buff[key]||0);
+ }
  // Preserve the public function's independent, mutable return value. Callers
  // may annotate a sheet without corrupting a later combat calculation.
  return {...result,resistances:{...result.resistances},...(result.spellPenetration?{spellPenetration:{...result.spellPenetration}}:{})};

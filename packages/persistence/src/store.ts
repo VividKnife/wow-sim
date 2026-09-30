@@ -1,4 +1,4 @@
-export const tables = ['accounts', 'account_presence', 'characters', 'companions', 'parties', 'wallets', 'items', 'reservations', 'activities', 'actor_leases', 'instances', 'instance_leases', 'combat_plans', 'settlements', 'ledger', 'receipts', 'outbox', 'inbox', 'reward_claims'] as const;
+export const tables = ['gm_templates', 'gm_deliveries', 'gm_buffs', 'gm_operations', 'accounts', 'account_presence', 'characters', 'companions', 'parties', 'wallets', 'items', 'reservations', 'activities', 'actor_leases', 'instances', 'instance_leases', 'combat_plans', 'settlements', 'ledger', 'receipts', 'outbox', 'inbox', 'reward_claims'] as const;
 export type TableName = typeof tables[number];
 // Domain tables validate their own payloads; the store only requires identity.
 export type Row = {

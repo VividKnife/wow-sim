@@ -8,9 +8,32 @@ import {armorWithAuras,attackTimeMultiplier,hasAura} from '../../../packages/sim
 import {enemyAITick} from '../../../packages/game-domain/src/rules/enemy-ai.js';
 import {spells} from '../../../packages/game-domain/src/rules/catalog.js';
 import {leaveDungeon} from '../../../packages/game-domain/src/rules/dungeon.js';
+import {playerEffects,effectsFor} from '../../../packages/game-domain/src/rules/battle-presentation.js';
+import {dispelSpellAuras} from '../../../packages/game-domain/src/rules/spell-aura-lifecycle.js';
 
 function encounter(entry){const s=createGame('测试',283,0);s.level=18;s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rules=[];startCombat(s,[entry]);s.nextAction=s.nextSwing=1e9;const e=s.combat.enemies[0];e.position=s.position+4;e.nextAttack=1e9;return {s,e};}
 const hurt=(s,e,c,amount)=>{c.hp=Math.max(0,c.hp-Math.round(amount));};
+
+for(const id of [744,3150,702,6533,6726,6304,5213,6016])test(`NPC ${id}: harmful auras retain their identity through HUD, dispel and expiry`,()=>{
+ const {s,e}=encounter(644);
+ assert.equal(enemySpells.castEnemySpell(s,e,s,id,[s],hurt,2),true);
+ const effects=playerEffects(s).filter(effect=>effect.spellId===id);
+ assert.equal(effects.length,1);assert.equal(effects[0].kind,'debuff');assert.equal(effects[0].routine,false);
+ assert.ok(effects[0].icon);assert.ok(effects[0].until>0);
+ if(spells[id].Dispel){
+  assert.equal(dispelSpellAuras(s,[spells[id].Dispel],1,s,'negative'),1);
+  assert.ok(!playerEffects(s).some(effect=>effect.spellId===id));
+ }else{
+  s.clock=effects[0].until;assert.ok(!playerEffects(s).some(effect=>effect.spellId===id));
+ }
+});
+
+test('NPC self buffs remain positive rather than appearing as player debuffs',()=>{
+ const {s,e}=encounter(644);
+ enemySpells.castEnemySpell(s,e,e,168,[s],hurt,2);
+ assert.equal(effectsFor(e,s.clock).find(effect=>effect.spellId===168)?.kind,'buff');
+ assert.ok(!playerEffects(s).some(effect=>effect.spellId===168));
+});
 
 test('source Slam applies bounded damage and a three-second stun, with normal actions suppressed',()=>{
  const {s,e}=encounter(644),before=s.hp;

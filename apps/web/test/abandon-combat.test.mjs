@@ -29,7 +29,7 @@ test('revive is required and the unfinished dungeon encounter can be retried at 
  const route=s.dungeon.cursor,run=s.dungeon.runId,source=remaining.sourceGuid,full=s.dungeon.spawns[source].hp;
  s=act(s,{type:'abandonCombat',encounterId:s.combat.id},s.wallAt);
  assert.throws(()=>act(s,{type:'dungeonNext'},s.wallAt));
- s=act(s,{type:'revive'},s.wallAt);s=advance(s,s.wallAt+10000).state;
+ s=act(s,{type:'revive'},s.wallAt);s=advance(s,s.wallAt+30000).state;
  assert.ok([s,...s.party].every(c=>c.hp>0));assert.equal(s.dungeon.cursor,route);assert.equal(s.dungeon.runId,run);
  prepareEncounter(s);
  assert.equal(s.combat.enemies.length,1);assert.equal(s.combat.enemies[0].sourceGuid,source);assert.equal(s.combat.enemies[0].hp,full);
@@ -41,12 +41,12 @@ test('no combat and stale encounter commands are rejected, including a delayed c
  let s=group();const old=s.combat.id;assert.throws(()=>act(s,{type:'abandonCombat',encounterId:'old'},s.wallAt),/变化/);
  s=act(s,{type:'abandonCombat',encounterId:old},s.wallAt);const deaths=s.totals.deaths;
  assert.throws(()=>act(s,{type:'abandonCombat',encounterId:old},s.wallAt),/没有/);assert.equal(s.totals.deaths,deaths);
- s=act(s,{type:'revive'},s.wallAt);s=advance(s,s.wallAt+10000).state;startCombat(s,[299],true);
+ s=act(s,{type:'revive'},s.wallAt);s=advance(s,s.wallAt+30000).state;startCombat(s,[299],true);
  assert.notEqual(s.combat.id,old);assert.throws(()=>act(s,{type:'abandonCombat',encounterId:old},s.wallAt),/变化/);assert.ok(s.hp>0);
 });
 
 test('outdoor abandonment stops automatic hunting and does not double-count an already dead leader',()=>{
  let s=createGame('野外',123,0);s.activity={type:'hunt',target:299};startCombat(s,[299]);s.hp=0;s.combat.leaderDeathCounted=true;s.totals.deaths=1;
  s=act(s,{type:'abandonCombat',encounterId:s.combat.id},s.wallAt);assert.equal(s.totals.deaths,1);assert.equal(s.activity.type,'dead');
- s=act(s,{type:'revive'},s.wallAt);s=advance(s,11000).state;assert.equal(s.combat,null);assert.equal(s.activity.type,'idle');assert.ok(s.hp>0);
+ s=act(s,{type:'revive'},s.wallAt);s=advance(s,30000).state;assert.equal(s.combat,null);assert.equal(s.activity.type,'idle');assert.ok(s.hp>0);
 });

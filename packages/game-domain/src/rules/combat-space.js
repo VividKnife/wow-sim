@@ -1,6 +1,7 @@
 import {fieldContains} from '../../../sim-core/src/encounter-geometry.js';
 import {environmentModifiers} from './class-environment.js';
 import {rooted,controlled,movementMultiplier} from '../../../sim-core/src/combat-auras.js';
+import {movementMultiplier as serverMovementMultiplier} from './experience.js';
 import {ranks,talentModifiers,talentCombatDefense} from './talent-effects.js';
 
 import {point,distance} from '../../../sim-core/src/geometry.js';
@@ -51,7 +52,7 @@ export function effectiveSpeed(unit,clock){
  if(rooted(unit,clock)||controlled(unit,clock)&&!(unit.auras||[]).some(a=>a.type===7&&a.until>clock))return 0;
  const speedBuff=Math.max(0,...(unit.auras||[]).filter(a=>a.until>clock&&a.type===31).map(a=>a.amount))/100;
  const slow=unit.slowUntil>clock?Math.max(0,1-(unit.slow||0)):1;
- return Math.max(0,(['swim','underwater'].includes(unit.environment?.mode)?environmentModifiers(unit,clock).swimSpeed:(unit.moveSpeed??7))*(1+Math.max(speedBuff,talentModifiers(unit).movementPct||0))*(unit.sprintUntil>clock?1.5:1)*(unit.stealthed?.5+.03*(ranks(unit).Camouflage||0):1)*Math.min(slow,movementMultiplier(unit,clock)));
+ return Math.max(0,(['swim','underwater'].includes(unit.environment?.mode)?environmentModifiers(unit,clock).swimSpeed:(unit.moveSpeed??7))*serverMovementMultiplier(unit)*(1+Math.max(speedBuff,talentModifiers(unit).movementPct||0))*(unit.sprintUntil>clock?1.5:1)*(unit.stealthed?.5+.03*(ranks(unit).Camouflage||0):1)*Math.min(slow,movementMultiplier(unit,clock)));
 }
 export function moveToward(s,unit,target,range,clock,dtMs=100){
  if(s?.combat?.pvp){

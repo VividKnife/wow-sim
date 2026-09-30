@@ -366,3 +366,7 @@ body:has(.classic-game-root) .battle-effects-control{display:none}
 
 /* Recovery controls remain reachable on narrow screens. */
 .cu-actions{max-width:calc(100% - 24px);flex-wrap:wrap;justify-content:center;width:max-content}
+.classic-game .cu-corpse-run{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:6;display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;max-width:calc(100% - 32px);padding:8px 20px;border:2px ridge #bca16a;border-radius:4px;background:linear-gradient(#57472d,#29271c);box-shadow:0 4px 18px #000b,inset 0 0 0 1px #19180f;color:#ffe2a6;font-size:16px;white-space:nowrap;text-shadow:0 1px 3px #000}
+.classic-game .cu-corpse-run img{width:30px;height:30px;border:1px solid #d4ba81;object-fit:cover}
+.classic-game .cu-corpse-run:hover:not(:disabled){border-color:#f3d58c;background:linear-gradient(#75603b,#39301e)}
+@media(max-width:800px){.classic-game .cu-corpse-run{min-height:50px;padding:7px 16px;font-size:14px}}

@@ -311,7 +311,7 @@ export class LocalSimulationClient {
     this.syncStatus='';
     if(this.stopped||this.suspended)return;
     this.session={...this.session,...result,characterId:selected};
-    this.worker?.postMessage({type:'ack',generation:result.session.id,itemIds:result.itemIds,deadline:result.deadline});
+    this.worker?.postMessage({type:'ack',generation:result.session.id,itemIds:result.itemIds,deadline:result.deadline,serverBuffs:result.serverBuffs});
     if(!result.active){this.clear();await this.options.refresh();}
     else if(retry&&pause)await this.checkpoint(true);
   }

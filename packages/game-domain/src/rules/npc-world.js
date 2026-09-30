@@ -4,6 +4,7 @@ import {rng,stats,canEquip,slotOf} from './character.js';
 import {combatRole} from './combat-roles.js';
 import {equipmentUpgrade,equipNpcItem,npcEquipmentValue,npcWeaponAllowed} from './npc-equipment.js';
 import {dungeonJournal} from './dungeon-journal.js';
+import {partyUnlocked} from './party-unlock.js';
 
 export const npcCommands=['npcVisit','npcRefresh','npcFriend','npcGroup','npcRecommend','npcLootPolicy'];
 export const NPC_BATCH_SIZE=6,NPC_REFRESH_MS=5*60*1000;
@@ -81,7 +82,7 @@ function buildUnit(s,index,level,initial=true,behavior=behaviorFor(index)){
  return c;
 }
 export function ensureNpcWorld(s){
- if(s.npcPlayer||s.growthPolicy==='companion'||s.level<18)throw new Error('主角达到18级后开放冒险者大厅。');
+ if(s.npcPlayer||s.growthPolicy==='companion'||!partyUnlocked(s))throw new Error('主角达到10级后开放冒险者大厅。');
  if(s.npcWorld)return s.npcWorld;
  s.npcWorld={selection:[],autoLoot:false,residents:names.map((name,index)=>{
   const unit=buildUnit(s,index,s.level);
@@ -212,7 +213,7 @@ export function npcAward(s,c,item,need){
 export function npcWorldView(s){
  const w=s.npcWorld,selected=selectedDungeonMembers(s),active=!!s.dungeon||!!s.goldRaid?.active;
  const member=c=>({id:c.id,name:c.name,classId:c.classId,level:c.level,role:combatRole(c),npc:!!c.npcPlayer,hp:c.hp});
- return {unlocked:s.level>=18&&!s.npcPlayer&&s.growthPolicy!=='companion',ready:!!w,locked:!!s.combat||active||s.goldRaid?.active||s.activity.type!=='idle',autoLoot:!!w?.autoLoot,selected:selected.map(member),
+ return {unlocked:partyUnlocked(s)&&!s.npcPlayer&&s.growthPolicy!=='companion',ready:!!w,locked:!!s.combat||active||s.goldRaid?.active||s.activity.type!=='idle',autoLoot:!!w?.autoLoot,selected:selected.map(member),
   total:w?.residents.length||names.length,board:w?{ids:w.board.ids,sequence:w.board.sequence,remaining:Math.max(0,w.board.refreshAt-s.wallAt),cooldown:NPC_REFRESH_MS}:null,
   residents:(w?.residents||[]).map(p=>{const c=s.party.find(c=>c.id===p.id)||p.unit;return {...member(c),friend:p.friend,personality:p.personality,runs:p.runs,history:p.history,wallet:c.goldNpc?c.money:p.wallet,raidRuns:p.raidRuns,raidProfile:p.raidProfile,status:active&&s.party.some(c=>c.id===p.id)?'与你冒险':p.steps%2?'正在任务历练':'等待组队',equipment:Object.entries(c.equipment).map(([slot,item])=>({slot:Number(slot),...item})),talents:c.talents,stats:stats(c),nextXp:xpTable[c.level]?.xp_for_next_level||0,xp:c.xp};})};
 }

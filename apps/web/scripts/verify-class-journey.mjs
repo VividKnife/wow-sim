@@ -49,7 +49,7 @@ function sell(){
  }
  if(s.pending.length&&s.bag.length<bagCapacity(s))command({type:'loot'});
 }
-function recover(){if(s.combat)throw new Error('Recovery requested in combat');if(s.hp<=0){command({type:'revive'});wait(10000);}if(s.activity.type==='hunt')command({type:'stop'});command({type:'rest'});let n=0;while((s.hp<stats(s).maxHp||s.mana<stats(s).maxMana)&&n++<300)wait(2000);if(n>=300)throw new Error('Recovery exceeded ten minutes');}
+function recover(){if(s.combat)throw new Error('Recovery requested in combat');if(s.hp<=0){command({type:'revive'});wait(s.activity.endsAt-s.clock);}if(s.activity.type==='hunt')command({type:'stop'});command({type:'rest'});let n=0;while((s.hp<stats(s).maxHp||s.mana<stats(s).maxMana)&&n++<300)wait(2000);if(n>=300)throw new Error('Recovery exceeded ten minutes');}
 function supplies(){
  for(const water of [true,false]){const id=knownRank(s,water?5504:587);if(!id)continue;const sp=spellInfo(s,id);let attempts=0;while(countItem(s,sp.EffectItemType1)<6&&s.bag.length<bagCapacity(s)&&attempts++<4){if(s.mana<sp.mana)recover();command({type:'conjure',water});wait(s.activity.endsAt-s.clock);}}
 }

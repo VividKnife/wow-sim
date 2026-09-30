@@ -96,6 +96,20 @@ const hordeTowns=['sun-rock','splintertree','zoram','tarren-mill','hammerfall','
 for(const n of worldNodes){if(allianceTowns.includes(n.id))n.faction='Alliance';if(hordeTowns.includes(n.id))n.faction='Horde';if(n.id==='ratchet')n.faction='Contested';}
 export const worldFlightNodes=['ironforge','thelsamar','lakeshire','darkshire','menethil','southshore','refuge-pointe','aerie-peak','booty-bay','tarren-mill','sepulcher','undercity','hammerfall','kargath','gromgol','stonard','darnassus','auberdine','astranaar','stonetalon-peak','nijels','feathermoon','theramore','orgrimmar','crossroads','ratchet','camp-taurajo','thunderbluff','sun-rock','splintertree','zoram','shadowprey','freewind','brackenwall','camp-mojache','gadgetzan','revantusk'];
 export const worldRoads=regions.flatMap(([, , , , , ,places])=>places.slice(1).map((p,i)=>[places[i][0],p[0]]));
+// Region lists describe content, not a walkable itinerary. Connect each place
+// to nearby places so a short local trip does not loop through distant entries.
+for(const [, , , , , ,places] of regions){
+ for(const place of places){
+  const nearby=places.filter(other=>other!==place)
+   .map(other=>({other,distance:Math.hypot(place[2]-other[2],place[3]-other[3])}))
+   .filter(candidate=>candidate.distance<=900)
+   .sort((a,b)=>a.distance-b.distance)
+   .slice(0,2);
+  for(const {other} of nearby){
+   if(!worldRoads.some(([a,b])=>a===place[0]&&b===other[0]||a===other[0]&&b===place[0]))worldRoads.push([place[0],other[0]]);
+  }
+ }
+}
 worldRoads.push(...endgameRoads);
 worldRoads.push(['wyrmbog','onyxias-lair'],['blackrock-mountain','molten-core']);
 worldFlightNodes.push(...endgameFlights);

@@ -33,7 +33,7 @@ test('a real first encounter advances the route once and cannot reward the same 
  const xp=s.totals.xp,kills=s.totals.kills;recordDungeonProgress(s);recordDungeonProgress(s);
  assert.equal(s.dungeon.cursor,1);assert.equal(s.totals.xp,xp);assert.equal(s.totals.kills,kills);
  // Casualties do not invalidate encounter rewards; recover before testing re-entry.
- if([s,...s.party].some(c=>c.hp<=0)){s=act(s,{type:'revive'},s.wallAt);s=advance(s,s.wallAt+11000,{}).state;}
+ if([s,...s.party].some(c=>c.hp<=0)){s=act(s,{type:'revive'},s.wallAt);s=advance(s,s.wallAt+30000,{}).state;}
  const run=structuredClone(s.dungeon);leaveDungeon(s);enterDungeon(s);assert.deepEqual(s.dungeon,run);
 });
 
@@ -99,7 +99,7 @@ test('a wiped party can return to corpses and resume without recreating defeated
  let s=group();enterDungeon(s);pull(s);s.combat.enemies[0].hp=0;combatTick(s);recordDungeonProgress(s);
  const deadGuid=s.combat.enemies[0].sourceGuid;for(const c of [s,...s.party])c.hp=0;combatTick(s);recordDungeonProgress(s);
  s=act(s,{type:'revive'},0);assert.equal(s.activity.type,'revive');
- s=advance(s,10000,{}).state;
+ s=advance(s,30000,{}).state;
  assert.ok([s,...s.party].every(c=>c.hp>0));assert.equal(s.dungeon.defeated[deadGuid],true);
  assert.doesNotThrow(()=>prepareEncounter(s));
 });
@@ -114,7 +114,7 @@ test('priest resurrection has its source cost and cast time, and restores flat h
  // The shared regeneration tick at 10s also occurs after resurrection.
  assert.ok(restored.hp>=70);assert.ok(restored.hp<stats(restored).maxHp/2);assert.ok(restored.mana>=135);
  const oldHp=s.hp;s.party.find(c=>c.classId===1).hp=0;s=act(s,{type:'revive'},10000);
- s=advance(s,20000,{}).state;assert.equal(s.hp,oldHp);assert.ok(s.party.find(c=>c.classId===1).hp>0);
+ s=advance(s,40000,{}).state;assert.equal(s.hp,oldHp);assert.ok(s.party.find(c=>c.classId===1).hp>0);
 });
 
 test('VanCleef drops the Alliance letter before its quest is accepted, enabling the item-started follow-up',()=>{
@@ -139,7 +139,7 @@ test('letter loot eligibility is independent of acceptance level and respects fa
 
 test('leaving with a fallen companion still permits recovery outside and re-entry',()=>{
  let s=group();enterDungeon(s);s.party.find(c=>c.classId===5).hp=0;leaveDungeon(s);
- s=act(s,{type:'revive'},0);s=advance(s,10000).state;
+ s=act(s,{type:'revive'},0);s=advance(s,30000).state;
  assert.ok(s.party.every(c=>c.hp>0));assert.doesNotThrow(()=>enterDungeon(s));
 });
 

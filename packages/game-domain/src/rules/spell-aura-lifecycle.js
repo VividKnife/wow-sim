@@ -26,12 +26,12 @@ export function applySpellAura(unit,aura,clock){
  addCombatAura(unit,next,clock);return true;
 }
 
-function positive(a,key){
+export function isPositiveSpellAura(a,key='auras'){
  if(a.positive!=null)return a.positive;
  if(['hots','periodicClass','classBuffs','absorb','manaShield'].includes(key))return true;
  if(key==='dots')return false;
  const sp=spells[spellId(a)];
- // Explicit hostile target selectors cover old/custom effects without metadata.
+ // Source selectors classify scripted effects that do not carry explicit polarity.
  if([1,2,3].some(n=>[6,15,16,22,24,28,53,54].includes(sp?.['EffectImplicitTargetA'+n])))return false;
  return [1,2,3].some(n=>[1,21,20,30,35,37].includes(sp?.['EffectImplicitTargetA'+n]));
 }
@@ -41,7 +41,7 @@ export function dispelSpellAuras(unit,types,count=Infinity,state,polarity='all')
  const collect=(a,key)=>{
   if(!a||a.until!=null&&a.until<=clock||a.remaining!=null&&a.remaining<=0)return;
   if(!types.includes(a.dispel??spells[spellId(a)]?.Dispel))return;
-  if(polarity!=='all'&&positive(a,key)!==(polarity==='positive'))return;
+  if(polarity!=='all'&&isPositiveSpellAura(a,key)!==(polarity==='positive'))return;
   const id=identity(a),group=groups.get(id)||{id,entries:[],resistance:0};
   group.entries.push({a,key});group.resistance=Math.max(group.resistance,a.dispelResistance||0);groups.set(id,group);
  };

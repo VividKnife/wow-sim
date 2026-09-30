@@ -57,3 +57,5 @@
  .cu-quick-controls .cu-quick-config{width:36px;height:36px}
  .cu-quickbar-cast{left:auto;right:0;transform:none;width:min(360px,calc(100vw - 24px))}
 }
+
+.classic-game .cu-quick-slot.queued{outline:2px solid #f4cf6b;outline-offset:2px;box-shadow:0 0 12px #f4cf6b88}

@@ -30,6 +30,7 @@ export function combatInputTargetReason(s,c,sp,target){
 export function combatInputReadyReason(s,c,sp,target){
  const invalid=combatInputTargetReason(s,c,sp,target);if(invalid)return invalid;
  if(controlled(c,s.clock))return '施法者被控制';
+ if(sp.SpellName==='Power Word: Shield'&&target.weakenedSoulUntil>s.clock)return '目标受到虚弱灵魂影响，暂时无法施加真言术：盾';
  if(sp.School>0&&(c.silenceUntil>s.clock||hasAura(c,27,s.clock))||(c.schoolLockouts?.[sp.School]||0)>s.clock)return '学派被锁定或施法者被沉默';
  if(cooldownUntil(c,sp)>s.clock)return '技能仍在冷却';
  if(c!==target&&!inSpellRange(c,target,sp))return '目标超出施法距离';

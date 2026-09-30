@@ -1,3 +1,4 @@
+import {applyGmBuffs} from './gm-buffs.ts';
 import { createGame } from './rules/engine.js';
 import {syncNpcWorld} from './rules/npc-world.js';
 import type { ReadView, Transaction } from '../../persistence/src/store.ts';
@@ -88,6 +89,7 @@ export async function context(tx: ReadView, character: Character, now: number, w
             s.rngState = active.rngState;
         }
     }
+    await applyGmBuffs(tx,s,character.accountId);
     return s;
 }
 export async function persistAssets(tx: Transaction, character: Character, s: Rules, key: string, newId: () => string) {

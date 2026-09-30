@@ -27,7 +27,7 @@ export async function createWebServer({dist=root+'dist',publicDir=root+'public',
    req.on('aborted',()=>outgoing.destroy());res.on('close',()=>outgoing.destroy());req.pipe(outgoing);return;
   }
   if(!['GET','HEAD'].includes(req.method)){res.writeHead(405,{Allow:'GET, HEAD'});res.end();return;}
-  let path=url.pathname==='/'||url.pathname==='/login'?'/index.html':decodeURIComponent(url.pathname);
+  let path=url.pathname==='/'||url.pathname==='/login'||url.pathname==='/admin'||url.pathname==='/admin/'?'/index.html':decodeURIComponent(url.pathname);
   const html=['/index.html','/model-viewer/index.html','/__deployment.json'].includes(path);
   // R2 deployments never relay or redirect static resource bytes through Zeabur.
   if(!html&&metadata.assetMode==='r2'){res.writeHead(404);res.end();return;}
