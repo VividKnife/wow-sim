@@ -1,4 +1,3 @@
-'use client';
 import {useEffect,useRef,useState,type CSSProperties} from 'react';
 import {Music2,Pause,Play,RotateCcw,Volume1,VolumeX} from 'lucide-react';
 import styles from './zone-music.module.css';

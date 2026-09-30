@@ -1,4 +1,3 @@
-"use client";
 import {GameProps,duration} from './game-ui';
 import {Button} from '@/components/ui/button';
 export default function ClassCompanion({state:s,data:d,busy,send}:GameProps){

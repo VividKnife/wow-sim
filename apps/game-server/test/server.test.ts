@@ -3,7 +3,7 @@ import test from 'node:test';
 import {once} from 'node:events';
 import WebSocket from 'ws';
 import {createGameServer, type GameServerOptions, type GameSnapshot} from '../src/server.ts';
-import {signGameToken} from '../src/auth.ts';
+import {issueSession,accounts,appOrigin} from './session-fixture.ts';
 import {createGame,advance} from '../../../packages/game-domain/src/rules/engine.js';
 import {startCombat} from '../../../packages/game-domain/src/rules/combat.js';
 import {finishCombat} from '../../../packages/game-domain/src/rules/combat-metrics.js';
@@ -62,7 +62,7 @@ type Started<T extends GameServerOptions['service']> = {
 async function start(): Promise<Started<TestService>>;
 async function start<T extends GameServerOptions['service']>(service: T): Promise<Started<T>>;
 async function start(service: GameServerOptions['service'] = fakeService()): Promise<Started<GameServerOptions['service']>> {
-  const game = createGameServer({service, secret, pollIntervalMs: 15});
+  const game = createGameServer({service, accounts, appOrigin, pollIntervalMs: 15});
   game.server.listen(0, '127.0.0.1');
   await once(game.server, 'listening');
   const address = game.server.address();
@@ -71,7 +71,7 @@ async function start(service: GameServerOptions['service'] = fakeService()): Pro
 }
 
 async function auth(accountId: string) {
-  return {Authorization: `Bearer ${await signGameToken({sub: accountId}, secret)}`};
+  return {Origin:appOrigin,Cookie: `wow_session=${await issueSession({sub: accountId})}`};
 }
 
 test('authenticated local simulation accepts checkpoints larger than a command and fences foreign characters',async t=>{
@@ -81,8 +81,8 @@ test('authenticated local simulation accepts checkpoints larger than a command a
   const initial=await service.command('local-a',{type:'hunt',id:299,requestId:'hunt'});
   const {game,url}=await start(service);t.after(()=>game.close());
   const input={type:'claim',ownerId:initial.localSimulation!.ownerId,characterId:initial.state.id,contentVersion:CONTENT_VERSION,clientId:'browser',requestId:'claim-0001'};
-  const post=async(body:any,who='local-a')=>fetch(`${url}/game/local`,{method:'POST',headers:{...await auth(who),'content-type':'application/json'},body:JSON.stringify(body)});
-  assert.equal((await fetch(`${url}/game/local`,{method:'POST',body:JSON.stringify(input)})).status,401);
+  const post=async(body:any,who='local-a')=>fetch(`${url}/api/game/local`,{method:'POST',headers:{...await auth(who),'content-type':'application/json'},body:JSON.stringify(body)});
+  assert.equal((await fetch(`${url}/api/game/local`,{method:'POST',headers:{Origin:appOrigin},body:JSON.stringify(input)})).status,401);
   const claim=await post(input);assert.equal(claim.status,200);const session=await claim.json();
   now=2000;const state=advance(session.state,now).state;
   // An unfiltered upload must still be pruned by the server.
@@ -97,8 +97,8 @@ test('authenticated local simulation accepts checkpoints larger than a command a
   assert.equal((await post({...input,requestId:'foreign-1'},'local-b')).status,403);
 });
 
-test('server startup rejects a shared secret shorter than 32 bytes', () => {
-  assert.throws(() => createGameServer({service: fakeService(), secret: 'weak'}), /32/);
+test('server startup rejects an origin containing a path', () => {
+ assert.throws(()=>createGameServer({service:fakeService(),accounts,appOrigin:'https://game.test/path'}),/APP_ORIGIN/);
 });
 
 test('combat scope has its own ETag and refreshes the complete view when combat ends',async t=>{
@@ -106,14 +106,14 @@ test('combat scope has its own ETag and refreshes the complete view when combat 
  let revision=1;
  service.snapshot=async(accountId,characterId)=>({...snapshot(accountId,characterId,revision),state});
  const {game,url}=await start(service);t.after(()=>game.close());const headers=await auth('account-a');
- const compact=await fetch(`${url}/game?scope=combat`,{headers}),compactBody:any=await compact.json();
+ const compact=await fetch(`${url}/api/game?scope=combat`,{headers}),compactBody:any=await compact.json();
  assert.equal(compactBody.scope,'combat');assert.equal(compactBody.snapshot.view.skills,undefined);
- const unchanged=await fetch(`${url}/game?scope=combat`,{headers:{...headers,'If-None-Match':compact.headers.get('etag')!}});
+ const unchanged=await fetch(`${url}/api/game?scope=combat`,{headers:{...headers,'If-None-Match':compact.headers.get('etag')!}});
  assert.equal(unchanged.status,304);
- const full=await fetch(`${url}/game`,{headers:{...headers,'If-None-Match':compact.headers.get('etag')!}});
+ const full=await fetch(`${url}/api/game`,{headers:{...headers,'If-None-Match':compact.headers.get('etag')!}});
  assert.equal(full.status,200);assert.equal((await full.json() as any).scope,'full');
  finishCombat(state);revision++;
- const ended:any=await (await fetch(`${url}/game?scope=combat`,{headers})).json();
+ const ended:any=await (await fetch(`${url}/api/game?scope=combat`,{headers})).json();
  assert.equal(ended.scope,'full');assert.ok(ended.snapshot.view.skills);assert.ok(ended.snapshot.player.lastCombat);
 });
 
@@ -122,8 +122,8 @@ test('two authenticated clients only receive their own projected game snapshot',
   t.after(() => game.close());
 
   const [a, b] = await Promise.all([
-    fetch(`${url}/game`, {headers: await auth('account-a')}),
-    fetch(`${url}/game`, {headers: await auth('account-b')}),
+    fetch(`${url}/api/game`, {headers: await auth('account-a')}),
+    fetch(`${url}/api/game`, {headers: await auth('account-b')}),
   ]);
   assert.equal(a.status, 200);
   assert.equal(b.status, 200);
@@ -140,18 +140,18 @@ test('game endpoints reject unsigned identity headers and reject cross-account c
   const {game, url} = await start();
   t.after(() => game.close());
 
-  const unsigned = await fetch(`${url}/game`, {'headers': {'oai-authenticated-user-id': 'account-a'}});
+  const unsigned = await fetch(`${url}/api/game`, {'headers': {'oai-authenticated-user-id': 'account-a'}});
   assert.equal(unsigned.status, 401);
-  const forbidden = await fetch(`${url}/game?characterId=account-b-hero`, {headers: await auth('account-a')});
+  const forbidden = await fetch(`${url}/api/game?characterId=account-b-hero`, {headers: await auth('account-a')});
   assert.equal(forbidden.status, 403);
   assert.deepEqual(await forbidden.json(), {error: '角色不属于此账号', code: 'FORBIDDEN'});
 });
 
-test('commands derive the account from the signed subject and never forward claimed account identity', async (t) => {
+test('commands derive the account from the validated session and never forward claimed account identity', async (t) => {
   const {game, service, url} = await start();
   t.after(() => game.close());
 
-  const response = await fetch(`${url}/game`, {
+  const response = await fetch(`${url}/api/game`, {
     method: 'POST',
     headers: {...await auth('account-a'), 'content-type': 'application/json'},
     body: JSON.stringify({type: 'travel', requestId: 'request-1234', characterId: 'account-a-hero', accountId: 'account-b', userId: 'account-b'}),
@@ -167,7 +167,7 @@ test('commands derive the account from the signed subject and never forward clai
 test('character creation rejects malformed names and class choices before calling the domain', async (t) => {
   const {game, service, url} = await start();
   t.after(() => game.close());
-  const response = await fetch(`${url}/game`, {
+  const response = await fetch(`${url}/api/game`, {
     method: 'POST',
     headers: {...await auth('account-a'), 'content-type': 'application/json'},
     body: JSON.stringify({type: 'create', requestId: 'create-invalid', name: '', classId: 'mage', raceId: 1}),
@@ -179,14 +179,14 @@ test('character creation rejects malformed names and class choices before callin
 test('character creation forwards a valid gender and rejects unknown values', async (t) => {
   const {game, service, url} = await start();
   t.after(() => game.close());
-  const created = await fetch(`${url}/game`, {
+  const created = await fetch(`${url}/api/game`, {
     method: 'POST',
     headers: {...await auth('account-a'), 'content-type': 'application/json'},
     body: JSON.stringify({type: 'create', requestId: 'create-female', name: 'Hero', classId: 8, raceId: 1, gender: 'female'}),
   });
   assert.equal(created.status, 200);
   assert.deepEqual(service.calls.at(-1), {method:'createAccount', accountId:'account-a', input:{name:'Hero',classId:8,raceId:1,gender:'female'}, requestId:'create-female'});
-  const invalid = await fetch(`${url}/game`, {
+  const invalid = await fetch(`${url}/api/game`, {
     method: 'POST',
     headers: {...await auth('account-a'), 'content-type': 'application/json'},
     body: JSON.stringify({type: 'create', requestId: 'create-invalid-gender', name: 'Hero', classId: 8, raceId: 1, gender: 'other'}),
@@ -197,7 +197,7 @@ test('character creation forwards a valid gender and rejects unknown values', as
 test('versioned content is immutable only for the exact version and mismatches fail', async (t) => {
   const content = {contentVersion: 'content-v1', items: {}, market: [], enchants: [], bandages: [], potionOptions: [], creationOptions: []};
   const service = fakeService();
-  const game = createGameServer({service, secret, content: () => content as any});
+  const game = createGameServer({service, accounts, appOrigin, content: () => content as any});
   game.server.listen(0, '127.0.0.1');
   await once(game.server, 'listening');
   t.after(() => game.close());
@@ -205,25 +205,25 @@ test('versioned content is immutable only for the exact version and mismatches f
   assert.ok(address && typeof address === 'object');
   const url = `http://127.0.0.1:${address.port}`;
 
-  const current = await fetch(`${url}/content?version=content-v1`);
+  const current = await fetch(`${url}/api/game/content?version=content-v1`);
   assert.equal(current.status, 200);
   assert.match(current.headers.get('cache-control') || '', /immutable/);
-  assert.match(current.headers.get('etag') || '', /^"[a-f0-9]{64}"$/);
+  assert.match(current.headers.get('etag') || '', /^(?:W\/)?"[a-f0-9]{64}"$/);
   const core = await current.json() as any;
   assert.equal(core.pack, 'core');
   assert.deepEqual(core.items, {});
-  const unchanged = await fetch(`${url}/content?version=content-v1`, {headers:{'if-none-match':current.headers.get('etag')!}});
+  const unchanged = await fetch(`${url}/api/game/content?version=content-v1`, {headers:{'if-none-match':current.headers.get('etag')!}});
   assert.equal(unchanged.status, 304);
-  const market = await fetch(`${url}/content?version=content-v1&pack=market`, {headers:{'if-none-match':current.headers.get('etag')!}});
+  const market = await fetch(`${url}/api/game/content?version=content-v1&pack=market`, {headers:{'if-none-match':current.headers.get('etag')!}});
   assert.equal(market.status, 200, 'one pack must not validate the cache of another');
   assert.notEqual(market.headers.get('etag'), current.headers.get('etag'));
   assert.equal((await market.json() as any).pack, 'market');
-  assert.equal((await fetch(`${url}/content?version=content-v1&pack=items&ids=-1`)).status,400);
-  assert.equal((await fetch(`${url}/content?version=content-v1&pack=all`)).status,404);
-  const mismatch = await fetch(`${url}/content?version=old`);
+  assert.equal((await fetch(`${url}/api/game/content?version=content-v1&pack=items&ids=-1`)).status,400);
+  assert.equal((await fetch(`${url}/api/game/content?version=content-v1&pack=all`)).status,404);
+  const mismatch = await fetch(`${url}/api/game/content?version=old`);
   assert.equal(mismatch.status, 409);
   assert.match((await mismatch.json() as any).error, /版本/);
-  const unversioned = await fetch(`${url}/content`);
+  const unversioned = await fetch(`${url}/api/game/content`);
   assert.equal(unversioned.headers.get('cache-control'), 'no-store');
 });
 
@@ -237,8 +237,8 @@ test('websocket subscriptions send full own-account snapshots with revision and 
   });
   const {game, url} = await start(service);
   t.after(() => game.close());
-  const token = await signGameToken({sub: 'account-a'}, secret);
-  const socket = new WebSocket(url.replace('http:', 'ws:') + '/events', {headers: {Authorization: `Bearer ${token}`}});
+  const token = await issueSession({sub: 'account-a'});
+  const socket = new WebSocket(url.replace('http:', 'ws:') + '/api/events', {headers: {Origin:appOrigin,Cookie: `wow_session=${token}`}});
   t.after(() => socket.close());
   await once(socket, 'open');
   socket.send(JSON.stringify({type: 'subscribe', characterId: 'account-a-hero', revision: 0, sequence: 0}));
@@ -271,8 +271,8 @@ test('delta websocket subscriptions reconstruct changes and resubscribe with a f
   return result;
  };
  const {game,url}=await start(service);t.after(()=>game.close());
- const token=await signGameToken({sub:'account-a'},secret);
- const socket=new WebSocket(url.replace('http:','ws:')+'/events',{headers:{Authorization:`Bearer ${token}`}});t.after(()=>socket.close());
+ const token=await issueSession({sub:'account-a'});
+ const socket=new WebSocket(url.replace('http:','ws:')+'/api/events',{headers:{Origin:appOrigin,Cookie:`wow_session=${token}`}});t.after(()=>socket.close());
  await once(socket,'open');
  socket.send(JSON.stringify({type:'subscribe',mode:'delta',characterId:'account-a-hero'}));
  let [raw]=await once(socket,'message'),event=JSON.parse(raw.toString());
@@ -306,7 +306,7 @@ test('the HTTP boundary integrates with a real GameService and isolates its crea
   const service = new GameService(store, {contentVersion: CONTENT_VERSION});
   const {game, url} = await start(service);
   t.after(async () => { await game.close(); await store.close(); });
-  const empty = await fetch(`${url}/game`, {headers: await auth('real-a')});
+  const empty = await fetch(`${url}/api/game`, {headers: await auth('real-a')});
   assert.equal(empty.status, 200);
   assert.deepEqual(await empty.json(), {
     protocolVersion: 1,
@@ -323,7 +323,7 @@ test('the HTTP boundary integrates with a real GameService and isolates its crea
     instanceId: null,
     instance: null,
   });
-  const created = await fetch(`${url}/game`, {
+  const created = await fetch(`${url}/api/game`, {
     method: 'POST',
     headers: {...await auth('real-a'), 'content-type': 'application/json'},
     body: JSON.stringify({type: 'create', requestId: 'create-real-a', name: '真实边界', classId: 1, raceId: 1}),
@@ -332,7 +332,7 @@ test('the HTTP boundary integrates with a real GameService and isolates its crea
   const payload = await created.json() as any;
   assert.equal(payload.account.id, 'real-a');
   assert.equal(payload.snapshot.player.name, '真实边界');
-  const forbidden = await fetch(`${url}/game?characterId=${encodeURIComponent(payload.snapshot.player.id)}`, {headers: await auth('real-b')});
+  const forbidden = await fetch(`${url}/api/game?characterId=${encodeURIComponent(payload.snapshot.player.id)}`, {headers: await auth('real-b')});
   assert.equal(forbidden.status, 404);
 });
 
@@ -341,13 +341,13 @@ test('conditional HTTP polls publish idle regeneration and cache again after ful
  const created=await service.createAccount('recover',{name:'恢复',classId:8,raceId:1},'create');
  await store.transaction(async tx=>{const c=(await tx.get('characters',created.state.id))!;c.rules.hp=1;c.rules.mana=0;await tx.put('characters',c);});
  const {game,url}=await start(service);t.after(async()=>{await game.close();await store.close();});
- const headers=await auth('recover');const first=await fetch(url+'/game',{headers});const before=await first.json() as any;
- now=7000;const next=await fetch(url+'/game',{headers:{...headers,'if-none-match':first.headers.get('etag')!}});
+ const headers=await auth('recover');const first=await fetch(url+'/api/game',{headers});const before=await first.json() as any;
+ now=7000;const next=await fetch(url+'/api/game',{headers:{...headers,'if-none-match':first.headers.get('etag')!}});
  assert.equal(next.status,200);const after=await next.json() as any;
  assert.ok(after.snapshot.player.hp>before.snapshot.player.hp);assert.ok(after.snapshot.player.mana>0);
- now=121000;const full=await fetch(url+'/game',{headers});const body=await full.json() as any;
+ now=121000;const full=await fetch(url+'/api/game',{headers});const body=await full.json() as any;
  assert.equal(body.snapshot.player.hp,body.snapshot.view.stats.maxHp);assert.equal(body.snapshot.player.mana,body.snapshot.view.stats.maxMana);
- now=123000;const unchanged=await fetch(url+'/game',{headers:{...headers,'if-none-match':full.headers.get('etag')!}});assert.equal(unchanged.status,304);
+ now=123000;const unchanged=await fetch(url+'/api/game',{headers:{...headers,'if-none-match':full.headers.get('etag')!}});assert.equal(unchanged.status,304);
 });
 
 test('authenticated user can recreate an invalid save then read it normally', async t => {
@@ -362,17 +362,17 @@ test('authenticated user can recreate an invalid save then read it normally', as
   const {game, url} = await start(service);
   t.after(async () => {await game.close(); await store.close();});
   const headers = {...await auth('recreate'), 'content-type': 'application/json'};
-  const invalid = await fetch(url + '/game', {headers});
+  const invalid = await fetch(url + '/api/game', {headers});
   assert.equal(invalid.status, 409);
   assert.equal((await invalid.json() as any).code, 'ACCOUNT_STATE');
-  const response = await fetch(url + '/game', {method: 'POST', headers, body: JSON.stringify({type: 'create', ...input, requestId: 'recreate-request'})});
+  const response = await fetch(url + '/api/game', {method: 'POST', headers, body: JSON.stringify({type: 'create', ...input, requestId: 'recreate-request'})});
   assert.equal(response.status, 200);
   const created = await response.json() as any;
   assert.notEqual(created.snapshot.player.id, old.state.id);
-  const loaded = await fetch(url + '/game', {headers});
+  const loaded = await fetch(url + '/api/game', {headers});
   assert.equal(loaded.status, 200);
   assert.equal((await loaded.json() as any).snapshot.player.id, created.snapshot.player.id);
-  const duplicate = await fetch(url + '/game', {method: 'POST', headers, body: JSON.stringify({type: 'create', ...input, requestId: 'duplicate-request'})});
+  const duplicate = await fetch(url + '/api/game', {method: 'POST', headers, body: JSON.stringify({type: 'create', ...input, requestId: 'duplicate-request'})});
   assert.equal(duplicate.status, 409);
   assert.equal((await duplicate.json() as any).code, 'EXISTS');
 });
@@ -384,9 +384,9 @@ test('authenticated conditional polls refresh offline allowance even when the re
   const {game, url} = await start(service);
   t.after(async () => {await game.close(); await store.close();});
   const headers = await auth('presence');
-  const first = await fetch(url + '/game', {headers});
+  const first = await fetch(url + '/api/game', {headers});
   now = 2500;
-  const cached = await fetch(url + '/game', {headers: {...headers, 'if-none-match': first.headers.get('etag')!}});
+  const cached = await fetch(url + '/api/game', {headers: {...headers, 'if-none-match': first.headers.get('etag')!}});
   assert.equal(cached.status, 304);
   assert.equal((await store.transaction(tx => tx.get('account_presence', 'presence')))!.lastSeenAt, 2500);
   now = 4000;
@@ -402,16 +402,16 @@ test('conditional snapshots validate identity and stop unchanged response serial
  };
  const {game,url}=await start(service);t.after(()=>game.close());
  const headers=await auth('account-a');
- const first=await fetch(url+'/game',{headers});assert.equal(first.status,200);
+ const first=await fetch(url+'/api/game',{headers});assert.equal(first.status,200);
  const etag=first.headers.get('etag');assert.ok(etag);
- const unchanged=await fetch(url+'/game',{headers:{...headers,'if-none-match':etag}});
+ const unchanged=await fetch(url+'/api/game',{headers:{...headers,'if-none-match':etag}});
  assert.equal(unchanged.status,304);assert.equal(await unchanged.text(),'');
- const forbidden=await fetch(url+'/game?characterId=account-b-hero',{headers:{...headers,'if-none-match':etag}});
+ const forbidden=await fetch(url+'/api/game?characterId=account-b-hero',{headers:{...headers,'if-none-match':etag}});
  assert.equal(forbidden.status,403);
- const different=await fetch(url+'/game?characterId=account-a-helper',{headers:{...headers,'if-none-match':etag}});
+ const different=await fetch(url+'/api/game?characterId=account-a-helper',{headers:{...headers,'if-none-match':etag}});
  assert.equal(different.status,200);assert.notEqual(different.headers.get('etag'),etag);
  revision++;
- const changed=await fetch(url+'/game',{headers:{...headers,'if-none-match':etag}});
+ const changed=await fetch(url+'/api/game',{headers:{...headers,'if-none-match':etag}});
  assert.equal(changed.status,200);assert.notEqual(changed.headers.get('etag'),etag);
 });
 
@@ -426,7 +426,7 @@ test('a task command and its large local checkpoint use one authenticated reques
  const localCheckpoint={type:'checkpoint',ownerId:started.localSimulation!.ownerId,characterId:started.state.id,contentVersion:CONTENT_VERSION,clientId:'browser',sessionId:session.session.id,sequence:1,state,requestId:'combined-checkpoint'};
  const input={type:'settings',autoLoot:true,characterId:started.state.id,localClientId:'browser',localSessionId:session.session.id,localCheckpoint,requestId:'combined-command'};
  const {game,url}=await start(service);t.after(()=>game.close());
- const post=async (body:any)=>fetch(`${url}/game`,{method:'POST',headers:{...await auth('combined'),'content-type':'application/json'},body:JSON.stringify(body)});
+ const post=async (body:any)=>fetch(`${url}/api/game`,{method:'POST',headers:{...await auth('combined'),'content-type':'application/json'},body:JSON.stringify(body)});
  const response=await post(input);assert.equal(response.status,200);
  const result=await response.json();assert.equal(result.snapshot.player.settings.autoLoot,true);assert.equal(result.snapshot.player.wallAt,1100);
  const replay=await post(input);assert.equal(replay.status,200);assert.equal((await replay.json()).revision,result.revision);

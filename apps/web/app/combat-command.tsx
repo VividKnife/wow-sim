@@ -1,5 +1,4 @@
-"use client";
-/* eslint-disable @next/next/no-img-element -- Game spell icons. */
+
 import {useEffect,useState,type ReactNode} from 'react';
 import {Swords,Flame,Footprints,Hand,Crosshair,RotateCcw,Pause,Play,Flag,ChevronDown,X,Droplets,HeartPulse} from 'lucide-react';
 import ClassIcon from './class-icon';

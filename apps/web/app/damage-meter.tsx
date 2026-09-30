@@ -1,4 +1,3 @@
-"use client";
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
 import {useState,type CSSProperties} from 'react';
 import {BarChart3,ChevronDown,ChevronRight,Clock3} from 'lucide-react';

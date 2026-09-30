@@ -13,7 +13,7 @@ import {buildGameResponse} from '../packages/game-domain/src/rules/server-respon
 import {CONTENT_VERSION} from '../packages/game-domain/src/rules/client-content.js';
 import {workshopView} from '../packages/game-domain/src/rules/workshop.js';
 import {createGameServer} from '../apps/game-server/src/server.ts';
-import {signGameToken} from '../apps/game-server/src/auth.ts';
+import {issueSession,accounts,appOrigin} from '../apps/game-server/test/session-fixture.ts';
 
 const fixedNow = Date.UTC(2026, 8, 16, 0, 0, 0);
 const accountId = 'foundation-benchmark-account';
@@ -131,17 +131,17 @@ async function measure() {
     assert.equal(idleResult.complete, true, 'quiet idle fast-forward must complete with maxTicks=1');
     assert.equal(idleResult.state.wallAt - snapshot.state.wallAt, dayMs);
 
-    game = createGameServer({service, secret});
+    game = createGameServer({service, accounts, appOrigin});
     game.server.listen(0, '127.0.0.1');
     await once(game.server, 'listening');
     const address = game.server.address();
     assert.ok(address && typeof address === 'object');
-    const token = await signGameToken({sub: accountId}, secret);
-    const url = `http://127.0.0.1:${address.port}/game`;
-    const http200 = await actualHttp(url, {authorization: `Bearer ${token}`});
+    const token = await issueSession({sub: accountId});
+    const url = `http://127.0.0.1:${address.port}/api/game`;
+    const http200 = await actualHttp(url, {cookie: `wow_session=${token}`});
     assert.equal(http200.status, 200);
     assert.ok(http200.etag);
-    const http304 = await actualHttp(url, {authorization: `Bearer ${token}`, 'if-none-match': http200.etag});
+    const http304 = await actualHttp(url, {cookie: `wow_session=${token}`, 'if-none-match': http200.etag});
     assert.equal(http304.status, 304);
     assert.equal(http304.decodedBodyBytes, 0);
 

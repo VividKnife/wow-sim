@@ -1,4 +1,3 @@
-"use client";
 import CreaturePortrait from './creature-portrait';
 import {Button} from '@/components/ui/button';
 import {Bar,GameProps,duration} from './game-ui';

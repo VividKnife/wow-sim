@@ -1,4 +1,3 @@
-'use client';
 import {Tooltip} from 'radix-ui';
 import type {ReactElement} from 'react';
 import {ItemTooltip,type GameProps} from './game-ui';

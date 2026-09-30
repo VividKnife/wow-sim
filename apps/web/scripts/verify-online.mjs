@@ -1,0 +1,92 @@
+// Explicit post-deployment E2E. Creates one isolated account/save on WEB_QA_ORIGIN.
+import assert from 'node:assert/strict';
+import {randomBytes, randomUUID} from 'node:crypto';
+import {mkdir, writeFile} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import {chromium} from 'playwright';
+const origin = process.env.WEB_QA_ORIGIN || 'https://wow-sim.zeabur.app';
+const output = resolve(process.env.WEB_QA_OUTPUT || '/tmp/wow-online-qa');
+const credentials = {username: `e2e_${Date.now().toString(36)}`, password: randomBytes(24).toString('base64url')};
+const metadata = await (await fetch(origin + '/__deployment.json')).json();
+assert.equal(metadata.assetMode, 'r2');
+if (process.env.WEB_QA_COMMIT) assert.equal(metadata.commit, process.env.WEB_QA_COMMIT);
+const html = await (await fetch(origin + '/')).text();
+assert.ok(Buffer.byteLength(html) < 4096);
+assert.ok(html.includes(metadata.assetBase));
+const request = async (path, {body, cookie, requestOrigin = origin} = {}) => fetch(origin + path, {
+  method: body ? 'POST' : 'GET', headers: {origin: requestOrigin, ...(body ? {'content-type': 'application/json'} : {}), ...(cookie ? {cookie} : {})},
+  ...(body ? {body: JSON.stringify(body)} : {}),
+});
+const registered = await request('/api/auth/register', {body: credentials});
+assert.equal(registered.status, 200, await registered.clone().text());
+const setCookie = registered.headers.get('set-cookie');
+for (const flag of ['HttpOnly', 'Secure', 'SameSite=Lax']) assert.ok(setCookie.toLowerCase().includes(flag.toLowerCase()));
+const cookie = setCookie.split(';')[0];
+const created = await request('/api/saves', {cookie, body: {name: '部署验证法师', classId: 8, raceId: 1, requestId: randomUUID()}});
+assert.equal(created.status, 201, await created.clone().text());
+const save = await created.json(), gamePath = `/api/game?saveId=${save.id}`;
+assert.equal((await request(gamePath)).status, 401);
+assert.equal((await request(gamePath, {cookie, requestOrigin: 'https://invalid.example', body: {type: 'advance', requestId: randomUUID()}})).status, 403);
+const snapshotResponse = await request(gamePath, {cookie});
+assert.equal(snapshotResponse.headers.get('content-encoding'), 'gzip');
+const initialPlayerId = (await snapshotResponse.json()).snapshot.player.id;
+const hunt = await request(gamePath, {cookie, body: {type: 'hunt', id: 299, requestId: randomUUID(), localClientId: 'e2e-fixture'}});
+assert.equal(hunt.status, 200, await hunt.clone().text());
+const requests = [], errors = [], failures = [], checkpoints = [], packResponses = [];
+const browser = await chromium.launch({headless: true, ...(process.env.CHROME_PATH ? {executablePath: process.env.CHROME_PATH} : {})});
+await mkdir(output, {recursive: true});
+let success = false;
+try {
+  const context = await browser.newContext({viewport: {width: 1440, height: 1000}});
+  const page = await context.newPage();
+  page.on('pageerror', error => errors.push(error.message));
+  context.on('request', request => requests.push(request.url()));
+  context.on('response', async response => {
+    const url = new URL(response.url());
+    if (response.status() >= 400 && !url.pathname.endsWith('/api/auth/session')) failures.push({url: response.url(), status: response.status(), body: (await response.text().catch(() => '')).slice(0, 300)});
+    if (url.pathname.includes('/simulation-content/')) packResponses.push({url: response.url(), status: response.status(), headers: await response.allHeaders()});
+    if (url.pathname === '/api/game/local' && response.request().postDataJSON()?.type === 'checkpoint' && response.ok()) checkpoints.push(await response.json());
+  });
+  await page.goto(origin + '/login');
+  await page.getByLabel('账号名称', {exact: true}).fill(credentials.username);
+  await page.getByLabel('账号密码', {exact: true}).fill(credentials.password);
+  assert.ok(!requests.some(url => /\/game-[^/]+\.js/.test(url)), 'login eagerly loads game');
+  await page.screenshot({path: output + '/login.png', fullPage: true});
+  await page.getByRole('button', {name: '登录并继续冒险'}).click();
+  await page.waitForURL(origin + '/');
+  await page.goto(origin + '/?saveId=' + save.id);
+  await page.getByText('部署验证法师', {exact: true}).first().waitFor({timeout: 90000});
+  for (let n = 0; n < 180 && !checkpoints.length; n++) await new Promise(resolve => setTimeout(resolve, 500));
+  assert.ok(checkpoints.length, 'real browser engine did not submit a checkpoint');
+  assert.ok(packResponses.some(item => /\/boot\.json\.gz/.test(item.url)), 'missing boot pack');
+  assert.ok(packResponses.some(item => /\/class-8\.json\.gz/.test(item.url)), 'missing class pack');
+  assert.ok(packResponses.some(item => /\/\d+\.json\.gz/.test(item.url)), 'missing lazy numeric shard');
+  for (const item of packResponses) { assert.equal(item.status, 200); assert.equal(item.headers['access-control-allow-origin'], origin); assert.match(item.headers['content-type'], /application\/json/); }
+  const loot = page.getByRole('dialog').filter({has: page.getByRole('heading', {name: '战利品', exact: true})});
+  if (await loot.isVisible()) await loot.getByRole('button', {name: 'Close', exact: true}).click();
+  await page.getByRole('button', {name: '打开世界地图', exact: true}).click();
+  await page.screenshot({path: output + '/world-map.png', fullPage: true});
+  await page.getByRole('button', {name: '关闭窗口', exact: true}).click();
+  await page.screenshot({path: output + '/desktop.png', fullPage: true});
+  await page.setViewportSize({width: 390, height: 844});
+  await page.screenshot({path: output + '/mobile.png', fullPage: true});
+  await page.reload();
+  await page.getByText('部署验证法师', {exact: true}).first().waitFor({timeout: 60000});
+  await page.setViewportSize({width: 1440, height: 1000});
+  await page.goto(origin + '/');
+  await page.getByRole('button', {name: '退出账号', exact: true}).click();
+  await page.waitForURL(origin + '/login');
+  const browserSession = await context.request.get(origin + '/api/auth/session');
+  assert.equal(browserSession.status(), 401);
+  const restored = await request(gamePath, {cookie});
+  assert.equal((await restored.json()).snapshot.player.id, initialPlayerId);
+  const originAssets = requests.filter(value => { const url = new URL(value); return url.origin === origin && !['/', '/login', '/model-viewer/index.html'].includes(url.pathname) && !url.pathname.startsWith('/api/'); });
+  assert.deepEqual(originAssets, [], 'static traffic returned to Zeabur');
+  assert.deepEqual(errors, []); assert.deepEqual(failures, []);
+  success = true;
+} finally {
+  await writeFile(output + '/result.json', JSON.stringify({success, origin, commit: metadata.commit, buildId: metadata.buildId, htmlBytes: Buffer.byteLength(html), testAccount: credentials.username, saveId: save.id, requests, errors, failures, checkpoints: checkpoints.length, packs: packResponses}, null, 2));
+  await browser.close();
+  await request('/api/auth/logout', {cookie, body: {}});
+}
+console.log(`Online E2E passed: ${metadata.commit}, ${requests.length} requests, ${checkpoints.length} checkpoints. Evidence: ${output}`);

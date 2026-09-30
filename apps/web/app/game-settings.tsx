@@ -1,4 +1,3 @@
-'use client';
 import {useState} from 'react';
 import {Tabs} from 'radix-ui';
 import {Volume2,Monitor,Cog,UserRound} from 'lucide-react';

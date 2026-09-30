@@ -1,4 +1,3 @@
-"use client";
 import {useState} from 'react';
 import {creatureVisual} from '@/lib/creature-visuals.js';
 

@@ -2,7 +2,7 @@ import {createServer} from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwind from '@tailwindcss/postcss';
 import {fileURLToPath} from 'node:url';
-import {handleModelRequest} from '../lib/wowhead-model-assets.js';
+import {handleModelRequest} from '../../game-server/src/wowhead-model-assets.js';
 const app=fileURLToPath(new URL('../',import.meta.url));
 const server=await createServer({configFile:false,root:app+'test/browser',publicDir:app+'public',plugins:[react(),{name:'journey-ui-assets',configureServer(server){server.middlewares.use(async(req,res,next)=>{
  const url=new URL(req.url,'http://127.0.0.1:5199');

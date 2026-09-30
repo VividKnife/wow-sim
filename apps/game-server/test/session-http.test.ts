@@ -1,0 +1,42 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {once} from 'node:events';
+import {PGlite} from '@electric-sql/pglite';
+import {AccountStore} from '../src/account-store.ts';
+import {createGameServer} from '../src/server.ts';
+import {MemoryStore} from '../../../packages/persistence/src/memory.ts';
+import {GameService} from '../../../packages/game-domain/src/service.ts';
+
+test('public API authenticates cookies, enforces CSRF and scopes saves; gzip and ETags survive removal of Next',async t=>{
+ const db=new PGlite();t.after(()=>db.close());
+ const accounts=new AccountStore({query:async(text,values)=>text.includes('CREATE TABLE')?(await db.exec(text),{rows:[]}):db.query(text,values)});await accounts.initialize();
+ const appOrigin='https://wow-sim.zeabur.app';
+ const game=createGameServer({accounts,appOrigin,secureCookies:true,trustProxyHops:1,publicAssetBase:'https://cdn.test/public/version',service:new GameService(new MemoryStore(),{contentVersion:'test'})});
+ game.server.listen(0,'127.0.0.1');await once(game.server,'listening');t.after(()=>game.close());
+ const url=`http://127.0.0.1:${(game.server.address() as any).port}`;
+ const request=(path:string,{body,cookie,origin=appOrigin,headers={}}:{body?:any;cookie?:string;origin?:string;headers?:Record<string,string>}={})=>fetch(url+path,{method:body?'POST':'GET',headers:{origin,'x-forwarded-for':'forged, 203.0.113.2',...(body?{'content-type':'application/json'}:{}),...(cookie?{cookie}:{}),...headers},...(body?{body:JSON.stringify(body)}:{})});
+ const credentials={username:'browser_player',password:'a-long-test-password'};
+ assert.equal((await request('/api/auth/register',{body:credentials,origin:'https://evil.test'})).status,403);
+ assert.equal((await request('/api/auth/session',{headers:{authorization:'Bearer forged','oai-authenticated-user-id':'forged'}})).status,401);
+ const registered=await request('/api/auth/register',{body:credentials});assert.equal(registered.status,200);
+ const setCookie=registered.headers.get('set-cookie')!;for(const flag of ['HttpOnly','Secure','SameSite=Lax'])assert.ok(setCookie.includes(flag));
+ const cookie=setCookie.split(';')[0];assert.equal((await (await request('/api/auth/session',{cookie})).json() as any).user.username,credentials.username);
+ const saved=await request('/api/saves',{body:{name:'/icons/冒险者',classId:8,raceId:1,requestId:crypto.randomUUID()},cookie});assert.equal(saved.status,201);const id=(await saved.json() as any).id;
+ const path=`/api/game?saveId=${id}`;
+ const snapshot=await request(path,{cookie});assert.equal(snapshot.status,200);assert.equal(snapshot.headers.get('content-encoding'),'gzip');const data=await snapshot.json() as any;assert.equal(data.snapshot.player.name,'/icons/冒险者');
+ const cached=await request(path,{cookie,headers:{'if-none-match':snapshot.headers.get('etag')!}});assert.equal(cached.status,304);assert.equal(await cached.text(),'');
+ const identity=await request(path,{cookie,headers:{'accept-encoding':'gzip;q=0, identity'}});assert.equal(identity.headers.get('content-encoding'),null);assert.equal((await identity.json() as any).snapshot.player.name,'/icons/冒险者');
+ const other=await request('/api/auth/register',{body:{...credentials,username:'another_player'}});const otherCookie=other.headers.get('set-cookie')!.split(';')[0];assert.equal((await request(path,{cookie:otherCookie})).status,404);
+ assert.equal((await request('/api/auth/logout',{body:{},cookie})).status,200);assert.equal((await request(path,{cookie})).status,401);
+ const login=await request('/api/auth/login',{body:credentials});assert.equal(login.status,200);assert.equal((await request(path,{cookie:login.headers.get('set-cookie')!.split(';')[0]})).status,200);
+ assert.equal((await request('/api/auth/login',{body:{...credentials,password:'x'.repeat(5000)}})).status,413);
+});
+
+test('CDN URL rewriting leaves canonical local checkpoints byte-for-byte intact',async t=>{
+ const original={state:{name:'/icons/player-name',serverBuffs:[{id:'experience',icon:'/icons/class-assets/buff.jpg',xpMultiplier:2}]}};
+ const game=createGameServer({appOrigin:'https://game.test',publicAssetBase:'https://cdn.test/public/version',accounts:{async session(){return {id:'owner',username:'owner'};},async logout(){},async login(){throw new Error();},async register(){throw new Error();}},service:{async localSimulation(){return structuredClone(original);}} as any});
+ game.server.listen(0,'127.0.0.1');await once(game.server,'listening');t.after(()=>game.close());
+ const url=`http://127.0.0.1:${(game.server.address() as any).port}/api/game/local`;
+ const response=await fetch(url,{method:'POST',headers:{origin:'https://game.test','content-type':'application/json'},body:JSON.stringify({type:'claim',requestId:'checkpoint-url-test'})});
+ assert.equal(response.status,200);assert.deepEqual(await response.json(),original);
+});

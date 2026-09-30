@@ -1,5 +1,4 @@
-'use client';
-/* eslint-disable @next/next/no-img-element -- Local Classic game textures and icons. */
+
 import {useEffect,useRef,useState,type CSSProperties,type ReactNode} from 'react';
 import {Dialog,Tabs} from 'radix-ui';
 import {Swords,X,Square,ArrowLeftRight,MessageCircle,GripHorizontal} from 'lucide-react';

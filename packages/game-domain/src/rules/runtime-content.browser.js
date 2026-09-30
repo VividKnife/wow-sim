@@ -16,7 +16,7 @@ function trim(){
 export const endContentScope=()=>{pinned=null;trim();};
 class ContentRequired extends Error {constructor(id){super('正在加载冒险资料');this.id=id;}}
 export const isContentPending=error=>error instanceof ContentRequired;
-const endpoint=name=>`/api/simulation-content/${version.version}/${name}`;
+const endpoint=name=>`${typeof __SIMULATION_ASSET_BASE__==='string'?__SIMULATION_ASSET_BASE__:'/simulation-content/'}${version.version}/${name}.json.gz`;
 async function fetchContent(name){
  const data=await fetchContentJson(endpoint(name));
  if(data.version!==version.version)throw new Error('游戏资料版本不一致，请刷新页面');

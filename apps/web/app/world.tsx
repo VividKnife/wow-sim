@@ -1,4 +1,3 @@
-"use client";
 import QuestScenes from './quest-scenes';
 import {useState,type ReactNode} from 'react';
 import {Button} from '@/components/ui/button';

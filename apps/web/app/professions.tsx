@@ -1,4 +1,3 @@
-"use client";
 import {TrainerNavigation} from './trainer-navigation';
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
 import {saveFetch} from '../lib/save-fetch';

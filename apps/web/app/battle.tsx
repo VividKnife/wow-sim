@@ -1,4 +1,3 @@
-"use client";
 import {GoldAuctionDock} from './gold-auction';
 import {useLowEffects} from '@/lib/use-low-effects';
 import {useBattleViewZoom} from '@/lib/use-battle-zoom';

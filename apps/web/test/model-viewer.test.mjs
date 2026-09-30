@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {modelEquipment} from '../lib/model-viewer.js';
-import {assetUrl,parseAppearance,parseItemIds,handleModelRequest} from '../lib/wowhead-model-assets.js';
+import {assetUrl,parseAppearance,parseItemIds,handleModelRequest} from '../../game-server/src/wowhead-model-assets.js';
 
 test('viewer uses inventory slots for cloak and robe, and explicit weapon hands',()=>{
  const equipment={5:{id:56},15:{id:1270},16:{id:35},17:{id:15925},18:{id:5069}};

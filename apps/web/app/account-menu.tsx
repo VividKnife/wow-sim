@@ -1,4 +1,3 @@
-'use client';
 import {useState} from 'react';
 export default function AccountMenu({username,settings=false}: {username?: string;settings?:boolean}) {
   const [error, setError] = useState('');

@@ -1,4 +1,3 @@
-'use client';
 import {useEffect,useRef,useState} from 'react';
 import {Dialog,Tooltip} from 'radix-ui';
 import ClassicActionTooltip from './classic-action-tooltip';

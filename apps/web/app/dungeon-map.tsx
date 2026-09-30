@@ -1,4 +1,3 @@
-"use client";
 import {useEffect,useRef,useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
@@ -53,7 +52,7 @@ export default function DungeonMap({state:s,data:d,busy,send,raid}:GameProps&{ra
   <div className={"atlas-floor-heading "+(floorId!==0?"is-single-floor":"")}><h3>{floor.name}</h3><small>{dm.route.filter(r=>map.floorByNode[r.id]===floor.id&&r.kind==='boss').length} 处首领遭遇</small></div>
   <div className="dungeon-map-scroll" tabIndex={0} aria-label={`${floor.name}地图${detailed?'，可横向和纵向滚动':''}`}><div className={'dungeon-map-canvas '+(detailed?'is-zoomed':'')} style={{aspectRatio:`${map.width} / ${map.height}`}}>
    {/* Original client tiles are assembled losslessly; labels/pins remain separate. */}
-   {/* eslint-disable-next-line @next/next/no-img-element */}
+   {}
    {floor.image&&<img className="atlas-original-map" src={floor.image} alt={`${dm.name} · ${floor.name}副本地图`} width={map.width} height={map.height}/>}
    <svg viewBox={`0 0 ${map.width} ${map.height}`} preserveAspectRatio="none" aria-hidden="true">
     {map.edges.filter(([a,b])=>map.floorByNode[a]===floor.id&&map.floorByNode[b]===floor.id&&(pairs.has([a,b].sort().join(':'))||!floor.image)).map(([a,b])=><line key={a+':'+b} className="atlas-corridor is-planned" x1={at(a)[0]} y1={at(a)[1]} x2={at(b)[0]} y2={at(b)[1]}/>)}

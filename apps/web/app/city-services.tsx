@@ -1,4 +1,3 @@
-"use client";
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {GameProps,Icon,ItemDisplay,money,duration} from './game-ui';

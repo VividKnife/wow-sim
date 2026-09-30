@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {characterPreview} from '../lib/character-preview.js';
+import {characterPreview} from '../../game-server/src/character-preview.js';
 import {classDefinitions} from '../../../packages/game-domain/src/rules/catalog.js';
 import {modelEquipment} from '../lib/model-viewer.js';
 

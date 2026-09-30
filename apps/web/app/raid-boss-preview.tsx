@@ -1,4 +1,3 @@
-'use client';
 import BattleHD2D from './battle-hd2d';
 import {sceneLayout} from '@/lib/battle-scene.js';
 import {creatureVisual} from '@/lib/creature-visuals.js';

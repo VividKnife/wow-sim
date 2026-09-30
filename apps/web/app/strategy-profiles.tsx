@@ -1,4 +1,3 @@
-"use client";
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';

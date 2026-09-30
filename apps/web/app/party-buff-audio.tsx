@@ -1,4 +1,3 @@
-'use client';
 import {useEffect,useRef,useState} from 'react';
 import {createCombatAudio} from '@/lib/combat-audio.js';
 import {freshBuffSounds} from '@/lib/buff-audio.js';

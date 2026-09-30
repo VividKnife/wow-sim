@@ -1,4 +1,3 @@
-"use client";
 import {useLowEffects} from '@/lib/use-low-effects';
 import {useBattleViewZoom} from '@/lib/use-battle-zoom';
 import {useEffect,useMemo,useRef,useState} from 'react';

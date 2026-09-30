@@ -47,15 +47,15 @@ try {
   await ready(() => pool.query('SELECT 1'), 'PostgreSQL');
   const apiPort = await port(), webPort = await port();
   const origin = `http://127.0.0.1:${webPort}`;
-  const env = {NODE_ENV: 'production', DATABASE_URL: database, GAME_SERVER_SECRET: secret,
+  const env = {NODE_ENV: 'production', DATABASE_URL: database,
     GAME_SERVER_URL: `http://127.0.0.1:${apiPort}`, APP_ORIGIN: origin};
   start(['scripts/start-runtime.mjs'], {...env, HOST: '127.0.0.1', PORT: String(apiPort), SERVICE_ROLE: 'api'});
   start(['scripts/start-runtime.mjs'], {...env, SERVICE_ROLE: 'worker'});
-  start(['node_modules/next/dist/bin/next', 'start', '--hostname', '127.0.0.1'], {...env, PORT: String(webPort)}, `${process.cwd()}/apps/web`);
-  await ready(async () => (await fetch(`${env.GAME_SERVER_URL}/content`)).ok, 'API');
+  start(['server.mjs'], {...env, PORT: String(webPort)}, `${process.cwd()}/apps/web`);
+  await ready(async () => (await fetch(`${env.GAME_SERVER_URL}/api/game/content`)).ok, 'API');
   await ready(async () => (await fetch(`${origin}/login`)).ok, 'Web');
   const request = (path, {method = 'GET', body, cookie, requestOrigin = origin, headers = {}} = {}) => fetch(`${origin}${path}`, {
-    method, headers: {origin: requestOrigin, ...(body ? {'content-type': 'application/json'} : {}), ...(cookie ? {cookie} : {}), ...headers},
+    method, headers: {origin: requestOrigin, 'x-forwarded-for': '127.0.0.1', ...(body ? {'content-type': 'application/json'} : {}), ...(cookie ? {cookie} : {}), ...headers},
     ...(body ? {body: JSON.stringify(body)} : {}),
   });
   const credentials = {username: 'deploy_check', password: 'test-password-for-deployment-123'};

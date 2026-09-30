@@ -1,4 +1,3 @@
-'use client';
 import {useEffect,useState} from 'react';
 import {createExperienceNotifications} from '@/lib/experience-notifications.js';
 import './experience-notifications.css';

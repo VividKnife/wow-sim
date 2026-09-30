@@ -1,4 +1,3 @@
-"use client";
 import {Button} from '@/components/ui/button';
 import {GameProps,money,duration} from './game-ui';
 import './mounts.css';

@@ -1,14 +1,14 @@
 # wow-sim Web
 
-Next.js Node application providing the game UI, independent username/password accounts, and an authenticated game API proxy. Game state remains owned by the separate API and worker.
+React + Vite static application. `main.tsx` loads the session from game-api, then lazy-loads login, save selection and game panels. `server.mjs` is a small HTML/API gateway with no framework or database dependency.
 
-Use Node.js 24.11.1+. Install dependencies at both the repository root and apps/web. Copy `.env.example` to `.env.local`, configure PostgreSQL, the API URL and shared secret, and run `npm run dev` here. Open the exact APP_ORIGIN (default `http://localhost:5173`).
+Use Node.js 24.11.1+. Install dependencies at the root and in apps/web. Configure `APP_ORIGIN=http://127.0.0.1:5173` and PostgreSQL in the root `.env` for game-api. Start API and worker, then run `npm run dev` here. Vite proxies `/api` to `GAME_SERVER_URL` (default `http://127.0.0.1:8788`).
 
-`npm run build` produces the Node production build; `npm start` listens on 0.0.0.0 and respects PORT. Root Dockerfile builds this service. Vite is retained only for isolated UI fixtures in scripts/serve-dungeon-preview.mjs.
+`npm run build` writes `dist`; `npm start` serves it on PORT (default 8080). For that origin, configure game-api's APP_ORIGIN accordingly. `WEB_ASSET_MODE=r2 npm run build` emits direct versioned CDN URLs; the default bundled build serves assets locally.
 
-The Web owns only authentication tables (web_users, web_sessions, web_auth_limits). It derives game identity from a validated HttpOnly session cookie, then signs a short-lived token for the game API. Caller-supplied identity headers are never trusted. Register/login at `/login`; logout revokes the database session. Game state is accessed through lib/game-backend.ts, not directly through SQL.
+Authentication and rate limits live in game-api. The gateway forwards cookies and requests without interpreting identity. The API validates HttpOnly sessions and mutation origins. Browser Worker engine data remains in versioned boot, class and on-demand shard files, never a monolithic JS catalog.
 
-See [Zeabur deployment](../../docs/development/zeabur.md) for service variables, automatic deployment and verification.
+See [R2 build and deployment](../../docs/development/r2-assets.md) and [Zeabur configuration](../../docs/development/zeabur.md).
 
 ## Classic game UI demo
 

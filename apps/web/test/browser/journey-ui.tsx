@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element -- This Vite preview serves local Classic assets. */
 import React,{useCallback,useEffect,useMemo,useRef,useState,type CSSProperties} from 'react';
 import {createRoot} from 'react-dom/client';
 import {Dialog} from 'radix-ui';

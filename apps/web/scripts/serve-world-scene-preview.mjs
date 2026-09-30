@@ -2,7 +2,7 @@ import {createServer} from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwind from '@tailwindcss/postcss';
 import {fileURLToPath} from 'node:url';
-import {handleModelRequest} from '../lib/wowhead-model-assets.js';
+import {handleModelRequest} from '../../game-server/src/wowhead-model-assets.js';
 const app=fileURLToPath(new URL('../',import.meta.url));
 const port=Number(process.env.PORT||5194);
 const server=await createServer({configFile:false,root:app+'test/browser',publicDir:app+'public',plugins:[react(),{name:'world-scene-assets',configureServer(server){server.middlewares.use(async(req,res,next)=>{

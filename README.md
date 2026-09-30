@@ -47,7 +47,7 @@ npm run data:check
 docker compose up -d postgres
 ```
 
-复制 `.env.example` 为 `.env`，把 `GAME_SERVER_SECRET` 设置为至少 32 字节的随机值。复制 `apps/web/.env.example` 为 `apps/web/.env.local`，填写数据库 URL、相同的游戏服务 URL/密钥与 Web 的 `APP_ORIGIN`，再分别启动三个进程：
+复制 `.env.example` 为 `.env`，配置数据库 URL 和 `APP_ORIGIN=http://127.0.0.1:5173`。Web 使用 React + Vite，只代理 `/api` 到 game-api；认证、会话和限流由 game-api 管理。需要覆盖 API 地址时，在 Web 的 `.env.local` 设置 `GAME_SERVER_URL`。分别启动三个进程：
 
 ```sh
 npm run game:server:dev

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {worldSceneState,worldMountDisplays,worldScenery,worldFlightMount} from '../lib/world-scene.js';
-import {assetUrl} from '../lib/wowhead-model-assets.js';
+import {assetUrl} from '../../game-server/src/wowhead-model-assets.js';
 import {worldCamera} from '../public/model-viewer/world-camera.js';
 const player={hp:100,location:'goldshire',activity:{type:'idle'}};
 const data={map:[{id:'logging',name:'东谷伐木场'}]};

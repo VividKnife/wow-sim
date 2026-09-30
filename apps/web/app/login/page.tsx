@@ -1,7 +1,5 @@
-'use client';
 
 import {useState, type FormEvent} from 'react';
-import Link from 'next/link';
 import styles from './login.module.css';
 
 export default function Login() {
@@ -77,7 +75,7 @@ export default function Login() {
     </div>
     <footer className={styles.footer}>
       <span>WOW-SIM <span aria-hidden="true">·</span> 经典旧世冒险</span>
-      <Link className={styles.back} href="/">返回游戏</Link>
+      <a className={styles.back} href="/">返回游戏</a>
       <span>艾泽拉斯，等待你的归来</span>
     </footer>
   </main>;

@@ -24,7 +24,7 @@ for(const scenario of ['solo','raid'])test(`real browser engine: ${scenario} loa
  for(const name of Object.keys(bundle.metafile.inputs))assert.ok(!/game-data\/(?:runtime\/catalog|data\/(?:world-reference|classes-reference|classic-reference|dungeon-journal))\.json$/.test(name),name);
  const messages=[],requests=[];
  const scope=createContext({performance,structuredClone,TextEncoder,TextDecoder,crypto,AbortSignal,setTimeout:()=>1,clearTimeout:()=>{},postMessage:message=>messages.push(structuredClone(message)),fetch:async url=>{
-  const match=url.match(/^\/api\/simulation-content\/([a-f0-9]{64})\/(boot|class-\d+|\d+)$/);assert.ok(match,url);assert.equal(match[1],version.version);
+  const match=url.match(/^\/simulation-content\/([a-f0-9]{64})\/(boot|class-\d+|\d+)\.json\.gz$/);assert.ok(match,url);assert.equal(match[1],version.version);
   const body=await readFile(root+`packages/game-data/runtime/browser/${match[2]}.json.gz`);requests.push({pack:match[2],bytes:body.length});
   return {ok:true,json:async()=>JSON.parse(gunzipSync(body))};
  }});
@@ -52,7 +52,7 @@ async function faultHarness({reject=false}={}){
  let release,requested=false;
  const gate=new Promise(resolve=>{release=resolve;});
  const scope=createContext({performance,structuredClone,TextEncoder,TextDecoder,crypto,AbortSignal,setTimeout:()=>1,clearTimeout:()=>{},postMessage:message=>messages.push(structuredClone(message)),fetch:async url=>{
-  const pack=url.split('/').at(-1);
+  const pack=url.split('/').at(-1).replace(/\.json\.gz$/,'');
   // Deliberately miss the speculative profile: correctness cannot depend on it.
   if(pack.startsWith('class-'))return {ok:true,json:async()=>({version:version.version,nodes:{}})};
   if(/^\d+$/.test(pack)&&!requested){requested=true;await gate;if(reject)throw new Error('test network failure');}
@@ -101,7 +101,7 @@ test('class download starts before boot finishes and safely joins boot initializ
  const bundle=await buildWorker(),messages=[],requests=[];
  let release;const bootGate=new Promise(resolve=>{release=resolve;});
  const scope=createContext({performance,structuredClone,TextEncoder,TextDecoder,crypto,AbortSignal,setTimeout:()=>1,clearTimeout:()=>{},postMessage:message=>messages.push(structuredClone(message)),fetch:async url=>{
-  const pack=url.split('/').at(-1);requests.push(pack);
+  const pack=url.split('/').at(-1).replace(/\.json\.gz$/,'');requests.push(pack);
   if(pack==='boot')await bootGate;
   const body=await readFile(root+`packages/game-data/runtime/browser/${pack}.json.gz`);
   return {ok:true,json:async()=>JSON.parse(gunzipSync(body))};

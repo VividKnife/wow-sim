@@ -1,4 +1,3 @@
-"use client";
 import ClassIcon from './class-icon';
 import {Bar,money,GameProps} from './game-ui';
 

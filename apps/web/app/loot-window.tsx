@@ -1,4 +1,3 @@
-"use client";
 import {useEffect,useRef,useState} from 'react';
 import {Dialog,DialogContent,DialogTitle,DialogDescription} from '@/components/ui/dialog';
 import {ItemDisplay,money,type GameProps} from './game-ui';

@@ -1,5 +1,4 @@
-'use client';
-/* eslint-disable @next/next/no-img-element -- Local, attributed game screenshots. */
+
 import {useState} from 'react';
 import WorldBackdrop from './world-backdrop';
 

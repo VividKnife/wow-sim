@@ -1,26 +1,10 @@
-FROM node:24.11.1-bookworm-slim AS build
+FROM node:24.11.1-bookworm-slim
 WORKDIR /app
-ENV NEXT_TELEMETRY_DISABLED=1
-COPY package.json package-lock.json ./
-COPY packages ./packages
-RUN npm ci
-COPY apps/web/package.json apps/web/package-lock.json ./apps/web/
-RUN npm --prefix apps/web ci
-COPY apps/web ./apps/web
-RUN npm --prefix apps/web run build
+ENV NODE_ENV=production PORT=8080
+COPY apps/web/server.mjs ./apps/web/server.mjs
+COPY apps/web/dist ./apps/web/dist
+COPY packages/contracts/src/asset-paths.mjs ./packages/contracts/src/asset-paths.mjs
 
-FROM node:24.11.1-bookworm-slim AS runtime
-WORKDIR /app
-ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=8080
-COPY package.json package-lock.json ./
-COPY packages ./packages
-RUN npm ci --omit=dev && npm cache clean --force
-COPY apps/web/package.json apps/web/package-lock.json ./apps/web/
-RUN npm --prefix apps/web ci --omit=dev && npm cache clean --force
-COPY --from=build --chown=node:node /app/apps/web/.next ./apps/web/.next
-COPY apps/web/public ./apps/web/public
-COPY apps/web/next.config.mjs ./apps/web/next.config.mjs
 USER node
 EXPOSE 8080
-WORKDIR /app/apps/web
-CMD ["node", "node_modules/next/dist/bin/next", "start", "--hostname", "0.0.0.0"]
+CMD ["node", "apps/web/server.mjs"]

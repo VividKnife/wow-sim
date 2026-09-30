@@ -1,4 +1,3 @@
-"use client";
 import {PartyBuffOrder} from './party-buffs';
 import {Button} from '@/components/ui/button';
 import {Bar,Icon,GameProps,duration} from './game-ui';

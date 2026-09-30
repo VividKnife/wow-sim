@@ -1,7 +1,8 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, rmSync, readFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import {createHash} from 'node:crypto';
 
 // Zeabur builds a small application tree. Only bundled mode downloads the
 // full public directory from the pinned source commit.
@@ -22,39 +23,52 @@ try {
     process.exitCode = 0;
   } else {
     git(['read-tree', source]);
-    const omitted = git(['ls-tree', '-r', '--name-only', '-z', source]).split('\0')
-      .filter(path => /^(apps\/web\/public\/|\.github\/|docs\/|\.tmp\/)/.test(path)
-        && !(assetMode === 'r2' && path.startsWith('apps/web/public/model-viewer/')));
-    git(['update-index', '--force-remove', '-z', '--stdin'], omitted.join('\0') + '\0');
-
-    const original = git(['show', `${source}:Dockerfile`]);
-    for (const required of ['COPY apps/web ./apps/web', 'COPY apps/web/public ./apps/web/public']) {
-      if (original.split(required).length !== 2) throw new Error(`Unexpected Dockerfile: ${required}`);
+    const omitted = git(['ls-tree','-r','--name-only','-z',source]).split('\0').filter(path=>/^(apps\/web\/public\/|\.github\/|docs\/|\.tmp\/)/.test(path));
+    git(['update-index','--force-remove','-z','--stdin'],omitted.join('\0')+'\0');
+    const metadata=JSON.parse(readFileSync('apps/web/dist/__deployment.json','utf8'));
+    if(metadata.commit!==source||metadata.assetMode!==assetMode||metadata.publicAssetVersion!==git(['rev-parse',`${source}:apps/web/public`]))throw new Error('Build metadata does not match deployment source or mode');
+    const buildFiles=[];
+    function walk(path=''){
+      for(const entry of readdirSync(join('apps/web/dist',path),{withFileTypes:true})){
+        if(entry.name.startsWith('.'))continue;
+        const name=path?path+'/'+entry.name:entry.name;
+        if(entry.isDirectory())walk(name);else if(entry.isFile())buildFiles.push(name);else throw new Error('Build assets must be regular files');
+      }
     }
-    const publicAssetVersion = git(['rev-parse', `${source}:apps/web/public`]);
-    const metadata = JSON.stringify({ commit: source, source: 'VividKnife/wow-sim', publicAssetVersion, assetMode });
-    const assets = `FROM node:24.11.1-bookworm-slim AS deployment-assets
-ADD https://codeload.github.com/VividKnife/wow-sim/tar.gz/${source} /tmp/source.tar.gz
-RUN mkdir /assets && tar -xzf /tmp/source.tar.gz -C /assets --strip-components=4 wow-sim-${source}/apps/web/public && rm /tmp/source.tar.gz
-RUN printf '%s\\n' '${metadata}' > /assets/__deployment.json
-
-`;
-    const dockerfile = assetMode === 'r2' ? original + '\n' : assets + original
-      .replace('COPY apps/web ./apps/web', 'COPY apps/web ./apps/web\nCOPY --from=deployment-assets /assets ./apps/web/public')
-      .replace('COPY apps/web/public ./apps/web/public', 'COPY --from=deployment-assets /assets ./apps/web/public') + '\n';
-    const addFile = (path, content) => {
-      const blob = git(['hash-object', '-w', '--stdin'], content);
-      git(['update-index', '--add', '--cacheinfo', `100644,${blob},${path}`]);
+    walk();buildFiles.sort();
+    if(assetMode==='r2'){
+      const receipt=JSON.parse(readFileSync('apps/web/dist/.r2-upload.json','utf8'));
+      const digest=createHash('sha256');
+      for(const name of buildFiles)digest.update(name+'\0').update(readFileSync(join('apps/web/dist',name)));
+      if(receipt.buildId!==metadata.buildId||receipt.digest!==digest.digest('hex'))throw new Error('Matching R2 upload must complete before deployment');
+    }
+    const addFile=(path,content)=>{
+      const blob=git(['hash-object','-w','--stdin'],content);
+      git(['update-index','--add','--cacheinfo',`100644,${blob},${path}`]);
     };
-    if (assetMode === 'r2') addFile('apps/web/public/__deployment.json', metadata + '\n');
-    addFile('Dockerfile', dockerfile);
-    addFile('packages/DEPLOYMENT.json', metadata + '\n');
-    const tree = git(['write-tree']);
-    const files = git(['ls-tree', '-r', '--name-only', tree]).split('\n');
-    if (files.some(path => /^(apps\/web\/public\/|\.github\/)/.test(path)
-      && !(assetMode === 'r2' && (path.startsWith('apps/web/public/model-viewer/') || path === 'apps/web/public/__deployment.json')))) {
-      throw new Error('Deployment tree still includes static assets or workflows');
+    for(const name of buildFiles){
+      if(assetMode==='r2'&&!['index.html','model-viewer/index.html','__deployment.json'].includes(name))continue;
+      addFile('apps/web/dist/'+name,readFileSync(join('apps/web/dist',name)));
     }
+    const assetStage=assetMode==='bundled'?`FROM node:24.11.1-bookworm-slim AS deployment-assets
+ADD https://codeload.github.com/VividKnife/wow-sim/tar.gz/${source} /tmp/source.tar.gz
+RUN mkdir /assets && tar -xzf /tmp/source.tar.gz -C /assets --strip-components=4 wow-sim-${source}/apps/web/public
+`:'';
+    addFile('Dockerfile',assetStage+`FROM node:24.11.1-bookworm-slim
+WORKDIR /app
+ENV NODE_ENV=production PORT=8080
+COPY apps/web/server.mjs ./apps/web/server.mjs
+COPY apps/web/dist ./apps/web/dist
+COPY packages/contracts/src/asset-paths.mjs ./packages/contracts/src/asset-paths.mjs
+${assetMode==='bundled'?'COPY --from=deployment-assets /assets ./apps/web/public':''}
+USER node
+EXPOSE 8080
+CMD ["node", "apps/web/server.mjs"]
+`);
+    addFile('packages/DEPLOYMENT.json',JSON.stringify(metadata)+'\n');
+    const tree=git(['write-tree']);
+    const files=git(['ls-tree','-r','--name-only',tree]).split('\n');
+    if(files.some(path=>/^(apps\/web\/public\/|\.github\/)/.test(path)))throw new Error('Deployment tree still includes public assets or workflows');
     const previous = git(['ls-remote', 'origin', `refs/heads/${branch}`]).split(/\s/)[0];
     let parent = [];
     let unchanged = false;

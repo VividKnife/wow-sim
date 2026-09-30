@@ -1,4 +1,3 @@
-"use client";
 import ClassIcon from './class-icon';
 import type {CSSProperties} from 'react';
 import type {ClientRosterMember} from '../../../packages/contracts/src/game';

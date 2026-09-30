@@ -1,7 +1,7 @@
 import {S3Client, HeadObjectCommand, PutObjectCommand, ListObjectsV2Command} from '@aws-sdk/client-s3';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
-import {readFile} from 'node:fs/promises';
+import {readFile,readdir,writeFile} from 'node:fs/promises';
 import {resolve, extname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -25,7 +25,7 @@ export async function publishAssets({upload=false, source='HEAD', env=process.en
   log(JSON.stringify({...manifest,upload}));
   if (!upload) return manifest;
   // Never label mutable working files as an immutable Git release.
-  if (git(['diff',commit,'--','apps/web/public'])) throw new Error('Public assets differ from source; use a clean checkout of that source');
+  if (git(['diff',commit,'--','apps/web','packages','scripts']) || git(['ls-files','--others','--exclude-standard','apps/web','packages','scripts'])) throw new Error('Build inputs differ from source; use a clean checkout of that source');
   const account = env.R2_ACCOUNT_ID, bucket = env.R2_BUCKET;
   const accessKeyId = env.R2_ACCESS_KEY_ID;
   const secretAccessKey = env.R2_SECRET_ACCESS_KEY || (env.CLOUDFLARE_API_TOKEN && createHash('sha256').update(env.CLOUDFLARE_API_TOKEN).digest('hex'));
@@ -67,9 +67,48 @@ export async function publishAssets({upload=false, source='HEAD', env=process.en
     if(failure) throw failure;
     // Readiness marker is written only after every object succeeded. No deletions.
     await client.send(new PutObjectCommand({Bucket:bucket,Key:`${prefix}/__release.json`,Body:JSON.stringify(manifest),ContentType:'application/json',CacheControl:'no-store'}));
+    await publishWeb(client,bucket,commit,version,root,log);
     log(`Ready: ${prefix}/__release.json`);
     return manifest;
   } finally { client.destroy(); }
+}
+export async function webFiles(directory){
+ const files=[];
+ async function walk(path=''){
+  for(const entry of await readdir(resolve(directory,path),{withFileTypes:true})){
+   if(entry.name.startsWith('.'))continue;
+   const name=path?path+'/'+entry.name:entry.name;
+   if(entry.isDirectory())await walk(name);
+   else if(entry.isFile())files.push(name);
+   else throw new Error('Build assets must be regular files');
+  }
+ }
+ await walk();return files.sort();
+}
+export async function webDigest(directory){
+ const hash=createHash('sha256');
+ for(const name of await webFiles(directory))hash.update(name+'\0').update(await readFile(resolve(directory,name)));
+ return hash.digest('hex');
+}
+async function publishWeb(client,bucket,commit,version,root,log){
+ const directory=resolve(root,'apps/web/dist');
+ const metadata=JSON.parse(await readFile(resolve(directory,'__deployment.json'),'utf8'));
+ if(metadata.commit!==commit||metadata.publicAssetVersion!==version||metadata.assetMode!=='r2')throw new Error('Web build does not match source and R2 mode');
+ const prefix=`web/${metadata.buildId}`;
+ const files=await webFiles(directory);
+ const digest=await webDigest(directory);
+ try {
+  const previous=await client.send(new HeadObjectCommand({Bucket:bucket,Key:`${prefix}/__release.json`}));
+  if(previous.Metadata?.['build-digest']!==digest)throw new Error('Refusing to overwrite an immutable web build');
+ } catch(error){if(error.$metadata?.httpStatusCode!==404)throw error;}
+ for(const name of files){
+  const compressed=name.endsWith('.json.gz');
+  await client.send(new PutObjectCommand({Bucket:bucket,Key:`${prefix}/${name}`,Body:await readFile(resolve(directory,name)),ContentType:compressed?'application/json':contentType(name),...(compressed?{ContentEncoding:'gzip'}:{}),CacheControl:'public, max-age=31536000, immutable'}));
+ }
+ const release={...metadata,files:files.length,digest};
+ await client.send(new PutObjectCommand({Bucket:bucket,Key:`${prefix}/__release.json`,Body:JSON.stringify(release),ContentType:'application/json',CacheControl:'no-store',Metadata:{'build-digest':digest}}));
+ await writeFile(resolve(directory,'.r2-upload.json'),JSON.stringify(release));
+ log(`Web ready: ${prefix}; ${files.length} files`);
 }
 if(process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   const index=process.argv.indexOf('--source');
