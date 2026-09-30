@@ -83,13 +83,18 @@ try{
  await page.getByText('拾取过滤已保存',{exact:true}).waitFor();
  const cloudCommand=engineRequests.find(r=>r.body.type==='settings');
  assert.ok(cloudCommand);assert.equal(cloudCommand.body.localClientId,undefined);
+ await service.work();
  await page.reload();
  await page.getByRole('button',{name:'设置',exact:true}).click();
  await page.getByRole('tab',{name:'游戏',exact:true}).click();
+ const localSwitchRequests=[];const trackLocalSwitch=request=>localSwitchRequests.push(request.url());
+ page.on('request',trackLocalSwitch);
  await page.getByRole('button',{name:'切换到本地引擎',exact:true}).click();
  await page.getByRole('button',{name:'切换到云端引擎',exact:true}).waitFor();
  for(let attempt=0;attempt<60&&!engineRequests.some(r=>r.body.type==='claim');attempt++)await new Promise(r=>setTimeout(r,500));
  assert.ok(engineRequests.some(r=>r.body.type==='claim'),'local switch must reclaim execution');
+ assert.ok(!localSwitchRequests.some(url=>url.includes('/api/game/replay')),'switching to local must stop requesting cloud playback');
+ page.off('request',trackLocalSwitch);
  await page.setViewportSize({width:390,height:844});
  await page.screenshot({path:output+'/engine-settings-mobile.png',fullPage:true});
  await page.setViewportSize({width:1440,height:1000});
