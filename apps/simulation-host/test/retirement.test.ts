@@ -160,7 +160,10 @@ test('inactive rooms retire early without spending or resetting the two-hour off
  const state=(await game.createAccount('alice',{name:'空闲法师',classId:8,raceId:1},'create')).state;
  const characters=new ResidentCharacters(store,{version:runtimeVersion,offlineLimitMs:7_200_000});
  const repository=new SimulationRepository(store,Date.now,characters.commit);
- const directory=new SimulationDirectory(repository,{characters,checkpointMs:100,idleRetireMs:150,maxInstances:1});
+ // Real Worker projections can take hundreds of milliseconds on CI. Keep the
+ // observer interval below a realistic grace, and observe beyond that grace.
+ const idleRetireMs=2000;
+ const directory=new SimulationDirectory(repository,{characters,checkpointMs:100,idleRetireMs,maxInstances:1});
  try{
   const first=await directory.openCharacter('alice',state.id);
   await until(()=>directory.inspect().instances===0);
@@ -171,10 +174,11 @@ test('inactive rooms retire early without spending or resetting the two-hour off
   const opened=await directory.openCharacter('alice',state.id);assert.equal(opened.instanceId,first.instanceId);assert.ok(opened.ownerEpoch>first.ownerEpoch);
   const restored=(await repository.load<InstanceCheckpoint>(first.instanceId))!;
   assert.deepEqual(restored.checkpoint.presence,saved.checkpoint.presence,'opening a route alone cannot replenish allowance');
-  for(let i=0;i<5;i++){await directory.presentation(first.instanceId,'alice',state.id,'full',true);await delay(60);}
+  const observingUntil=Date.now()+idleRetireMs+500;
+  do{await directory.presentation(first.instanceId,'alice',state.id,'full',true);await delay(60);}while(Date.now()<observingUntil);
   assert.equal(directory.inspect().instances,1,'an authenticated idle observer does not churn the owner');
   const receipt=await directory.input('alice',{instanceId:first.instanceId,actorId:state.id,controllerGeneration:1,clientSequence:1,requestId:'start-hunt',command:{kind:'action',action:{type:'hunt',id:299}}});
   assert.equal(receipt.status,'applied');
-  await delay(250);assert.equal(directory.inspect().instances,1,'active hunting stays resident after the idle timeout');
+  await delay(idleRetireMs+250);assert.equal(directory.inspect().instances,1,'active hunting stays resident after the idle timeout');
  }finally{await directory.close();await store.close();}
 });
