@@ -1,11 +1,13 @@
 FROM node:24.11.1-bookworm-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
+COPY scripts/install-git-hooks.mjs ./scripts/
 COPY packages ./packages
 RUN npm ci
 COPY apps/web/package.json apps/web/package-lock.json ./apps/web/
 RUN npm --prefix apps/web ci
 COPY apps/web ./apps/web
+COPY game-version.json ./
 # Local/container builds are self-contained. Production deploys use the exact
 # CI artifact and a generated runtime-only Dockerfile (publish-zeabur.mjs).
 RUN npm --prefix apps/web run build

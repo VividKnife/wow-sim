@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import {readFile,readdir,stat} from 'node:fs/promises';
 const root=new URL('../apps/web/dist/',import.meta.url);
 const metadata=JSON.parse(await readFile(new URL('__deployment.json',root),'utf8'));
+const stamp=JSON.parse(await readFile(new URL('../game-version.json',import.meta.url),'utf8'));
+assert.deepEqual(metadata.gameVersion,stamp,'deployed version must match the committed stamp');
 const html=await readFile(new URL('index.html',root),'utf8');
 assert.ok(Buffer.byteLength(html)<4096,'HTML must remain a tiny static shell');
 assert.ok(!html.includes('_next/'));

@@ -27,6 +27,7 @@ jobs:
       - run: npm ci
       - run: npm --prefix apps/web ci
       - run: npm run data:check
+      - run: node --test scripts/game-version.test.mjs
       - run: node --test scripts/publish-zeabur.test.mjs scripts/publish-r2-assets.test.mjs scripts/verify-deployment.test.mjs apps/web/test/static-web.test.mjs
       - run: npm run content:measure
       - run: node --test apps/web/test/content-packs.test.mjs apps/web/test/client-snapshot.test.mjs

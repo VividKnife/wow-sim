@@ -6,6 +6,7 @@ import {execFileSync} from 'node:child_process';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {randomUUID} from 'node:crypto';
 import {rewriteAssetLiterals} from '../../packages/contracts/src/asset-paths.mjs';
+import gameVersion from '../../game-version.json' with {type:'json'};
 const root=fileURLToPath(new URL('./',import.meta.url));
 const git=(...args)=>{try{return execFileSync('git',args,{cwd:root,encoding:'utf8',stdio:['ignore','pipe','ignore']}).trim();}catch{if(process.env.WEB_ASSET_MODE==='r2')throw new Error('R2 builds require a Git checkout');return 'local';}};
 export default defineConfig(({command,mode})=>{
@@ -20,7 +21,7 @@ export default defineConfig(({command,mode})=>{
  if(new URL(origin).origin!==origin||!origin.startsWith('https://'))throw new Error('R2_ASSET_ORIGIN must be an HTTPS origin');
  const publicAssetBase=assetMode==='r2'?`${origin}/public/${publicAssetVersion}`:'';
  const base=assetMode==='r2'?`${origin}/web/${buildId}/`:'/';
- const metadata={commit,publicAssetVersion,assetMode,buildId,publicAssetBase,assetBase:base};
+ const metadata={commit,gameVersion,publicAssetVersion,assetMode,buildId,publicAssetBase,assetBase:base};
  const assets=()=>({name:'versioned-assets',enforce:'pre',transform(code,id){
   if(id.includes('node_modules')||! /\.(?:[cm]?[jt]sx?|json|css)(?:\?|$)/.test(id))return;
   return {code:rewriteAssetLiterals(code,publicAssetBase),map:null};
@@ -38,7 +39,7 @@ export default defineConfig(({command,mode})=>{
     await writeFile(root+'dist/model-viewer/index.html',viewer.replace('./bridge.js',`${publicAssetBase}/model-viewer/bridge.js`));
     await writeFile(root+'dist/__deployment.json',JSON.stringify(metadata)+'\n');
    }}],
-  define:{__PUBLIC_ASSET_BASE__:JSON.stringify(publicAssetBase)},
+  define:{__PUBLIC_ASSET_BASE__:JSON.stringify(publicAssetBase),__GAME_VERSION__:JSON.stringify({...gameVersion,commit})},
   resolve:{alias:{'@':root}},
   worker:{format:'es',plugins:()=>[assets()]},
   css:{postcss:{plugins:[tailwind(),{postcssPlugin:'public-asset-urls',OnceExit(sheet){sheet.walkDecls(declaration=>{declaration.value=rewriteAssetLiterals(declaration.value,publicAssetBase);});}}]}},
