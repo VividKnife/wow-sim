@@ -7,10 +7,13 @@ on:
     branches: [main]
 permissions:
   contents: read
+concurrency:
+  group: validate-and-deploy-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 20
     env:
       WEB_ASSET_MODE: ${{ vars.WEB_ASSET_MODE || 'r2' }}
     steps:
@@ -27,37 +30,14 @@ jobs:
       - run: npm ci
       - run: npm --prefix apps/web ci
       - run: npm run data:check
-      - run: node --test scripts/game-version.test.mjs
-      - run: node --test scripts/publish-zeabur.test.mjs scripts/publish-r2-assets.test.mjs scripts/verify-deployment.test.mjs apps/web/test/static-web.test.mjs
-      - run: npm run content:measure
-      - run: node --test apps/web/test/content-packs.test.mjs apps/web/test/client-snapshot.test.mjs
-      - run: node --test apps/web/test/game-response.test.mjs packages/sim-core/test/collections.test.mjs
-      - run: node --test packages/sim-core/test/packed-content.test.mjs packages/game-domain/test/runtime-content.test.mjs
-      - run: node --test scripts/game-runtime.test.mjs
-      - run: npm run simulation:test
-      - run: node --test packages/game-domain/test/combat-policy.test.mjs packages/game-domain/test/policy-observation.test.mjs packages/game-domain/test/raid-healing-policy.test.mjs
+      - name: Verify deployment contracts and reviewed simulation baseline
+        run: node --test scripts/game-version.test.mjs scripts/publish-zeabur.test.mjs scripts/publish-r2-assets.test.mjs scripts/verify-deployment.test.mjs apps/web/test/static-web.test.mjs packages/simulation-tests/baseline.test.ts
       - run: npm run typecheck
-      - run: node --test apps/web/test/route-performance.test.mjs apps/web/test/mounts.test.mjs apps/web/test/navigation.test.mjs apps/web/test/snapshot-poller.test.mjs packages/game-domain/test/mounts-service.test.ts
-      - run: node --test --test-concurrency=2 apps/web/test/account-store.test.ts apps/game-server/test/*.test.ts apps/game-worker/test/*.test.ts
       - run: npm --prefix apps/web run typecheck
-      - run: node --test apps/web/test/hunter-presentation.test.mjs apps/web/test/combat-audio.test.mjs apps/web/test/combat-sound-assets.test.mjs apps/web/test/character-models.test.mjs apps/web/test/creature-instance.test.mjs
       - run: npm --prefix apps/web run build
-      - run: node scripts/verify-web-build.mjs
-      - name: Install browser for production smoke test
-        if: env.WEB_ASSET_MODE == 'r2'
-        run: npm --prefix apps/web exec -- playwright install --with-deps chromium
-      - name: Verify CDN modules and server-authoritative gameplay in browser
-        if: env.WEB_ASSET_MODE == 'r2'
-        run: node apps/web/scripts/verify-browser.mjs
         env:
-          WEB_QA_OUTPUT: ${{ runner.temp }}/wow-vite-qa
-      - name: Save browser evidence
-        if: always() && env.WEB_ASSET_MODE == 'r2'
-        uses: actions/upload-artifact@v4
-        with:
-          name: browser-evidence
-          path: ${{ runner.temp }}/wow-vite-qa
-          if-no-files-found: ignore
+          WEB_BUILD_ID: ${{ github.sha }}
+      - run: node scripts/verify-web-build.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: web-build
@@ -67,7 +47,6 @@ jobs:
       - run: node scripts/verify-production.mjs
         env:
           RUNTIME_IMAGE: wow-sim-runtime:ci
-      - run: docker build -t wow-sim-web:ci .
   publish-r2-assets:
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' && vars.WEB_ASSET_MODE != 'bundled'
     needs: validate

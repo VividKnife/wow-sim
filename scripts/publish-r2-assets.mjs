@@ -7,6 +7,8 @@ import {fileURLToPath} from 'node:url';
 
 const types = {'.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.gif':'image/gif','.avif':'image/avif','.ico':'image/x-icon','.glb':'model/gltf-binary','.gltf':'model/gltf+json','.json':'application/json','.mp3':'audio/mpeg','.ogg':'audio/ogg','.wav':'audio/wav','.mp4':'video/mp4','.webm':'video/webm','.woff':'font/woff','.woff2':'font/woff2','.ttf':'font/ttf','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.html':'text/html; charset=utf-8','.md':'text/plain; charset=utf-8','.txt':'text/plain; charset=utf-8'};
 export const contentType = path => types[extname(path).toLowerCase()] || 'application/octet-stream';
+const sha256 = value => createHash('sha256').update(value).digest('hex');
+export const publicReleaseDigest = ({version,prefix,files,bytes}) => sha256(JSON.stringify({version,prefix,files,bytes}));
 export function parseTree(output) {
   return output.trimEnd().split('\0').filter(Boolean).map(line => {
     const match = /^(100644|100755) blob ([a-f0-9]{40})\s+(\d+)\t(.+)$/.exec(line);
@@ -22,6 +24,9 @@ export async function publishAssets({upload=false, source='HEAD', env=process.en
   const root = git(['rev-parse','--show-toplevel']);
   const prefix = `public/${version}`;
   const manifest = {commit,version,prefix,files:files.length,bytes:files.reduce((n,f)=>n+f.size,0)};
+  // The public tree is the immutable identity. A server-only commit with the
+  // same tree must reuse the existing release without listing every object.
+  const manifestDigest=publicReleaseDigest(manifest);
   log(JSON.stringify({...manifest,upload}));
   if (!upload) return manifest;
   // Never label mutable working files as an immutable Git release.
@@ -34,6 +39,14 @@ export async function publishAssets({upload=false, source='HEAD', env=process.en
   const client = new S3Client({region:'auto',endpoint:`https://${account}.r2.cloudflarestorage.com`,credentials:{accessKeyId,secretAccessKey},maxAttempts:5});
   let cursor=0, completed=0, reused=0, failure;
   try {
+    try {
+      const release=await client.send(new HeadObjectCommand({Bucket:bucket,Key:`${prefix}/__release.json`}));
+      if(release.Metadata?.['manifest-digest']===manifestDigest){
+        log(`Reused: ${prefix}; ${files.length} files`);
+        await publishWeb(client,bucket,commit,version,root,log);
+        return manifest;
+      }
+    } catch(error){if(error.$metadata?.httpStatusCode!==404)throw error;}
     const existing=new Set();
     let token;
     do {
@@ -66,7 +79,7 @@ export async function publishAssets({upload=false, source='HEAD', env=process.en
     }));
     if(failure) throw failure;
     // Readiness marker is written only after every object succeeded. No deletions.
-    await client.send(new PutObjectCommand({Bucket:bucket,Key:`${prefix}/__release.json`,Body:JSON.stringify(manifest),ContentType:'application/json',CacheControl:'no-store'}));
+    await client.send(new PutObjectCommand({Bucket:bucket,Key:`${prefix}/__release.json`,Body:JSON.stringify(manifest),ContentType:'application/json',CacheControl:'no-store',Metadata:{'manifest-digest':manifestDigest}}));
     await publishWeb(client,bucket,commit,version,root,log);
     log(`Ready: ${prefix}/__release.json`);
     return manifest;
@@ -90,25 +103,30 @@ export async function webDigest(directory){
  for(const name of await webFiles(directory))hash.update(name+'\0').update(await readFile(resolve(directory,name)));
  return hash.digest('hex');
 }
-async function publishWeb(client,bucket,commit,version,root,log){
+export async function publishWeb(client,bucket,commit,version,root,log=()=>{}){
  const directory=resolve(root,'apps/web/dist');
  const metadata=JSON.parse(await readFile(resolve(directory,'__deployment.json'),'utf8'));
  if(metadata.commit!==commit||metadata.publicAssetVersion!==version||metadata.assetMode!=='r2')throw new Error('Web build does not match source and R2 mode');
  const prefix=`web/${metadata.buildId}`;
  const files=await webFiles(directory);
  const digest=await webDigest(directory);
+ let reused=false;
  try {
   const previous=await client.send(new HeadObjectCommand({Bucket:bucket,Key:`${prefix}/__release.json`}));
   if(previous.Metadata?.['build-digest']!==digest)throw new Error('Refusing to overwrite an immutable web build');
+  reused=true;
  } catch(error){if(error.$metadata?.httpStatusCode!==404)throw error;}
- for(const name of files){
-  const compressed=name.endsWith('.json.gz');
-  await client.send(new PutObjectCommand({Bucket:bucket,Key:`${prefix}/${name}`,Body:await readFile(resolve(directory,name)),ContentType:compressed?'application/json':contentType(name),...(compressed?{ContentEncoding:'gzip'}:{}),CacheControl:'public, max-age=31536000, immutable'}));
+ if(!reused){
+  for(const name of files){
+   const compressed=name.endsWith('.json.gz');
+   await client.send(new PutObjectCommand({Bucket:bucket,Key:`${prefix}/${name}`,Body:await readFile(resolve(directory,name)),ContentType:compressed?'application/json':contentType(name),...(compressed?{ContentEncoding:'gzip'}:{}),CacheControl:'public, max-age=31536000, immutable'}));
+  }
  }
  const release={...metadata,files:files.length,digest};
- await client.send(new PutObjectCommand({Bucket:bucket,Key:`${prefix}/__release.json`,Body:JSON.stringify(release),ContentType:'application/json',CacheControl:'no-store',Metadata:{'build-digest':digest}}));
+ if(!reused)await client.send(new PutObjectCommand({Bucket:bucket,Key:`${prefix}/__release.json`,Body:JSON.stringify(release),ContentType:'application/json',CacheControl:'no-store',Metadata:{'build-digest':digest}}));
  await writeFile(resolve(directory,'.r2-upload.json'),JSON.stringify(release));
- log(`Web ready: ${prefix}; ${files.length} files`);
+ log(`${reused?'Web reused':'Web ready'}: ${prefix}; ${files.length} files`);
+ return {...release,reused};
 }
 if(process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   const index=process.argv.indexOf('--source');
