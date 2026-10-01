@@ -48,7 +48,6 @@ export function groundTheme(key){return themes[key]||themes.grass;}
 export function groundTexture(key){const theme=groundTheme(key);return `/battle/ground/${theme.texture||(key==='molten'?'cave':theme.id)}.webp`;}
 /** @param {import('./battle-hd2d-types').BattleLayout} layout */
 export function battleObstacles(layout){return (layout.area?.obstacles||[]).map(o=>({position:worldPoint(layout,o),radius:worldRadius(layout,o.radius),height:worldRadius(layout,3.8)}));}
-export function renderClock(scene,now){return Math.min(scene.endClock??Infinity,scene.clock+(scene.live?Math.min(1000,Math.max(0,now-(scene.sampledAt??now))):0));}
 export function unitAnimation(unit,effects,clock,wall,moving){
  if(unit.hp<=0||unit.removed)return 'dead';
  const condition=unitCondition(unit,clock);

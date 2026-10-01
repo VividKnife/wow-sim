@@ -4,8 +4,9 @@ import {useFrame,useThree} from '@react-three/fiber';
 import {PerspectiveCamera,Vector3} from 'three';
 import {OrbitControls} from '@react-three/drei';
 import type {OrbitControls as OrbitControlsInstance} from 'three-stdlib';
+import {createSceneClock} from '@/lib/battle-clock.js';
 import {createSceneMotion} from '@/lib/battle-scene.js';
-import {renderClock,CAMERA_TILT,cameraFit,soloCameraPose} from '@/lib/battle-hd2d.js';
+import {CAMERA_TILT,cameraFit,soloCameraPose} from '@/lib/battle-hd2d.js';
 import type {BattleScene,BattleLayout} from '@/lib/battle-hd2d-types';
 
 export type Frame={scene:BattleScene;layout:BattleLayout;clock:number;wall:number;seconds:number;units:Map<string,BattleScene['units'][number]>};
@@ -17,14 +18,13 @@ export function BattleFrames({scene,children}:{scene:BattleScene;children:React.
  const latest=useRef(scene);
  const units=useMemo(()=>new Map(scene.units.map(unit=>[unit.id,unit])),[scene.units]);
  const frame=useRef<Frame>({scene,layout:scene.layout,clock:scene.clock,wall:0,seconds:0,units});
- const encounter=useRef(scene.encounterId);
+ const presentation=useMemo(()=>createSceneClock(),[]);
  useLayoutEffect(()=>{latest.current=scene;frame.current.units=units;},[scene,units]);
  useLayoutEffect(()=>{motion.update(scene.layout,scene.encounterId,performance.now(),scene.reducedMotion||!scene.live);},[motion,scene.layout,scene.encounterId,scene.reducedMotion,scene.live]);
  useFrame(()=>{
   const next=latest.current,now=performance.now();
-  const sampled=renderClock(next,now),clock=next.live&&encounter.current===next.encounterId?Math.min(next.endClock??Infinity,Math.max(frame.current.clock,sampled)):sampled;
+  const clock=presentation.read(next,now);
   const f=frame.current;f.scene=next;f.layout=motion.read(next.layout,now);f.clock=clock;f.wall=Date.now();f.seconds=next.reducedMotion?0:clock/1000;
-  encounter.current=next.encounterId;
  },-10);
  return <FrameContext.Provider value={frame}>{children}</FrameContext.Provider>;
 }

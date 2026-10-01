@@ -54,7 +54,9 @@ export function enemyMeleeProgress(enemy,actors,clock){
  if(clock>=enemy.nextAttack)return 1;
  return actionProgress(enemy.swingStartedAt??enemy.nextAttack-enemy.swing,enemy.nextAttack,clock);
 }
-export function recentCombatEvents(logs,afterId,clock){return logs.filter(l=>l.id>afterId&&l.at>=clock-3000&&['cast','damage','incoming','heal','miss','interrupt','impact','launch','cancel'].includes(l.kind));}
+// A delayed packet updates current state immediately. Do not replay seconds of
+// stale cosmetic attacks at once; the complete combat log remains untouched.
+export function recentCombatEvents(logs,afterId,clock){return logs.filter(l=>l.id>afterId&&l.at>=clock-600&&['cast','damage','incoming','heal','miss','interrupt','impact','launch','cancel'].includes(l.kind));}
 const replayDuration=e=>Math.min(1000,Math.max(160,e.landsAt-e.startedAt));
 export function mergeCombatEffects(previous,incoming,now,projectiles=[]){
  const active=previous.filter(e=>now-e.shownAt<1500),ids=new Set(active.map(e=>e.id));

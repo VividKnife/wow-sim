@@ -1,7 +1,7 @@
 import {GoldAuctionDock} from './gold-auction';
 import {useLowEffects} from '@/lib/use-low-effects';
 import {useBattleViewZoom} from '@/lib/use-battle-zoom';
-import {createBattleClock} from '@/lib/battle-clock.js';
+import {createBattleClock,BATTLE_PREDICTION_MS} from '@/lib/battle-clock.js';
 import {useCombatPlayback} from '@/lib/use-combat-playback';
 import CombatCommand,{combatMarks} from './combat-command';
 import BattleHD2D from './battle-hd2d';
@@ -48,18 +48,17 @@ export default function Battle({state,data,playback,contentVersion,busy,send,ope
  const battle=s.combat||s.lastCombat;
  const [zoom,setZoom,defaultZoom]=useBattleViewZoom(battle?.id);
  const pendingPull=s.combat?.pull?.engagedAt==null?s.combat?.pull:null;
- // Countdown time is deterministic, so it may advance locally up to (but not
- // beyond) the authoritative pull deadline. Ordinary combat stays capped at
- // one second of prediction while waiting for another server snapshot.
- const predictionMs=pendingPull&&pendingPull.startsAt>s.clock?pendingPull.startsAt-s.clock:1000;
+ const predictionMs=Math.max(BATTLE_PREDICTION_MS,(pendingPull?.startsAt||0)-s.clock);
+ const live=!!s.combat&&!s.combat.command?.paused&&!s.presence?.paused;
+ const sampleAt=useMemo(()=>performance.now(),[s.clock,battle?.id,live]);
  const [clock,setClock]=useState(s.clock),[effects,setEffects]=useState<any[]>([]),[lowEffects,setLowEffects]=useLowEffects(),[reducedMotion,setReducedMotion]=useState(false),[selectedId,setSelectedId]=useState(s.id);
  const [commandMember,setCommandMember]=useState(s.id),[commandTarget,setCommandTarget]=useState(''),[pendingCommand,setPendingCommand]=useState<any>(null);
  useEffect(()=>{setPendingCommand(null);setCommandTarget('');},[s.combat?.id]);
  useEffect(()=>{if(commandMemberId){setCommandMember(commandMemberId);setSelectedId(commandMemberId);setPendingCommand(null);}},[commandMemberId]);
- const cursor=useRef(s.logSequence),observed=useRef(createBattleClock(s.clock,performance.now())),encounter=useRef(s.combat?.id||s.lastCombat?.id);
+ const cursor=useRef(s.logSequence),observed=useRef(createBattleClock(s.clock,performance.now())),encounter=useRef(s.combat?.id||s.lastCombat?.id),wasLive=useRef(live);
  useEffect(()=>{const query=matchMedia('(prefers-reduced-motion: reduce)'),update=()=>setReducedMotion(query.matches);update();query.addEventListener('change',update);return()=>query.removeEventListener('change',update);},[]);
- useEffect(()=>{const key=s.combat?.id||s.lastCombat?.id,now=performance.now();observed.current.observe(s.clock,now,key!==encounter.current);encounter.current=key;setClock(observed.current.read(now,!!s.combat,predictionMs));const events=recentCombatEvents(s.logs,cursor.current,s.clock);cursor.current=s.logSequence;if(open&&events.length){setEffects(old=>mergeCombatEffects(old,events,Date.now(),s.combat?.projectiles||[]));}},[s.logSequence,s.clock,open,predictionMs]);
- useEffect(()=>{if(!open){cursor.current=s.logSequence;setEffects([]);return;}const timer=setInterval(()=>{if(document.hidden)return;setClock(observed.current.read(performance.now(),!!s.combat,predictionMs));setEffects(old=>old.some(e=>Date.now()-e.shownAt>=1500)?old.filter(e=>Date.now()-e.shownAt<1500):old);},100);return()=>clearInterval(timer);},[open,!!s.combat,predictionMs]);
+ useEffect(()=>{const key=s.combat?.id||s.lastCombat?.id,now=performance.now();observed.current.observe(s.clock,now,key!==encounter.current||wasLive.current!==live);encounter.current=key;wasLive.current=live;setClock(observed.current.read(now,live,predictionMs));const events=recentCombatEvents(s.logs,cursor.current,s.clock);cursor.current=s.logSequence;if(open&&events.length){setEffects(old=>mergeCombatEffects(old,events,Date.now(),s.combat?.projectiles||[]));}},[s.logSequence,s.clock,open,predictionMs,live,battle?.id]);
+ useEffect(()=>{if(!open){cursor.current=s.logSequence;setEffects([]);return;}const timer=setInterval(()=>{if(document.hidden)return;setClock(observed.current.read(performance.now(),live,predictionMs));setEffects(old=>old.some(e=>Date.now()-e.shownAt>=1500)?old.filter(e=>Date.now()-e.shownAt<1500):old);},100);return()=>clearInterval(timer);},[open,live,predictionMs]);
  const projection=d.battleView;
  const raid=d.goldRaid?.active?d.goldRaid:null;
  const routeAdvancing=!!(raid?.map?.autoAdvance||d.dungeon?.autoAdvance);
@@ -77,7 +76,7 @@ export default function Battle({state,data,playback,contentVersion,busy,send,ope
  const units=baseUnits.map(u=>({...u,commandMark:combatMarks[battle.command?.marks?.[u.id]],marker:battle.command?.focusId===u.id?'focus':battle.command?.orders?.some((o:any)=>o.targetId===u.id&&o.kind==='soft')?'control':undefined,swing:s.combat&&!u.petUnit?(u.foe?enemyMeleeProgress(u,actors,viewClock):classAttackStatus(u,battle,viewClock,projection.units[u.id]?.attack).progress):0}));
  const player=units.find(u=>u.id===s.id),playerUi=projection.units[s.id];
  const selected=units.find(u=>u.id===selectedId)||units[0],target=battleTarget(selected,units,viewClock),castSkill=skills.find((skill:any)=>skill.spellId===selected.cast?.spell),range=Number(castSkill?.range||castSkill?.radius||5);
- const scene:BattleScene={playerId:s.id,encounterId:battle.id,paused:!!s.combat?.command?.paused,live:!!s.combat&&!s.combat.command?.paused,sampledAt:performance.now(),ground:battle.ground||'grass',endClock:s.playbackUntil,layout,units,clock:viewClock,selectedId:selected.id,range,projectiles:presentationProjectiles(s.combat?battle.projectiles||[]:[],effects,viewClock,Date.now(),units),effects:effects.filter(e=>e.shownAt<=Date.now()),groundEffects:s.combat?[...projection.groundEffects,...actors.filter((u:any)=>u.cast?.channel&&u.cast?.center).map((u:any)=>{const skill=skills.find((a:any)=>a.spellId===u.cast.spell);return {...u.cast,actorId:u.id,spellId:u.cast.spell,radius:skill?.radius||8,school:skill?.school};})]:projection.groundEffects.filter((f:any)=>f.terrain),lowEffects,reducedMotion};
+ const scene:BattleScene={playerId:s.id,encounterId:battle.id,paused:!!s.combat?.command?.paused,live,sampledAt:sampleAt,ground:battle.ground||'grass',endClock:s.playbackUntil,layout,units,clock:s.combat?s.clock:battle.endedAt??s.clock,selectedId:selected.id,range,projectiles:presentationProjectiles(s.combat?battle.projectiles||[]:[],effects,viewClock,Date.now(),units),effects:effects.filter(e=>e.shownAt<=Date.now()),groundEffects:s.combat?[...projection.groundEffects,...actors.filter((u:any)=>u.cast?.channel&&u.cast?.center).map((u:any)=>{const skill=skills.find((a:any)=>a.spellId===u.cast.spell);return {...u.cast,actorId:u.id,spellId:u.cast.spell,radius:skill?.radius||8,school:skill?.school};})]:projection.groundEffects.filter((f:any)=>f.terrain),lowEffects,reducedMotion};
  const attack=classAttackStatus(player,s.combat,viewClock,playerUi.attack),swing=attack.status,swingProgress=attack.progress,speed=projection.units[selected.id].movement.speed;
  const remaining=conditionRemaining(selected,viewClock);
  const baseSpeed=projection.units[selected.id].movement.baseSpeed,slow=baseSpeed>0?Math.max(0,1-speed/baseSpeed):0;

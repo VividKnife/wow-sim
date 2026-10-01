@@ -1,21 +1,26 @@
-import {useEffect,useState} from 'react';
+import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {Footprints,Navigation} from 'lucide-react';
 import {duration,Icon} from './game-ui';
 import './activity-progress.css';
+import {createBattleClock} from '@/lib/battle-clock.js';
 
 type Skill={spellId:number;name:string;cast?:number;icon?:string};
 type ProgressState={clock:number;activity:{type:string;startedAt?:number;endsAt?:number;spell?:number;mount?:number;from?:string;to?:string;flight?:boolean;target?:string|number|null;auto?:boolean};cast?:{startedAt:number;until:number;spell:number}|null;combat?:unknown;rest?:{startedAt?:number;until:number;foodUntil:number;waterUntil:number}|null;presence?:{paused?:boolean}};
 type ProgressData={map?:{id:string;name:string}[];skills?:Skill[];combatSkills?:Skill[];hearthstone?:{destinationName:string|number};mounts?:{collection:{id:number;name:string}[]};itemBuffs?:{spell:number;name:string;icon?:string;until:number}[]};
 
 function Progress({label,start,end,clock,running,journey,quartz,icon,channel}:{label:string;start:number;end:number;clock:number;running:boolean;quartz?:boolean;icon?:string;channel?:boolean;journey?:{from:string;to:string;flight:boolean}}){
- const [elapsed,setElapsed]=useState(0);
+ const timerClock=useRef(createBattleClock(clock,performance.now()));
+ const [displayClock,setDisplayClock]=useState(clock);
+ useLayoutEffect(()=>{
+  const now=performance.now();timerClock.current.observe(clock,now);
+  setDisplayClock(timerClock.current.read(now,running,Math.max(0,end-clock)));
+ },[clock,end,running]);
  useEffect(()=>{
   if(!running)return;
-  const began=performance.now();
-  const timer=setInterval(()=>setElapsed(performance.now()-began),50);
+  const timer=setInterval(()=>setDisplayClock(timerClock.current.read(performance.now(),true,Math.max(0,end-clock))),50);
   return()=>clearInterval(timer);
- },[running]);
- const total=Math.max(1,end-start),current=Math.min(total,Math.max(0,clock-start+(running?elapsed:0))),percent=current/total*100;
+ },[clock,end,running]);
+ const total=Math.max(1,end-start),current=Math.min(total,Math.max(0,displayClock-start)),percent=current/total*100;
  if(journey){const TravelIcon=journey.flight?Navigation:Footprints;return <section className="travel-progress" aria-label="旅途进度">
   <div className="travel-progress-heading"><span><TravelIcon size={18} aria-hidden="true"/>{journey.flight?'飞行中':'行进中'}</span><strong>{percent>=100?'等待抵达确认':`还有 ${duration(total-current)}`}<small>{Math.floor(percent)}%</small></strong></div>
   <div className="travel-progress-route"><span>{journey.from}</span><span>{journey.to}</span></div>
@@ -60,5 +65,5 @@ export default function ActivityProgress({state:s,data:d,running=true,hideTravel
  const spellIcon=[...(d.skills||[]),...(d.combatSkills||[])].find(skill=>skill.spellId===spellId)?.icon;
  const castIcon=a.type==='hearth'?'/icons/assets/inv_misc_rune_01.png':spellIcon||(a.type==='mount'?'/icons/assets/ability_mount_ridinghorse.png':undefined);
  const journey=a.type==='travel'?{from:d.map?.find(n=>n.id===a.from)?.name||a.from||'出发地',to:d.map?.find(n=>n.id===a.to)?.name||a.to||'目的地',flight:!!a.flight}:undefined;
- return <>{!(hideTravel&&a.type==='travel')&&start!==undefined&&end!==undefined&&Number.isFinite(start)&&Number.isFinite(end)&&end>start&&<Progress key={`${s.clock}:${start}:${end}:${running}`} label={label||'施法'} start={start} end={end} clock={s.clock} running={running&&!s.presence?.paused} journey={journey} quartz={quartz} icon={castIcon} channel={a.type==='classChannel'}/>}</>;
+ return <>{!(hideTravel&&a.type==='travel')&&start!==undefined&&end!==undefined&&Number.isFinite(start)&&Number.isFinite(end)&&end>start&&<Progress key={`${start}:${end}:${running&&!s.presence?.paused}`} label={label||'施法'} start={start} end={end} clock={s.clock} running={running&&!s.presence?.paused} journey={journey} quartz={quartz} icon={castIcon} channel={a.type==='classChannel'}/>}</>;
 }

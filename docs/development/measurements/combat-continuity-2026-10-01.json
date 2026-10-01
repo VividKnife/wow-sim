@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-01",
+  "environment": "Local Edge, production frontend build, in-memory ResidentInstance, real HTTP/WebSocket, no PostgreSQL or worker pool; concurrent repository tests present",
+  "injectedSnapshotDelayMs": 1600,
+  "injectionIntervalMs": 8000,
+  "maxTicksPerAdvance": 10,
+  "scene": "40-member Lucifron encounter, natural combat including deaths",
+  "browser": {"frames":1800,"p50":16.7,"p99":32.1,"messages":236,"bytes":5294485,"longTasks":1,"snapshots":0,"deltas":236,"disconnects":0,"maxPacketGap":1820,"seconds":55.8,"consoleErrors":0},
+  "cast": {"durationMs":3000,"delayedSampleAtMs":1200,"delayedSampleClock":600,"completionPacket":false,"rewinds":0,"replacements":0,"maxAdvancePercentagePoints":2,"finishedAtMs":3213},
+  "automatedTestsPassed": 53,
+  "typecheck": "passed",
+  "limitations": ["Not a deployment or server capacity test", "Frame percentiles cover the most recent 1800 frames", "An initial preview attempt with a 100-tick catch-up budget disconnected under CPU contention; it was corrected to the production worker's 10-tick budget"]
+}

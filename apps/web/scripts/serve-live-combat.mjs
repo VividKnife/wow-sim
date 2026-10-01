@@ -14,8 +14,12 @@ if(process.env.PREVIEW_SCENE==='recovery'){state.combat=null;state.activity={typ
 const runtime=new ResidentInstance({instanceId:'live-preview',ownerEpoch:1,state,controllers:[{actorId:state.id,accountId:'preview',generation:1,canPause:true}]});
 const accounts={session:async value=>value===token?{id:'preview',username:'preview'}:null,logout:async()=>{},login:async()=>{throw Error('Fixture only');},register:async()=>{throw Error('Fixture only');}};
 let started=performance.now(),wall=runtime.wallAt;
-const tick=setInterval(()=>{try{runtime.advance(wall+Math.floor(performance.now()-started),100);}catch(error){console.error(error);clearInterval(tick);}},25);
-const snapshot=async(_account,_actor,_online,scope='full')=>({response:runtime.presentation('preview',state.id,scope),state:null,revision:0,account:null,roster:[],activities:[],instanceId:'live-preview'});
+const tick=setInterval(()=>{try{runtime.advance(wall+Math.floor(performance.now()-started),10);}catch(error){console.error(error);clearInterval(tick);}},25);
+let nextDelayAt=performance.now()+8000;
+const jitterMs=Number(process.env.PREVIEW_JITTER_MS||0);
+const snapshot=async(_account,_actor,_online,scope='full')=>{
+ if(jitterMs>0&&performance.now()>=nextDelayAt){nextDelayAt=performance.now()+8000;await new Promise(resolve=>setTimeout(resolve,jitterMs));}
+ return {response:runtime.presentation('preview',state.id,scope),state:null,revision:0,account:null,roster:[],activities:[],instanceId:'live-preview'};};
 const service={snapshot,socialSnapshot:async()=>({self:{id:state.id,name:state.name,roles:['dps']},incoming:[],outgoing:[],proposal:null,group:null,messages:{world:[],party:[]},friends:[],players:[],npcs:[],dungeons:[]}),socialCommand:async()=>{throw Error('Fixture social commands disabled');},createAccount:async()=>{throw Error('Fixture only');},work:async()=>({}),gmInbox:async()=>[],command:async(_account,body)=>{
  const {execution,requestId,characterId,...action}=body;
  const receipt=runtime.input('preview',{instanceId:'live-preview',actorId:state.id,controllerGeneration:execution.controllerGeneration,clientSequence:execution.clientSequence,requestId,command:{kind:'action',action}});
@@ -29,7 +33,7 @@ let web;
 if(process.env.PREVIEW_BUILD==='1'){
  // Measure production React/Three code without HMR or development prop tracing.
  // Output is isolated from the app's real build and can be regenerated freely.
- const production={...config,build:{outDir:app+'../../.cache/qa/live-combat-production',emptyOutDir:true,copyPublicDir:false,sourcemap:true,rollupOptions:{input:app+'test/browser/live-combat.html'}},preview:{host:'127.0.0.1',port:5221,strictPort:true,proxy}};
+ const production={...config,build:{outDir:app+'../../.cache/qa/live-combat-production',emptyOutDir:true,copyPublicDir:false,sourcemap:true,rollupOptions:{input:[app+'test/browser/live-combat.html',app+'test/browser/cast-continuity.html']}},preview:{host:'127.0.0.1',port:5221,strictPort:true,proxy}};
  await build(production);
  for(const name of await readdir(app+'public'))await symlink(app+'public/'+name,production.build.outDir+'/'+name);
  const server=await preview(production);
