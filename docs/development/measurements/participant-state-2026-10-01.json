@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-01",
+  "rulesetVersion": "owned-v1:08a1dfd89875d392e87816f81e730bb7e821cc259acc71a21199f5e29927bc77",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "architectureComplete": false,
+  "scope": "Resident participant identity, independent character asset materialization, actor-private presentation and canonical pending rewards",
+  "changes": [
+    "Durable residency lists all human characters and accounts; lookup supports every participant.",
+    "Human controllers require complete character states instead of stripped combat units.",
+    "One fenced transaction materializes each participant character, items, wallet, ledger, presence and outbox.",
+    "Participant snapshots use in-memory private character state; no database asset merge on presentation or checkpoint.",
+    "Private projection cache includes account and actor identity; foreign profiles, private logs and input receipts are excluded.",
+    "Shared preparation tableaux use the original room, preserving positions and scene identity across viewers.",
+    "Non-leader group rewards use the participant pending container; pendingRewards and the database-path reward move were removed."
+  ],
+  "verification": {
+    "simulation": {
+      "tests": 170,
+      "passed": 170,
+      "failed": 0,
+      "durationMs": 161946.358625,
+      "log": "/tmp/wow-sim-participants-complete.log"
+    },
+    "focusedBoundaries": {
+      "tests": 20,
+      "passed": 20,
+      "failed": 0,
+      "durationMs": 16788.203375,
+      "log": "/tmp/wow-sim-participants-boundaries.log"
+    },
+    "adjacentAndAuthenticatedHttp": {
+      "tests": 41,
+      "passed": 41,
+      "failed": 0,
+      "durationMs": 29854.770208,
+      "log": "/tmp/wow-sim-participants-adjacent-final.log"
+    },
+    "npcLootAndLifecycle": {
+      "tests": 19,
+      "passed": 19,
+      "failed": 0,
+      "durationMs": 41925.555917,
+      "log": "/tmp/wow-sim-participants-npc-loot.log"
+    },
+    "rootTypecheck": "passed",
+    "webTypecheck": "passed",
+    "productionBuild": "passed",
+    "gitDiffCheck": "passed",
+    "databaseBackends": [
+      "MemoryStore",
+      "PostgresStore through PGlite"
+    ],
+    "goldenFilesModified": false,
+    "http": "Two authenticated accounts, real local HTTP gateway, simulation-host and Worker; separate private state and commands; one room restored after close with a new owner epoch."
+  },
+  "limitations": [
+    "Shared-room tests provision the room before either character becomes resident. Active personal-to-dungeon owner transfer and join/leave product flows are not implemented by this change.",
+    "The rule kernel still uses a leader/party aggregate; separate UnitRuntime and permanent entity components remain unfinished.",
+    "Participant out-of-combat activities and complete multiplayer loot/quest interaction still need integration.",
+    "PGlite tests are not multi-connection PostgreSQL crash/failover tests.",
+    "No new browser playtest or native browser crash validation in this turn. Prior browser evidence retains its own version identifiers.",
+    "No measured capacity guarantee; existing large scene/model client bundles remain."
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-01",
+  "worktreeVersion": {
+    "rulesetVersion": "owned-v1:49f8fefc4ffebf69117a6b8e9279e69cbf7dbba1347cc9ef47e03e2f35ec843b",
+    "contentHash": "7691bf09687eea722ce20cc09d3b19b513d2f4294f2d9d030393d877f7b0045b"
+  },
+  "scope": "Station command implementation and isolated browser component-to-resident-Worker verification; not dungeon completion or capacity evidence.",
+  "runs": [
+    {
+      "scope": "station, real owner, raid hazards",
+      "path": "/tmp/wow-sim-team-position-final.log",
+      "tests": 18,
+      "passed": 18,
+      "failed": 0
+    },
+    {
+      "scope": "combat input, policy, spatial, spacing",
+      "path": "/tmp/wow-sim-team-movement-regressions.log",
+      "tests": 63,
+      "passed": 63,
+      "failed": 0
+    },
+    {
+      "scope": "existing combat commands",
+      "path": "/tmp/wow-sim-team-command-old.log",
+      "tests": 16,
+      "passed": 16,
+      "failed": 0
+    },
+    {
+      "scope": "resident, SQL, worker, recovery",
+      "path": "/tmp/wow-sim-team-position-full-final.log",
+      "tests": 37,
+      "passed": 37,
+      "failed": 0
+    },
+    {
+      "scope": "final station capacity changes",
+      "path": "/tmp/wow-sim-team-position-domain-final.log",
+      "tests": 7,
+      "passed": 7,
+      "failed": 0
+    }
+  ],
+  "browser": {
+    "url": "http://127.0.0.1:5199/team-position.html",
+    "execution": "Real SimulationHost Worker, manual test-time advancement; isolated fixture without production database",
+    "verified": [
+      "whole-team command accepted",
+      "moving status after 1 second",
+      "holding after routing around pillar",
+      "individual cancellation receipt",
+      "keyboard destination selection",
+      "server rejects destination within pillar",
+      "new valid station task reaches holding"
+    ],
+    "screenshot": ".cache/qa/team-position-2026-10-01.png",
+    "cleanup": "Preview tab and dedicated server stopped"
+  },
+  "remaining": [
+    "orientation and role handover",
+    "interrupt and healing rotations",
+    "time-dependent danger routing",
+    "actual Onyxia browser kill, loot and distribution"
+  ]
+}

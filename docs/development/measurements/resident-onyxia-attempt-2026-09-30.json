@@ -1,0 +1,121 @@
+{
+  "at": "2026-09-30T15:31:19.487Z",
+  "instanceId": "personal:617e2ad6-6e2d-4bff-b0af-9bb2bae68fd7",
+  "characterId": "0f6c40cb-f9cc-4fca-8bf8-1645e867ed04",
+  "ownerEpoch": 1,
+  "rulesetVersion": "owned-v1:da43008ca919f5705185e5e53d7f882e058991d787a0e36a5043ee0758df2744",
+  "contentHash": "7691bf09687eea722ce20cc09d3b19b513d2f4294f2d9d030393d877f7b0045b",
+  "inputSequence": 13,
+  "schema": "sim2_gateway_20260930",
+  "saveId": "25d84fe6-9642-4005-a2ac-52233196dde9:6c94e4bb-c4e8-480a-9535-54c1a6def28d",
+  "status": "failed_attempt_not_acceptance",
+  "partySize": 40,
+  "composition": {
+    "tanks": 3,
+    "healers": 8,
+    "damage": 29
+  },
+  "clearedPacks": [
+    "onyxia-warders"
+  ],
+  "attempt": {
+    "review": {
+      "bossRemaining": 63,
+      "healerMana": 3,
+      "firstDeath": {
+        "name": "背后有只贼",
+        "at": 1790782067601,
+        "role": "melee",
+        "cause": "顺劈斩"
+      },
+      "plan": {
+        "mainTank": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:55",
+        "offTank": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:37",
+        "focus": "adds",
+        "formation": "spread",
+        "movement": "early",
+        "dispelPolicy": "assigned",
+        "jobs": {
+          "magic": [
+            "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:23",
+            "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:59"
+          ],
+          "curse": [
+            "0f6c40cb-f9cc-4fca-8bf8-1645e867ed04",
+            "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:7"
+          ],
+          "tranquilize": [
+            "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:66",
+            "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:39"
+          ],
+          "ward": [
+            "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:23",
+            "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:59"
+          ]
+        },
+        "cooldowns": {
+          "wall": {
+            "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:55",
+            "trigger": "automatic"
+          },
+          "rescue": {
+            "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:65",
+            "trigger": "automatic"
+          },
+          "mana": {
+            "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:45",
+            "trigger": "automatic"
+          }
+        }
+      },
+      "events": [
+        {
+          "at": 1790782059201,
+          "text": "橡木与月光 执行激活 → 月下橡树",
+          "key": "mana",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:45"
+        },
+        {
+          "at": 1790782081801,
+          "text": "黑铁壁垒 执行盾墙 → 黑铁壁垒",
+          "key": "wall",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:55"
+        },
+        {
+          "at": 1790782107801,
+          "text": "圣光长明 执行圣疗术 → 黑铁壁垒",
+          "key": "rescue",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:65"
+        }
+      ],
+      "used": {
+        "mana": 1,
+        "wall": 1,
+        "rescue": 1
+      },
+      "failures": {
+        "doom": 0,
+        "fire": 24,
+        "feared": 0
+      },
+      "suggestions": [
+        "火区受伤：改为提前撤离、分散站位；金团优先招募执行机制更稳定的成员。",
+        "治疗法力不足：安排激活；减少全员驱散占用，先清治疗小怪以缩短战斗。"
+      ],
+      "unused": []
+    },
+    "bossId": "onyxia",
+    "won": false,
+    "seconds": 129.732,
+    "deaths": 40
+  },
+  "browserCrashes": 2,
+  "browserCrashCause": "unconfirmed",
+  "screen": ".cache/qa/host-ony-phase1.png",
+  "replayFixture": ".cache/qa/host-ony-replay.json",
+  "notes": [
+    "All gameplay actions used the local browser UI.",
+    "The server completed the warders and the boss attempt after browser crashes.",
+    "Boss, loot, distribution and exit acceptance are not complete."
+  ]
+}

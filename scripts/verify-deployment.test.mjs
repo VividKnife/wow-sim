@@ -9,6 +9,7 @@ function fixture(overrides = {}, metadata = expected) {
   const responses = {
     [origin + '/__deployment.json']: [JSON.stringify(metadata)],
     [origin + '/login']: [`<div id="root"></div><script src="${metadata.assetBase}assets/app.js"></script>`],
+    [origin + '/api/health']: [JSON.stringify({ready:true,deployment:{commit:metadata.commit,buildId:metadata.buildId}})],
     [origin + '/api/auth/session']: [JSON.stringify({error: 'Login required'}), {status: 401}],
     [metadata.assetBase + '__release.json']: [JSON.stringify(metadata)],
     [metadata.publicAssetBase + '/__release.json']: [JSON.stringify({version: metadata.publicAssetVersion})],
@@ -70,4 +71,11 @@ test('hands verification to a newer push instead of timing out the old run', asy
   assert.equal(await waitForDeployment({origin, expected, currentSource: async () => 'new-source',
     check: () => assert.fail('Superseded builds should not be checked'), log: () => {},
   }), 'superseded');
+});
+
+test('rejects a healthy API running a different deployment',async()=>{
+ await assert.rejects(checkDeployment(origin,expected,{fetchImpl:fixture({[origin+'/api/health']:[JSON.stringify({ready:true,deployment:{commit:expected.commit,buildId:'old'}})]})}),/runtime buildId/);
+});
+test('does not declare a web-only deployment ready when simulation is unavailable',async()=>{
+ await assert.rejects(checkDeployment(origin,expected,{fetchImpl:fixture({[origin+'/api/health']:[JSON.stringify({ready:false}),{status:503}]})}),/503/);
 });

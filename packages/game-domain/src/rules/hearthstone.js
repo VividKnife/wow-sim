@@ -1,3 +1,4 @@
+import {removeGroundEffects} from './ground-events.js';
 import {nodes,creatures,creatureLocations,icon} from './catalog.js';
 import {countItem,addItem,log} from './character.js';
 import {stopRecovery} from './recovery.js';
@@ -37,6 +38,6 @@ export function finishHearth(s){
  const to=s.activity.to;s.activity={type:'idle'};
  if(s.dungeon)leaveDungeon(s);
  s.location=to;if(!s.visited.includes(to))s.visited.push(to);
- s.hearthReady=s.clock+hearthCooldownMs;s.groundEffects=[];stopRecovery(s);
+ s.hearthReady=s.clock+hearthCooldownMs;removeGroundEffects(s);stopRecovery(s);
  log(s,'炉石将你带回 '+nodes[to].name,'travel');
 }

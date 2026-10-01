@@ -1,0 +1,61 @@
+{
+  "recordedAt": "2026-09-30T21:44:43.225Z",
+  "node": "v24.15.0",
+  "rulesetVersion": "owned-v1:cfc669a51bedd22c8ddcaa6913ecfc7cd755a1e179e3de96c816fdf41ba9a3df",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "scope": "Actor main/off/ranged, combat pets and PvE enemy hands use AutoAttackReady in the existing combat heap. Battleground simplified attacks are not migrated.",
+  "tests": {
+    "simulation": {
+      "passed": 94,
+      "total": 94,
+      "durationMs": 137038.997792
+    },
+    "castResourceClassPetRegression": {
+      "passed": 78,
+      "total": 78
+    },
+    "extendedGameplay": {
+      "initialPassed": 104,
+      "total": 108,
+      "fixtureRepairRerunPassed": 32,
+      "fixtureRepairRerunTotal": 32
+    },
+    "autoAttackCases": 12,
+    "typecheck": "passed",
+    "diffCheck": "passed"
+  },
+  "comparison": {
+    "scenarios": [
+      "solo",
+      "dungeon",
+      "raid",
+      "arena",
+      "battleground"
+    ],
+    "snapshots": 75,
+    "periodMs": 1000,
+    "durationPerScenarioMs": 15000,
+    "excludedFields": [
+      "combatEvents",
+      "attackEventIds"
+    ],
+    "result": "All remaining state fields, logs, RNG, resources, deaths, assets and existing attack clocks are identical",
+    "beforeArtifact": ".cache/qa/auto-attack-before-2026-10-01.json.gz",
+    "beforeSha256": "d2a4882f59fd9773a4055c803e204cda8d8edb75473b94498d916f8f9921b56d",
+    "captureAndComparisonElapsedMs": 4402.285208
+  },
+  "benchmark": "auto-attack-benchmark-2026-10-01.json",
+  "semantics": [
+    "At most one queued event per attack timer; a ready timer waits without periodic requeueing",
+    "Independent timer identities per hand and replacement incarnation; reset cancels its old queued event",
+    "Enemy main-hand lethal damage prevents subsequent offhand/extra damage in the same call, retaining existing clock advancement",
+    "Current haste changes affect the next interval; remaining swing progress rescaling is not implemented"
+  ],
+  "limitations": [
+    "Outer 100ms steps, full unit iteration and ready-timer cleanup remain",
+    "No before/after pure CPU measurement; snapshot comparison timing includes copies and assertions",
+    "Benchmark runs on local Apple M4 alongside existing local QA services; 3 measured rounds per mode after warmup, no production percentile or capacity claim",
+    "Separate simplified battleground pipeline still polls attacks",
+    "This runtime hash has not completed the full browser QA matrix; preceding browser evidence retains its older hashes"
+  ]
+}

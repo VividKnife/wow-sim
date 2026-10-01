@@ -18,7 +18,7 @@ function Sprite({unit:initialUnit,height,clock,school}:{unit:BattleUnitData;heig
  const previous=useRef<[number,number]>([Infinity,Infinity]),lastMove=useRef(0);
  useFrame(({camera})=>{
   if(!body.current||!material.current)return;
-  const f=frame.current,unit=f.scene.units.find(u=>u.id===initialUnit.id)||initialUnit,p=unitPoint(f.layout,unit.id),target=battleTarget(unit,f.scene.units,f.clock),q=target?unitPoint(f.layout,target.id):null;
+  const f=frame.current,unit=f.units.get(initialUnit.id)||initialUnit,p=unitPoint(f.layout,unit.id),target=battleTarget(unit,f.scene.units,f.clock,f.units),q=target?unitPoint(f.layout,target.id):null;
   const moved=Math.hypot(p[0]-previous.current[0],p[2]-previous.current[1]);
   if(Number.isFinite(moved)&&moved>.001)lastMove.current=f.wall;
   previous.current=[p[0],p[2]];

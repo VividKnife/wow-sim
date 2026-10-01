@@ -1,0 +1,39 @@
+{
+  "at": "2026-09-30T14:08:35.363Z",
+  "passed": true,
+  "schema": "sim2_qa_20260930_2134",
+  "characterId": "aa8b7ca9-5371-4614-b0bc-0aded543ca0a",
+  "questCompleted": 783,
+  "kills": 2,
+  "loot": [
+    {
+      "id": "item:aa8b7ca9-5371-4614-b0bc-0aded543ca0a:11",
+      "characterId": "aa8b7ca9-5371-4614-b0bc-0aded543ca0a",
+      "itemId": 4865,
+      "count": 2,
+      "container": "bag"
+    },
+    {
+      "id": "item:aa8b7ca9-5371-4614-b0bc-0aded543ca0a:9",
+      "characterId": "aa8b7ca9-5371-4614-b0bc-0aded543ca0a",
+      "itemId": 7074,
+      "count": 1,
+      "container": "bag"
+    },
+    {
+      "id": "item:aa8b7ca9-5371-4614-b0bc-0aded543ca0a:10",
+      "characterId": "aa8b7ca9-5371-4614-b0bc-0aded543ca0a",
+      "itemId": 7073,
+      "count": 1,
+      "container": "bag"
+    }
+  ],
+  "authority": "existing GameService/local Worker; not simulation-host",
+  "checks": [
+    "UI created character",
+    "UI completed quest 783",
+    "UI hunted young wolves",
+    "UI looted first encounter",
+    "SQL verified same three item IDs and quantities after pickup"
+  ]
+}

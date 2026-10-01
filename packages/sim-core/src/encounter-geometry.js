@@ -1,5 +1,6 @@
 // Serializable encounter geometry in combat yards, shared by damage and drawing.
 import {point} from './geometry.js';
+import {scenePointAllowed} from './scene-space.js';
 
 export function fieldContains(field,unit,padding=0){
  const p=point(unit),center=field.center;
@@ -25,10 +26,10 @@ export function sectorField(center,radius,angle,arc){
 }
 export function fieldSafePoint(unit,fields,area,padding=1.5){
  const p=point(unit);
- if((!area||p.x>=area.minX+1&&p.x<=area.maxX-1&&p.y>=area.minY+1&&p.y<=area.maxY-1)&&!fields.some(f=>fieldContains(f,p,padding)))return p;
+ if((!area||scenePointAllowed(area,p,1))&&!fields.some(f=>fieldContains(f,p,padding)))return p;
  for(let radius=padding;radius<=80;radius+=1.5)for(let i=0;i<32;i++){
   const angle=i*Math.PI/16,q={x:p.x+Math.cos(angle)*radius,y:p.y+Math.sin(angle)*radius};
-  if(area&&(q.x<area.minX+1||q.x>area.maxX-1||q.y<area.minY+1||q.y>area.maxY-1))continue;
+  if(area&&!scenePointAllowed(area,q,1))continue;
   if(!fields.some(f=>fieldContains(f,q,padding)))return q;
  }
  return p;

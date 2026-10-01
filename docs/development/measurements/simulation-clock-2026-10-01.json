@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-01",
+  "scope": "simulation clock translation and completed local owner removal",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:6c7d2e1bdad7deee311ae39248022c6aeed4e43705bb01e3e5d926d6e0ffabdf",
+    "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1"
+  },
+  "sourceHashes": {
+    "packages/game-domain/src/simulation-clock.ts": "edc26cf881d7cca86edbbb3c0f4cb1b6bba739fd0c1cbd4c829789e3d045e3a2",
+    "packages/game-domain/src/context.ts": "13d83ce1d68dee65e426d3397dca8badf99269d0c704c13eb9bf1c0dc0e7d9a8",
+    "packages/game-domain/test/simulation-clock.test.ts": "314aa22b54cdd536e275deb43a23c895d0a045299f192a1bc7817649c224fac5",
+    "apps/simulation-host/src/session.ts": "9caa4bef90987f8184825e87a679105d1e6330c7492d2dc8290038ebd4f9d5fe",
+    "apps/simulation-host/test/transfer-barrier.test.ts": "7c8d1626561cfe79a3cdd71fff151d5786f4c59a2108997477add2dabba7d4b5"
+  },
+  "verification": {
+    "focused": {
+      "passed": 21,
+      "failed": 0,
+      "durationMs": 26418.273583,
+      "log": "/tmp/simulation-clock-barrier-final.log"
+    },
+    "callers": {
+      "passed": 14,
+      "failed": 0,
+      "durationMs": 3082.496292,
+      "log": "/tmp/simulation-clock-callers-final.log"
+    },
+    "rootTypes": true,
+    "initialFullSuite": {
+      "passed": 199,
+      "failed": 1,
+      "log": "/tmp/simulation-clock-full.log",
+      "failure": "transfer timeout exposed whenStopped returning before Worker removal; fixed and reproduced with an explicitly delayed removal"
+    },
+    "fullSimulationSuite": {
+      "command": "npm run simulation:test",
+      "passed": 201,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 187265.584542,
+      "log": "/tmp/simulation-clock-full-final.log"
+    }
+  },
+  "limitations": [
+    "Clock translation does not compose multiple event heaps or remap colliding effect identities",
+    "Production shared dungeon entry and leaving remain incomplete",
+    "Nine-class continuation tests use short level-20 single-enemy fights, not the full encounter matrix",
+    "No browser gameplay rerun or capacity measurement in this change"
+  ]
+}

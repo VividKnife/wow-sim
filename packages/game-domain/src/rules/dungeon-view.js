@@ -1,7 +1,9 @@
+import {spellReady} from './spell-timing.js';
+import {partyLeader,partyLeaderId,controlledPartyMembers} from './party-control.js';
 import {hasBlockingLoot} from './loot.js';
 import {selectedDungeonMembers} from './npc-world.js';
 import {dungeonDefinitions,dungeonDefinition,dungeonIdFor} from './dungeon-registry.js';
-import {dungeonRoute,dungeonEntryReason,dungeonResetReason,remainingDungeonEnemies,dungeonAdvanceReason,dungeonDestinationReason} from './dungeon.js';
+import {dungeonRoute,dungeonEntryReason,dungeonResetReason,remainingDungeonEnemies,dungeonAdvanceReason,dungeonDestinationReason,dungeonInventoryReason} from './dungeon.js';
 import {dungeonMap,dungeonDestinationPath} from './dungeon-map.js';
 import {dungeonQuestObjectives,dungeonQuestTargets} from './dungeon-quest-targets.js';
 import {dungeonJournal} from './dungeon-journal.js';
@@ -12,12 +14,12 @@ import {resurrectionFor} from './recovery.js';
 export function recoveryView(s){
  const members=[s,...s.party],free=!s.combat&&['idle','dead','hunt'].includes(s.activity.type);
  const canBeginResurrection=!s.combat&&['idle','dead'].includes(s.activity.type);
- const fallen=members.filter(c=>c.hp<=0).map(c=>{const resurrection=resurrectionFor(s,c.id),canResurrect=!!(canBeginResurrection&&resurrection&&resurrection.caster.mana>=resurrection.info.mana);return{id:c.id,name:c.name,canResurrect,reason:!canBeginResurrection?'请先结束当前活动。':!resurrection?'需要存活且学会复活法术的牧师、圣骑士或萨满祭司。':resurrection.caster.mana<resurrection.info.mana?'复活施法者法力不足，先恢复法力。':''}});
+ const fallen=members.filter(c=>c.hp<=0).map(c=>{const resurrection=resurrectionFor(s,c.id),canResurrect=!!(canBeginResurrection&&resurrection&&resurrection.caster.mana>=resurrection.info.mana&&spellReady(resurrection.caster,resurrection.info,s.clock));return{id:c.id,name:c.name,canResurrect,reason:!canBeginResurrection?'请先结束当前活动。':!resurrection?'需要存活且学会复活法术的牧师、圣骑士或萨满祭司。':resurrection.caster.mana<resurrection.info.mana?'复活施法者法力不足，先恢复法力。':!spellReady(resurrection.caster,resurrection.info,s.clock)?'复活法术尚未冷却。':''}});
  const conjure=water=>{const id=knownRank(s,water?5504:587),sp=id&&spellInfo(s,id);return !!(free&&s.hp>0&&sp&&s.mana>=sp.mana);};
  const supplies=aura=>s.bag.reduce((n,i)=>n+(spells[items[i.id]?.spellid_1]?.EffectApplyAuraName1===aura?i.count:0),0);
- return {fallen,canRevive:fallen.length>0&&!s.combat&&['idle','dead'].includes(s.activity.type),canRest:free,
+ return {fallen,canRevive:controlledPartyMembers(s).some(c=>c.hp<=0)&&!s.combat&&['idle','dead'].includes(s.activity.type),canRest:free,
   canConjureFood:conjure(false),canConjureWater:conjure(true),food:supplies(84),water:supplies(85),
-  members:members.map(c=>({id:c.id,name:c.name,role:c.role||'队长',level:c.level,hp:c.hp,mana:c.mana,maxHp:stats(c).maxHp,maxMana:stats(c).maxMana,restUntil:c.rest?.until||0}))};
+  members:members.map(c=>({id:c.id,name:c.name,role:c.role||(c.id===partyLeaderId(s)?'队长':'队员'),level:c.level,hp:c.hp,mana:c.mana,maxHp:stats(c).maxHp,maxMana:stats(c).maxMana,restUntil:c.rest?.until||0}))};
 }
 
 // The journal needs entry eligibility, not every dungeon's full encounter map.
@@ -40,15 +42,16 @@ export function dungeonView(s,id=dungeonIdFor(s)){
  const context=run?{...s,dungeon:run}:s,remaining=encounter?remainingDungeonEnemies(context,encounter):[];
  const enemies=[];for(const mob of remaining){let row=enemies.find(e=>e.entry===mob.entry&&e.level===mob.level);if(!row){row={entry:mob.entry,name:mob.name,level:mob.level,elite:!!mob.rank,count:0};enemies.push(row);}row.count++;}
  const entryReason=dungeonEntryReason(s,id),free=active&&!s.combat&&s.activity.type==='idle'&&s.hp>0;
+ const leader=partyLeader(s),controlReason=s.id!==partyLeaderId(s)?'由队长选择副本路线与机关交互。':'';
  const activityReason=s.combat?'小队正在战斗。':s.hp<=0?'先复活倒下的队长。':s.activity.type!=='idle'?'请先结束当前活动。':'';
- let nextReason=!active?'请先进入副本。':activityReason||dungeonAdvanceReason(s);
+ let nextReason=controlReason||(!active?'请先进入副本。':activityReason||dungeonAdvanceReason(s));
  if(!nextReason&&[s,...s.party].some(c=>c.rest))nextReason='小队正在恢复，休整结束后继续。';
- let interactionReason=!free?activityReason||'请先进入副本。':!encounter?.interaction?'这里没有待完成的交互。':remaining.length?'先击败看守的敌人。':'';
- if(!interactionReason&&encounter.id==='dm-cannon'&&!countItem(s,5397))interactionReason='需要迪菲亚火药。';
- if(!interactionReason&&encounter.id==='dm-gunpowder'&&s.bag.length>=bagCapacity(s)&&!countItem(s,5397))interactionReason='背包需要一个空位存放火药。';
- if(!interactionReason)for(const [item,count]of encounter.interaction?.inputs||[])if(countItem(s,item)<count)interactionReason='需要 '+nameOf('items',item)+' ×'+count+'。';
+ let interactionReason=controlReason||(!free?activityReason||'请先进入副本。':!encounter?.interaction?'这里没有待完成的交互。':remaining.length?'先击败看守的敌人。':'');
+ if(!interactionReason&&encounter.id==='dm-cannon'&&!countItem(leader,5397))interactionReason='需要迪菲亚火药。';
+ if(!interactionReason&&encounter.id==='dm-gunpowder'&&leader.bag.length>=bagCapacity(leader)&&!countItem(leader,5397))interactionReason='背包需要一个空位存放火药。';
+ if(!interactionReason)for(const [item,count]of encounter.interaction?.inputs||[])if(countItem(leader,item)<count)interactionReason='需要 '+nameOf('items',item)+' ×'+count+'。';
  const map=dungeonMap(id),objectives=run?dungeonQuestObjectives(s):[],bosses=dungeonJournal.find(d=>d.id===id).bosses;
- const navigateReason=!active?'请先进入副本。':[s,...s.party].some(c=>c.hp<=0)?'先让倒下的成员复活，再继续推进。':!s.combat&&!['idle','dungeonCannon'].includes(s.activity.type)?'请先结束当前活动。':'';
+ const navigateReason=controlReason||(!active?'请先进入副本。':[s,...s.party].some(c=>c.hp<=0)?'先让倒下的成员复活，再继续推进。':!s.combat&&!['idle','dungeonCannon'].includes(s.activity.type)?'请先结束当前活动。':'');
  return {background:dungeonJournal.find(d=>d.id===id)?.background,active,saved:!!s.dungeonSaves?.[id],canReset:!dungeonResetReason(s,id),resetReason:dungeonResetReason(s,id),id,entrance:definition.entrance,zone:definition.zone,description:definition.description,atEntrance:s.location===definition.entrance,name:definition.name,minimumLevel:definition.minimumLevel,recommendedLevel:definition.recommendedLevel,
   groupSize:selectedDungeonMembers(s).length+1,canEnter:!entryReason,entryReason,completed:!!run?.completedAt,progress:run?route.filter(e=>run.cleared[e.id]||run.skipped[e.id]).length:0,total:route.length,
   destination:run?.destination||'full',locationId:run?.locationId||'entrance',path:run?.path||[],map,
@@ -56,9 +59,9 @@ export function dungeonView(s,id=dungeonIdFor(s)){
   canFullClear:!navigateReason&&active&&!dungeonDestinationReason(s,'full'),
   autoAdvance:active&&!!run.autoAdvance,advanceReason:active?run.advanceReason:'',
   rescuing:active&&!!run.autoAdvance&&!s.combat&&[s,...s.party].some(c=>c.hp<=0),
-  waitingForLoot:active&&!!run.autoAdvance&&!s.combat&&hasBlockingLoot(s),
-  recovering:active&&!!run.autoAdvance&&!s.combat&&!hasBlockingLoot(s)&&s.activity.type==='idle',
-  canNext:!nextReason,nextReason,canSkip:!!(free&&encounter?.optional),canLeave:free&&!s.groupLoot?.pending.length,canInteract:!interactionReason,interactionReason,
+  waitingForLoot:active&&!!run.autoAdvance&&!s.combat&&!!dungeonInventoryReason(s),
+  recovering:active&&!!run.autoAdvance&&!s.combat&&!dungeonInventoryReason(s)&&s.activity.type==='idle',
+  canPause:!controlReason,canNext:!nextReason,nextReason,canSkip:!!(!controlReason&&free&&encounter?.optional),canLeave:free&&!s.groupLoot?.pending.length,canInteract:!interactionReason,interactionReason,
   interactionLabel:encounter?.interaction?.label||(encounter?.id==='dm-cannon'?'装填火炮':'拾取迪菲亚火药'),interactionIcon:icon('items',encounter?.interaction?.inputs?.[0]?.[0]||5397),
   current:encounter?{id:encounter.id,name:encounter.nameZh,kind:encounter.kind,optional:!!encounter.optional,interaction:!!encounter.interaction,enemies}:null,
   route:route.map((e,i)=>{

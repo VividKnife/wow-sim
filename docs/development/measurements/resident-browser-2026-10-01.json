@@ -1,0 +1,863 @@
+{
+  "measuredAt": "2026-09-30T19:43:16.424Z",
+  "environment": {
+    "origin": "http://127.0.0.1:5182",
+    "gateway": "http://127.0.0.1:8794",
+    "host": "http://127.0.0.1:8793",
+    "schema": "sim2_playtest_20261001",
+    "node": "v24.15.0",
+    "isolatedLocalQa": true
+  },
+  "rulesetVersion": "owned-v1:caef3618f756c62c8a81357164e41ae7fbf31cd986d060e23ef1827aad1e52d4",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "workflow": "All gameplay actions through browser UI; durable records inspected read-only.",
+  "hunting": {
+    "name": "新架构旅人",
+    "characterId": "11b983e4-6893-4201-bd9a-04ddf17cfa5f",
+    "instanceId": "personal:a4abc165-ee36-4314-9959-463bcb017cbe",
+    "kills": 10,
+    "completed": {
+      "7": 1,
+      "783": 1
+    },
+    "level": 3,
+    "xp": 148,
+    "inputSequence": 8,
+    "artifact": ".cache/qa/resident-hunt-quest-2026-10-01.json",
+    "sha256": "3e80441a3307c117e65e61018a64776219624c828d45e1b0183626d844adb8f9",
+    "bag": [
+      {
+        "uid": "item:11b983e4-6893-4201-bd9a-04ddf17cfa5f:6",
+        "id": 2070,
+        "count": 4
+      },
+      {
+        "uid": "item:11b983e4-6893-4201-bd9a-04ddf17cfa5f:8",
+        "id": 6948,
+        "count": 1
+      },
+      {
+        "uid": "item:11b983e4-6893-4201-bd9a-04ddf17cfa5f:9",
+        "id": 4536,
+        "count": 2
+      },
+      {
+        "uid": "item:11b983e4-6893-4201-bd9a-04ddf17cfa5f:11",
+        "id": 755,
+        "count": 5
+      },
+      {
+        "uid": "item:11b983e4-6893-4201-bd9a-04ddf17cfa5f:13",
+        "id": 2656,
+        "count": 1
+      }
+    ],
+    "persistedBag": [
+      {
+        "id": "item:11b983e4-6893-4201-bd9a-04ddf17cfa5f:6",
+        "templateId": 2070,
+        "count": 4
+      },
+      {
+        "id": "item:11b983e4-6893-4201-bd9a-04ddf17cfa5f:8",
+        "templateId": 6948,
+        "count": 1
+      },
+      {
+        "id": "item:11b983e4-6893-4201-bd9a-04ddf17cfa5f:9",
+        "templateId": 4536,
+        "count": 2
+      },
+      {
+        "id": "item:11b983e4-6893-4201-bd9a-04ddf17cfa5f:11",
+        "templateId": 755,
+        "count": 5
+      },
+      {
+        "id": "item:11b983e4-6893-4201-bd9a-04ddf17cfa5f:13",
+        "templateId": 2656,
+        "count": 1
+      }
+    ],
+    "steps": [
+      "Create level-1 human mage",
+      "Complete quest 783",
+      "Accept quest 7",
+      "Travel to Northshire woodland",
+      "Hunt current quest target until 10 kills",
+      "Enable automatic loot through loot UI",
+      "Return to Marshal McBride and complete quest 7",
+      "Verify level 3 and completion log",
+      "Inspect loot in inventory",
+      "Refresh browser and verify persisted completion"
+    ],
+    "screenshots": [
+      ".cache/qa/resident-quest-complete-2026-10-01.png",
+      ".cache/qa/resident-hunt-bag-2026-10-01.png"
+    ]
+  },
+  "limitations": [
+    "Hunting, quest, five-player boss and Onyxia kill/loot/settlement gameplay workflows completed. Browser stability acceptance remains incomplete.",
+    "Gateway exited once with an unhandled Readable TimeoutError during character creation; original crash root cause remains unproven. Separately reproduced and fixed unreleased non-success upstream response bodies (404 and final 503); all 15 model tests pass.",
+    "No full 2.0 or production capacity claim.",
+    "The in-app browser renderer crashed in the five-player run and four further times in the Onyxia run, including after simplified effects and in web layout. Server continued; reconnect retained state. Root cause remains unresolved."
+  ],
+  "checks": {
+    "simulation": {
+      "passed": 61,
+      "total": 61,
+      "log": "/tmp/wow-sim-webqa-simulation.log"
+    },
+    "modelStreams": {
+      "passed": 15,
+      "total": 15,
+      "log": "/tmp/wow-sim-model-rejected-after.log",
+      "reproducesObservedCrash": false,
+      "rejectedBodyCleanup": {
+        "reproducedBeforeFix": 2,
+        "passedAfterFix": 2,
+        "beforeLog": "/tmp/wow-sim-model-rejected-before.log"
+      }
+    },
+    "types": {
+      "passed": true,
+      "log": "/tmp/wow-sim-model-rejected-types.log"
+    }
+  },
+  "fivePlayer": {
+    "name": "五人常驻法师",
+    "characterId": "cedf4c59-55ac-43fc-99b6-0d17bd08d4b3",
+    "instanceId": "personal:5b8a1b99-7b1f-4bea-b2e3-2760e31e8fde",
+    "rulesetVersion": "owned-v1:caef3618f756c62c8a81357164e41ae7fbf31cd986d060e23ef1827aad1e52d4",
+    "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+    "inputSequence": 9,
+    "steps": [
+      "Create level-20 human mage using the existing UI option",
+      "Open adventure hall and choose recommended NPC group",
+      "Travel normally from Stormwind to Deadmines",
+      "Enter dungeon, apply party buffs and select RhahkZor destination",
+      "Clear eight preceding encounters with normal automatic recovery",
+      "Enable ordinary automatic loot after first encounter; resume route",
+      "Choose greed for Stonemason Cloak; other group loot reaches normal deadlines",
+      "Browser renderer crashed near boss; reconnect in a new tab to same character",
+      "Observe RhahkZor dead while sentries remain, then both sentries defeated",
+      "Verify destination completed, five members alive and Death Speaker Scepter? No: item 5187 RhahkZor Hammer in inventory",
+      "Verify destination completed, five members alive and item 5187 (死神之锤) in inventory"
+    ],
+    "encounter": {
+      "id": "encounter-9",
+      "durationMs": 82200,
+      "enemies": [
+        {
+          "id": "deadmines-3600074",
+          "name": "拉克佐",
+          "hp": 0,
+          "maxHp": 4490
+        },
+        {
+          "id": "deadmines-3600080",
+          "name": "迪菲亚哨兵",
+          "hp": 0,
+          "maxHp": 1068
+        },
+        {
+          "id": "deadmines-3600081",
+          "name": "迪菲亚哨兵",
+          "hp": 0,
+          "maxHp": 1158
+        }
+      ],
+      "survivors": 5,
+      "routeCursor": 9,
+      "autoAdvance": false
+    },
+    "drop": {
+      "uid": "item:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:67",
+      "id": 5187,
+      "count": 1,
+      "name": "死神之锤",
+      "durable": {
+        "id": "item:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:67",
+        "templateId": 5187,
+        "count": 1
+      }
+    },
+    "groupLoot": [
+      {
+        "id": "item:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:65",
+        "name": "凶猛外衣",
+        "itemId": 15018,
+        "winner": "糖在包里",
+        "votes": [
+          {
+            "id": "cedf4c59-55ac-43fc-99b6-0d17bd08d4b3",
+            "name": "五人常驻法师",
+            "npc": false,
+            "eligible": true,
+            "need": false,
+            "reason": "不符合装备条件",
+            "choice": "greed",
+            "roll": 31
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:2",
+            "name": "圣光不加班",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 14730,
+            "choice": "greed",
+            "roll": 4
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:23",
+            "name": "星光落肩",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "不符合装备条件",
+            "choice": "greed",
+            "roll": 71
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:7",
+            "name": "面包管够",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "不符合装备条件",
+            "choice": "greed",
+            "roll": 5
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:8",
+            "name": "糖在包里",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "不符合装备条件",
+            "choice": "greed",
+            "roll": 76
+          }
+        ]
+      },
+      {
+        "id": "item:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:63",
+        "name": "石工披风",
+        "itemId": 1930,
+        "winner": "面包管够",
+        "votes": [
+          {
+            "id": "cedf4c59-55ac-43fc-99b6-0d17bd08d4b3",
+            "name": "五人常驻法师",
+            "npc": false,
+            "eligible": true,
+            "need": false,
+            "reason": "已经拥有这件装备，先领取或换装",
+            "choice": "greed",
+            "roll": 3
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:2",
+            "name": "圣光不加班",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 20428,
+            "choice": "greed",
+            "roll": 42
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:23",
+            "name": "星光落肩",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 6378,
+            "choice": "greed",
+            "roll": 32
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:7",
+            "name": "面包管够",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 4710,
+            "choice": "greed",
+            "roll": 76
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:8",
+            "name": "糖在包里",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 5542,
+            "choice": "greed",
+            "roll": 46
+          }
+        ]
+      },
+      {
+        "id": "item:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:57",
+        "name": "石工披风",
+        "itemId": 1930,
+        "winner": "星光落肩",
+        "votes": [
+          {
+            "id": "cedf4c59-55ac-43fc-99b6-0d17bd08d4b3",
+            "name": "五人常驻法师",
+            "npc": false,
+            "eligible": true,
+            "need": false,
+            "reason": "已经拥有这件装备，先领取或换装",
+            "choice": "greed",
+            "roll": 86
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:2",
+            "name": "圣光不加班",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 20428,
+            "choice": "greed",
+            "roll": 11
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:23",
+            "name": "星光落肩",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 6378,
+            "choice": "greed",
+            "roll": 88
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:7",
+            "name": "面包管够",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 4710,
+            "choice": "greed",
+            "roll": 26
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:8",
+            "name": "糖在包里",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 5542,
+            "choice": "greed",
+            "roll": 35
+          }
+        ]
+      },
+      {
+        "id": "item:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:47",
+        "name": "士兵护甲",
+        "itemId": 6545,
+        "winner": "圣光不加班",
+        "votes": [
+          {
+            "id": "cedf4c59-55ac-43fc-99b6-0d17bd08d4b3",
+            "name": "五人常驻法师",
+            "npc": false,
+            "eligible": true,
+            "need": false,
+            "reason": "不符合装备条件",
+            "choice": "greed",
+            "roll": 31
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:2",
+            "name": "圣光不加班",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 14730,
+            "choice": "greed",
+            "roll": 70
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:23",
+            "name": "星光落肩",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "不符合装备条件",
+            "choice": "greed",
+            "roll": 49
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:7",
+            "name": "面包管够",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "不符合装备条件",
+            "choice": "greed",
+            "roll": 65
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:8",
+            "name": "糖在包里",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "不符合装备条件",
+            "choice": "greed",
+            "roll": 57
+          }
+        ]
+      },
+      {
+        "id": "item:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:38",
+        "name": "石工披风",
+        "itemId": 1930,
+        "winner": "五人常驻法师",
+        "votes": [
+          {
+            "id": "cedf4c59-55ac-43fc-99b6-0d17bd08d4b3",
+            "name": "五人常驻法师",
+            "npc": false,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 5343,
+            "choice": "greed",
+            "roll": 84
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:2",
+            "name": "圣光不加班",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 20428,
+            "choice": "greed",
+            "roll": 72
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:23",
+            "name": "星光落肩",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 6378,
+            "choice": "greed",
+            "roll": 11
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:7",
+            "name": "面包管够",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 4710,
+            "choice": "greed",
+            "roll": 65
+          },
+          {
+            "id": "npc:cedf4c59-55ac-43fc-99b6-0d17bd08d4b3:8",
+            "name": "糖在包里",
+            "npc": true,
+            "eligible": true,
+            "need": false,
+            "reason": "已有相当或更好的配装",
+            "replaces": 5542,
+            "choice": "greed",
+            "roll": 36
+          }
+        ]
+      }
+    ],
+    "artifact": ".cache/qa/resident-five-complete-2026-10-01.json",
+    "sha256": "cc69a575e8865cdc5d6088810ab908d4d30e8030a69c59caa4f54ccff4eaf548",
+    "checkpointArtifact": ".cache/qa/resident-five-checkpoint-2026-10-01.json",
+    "checkpointSha256": "f685d73addf56681189391b65e62fdb932a105b49b6924d96bfbf65f27671e74",
+    "screenshots": [
+      ".cache/qa/resident-five-boss-2026-10-01.png",
+      ".cache/qa/resident-five-loot-2026-10-01.png",
+      ".cache/qa/resident-five-distribution-2026-10-01.png"
+    ],
+    "result": "Gameplay and asset workflow completed with recovery; not a fault-free browser acceptance."
+  },
+  "onyxia": {
+    "name": "常驻龙巢法师",
+    "characterId": "d1b9f63e-d940-4c30-8082-47ccd45b9625",
+    "instanceId": "personal:79f063a4-5d80-43d5-9833-e5ca1ca2489c",
+    "rulesetVersion": "owned-v1:caef3618f756c62c8a81357164e41ae7fbf31cd986d060e23ef1827aad1e52d4",
+    "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+    "inputSequence": 17,
+    "composition": {
+      "tanks": 4,
+      "healers": 10,
+      "dps": 26
+    },
+    "steps": [
+      "Create level-60 human mage through existing raid-experience UI",
+      "Create Onyxia gold raid, publish default 5/10/10 percent distribution rules",
+      "Recruit recommended steady roster of 40, lock roster",
+      "Apply party buffs and NPC-funded consumables; player waits for natural mana regeneration where no water exists",
+      "Publish plan: boss focus, spread, early movement, assigned dispels; automatic reserved cooldowns",
+      "Recover, clear warders, stop at boss boundary, recover and engage boss",
+      "Reconnect same instance after renderer crashes; enable simplified effects, then switch existing interface from classic to web",
+      "Use visible live controls: focus adds, conserve mana, normal healing after landing, focus boss",
+      "Boss defeated naturally; all gameplay inputs via browser, no state/RNG edits",
+      "Auctions complete automatically; attempted player bid did not reach owner before deadline (no bid input recorded)",
+      "Confirm gold settlement in UI; inspect durable records read-only",
+      "Refresh after settlement: UI still reports completed 1/1, distributed 188.3197 gold and available balance 112.9469 gold; read-only wallet audit still has exactly one payout entry"
+    ],
+    "encounter": {
+      "durationMs": 259367,
+      "survivors": 27,
+      "bossHp": 0
+    },
+    "review": {
+      "bossRemaining": 0,
+      "healerMana": 10,
+      "firstDeath": {
+        "name": "凯恩·赤铁",
+        "at": 1790799309935,
+        "role": "melee",
+        "cause": "烈焰吐息"
+      },
+      "plan": {
+        "mainTank": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:55",
+        "offTank": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:37",
+        "focus": "boss",
+        "formation": "spread",
+        "movement": "early",
+        "dispelPolicy": "assigned",
+        "jobs": {
+          "magic": [
+            "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:23",
+            "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:41"
+          ],
+          "curse": [
+            "d1b9f63e-d940-4c30-8082-47ccd45b9625",
+            "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:7"
+          ],
+          "tranquilize": [
+            "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:12",
+            "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:66"
+          ],
+          "ward": [
+            "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:23",
+            "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:41"
+          ]
+        },
+        "cooldowns": {
+          "wall": {
+            "actorId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:55",
+            "trigger": "automatic"
+          },
+          "rescue": {
+            "actorId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:38",
+            "trigger": "automatic"
+          },
+          "mana": {
+            "actorId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:45",
+            "trigger": "automatic"
+          }
+        }
+      },
+      "events": [
+        {
+          "at": 1790799360135,
+          "text": "橡木与月光 执行激活 → 伊莲·晨祷",
+          "key": "mana",
+          "actorId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:45"
+        },
+        {
+          "at": 1790799377139,
+          "text": "团长下令：先清小怪",
+          "key": "focus"
+        },
+        {
+          "at": 1790799388171,
+          "text": "团长下令：治疗节约蓝量",
+          "key": "healing"
+        },
+        {
+          "at": 1790799484885,
+          "text": "团长下令：正常治疗",
+          "key": "healing"
+        },
+        {
+          "at": 1790799502828,
+          "text": "团长下令：集中首领",
+          "key": "focus"
+        }
+      ],
+      "used": {
+        "mana": 1
+      },
+      "failures": {
+        "doom": 0,
+        "fire": 83,
+        "feared": 0
+      },
+      "suggestions": [
+        "火区受伤：改为提前撤离、分散站位；金团优先招募执行机制更稳定的成员。",
+        "治疗法力不足：安排激活；减少全员驱散占用，先清治疗小怪以缩短战斗。"
+      ],
+      "unused": [
+        "盾墙",
+        "圣疗术"
+      ]
+    },
+    "settlement": {
+      "phase": "settled",
+      "cleared": [
+        "onyxia"
+      ],
+      "pot": 1883197,
+      "fee": 94159,
+      "playerIncome": 129469,
+      "playerBalance": 1129469,
+      "npcRecipients": 39,
+      "soldItems": 11,
+      "unsoldItems": 1,
+      "payoutLedgerEntries": 1
+    },
+    "sales": [
+      {
+        "id": "1:onyxia-warders:0",
+        "itemId": 8952,
+        "count": 1,
+        "name": "烤鹌鹑",
+        "rare": false,
+        "winner": "弹药还剩两组",
+        "winnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:39",
+        "recipient": null,
+        "price": 118799,
+        "itemInstanceId": "item:d1b9f63e-d940-4c30-8082-47ccd45b9625:90",
+        "durableOwnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:39",
+        "ownershipRepresentation": "NPC resident inventory container"
+      },
+      {
+        "id": "1:onyxia:1",
+        "itemId": 18422,
+        "count": 1,
+        "name": "奥妮克希亚的徽记",
+        "rare": false,
+        "winner": "风行者的箭袋",
+        "winnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:3",
+        "recipient": null,
+        "price": 100000,
+        "itemInstanceId": "item:d1b9f63e-d940-4c30-8082-47ccd45b9625:91",
+        "durableOwnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:3",
+        "ownershipRepresentation": "NPC resident inventory container"
+      },
+      {
+        "id": "1:onyxia:2",
+        "itemId": 18423,
+        "count": 1,
+        "name": "奥妮克希亚的徽记",
+        "rare": false,
+        "winner": "洛瑞安·晨誓",
+        "winnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:11",
+        "recipient": null,
+        "price": 100000,
+        "itemInstanceId": "item:d1b9f63e-d940-4c30-8082-47ccd45b9625:92",
+        "durableOwnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:11",
+        "ownershipRepresentation": "NPC resident inventory container"
+      },
+      {
+        "id": "1:onyxia:3",
+        "itemId": 18705,
+        "count": 1,
+        "name": "成年黑龙的肌腱",
+        "rare": false,
+        "winner": "弹药还剩两组",
+        "winnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:39",
+        "recipient": null,
+        "price": 101750,
+        "itemInstanceId": "item:d1b9f63e-d940-4c30-8082-47ccd45b9625:93",
+        "durableOwnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:39",
+        "ownershipRepresentation": "NPC resident inventory container"
+      },
+      {
+        "id": "1:onyxia:4",
+        "itemId": 16929,
+        "count": 1,
+        "name": "复仇骨帽",
+        "rare": false,
+        "winner": "午夜契约",
+        "winnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:53",
+        "recipient": null,
+        "price": 100000,
+        "itemInstanceId": "item:d1b9f63e-d940-4c30-8082-47ccd45b9625:94",
+        "durableOwnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:53",
+        "ownershipRepresentation": "NPC resident inventory container"
+      },
+      {
+        "id": "1:onyxia:5",
+        "itemId": 16939,
+        "count": 1,
+        "name": "巨龙追猎者头盔",
+        "rare": false,
+        "winner": "林深见兽",
+        "winnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:30",
+        "recipient": null,
+        "price": 150000,
+        "itemInstanceId": "item:d1b9f63e-d940-4c30-8082-47ccd45b9625:95",
+        "durableOwnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:30",
+        "ownershipRepresentation": "NPC resident inventory container"
+      },
+      {
+        "id": "1:onyxia:7",
+        "itemId": 13040,
+        "count": 1,
+        "name": "觅心弩",
+        "rare": false,
+        "winner": "黑巷无声",
+        "winnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:40",
+        "recipient": null,
+        "price": 150000,
+        "itemInstanceId": "item:d1b9f63e-d940-4c30-8082-47ccd45b9625:96",
+        "durableOwnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:40",
+        "ownershipRepresentation": "NPC resident inventory container"
+      },
+      {
+        "id": "1:onyxia:8",
+        "itemId": 13040,
+        "count": 1,
+        "name": "觅心弩",
+        "rare": false,
+        "winner": "潜行摸个箱",
+        "winnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:4",
+        "recipient": null,
+        "price": 150000,
+        "itemInstanceId": "item:d1b9f63e-d940-4c30-8082-47ccd45b9625:97",
+        "durableOwnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:4",
+        "ownershipRepresentation": "NPC resident inventory container"
+      },
+      {
+        "id": "1:onyxia:9",
+        "itemId": 13488,
+        "count": 1,
+        "name": "配方：生命归土",
+        "rare": false,
+        "winner": "消失等冷却",
+        "winnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:49",
+        "recipient": null,
+        "price": 119166,
+        "itemInstanceId": "item:d1b9f63e-d940-4c30-8082-47ccd45b9625:98",
+        "durableOwnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:49",
+        "ownershipRepresentation": "NPC resident inventory container"
+      },
+      {
+        "id": "1:onyxia:10",
+        "itemId": 17963,
+        "count": 1,
+        "name": "绿色宝石袋",
+        "rare": false,
+        "winner": "潜行摸个箱",
+        "winnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:4",
+        "recipient": null,
+        "price": 100970,
+        "itemInstanceId": "item:d1b9f63e-d940-4c30-8082-47ccd45b9625:99",
+        "durableOwnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:4",
+        "ownershipRepresentation": "NPC resident inventory container"
+      },
+      {
+        "id": "1:onyxia:6",
+        "itemId": 18205,
+        "count": 1,
+        "name": "艾斯卡达尔的项圈",
+        "rare": false,
+        "winner": "黑铁壁垒",
+        "winnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:55",
+        "recipient": null,
+        "price": 692512,
+        "itemInstanceId": "item:d1b9f63e-d940-4c30-8082-47ccd45b9625:100",
+        "durableOwnerId": "npc:d1b9f63e-d940-4c30-8082-47ccd45b9625:55",
+        "ownershipRepresentation": "NPC resident inventory container"
+      }
+    ],
+    "unsold": [
+      {
+        "id": "1:onyxia:0",
+        "itemId": 17966,
+        "count": 1,
+        "name": "奥妮克希亚皮袋",
+        "rare": false,
+        "winner": "流拍",
+        "winnerId": null,
+        "recipient": null,
+        "price": 0
+      }
+    ],
+    "assetStorage": "Player wallet/ledger are separate durable rows. NPC wallets and owned items are still embedded in character.rules.npcWorld; this is not the completed independent NPC asset architecture.",
+    "artifacts": [
+      {
+        "path": ".cache/qa/resident-ony-preparation-2026-10-01.json",
+        "sha256": "8001299fc260a8a8f855a219ef6efff2cefb5f17480606d475bdaedada1c867a"
+      },
+      {
+        "path": ".cache/qa/resident-ony-route-start-2026-10-01.json",
+        "sha256": "9cc152851b8cbdc6fe5d92d184f9a053e51838806793658e9611d602bf738ff9"
+      },
+      {
+        "path": ".cache/qa/resident-ony-before-boss-2026-10-01.json",
+        "sha256": "81420ec7ee48c8e3175f0ab0acb64aa11a88603e23ea9363e469cc9c9932063c"
+      },
+      {
+        "path": ".cache/qa/resident-ony-before-settlement-2026-10-01.json",
+        "sha256": "103617ccf6f201088afb04aa3fbca6d6216cb9a67e91038b2e99678193159bf1"
+      },
+      {
+        "path": ".cache/qa/resident-ony-settled-2026-10-01.json",
+        "sha256": "5fb3dd67a98254a9f13bcdc7b25c9035dba464eb90d35727dba52e9b75ee94de"
+      },
+      {
+        "path": ".cache/qa/resident-ony-asset-audit-2026-10-01.json",
+        "sha256": "12e2b2c344892dca22047bf0913b548364b32b51e859b33dbecd4cea9034b252"
+      }
+    ],
+    "screenshots": [
+      ".cache/qa/resident-ony-guards-2026-10-01.png",
+      ".cache/qa/resident-ony-live-orders-2026-10-01.png",
+      ".cache/qa/resident-ony-settlement-2026-10-01.png"
+    ],
+    "result": "Kill, loot and settlement workflow completed with reconnects; not fault-free browser acceptance.",
+    "renderer": {
+      "crashesObservedThisRun": 4,
+      "stages": [
+        "preparation",
+        "boss start",
+        "combat after simplified effects",
+        "post-kill web layout before settlement"
+      ],
+      "rootCauseKnown": false,
+      "heapSamplesBytes": [
+        112623152,
+        125183008,
+        230242064,
+        456883432,
+        192065688
+      ],
+      "heapSampleLimitation": "Different stages and tabs; no forced GC, not a leak proof or capacity measurement."
+    }
+  }
+}

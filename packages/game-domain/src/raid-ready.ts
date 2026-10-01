@@ -17,11 +17,12 @@ export async function provisionRaidHero(service:GameService,tx:Transaction,accou
  state.party=[];state.bag=[];state.pending=[];state.bank=[];state.auctions=[];state.bags=Array.from({length:4},()=>makeItem(state,14046));
  grantRaidReadyAttunements(state);
  state.location='goldshire';state.hearth='goldshire';state.visited=['northshire','goldshire'];state.activity={type:'idle'};
- for(const item of Object.values(state.equipment) as Rules[])item.ownerId=id;
+ // The roster is a template; each provisioned character owns newly issued items.
+ for(const [slot,item] of Object.entries(state.equipment) as [string,Rules][])state.equipment[slot]={...item,...makeItem(state,item.id,item.count),ownerId:id};
  const attributes=stats(state);state.hp=attributes.maxHp;state.mana=attributes.maxMana;
  log(state,'60级金团已整备：蓝装、职业技能与冒险者大厅就绪。队长已完成熔火之心门任务并持有龙火护符。','raid');
  ensureNpcWorld(state);
  const row:Character={id,accountId,kind:'hero',rules:characterRules(state),professionReadyAt:{},resourceReadyAt:{}};
- await tx.put('characters',row);await persistAssets(tx,row,state,`raid-ready:${accountId}:${id}`,service.id);
+ await tx.put('characters',row);await persistAssets(tx,row,state,`raid-ready:${accountId}:${id}`);
  await tx.put('parties',{id:partyId,accountId,characterIds:[id]});
 }

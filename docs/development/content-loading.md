@@ -24,7 +24,7 @@
 - 新增区域、任务和怪物不要塞进 `core`。当前动态资料随所在地快照发送；未来较大的区域静态展示资料应添加独立内容包。
 - 新增副本沿用首领索引与掉落分离；同一个包必须只包含该范围依赖。
 - 若市场显著扩大，应把市场搜索和商品列表改成服务端分页；当前市场为一个按需包。
-- 浏览器本地模拟 Worker **仍静态导入完整规则及模拟数据**，本次没有实现模拟数据按区域卸载。未来全世界规则扩展时，需要进一步拆分模拟数据注册与依赖声明；不能仅凭展示包已拆分就认为 Worker 也完成分区。
+- 浏览器不加载战斗规则与模拟数据；展示数据继续按需加载，详见 [客户端与服务器模拟边界](client-simulation-boundary.md)。
 - GLB 继续按遭遇加载，但本次没有做模型压缩或 GPU 缓存淘汰。
 
 运行 `npm run content:measure` 查看原始/gzip 体积；基础包上限 150,000 字节，测试还限制其 gzip 在 40,000 字节以内。运行 `node --test apps/web/test/content-packs.test.mjs apps/web/test/client-snapshot.test.mjs apps/game-server/test/server.test.ts` 验证作用域、并发请求、版本隔离、重试及 HTTP 缓存。

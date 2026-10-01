@@ -1,4 +1,3 @@
-import {isContentPending} from './runtime-content.js';
 import {invalidatePolicyIntents} from './combat-policy.js';
 import {commandCombatCast} from './combat.js';
 import {combatInputReadyReason} from './combat-input.js';
@@ -10,6 +9,18 @@ import {spellReady,cooldownUntil} from './spell-timing.js';
 import {distance} from '../../../sim-core/src/geometry.js';
 import {raidBossesFor} from './molten-core-content.js';
 import {raidNotice} from './molten-core-mechanics.js';
+import {compileTeamCondition} from '../../../bot-ai/src/team-condition.js';
+
+// Classic plan labels resolve to reusable, observable conditions. A future
+// ruleset can map its capabilities to the same condition vocabulary.
+const cooldownConditions={
+ manual:compileTeamCondition({kind:'manual'}),
+ frenzy:compileTeamCondition({kind:'effect',effect:'enrage'}),
+ fear:compileTeamCondition({kind:'warning',mechanic:'fear',withinMs:2000}),
+ wall:compileTeamCondition({kind:'healthBelow',fraction:.45}),
+ rescue:compileTeamCondition({kind:'healthBelow',fraction:.25}),
+ mana:compileTeamCondition({kind:'resourceBelow',fraction:.25}),
+};
 
 const owner=s=>s.goldRaid?.active?s.goldRaid:null;
 const members=s=>[s,...s.party];
@@ -34,7 +45,6 @@ export function raidCommandAction(s,a){
   require(['adds','boss'].includes(p.focus)&&['spread','compact'].includes(p.formation)&&['early','finishCast'].includes(p.movement)&&['assigned','all'].includes(p.dispelPolicy),'作战纪律无效。');
   for(const [key,j]of Object.entries(raidJobs)){const ids=p.jobs?.[key];require(Array.isArray(ids)&&ids.length<=2&&new Set(ids).size===ids.length&&ids.every(id=>eligible(s,j.spell).some(c=>c.id===id)),`${j.name}需要指定已掌握技能的成员，主备不能重复。`);}
   for(const [key,j]of Object.entries(raidCooldowns)){const slot=p.cooldowns?.[key];require(slot&&(key==='wall'?['automatic','manual','frenzy','fear']:['automatic','manual']).includes(slot.trigger)&&typeof slot.actorId==='string'&&(!slot.actorId||eligible(s,j.spell).some(c=>c.id===slot.actorId)),`${j.name}安排无效。`);if(key==='wall'&&slot.actorId)require(slot.actorId===p.mainTank,'盾墙应安排给主坦。');}
-  require(!['frenzy','fear'].includes(p.cooldowns.wall.trigger)||a.bossId==='magmadar','狂暴与恐慌时间轴触发仅用于玛格曼达。');
   r.plans??={};r.plans[a.bossId]={mainTank:p.mainTank,offTank:p.offTank,focus:p.focus,formation:p.formation,movement:p.movement,dispelPolicy:p.dispelPolicy,jobs:structuredClone(p.jobs),cooldowns:structuredClone(p.cooldowns)};
   return;
  }
@@ -57,7 +67,7 @@ export function raidCommandAction(s,a){
 function record(s,text,key,actorId){const c=s.combat.raidEncounter.command;c.events.push({at:s.clock,text,key,actorId});c.events=c.events.slice(-40);raidNotice(s,text,'raid-command',{actorId});}
 export function initRaidCommand(s,bossId){
  const enc=s.combat.raidEncounter,plan=raidPlan(s,bossId);
- enc.command={plan,events:[],used:{},dead:[],firstDeath:null,focusReadyAt:0,healingMode:'normal'};
+ enc.command={plan,formation:plan.formation,events:[],used:{},dead:[],firstDeath:null,focusReadyAt:0,healingMode:'normal'};
  enc.tactics.focusAdds=plan.focus==='adds';enc.tactics.dispel=true;enc.tactics.tranquilize=true;enc.tactics.fearWard=true;enc.tactics.avoidFire=true;
  for(const c of members(s))c.raidReservedSpells=Object.entries(raidCooldowns).filter(([key])=>plan.cooldowns[key].actorId===c.id).map(([,j])=>j.spell);
 }
@@ -82,7 +92,7 @@ function executeCooldown(s,key){
  // Emergency assignments explicitly cancel the current cast, then use the
  // same validation and settlement as player and team input. Restore on failure.
  const cast=actor.cast,nextAction=actor.nextAction;actor.cast=null;actor.nextAction=s.clock;
- try{commandCombatCast(s,actor,sp.Id,target.id);}catch(error){if(isContentPending(error))throw error;actor.cast=cast;actor.nextAction=nextAction;return error.message;}
+ try{commandCombatCast(s,actor,sp.Id,target.id);}catch(error){actor.cast=cast;actor.nextAction=nextAction;return error.message;}
  s.combat.raidEncounter.command.used[key]=(s.combat.raidEncounter.command.used[key]||0)+1;
  record(s,`${actor.name} 执行${raidCooldowns[key].name} → ${target.name}`,key,actor.id);return '';
 }
@@ -95,8 +105,13 @@ export function raidCommandTick(s,actors){
  }
  for(const key of Object.keys(raidCooldowns)){
   const x=cooldownContext(s,key);if(x.slot?.trigger==='manual'||x.reason)continue;
-  const enc=s.combat.raidEncounter;
-  const needed=x.slot.trigger==='frenzy'?!!s.combat.enemies.find(e=>e.id===enc.bossId)?.enraged:x.slot.trigger==='fear'?enc.id==='magmadar'&&enc.nextFear-s.clock<=2000:key==='mana'?x.target.mana/stats(x.target).maxMana<.25:x.target.hp/stats(x.target).maxHp<(key==='wall'?.45:.25);
+  const enc=s.combat.raidEncounter,boss=s.combat.enemies.find(e=>e.id===enc.bossId),st=stats(x.target);
+  const condition=cooldownConditions[x.slot.trigger==='automatic'?key:x.slot.trigger];
+  const needed=condition({clock:s.clock,
+   source:boss?{id:boss.id,alive:boss.hp>0&&!boss.removed,effects:(boss.auras||[]).some(a=>a.dispel===9&&a.until>s.clock)?['enrage']:[]}:null,
+   target:{alive:x.target.hp>0,health:{current:x.target.hp,maximum:st.maxHp},resource:{current:x.target.mana,maximum:st.maxMana}},
+   warnings:enc.warnings||[],
+  });
   if(needed)executeCooldown(s,key);
  }
 }

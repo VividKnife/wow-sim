@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-01",
+  "kind": "resident-retirement-correctness",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:b323fed73030c3841363e0669e4bf23e6a531fcce0267777e374c7ced39f909b",
+    "contentHash": "7691bf09687eea722ce20cc09d3b19b513d2f4294f2d9d030393d877f7b0045b"
+  },
+  "lifecycleSources": {
+    "files": [
+      "apps/simulation-host/src/session.ts",
+      "apps/simulation-host/src/directory.ts",
+      "apps/simulation-host/src/host.ts",
+      "apps/simulation-host/src/main.ts"
+    ],
+    "sha256": "1f9ffaca8e7cde61bf1d16d4ccac84ce172383848a9948c089e44a7adab5c65b"
+  },
+  "node": "v24.15.0",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "verification": {
+    "tests": 52,
+    "passed": 52,
+    "failed": 0,
+    "durationMs": 95185.707417,
+    "typecheck": "passed",
+    "diffCheck": "passed"
+  },
+  "coverage": [
+    "cutoff checkpoint and release of directory/worker capacity",
+    "no checkpoint IO after retirement",
+    "queued input cancels retirement",
+    "concurrent reopen waits for lease release and shares one owner",
+    "cached actor routes authenticate before reopening",
+    "quest reward and receipt idempotence across repeated eviction",
+    "stale cleanup epoch cannot remove new worker owner",
+    "failed commit fences execution without releasing uncertain durable ownership",
+    "existing gateway, process recovery, SQL asset and golden-state regressions"
+  ],
+  "limitations": [
+    "No additional browser playthrough in this run",
+    "No capacity throughput or long-term RSS claim",
+    "Save deletion still needs explicit ownership lifecycle",
+    "Long catch-up admission and asynchronous durable receipts remain unfinished"
+  ],
+  "command": "node --test --test-concurrency=1 packages/bot-ai/test/*.test.mjs packages/combat-core/test/*.test.ts packages/simulation-tests/*.test.ts apps/simulation-host/test/*.test.ts packages/persistence/test/simulation.test.ts packages/game-domain/test/resident-characters.test.ts apps/game-server/test/resident-game.test.ts"
+}

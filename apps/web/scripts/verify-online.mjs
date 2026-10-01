@@ -1,3 +1,4 @@
+import {applyGameEvent} from '../../../packages/contracts/src/events.ts';
 // Explicit post-deployment E2E. Creates one isolated account/save on WEB_QA_ORIGIN.
 import assert from 'node:assert/strict';
 import {randomBytes, randomUUID} from 'node:crypto';
@@ -29,10 +30,12 @@ assert.equal((await request(gamePath)).status, 401);
 assert.equal((await request(gamePath, {cookie, requestOrigin: 'https://invalid.example', body: {type: 'advance', requestId: randomUUID()}})).status, 403);
 const snapshotResponse = await request(gamePath, {cookie});
 assert.equal(snapshotResponse.headers.get('content-encoding'), 'gzip');
-const initialPlayerId = (await snapshotResponse.json()).snapshot.player.id;
-const hunt = await request(gamePath, {cookie, body: {type: 'hunt', id: 299, requestId: randomUUID(), localClientId: 'e2e-fixture'}});
+const initial = await snapshotResponse.json(), initialPlayerId=initial.snapshot.player.id;
+assert.ok(initial.execution);
+const {instanceId,controllerGeneration,clientSequence}=initial.execution;
+const hunt = await request(gamePath, {cookie, body: {type: 'hunt', id: 299, requestId: randomUUID(), execution:{instanceId,controllerGeneration,clientSequence:clientSequence+1}}});
 assert.equal(hunt.status, 200, await hunt.clone().text());
-const requests = [], errors = [], failures = [], checkpoints = [], packResponses = [];
+const requests = [], errors = [], failures = [], streamMessages = [];
 const browser = await chromium.launch({headless: true, ...(process.env.CHROME_PATH ? {executablePath: process.env.CHROME_PATH} : {})});
 await mkdir(output, {recursive: true});
 let success = false, loggingOut = false;
@@ -44,9 +47,9 @@ try {
   context.on('response', async response => {
     const url = new URL(response.url());
     if (response.status() >= 400 && !url.pathname.endsWith('/api/auth/session') && !(loggingOut && response.status() === 401 && url.pathname.startsWith('/api/game'))) failures.push({url: response.url(), status: response.status(), body: (await response.text().catch(() => '')).slice(0, 300)});
-    if (url.pathname.includes('/simulation-content/')) packResponses.push({url: response.url(), status: response.status(), headers: await response.allHeaders()});
-    if (url.pathname === '/api/game/local' && response.request().postDataJSON()?.type === 'checkpoint' && response.ok()) checkpoints.push(await response.json());
   });
+  let live=null;
+  page.on('websocket',socket=>{if(!socket.url().includes('/api/events'))return;socket.on('framereceived',frame=>{try{live=applyGameEvent(live,JSON.parse(String(frame.payload)));if(live)streamMessages.push(live.execution?.streamSequence);}catch(error){errors.push(String(error));}});});
   await page.goto(origin + '/login');
   await page.getByLabel('账号名称', {exact: true}).fill(credentials.username);
   await page.getByLabel('账号密码', {exact: true}).fill(credentials.password);
@@ -56,18 +59,13 @@ try {
   await page.waitForURL(origin + '/');
   await page.goto(origin + '/?saveId=' + save.id);
   await page.getByText('部署验证法师', {exact: true}).first().waitFor({timeout: 90000});
-  for (let n = 0; n < 180 && !checkpoints.length; n++) await new Promise(resolve => setTimeout(resolve, 500));
-  assert.ok(checkpoints.length, 'real browser engine did not submit a checkpoint');
-  // A lease checkpoint can precede the first frame; require a completed fight
-  // and loaded character/background before checking the visual interface.
+  for(let n=0;n<180&&(!live?.snapshot?.player?.totals?.kills||streamMessages.length<2);n++)await new Promise(resolve=>setTimeout(resolve,500));
+  assert.ok(live?.execution&&live.snapshot.player.totals.kills>0,'server combat did not progress');
+  assert.ok(!requests.some(url=>/api\/game\/local|simulation-content\/|local-simulation.worker/.test(url)),'browser must not load or submit simulation state');
   await page.locator('.world-scene:not(.is-combat) .character-model.model-ready').waitFor({timeout: 120000});
   await page.waitForFunction(() => [...document.querySelectorAll('.world-scene-photograph')].some(image => image.complete && image.naturalWidth > 0), {}, {timeout: 60000});
   const progressed = await (await request(gamePath, {cookie})).json();
   assert.ok(progressed.snapshot.player.xp > 0 || progressed.snapshot.player.level > 1, 'combat did not persist experience');
-  assert.ok(packResponses.some(item => /\/boot\.json\.gz/.test(item.url)), 'missing boot pack');
-  assert.ok(packResponses.some(item => /\/class-8\.json\.gz/.test(item.url)), 'missing class pack');
-  assert.ok(packResponses.some(item => /\/\d+\.json\.gz/.test(item.url)), 'missing lazy numeric shard');
-  for (const item of packResponses) { assert.equal(item.status, 200); assert.equal(item.headers['access-control-allow-origin'], origin); assert.match(item.headers['content-type'], /application\/json/); }
   const loot = page.getByRole('dialog').filter({has: page.getByRole('heading', {name: '战利品', exact: true})});
   if (await loot.isVisible()) await loot.getByRole('button', {name: 'Close', exact: true}).click();
   await page.getByRole('button', {name: '打开世界地图', exact: true}).click();
@@ -92,8 +90,8 @@ try {
   assert.deepEqual(errors, []); assert.deepEqual(failures, []);
   success = true;
 } finally {
-  await writeFile(output + '/result.json', JSON.stringify({success, origin, commit: metadata.commit, buildId: metadata.buildId, htmlBytes: Buffer.byteLength(html), testAccount: credentials.username, saveId: save.id, requests, errors, failures, checkpoints: checkpoints.length, packs: packResponses}, null, 2));
+  await writeFile(output + '/result.json', JSON.stringify({success, origin, commit: metadata.commit, buildId: metadata.buildId, htmlBytes: Buffer.byteLength(html), testAccount: credentials.username, saveId: save.id, requests, errors, failures, streamMessages: streamMessages.length}, null, 2));
   await browser.close();
   await request('/api/auth/logout', {cookie, body: {}});
 }
-console.log(`Online E2E passed: ${metadata.commit}, ${requests.length} requests, ${checkpoints.length} checkpoints. Evidence: ${output}`);
+console.log(`Online E2E passed: ${metadata.commit}, ${requests.length} requests, ${streamMessages.length} server updates. Evidence: ${output}`);

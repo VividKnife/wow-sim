@@ -1,6 +1,5 @@
 import {claimGmGift} from './gm.ts';
 import {applyExperienceBuff} from './rules/experience.js';
-import {resetLocalSession} from './local-simulation.ts';
 import {progressNpcWorld} from './rules/npc-world.js';
 import {leaveGoldRaid,goldCommands} from './rules/gold-raid.js';
 import {dungeonIdFor,dungeonDefinitions} from './rules/dungeon-registry.js';
@@ -34,8 +33,10 @@ export async function createInstance(this: GameService, tx: Transaction, c: Char
     requireThat(ids.includes(c.id) && ids.length <= capacity, 'ROSTER', '副本名册必须包含发起角色且不超过席位上限', 400);
     const instance: Instance = { id: this.id(), creatorAccountId: c.accountId, leaderId: c.id, contentId, contentVersion: this.contentVersion, capacity, status: 'forming', roster: [], simulation: null, rngState: this.seed(), sequence: 0, epoch: 0, nextEventAt: now + 1000, createdAt: now };
     for (const id of ids) {
-        const npc = c.kind === 'hero' && Object.hasOwn(dungeonDefinitions,contentId) && c.rules.npcWorld?.residents.find((p:Rules)=>p.id===id);
+        const npc = c.kind === 'hero' && Object.hasOwn(dungeonDefinitions,contentId) &&
+            c.rules.npcWorld?.residentIds.includes(id) && await tx.get('npc_characters', id);
         if (npc) {
+            requireThat(npc.ownerCharacterId === c.id && npc.accountId === c.accountId, 'NPC_OWNER', '冒险者不属于当前队伍');
             // The world's hero lease below owns all NPC state for this instance.
             instance.roster.push({characterId:id,accountId:c.accountId,controller:'npc'});
             continue;
@@ -92,7 +93,7 @@ export async function startInstance(this: GameService, tx: Transaction, c: Chara
     if (s.dungeon && !savedRunId)
         s.dungeon.runId = instance.id;
     if (s.dungeon || s.goldRaid?.active)
-        await persistCharacter(tx, c, s, s.wallAt, `instance:${instance.id}:start`, this.id);
+        await persistCharacter(tx, c, s, s.wallAt, `instance:${instance.id}:start`);
     for (const member of s.party) applyExperienceBuff(member, this.xpMultiplier);
     instance.simulation = s;
     instance.rngState = s.rngState;
@@ -131,15 +132,14 @@ export async function instanceCommand(this: GameService, tx: Transaction, c: Cha
     }
     const deadline = await this.instanceDeadline(tx, instance, observedPresence);
     requireThat(now <= deadline, 'OFFLINE_PARTICIPANT', '有副本参与者已超出离线时限，请等待其上线');
-    const s = instance.localSimulation ? structuredClone(instance.simulation) : advance(instance.simulation, now, {}).state;
-    resetLocalSession(instance);
+    const s = advance(instance.simulation, now, {}).state;
     const actor = visitor ? s.party.find((unit: Rules) => unit.id === c.id) : s;
     requireThat(actor, 'INSTANCE_ACTOR', '实例中找不到该角色');
     if(action.type==='claimGmGift'){
         if(visitor){
             const inventory=await context(tx,c,now,false);
             const granted=await claimGmGift(tx,c,inventory,action.id,now);
-            await persistAssets(tx,c,granted,`instance:${id}:gift:${cmd.requestId}`,this.id);
+            await persistAssets(tx,c,granted,`instance:${id}:gift:${cmd.requestId}`);
             instance.simulation=s;
         }else instance.simulation=await claimGmGift(tx,c,s,action.id,now);
     }
@@ -166,7 +166,7 @@ export async function instanceCommand(this: GameService, tx: Transaction, c: Cha
     await this.persistInstance(tx, instance, now, `instance:${id}:command:${cmd.requestId}`, observedPresence);
     await this.bumpInstanceAccounts(tx, instance, c.accountId);
 }
-export async function persistInstance(this: GameService, tx: Transaction, instance: Instance, now: number, key: string, observedPresence?: ReadonlyMap<string, number>, options:{localCheckpoint?:boolean}={}) {
+export async function persistInstance(this: GameService, tx: Transaction, instance: Instance, now: number, key: string, observedPresence?: ReadonlyMap<string, number>) {
     await invalidateCombatPlan(tx, instance);
     const s = instance.simulation!;
     for (const row of instance.roster) {
@@ -174,7 +174,7 @@ export async function persistInstance(this: GameService, tx: Transaction, instan
             continue;
         const c = await owned(tx, row.accountId, row.characterId);
         if (c.id === s.id)
-            await persistCharacter(tx, c, { ...s, combat: null, lastCombat: null }, s.wallAt, key, this.id);
+            await persistCharacter(tx, c, { ...s, combat: null, lastCombat: null }, s.wallAt, key);
         else {
             const unit = s.party.find((p: Rules) => p.id === c.id);
             if (unit)
@@ -205,15 +205,13 @@ export async function persistInstance(this: GameService, tx: Transaction, instan
     if (s.goldRaid?.active && !s.combat && !s.goldRaid.autoAdvance && !s.goldRaid.auctions.length &&
         !s.goldRaid.recoverUntil && s.activity.type === 'idle' && !s.rest)
         instance.nextEventAt = PAUSED_EVENT_AT;
-    if (instance.localSimulation) instance.nextEventAt = PAUSED_EVENT_AT;
     await tx.put('instances', instance);
     // Routine browser saves are covered by the session sequence and bounded
     // receipt. Keep asset ledger entries and the actual completion event.
-    if(!options.localCheckpoint||instance.status==='completed')await economicEvent(tx, key, instance.creatorAccountId, 'instanceSettled', { instanceId: instance.id, sequence: instance.sequence });
+    await economicEvent(tx, key, instance.creatorAccountId, 'instanceSettled', { instanceId: instance.id, sequence: instance.sequence });
 }
 export async function leaveInstance(this: GameService, tx: Transaction, c: Character, id: string, now: number) {
     const instance = await this.instanceFor(tx, c, id);
-    resetLocalSession(instance);
     requireThat(!instance.simulation?.combat, 'IN_COMBAT', '战斗结束后才能离开');
     await invalidateCombatPlan(tx, instance);
     const departing = instance.roster.filter(r => r.accountId === c.accountId), ownedRows = departing.filter(r => r.controller !== 'npc');
@@ -229,7 +227,7 @@ export async function leaveInstance(this: GameService, tx: Transaction, c: Chara
         const character = await owned(tx, c.accountId, row.characterId), s = await context(tx, character, now, false);
         s.activity = { type: 'idle' };
         s.combat = null;
-        await persistCharacter(tx, character, s, now, `leave:${id}:${row.characterId}`, this.id);
+        await persistCharacter(tx, character, s, now, `leave:${id}:${row.characterId}`);
     }
     instance.roster = instance.roster.filter(r => r.accountId !== c.accountId);
     if (instance.simulation)

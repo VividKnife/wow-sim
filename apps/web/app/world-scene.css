@@ -60,3 +60,5 @@
 .is-moving .world-spirit-aura i{animation-play-state:running}
 @keyframes world-spirit-rise{0%{opacity:0;transform:translate(0,0)}25%{opacity:.8}100%{opacity:0;transform:translate(12px,-170px)}}
 @media(prefers-reduced-motion:reduce){.world-spirit-aura i{animation:none}}
+
+.instance-preparation-status{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:min(560px,65%);display:grid;gap:4px;text-align:center;color:#e9dec5;text-shadow:0 2px 5px #000;pointer-events:none;font-size:12px}.instance-preparation-status strong{color:#ffe1a4}.instance-preparation-status span:last-child{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

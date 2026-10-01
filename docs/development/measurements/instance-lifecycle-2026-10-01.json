@@ -1,0 +1,160 @@
+{
+  "recordedAt": "2026-10-01T00:48:10.461Z",
+  "node": "v24.15.0",
+  "rulesetVersion": "owned-v1:de08ceafe78ea8df8cf08bf6c0774f0fc78e29e5971315130a4fd9d8598608de",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "architectureComplete": false,
+  "scope": [
+    "Enemy periodic aura heap scheduling and cold restoration",
+    "Resident character admission before combat; no duplicate admission on refresh",
+    "Public five-person / forty-person preparation tableau and out-of-combat buffs",
+    "Remove hidden single-character renderer while a group scene is active",
+    "Match cross-region minimap switch to the scene midpoint"
+  ],
+  "tests": {
+    "simulation": {
+      "total": 157,
+      "passed": 157,
+      "failed": 0,
+      "durationMs": 223082.275,
+      "log": "/tmp/wow-sim-instance-complete-final.log"
+    },
+    "enemyAuraAndGameplay": {
+      "total": 62,
+      "passed": 62,
+      "failed": 0,
+      "durationMs": 7866.5835,
+      "log": "/tmp/wow-sim-enemy-aura-final.log"
+    },
+    "boundaries": {
+      "total": 34,
+      "passed": 34,
+      "failed": 0,
+      "durationMs": 14378.523583,
+      "log": "/tmp/wow-sim-instance-boundaries.log"
+    },
+    "gateway": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "durationMs": 14288.52225,
+      "log": "/tmp/wow-sim-instance-owner-http.log"
+    },
+    "adjacent": {
+      "total": 32,
+      "passed": 32,
+      "failed": 0,
+      "durationMs": 22146.23325,
+      "log": "/tmp/wow-sim-instance-adjacent.log"
+    },
+    "baseline": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "durationMs": 9914.5175,
+      "log": "/tmp/wow-sim-instance-baseline-final.log"
+    },
+    "rootTypecheck": "passed",
+    "webTypecheck": "passed",
+    "productionBuild": "passed; existing large chunks warning",
+    "diffCheck": "passed"
+  },
+  "differential": {
+    "scenarios": [
+      "solo",
+      "dungeon",
+      "raid",
+      "arena",
+      "battleground"
+    ],
+    "durationPerScenarioMs": 15000,
+    "snapshots": 75,
+    "result": "all normalized states equal before/after",
+    "historicalFixturesRewritten": false,
+    "normalization": "Existing scheduler/projectile representation normalization plus enemyAuraEventId; no health, RNG, resources, loot or rule timeline exclusions"
+  },
+  "browser": {
+    "schema": "sim2_instance_scene_20261001",
+    "url": "http://127.0.0.1:5185",
+    "rulesetVersion": "owned-v1:8ee859e7e4c1c856da5c232735be6c6739af5927ffd9e24876be244cf61da3e2",
+    "finalSourceDifference": "Subsequent enemy aura fix preserves nonparticipant recipients and sweeps departed ready targets; scene presentation unchanged. That final rules hash is covered by the final tests, not claimed as a second browser matrix.",
+    "scenarios": [
+      {
+        "name": "入本即见小队",
+        "members": 5,
+        "entry": "deadmines",
+        "combatStarted": false,
+        "buff": "Arcane Intellect cast through utility hotbar; visible before/after refresh",
+        "checkpoint": ".cache/qa/instance-scene-five-2026-10-01.json",
+        "screenshot": ".cache/qa/instance-five-preparation-2026-10-01.png"
+      },
+      {
+        "name": "集结即见团队",
+        "members": 40,
+        "entry": "onyxias-lair",
+        "phase": "camp",
+        "combatStarted": false,
+        "checkpoint": ".cache/qa/instance-scene-raid-2026-10-01.json",
+        "screenshot": ".cache/qa/instance-raid-preparation-2026-10-01.png"
+      }
+    ],
+    "sceneProofBefore": {
+      "five": "deadmines-1",
+      "raid": "3736b7a4-4730-4627-b01c-9bddd90ea222:raid:onyxias-lair:1"
+    },
+    "sceneProofAfter": {
+      "five": "deadmines-1",
+      "raid": "3736b7a4-4730-4627-b01c-9bddd90ea222:raid:onyxias-lair:1"
+    },
+    "heapSamples": [
+      {
+        "at": "2026-10-01T00:41:25.308Z",
+        "heap": {
+          "backingStorageSize": 41429051,
+          "embedderHeapUsedSize": 15042304,
+          "totalSize": 191283200,
+          "usedSize": 144000828
+        }
+      },
+      {
+        "at": "2026-10-01T00:42:50.579Z",
+        "heap": {
+          "backingStorageSize": 27587101,
+          "embedderHeapUsedSize": 8962128,
+          "totalSize": 148176896,
+          "usedSize": 85981052
+        }
+      },
+      {
+        "at": "2026-10-01T00:46:06.126Z",
+        "heap": {
+          "backingStorageSize": 27586451,
+          "embedderHeapUsedSize": 8873352,
+          "totalSize": 151437312,
+          "usedSize": 97442296
+        }
+      }
+    ],
+    "raidErrors": [],
+    "fiveErrors": [],
+    "raidDom": {
+      "canvases": 1,
+      "iframes": 0,
+      "members": 40
+    },
+    "observedCrash": false
+  },
+  "limitations": [
+    "Preparation positions are public tableau coordinates, not navigation/range authority",
+    "Personal owner continues across its single-account dungeon scenes; shared multi-account owner transfer is incomplete",
+    "Ordinary aura expiration and other rule systems still have tick scans",
+    "No capacity or comparative speed claim; short heap samples are not peak RSS or a long-duration leak proof",
+    "Existing 1280x720 HUD panels obscure portions of the raid; mobile QA remains outstanding"
+  ],
+  "earlierTestAttempt": {
+    "passed": 148,
+    "failed": 2,
+    "reason": "Source was edited while parent and new Workers computed their rule version; version fencing rejected mismatched workers. Final frozen-source suite passed.",
+    "log": "/tmp/wow-sim-enemy-aura-full.log"
+  }
+}

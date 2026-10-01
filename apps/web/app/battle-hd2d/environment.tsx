@@ -4,6 +4,8 @@ import {useTexture} from '@react-three/drei';
 import {BufferGeometry,Float32BufferAttribute,Fog,Mesh,NearestFilter,Points,RepeatWrapping,SRGBColorSpace,Vector3} from 'three';
 import {groundTheme,groundTexture,sceneryLayout} from '@/lib/battle-hd2d.js';
 import {useBattleFrame} from './frame';
+import {BossRoom} from './room';
+import type {BattleLayout} from '@/lib/battle-hd2d-types';
 
 type Theme=ReturnType<typeof groundTheme>;
 function Tree({x,z,scale,turn,theme}:{x:number;z:number;scale:number;turn:number;theme:Theme}){
@@ -48,7 +50,7 @@ function Atmosphere({theme,low}:{theme:Theme;low:boolean}){
  return <points ref={points} geometry={geometry}><pointsMaterial color={theme.accent} size={.055} transparent opacity={.55} depthWrite={false} sizeAttenuation/></points>;
 }
 
-export const Environment=memo(function Environment({ground,low,reduced}:{ground:string;low:boolean;reduced:boolean}){
+export const Environment=memo(function Environment({ground,low,reduced,layout}:{ground:string;low:boolean;reduced:boolean;layout:BattleLayout}){
  const theme=groundTheme(ground),original=useTexture(groundTexture(ground));
  const texture=useMemo(()=>{const t=original.clone();t.wrapS=t.wrapT=RepeatWrapping;t.repeat.set(5,4);t.colorSpace=SRGBColorSpace;t.magFilter=NearestFilter;t.needsUpdate=true;return t;},[original]);
  useEffect(()=>()=>texture.dispose(),[texture]);
@@ -59,11 +61,13 @@ export const Environment=memo(function Environment({ground,low,reduced}:{ground:
   // Portrait framing pulls the camera back; fog must not swallow the playfield.
   if(fog.current){camera.getWorldDirection(direction);const offset=Math.max(0,camera.position.y/Math.max(.2,-direction.y)-45);fog.current.near=34+offset;fog.current.far=theme.fog+offset;}
  });
+ const room=layout.area?.shape==='polygon';
  const props=useMemo(()=>ground==='arena'?[]:sceneryLayout(theme.id),[ground,theme.id]);
  return <>
   <color attach="background" args={[theme.sky]}/><fog ref={fog} attach="fog" args={[theme.sky,34,theme.fog]}/>
   <ambientLight intensity={.6} color={theme.ambient}/><hemisphereLight args={[theme.ambient,'#292b31',1.35]}/>
   <directionalLight position={[-14,24,6]} intensity={2.3} color={theme.light} castShadow={!low} shadow-mapSize={[1024,1024]} shadow-camera-left={-30} shadow-camera-right={30} shadow-camera-top={25} shadow-camera-bottom={-25} shadow-camera-far={80} shadow-bias={-.0005} shadow-normalBias={.07}/>
+  {room?<BossRoom layout={layout} texture={texture}/>:<>
   <mesh rotation={[-Math.PI/2,0,0]} position={[0,-.025,0]} receiveShadow><planeGeometry args={[90,70]}/><meshStandardMaterial map={texture} color={ground==='molten'?'#a5704b':'#c2c6be'} roughness={ground==='water'?.36:1} metalness={ground==='water'?.22:0}/></mesh>
   {/* A shallow raised floor gives the diorama real silhouettes at its edge. */}
   <mesh position={[0,-.65,0]} receiveShadow><boxGeometry args={[62,1.2,42]}/><meshStandardMaterial color={theme.rock} roughness={1}/></mesh>
@@ -74,6 +78,7 @@ export const Environment=memo(function Environment({ground,low,reduced}:{ground:
   {ground==='deck'&&<>{[-14,14].map(z=><group key={z}>{Array.from({length:11},(_,i)=><mesh castShadow key={i} position={[-25+i*5,1,z]}><boxGeometry args={[.3,2,.3]}/><meshStandardMaterial color="#685541"/></mesh>)}<mesh position={[0,1.8,z]}><boxGeometry args={[53,.18,.18]}/><meshStandardMaterial color="#b49b6e"/></mesh></group>)}<Crate x={-17} z={-9}/><Crate x={16} z={-10}/><Crate x={18} z={-9}/></>}
   {ground==='dirt'&&<><Crate x={-17} z={-7}/><Crate x={-18} z={-9}/></>}
   <Lantern x={-14} z={-8} theme={theme}/><Lantern x={15} z={-9} theme={theme}/>
+  </>}
   {!reduced&&<Atmosphere theme={theme} low={low}/>}
  </>;
 });

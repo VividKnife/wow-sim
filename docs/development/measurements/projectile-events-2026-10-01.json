@@ -1,0 +1,289 @@
+{
+  "scope": "Hot projectile scheduling only; excludes launch registration, combat effects, projection, IO and networking. Not a capacity benchmark.",
+  "rulesetVersion": "owned-v1:95f9dbae12d56a1194fdf83bc1d5484e95ee8a6a003f65307b8f298fc76f0885",
+  "contentHash": "7691bf09687eea722ce20cc09d3b19b513d2f4294f2d9d030393d877f7b0045b",
+  "node": "v24.15.0",
+  "cpu": "Apple M4",
+  "rounds": 12,
+  "warmups": 3,
+  "results": [
+    {
+      "name": "sparse-flight",
+      "projectiles": 2000,
+      "steps": 100,
+      "summary": {
+        "heap": {
+          "medianWallMs": 0.39383400000002666,
+          "p95WallMs": 0.4634580000000028,
+          "medianCpuMs": 0.419
+        },
+        "scan": {
+          "medianWallMs": 7.107959000000051,
+          "p95WallMs": 7.919249999999977,
+          "medianCpuMs": 7.191
+        }
+      },
+      "samples": [
+        {
+          "heap": {
+            "wallMs": 0.42320799999998826,
+            "cpuMs": 0.668
+          },
+          "scan": {
+            "wallMs": 6.889666000000005,
+            "cpuMs": 6.881
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.37400000000002365,
+            "cpuMs": 0.373
+          },
+          "scan": {
+            "wallMs": 7.677000000000021,
+            "cpuMs": 8.188
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.4634580000000028,
+            "cpuMs": 0.843
+          },
+          "scan": {
+            "wallMs": 7.919249999999977,
+            "cpuMs": 8.466
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.4357079999999769,
+            "cpuMs": 0.938
+          },
+          "scan": {
+            "wallMs": 7.249750000000006,
+            "cpuMs": 7.924
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.44870800000001054,
+            "cpuMs": 0.445
+          },
+          "scan": {
+            "wallMs": 7.107959000000051,
+            "cpuMs": 7.095
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.4201659999999947,
+            "cpuMs": 0.419
+          },
+          "scan": {
+            "wallMs": 7.4035840000000235,
+            "cpuMs": 7.4
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.39100000000001955,
+            "cpuMs": 0.665
+          },
+          "scan": {
+            "wallMs": 7.523167000000001,
+            "cpuMs": 7.703
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.39383400000002666,
+            "cpuMs": 0.393
+          },
+          "scan": {
+            "wallMs": 6.825040999999999,
+            "cpuMs": 6.823
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.3366669999999772,
+            "cpuMs": 0.335
+          },
+          "scan": {
+            "wallMs": 6.921625000000006,
+            "cpuMs": 7.188
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.4406249999999545,
+            "cpuMs": 0.438
+          },
+          "scan": {
+            "wallMs": 7.204584000000011,
+            "cpuMs": 7.191
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.35770899999999983,
+            "cpuMs": 0.355
+          },
+          "scan": {
+            "wallMs": 6.97783400000003,
+            "cpuMs": 6.977
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.3399159999999597,
+            "cpuMs": 0.337
+          },
+          "scan": {
+            "wallMs": 7.052542000000017,
+            "cpuMs": 7.523
+          }
+        }
+      ]
+    },
+    {
+      "name": "single-burst",
+      "projectiles": 2000,
+      "steps": 100,
+      "summary": {
+        "heap": {
+          "medianWallMs": 0.32320900000001984,
+          "p95WallMs": 0.3977909999999838,
+          "medianCpuMs": 0.322
+        },
+        "scan": {
+          "medianWallMs": 0.09800000000001319,
+          "p95WallMs": 0.12512499999996862,
+          "medianCpuMs": 0.098
+        }
+      },
+      "samples": [
+        {
+          "heap": {
+            "wallMs": 0.35616700000002766,
+            "cpuMs": 0.354
+          },
+          "scan": {
+            "wallMs": 0.12512499999996862,
+            "cpuMs": 0.125
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.32783399999999574,
+            "cpuMs": 0.649
+          },
+          "scan": {
+            "wallMs": 0.12008400000001984,
+            "cpuMs": 0.118
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.36862500000000864,
+            "cpuMs": 0.763
+          },
+          "scan": {
+            "wallMs": 0.12258300000002009,
+            "cpuMs": 0.259
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.32920799999999417,
+            "cpuMs": 0.328
+          },
+          "scan": {
+            "wallMs": 0.08533299999999144,
+            "cpuMs": 0.084
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.32320900000001984,
+            "cpuMs": 0.322
+          },
+          "scan": {
+            "wallMs": 0.10054200000001856,
+            "cpuMs": 0.1
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.275874999999985,
+            "cpuMs": 0.275
+          },
+          "scan": {
+            "wallMs": 0.0827080000000251,
+            "cpuMs": 0.082
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.25087500000000773,
+            "cpuMs": 0.25
+          },
+          "scan": {
+            "wallMs": 0.09800000000001319,
+            "cpuMs": 0.098
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.3977909999999838,
+            "cpuMs": 0.398
+          },
+          "scan": {
+            "wallMs": 0.11854099999999335,
+            "cpuMs": 0.117
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.3258750000000532,
+            "cpuMs": 0.322
+          },
+          "scan": {
+            "wallMs": 0.09525000000002137,
+            "cpuMs": 0.095
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.28304100000002563,
+            "cpuMs": 0.282
+          },
+          "scan": {
+            "wallMs": 0.08545900000001438,
+            "cpuMs": 0.085
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.26095900000001393,
+            "cpuMs": 0.26
+          },
+          "scan": {
+            "wallMs": 0.09870899999998528,
+            "cpuMs": 0.098
+          }
+        },
+        {
+          "heap": {
+            "wallMs": 0.2482079999999769,
+            "cpuMs": 0.247
+          },
+          "scan": {
+            "wallMs": 0.08737500000000864,
+            "cpuMs": 0.087
+          }
+        }
+      ]
+    }
+  ]
+}

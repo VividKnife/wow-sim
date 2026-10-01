@@ -5,22 +5,20 @@ import {build} from 'esbuild';
 import {chromium} from 'playwright';
 import {fileURLToPath} from 'node:url';
 
-// Exercise the live subscription with a deliberately stale overview, as on mobile.
+// Exercise server-projected cast changes on the mobile HUD.
 test('mobile cast HUD clears on completion and follows the next cast without overview polling',async()=>{
  const web=fileURLToPath(new URL('../',import.meta.url));
  const bundle=await build({absWorkingDir:web,stdin:{contents:`
   import React from 'react';
   import {createRoot} from 'react-dom/client';
   import LiveCastBar from './app/live-cast-bar';
-  import {publishLocalCombat} from './lib/local-combat-store';
   const cast={spell:585,startedAt:0,until:1500};
   const state={id:'hero',clock:1000,activity:{type:'combat'},combat:{id:'fight'},cast};
   const data={combatSkills:[{spellId:585,name:'惩击'}]};
-  window.publish=(clock,cast,paused=false)=>publishLocalCombat({
-   player:{...state,clock,cast,combat:{id:'fight',command:{paused}}},
-   view:{battleView:{actors:[{id:'hero',cast}],units:{hero:{}}}}
-  });
-  createRoot(document.getElementById('root')).render(<LiveCastBar state={state} data={data}/>);
+  const root=createRoot(document.getElementById('root'));
+  window.publish=(clock,cast,paused=false)=>root.render(<LiveCastBar state={{...state,clock,cast,combat:{id:'fight',command:{paused}}}} data={data}/>);
+  window.publish(state.clock,cast);
+
  `,resolveDir:web,loader:'tsx'},bundle:true,write:false,format:'iife',platform:'browser',jsx:'automatic',loader:{'.css':'empty'},logLevel:'silent'});
  const browser=await chromium.launch({headless:true});
  try{

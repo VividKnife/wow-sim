@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/immutability -- Three.js line geometry and visibility belong to the imperative render loop. */
 import {memo,useEffect,useMemo,useRef} from 'react';
-import {Html} from '@react-three/drei';
+import {Html,useMask} from '@react-three/drei';
 import {useFrame} from '@react-three/fiber';
 import {Shape,ShapeGeometry,BufferGeometry,Float32BufferAttribute,Group,Line as ThreeLine,LineBasicMaterial,Mesh,MeshBasicMaterial,Vector3,AdditiveBlending} from 'three';
 import {actionProgress,battleTarget,schoolColor} from '@/lib/combat-view.js';
@@ -10,6 +10,7 @@ import {useBattleFrame} from './frame';
 
 export function GroundArea({area,scene}:{area:BattleGroundEffect;scene:BattleScene}){
  const group=useRef<Group>(null),fill=useRef<MeshBasicMaterial>(null),frame=useBattleFrame();
+ const floorMask=useMask(1),mask=scene.layout.area?.boundary?floorMask:{};
  const r=Math.max(.15,worldRadius(scene.layout,area.radius||5)),color=schoolColor(area.school);
  const geometry=useMemo(()=>{
   const shape=new Shape(),center=worldPoint(scene.layout,area.center);
@@ -17,7 +18,7 @@ export function GroundArea({area,scene}:{area:BattleGroundEffect;scene:BattleSce
   else shape.absarc(0,0,r,0,Math.PI*2,false);
   const surface=new ShapeGeometry(shape,48),points=shape.getPoints(64).map(p=>new Vector3(p.x,.075,-p.y));
   points.push(points[0]);
-  const outline=new ThreeLine(new BufferGeometry().setFromPoints(points),new LineBasicMaterial({color,transparent:true,opacity:.95,depthWrite:false}));
+  const outline=new ThreeLine(new BufferGeometry().setFromPoints(points),new LineBasicMaterial({color,transparent:true,opacity:.95,depthWrite:false,...mask}));
   return {surface,outline};
  },[area.points,area.center,scene.layout,r,color]);
  useEffect(()=>()=>{geometry.surface.dispose();geometry.outline.geometry.dispose();geometry.outline.material.dispose();},[geometry]);
@@ -29,7 +30,7 @@ export function GroundArea({area,scene}:{area:BattleGroundEffect;scene:BattleSce
  });
  const warning=area.armedAt!==undefined&&scene.clock<area.armedAt;
  return <group ref={group} name={`encounter-field-${area.id}`} position={worldPoint(scene.layout,area.center) as [number,number,number]}>
-  <mesh rotation={[-Math.PI/2,0,0]} position={[0,.06,0]} geometry={geometry.surface}><meshBasicMaterial ref={fill} color={color} transparent opacity={.2} toneMapped={false} depthWrite={false}/></mesh>
+  <mesh rotation={[-Math.PI/2,0,0]} position={[0,.06,0]} geometry={geometry.surface}><meshBasicMaterial ref={fill} {...mask} color={color} transparent opacity={.2} toneMapped={false} depthWrite={false}/></mesh>
   <primitive object={geometry.outline}/>
   {!area.points&&!scene.lowEffects&&Array.from({length:5},(_,i)=><AreaMote key={i} index={i} radius={r} color={color} frost={area.school===4} metric={actorScale(scene.layout)}/>)}
   {area.label&&!area.terrain&&<Html position={[0,.15,0]} center style={{pointerEvents:'none',whiteSpace:'nowrap',fontSize:11,color:'#ffe7b5',textShadow:'0 1px 3px #000',background:'#21130ec9',padding:'2px 5px',borderRadius:3}}>{area.label}{warning?` · ${Math.max(0,(area.armedAt!-scene.clock)/1000).toFixed(1)}秒`:' · 危险'}</Html>}
@@ -49,7 +50,7 @@ function MagicProjectile({flight}:{flight:BattleProjectile}){
  useFrame(()=>{
   if(!group.current)return;const f=frame.current,t=actionProgress(flight.startedAt,flight.landsAt,f.clock);
   group.current.visible=f.clock>=flight.startedAt&&f.clock<flight.landsAt;
-  const a=worldPoint(f.layout,flight.from),b=worldPoint(f.layout,flight.to),metric=actorScale(f.layout),source=f.scene.units.find(u=>u.id===flight.actorId),target=f.scene.units.find(u=>u.id===flight.targetId);
+  const a=worldPoint(f.layout,flight.from),b=worldPoint(f.layout,flight.to),metric=actorScale(f.layout),source=f.units.get(flight.actorId??''),target=f.units.get(flight.targetId??'');
   if(target){const p=unitPoint(f.layout,target.id);b[0]=p[0];b[2]=p[2];}
   const startHeight=actorHeight(f.layout,source||{})*.55,endHeight=actorHeight(f.layout,target||{})*.55;
   group.current.children.forEach((child,i)=>{const k=Math.max(0,t-i*.018);child.position.set(a[0]+(b[0]-a[0])*k,startHeight+(endHeight-startHeight)*k+Math.sin(k*Math.PI)*metric,a[2]+(b[2]-a[2])*k);child.scale.setScalar((1-i*.13)*(flight.school===4?.8:1)*metric*1.5);});
@@ -61,7 +62,7 @@ function HunterProjectile({flight}:{flight:BattleProjectile}){
  useFrame(()=>{
   if(!group.current)return;const f=frame.current,t=actionProgress(flight.startedAt,flight.landsAt,f.clock),metric=actorScale(f.layout);
   group.current.visible=f.clock>=flight.startedAt&&f.clock<flight.landsAt;
-  const a=worldPoint(f.layout,flight.from),b=worldPoint(f.layout,flight.to),target=f.scene.units.find(u=>u.id===flight.targetId),source=f.scene.units.find(u=>u.id===flight.actorId);
+  const a=worldPoint(f.layout,flight.from),b=worldPoint(f.layout,flight.to),target=f.units.get(flight.targetId??''),source=f.units.get(flight.actorId??'');
   if(target){const p=unitPoint(f.layout,target.id);b[0]=p[0];b[2]=p[2];}
   const startHeight=actorHeight(f.layout,source||{})*.58,endHeight=actorHeight(f.layout,target||{})*.58,k=Math.min(1,t*1.04);
   const position=new Vector3(a[0]+(b[0]-a[0])*k,startHeight+(endHeight-startHeight)*k+Math.sin(k*Math.PI)*metric*.35,a[2]+(b[2]-a[2])*k);
@@ -97,7 +98,7 @@ function Selection(){
  const line=useMemo(()=>{const geometry=new BufferGeometry();geometry.setAttribute('position',new Float32BufferAttribute(new Float32Array(6),3));return new ThreeLine(geometry,new LineBasicMaterial({color:'#ecc88c',transparent:true,opacity:.5,depthWrite:false}));},[]);
  useEffect(()=>()=>{line.geometry.dispose();line.material.dispose();},[line]);
  useFrame(()=>{
-  const f=frame.current,u=f.scene.units.find(a=>a.id===f.scene.selectedId),target=u?battleTarget(u,f.scene.units,f.clock):null;
+  const f=frame.current,u=f.units.get(f.scene.selectedId),target=u?battleTarget(u,f.scene.units,f.clock,f.units):null;
   line.visible=!!target;
   if(!u)return;
   const a=unitPoint(f.layout,u.id);
@@ -109,7 +110,7 @@ function Selection(){
 function Boundary({scene}:{scene:BattleScene}){
  const area=scene.layout.area;
  const line=useMemo(()=>{
-  if(!area)return null;
+  if(!area||area.boundary)return null;
   const points=[[area.minX,area.minY],[area.maxX,area.minY],[area.maxX,area.maxY],[area.minX,area.maxY],[area.minX,area.minY]].map(([x,y])=>{const p=worldPoint(scene.layout,{x,y});return new Vector3(p[0],.035,p[2]);});
   return new ThreeLine(new BufferGeometry().setFromPoints(points),new LineBasicMaterial({color:'#d4b881',transparent:true,opacity:.27}));
  },[scene.layout,area]);

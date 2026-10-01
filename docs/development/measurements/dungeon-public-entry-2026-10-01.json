@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-01",
+  "node": "v24.15.0",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:91674ca4fd9b553763933c2798862ffc35c3882907731643cfafbcf9c95f424b",
+    "contentHash": "5910c11590fd3adc47ad8307b1a94d8b697dd9ca9e23757e3510a11c88e00154"
+  },
+  "decision": "Humans manually enter at the selected dungeon entrance. The complete matched NPC cohort enters with the party leader; an earlier nonleader enters without NPCs.",
+  "tests": {
+    "simulation": {
+      "passed": 246,
+      "total": 246,
+      "durationMs": 251602.206833
+    },
+    "httpAndTransferIntegration": {
+      "passed": 17,
+      "total": 17,
+      "durationMs": 46429.686791
+    },
+    "clientResponseAndReceipts": {
+      "passed": 20,
+      "total": 20,
+      "durationMs": 2813.821459
+    },
+    "rootTypecheck": "passed",
+    "webTypecheck": "passed",
+    "webBuild": "passed; existing large chunk and runtime asset resolution warnings",
+    "contentCheck": "passed",
+    "goldenScenarios": "All five exact state/RNG/reward captures unchanged"
+  },
+  "verified": [
+    "Authenticated HTTP social matching and successive manual dungeon entries through real Worker instances",
+    "Leader first or later; existing personal parties need not contain matched NPCs",
+    "Incorrect entrance and stale controller rejected without altering group route or input cursor",
+    "Lost acknowledgement after successful transfer can retry original request without duplicate entry",
+    "Input receipt, manual intent, group binding, checkpoint and claims use the same existing transaction",
+    "NPC participation counted once; private human projections and checkpoint-only reopening verified",
+    "Client accepts full new-room baseline with higher actor controller generation while rejecting old-room responses",
+    "Receipt waiters continue across a valid full-baseline transfer when the original request is preserved"
+  ],
+  "browser": {
+    "url": "http://127.0.0.1:5217",
+    "build": "production Vite build",
+    "database": "isolated PGlite",
+    "fixture": "One human mage at Deadmines entrance; four matched NPCs; no initial personal party",
+    "flow": [
+      "Sign in and select character",
+      "Open finder and manually enter",
+      "Without reload see 5 people waiting in the rendered dungeon scene",
+      "Reload and retain the 5-person scene"
+    ],
+    "screenshot": ".cache/qa/finder-leader-entry-2026-10-01.png",
+    "consoleErrors": 0,
+    "warnings": [
+      "THREE.Clock deprecated; use THREE.Timer"
+    ],
+    "crash": "not observed during this short entry/reload check"
+  },
+  "limitations": [
+    "NPCs held by a still-travelling human outside the participating source rooms require claim/state splitting; entry is currently rejected",
+    "Shared full encounter, departure/re-entry lifecycle and battle-in-progress arrivals remain unfinished",
+    "One-human browser test does not prove two-browser shared combat or full boss/loot distribution",
+    "Fixture starts at entrance; browser world travel not tested in this check",
+    "Short browser check is not a long-run crash or mobile performance acceptance",
+    "PGlite is transaction coverage, not external PostgreSQL failure/capacity evidence"
+  ],
+  "sourceSha256": {
+    "packages/game-domain/src/dungeon-admissions.ts": "bc1504dcaff9d7913478458d17bc5409e744dfa7b5e17df8a33a7d825815b458",
+    "packages/game-domain/src/room-composition.ts": "d1f0583abf80bcd157b4bb09c643e9e602b0ff454bd72263408a60499d54c3b4",
+    "apps/simulation-host/src/directory.ts": "fd4e7bbd5d40c3ca48f109dd1fc90aaff2fd2cb824b7ccaf4b3c16e7b3c0145f",
+    "apps/simulation-host/src/dungeon-transfer.ts": "c4192f99b1e7010c4aa5c2287bf8ed469963a0d4956814ce33f0feaaacd32577",
+    "apps/simulation-host/src/dungeon-composition.ts": "964e30be6644c127d0c2488206ca8232fbc202c54e033f92ba4eb639be8a54df",
+    "apps/simulation-host/src/dungeon-input.ts": "751afd7527e51ab6ee2ad34de4d2d59f950a139746a1ec8bda026fd028507a6b",
+    "apps/game-server/src/resident-game-service.ts": "7124de48e474e691ccb3b33b02b9c0f69caf7acb660a42cfd356732c498c1dba",
+    "apps/game-server/test/dungeon-admission.test.ts": "5b3138b5573197bfb7bcbeeede241809f3a55bde0c02c0884bd1302d1249d369",
+    "apps/web/app/social.tsx": "4a4b7538ebe5583725033e283875cbd10ca664c1c3b6d09e1e16d7864b52fb2a",
+    "apps/web/lib/game-response.js": "40ab762aa210fd1ff8d23b119515683eb13e3f3a7060b3ffef1b6dd5b1ea7166",
+    "apps/web/lib/input-receipts.js": "4c773b7c6f2702316c7c3970b1079f772103a402dcf539a2998e9d1c56aacfed",
+    "apps/web/test/game-response.test.mjs": "bb96764aa0a13ec75beb4f5b78edf66abf62af062f5913488bb58861e86f6a03",
+    "apps/web/test/input-receipts.test.mjs": "9ac43d10ade9d8dee0a9ee5e71b837b4ebdd0588b89085aa70a254aec92fbd93"
+  }
+}

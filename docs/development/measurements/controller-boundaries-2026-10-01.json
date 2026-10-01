@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-01",
+  "rulesetVersion": "owned-v1:36e5ae122b2db9cf3110ec2681ab1592e162169e17e058f089c98da71120ae3e",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "architectureComplete": false,
+  "scope": "Resident owner controller authorization, actor-aware rule input, existing pet command protocol repair",
+  "behavior": [
+    "Controller authorization runs at application time, including queued input restored from checkpoints.",
+    "Member healing, recovery settings, strategy and pet controls use the member actor, including when the leader is dead.",
+    "Foreign human control through memberId, memberIds or configuration target is rejected without changing rule state or RNG.",
+    "All prepare/takeover/pause/resume aliases require leader pause authority; multiple account clocks cannot be paused.",
+    "Global orders that mutate foreign human behavior remain unavailable until scoped team consent exists; NPC commands and personal pause remain available.",
+    "Existing pet actions pass protocol validation and retain rule-level pet, inventory and target checks."
+  ],
+  "validation": {
+    "fullSimulation": {
+      "passed": 165,
+      "failed": 0,
+      "durationMs": 151648.561417,
+      "log": "/tmp/wow-sim-controller-complete.log"
+    },
+    "focusedBoundariesAndGolden": {
+      "passed": 15,
+      "failed": 0,
+      "durationMs": 17652.384708,
+      "log": "/tmp/wow-sim-controller-boundaries.log"
+    },
+    "adjacentAndActualHttp": {
+      "passed": 22,
+      "failed": 0,
+      "durationMs": 16206.138459,
+      "log": "/tmp/wow-sim-controller-adjacent.log"
+    },
+    "typecheck": {
+      "root": "passed",
+      "web": "passed"
+    },
+    "productionBuild": {
+      "status": "passed",
+      "warnings": [
+        "Existing large scene and battle-model chunks remain."
+      ]
+    },
+    "gitDiffCheck": "passed",
+    "historicalGoldenModified": false,
+    "currentGoldenModified": false
+  },
+  "tests": [
+    "apps/simulation-host/test/controller-actions.test.ts",
+    "apps/simulation-host/test/host.test.ts"
+  ],
+  "limitations": [
+    "Two human controllers were tested in isolated rule/Worker rooms, not a multi-account asset-backed end-to-end dungeon.",
+    "Participant private projections, independent out-of-combat activities, character transfers and multi-account atomic asset commits remain unfinished.",
+    "Shared visitors remain denied the leader private presentation; no old database authority fallback is enabled.",
+    "No browser playtest rerun for this server authorization change. Prior preparation-scene and crash observations are in instance-lifecycle-2026-10-01.json with their own runtime versions.",
+    "No capacity or native browser crash resolution guarantee."
+  ]
+}

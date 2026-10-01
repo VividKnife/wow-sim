@@ -1,0 +1,23 @@
+import {createServer} from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwind from '@tailwindcss/postcss';
+import {fileURLToPath} from 'node:url';
+import {once} from 'node:events';
+import {PGlite} from '@electric-sql/pglite';
+import {PostgresStore} from '../../../packages/persistence/src/postgres.ts';
+import {SocialService} from '../../../packages/game-domain/src/social.ts';
+import {createGameServer} from '../../game-server/src/server.ts';
+const db=new PGlite();let tail=Promise.resolve();
+const store=new PostgresStore({async connect(){const previous=tail;let release;tail=new Promise(r=>release=r);await previous;return {query:async(sql,values)=>sql.includes('CREATE TABLE')?(await db.exec(sql),{rows:[]}):db.query(sql,values),release};},end:()=>db.close()});await store.initialize();
+await store.transaction(async tx=>{
+ for(const [id,name,classId] of [['alice','艾琳法师',8],['bob','伯恩牧师',5]])await tx.insert('characters',{id,accountId:'social-qa',kind:'hero',rules:{name,level:20,classId,location:'northshire'}});
+ for(const [i,name,classId,role] of [[0,'加瑞克',1,'tank'],[1,'莉雅',5,'healer'],[2,'洛恩',4,'melee'],[3,'米拉',8,'ranged']])await tx.insert('npc_characters',{id:`npc:alice:${i}`,ownerCharacterId:'alice',accountId:'social-qa',rules:{name,level:20,classId,strategyPolicy:{role}},profile:{}});
+});
+const tokens=new Set(),accounts={async session(token){return tokens.has(token)?{id:'social-qa',username:'social-qa'}:null;},async login(){const token=crypto.randomUUID();tokens.add(token);return {token};},async register(){throw new Error('Preview only');},async logout(token){tokens.delete(token);}};
+const social=new SocialService(store),unused=async()=>{throw new Error('Social preview has no combat endpoint');};
+const service={snapshot:unused,command:unused,createAccount:unused,work:unused,socialSnapshot:(...args)=>social.snapshot(...args),socialCommand:(...args)=>social.command(...args)};
+const gateway=createGameServer({service,accounts,appOrigin:'http://127.0.0.1:5196',trustProxyHops:0});gateway.server.listen(8808,'127.0.0.1');await once(gateway.server,'listening');
+const app=fileURLToPath(new URL('../',import.meta.url));
+const vite=await createServer({configFile:false,root:app+'test/browser',publicDir:app+'public',plugins:[react()],resolve:{alias:{'@':app}},optimizeDeps:{entries:['social.html']},css:{postcss:{plugins:[tailwind()]}},server:{host:'127.0.0.1',port:5196,strictPort:true,fs:{allow:[fileURLToPath(new URL('../../../',import.meta.url))]},proxy:{'/api':'http://127.0.0.1:8808'}}});
+await vite.listen();console.log('Isolated SQL social preview: http://127.0.0.1:5196/social.html');
+for(const signal of ['SIGINT','SIGTERM'])process.once(signal,async()=>{await vite.close();await gateway.close();await store.close();process.exit(0);});

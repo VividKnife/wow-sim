@@ -48,13 +48,13 @@ export async function recordPresence(this: GameService, tx: Transaction, account
     if (now < oldDeadline) {
         if (returning) {
             for (const activity of await tx.list<Activity>('activities', {accountId})) {
-                if (activity.localSimulation || activity.type !== 'personal' || activity.status !== 'running' || activity.playback) continue;
+                if (activity.type !== 'personal' || activity.status !== 'running' || activity.playback) continue;
                 activity.nextEventAt = Math.min(activity.nextEventAt, now);
                 await tx.put('activities', activity);
             }
             for (const lease of await tx.list<{ownerId: string}>('actor_leases', {accountId, kind: 'instance'})) {
                 const instance = await tx.get<Instance>('instances', lease.ownerId);
-                if (!instance || instance.localSimulation || instance.status !== 'running' || instance.playback) continue;
+                if (!instance || instance.status !== 'running' || instance.playback) continue;
                 instance.nextEventAt = Math.min(instance.nextEventAt, now);
                 await tx.put('instances', instance);
             }
@@ -66,7 +66,6 @@ export async function recordPresence(this: GameService, tx: Transaction, account
     // unchanged, including allowed progress the worker has not processed yet.
     const skipped = now - oldDeadline;
     for (const activity of await tx.list<Activity>('activities', {accountId})) {
-        if (activity.localSimulation) continue;
         if (!['running', 'returning'].includes(activity.status)) continue;
         const actor = (await tx.get<Character>('characters', activity.actorId))!;
         if (activity.type !== 'personal' && actor.kind === 'companion') continue;
@@ -82,7 +81,6 @@ export async function recordPresence(this: GameService, tx: Transaction, account
         await tx.put('activities', activity);
     }
     for (const {instance, deadline} of instances) {
-        if (instance.localSimulation) continue;
         const newDeadline = await this.instanceDeadline(tx, instance);
         const resumedUntil = Math.min(now, newDeadline);
         const shift = Math.max(0, resumedUntil - deadline);

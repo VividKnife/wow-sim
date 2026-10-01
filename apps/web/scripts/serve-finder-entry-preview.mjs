@@ -1,0 +1,41 @@
+// Isolated production-build QA. Fixture accounts start at the entrance; this
+// verifies finder entry, not world travel or an external PostgreSQL deployment.
+import {once} from 'node:events';
+import {randomBytes,randomUUID} from 'node:crypto';
+import {PGlite} from '@electric-sql/pglite';
+import {PostgresStore} from '../../../packages/persistence/src/postgres.ts';
+import {residentStore} from '../../../packages/game-domain/src/resident-store.ts';
+import {GameService} from '../../../packages/game-domain/src/service.ts';
+import {SocialService} from '../../../packages/game-domain/src/social.ts';
+import {ResidentCharacters} from '../../../packages/game-domain/src/resident-characters.ts';
+import {DungeonAdmissions} from '../../../packages/game-domain/src/dungeon-admissions.ts';
+import {context,persistCharacter} from '../../../packages/game-domain/src/context.ts';
+import {ensureNpcMatchSupply} from '../../../packages/game-domain/src/rules/npc-world.js';
+import {combatRole} from '../../../packages/game-domain/src/rules/combat-roles.js';
+import {SimulationRepository} from '../../../packages/persistence/src/simulation.ts';
+import {SimulationDirectory} from '../../simulation-host/src/directory.ts';
+import {createSimulationServer} from '../../simulation-host/src/server.ts';
+import {runtimeVersion} from '../../simulation-host/src/version.ts';
+import {SimulationClient} from '../../game-server/src/simulation-client.ts';
+import {ResidentGameService} from '../../game-server/src/resident-game-service.ts';
+import {createGameServer} from '../../game-server/src/server.ts';
+import {createWebServer} from '../server.mjs';
+const db=new PGlite();let tail=Promise.resolve();
+const sql=new PostgresStore({async connect(){const previous=tail;let release;tail=new Promise(r=>release=r);await previous;return {query:async(sql,values)=>sql.includes('CREATE TABLE')?(await db.exec(sql),{rows:[]}):db.query(sql,values),release};},end:()=>db.close()});
+await sql.initialize();const store=residentStore(sql),domain=new GameService(store,{contentVersion:'finder-entry-qa',seed:()=>283});
+const userId='entry-qa',created=await domain.createSave(userId,{name:'进本验证法师',classId:8,raceId:1,boost:true},'fixture-create'),accountId=created.id;
+const actorId=(await store.read(tx=>tx.get('accounts',accountId))).primaryCharacterId;
+await store.transaction(async tx=>{const row=await tx.get('characters',actorId),state=await context(tx,row,Date.now(),false);state.level=20;state.location='deadmines';ensureNpcMatchSupply(state);await persistCharacter(tx,row,state,state.wallAt,'fixture-level');});
+const social=new SocialService(store),command=body=>social.command(accountId,actorId,{...body,requestId:randomUUID()});
+await command({type:'role',role:'dps'});
+const npcs=await store.read(tx=>tx.list('npc_characters',{ownerCharacterId:actorId})),selected=new Set();
+for(const role of ['tank','healer','dps','dps']){const npc=npcs.find(n=>!selected.has(n.id)&&(()=>{const r=combatRole(n.rules);return (r==='tank'||r==='healer'?r:'dps')===role;})());selected.add(npc.id);await command({type:'npcInvite',targetId:npc.id});}
+const proposal=(await command({type:'queue',dungeonId:'deadmines'})).proposal;await command({type:'proposal',proposalId:proposal.id,accept:true});
+const characters=new ResidentCharacters(store,{version:runtimeVersion}),directory=new SimulationDirectory(new SimulationRepository(store,Date.now,characters.commit),{characters,dungeons:new DungeonAdmissions(store)});
+const token=randomBytes(32).toString('base64url'),host=createSimulationServer(directory,{token});host.server.listen(8817,'127.0.0.1');await once(host.server,'listening');
+const tokens=new Set(),accounts={async session(token){return tokens.has(token)?{id:userId,username:userId}:null;},async login(username,password){if(username!==userId||password!=='entry-preview')throw new Error('Preview credentials only');const token=randomUUID();tokens.add(token);return {token};},async register(){throw new Error('Preview only');},async logout(token){tokens.delete(token);}};
+const gateway=createGameServer({service:new ResidentGameService(domain,new SimulationClient({url:'http://127.0.0.1:8817',token})),accounts,appOrigin:'http://127.0.0.1:5217'});
+gateway.server.listen(8818,'127.0.0.1');await once(gateway.server,'listening');
+const web=await createWebServer({backend:'http://127.0.0.1:8818',trustProxy:false});web.listen(5217,'127.0.0.1');await once(web,'listening');
+console.log('Production finder-entry preview: http://127.0.0.1:5217');
+for(const signal of ['SIGINT','SIGTERM'])process.once(signal,async()=>{await new Promise(resolve=>web.close(resolve));await gateway.close();await host.close();await store.close();process.exit(0);});

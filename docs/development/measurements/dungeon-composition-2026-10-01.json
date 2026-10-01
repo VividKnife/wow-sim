@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-01",
+  "node": "v24.15.0",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:92320e8e06865daea0572b8a8e327de3307b253b1e4ef15a6eb184c016926949",
+    "contentHash": "b9ff4b2efacd37f486432eccae403b4f1db9afd8c6d11fb91c5db60d282c2e01"
+  },
+  "scope": "Pure composition of sealed personal checkpoints into a fresh five-player dungeon. Real-time alignment, directory orchestration and public entry route remain incomplete.",
+  "tests": {
+    "simulation": {
+      "passed": 224,
+      "total": 224,
+      "durationMs": 204473.34475
+    },
+    "compositionAndParticipants": {
+      "passed": 10,
+      "total": 10
+    },
+    "adjacentCallers": {
+      "passed": 21,
+      "total": 21
+    },
+    "finalAssetTransfer": {
+      "passed": 2,
+      "total": 2,
+      "backends": [
+        "MemoryStore",
+        "PGlite"
+      ]
+    },
+    "rootTypecheck": "passed",
+    "webTypecheck": "passed",
+    "productionBuild": "passed; existing large bundle warnings remain",
+    "contentCheck": "passed",
+    "goldenReview": "All five existing complete scenario captures compared unchanged; metadata-only content/ruleset update"
+  },
+  "verified": [
+    "Two different simulation clocks; duplicate effect IDs remapped",
+    "Pending and already-dispatched healing retained through JSON recovery",
+    "Each human retains private items, wallet, quest state and input deduplication",
+    "Five seats: two humans and three NPCs; all twenty persistent NPC claims transferred",
+    "NPC participation and award ownership use the actual participant",
+    "Retired attack/resource bindings cannot point to newly allocated timers",
+    "Invalid, corrupt, queued-input or mismatched-boundary sources leave inputs unchanged",
+    "SQL transfer rollback, retry, fencing and target recovery before startup",
+    "Participation records remain single-application after repeated commit"
+  ],
+  "limitations": [
+    "Sources currently require identical saved wallAt; live synchronization is not implemented",
+    "Only personal, idle, out-of-combat sources with five already-prepared seats",
+    "Existing personal dungeon progress requires explicit reset",
+    "Scene-bound ground effects must end before transfer",
+    "Group authorization, readiness, routing, actual manual entry/leave and bench composition not wired",
+    "No browser or full encounter/loot acceptance in this turn",
+    "SQL test uses PGlite, not a PostgreSQL multi-connection fault test"
+  ],
+  "sourceSha256": {
+    "packages/game-domain/src/room-composition.ts": "6360b51ec62f547db03edac8536507197d90bbd38d2eac6c530f592a2eb4b20e",
+    "apps/simulation-host/src/dungeon-composition.ts": "c92af16bb4fc5bf3d7e4ea5bc38565476668355da5bc98cab259e97caad8a65f",
+    "apps/simulation-host/src/version.ts": "a33989dfa2e3831f01d0b1bef2bb8973b5cc02b21e2aca665957af2108c91860",
+    "packages/game-domain/src/rules/dungeon.js": "ecea5be2b4cb7d7158f51c8367e6c4241bdbf0603ca56299c066897d5ad20866",
+    "packages/game-domain/src/rules/npc-world.js": "1efbd0cfc6693343a1d54c3df56a69babfe607fb7eb4bc8f0ee42a7f906d2dac",
+    "apps/simulation-host/test/dungeon-composition.test.ts": "c84481cc858b1849c1a4ea8b8fa87260117d02e33e1e78b43952f24a0d745016",
+    "packages/game-domain/test/resident-transfer.test.ts": "c96bcec3a3eeb14129fdad7f9f8130ae8c3ebf47ec123355535f2ddc1dad1856",
+    "packages/simulation-tests/fixtures/current.json": "8cb682b02d35883391eac5d93b28c1b4d379242b8f973667c079f678d988f7a7"
+  }
+}

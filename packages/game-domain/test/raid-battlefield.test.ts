@@ -65,6 +65,23 @@ test('deep breath covers the whole lane, damages its far end, and clears on land
  const hits:string[]=[];moltenCoreTick(s,[s,s.party[0]],(_s:Rules,_b:Rules,c:Rules,_n:number,label:string)=>{if(label==='深呼吸')hits.push(c.id);});assert.deepEqual(hits,[s.id]);
  b.hp=b.maxHp*.39;moltenCoreTick(s,[s,...s.party],noDamage);assert.ok(!r.fires.some((f:Rules)=>f.label==='深呼吸'));assert.ok(r.fires.some((f:Rules)=>f.label==='熔岩裂隙'));
 });
+
+test('Onyxia breath tank holds facing and takes damage while allies evade; deep breath still displaces the tank',()=>{
+ const s=start('onyxia'),r=s.combat.raidEncounter,b=s.combat.enemies[0];
+ const tank=[s,...s.party].find(c=>c.raidMainTank)!,ally=[s,...s.party].find(c=>!c.raidMainTank)!;
+ Object.assign(tank,{position:25,positionY:0});Object.assign(ally,{position:24,positionY:0});b.target=tank.id;
+ r.nextSpecial=s.clock;r.nextShock=r.nextTail=Infinity;
+ const hits:string[]=[];
+ const hit=(_s:Rules,_b:Rules,c:Rules,_amount:number,label:string)=>{if(label==='烈焰吐息')hits.push(c.id);};
+ moltenCoreTick(s,[tank,ally],hit);
+ const breath=r.fires.find((f:Rules)=>f.label==='烈焰吐息');assert.equal(breath.soakActorId,tank.id);
+ for(let i=0;i<24;i++){s.clock+=100;raidFieldsTick(s,[tank,ally],b,hit);}
+ assert.deepEqual({x:tank.position,y:tank.positionY},{x:25,y:0});
+ assert.deepEqual(hits,[tank.id]);
+ r.fires=[];addRaidField(s,rectangleField(20,29,-2,2),{label:'深呼吸',delay:5000});
+ const initial={x:tank.position,y:tank.positionY};s.clock+=100;raidFieldsTick(s,[tank],b,noDamage);
+ assert.notDeepEqual({x:tank.position,y:tank.positionY},initial);
+});
 test('bomb markers follow actors, and client projection preserves authoritative lava points',()=>{
  const s=start('baron-geddon'),r=s.combat.raidEncounter;r.bombs=[{actorId:s.id,at:s.clock+7000}];s.position=12;s.positionY=-8;
  const marker=raidFieldPresentation(s.combat,[s],s.clock)[0];assert.equal(marker.radius,10);assert.deepEqual(marker.center,{x:12,y:-8});

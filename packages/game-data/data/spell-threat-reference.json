@@ -1,0 +1,636 @@
+{
+  "sourceRepository": "https://github.com/cmangos/classic-db",
+  "sourceCommit": "22b51464f1625f6ef6275771de1f5466c6f5d19e",
+  "archiveSha256": "4f92db520868ab4e566726f68b5b2e380ae781209beaf22237b4f7f04600d0c0",
+  "status": "Complete community Classic 1.12 reference table; not official 2019 certification",
+  "schemas": {
+    "spell_threat": [
+      "entry",
+      "Threat",
+      "multiplier",
+      "ap_bonus"
+    ]
+  },
+  "tables": {
+    "spell_threat": [
+      {
+        "entry": 72,
+        "Threat": 180,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 78,
+        "Threat": 20,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 99,
+        "Threat": 15,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 284,
+        "Threat": 39,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 285,
+        "Threat": 59,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 770,
+        "Threat": 108,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 845,
+        "Threat": 10,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 1022,
+        "Threat": 10,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 1038,
+        "Threat": 26,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 1044,
+        "Threat": 18,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 1160,
+        "Threat": 43,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 1608,
+        "Threat": 78,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 1715,
+        "Threat": 61,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 1735,
+        "Threat": 25,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 2139,
+        "Threat": 300,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 2649,
+        "Threat": 415,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 3716,
+        "Threat": 395,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 4987,
+        "Threat": 40,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 5599,
+        "Threat": 24,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 6343,
+        "Threat": 17,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 6572,
+        "Threat": 155,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 6574,
+        "Threat": 195,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 6673,
+        "Threat": 60,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 6807,
+        "Threat": 59,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 6809,
+        "Threat": 89,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 6940,
+        "Threat": 46,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 7369,
+        "Threat": 40,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 7372,
+        "Threat": 101,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 7373,
+        "Threat": 141,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 7379,
+        "Threat": 235,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 7386,
+        "Threat": 100,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 7405,
+        "Threat": 140,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 8092,
+        "Threat": 0,
+        "multiplier": 2,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 8198,
+        "Threat": 40,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 8204,
+        "Threat": 64,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 8205,
+        "Threat": 96,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 8380,
+        "Threat": 180,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 8972,
+        "Threat": 118,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 9490,
+        "Threat": 29,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 9745,
+        "Threat": 148,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 9747,
+        "Threat": 36,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 9880,
+        "Threat": 178,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 9881,
+        "Threat": 207,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 9898,
+        "Threat": 42,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 10278,
+        "Threat": 38,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11374,
+        "Threat": 90,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11564,
+        "Threat": 98,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11565,
+        "Threat": 118,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11566,
+        "Threat": 137,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11567,
+        "Threat": 145,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11580,
+        "Threat": 143,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11581,
+        "Threat": 180,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11596,
+        "Threat": 220,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11597,
+        "Threat": 261,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11600,
+        "Threat": 275,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11601,
+        "Threat": 315,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11608,
+        "Threat": 60,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 11609,
+        "Threat": 70,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 14274,
+        "Threat": 200,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 15629,
+        "Threat": 300,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 15630,
+        "Threat": 400,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 15631,
+        "Threat": 500,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 15632,
+        "Threat": 600,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 16857,
+        "Threat": 108,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 17735,
+        "Threat": 200,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 17750,
+        "Threat": 300,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 17751,
+        "Threat": 450,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 17752,
+        "Threat": 600,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 19740,
+        "Threat": 4,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 19834,
+        "Threat": 12,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 19835,
+        "Threat": 22,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 19836,
+        "Threat": 32,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 19837,
+        "Threat": 42,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 19838,
+        "Threat": 52,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 19977,
+        "Threat": 40,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 19978,
+        "Threat": 50,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 19979,
+        "Threat": 60,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 20217,
+        "Threat": 60,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 20243,
+        "Threat": 101,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 20569,
+        "Threat": 100,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 20729,
+        "Threat": 54,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 20736,
+        "Threat": 100,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 20911,
+        "Threat": 30,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 20912,
+        "Threat": 40,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 20913,
+        "Threat": 50,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 20914,
+        "Threat": 60,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 20925,
+        "Threat": 20,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 20927,
+        "Threat": 30,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 20928,
+        "Threat": 40,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 23922,
+        "Threat": 160,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 23923,
+        "Threat": 190,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 23924,
+        "Threat": 220,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 23925,
+        "Threat": 250,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 24394,
+        "Threat": 580,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 24640,
+        "Threat": 5,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 25286,
+        "Threat": 175,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 25288,
+        "Threat": 355,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 25291,
+        "Threat": 60,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 25782,
+        "Threat": 52,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 25890,
+        "Threat": 60,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 25895,
+        "Threat": 60,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 25899,
+        "Threat": 60,
+        "multiplier": 1,
+        "ap_bonus": 0
+      },
+      {
+        "entry": 25916,
+        "Threat": 60,
+        "multiplier": 1,
+        "ap_bonus": 0
+      }
+    ]
+  }
+}

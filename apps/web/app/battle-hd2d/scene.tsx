@@ -19,25 +19,30 @@ export function clearBattleAssets(scene:BattleScene){
 }
 function LoadingSignal({onLoading}:{onLoading:()=>void}){useLayoutEffect(onLoading,[onLoading]);return null;}
 const PostEffects=memo(function PostEffects(){
- return <EffectComposer multisampling={0}><Bloom luminanceThreshold={.8} intensity={.35} mipmapBlur/><DepthOfField target={[0,0,0]} focusRange={16} bokehScale={1.2} height={360}/></EffectComposer>;
+ return <EffectComposer multisampling={0} stencilBuffer><Bloom luminanceThreshold={.8} intensity={.35} mipmapBlur/><DepthOfField target={[0,0,0]} focusRange={16} bokehScale={1.2} height={360}/></EffectComposer>;
 });
 function Lifecycle({low,visible,onReady,onLost}:{low:boolean;visible:boolean;onReady:()=>void;onLost:()=>void}){
- const {gl,invalidate}=useThree();
+ const {gl,scene}=useThree();
+ useEffect(()=>{
+  if(!import.meta.env.DEV)return;
+  // Scalar diagnostics only: never retain scene objects or frame histories.
+  const timer=setInterval(()=>{let objects=0;scene.traverse(()=>objects++);gl.domElement.dataset.renderStats=JSON.stringify({objects,...gl.info.memory,programs:gl.info.programs?.length,frame:gl.info.render.frame});},1000);
+  return()=>{clearInterval(timer);delete gl.domElement.dataset.renderStats;};
+ },[gl,scene]);
  // Layout effects are reconnected when Suspense reveals a newly loaded terrain or creature.
  useLayoutEffect(onReady,[onReady]);
  useEffect(()=>{const lost=(event:Event)=>{event.preventDefault();onLost();};gl.domElement.addEventListener('webglcontextlost',lost);return()=>gl.domElement.removeEventListener('webglcontextlost',lost);},[gl,onLost]);
- useEffect(()=>{if(!low||!visible)return;const timer=setInterval(invalidate,1000/30);return()=>clearInterval(timer);},[low,visible,invalidate]);
  return null;
 }
 export default function BattleCanvas({scene,skills,onSelect,visible,onReady,onLoading,onLost,manual,onManual}:{scene:BattleScene;skills:BattleSkill[];onSelect:(id:string)=>void;visible:boolean;onReady:()=>void;onLoading:()=>void;onLost:()=>void;manual:boolean;onManual:()=>void}){
- const createRenderer=useCallback((defaults:WebGLRendererParameters)=>{try{const renderer=new WebGLRenderer({...defaults,antialias:true,alpha:false,powerPreference:'high-performance'});renderer.toneMapping=ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;return renderer;}catch(error){queueMicrotask(onLost);throw error;}},[onLost]);
+ const createRenderer=useCallback((defaults:WebGLRendererParameters)=>{try{const renderer=new WebGLRenderer({...defaults,antialias:true,stencil:true,alpha:false,powerPreference:'high-performance'});renderer.toneMapping=ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;return renderer;}catch(error){queueMicrotask(onLost);throw error;}},[onLost]);
  return <Canvas camera={{position:[0,25,32],fov:42,near:.05,far:500}} shadows={scene.lowEffects?false:'percentage'}
-  dpr={scene.lowEffects?1:[1,1.5]} frameloop={!visible?'never':scene.lowEffects?'demand':'always'} gl={createRenderer}
+  dpr={scene.lowEffects?1:[1,1.5]} frameloop={!visible?'never':'always'} gl={createRenderer}
   aria-label="3D 战斗场景" fallback={null}>
   <BattleFrames scene={scene}>
    <CameraRig manual={manual} onManual={onManual}/>
    <Suspense fallback={<LoadingSignal onLoading={onLoading}/>}>
-    <Environment ground={scene.ground||'grass'} low={scene.lowEffects} reduced={scene.reducedMotion}/>
+    <Environment ground={scene.ground||'grass'} low={scene.lowEffects} reduced={scene.reducedMotion} layout={scene.layout}/>
     <BattleObstacles layout={scene.layout}/>
     {scene.units.map(unit=><BattleUnit key={`${scene.encounterId}:${unit.id}`} unit={unit} scene={scene} skills={skills} onSelect={onSelect}/>)}
     <BattleLabels scene={scene} skills={skills} onSelect={onSelect}/>

@@ -24,8 +24,8 @@ export function Creature({unit:initialUnit,height,model}:{unit:BattleUnitData;he
   return()=>instance.dispose();
  },[instance]);
  useFrame(()=>{
-  const f=frame.current,s=state.current,unit=f.scene.units.find(u=>u.id===initialUnit.id)||initialUnit;
-  const p=unitPoint(f.layout,unit.id),target=battleTarget(unit,f.scene.units,f.clock),q=target?unitPoint(f.layout,target.id):null;
+  const f=frame.current,s=state.current,unit=f.units.get(initialUnit.id)||initialUnit;
+  const p=unitPoint(f.layout,unit.id),target=battleTarget(unit,f.scene.units,f.clock,f.units),q=target?unitPoint(f.layout,target.id):null;
   const moved=Math.hypot(p[0]-s.previous[0],p[2]-s.previous[1]);
   if(Number.isFinite(moved)&&moved>.001)s.lastMove=f.clock;
   s.previous=[p[0],p[2]];

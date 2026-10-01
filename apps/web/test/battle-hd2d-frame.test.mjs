@@ -17,7 +17,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT=true;
 before(async()=>{
  const web=fileURLToPath(new URL('../',import.meta.url));directory=await mkdtemp(join(web,'.hd2d-frame-test-'));
  const outfile=join(directory,'frame.mjs');
- await build({absWorkingDir:web,stdin:{contents:"export * from './app/battle-hd2d/frame';export {BattleUnit} from './app/battle-hd2d/unit';export {useLocalCombat,useLocalBattleground,publishLocalCombat} from './lib/local-combat-store';export {useCombatPlayback} from './lib/use-combat-playback';export {useLivePlayerVitals} from './lib/use-live-player-vitals';",resolveDir:web,loader:'tsx'},outfile,bundle:true,platform:'node',format:'esm',packages:'external',jsx:'automatic',logLevel:'silent',plugins:[{
+ await build({absWorkingDir:web,stdin:{contents:"export * from './app/battle-hd2d/frame';export {BattleUnit} from './app/battle-hd2d/unit';export {useCombatPlayback} from './lib/use-combat-playback';export {useLivePlayerVitals} from './lib/use-live-player-vitals';",resolveDir:web,loader:'tsx'},outfile,bundle:true,platform:'node',format:'esm',packages:'external',jsx:'automatic',logLevel:'silent',plugins:[{
   name:'headless-assets',setup(builder){
    builder.onResolve({filter:/^@react-three\/drei$/},()=>({path:'drei-probe',namespace:'probe'}));
    builder.onLoad({filter:/.*/,namespace:'probe'},()=>({resolveDir:web,loader:'js',contents:`import {useMemo} from 'react';import {Texture} from 'three';
@@ -31,47 +31,17 @@ after(async()=>{if(directory){await unlink(join(directory,'frame.mjs')).catch(er
 function scene(x=0){const unit={id:'a',name:'测试角色',hp:100,maxHp:100,classId:8,position:x,positionY:0};return{encounterId:'one',live:true,clock:0,sampledAt:0,layout:sceneLayout([unit],[],1,{minX:0,maxX:40,minY:-10,maxY:10}),units:[unit],effects:[],projectiles:[],groundEffects:[],selectedId:'a',range:5,lowEffects:true,reducedMotion:false};}
 function tree(s,extra=null,manual=false){return React.createElement(components.BattleFrames,{scene:s},React.createElement(components.CameraRig,{manual,onManual:()=>{}}),extra);}
 
-test('HUD-only updates preserve the local combat projection until the next simulation packet',async()=>{
- const state={id:'a',clock:0},data={battleView:{actors:[],units:{}}};let result;
- function Probe(){result=components.useLocalCombat(state,data,true);return null;}
- const packet=clock=>({player:{id:'a',clock},view:{battleView:{actors:[{id:'a',hp:100}],units:{a:{}}}}});
- components.publishLocalCombat(packet(100));const renderer=await create(React.createElement(Probe,{hud:0}));
+test('player vitals follow authoritative props and leave combat with the server',async()=>{
+ const data={stats:{maxHp:100,maxMana:80},resource:{name:'法力',value:80,max:80}};let result;
+ function Probe({state}){result=components.useLivePlayerVitals(state,data,null,undefined);return null;}
+ const state={id:'a',clock:0,hp:100,mana:80,combat:{id:'fight'}};
+ const renderer=await create(React.createElement(Probe,{state}));
  try{
-  const first=result;assert.equal(first.state.clock,100);
-  await renderer.update(React.createElement(Probe,{hud:1}));assert.equal(result,first,'a second HUD commit must not restart scene interpolation');
-  await act(async()=>components.publishLocalCombat(packet(200)));assert.notEqual(result,first);assert.equal(result.state.clock,200);
- }finally{await renderer.unmount();components.publishLocalCombat(null);}
-});
-
-test('player vitals use each combat frame and return to the overview after combat',async()=>{
- const state={id:'a',clock:0,hp:100,mana:80,combat:{id:'fight'}},data={stats:{maxHp:100,maxMana:80},resource:{name:'法力',value:80,max:80},battleView:{actors:[],units:{}}};
- let result;
- function Probe({player}){result=components.useLivePlayerVitals(player,data,null,undefined);return null;}
- const renderer=await create(React.createElement(Probe,{player:state}));
- try{
-  const packet=(clock,hp,mana)=>({player:{id:'a',clock,combat:{id:'fight'}},view:{battleView:{actors:[{id:'a',hp,mana,stats:{maxHp:100,maxMana:80}}],units:{a:{resource:{name:'法力',value:mana,max:80}}}}}});
-  await act(async()=>components.publishLocalCombat(packet(100,63,42)));
-  assert.equal(result.state.hp,63);assert.equal(result.data.resource.value,42);
-  await act(async()=>components.publishLocalCombat(packet(200,51,26)));
-  assert.equal(result.state.hp,51);assert.equal(result.data.resource.value,26);
-  await act(async()=>components.publishLocalCombat({...packet(300,10,3),player:{id:'a',clock:300,combat:{id:'previous-fight'}}}));
-  assert.equal(result.state.hp,100,'a frame from another encounter must not replace the current player vitals');
-  await renderer.update(React.createElement(Probe,{player:{...state,clock:300,hp:49,mana:24,combat:null}}));
-  assert.equal(result.state.hp,49);assert.equal(result.data.resource.value,80);
- }finally{await renderer.unmount();components.publishLocalCombat(null);}
-});
-
-test('local battleground deployment orders expose their new revision immediately',async()=>{
- const fallback={match:{id:'match',phase:'preparing',clock:0,revision:0}};let result;
- function Probe(){result=components.useLocalBattleground(fallback);return null;}
- const renderer=await create(React.createElement(Probe));
- try{
-  const updated={match:{...fallback.match,revision:1}};
-  await act(async()=>components.publishLocalCombat({view:{battleground:updated}}));
-  assert.equal(result,updated,'the next order must use the acknowledged local revision');
-  await act(async()=>components.publishLocalCombat({view:{battleground:{match:{...updated.match,id:'other'}}}}));
-  assert.equal(result,fallback,'another match cannot replace deployment');
- }finally{await renderer.unmount();components.publishLocalCombat(null);}
+  await renderer.update(React.createElement(Probe,{state:{...state,clock:100,hp:63,mana:42}}));
+  assert.equal(result.state.hp,63);assert.equal(result.state.mana,42);
+  await renderer.update(React.createElement(Probe,{state:{...state,clock:300,hp:49,combat:null}}));
+  assert.equal(result.state.hp,49);assert.equal(result.state.combat,null);
+ }finally{await renderer.unmount();}
 });
 
 test('recorded playback also keeps the scene projection stable between display samples',async t=>{

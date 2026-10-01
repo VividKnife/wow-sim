@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-01",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:df612bce1b9e76906e4c2f4aec92a0fdc05718a5d2a3b65e859122caec8dbe77",
+    "contentHash": "c8bc2e093666c7db5cba863f1bf5aa40ea7552c22b1fd0d42ef9cbe19baf0d7c"
+  },
+  "node": "v24.15.0",
+  "scope": "First authored single-floor Onyxia room; shared collision/navigation/render floor and preparation scene. No ACore binaries or copied code.",
+  "tests": {
+    "targeted": {
+      "passed": 25,
+      "total": 25
+    },
+    "fullSimulation": {
+      "passed": 220,
+      "total": 221,
+      "durationMs": 275772.906708,
+      "remainingFailure": "Golden content metadata mismatch after room content addition"
+    },
+    "goldenReview": "captureBaseline deepEqual against all five preexisting complete current.scenarios succeeded before metadata-only update; original historical captures and current scenario expectations unchanged",
+    "goldenRerun": {
+      "passed": 1,
+      "total": 1
+    },
+    "rootTypecheck": "passed after fixing inferred test identity type",
+    "webTypecheck": "passed",
+    "build": "passed; existing large bundle warnings remain",
+    "contentCheck": "passed after regenerating content from final source"
+  },
+  "navigationSweep": {
+    "queries": 1023,
+    "unreachable": 0,
+    "invalidSegments": 0,
+    "description": "Three anchor starts to 3-yard grid points inside the room; no capacity claim"
+  },
+  "browser": {
+    "url": "http://127.0.0.1:5207/battle-3d.html",
+    "productionRenderer": true,
+    "productionAccount": false,
+    "fixture": "40 members, Onyxia phase 2 with telegraphed deep breath",
+    "verified": [
+      "Shared floor and wall boundary",
+      "Deep breath stencil clipping in normal and low-effects modes",
+      "Old rectangle outline removed",
+      "Combat continues with moving participants and spawned whelps"
+    ],
+    "consoleErrors": 0,
+    "observedCrash": false,
+    "screenshot": ".cache/qa/onyxia-boss-room-2026-10-01.png",
+    "lastObserved": "17 enemies and 34 surviving members; full kill and loot not tested"
+  },
+  "limitations": [
+    "Single floor; no height queries or multi-level paths",
+    "Fixed 0.45-yard movement clearance",
+    "Portal midpoint routing does not guarantee shortest path",
+    "No dedicated flight, doors or body-size navigation",
+    "Ragnaros room migration not implemented",
+    "Not a browser endurance or memory leak proof",
+    "Not a production full encounter/loot/distribution acceptance run"
+  ],
+  "sourceSha256": {
+    "packages/game-data/source/boss-rooms.json": "bbfadfa60c6a35149a1311ead94c5a5be1f5ed709d0f02094ec646975d00cf69",
+    "packages/game-data/data/boss-rooms.json": "b6deb31164fd99749ed7101f01389cd8ced59fb0966c1742dc5e8a882d598a1a",
+    "scripts/compile-boss-rooms.mjs": "707353bc794df9afabae67f0bab8f06a3b4e159a7a4b51124b0b729209976d4b",
+    "packages/sim-core/src/room-geometry.js": "074fde54c304c71d035c5535a218ead924c7f5a4b7869668e14e14cb12aa2696",
+    "packages/sim-core/src/scene-space.js": "740a32457ec460cbb45cff84fbbbd8087b9048eb95626b5acc42efc9f3161993",
+    "packages/game-domain/src/rules/combat-area.js": "a064b4cf368d8efea0ee3fed892936af8e5678921cd9a5e277d03e71e15499ec",
+    "packages/game-domain/src/rules/instance-presentation.js": "1e97c248a2f983daffc35bbe667ffa6b60e1c990512840d1b102a52ee4305d63",
+    "packages/game-domain/src/rules/molten-core-battle.js": "a5deb4c184e4b148cff47556689e1af607033659c612331ce71abeee8a50900c",
+    "packages/game-domain/src/rules/onyxia-encounter.js": "8c891d883d4568c371d2130809e79e5107b1fea1e24e6580f6c8fed360d42519",
+    "apps/web/app/battle-hd2d/room.tsx": "3a4a2428dbfa4a33ff48eb701195f231d82ffe0b339589cdc092a8581cccb143",
+    "apps/web/app/battle-hd2d/effects.tsx": "b26bb2090d2d2a44786ad5ec21051b6b1874801580e22417d8624fbf56ba6b81",
+    "apps/web/app/battle-hd2d/scene.tsx": "10f2785698d2201c6a286125cb7b18ee08a481bf6889335b01621a67e202d7db",
+    "packages/game-domain/test/boss-room.test.ts": "b9e86399b07209cc815f18aa4656c645cbf547811484a57a1720ddc6ea7bb71f",
+    "packages/simulation-tests/fixtures/current.json": "d0478c4308cf1c0a0567ec0ee83a5fe91ee64751d1e4949c0574a31157c6997d"
+  }
+}

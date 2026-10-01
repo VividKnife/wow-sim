@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "at": "2026-09-30T21:17:28.528Z",
+  "schema": "sim2_recovery_56bf9e2c0ad88fc5",
+  "elapsedMs": 41556,
+  "originalEpoch": 1,
+  "recoveredEpoch": 2,
+  "character": {
+    "id": "63b01186-c799-40e3-9f46-03b101c32e2a",
+    "instanceId": "personal:11bdf36a-84bc-4032-a169-5ed80ee3c405",
+    "originalEpoch": 1,
+    "recoveredEpoch": 2,
+    "questId": 783,
+    "dropIds": [
+      "item:63b01186-c799-40e3-9f46-03b101c32e2a:9"
+    ]
+  },
+  "checks": [
+    "real PostgreSQL checkpoint",
+    "SIGKILL after durable receipt",
+    "unexpired lease rejects takeover",
+    "actual lease expiry",
+    "new process restores",
+    "duplicate input returns original receipt",
+    "RNG and paused clock preserved",
+    "database character admission",
+    "server Worker hunting without polling",
+    "quest and loot assets commit with checkpoint",
+    "pickup identities survive process death",
+    "repeated pickup cannot duplicate ledger, items, wallet or quest XP"
+  ],
+  "limits": [
+    "Personal residency only; multiplayer asset binding still pending",
+    "No public WebSocket/client gameplay test",
+    "No capacity claim"
+  ]
+}

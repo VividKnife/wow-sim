@@ -1,4 +1,5 @@
-import {selectCombatPolicy} from '../src/rules/combat.js';
+import {selectCombatPolicy} from '../src/rules/bot-strategies.js';
+import {DecisionTrace} from '../../bot-ai/src/decision.js';
 import {projectCombatObservation} from '../src/rules/combat-observation.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -95,23 +96,26 @@ test('conservation leaves safe GCDs idle instead of falling through to filler ca
  const {s,c,target}=fixture(2,[19943,25292,20217]);Object.assign(s,target);s.hp=9000;s.combat.participantIds=[s.id,c.id];
  s.combat.raidEncounter.command.healingMode='conserve';c.target='enemy';
  const before=structuredClone(c);
+ const trace=new DecisionTrace();assert.equal(selectCombatPolicy(s,c,{trace}),null);
+ assert.equal(trace.entries.at(-1).strategy,'conserve-mana');assert.equal(trace.entries.at(-1).status,'stop');
+ assert.equal(trace.entries.some(row=>row.strategy==='rotation'),false);
  for(let at=10000;at<18000;at+=200){s.clock=at;assert.equal(selectCombatPolicy(s,c),null);}
  assert.deepEqual(c,before,'waiting neither spends mana nor starts GCDs');
  s.hp=2000;assert.equal(selectCombatPolicy(s,c)?.kind,'cast','danger immediately interrupts waiting');
 });
 
-test('conservation cancels automatic healed-target casts but respects manual casts',()=>{
- const {s,c,target}=fixture(2,[25292]);Object.assign(s,target);s.hp=9000;s.combat.participantIds=[s.id,c.id];s.combat.raidEncounter.command.healingMode='conserve';c.target='enemy';
+for(const mode of ['normal','conserve'])test(`${mode} healing cancels automatic healed-target casts but respects manual casts`,()=>{
+ const {s,c,target}=fixture(2,[25292]);Object.assign(s,target);s.hp=9900;s.combat.participantIds=[s.id,c.id];s.combat.raidEncounter.command.healingMode=mode;c.target='enemy';
  c.cast={spell:25292,target:s.id,startedAt:9000,until:11500,policyControlled:true};
  assert.deepEqual(selectCombatPolicy(s,c),{kind:'cancel',spellId:25292,startedAt:9000});
  c.cast.commanded=true;assert.notEqual(selectCombatPolicy(s,c)?.kind,'cancel');
  c.cast.commanded=false;s.hp=2000;assert.notEqual(selectCombatPolicy(s,c)?.kind,'cancel');
 });
 
-test('observed incoming heals prevent duplicate mana spending and survive worker projection',()=>{
+for(const mode of ['normal','conserve'])test(`${mode} observed incoming heals prevent duplicate mana spending and survive worker projection`,()=>{
  const {s,c,target}=fixture(2,[25292]);Object.assign(s,target);s.hp=7500;
  const other={...structuredClone(c),id:'other',cast:{spell:25292,target:s.id,startedAt:8000,until:10500,policyControlled:true}};
- s.party=[c,other];c.target='enemy';s.combat.participantIds=[s.id,c.id,other.id];s.combat.raidEncounter.command.healingMode='conserve';
+ s.party=[c,other];c.target='enemy';s.combat.participantIds=[s.id,c.id,other.id];s.combat.raidEncounter.command.healingMode=mode;
  assert.equal(selectCombatPolicy(s,c),null);
  const observation=projectCombatObservation(s);assert.equal(selectCombatPolicy(observation,observation.party[0]),null);
  other.cast=null;assert.equal(selectCombatPolicy(s,c)?.kind,'cast');
@@ -123,4 +127,33 @@ test('incoming chain healing reserves each recipient separately, never the whole
  const projected=projectRaidHealingTargets(s,c,group);
  assert.equal(projected[1].hp,target.hp+expected.tank);assert.equal(projected[2].hp,near.hp+expected.near);
  assert.ok(expected.tank>expected.near);assert.equal(target.hp,5000);
+});
+
+test('mana conservation preserves configured recovery instead of suppressing Innervate',()=>{
+ const {s,c,target}=fixture(11,[29166]);Object.assign(s,target);s.hp=s.maxHp;
+ s.combat.participantIds=[s.id,c.id];s.combat.raidEncounter.command.healingMode='conserve';c.target='enemy';
+ c.rules=[{spell:29166,enabled:true,condition:'manaBelow',value:30}];c.mana=stats(c).maxMana*.2;
+ const intent=selectCombatPolicy(s,c);
+ assert.equal(intent?.spellId,29166);assert.equal(intent?.targetId,c.id);
+ const observed=projectCombatObservation(s);
+ assert.deepEqual(selectCombatPolicy(observed,observed.party[0]),intent);
+ c.rules[0].enabled=false;assert.equal(selectCombatPolicy(s,c),null,'disabled recovery remains disabled');
+ c.rules[0].enabled=true;c.mana=stats(c).maxMana;assert.equal(selectCombatPolicy(s,c),null,'configured resource threshold remains authoritative');
+ c.mana=stats(c).maxMana*.2;c.cooldowns[29166]=s.clock+1000;
+ assert.equal(selectCombatPolicy(s,c),null,'conservation cannot bypass cooldowns');
+ c.cooldowns[29166]=0;c.raidReservedSpells=[29166];
+ assert.equal(selectCombatPolicy(s,c),null,'a cooldown reserved by the commander stays reserved');
+});
+
+test('conservation permits configured personal defense and mana totems without enabling filler buffs',()=>{
+ for(const [classId,id]of [[2,5573],[11,22812],[7,10497]]){
+  const {s,c,target}=fixture(classId,[id]);Object.assign(s,target);s.hp=s.maxHp;
+  s.combat.participantIds=[s.id,c.id];s.combat.raidEncounter.command.healingMode='conserve';c.target='enemy';
+  if(classId!==7){c.hp=stats(c).maxHp*.2;c.rules[0].condition='healthBelow';c.rules[0].value=35;}
+  const intent=selectCombatPolicy(s,c);
+  assert.equal(intent?.spellId,id);assert.equal(intent?.kind,'cast');
+  const observation=projectCombatObservation(s);
+  assert.deepEqual(selectCombatPolicy(observation,observation.party[0]),intent);
+  c.rules[0].enabled=false;assert.equal(selectCombatPolicy(s,c),null);
+ }
 });

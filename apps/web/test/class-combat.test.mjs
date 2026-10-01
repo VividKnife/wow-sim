@@ -1,3 +1,4 @@
+import {setCombatStrategy} from '../../../packages/game-domain/src/rules/strategy-revision.js';
 import {battlePresentation,playerEffects} from '../../../packages/game-domain/src/rules/battle-presentation.js';
 import {icon} from '../../../packages/game-domain/src/rules/catalog.js';
 import test from 'node:test';
@@ -12,7 +13,7 @@ import {defaultClassRules} from '../../../packages/game-domain/src/rules/class-s
 
 function fixture(classId,learned,rules=learned){
  const s=createGame('职业测试',12345,0,{classId,raceId:classId===7?2:classId===11?4:classId===3?3:1});
- s.classId=classId;s.level=20;s.learned=learned;s.rules=rules.map(spell=>({spell,condition:'always',value:0,enabled:true}));s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.energy=100;s.rage=800;
+ s.classId=classId;s.level=20;s.learned=learned;setCombatStrategy(s,{rules:rules.map(spell=>({spell,condition:'always',value:0,enabled:true}))});s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.energy=100;s.rage=800;
  startCombat(s,[299]);const e=s.combat.enemies[0];e.hp=e.maxHp=100000;e.nextAttack=1e9;e.nextSpell=1e9;e.rootUntil=1e9;e.level=20;return s;
 }
 function tickTo(s,until){for(let at=s.clock;at<=until;at+=100){s.clock=at;combatTick(s);}}
@@ -26,7 +27,7 @@ test('player priest shield absorbs damage and its cooldown prevents reapplying w
 
 test('Renew restores health in periodic ticks instead of charging mana for a no-op',()=>{
  const s=fixture(5,[139],[139]);s.hp=100;combatTick(s);const mana=s.mana;assert.ok(s.hots?.length);
- s.rules=[];tickTo(s,3100);assert.ok(s.hp>100);assert.equal(s.mana,mana);assert.ok(s.logs.some(l=>l.kind==='heal'&&l.spellId===139));
+ setCombatStrategy(s,{rules:[]});tickTo(s,3100);assert.ok(s.hp>100);assert.equal(s.mana,mana);assert.ok(s.logs.some(l=>l.kind==='heal'&&l.spellId===139));
 });
 
 test('every class produces its own damaging action with seeded state and real resource costs',()=>{
@@ -37,7 +38,7 @@ test('every class produces its own damaging action with seeded state and real re
 });
 
 test('warlock periodic damage expires and survives JSON continuation deterministically',()=>{
- const s=fixture(9,[172]);combatTick(s);tickTo(s,2100);s.rules=[];const restored=JSON.parse(JSON.stringify(s));
+ const s=fixture(9,[172]);combatTick(s);tickTo(s,2100);setCombatStrategy(s,{rules:[]});const restored=JSON.parse(JSON.stringify(s));
  tickTo(s,22000);tickTo(restored,22000);assert.deepEqual(restored,s);assert.ok(s.logs.some(l=>l.kind==='damage'&&l.periodic));assert.equal(s.combat.enemies[0].dots.length,0);
 });
 
@@ -47,12 +48,12 @@ test('hunter and warlock summons deal attributed damage and are not free repeate
 
 test('dead hunter pets require a paid Revive Pet cast and return at 15 percent health',()=>{
  const s=fixture(3,[883,982,1515],[883]);combatTick(s);const pet=s.pet;pet.hp=0;s.clock=1600;combatTick(s);assert.equal(s.pet.hp,0,'Call Pet cannot revive');
- s.rules=[{spell:1515,condition:'always',value:0,enabled:true}];s.nextAction=0;combatTick(s);assert.equal(s.cast,null,'taming cannot replace a dead owned pet');
- s.rules=[{spell:982,condition:'always',value:0,enabled:true}];const mana=s.mana;combatTick(s);assert.equal(s.cast?.spell,982);assert.equal(s.mana,mana);assert.ok(s.cast.timing.cost>0);const end=s.cast.until;s.rules=[];tickTo(s,end);assert.equal(s.pet,pet);assert.equal(s.pet.hp,Math.round(s.pet.maxHp*.15));
+ setCombatStrategy(s,{rules:[{spell:1515,condition:'always',value:0,enabled:true}]});s.nextAction=0;combatTick(s);assert.equal(s.cast,null,'taming cannot replace a dead owned pet');
+ setCombatStrategy(s,{rules:[{spell:982,condition:'always',value:0,enabled:true}]});const mana=s.mana;combatTick(s);assert.equal(s.cast?.spell,982);assert.equal(s.mana,mana);assert.ok(s.cast.timing.cost>0);const end=s.cast.until;setCombatStrategy(s,{rules:[]});tickTo(s,end);assert.equal(s.pet,pet);assert.equal(s.pet.hp,Math.round(s.pet.maxHp*.15));
 });
 
 test('hunters keep fighting when a faster melee enemy prevents reaching bow range',()=>{
- const s=fixture(3,[75,1978,3044,2973]);s.rules=defaultClassRules(3);const e=s.combat.enemies[0];e.rootUntil=0;e.moveSpeed=8;e.position=s.position+4;
+ const s=fixture(3,[75,1978,3044,2973]);setCombatStrategy(s,{rules:defaultClassRules(3)});const e=s.combat.enemies[0];e.rootUntil=0;e.moveSpeed=8;e.position=s.position+4;
  tickTo(s,30000);assert.ok(s.logs.some(l=>l.kind==='damage'&&l.at>20000&&!l.periodic),'must not retreat forever');
 });
 
@@ -90,9 +91,9 @@ test('Rockbiter uses the enchant aura attack power, never the 1800-second durati
 });
 
 test('Stoneskin reduces physical hits, Strength of Earth changes strength, and fire totem deals damage',()=>{
- const s=fixture(7,[8071,8075,3599]);s.rules=[{spell:8071,condition:'always',value:0,enabled:true}];s.position=20;combatTick(s);s.rules=[];tickTo(s,2100);assert.equal(s.stoneskin.amount,4);const hp=s.hp;hurtPlayer(s,s.combat.enemies[0],s,10);assert.equal(s.hp,hp-6);
- s.rules=[{spell:8075,condition:'always',value:0,enabled:true}];s.nextAction=0;const str=stats(s).str;combatTick(s);s.rules=[];tickTo(s,4200);assert.equal(stats(s).str,str+10);
- s.rules=[{spell:3599,condition:'always',value:0,enabled:true}];s.nextAction=0;combatTick(s);s.rules=[];tickTo(s,6500);assert.ok(s.logs.some(l=>l.kind==='damage'&&l.triggeredBy===3599&&l.spellId===22048));
+ const s=fixture(7,[8071,8075,3599]);setCombatStrategy(s,{rules:[{spell:8071,condition:'always',value:0,enabled:true}]});s.position=20;combatTick(s);setCombatStrategy(s,{rules:[]});tickTo(s,2100);assert.equal(s.stoneskin.amount,4);const hp=s.hp;hurtPlayer(s,s.combat.enemies[0],s,10);assert.equal(s.hp,hp-6);
+ setCombatStrategy(s,{rules:[{spell:8075,condition:'always',value:0,enabled:true}]});s.nextAction=0;const str=stats(s).str;combatTick(s);setCombatStrategy(s,{rules:[]});tickTo(s,4200);assert.equal(stats(s).str,str+10);
+ setCombatStrategy(s,{rules:[{spell:3599,condition:'always',value:0,enabled:true}]});s.nextAction=0;combatTick(s);setCombatStrategy(s,{rules:[]});tickTo(s,6500);assert.ok(s.logs.some(l=>l.kind==='damage'&&l.triggeredBy===3599&&l.spellId===22048));
 });
 
 test('pets are living combat targets and never dilute player experience rewards',()=>{
@@ -148,16 +149,16 @@ test('stealth rear movement respects roots and resumes deterministically',()=>{
 
 test('PvE stealth detection distinguishes the front from the rear',()=>{
  const s=fixture(4,[1784]),e=s.combat.enemies[0];e.combatFacing=Math.PI;s.stealthed=true;s.positionY=e.positionY;
- s.position=e.position-4;assert.equal(detectsTarget(e,s,0),true);
- s.position=e.position+4;assert.equal(detectsTarget(e,s,0),false);
- s.position=e.position+.5;assert.equal(detectsTarget(e,s,0),true);
+ s.position=e.position-4;assert.equal(detectsTarget(s,e,s,0),true);
+ s.position=e.position+4;assert.equal(detectsTarget(s,e,s,0),false);
+ s.position=e.position+.5;assert.equal(detectsTarget(s,e,s,0),true);
 });
 
 for(const incoming of [false,true])test(`ordinary Stealth cannot start after ${incoming?'incoming damage':'enemy acquisition'} without outgoing threat`,()=>{
- const s=fixture(4,[1784],[1784]),e=s.combat.enemies[0];s.rules=[];s.nextSwing=1e9;
+ const s=fixture(4,[1784],[1784]),e=s.combat.enemies[0];setCombatStrategy(s,{rules:[]});s.nextSwing=1e9;
  if(incoming)hurtPlayer(s,e,s,1);else combatTick(s);
  assert.equal(e.threat[s.id]||0,0,'regression must not rely on outgoing threat');
- s.rules=[{spell:1784,condition:'always',value:0,enabled:true}];s.clock=2000;s.nextAction=0;
+ setCombatStrategy(s,{rules:[{spell:1784,condition:'always',value:0,enabled:true}]});s.clock=2000;s.nextAction=0;
  combatTick(s);assert.equal(!!s.stealthed,false);assert.ok(!s.logs.some(l=>l.kind==='cast'&&l.spellId===1784));
 });
 

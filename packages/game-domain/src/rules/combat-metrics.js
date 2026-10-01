@@ -1,3 +1,5 @@
+import {removeGroundEffects} from './ground-events.js';
+import {clearCombatEvents} from './simulation-events.js';
 import {trimBattleHistory} from '../../../sim-core/src/battle-history.js';
 import {finishJourneyBattle} from './journey.js';
 import {battlePresentation} from './battle-presentation.js';
@@ -58,8 +60,8 @@ export function finishCombat(s){
  battle.endedAt??=s.clock;
  const actors=combatMembers(s,battle);
  for(const actor of [...actors,...(battle.enemies||[])])actor.cast=null;
- battle.projectiles=[];
- s.groundEffects=(s.groundEffects||[]).filter(area=>area.side!=='friendly');
+ clearCombatEvents(s);
+ removeGroundEffects(s,area=>area.side==='friendly');
  const snapshotFields=['bloodrage','totemWeaponEnchant','judgement','talentProcs','talentBuffs','racialEffects','racialBuff','cannibalize','lightwell','spell','until','petUnit','totemUnit','ownerId','kind','form','stance','focus','combo','comboTarget','classBuffs','buffs','dots','hots','periodicClass','absorb','manaShield','seal','reactiveClass','soulstone','weaponEnchants','weaponEnchant','equipment','totems','cooldowns','learned','globalCooldowns','categoryCooldowns','stealthed','combatFacing','weakenedSoulUntil','sprintUntil','innervateUntil','hawkHasteUntil','feignUntil','mode','loyalty','happiness','nextRanged','rangedStartedAt','nextOffhand','offhandStartedAt','escortNpc','entry','modelId','creatureType','family','id','name','classId','level','hp','mana','energy','rage','position','positionY','moveSpeed','nextSwing','swingStartedAt','auras','rootUntil','slowUntil','slow','movementSlows','stunUntil','polyUntil'];
  battle.actorsSnapshot??=JSON.parse(JSON.stringify(actors.map(actor=>{
   const derived=stats(actor);

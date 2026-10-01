@@ -1,0 +1,158 @@
+{
+  "measuredAt": "2026-09-30T19:14:09.696Z",
+  "rulesetVersion": "owned-v1:959392d0085148e5640698a87cc84e83574ea3b38b1ca342473ef3803758104d",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "changes": [
+    "During its own active taunt, a rescue tank establishes ordinary threat before chasing another loose mob.",
+    "Complete 103-row spell_threat import from pinned ClassicDB replaces level-20 regional slice; high-rank Sunder and queued melee attacks use one shared flat-threat index."
+  ],
+  "source": "22b51464f1625f6ef6275771de1f5466c6f5d19e",
+  "workload": {
+    "initialFixture": ".cache/qa/host-ony-replay.json",
+    "initialSha256": "54b2c496436b14ca7e49cf3ced9c54ad3f9e756a1f115a8dff05173ac7ff3b22",
+    "runnerSha256": "c7fc173e4de64fe99ba52056c920d03692a1d6ccb2d70d32dd5a31fbdc0ef336",
+    "composition": {
+      "size": 40,
+      "tanks": 4,
+      "healers": 10
+    },
+    "recruitPriority": "progress",
+    "commands": [
+      "Replay first five legal actions from admission",
+      "partyBuffs and goldRecover",
+      "recommendedRaidPlan",
+      "goldNavigate full",
+      "conserveMana and focusBoss on boss entry"
+    ],
+    "stepMs": 100,
+    "simulationOnly": true
+  },
+  "run": {
+    "artifact": ".cache/qa/ony-steady-threat-fixed-2026-10-01.json",
+    "sha256": "c6a3ea42d46fefa63869f76567b79809b5358798604f7f66bc734de56334aac3",
+    "won": false,
+    "elapsedMs": 303778,
+    "bossHp": 375842,
+    "bossMaxHp": 1099230,
+    "survivors": 0,
+    "firstDeath": {
+      "name": "影步拾荒者",
+      "at": 1790781905101,
+      "role": "melee",
+      "cause": "火球术"
+    },
+    "healerManaPercent": 21,
+    "phaseTransitions": [
+      {
+        "atMs": 47878,
+        "phase": 2
+      },
+      {
+        "atMs": 187478,
+        "phase": 3
+      }
+    ]
+  },
+  "goldenReview": {
+    "method": "In isolated review process restore only previous compiled spell_threat before loading rules. All three old raid hashes reproduced. Compare all durable fields against new table.",
+    "changedFields": [
+      {
+        "path": "raid.0.combat.enemies.0.threat.mc-member-2",
+        "before": 3136.87,
+        "after": 3476.17
+      },
+      {
+        "path": "raid.0.combat.enemies.1.threat.mc-member-6",
+        "before": 2964.945,
+        "after": 3304.2450000000003
+      },
+      {
+        "path": "raid.0.combat.enemies.2.threat.mc-member-26",
+        "before": 3130.89,
+        "after": 3809.4900000000002
+      },
+      {
+        "path": "raid.1.combat.enemies.0.threat.mc-member-2",
+        "before": 3586.865,
+        "after": 4944.0650000000005
+      },
+      {
+        "path": "raid.1.combat.enemies.1.threat.mc-member-6",
+        "before": 3513.61,
+        "after": 4531.51
+      },
+      {
+        "path": "raid.1.combat.enemies.2.threat.mc-member-26",
+        "before": 3613.7749999999996,
+        "after": 4631.675
+      },
+      {
+        "path": "raid.2.combat.enemies.0.threat.mc-member-2",
+        "before": 3849.9849999999997,
+        "after": 5546.485000000001
+      },
+      {
+        "path": "raid.2.combat.enemies.1.threat.mc-member-6",
+        "before": 3754.3050000000003,
+        "after": 4772.205
+      },
+      {
+        "path": "raid.2.combat.enemies.2.threat.mc-member-26",
+        "before": 3906.7949999999996,
+        "after": 4924.695
+      }
+    ],
+    "unchanged": "All four other scenarios; initial hashes, RNG, totals and living counts in all five scenarios. Pinned historical fixtures unchanged."
+  },
+  "checks": {
+    "strategies": {
+      "passed": 54,
+      "total": 54,
+      "log": "/tmp/wow-sim-threat-targeted.log",
+      "sha256": "f883289331f52bc56a3896ff41ce6ba9f320400e9cd39cc17ffd16a438c83d00"
+    },
+    "combatAndSpace": {
+      "passed": 52,
+      "total": 52,
+      "log": "/tmp/wow-sim-threat-combat-spatial.log",
+      "sha256": "53fa159e8621d94506520a5abfc103f13805a3f1e7b7cc6d2da66ef3af378535"
+    },
+    "finalTankAndLifecycle": {
+      "passed": 15,
+      "total": 15,
+      "log": "/tmp/wow-sim-threat-lifecycle.log",
+      "sha256": "46207d8608288fa4fcebae8b716caf9a16067d22ca8275b44207b6bfdc2ec252"
+    },
+    "baseline": {
+      "passed": 1,
+      "total": 1,
+      "log": "/tmp/wow-sim-threat-baseline.log",
+      "sha256": "b3744d1c41f8f5b33a4e47ea658cbbd5e6be4b36a26b3a172c774b68d239d8a5"
+    },
+    "worker": {
+      "passed": 7,
+      "total": 7,
+      "log": "/tmp/wow-sim-threat-worker.log",
+      "sha256": "b4a050cb277e7a852938b797d54cc108aab28f2e3dc405034e5b7eee4341328b"
+    },
+    "types": {
+      "passed": true,
+      "log": "/tmp/wow-sim-threat-types.log"
+    },
+    "data": {
+      "passed": true,
+      "log": "/tmp/wow-sim-threat-data-check.log"
+    },
+    "webBuild": {
+      "passed": true,
+      "log": "/tmp/wow-sim-threat-web-build.log",
+      "existingLargeChunkWarning": true
+    }
+  },
+  "limitations": [
+    "Single-seed offline diagnosis, not browser acceptance or measured win-rate improvement.",
+    "Onyxia kill, loot and distribution acceptance remain incomplete.",
+    "The full threat table is reference data; this change only repairs existing flat-threat consumers, not a complete ThreatSystem or all table multipliers.",
+    "No navmesh, multi-floor navigation, dynamic hazard path costs, production capacity or complete 2.0 claim."
+  ]
+}

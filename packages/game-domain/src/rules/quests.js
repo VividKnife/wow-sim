@@ -1,7 +1,8 @@
 import {runtime} from './runtime-content.js';
 import {groupRows} from '../../../sim-core/src/collections.js';
 import {grantHunterTrainingLinks} from './pet-knowledge.js';
-import {queueCombatLoot} from './loot.js';
+import {queueCombatLoot,queuePersonalCombatLoot} from './loot.js';
+import {rewardCharacters} from './combat-members.js';
 import {racialModifiers} from './racial-effects.js';
 import {quests,questLinks,questXp,classContentManifest,classDefinitions,raceDefinitions,endpointNodes,creatureLocations,creatures,items,objectLocations,objectSpawnsByNode,objectTemplates,objectLoot,creatureLoot,referenceLoot,table,localize,nameOf,nearestNode,nodes,monsterIdsAt,attackableCreature} from './catalog.js';
 import {countItem,takeItem,addItem,gainXp,rng,roll,log} from './character.js';
@@ -37,7 +38,7 @@ export function questAvailable(s,q,seen=new Set()){if(questContentReason(q))retu
  return !q.RequiredCondition||meetsCondition(s,q.RequiredCondition,seen);
 }
 export function atEndpoint(s,q,kind){return(questLinks[q.entry]?.[kind]||[]).some(e=>e.type==='item'?kind==='starts'&&countItem(s,e.id)>0:endpointNodes(e).includes(s.location));}
-export function needsQuestItem(s,id){return Object.keys(s.quests).some(qid=>[1,2,3,4].some(n=>['Item','Source'].some(kind=>quests[qid]['Req'+kind+'Id'+n]===id&&countItem(s,id)<quests[qid]['Req'+kind+'Count'+n])));}
+export function needsQuestItem(s,id){return Object.keys(s.quests||{}).some(qid=>[1,2,3,4].some(n=>['Item','Source'].some(kind=>quests[qid]['Req'+kind+'Id'+n]===id&&countItem(s,id)+(s.pending||[]).filter(i=>i.id===id).reduce((n,i)=>n+i.count,0)<quests[qid]['Req'+kind+'Count'+n])));}
 function hasNeededCreatureLoot(s,rows,needed,depth=0){
  if(depth>8)return false;
  return (rows||[]).some(row=>meetsCondition(s,row.condition_id)&&(row.mincountOrRef<0
@@ -146,21 +147,51 @@ export function abandonQuest(s,id){
  log(s,'放弃任务：'+nameOf('quests',id),'quest');
 }
 export function turnIn(s,id,choice){const q=quests[id],p=questProgress(s,id);if(!q||!p?.complete||!atEndpoint(s,q,'ends'))throw new Error('任务未完成，或尚未到达交付地点。');if(p.choices.length&&!p.choices.some(i=>i.id===choice))throw new Error('请选择一件任务奖励。');for(let n=1;n<=4;n++)if(q['ReqItemId'+n])takeItem(s,q['ReqItemId'+n],q['ReqItemCount'+n]);s.money+=q.RewOrReqMoney;for(const reward of p.rewards)addItem(s,reward.id,reward.count);const selected=p.choices.find(i=>i.id===choice);if(selected)addItem(s,selected.id,selected.count);gainXp(s,s,p.xp);for(let n=1;n<=5;n++)if(q['RewRepFaction'+n])s.reputation[q['RewRepFaction'+n]]=(s.reputation[q['RewRepFaction'+n]]||0)+Math.floor(q['RewRepValue'+n]*(q['RewRepValue'+n]>0?1+racialModifiers(s).diplomacyPct:1));for(const entry of classContentManifest.entries)if(entry.acquisition==='classQuest'&&entry.actor==='player'&&entry.classId===s.classId&&entry.raceIds.includes(s.raceId)&&entry.questIds?.includes(+id)){s.learned=[...new Set([...s.learned,entry.spellId])];grantHunterTrainingLinks(s,entry.spellId);}delete s.quests[id];s.completed[id]=(s.completed[id]||0)+1;if(+id===1921){s.questWaits??={};s.questWaits[1941]=s.clock+9500;}log(s,`完成任务：${p.name} · ${p.xp} 经验`,'quest');}
-export function creditKill(s,id){const c=creatures[id];for(const[qid,p]of Object.entries(s.quests)){if(+qid===434&&(!s.stockadesQuestEvent||s.stockadesQuestEvent.cancelled||s.stockadesQuestEvent.stage!=='combat'||s.combat?.quest!==434||s.combat.questEventAttempt!==s.stockadesQuestEvent.attempt))continue;const q=quests[qid];if(p.encounterReward?.entry===id&&s.combat?.quest===+qid){addItem(s,p.encounterReward.item,1);delete p.encounterReward;}for(let n=1;n<=4;n++){const target=q['ReqCreatureOrGOId'+n];if(target>0&&!['spell','interact'].includes(questTargetAction(q,n).kind)&&[id,c?.KillCredit1,c?.KillCredit2].includes(target))p.kills[target]=Math.min(q['ReqCreatureOrGOCount'+n],(p.kills[target]||0)+1);}}}
+export function creditKill(s,id,battle=s.combat){const c=creatures[id];for(const[qid,p]of Object.entries(s.quests)){if(+qid===434&&(!s.stockadesQuestEvent||s.stockadesQuestEvent.cancelled||s.stockadesQuestEvent.stage!=='combat'||battle?.quest!==434||battle.questEventAttempt!==s.stockadesQuestEvent.attempt))continue;const q=quests[qid];if(p.encounterReward?.entry===id&&battle?.quest===+qid){addItem(s,p.encounterReward.item,1);delete p.encounterReward;}for(let n=1;n<=4;n++){const target=q['ReqCreatureOrGOId'+n];if(target>0&&!['spell','interact'].includes(questTargetAction(q,n).kind)&&[id,c?.KillCredit1,c?.KillCredit2].includes(target))p.kills[target]=Math.min(q['ReqCreatureOrGOCount'+n],(p.kills[target]||0)+1);}}}
 function canLootStarter(s,id){
  const item=items[id],quest=item?.startquest;if(!quest||item.ExtraFlags&2)return true;
- return !s.quests[quest]&&(!s.completed[quest]||!!(quests[quest]?.SpecialFlags&1));
+ return !s.quests?.[quest]&&(!s.completed?.[quest]||!!(quests[quest]?.SpecialFlags&1));
 }
-export function lootRows(s,rows,depth=0,combatLoot=false){if(depth>8)return;const eligible=(rows||[]).filter(r=>meetsCondition(s,r.condition_id)&&canLootStarter(s,r.item)&&(items[r.item]?.bonding!==4||items[r.item]?.startquest||needsQuestItem(s,r.item))&&(r.ChanceOrQuestChance>=0||needsQuestItem(s,r.item)));const groups=groupRows(eligible,r=>r.groupid);const award=r=>{if(r.mincountOrRef<0){for(let n=0;n<r.maxcount;n++)lootRows(s,referenceLoot[-r.mincountOrRef],depth+1,combatLoot);}else if(items[r.item]){const count=roll(s,Math.max(1,r.mincountOrRef),Math.max(1,r.maxcount));(combatLoot?queueCombatLoot:addItem)(s,r.item,count);s.totals.items+=count;log(s,`${combatLoot?'掉落':'获得'} ${nameOf('items',r.item)} ×${count}`,'loot');}};
- for(const[groupId,group]of Object.entries(groups)){if(+groupId===0){for(const r of group)if(rng(s)*100<Math.abs(r.ChanceOrQuestChance))award(r);}else{let pick=rng(s)*100;let selected;const explicit=group.filter(r=>r.ChanceOrQuestChance!==0);for(const r of explicit){pick-=Math.abs(r.ChanceOrQuestChance);if(pick<0){selected=r;break;}}const equal=group.filter(r=>r.ChanceOrQuestChance===0);if(!selected&&equal.length)selected=equal[roll(s,0,equal.length-1)];if(selected)award(selected);}}
+export function lootRows(s,rows,depth=0,combatLoot=false,recipients=combatLoot?rewardCharacters(s):[s]){
+ if(depth>8||!recipients.length)return;
+ // Conditions use each recipient's private quests/inventory and the room's
+ // current encounter context. One table roll is shared, never rerolled per human.
+ const contexts=new Map(recipients.map(c=>[c,c===s?c:{...c,clock:s.clock,location:s.location,dungeon:s.dungeon,combat:s.combat,
+  quests:c.quests||{},completed:c.completed||{},questWaits:c.questWaits||{},reputation:c.reputation||{},bag:c.bag||[],pending:c.pending||[],bank:c.bank||[]} ]));
+ const personal=r=>r.ChanceOrQuestChance<0||items[r.item]?.bonding===4;
+ const eligibleFor=r=>recipients.filter(c=>{
+  const context=contexts.get(c);
+  if((personal(r)||items[r.item]?.startquest)&&!c.quests)return false;
+  return meetsCondition(context,r.condition_id)&&canLootStarter(context,r.item)&&
+   (items[r.item]?.bonding!==4||items[r.item]?.startquest||needsQuestItem(context,r.item))&&
+   (r.ChanceOrQuestChance>=0||needsQuestItem(context,r.item));
+ });
+ const groups=groupRows((rows||[]).filter(r=>eligibleFor(r).length),r=>r.groupid);
+ const award=r=>{
+  const eligible=eligibleFor(r);if(!eligible.length)return;
+  if(r.mincountOrRef<0){for(let n=0;n<r.maxcount;n++)lootRows(s,referenceLoot[-r.mincountOrRef],depth+1,combatLoot,eligible);}
+  else if(items[r.item]){
+   const count=roll(s,Math.max(1,r.mincountOrRef),Math.max(1,r.maxcount));
+   if(combatLoot){
+    if(personal(r))for(const c of eligible)queuePersonalCombatLoot(s,c,r.item,count);
+    else queueCombatLoot(s,r.item,count,eligible);
+   }else addItem(s,r.item,count);
+   s.totals.items+=count;log(s,`${combatLoot?'掉落':'获得'} ${nameOf('items',r.item)} ×${count}`,'loot');
+  }
+ };
+ for(const[groupId,group]of Object.entries(groups)){
+  if(+groupId===0){for(const r of group)if(rng(s)*100<Math.abs(r.ChanceOrQuestChance))award(r);}
+  else{let pick=rng(s)*100;let selected;const explicit=group.filter(r=>r.ChanceOrQuestChance!==0);for(const r of explicit){pick-=Math.abs(r.ChanceOrQuestChance);if(pick<0){selected=r;break;}}const equal=group.filter(r=>r.ChanceOrQuestChance===0);if(!selected&&equal.length)selected=equal[roll(s,0,equal.length-1)];if(selected)award(selected);}
+ }
 }
+
 function availableObjects(s,id){return (objectSpawnsByNode[s.location+':'+id]||[]).filter(o=>(s.objectRespawns?.[o.guid]||0)<=s.clock);}
 export function gatherables(s){
  const result=[];
  for(const[id,locations]of Object.entries(objectLocations)){
   if(!locations.includes(s.location)||!availableObjects(s,id).length)continue;const o=objectTemplates[id];if(!o)continue;
   const rows=objectLoot[o.data1]||[],needed=rows.some(r=>needsQuestItem(s,r.item));
-  const target=Object.keys(s.quests).some(qid=>[1,2,3,4].some(n=>quests[qid]['ReqCreatureOrGOId'+n]===-(+id)&&(s.quests[qid].kills[-id]||0)<quests[qid]['ReqCreatureOrGOCount'+n]));
+  const target=Object.keys(s.quests||{}).some(qid=>[1,2,3,4].some(n=>quests[qid]['ReqCreatureOrGOId'+n]===-(+id)&&(s.quests[qid].kills[-id]||0)<quests[qid]['ReqCreatureOrGOCount'+n]));
   if(needed||target)result.push({id:+id,name:o.name,items:rows.filter(r=>needsQuestItem(s,r.item)).map(r=>({id:r.item,name:nameOf('items',r.item)}))});
  }
  for(const o of s.questObjects||[])if(o.location===s.location&&o.availableAt<=s.clock&&s.quests[o.quest]&&!result.some(r=>r.id===o.id))result.push({id:o.id,name:objectTemplates[o.id].name,items:[{id:7292,name:nameOf('items',7292)}]});

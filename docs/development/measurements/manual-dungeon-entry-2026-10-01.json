@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-01",
+  "node": "v24.15.0",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:ec0704239d74875d4553516b980a046e8f8c39cbb4e3b74b5099dd0e59f3df31",
+    "contentHash": "b9ff4b2efacd37f486432eccae403b4f1db9afd8c6d11fb91c5db60d282c2e01"
+  },
+  "decision": "Finder selects the dungeon and roster. Humans walk to the entrance and manually enter; NPCs join the party dungeon automatically. Ordinary party invitations never teleport. No second group-wide entry confirmation.",
+  "scope": "Matched-roster authorization and per-human manual intentions checked within existing sealed-room transfer transaction. Complete runtime/asset pipeline exercised with two humans and three NPCs, using MemoryStore and PGlite.",
+  "tests": {
+    "simulation": {
+      "passed": 235,
+      "total": 235,
+      "durationMs": 224735.258333
+    },
+    "social": {
+      "passed": 24,
+      "total": 24,
+      "durationMs": 14237.342166
+    },
+    "integrationBeforeFinalNpcLocationAssertion": {
+      "passed": 18,
+      "total": 18,
+      "durationMs": 14729.720625
+    },
+    "rootTypecheck": "passed",
+    "goldenScenarios": "All five complete state/RNG/reward samples unchanged",
+    "browser": "not run; frontend unchanged"
+  },
+  "verified": [
+    "Matching acceptance creates a dungeon/roster record with zero human manual-entry requests",
+    "Ordinary invitation, timed-out proposal or forged account cannot substitute a human entry request",
+    "Membership, leader, role, source controller accounts, level and target dungeon are checked at the transaction boundary",
+    "Current whole-room composition rejects until every included human has requested entry",
+    "Human source locations still pass the ordinary entrance rules; no human location rewrite or return-point teleport metadata remains",
+    "NPC runtime members can start in another world location and enter the dungeon without manual requests",
+    "Group instance binding, all twenty-two identity claims and checkpoint transfer commit or roll back together",
+    "Duplicate transfer, original-owner fencing, normal target recovery and private participant presentations",
+    "No additional tables, external queue or per-tick database operations"
+  ],
+  "limitations": [
+    "Public entry orchestration and gateway/browser routing are not connected; autoTeleport remains false",
+    "First human entry with NPCs and later incremental human arrivals are the target but not yet implemented",
+    "Current whole-room composition requires all five prepared seats and all human entrance locations together",
+    "NPC roster selection/bench removal and member departure remain incomplete",
+    "PGlite validates SQL transactions here; not a real PostgreSQL multi-connection fault or capacity test",
+    "No browser, complete shared encounter or loot distribution acceptance this turn"
+  ],
+  "initialTestCorrections": [
+    "New five-human authorization fixture originally gave all queues identical timestamps; UUID tie ordering selected a different leader. Use distinct arrival timestamps to make the asserted leader explicit.",
+    "A rollback callback needed the explicit InstanceCheckpoint transfer type for strict TypeScript inference."
+  ],
+  "sourceSha256": {
+    "packages/game-domain/src/social.ts": "5c9dfe06fbdbd54f4701aeecafb55e93fcfe7c68fbfe02ab5349f635cdb9e2b7",
+    "packages/game-domain/src/social-party.ts": "ffd491004e631b2eb0e7a19a2ff14a5fe80c2b7da93b06ae47c232bee09e843e",
+    "packages/game-domain/src/social-cleanup.ts": "bee43d863b47b32bdeb868c95bb98117b6bb2ec6b6483bf0104915cdf81a7e2c",
+    "packages/game-domain/src/dungeon-entry.ts": "a007085c23a3d655347541f3843bc529f6751898e4130e0fe888662f39dae48c",
+    "packages/game-domain/test/dungeon-entry.test.ts": "6dee3136f2479abcaef4cce072cf26b4fe63fe2a43fc0beb324ce42cec9bb87d",
+    "apps/simulation-host/src/dungeon-composition.ts": "5f9fe3bf7a5312365fb3c01b52d06a1ae997c6043466ae5c7280f32a7a854842",
+    "apps/simulation-host/src/dungeon-transfer.ts": "b4234fbf5c4f42d05b330a1e21664156dcaf97ea09251844a0281ac1ca3b4494",
+    "apps/simulation-host/src/version.ts": "0d163755432a936828107507924dd8a7b79cbbac6c5685933b4ce122bb6b393e",
+    "apps/simulation-host/test/realtime-dungeon-transfer.test.ts": "404be2919acb7aefd193abb36130aa9cfd215dd30508e20dd1b312db1ad1f663",
+    "package.json": "adb4d9d52ac314e0c49dad7a741ee8a65e6666ecf3725db1a537a0575ea3b799"
+  }
+}

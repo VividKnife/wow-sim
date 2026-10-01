@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-01",
+  "node": "v24.15.0",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:7dea534d0cf1873c48854b516f7bf94e2d0996014edacaefbfa861c3bd27717a",
+    "contentHash": "5910c11590fd3adc47ad8307b1a94d8b697dd9ca9e23757e3510a11c88e00154"
+  },
+  "decision": "Select dungeon when matching; each human walks to the entrance and manually enters. The complete matched NPC cohort enters together with the party leader. A nonleader may enter earlier without NPCs. Invitations and matching acceptance do not teleport humans.",
+  "scope": "Internal partial-occupancy composition, successive arrivals and atomic group/claim transfers. Public gateway/browser entry orchestration remains incomplete.",
+  "tests": {
+    "simulation": {
+      "passed": 243,
+      "total": 243,
+      "durationMs": 238619.701333
+    },
+    "social": {
+      "passed": 24,
+      "total": 24,
+      "durationMs": 13471.619458
+    },
+    "arrivalCore": {
+      "passed": 6,
+      "total": 6,
+      "durationMs": 5697.149667
+    },
+    "rootTypecheck": "passed",
+    "webTypecheck": "passed",
+    "webBuild": "passed with existing large-chunk warnings",
+    "contentCompileAndCheck": "passed",
+    "goldenScenarios": "All five complete state/RNG/reward captures unchanged; only fixture version metadata updated",
+    "browser": "not run in this iteration"
+  },
+  "verified": [
+    "Planned five-person roster is separate from present units, controllers and human assets",
+    "A nonleader enters alone and does not gain leadership; the leader brings the full NPC cohort, whether entering first or later",
+    "Missing/early NPC cohorts are rejected; subsequent human arrivals do not count NPC participation again",
+    "Planned multiplayer rooms cannot use personal lifecycle authority while only the leader is present",
+    "Three successive humans, larger arriving simulation clock, preserved dungeon progress/RNG and remaining periodic timers",
+    "Every prior controller retains its own rebased input receipts; JSON restore and uninterrupted continuation agree",
+    "Incoming humans pass normal entrance rules; wrong entrance, malformed roster, duplicate identity, missing controller and combat arrivals are rejected without source mutation",
+    "Real Worker plus MemoryStore/PGlite cover together/separate manual arrivals, first/later transfer rollback after writes, duplicate submissions, old-owner fencing and persisted target recovery",
+    "Participant presentations share room context while retaining private character data",
+    "No new consistency table, external message queue or per-tick database operation"
+  ],
+  "limitations": [
+    "NPCs still belong to human aggregates. The verified independent-arrival flow uses the leader-owned NPC cohort. NPCs held by another still-travelling human need claim/state separation before they can accompany the leader without moving that human",
+    "Public manual-entry orchestration, gateway/browser route changes, NPC selection/bench handling and departure splitting are not connected",
+    "Joining requires an idle, alive boundary with no combat, casts, ground effects or pending group loot",
+    "The internal owner/routing instance ID changes during transfer; the dungeon run identity and progress are preserved",
+    "PGlite is SQL transaction coverage, not real PostgreSQL multi-connection failure/capacity evidence",
+    "No current browser crash, full shared encounter or loot-distribution acceptance in this iteration"
+  ],
+  "sourceSha256": {
+    "packages/game-domain/src/dungeon-roster.ts": "664504fe2275f3c63b5490e8e011f21e122dc6fe5c787fa75ba76adf5f0c0e8e",
+    "packages/game-domain/src/room-composition.ts": "57cdc1499ca4e281c592aadeeda10874071b988af5c46be1fa897626d6bc771c",
+    "packages/game-domain/src/dungeon-entry.ts": "1e03827345c095dee60399868783a722196f148b556bed3fdf60502ad46b9646",
+    "packages/game-domain/src/social-party.ts": "cbea478bd4c5de64e404dcc42c2453e2023cd1168cc9b75967a7ee0fdcdb102c",
+    "packages/game-domain/src/controller-actions.ts": "bfb1a1d2b73a4e91f4ca4871fe67c2c7b3551f62182efdf2f96c3f48dcc62eda",
+    "packages/game-domain/src/resident-participants.ts": "f8b5ee579d08e3ed8277fdeb5bbc6bc983fbeb00f61eccd5cb85ead8792e137f",
+    "packages/game-domain/src/rules/dungeon.js": "9de4370ffb8e8eab44c90d493b0c144d99002a9bab4151d2164b92948c973473",
+    "packages/game-domain/src/rules/npc-world.js": "81ed2e8f6399a815aee9623678e375bb599bbc76ca553e8f8ddf65b2f00c8375",
+    "apps/simulation-host/src/dungeon-composition.ts": "dae270dc9831a9f128567ff32564b163c1a2bc4e38ba382fae848cb849b9bfc9",
+    "apps/simulation-host/src/dungeon-transfer.ts": "638caa8edee91443a1c8d3caced77cded35dc8f14fa5bed9ad977e0ae30afc44",
+    "apps/simulation-host/src/instance.ts": "282977449b144a62ba15d70f213b8725e06911efbd4d7e7f23aaac8526a25cf1",
+    "apps/simulation-host/test/dungeon-arrivals.test.ts": "6f21e107538dff382dcd4da15a526e7f63e4352dd4c7f4dbf7dd90c8b27035d2",
+    "apps/simulation-host/test/realtime-dungeon-transfer.test.ts": "ff82a762a161f356632da00174de2e0cad9323c325b7efb49809e338cf7f2892",
+    "packages/game-domain/test/dungeon-entry.test.ts": "5f32d37fe0c688331f221eca54ac0688ba64e839c677f3ef91e76dbe5688860a"
+  }
+}

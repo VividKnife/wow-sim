@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-01",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:410b47c95cc861bc201738d9d7259c3d39afeabc72016819b4a8342fc725ae9e",
+    "contentHash": "5910c11590fd3adc47ad8307b1a94d8b697dd9ca9e23757e3510a11c88e00154"
+  },
+  "node": "v24.15.0",
+  "scope": "Independent human group loot votes, participant projections, participant-local pickup and durable recovery; shared combat activity admission still restricted.",
+  "tests": {
+    "simulation": {
+      "passed": 250,
+      "total": 250,
+      "durationMs": 277349.854125
+    },
+    "npcParticipantsAndControl": {
+      "passed": 32,
+      "total": 32,
+      "durationMs": 46161.903083
+    },
+    "sharedLootCore": {
+      "passed": 4,
+      "total": 4,
+      "durationMs": 6862.199667
+    },
+    "twoAccountHttp": {
+      "passed": 1,
+      "total": 1,
+      "durationMs": 5561.456
+    },
+    "rootTypecheck": "passed",
+    "webTypecheck": "passed",
+    "webBuild": "passed with existing asset/chunk warnings",
+    "goldens": "Five complete existing state/RNG/reward captures unchanged"
+  },
+  "verified": [
+    "Human-only parties can queue group loot",
+    "Each human chooses independently; the leader cannot submit another actorId",
+    "Waiters preserve votes and pre-generated rolls across a real Worker restart",
+    "Each human auto preference and the postcombat 60-second timeout apply independently",
+    "Human winners receive the same item identity in their private pending container and are not automatically equipped",
+    "Member pickup uses their own assets; another character cannot claim that item; room combat blocks member pickup",
+    "Shared projections show per-viewer vote/eligibility and hide pre-generated rolls until settlement",
+    "Authenticated two-account HTTP test commits the award to the correct durable item owner and recovers it without duplication"
+  ],
+  "browser": {
+    "url": "http://127.0.0.1:5219/shared-loot.html",
+    "fixture": "Isolated actual GroupLoot component, server ResidentInstance commands/projections and MemoryStore checkpoint/character materialization; seeded drop, not a boss kill",
+    "steps": [
+      "Alice greed leaves one human waiting with buttons disabled",
+      "Bob retains independent buttons and selects need",
+      "Bob wins and collects one staff",
+      "Alice has zero copies",
+      "Reload retains one history entry"
+    ],
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "screenshots": [
+      ".cache/qa/shared-loot-waiting-2026-10-01.png",
+      ".cache/qa/shared-loot-award-2026-10-01.png"
+    ]
+  },
+  "limitations": [
+    "Shared dungeon combat progression remains restricted until coin, quest and ordinary loot policy stops relying on the room root",
+    "Cross-owner NPC transfer and departure splitting are incomplete",
+    "No shared full boss/loot browser acceptance or external PostgreSQL capacity test in this iteration",
+    "Main merge and deployment remain pending full implementation and acceptance"
+  ],
+  "sourceSha256": {
+    "packages/game-domain/src/rules/group-loot.js": "525e898d425051c1b7207928d81463a498755406fbd8d01fb88e78c1b190c1a7",
+    "packages/game-domain/src/rules/engine.js": "5355cc82ca8360a4fe771af04ad506176c1044cbc7322eef66f2c1cd11aed996",
+    "packages/game-domain/src/controller-actions.ts": "481d7b622b41cc3129c6bfd9b68cb74d13fc7e26146566260eb3336aa8e5863d",
+    "packages/game-domain/src/resident-participants.ts": "a039127a47e68c36a60eebd409fbbc475d0bcebd051d8a339bdad5f1ef724c71",
+    "apps/web/app/group-loot.tsx": "961460b9314b21867c522ac186d2c23da81dfddecacc20f7d63f8a51e91e9f38",
+    "apps/simulation-host/test/shared-group-loot.test.ts": "3df44e6d4a6dce071c1e8c4844ab710f3f4e4e494de23e4e0062fab1693ac5da",
+    "apps/game-server/test/resident-party.test.ts": "efae6101d851c2efa614177d88b0dd9b0112c64dae0e3657fe3bf3569d5074f9",
+    "packages/game-domain/test/resident-participants.test.ts": "d0f51041b08af6b7cd6e592f737995abdbb8b0ed799d75b9636cf6af9e3a9ceb"
+  }
+}

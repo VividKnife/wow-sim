@@ -1,0 +1,31 @@
+{
+  "recordedAt": "2026-09-30T21:18:27.192Z",
+  "node": "v24.15.0",
+  "rulesetVersion": "owned-v1:669c273fef554bf51c85f7de61f6edc5efbfd2746426a93e252958e180b897fa",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "scope": "Fixed Worker replacement, stale session fencing and authenticated instance recovery after lease expiry",
+  "tests": {
+    "simulation": {
+      "passed": 74,
+      "total": 74,
+      "durationMs": 136880.836208
+    },
+    "addedFaultCases": 5,
+    "typecheck": "passed",
+    "diffCheck": "passed"
+  },
+  "checks": [
+    "acknowledged quest reward survives actual worker termination",
+    "committed but unacknowledged reward survives actual worker termination",
+    "old owner rejected and retry receipt returns once without asset replay",
+    "IPC timeout terminates old worker before replacement",
+    "shutdown cancels pending restart",
+    "replacement allocation failure backs off without terminating host"
+  ],
+  "limits": [
+    "Fault cases use MemoryStore and an accelerated repository lease clock; normal rule and worker clocks are retained",
+    "Separate PostgreSQL report covers full process death and real lease expiry",
+    "Worker slots recover automatically; instances reopen on authenticated demand, not via a background supervisor",
+    "No capacity claim, no browser renderer crash fix, no claim of complete 2.0 migration"
+  ]
+}

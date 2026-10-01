@@ -1,3 +1,4 @@
+import {instancePresentation} from './instance-presentation.js';
 import {combatMembers} from './combat-members.js';
 import {characterAttributes} from './character-attributes.js';
 
@@ -16,7 +17,7 @@ const viewKeys = [
   'partyBuffCheck','combatCommand','raidCommand','goldRaid','partyUnlocked','battleView','reincarnation','canSoulstoneRevive','skillUsesByTarget','environment','trackingKind','trackedTreasures','lockpicking',
   'trackedTargets','scouting','lockTargets','petControls','classPortals','skillUses','itemUses','itemBuffs','professions','professionRecipeCount','canTrainProfession',
   'resources','disenchantable','className','raceName','faction','resource','raceTraits','talentTrees','talentResetCost','canResetTalents',
-  'talentResetBlockedReason','bankCapacity','bankHere','bankUpgradeCost','inventoryActions','escort','escortNpc','hearthstone','mounts',
+  'talentResetBlockedReason','buildChangeBlockedReason','bankCapacity','bankHere','bankUpgradeCost','inventoryActions','escort','escortNpc','hearthstone','mounts',
   'strategyMembers','journey','dungeon','dungeons','stockadesQuestEvent','recovery','combatSkills','party','nextXp','stats','characterAttributes','location','map','monsters','quests',
   'questTools','shop','gatherables','bagCapacity','skills','talents','canTrain','hasFlight','city','flight','interactions','ammo','ammoPrompt'
 ] as const;
@@ -47,7 +48,7 @@ const policyKeys=['role','target','healing','threat','protectCC','waitForTank','
 const autoBuffKeys=['enabled','armor','int','sta','targets','refreshSeconds'];
 const actorView=(actor:any)=>{const result=pick(actor||{},actorKeys);if(Array.isArray(actor?.rules))result.rules=actor.rules.map(ruleView);if(actor?.strategyPolicy)result.strategyPolicy=pick(actor.strategyPolicy,policyKeys);if(actor?.autoBuffs)result.autoBuffs=pick(actor.autoBuffs,autoBuffKeys);if(actor?.potions)result.potions=pick(actor.potions,['enabled','health','mana','healthItem','manaItem']);return result;};
 const enemyView=(enemy:any)=>pick(enemy||{},enemyKeys);
-function combatView(combat:any){if(!combat)return combat;const result=pick(combat,combatKeys);result.enemies=Array.isArray(combat.enemies)?combat.enemies.map(enemyView):[];if(Array.isArray(combat.actorsSnapshot))result.actorsSnapshot=combat.actorsSnapshot.map(actorView);return result;}
+function combatView(combat:any,actorId:string){if(!combat)return combat;const result=pick(combat,combatKeys);if(combat.lootGoldByActor)result.lootGold=combat.lootGoldByActor[actorId]??0;result.enemies=Array.isArray(combat.enemies)?combat.enemies.map(enemyView):[];if(Array.isArray(combat.actorsSnapshot))result.actorsSnapshot=combat.actorsSnapshot.map(actorView);return result;}
 const dungeonView=(dungeon:any)=>dungeon?pick(dungeon,dungeonKeys):dungeon;
 const candidateView=(candidate:any)=>pick(candidate||{},['serverBuffs','id','name','classId','role','roles','level','gearCap','canRecruit']);
 const battleUnitKeys=['quickCasts','queuedSpellId','id','spellId','className','color','portrait','mode','resource','secondaryResource','hp','maxHp','level','combo','effects','cooldowns','totems','cast','globalCooldown','canCommand','petMode','happiness','loyalty','controlled','ownerName','controlUntil','shards','attack','offhand','movement'];
@@ -60,10 +61,11 @@ function battlePresentationView(battle:any){
  return result;
 }
 
-export function projectClientSnapshot(state:Record<string,unknown>,view:Record<string,unknown>){
+export function projectClientSnapshot(state:Record<string,unknown>,view:Record<string,unknown>,{instanceState=state}:{instanceState?:Record<string,unknown>}={}){
  if(!state||typeof state!=='object'||Array.isArray(state))throw new TypeError('state must be an object');
  if(!view||typeof view!=='object'||Array.isArray(view))throw new TypeError('view must be an object');
  const clientView=pick(view,viewKeys);
+ clientView.instanceScene=instancePresentation(instanceState);
  // World content grows independently of a player's quest log. Send only the
  // active log and quests actionable here, including carried item starters.
  if(Array.isArray((view as any).quests))clientView.quests=(view as any).quests.filter((quest:any)=>quest.active||quest.canAccept||quest.canTurnIn).map(copy);
@@ -76,14 +78,14 @@ export function projectClientSnapshot(state:Record<string,unknown>,view:Record<s
  }
  if(Array.isArray((view as any).candidates))clientView.candidates=(view as any).candidates.map(candidateView);
  const player=pick(state,playerKeys);
- player.battleHistory=((state as any).battleHistory||[]).map((entry:any)=>({battle:combatView(entry.battle),location:copy(entry.location),view:battlePresentationView(entry.view),logs:copy(entry.logs)}));
+ player.battleHistory=((state as any).battleHistory||[]).map((entry:any)=>({battle:combatView(entry.battle,(state as any).id),location:copy(entry.location),view:battlePresentationView(entry.view),logs:copy(entry.logs)}));
  player.activity=pick((state as any).activity||{},activityKeys);
  if((state as any).activity?.type==='travel'&&Array.isArray((state as any).activity.path))(player.activity as Record<string,unknown>).path=(state as any).activity.path.map((leg:any)=>pick(leg,['a','b','duration','distance','startProgress']));
  player.party=Array.isArray((state as any).party)?(state as any).party.map(actorView):[];
  if((state as any).pet)player.pet=actorView((state as any).pet);
  if((state as any).escort){player.escort=pick((state as any).escort,['id','questId','startedAt','waypoint','failed','completed']);if((state as any).escort.npc)(player.escort as Record<string,unknown>).npc=actorView((state as any).escort.npc);}
- if((state as any).combat)player.combat=combatView((state as any).combat);
- if((state as any).lastCombat)player.lastCombat=combatView((state as any).lastCombat);
+ if((state as any).combat)player.combat=combatView((state as any).combat,(state as any).id);
+ if((state as any).lastCombat)player.lastCombat=combatView((state as any).lastCombat,(state as any).id);
  if((state as any).dungeon)player.dungeon=dungeonView((state as any).dungeon);
  return{player,view:clientView};
 }
@@ -93,8 +95,8 @@ export function projectClientSnapshot(state:Record<string,unknown>,view:Record<s
 export function projectCombatPlayback(state:any,battle:any,wallAt:number){
  const player=pick(state,['id','clock','hp','mana','rage','energy','power','form','stance','cast','logs','logSequence']);
  player.wallAt=wallAt;
- player.combat=combatView(state.combat);
- player.lastCombat=combatView(state.lastCombat);
+ player.combat=combatView(state.combat,state.id);
+ player.lastCombat=combatView(state.lastCombat,state.id);
  player.party=(state.party||[]).map(actorView);
  if(state.pet)player.pet=actorView(state.pet);
  const projected=battlePresentationView(battle);
@@ -114,7 +116,7 @@ export function createCombatFrameProjector(){
   const members=combatMembers(state,state.combat||state.lastCombat),owners=[state,...(state.party||[])];
   const actors=Object.fromEntries([...new Map([...owners,...members].map((a:any)=>[a.id,a])).values()].map((actor:any)=>[actor.id,{...actorView(actor),...(attributes.has(actor.id)?{characterAttributes:attributes.get(actor.id)}:{})}]));
   const player=pick(state,['id','clock','hp','mana','rage','energy','power','form','stance','cast','logSequence']);
-  player.wallAt=wallAt;player.combat=combatView(state.combat);player.lastCombat=state.combat?null:combatView(state.lastCombat);
+  player.wallAt=wallAt;player.combat=combatView(state.combat,state.id);player.lastCombat=state.combat?null:combatView(state.lastCombat,state.id);
   player.party=(state.party||[]).map((a:any)=>a.id);if(state.pet)player.pet=actorView(state.pet);
   const projected=battlePresentationView(battle);if(projected)projected.actors=members.map((a:any)=>a.id);
   return {player,view:{battleView:projected},actors};

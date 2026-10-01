@@ -4,7 +4,7 @@ import {point} from '../../../sim-core/src/geometry.js';
 import {moveToward} from './combat-space.js';
 import {goldAvoidsFire} from './gold-raid-npcs.js';
 
-/** @param {{label?:string,delay?:number,duration?:number,damage?:number,school?:number,spellId?:number,once?:boolean,terrain?:boolean,unavoidable?:boolean,followId?:string,interval?:number,damageRamp?:number}} options */
+/** @param {{label?:string,delay?:number,duration?:number,damage?:number,school?:number,spellId?:number,once?:boolean,terrain?:boolean,unavoidable?:boolean,followId?:string,interval?:number,damageRamp?:number,soakActorId?:string}} options */
 export function addRaidField(s,geometry,options={}){
  const {label='熔岩灼烧',delay=2500,duration=8500,damage=750,school=2,spellId=19411,...extra}=options;
  const r=s.combat.raidEncounter;
@@ -34,11 +34,11 @@ export function raidFieldsTick(s,actors,boss,hurt){
  }
  if(!r.tactics.avoidFire)return;
  for(const c of actors.filter(c=>c.hp>0&&!c.totemUnit&&!controlled(c,s.clock))){
-  const threats=r.fires.filter(f=>f.until>s.clock&&!f.unavoidable&&fieldContains(f,c,1)&&goldAvoidsFire(s,c,f));
+  const threats=r.fires.filter(f=>f.until>s.clock&&!f.unavoidable&&f.soakActorId!==c.id&&fieldContains(f,c,1)&&goldAvoidsFire(s,c,f));
   if(!threats.length)continue;
   if(r.command?.plan.movement==='finishCast'&&c.cast&&threats.every(f=>s.clock<f.armedAt))continue;
   c.cast=null;const destination=fieldSafePoint(c,r.fires.filter(f=>f.until>s.clock&&!f.unavoidable),s.combat.area);
-  moveToward(s,c,destination,0,s.clock);c.raidEvadingAt=s.clock;
+  moveToward(s,c,destination,0,s.clock,100,{source:'hazard'});c.raidEvadingAt=s.clock;
  }
 }
 export function raidFieldPresentation(battle,actors,clock){

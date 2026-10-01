@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-01",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:cc94d50503e0a0a2893fb1025fc69d275ea7b294950c20a12bcb26f2f5e67fd3",
+    "contentHash": "5910c11590fd3adc47ad8307b1a94d8b697dd9ca9e23757e3510a11c88e00154"
+  },
+  "fix": "Unique-item eligibility includes auction listings, matching automatic loot allocation ownership counts; prevents a zero-count allocation loop.",
+  "tests": {
+    "sharedLoot": {
+      "passed": 7,
+      "total": 7
+    },
+    "npcWorld": {
+      "passed": 20,
+      "total": 20
+    },
+    "rootTypecheck": "passed"
+  },
+  "browser": {
+    "url": "http://127.0.0.1:5219/shared-loot.html",
+    "fixture": "Isolated ResidentInstance and MemoryStore with static clock",
+    "verified": [
+      "Three drops show two cards and one queued",
+      "Alice passes; first item waits for Bob",
+      "Bob needs; first item is awarded to Bob, third item becomes visible"
+    ],
+    "screenshot": ".cache/qa/loot-popup-final-2026-10-01.png",
+    "scope": "Popup interaction only; no claim of full boss or prolonged browser stability testing"
+  },
+  "sourceSha256": {
+    "packages/game-domain/src/rules/npc-equipment.js": "cf2e7239507aa7778ee8351fb0e7b758d609842d2c3a0fddbe905e891224cbc8",
+    "apps/simulation-host/test/shared-group-loot.test.ts": "7bcebbae6f80e428df3c8cbf110dba18939d97d12af7667d8445542eeaf0ce75"
+  }
+}

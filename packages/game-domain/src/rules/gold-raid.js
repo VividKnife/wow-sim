@@ -19,7 +19,8 @@ import {GOLD,createGoldApplicants,goldNpcView,npcPriceLimit,npcBidValuation,prep
 import {meterRows} from '../../../sim-core/src/combat-meter.js';
 
 export const GOLD_RAID_ID='molten-core-gold';
-export const goldCommands=['goldNavigate','goldPause','goldRules','goldPublish','goldInvite','goldRecommend','goldLaunch','goldStart','goldRecover','goldTactics','goldBid','goldPass','goldBidLimit','goldAuctionStep','goldSettle'];
+export const goldRaidContents=Object.freeze({'molten-core-gold':'molten-core','onyxias-lair-gold':'onyxias-lair'});
+export const goldCommands=['goldNavigate','goldPause','goldRules','goldPublish','goldInvite','goldRecommend','goldLaunch','goldStart','goldRecover','goldTactics','goldBid','goldPass','goldBidLimit','goldAuctionStep','goldSettle','goldLeave'];
 const need=(ok,text)=>{if(!ok)throw new Error(text);};
 const active=s=>{need(s.goldRaid?.active,'请先创建金团。');return s.goldRaid;};
 const announce=(s,text)=>{const g=s.goldRaid;g.chat.push({at:s.clock,text});g.chat=g.chat.slice(-50);};
@@ -144,7 +145,8 @@ export function goldRaidAction(s,a){
  }else if(a.type==='goldRecover'){inPhase(g,'camp');g.autoAdvance=false;g.recoverUntil=s.clock+10000;s.activity={type:'goldRecovery',endsAt:g.recoverUntil};
  }else if(a.type==='goldStart'||a.type==='goldNavigate'){
   inPhase(g,'camp');navigateRaid(s,g,a.destination||a.bossId,id=>launchGoldEncounter(s,id));
- } else if(a.type==='goldSettle'){inPhase(g,'camp','draft','recruiting');finishGoldRun(s);}
+ } else if(a.type==='goldLeave'){leaveGoldRaid(s);}
+ else if(a.type==='goldSettle'){inPhase(g,'camp','draft','recruiting');finishGoldRun(s);}
  else throw new Error('未知金团指令。');
 }
 function launchGoldEncounter(s,id){

@@ -1,0 +1,9 @@
+{
+  "name": "@wow-sim/simulation-host",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.ts",
+    "bench": "node scripts/benchmark.ts"
+  }
+}

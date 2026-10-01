@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-01",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:94f8d11c2db70b432477bf6236b0164b6b89e6fedc316b25ba95569c3da98f10",
+    "contentHash": "5910c11590fd3adc47ad8307b1a94d8b697dd9ca9e23757e3510a11c88e00154"
+  },
+  "node": "v24.15.0",
+  "request": "Global equipment drop popup; two active items, queue the rest; unlimited manual choice with NPC teammates only, 60 seconds with other humans; white/gray ordinary drops allocated automatically.",
+  "reference": {
+    "url": "https://github.com/azerothcore/azerothcore-wotlk/blob/master/src/server/game/Groups/Group.cpp",
+    "observed": "SendLootStartRoll(60000) and creature/game object group loot timer 60000",
+    "scope": "Timer duration only; no copied implementation; two-item queue and solo unlimited rule are user requirements"
+  },
+  "tests": {
+    "simulation": {
+      "passed": 252,
+      "total": 252,
+      "durationMs": 286868.35125
+    },
+    "coreAndNpc": {
+      "passed": 25,
+      "total": 25,
+      "durationMs": 48145.537916
+    },
+    "coreWithRngStateAssertions": {
+      "passed": 6,
+      "total": 6,
+      "durationMs": 8094.73375
+    },
+    "npcStackValue": {
+      "passed": 1,
+      "total": 1,
+      "durationMs": 5904.306083
+    },
+    "httpParticipantAssets": {
+      "passed": 1,
+      "total": 1,
+      "durationMs": 6483.189667
+    },
+    "rootTypecheck": "passed",
+    "webTypecheck": "passed",
+    "build": "passed; existing asset/chunk warnings",
+    "goldens": "All five exact state/RNG/reward captures unchanged"
+  },
+  "verified": [
+    "Only the first two queued drops are exposed and accept votes",
+    "Hidden queued drops have no deadline and receive a fresh full timer on promotion",
+    "A single human with NPCs remains pending indefinitely without an auto preference",
+    "Other humans retain independent votes and auto preferences; a disconnected human is not reclassified as a bot",
+    "White and gray ordinary dungeon drops use checkpointed round-robin allocation without roll RNG",
+    "Task-bound/starter drops retain their existing specialized route",
+    "NPC stack sale credits quantity times vendor value",
+    "Global popup mounted for classic and web interfaces; ordinary pickup modal waits until rolls finish"
+  ],
+  "browser": {
+    "url": "http://127.0.0.1:5219/shared-loot.html",
+    "fixture": "Actual components and server ResidentInstance/checkpoint path, isolated MemoryStore and seeded three-drop fixture",
+    "steps": [
+      "Three test items render two cards plus one queued count",
+      "Alice first vote leaves the first card waiting for Bob",
+      "Bob completes the first vote; one result is recorded and the third item is promoted",
+      "Only two cards remain; queued count disappears"
+    ],
+    "clock": "Static preview clock; countdown progression/expiration/restore verified by core tests",
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "screenshots": [
+      ".cache/qa/loot-popup-queue-2026-10-01.png",
+      ".cache/qa/loot-popup-promoted-2026-10-01.png"
+    ]
+  },
+  "limitations": [
+    "Shared boss progression, coin/quest allocation, cross-owner NPC transfer and departure splitting still need completion",
+    "Full production page/boss/loot acceptance and actual PostgreSQL deployment validation remain required before merge/deploy"
+  ],
+  "sourceSha256": {
+    "packages/game-domain/src/rules/group-loot.js": "a35744ccc3918129b79bfd6ee0410df5552c1f073806aea199ddce26297a2c65",
+    "packages/game-domain/src/rules/loot.js": "ff08dc1b127f416b99a6ebd2d203dbf04f1d9b12a0d88cc592d765a60ad978eb",
+    "packages/game-domain/src/rules/npc-world.js": "df0827090892fff1580c190c02263eb051b438e502fc9b7e4ccaef6e1b90f88b",
+    "apps/web/app/group-loot.tsx": "2a3fa5e71c6d149bf6c8ebab91386242dfd667a7a9e1c96768e0d2a53c06c00c",
+    "apps/web/app/group-loot.css": "5641d912677eab745dc6f4608b7698bd3a90689e00e9fbaf1384e7eb978dfa4a",
+    "apps/web/app/game.tsx": "0d42b8e1116e43d39ce834bdb65c598b403e8aa2d157dd362d842b86b5fa4831",
+    "apps/simulation-host/test/shared-group-loot.test.ts": "0005c0ef3ebb8c88e76bffebcb3d81713273c0a0cfbf816f838afbbd994d16be",
+    "packages/game-domain/test/npc-world.test.ts": "6eeeae25e04926884452fd8ed1d4341caaaf8f4b52c92576c7fe765e42639a7d"
+  }
+}

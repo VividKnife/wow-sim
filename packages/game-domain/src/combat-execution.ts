@@ -5,8 +5,7 @@ import {account, presence, owned} from './context.ts';
 import {requireThat, type Activity, type Instance, type ActorLease, type Rules} from './model.ts';
 import {simulateCombatRecording, playbackManifest, type CombatPlan} from './combat-playback.ts';
 
-export function combatExecutionMode(owner: Activity | Instance, state: Rules): 'realtime' | 'recorded' | 'local' {
-    if (owner.localSimulation) return 'local';
+export function combatExecutionMode(owner: Activity | Instance, state: Rules): 'realtime' | 'recorded' {
     // Content may declare manual control before an encounter starts. A browser
     // cannot change this flag through a command.
     if (state.combat?.command || state.combat?.requiresManualControl) return 'realtime';
@@ -39,7 +38,7 @@ export async function consumeCombatPlan(tx: Transaction, owner: Activity | Insta
 export async function prepareCombatPlan(this: GameService, table: 'activities' | 'instances', id: string, now: number) {
     const input = await this.store.read(async tx => {
         const owner = await tx.get<Activity | Instance>(table, id);
-        if (!owner || owner.localSimulation || owner.status !== 'running' || owner.playback || owner.contentVersion !== this.contentVersion) return null;
+        if (!owner || owner.status !== 'running' || owner.playback || owner.contentVersion !== this.contentVersion) return null;
         if ('type' in owner && owner.type !== 'personal') return null;
         const accountId = 'roster' in owner ? owner.creatorAccountId : owner.accountId;
         const observed = await presence(tx, accountId);

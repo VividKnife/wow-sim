@@ -1,0 +1,340 @@
+{
+  "measuredAt": "2026-09-30T19:37:48.143Z",
+  "rulesetVersion": "owned-v1:caef3618f756c62c8a81357164e41ae7fbf31cd986d060e23ef1827aad1e52d4",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "changes": [
+    "Idle melee obey spread formation while every visible hostile is airborne. Ground targets, tank roles, casts, roots and explicit movement orders retain precedence.",
+    "Spread destination scoring evaluates the next legal movement step to prevent actors chasing the same empty destination together.",
+    "Shared gold NPC upkeep runs before Onyxia dispatch; potions respect real NPC wallets, opt-out, death and cooldowns."
+  ],
+  "workload": {
+    "initialFixture": ".cache/qa/host-ony-replay.json",
+    "initialSha256": "54b2c496436b14ca7e49cf3ced9c54ad3f9e756a1f115a8dff05173ac7ff3b22",
+    "composition": {
+      "size": 40,
+      "tanks": 4,
+      "healers": 10
+    },
+    "recruitPriority": "progress",
+    "stepMs": 100,
+    "simulationOnly": true,
+    "commands": {
+      "spread-step": "Conserve mana and focus boss at entry.",
+      "team-orders": "Conserve at entry; visible adds select focus and AoE; normal healing on visible landing.",
+      "npc-upkeep": "Same team orders after shared NPC upkeep fix.",
+      "phase-healing": "Normal healing initially; conserve only upon visible airborne transition; normal on landing. All other commands as team-orders."
+    }
+  },
+  "runs": [
+    {
+      "name": "spread-step",
+      "artifact": ".cache/qa/ony-steady-spread-step-2026-10-01.json",
+      "sha256": "202998be1082ce5be4c1ad32c10c8caead5d952b6ca283cb1c67386c23803333",
+      "runnerSha256": "10b32f15207b3526eef0df823a53633ec5ffcd1c1cfc9af92d5b8f72615be4d6",
+      "rulesetVersion": "owned-v1:a641cc42fc99021f138fd46c52c9fed591dac71a1963c02707730f4078c329b9",
+      "won": false,
+      "elapsedMs": 475478,
+      "bossHp": 231248,
+      "bossMaxHp": 1099230,
+      "survivors": 0,
+      "firstDeath": {
+        "name": "无声匕首",
+        "at": 1790781850001,
+        "role": "melee",
+        "cause": "烈焰吐息"
+      },
+      "potionsUsed": 0,
+      "commandEvents": [
+        {
+          "at": 1790781815823,
+          "text": "团长下令：治疗节约蓝量",
+          "key": "healing"
+        },
+        {
+          "at": 1790781815823,
+          "text": "团长下令：集中首领",
+          "key": "focus"
+        },
+        {
+          "at": 1790781862001,
+          "text": "晨曦圣印 执行圣疗术 → 黑铁壁垒",
+          "key": "rescue",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:56"
+        },
+        {
+          "at": 1790781868401,
+          "text": "橡木与月光 执行激活 → 月下橡树",
+          "key": "mana",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:45"
+        },
+        {
+          "at": 1790781912601,
+          "text": "黑铁壁垒 执行盾墙 → 黑铁壁垒",
+          "key": "wall",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:55"
+        }
+      ]
+    },
+    {
+      "name": "team-orders",
+      "artifact": ".cache/qa/ony-steady-team-orders-2026-10-01.json",
+      "sha256": "24a205df70820ea13efcf526e4754e92f5b6df08531c796ad27bc9103ca15e16",
+      "runnerSha256": "1b6cc7e8f1b17a1b2f90ea0003d30807ba3ac973563c48e9b4150620dc43c11c",
+      "rulesetVersion": "owned-v1:a641cc42fc99021f138fd46c52c9fed591dac71a1963c02707730f4078c329b9",
+      "won": false,
+      "elapsedMs": 558478,
+      "bossHp": 94213,
+      "bossMaxHp": 1099230,
+      "survivors": 0,
+      "firstDeath": {
+        "name": "米瑞尔·蓝焰",
+        "at": 1790781971401,
+        "role": "ranged",
+        "cause": "火球术"
+      },
+      "potionsUsed": 0,
+      "commandEvents": [
+        {
+          "at": 1790781815823,
+          "text": "团长下令：治疗节约蓝量",
+          "key": "healing"
+        },
+        {
+          "at": 1790781815823,
+          "text": "团长下令：集中首领",
+          "key": "focus"
+        },
+        {
+          "at": 1790781850401,
+          "text": "晨曦圣印 执行圣疗术 → 黑铁壁垒",
+          "key": "rescue",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:56"
+        },
+        {
+          "at": 1790781866723,
+          "text": "团长下令：先清小怪",
+          "key": "focus"
+        },
+        {
+          "at": 1790781888001,
+          "text": "橡木与月光 执行激活 → 星光落肩",
+          "key": "mana",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:45"
+        },
+        {
+          "at": 1790781895923,
+          "text": "团长下令：集中首领",
+          "key": "focus"
+        },
+        {
+          "at": 1790781956723,
+          "text": "团长下令：先清小怪",
+          "key": "focus"
+        },
+        {
+          "at": 1790781982623,
+          "text": "团长下令：集中首领",
+          "key": "focus"
+        },
+        {
+          "at": 1790782046723,
+          "text": "团长下令：先清小怪",
+          "key": "focus"
+        },
+        {
+          "at": 1790782059223,
+          "text": "团长下令：正常治疗",
+          "key": "healing"
+        },
+        {
+          "at": 1790782072323,
+          "text": "团长下令：集中首领",
+          "key": "focus"
+        },
+        {
+          "at": 1790782249001,
+          "text": "橡木与月光 执行激活 → 月下橡树",
+          "key": "mana",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:45"
+        }
+      ]
+    },
+    {
+      "name": "npc-upkeep",
+      "artifact": ".cache/qa/ony-steady-npc-upkeep-2026-10-01.json",
+      "sha256": "d95dc253a6b9c70bfeba4c1757fbc053b8aa9a12ace3f9f16b7295faf48f40d1",
+      "runnerSha256": "c64d33f132c5347b38488c4d13344d699003b090af41c5d50a7e9d9906e18491",
+      "rulesetVersion": "owned-v1:caef3618f756c62c8a81357164e41ae7fbf31cd986d060e23ef1827aad1e52d4",
+      "won": false,
+      "elapsedMs": 550478,
+      "bossHp": 79268,
+      "bossMaxHp": 1099230,
+      "survivors": 0,
+      "firstDeath": {
+        "name": "黑铁壁垒",
+        "at": 1790781850001,
+        "role": "tank",
+        "cause": "烈焰吐息"
+      },
+      "potionsUsed": 75,
+      "commandEvents": [
+        {
+          "at": 1790781815823,
+          "text": "团长下令：治疗节约蓝量",
+          "key": "healing"
+        },
+        {
+          "at": 1790781815823,
+          "text": "团长下令：集中首领",
+          "key": "focus"
+        },
+        {
+          "at": 1790781865123,
+          "text": "团长下令：先清小怪",
+          "key": "focus"
+        },
+        {
+          "at": 1790781875601,
+          "text": "橡木与月光 执行激活 → 月下橡树",
+          "key": "mana",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:45"
+        },
+        {
+          "at": 1790781907623,
+          "text": "团长下令：集中首领",
+          "key": "focus"
+        },
+        {
+          "at": 1790781955123,
+          "text": "团长下令：先清小怪",
+          "key": "focus"
+        },
+        {
+          "at": 1790781973323,
+          "text": "团长下令：集中首领",
+          "key": "focus"
+        },
+        {
+          "at": 1790782030223,
+          "text": "团长下令：正常治疗",
+          "key": "healing"
+        }
+      ]
+    },
+    {
+      "name": "phase-healing",
+      "artifact": ".cache/qa/ony-steady-phase-healing-2026-10-01.json",
+      "sha256": "ec877d7329f22138408b55dcc1b38dc9d56242995a4dae6c1a0f5227491c1b16",
+      "runnerSha256": "069bef6d0a294449f5231ee058c342790b236b1f313c20ae3eccec7250ea3e9d",
+      "rulesetVersion": "owned-v1:caef3618f756c62c8a81357164e41ae7fbf31cd986d060e23ef1827aad1e52d4",
+      "won": false,
+      "elapsedMs": 510378,
+      "bossHp": 12455,
+      "bossMaxHp": 1099230,
+      "survivors": 0,
+      "firstDeath": {
+        "name": "拉稳再开打",
+        "at": 1790782061201,
+        "role": "tank",
+        "cause": "烈焰吐息"
+      },
+      "potionsUsed": 78,
+      "commandEvents": [
+        {
+          "at": 1790781815823,
+          "text": "团长下令：集中首领",
+          "key": "focus"
+        },
+        {
+          "at": 1790781850801,
+          "text": "黑铁壁垒 执行盾墙 → 黑铁壁垒",
+          "key": "wall",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:55"
+        },
+        {
+          "at": 1790781863323,
+          "text": "团长下令：治疗节约蓝量",
+          "key": "healing"
+        },
+        {
+          "at": 1790781863323,
+          "text": "团长下令：先清小怪",
+          "key": "focus"
+        },
+        {
+          "at": 1790781892001,
+          "text": "橡木与月光 执行激活 → 熊德不迷路",
+          "key": "mana",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:45"
+        },
+        {
+          "at": 1790781894423,
+          "text": "团长下令：集中首领",
+          "key": "focus"
+        },
+        {
+          "at": 1790781953323,
+          "text": "团长下令：先清小怪",
+          "key": "focus"
+        },
+        {
+          "at": 1790781980423,
+          "text": "团长下令：集中首领",
+          "key": "focus"
+        },
+        {
+          "at": 1790782018123,
+          "text": "团长下令：正常治疗",
+          "key": "healing"
+        },
+        {
+          "at": 1790782051001,
+          "text": "晨曦圣印 执行圣疗术 → 黑铁壁垒",
+          "key": "rescue",
+          "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:56"
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "spaceAndStrategy": {
+      "passed": 47,
+      "total": 47,
+      "log": "/tmp/wow-sim-spread-step-targeted.log",
+      "sha256": "081b325ae58b7b229256df4ceebe1cc6d6b5e5a59fe77616a116ee47753f4045"
+    },
+    "runtime": {
+      "passed": 2,
+      "total": 2,
+      "log": "/tmp/wow-sim-spread-step-runtime.log",
+      "sha256": "e2493ca6719ac88a98e6e5ef6e978b22b9a3f1aeb2cd08453ac01e34ffa43d54"
+    },
+    "coordination": {
+      "passed": 40,
+      "total": 40,
+      "log": "/tmp/wow-sim-spread-step-coordination.log",
+      "sha256": "00753288dbd4428cbd1f9f84d06a5f795b1a3490fa9b138671b4639e705b9a8c"
+    },
+    "npcAndBaseline": {
+      "passed": 10,
+      "total": 10,
+      "log": "/tmp/wow-sim-npc-potions-targeted.log",
+      "sha256": "5b4d9a6a95963f97eed097eec7836854a9d774678d7838d4e8f4daf0b35eb19d"
+    },
+    "types": {
+      "passed": true,
+      "log": "/tmp/wow-sim-npc-upkeep-types.log"
+    },
+    "build": {
+      "passed": true,
+      "log": "/tmp/wow-sim-npc-upkeep-build.log",
+      "existingLargeChunkWarning": true
+    }
+  },
+  "limitations": [
+    "Single fixture, not a measured win rate. AI changes alter RNG consumption.",
+    "All four Onyxia attempts wiped; kill, loot and distribution acceptance remain incomplete.",
+    "These are offline rule runs, not browser or end-to-end capacity tests.",
+    "No full 2.0 completion claim."
+  ]
+}

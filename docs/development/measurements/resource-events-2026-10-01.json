@@ -1,0 +1,54 @@
+{
+  "recordedAt": "2026-09-30T21:28:43.442Z",
+  "node": "v24.15.0",
+  "rulesetVersion": "owned-v1:effd3c753588fbd8f61f52b40b26eca6087291a01767a3d58a6941a8ab06e7f6",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "scope": "Rogue/druid energy and combat-pet mana/focus deadlines in the existing per-combat EventQueue",
+  "tests": {
+    "simulation": {
+      "passed": 82,
+      "total": 82,
+      "durationMs": 133667.4735
+    },
+    "castChannelRegression": {
+      "passed": 27,
+      "total": 27
+    },
+    "classPetArenaBattleground": {
+      "initialPassed": 94,
+      "total": 95,
+      "repairedFixtureRerunPassed": 4,
+      "repairedFixtureRerunTotal": 4
+    },
+    "resourceCases": 8,
+    "typecheck": "passed",
+    "diffCheck": "passed"
+  },
+  "comparison": {
+    "scenarios": [
+      "solo",
+      "dungeon",
+      "raid",
+      "arena",
+      "battleground"
+    ],
+    "snapshots": 75,
+    "periodMs": 1000,
+    "durationPerScenarioMs": 15000,
+    "excludedFields": [
+      "combatEvents",
+      "powerEventId",
+      "nextPowerRegen on non-pet actors except rogue/druid"
+    ],
+    "result": "Every remaining state field including logs, RNG, resource values, deaths and assets is identical",
+    "beforeArtifact": ".cache/qa/resource-before-2026-10-01.json.gz",
+    "beforeSha256": "f5e5d2ae6cc32585a19829fe6b457dbea142192cc74354a3cd31bf62138478c0",
+    "captureAndComparisonElapsedMs": 4200.002667
+  },
+  "limitations": [
+    "Timing includes state copies and assertions; not a pure rules benchmark or evidence of a speedup",
+    "Actor iteration and outer 100ms progression remain",
+    "Global health/mana regeneration, auras, auto attacks and encounter timers are not fully event-driven",
+    "This runtime hash has not completed the full browser QA matrix; preceding browser records retain their own hashes"
+  ]
+}

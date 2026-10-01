@@ -16,7 +16,7 @@ export async function fetchContentJson(url,{
    const retryable=error?.retryable||['TypeError','AbortError','TimeoutError'].includes(error?.name);
    if(!retryable)throw error;
    if(attempt===0){await sleep(retryDelayMs);continue;}
-   throw Object.assign(new Error('冒险资料下载超时或网络暂时不可用，请稍后重试。'),{code:'LOCAL_CONTENT_NETWORK',cause:error});
+   throw Object.assign(new Error('冒险资料下载超时或网络暂时不可用，请稍后重试。'),{code:'CONTENT_NETWORK',cause:error});
   }
  }
 }

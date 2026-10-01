@@ -1,3 +1,4 @@
+import {nextItemIdentity} from './item-identity.js';
 import {mightSetBonuses} from './might-set.js';
 import {scaledXp,activeServerBuffs} from './experience.js';
 import {partyUnlocked} from './party-unlock.js';
@@ -192,7 +193,7 @@ function calculateStats(c){
  return result;
 }
 export function newCharacter(name,classId=8,level=1,raceId=1,gender='male'){const def=classDefinitions.find(c=>c.id===classId),learned=(classAbilities[classId]||[]).filter(a=>a.startingSpell&&(!a.startingRaces||a.startingRaces.includes(raceId))).map(a=>a.spellId);return{id:'player',name,classId,raceId,gender,pvpProfile:null,strategyProfiles:[],power:def?.power||'mana',level,xp:0,equipment:{},talents:{},talentResetCount:0,learned:[...new Set(learned)],cooldowns:{},buffs:{},hp:0,mana:0,rage:0,energy:100,time:0,lastManaUse:-5000,...(classId===3?{ammunition:{},ammoPolicy:{enabled:false,target:400}}:{})};}
-export function makeItem(s,id,count=1){const i=items[id];if(!i)throw new Error('物品数据缺失：'+id);return{uid:'i'+(++s.itemSequence),id,count,durability:i.MaxDurability,bound:!!(i.bonding===1||i.bonding===4)};}
+export function makeItem(s,id,count=1){const i=items[id];if(!i)throw new Error('物品数据缺失：'+id);return{uid:nextItemIdentity(s),id,count,durability:i.MaxDurability,bound:!!(i.bonding===1||i.bonding===4)};}
 export function equipStarter(s){
  for(const row of classStartingItems[`${s.raceId||1}:${s.classId}`]||[]){
   const i=items[row.itemId],item=makeItem(s,row.itemId,row.count||1);
@@ -232,7 +233,7 @@ export function addItem(s,id,count=1,pending=true){const data=items[id];if(!data
  while(count>0&&s.bag.length<bagCapacity(s)){const n=Math.min(max,count);s.bag.push(makeItem(s,id,n));count-=n;}
  if(count&&pending)s.pending.push(makeItem(s,id,count));return count===0;
 }
-export function gainXp(s,c,amount){amount=scaledXp(c,amount);if(c.level>=LEVEL_CAP)return;if(!Number.isFinite(amount)||amount<0)throw new Error('经验值无效');const wasPartyUnlocked=partyUnlocked(s);c.xp+=amount;if(c===s){s.totals.xp+=amount;if(amount>0)log(s,`获得 ${amount} 点经验`,'xp',{amount});}while(c.level<LEVEL_CAP&&c.xp>=xpTable[c.level].xp_for_next_level){c.xp-=xpTable[c.level].xp_for_next_level;c.level++;const st=stats(c);c.hp=st.maxHp;c.mana=st.maxMana;log(s,`${c.name} 升到了 ${c.level} 级！`,'level');}if(c.level===LEVEL_CAP)c.xp=0;if(!wasPartyUnlocked&&partyUnlocked(s)&&s.growthPolicy!=='companion')log(s,'冒险者大厅已开放！可结识 NPC 玩家并组建副本小队。','party');}
+export function gainXp(s,c,amount){amount=scaledXp(c,amount);if(c.level>=LEVEL_CAP)return;if(!Number.isFinite(amount)||amount<0)throw new Error('经验值无效');const wasPartyUnlocked=partyUnlocked(s);c.xp+=amount;if(c.totals)c.totals.xp+=amount;if(c===s&&amount>0)log(s,`获得 ${amount} 点经验`,'xp',{amount});while(c.level<LEVEL_CAP&&c.xp>=xpTable[c.level].xp_for_next_level){c.xp-=xpTable[c.level].xp_for_next_level;c.level++;const st=stats(c);c.hp=st.maxHp;c.mana=st.maxMana;log(s,`${c.name} 升到了 ${c.level} 级！`,'level');}if(c.level===LEVEL_CAP)c.xp=0;if(!wasPartyUnlocked&&partyUnlocked(s)&&s.growthPolicy!=='companion')log(s,'冒险者大厅已开放！可结识 NPC 玩家并组建副本小队。','party');}
 export function killXp(playerLevel,mobLevel,elite=false,dungeon=false){const diff=mobLevel-playerLevel;const base=playerLevel*5+45;const trivial=playerLevel<10?4:playerLevel<20?5:playerLevel<30?6:playerLevel<40?7:playerLevel<45?8:playerLevel<50?9:playerLevel<55?10:playerLevel<60?11:12;const zd=playerLevel<8?5:playerLevel<10?6:playerLevel<12?7:playerLevel<16?8:playerLevel<20?9:playerLevel<30?11:playerLevel<40?12:playerLevel<45?13:playerLevel<50?14:playerLevel<55?15:playerLevel<60?16:17;let amount=diff>=0?base*(1+.05*Math.min(4,diff)):-diff<=trivial?base*(1+diff/zd):0;if(elite)amount*=dungeon?2.5:2;const integer=Math.floor(amount),fraction=amount-integer;return fraction===.5?integer+(integer%2):Math.round(amount);}
 export function knownRank(c,first){const original=spells[first];return c.learned.filter(id=>spells[id]&&((spellChain[id]?.first_spell||id)===first||spells[id].SpellName===original?.SpellName)).sort((a,b)=>spells[b].SpellLevel-spells[a].SpellLevel)[0]||null;}
 export function spellInfo(c,id){const sp=spells[id];if(!sp)return null;const cast=lookup.SpellCastTimes[sp.CastingTimeIndex];const duration=lookup.SpellDuration[sp.DurationIndex];const range=lookup.SpellRange[sp.RangeIndex];let castMs=Math.max(cast?.minimumMs||0,(cast?.baseMs||0)+(cast?.perLevelMs||0)*c.level);

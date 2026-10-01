@@ -2,7 +2,8 @@ import { act, advance } from './rules/engine.js';
 import { recipes } from './rules/profession-data.js';
 import { items } from './rules/catalog.js';
 import { recipeQuote, professionAction } from './rules/professions.js';
-import { receive, consume } from './rules/inventory.js';
+import { receive, put } from './rules/inventory.js';
+import {nextItemIdentity} from './rules/item-identity.js';
 import { bagCapacity } from './rules/character.js';
 import type { Transaction } from '../../persistence/src/store.ts';
 import { requireThat } from './model.ts';
@@ -14,6 +15,49 @@ import { PAUSED_EVENT_AT } from './presence.ts';
 import {consumeCombatPlan, invalidateCombatPlan, combatExecutionMode} from './combat-execution.ts';
 import {OFFLINE_BATCH_TICKS, OFFLINE_BATCH_INTERVAL_MS} from './combat-playback.ts';
 function returnTool(state: Rules, tool: Rules) { (state.bag.length < bagCapacity(state) ? state.bag : state.pending).push(clone(tool.data)); }
+function returnMaterial(state: Rules, material: Rules) {
+    try { put(state.bag, clone(material.data), bagCapacity(state)); }
+    catch (error) {
+        if (!(error instanceof Error) || !error.message.startsWith('储物空间不足')) throw error;
+        state.pending.push(clone(material.data));
+    }
+}
+/** Reservation rows remain actual assets. A whole stack keeps its identity; a
+ * partial stack gets one new identity at the split, before any durable write. */
+async function reserveMaterial(tx: Transaction, payer: Character, state: Rules, activity: Activity, material: Rules, reserved: Rules[]) {
+    let remaining = material.count;
+    for (const item of [...state.bag]) {
+        if (item.id !== material.id || item.locked || item.issued || !remaining) continue;
+        const count = Math.min(remaining, item.count), whole = count === item.count;
+        const row = await tx.get<Item>('items', item.uid);
+        requireThat(row?.ownerCharacterId === payer.id && row.container === 'bag', 'RESERVATION', '材料资产不可用');
+        const assetId = whole ? item.uid : nextItemIdentity(state);
+        const data = {...clone(item), uid: assetId, count};
+        const held = {...row, id: assetId, container: 'reservation', reservationId: activity.id, data, count};
+        if (whole) await tx.put('items', held);
+        else await tx.insert('items', held);
+        await tx.insert('ledger', {id: `reserve:${activity.id}:item:${assetId}:hold`, businessKey: `reserve:${activity.id}`,
+            accountId: payer.accountId, characterId: payer.id, kind: 'item', itemId: item.id,
+            itemInstanceId: assetId, amount: whole ? 0 : count, container: 'reservation'});
+        reserved.push({id: item.id, count, assetId, data});
+        item.count -= count; remaining -= count;
+        if (!item.count) state.bag.splice(state.bag.indexOf(item), 1);
+    }
+    requireThat(!remaining, 'RESERVATION', '预留材料不足');
+}
+async function finishReservationAssets(tx: Transaction, reservation: Rules, key: string) {
+    for (const material of reservation.materials) {
+        const row = await tx.get<Item>('items', material.assetId);
+        // Returned tools/stacks have already moved out of escrow. Consumed or
+        // merged stacks retire here, in the same transaction as output/refund.
+        if (row?.container !== 'reservation') continue;
+        requireThat(row.reservationId === reservation.id, 'RESERVATION', '材料预留归属不一致');
+        await tx.delete('items', row.id);
+        await tx.insert('ledger', {id: `${key}:item:${row.id}:release`, businessKey: key,
+            accountId: row.accountId, characterId: row.ownerCharacterId, kind: 'item', itemId: row.data.id,
+            itemInstanceId: row.id, amount: -row.data.count, container: 'reservation'});
+    }
+}
 export async function startActivity(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) {
     await this.ensureFree(tx, c.id);
     const type = cmd.type === 'craft' || cmd.activityType === 'craft' ? 'craft' : 'gather';
@@ -40,7 +84,7 @@ export async function startActivity(this: GameService, tx: Transaction, c: Chara
         requireThat(recipient.id === c.id || ![1, 4].includes(items[recipe.item]?.bonding), 'BOUND_OUTPUT', '绑定产物必须由制造角色接收');
         let payerState = await context(tx, payer, now, false);
         payerState = advance(payerState, now).state;
-        let input = { ...clone(s), bag: clone(payerState.bag), bank: clone(payerState.bank), money: payerState.money, marketStock: rebaseSimulation({clock:payerState.clock,marketStock:clone(payerState.marketStock)},s.clock).marketStock };
+        let input: Rules = { ...clone(s), bag: clone(payerState.bag), bank: clone(payerState.bank), money: payerState.money, marketStock: rebaseSimulation({clock:payerState.clock,marketStock:clone(payerState.marketStock)},s.clock).marketStock };
         // Dry run uses the same authoritative engine validation as eventual settlement.
         act(input, { ...action, type: 'craft' }, now);
         if (action.buyMissing) {
@@ -49,15 +93,19 @@ export async function startActivity(this: GameService, tx: Transaction, c: Chara
             payerState.bank = input.bank;
             payerState.money = input.money;
             payerState.marketStock = rebaseSimulation({clock:s.clock,marketStock:clone(input.marketStock)},payerState.clock).marketStock;
+            s.itemSequence = input.itemSequence;
+            if (payer.id === c.id) payerState.itemSequence = s.itemSequence;
             if (payer.id === c.id) s.marketStock = clone(input.marketStock);
-            await persistCharacter(tx, payer, payerState, now, `purchase:${a.id}`, this.id);
         }
+        // Settle any due inventory changes and purchases before moving their
+        // rows into escrow; reservation must not hide consumed quantities.
+        await persistCharacter(tx, payer, payerState, now, `prepare:${a.id}`);
         const quote = recipeQuote(input, recipe, action.count);
         const reserved: Rules[] = [];
         for (const material of quote.materials) {
-            consume(payerState, material.id, material.count);
-            reserved.push({ id: material.id, count: material.count });
+            await reserveMaterial(tx, payer, payerState, a, material, reserved);
         }
+        if (payer.id === c.id) s.itemSequence = payerState.itemSequence;
         // Ask the rule engine whether each actual asset satisfies the tool requirement:
         // this includes superior enchanting rods without duplicating its rod hierarchy.
         // Keep the tool row and full stack identity while it is held by the reservation.
@@ -75,13 +123,13 @@ export async function startActivity(this: GameService, tx: Transaction, c: Chara
         }
         a.reservationId = a.id;
         await tx.insert('reservations', { id: a.id, accountId: c.accountId, actorId: c.id, payerId: payer.id, recipientId: recipient.id, activityId: a.id, status: 'reserved', materials: reserved });
-        await persistCharacter(tx, payer, payerState, now, `reserve:${a.id}`, this.id);
+        await persistCharacter(tx, payer, payerState, now, `reserve:${a.id}`);
         a.engineActivity = { type: 'craft', recipeId: recipe.id, endsAt: s.clock + 3000 };
     }
     // Only the activity owns this RNG. Dispatching other actors cannot perturb it.
     const rootRng = c.rules.rngState;
     s.rngState = rootRng;
-    await persistCharacter(tx, c, s, now, `dispatch:${a.id}`, this.id, type !== 'craft' || payer.id !== c.id);
+    await persistCharacter(tx, c, s, now, `dispatch:${a.id}`, type !== 'craft' || payer.id !== c.id);
     await tx.insert('activities', a);
     await this.lock(tx, c, 'activity', a.id);
     await economicEvent(tx, `dispatch:${a.id}`, c.accountId, 'activityStarted', { activityId: a.id });
@@ -110,10 +158,9 @@ export async function restoreReservation(this: GameService, tx: Transaction, a: 
     if (material.tool)
         returnTool(s, material);
     else
-        receive(s, material.id, material.count);
-} await persistCharacter(tx, payer, s, s.wallAt, key, this.id); reservation.status = 'released'; await tx.put('reservations', { ...reservation, id: a.reservationId! }); }
+        returnMaterial(s, material);
+} await persistCharacter(tx, payer, s, s.wallAt, key); await finishReservationAssets(tx, reservation, key); reservation.status = 'released'; await tx.put('reservations', { ...reservation, id: a.reservationId! }); }
 export async function settleActivity(this: GameService, tx: Transaction, a: Activity, now: number, prepared?: {state: Rules; interval: number}) {
-    if (a.localSimulation) return;
     const deadline = await this.activityDeadline(tx, a), wallNow = now;
     now = Math.min(now, deadline);
     // Bounded event catch-up: an automatic gather chain may contain several due
@@ -159,12 +206,7 @@ async function settleActivityEvent(this: GameService, tx: Transaction, a: Activi
         requireThat(reservation?.status === 'reserved', 'RESERVATION', '材料预留不存在');
         const actorState = advance({ ...s, activity: { type: 'idle' } }, a.nextEventAt).state;
         s = { ...clone(actorState), bag: [], bank: [], pending: [], money: 0 };
-        for (const material of reservation.materials) {
-            if (material.tool)
-                s.bag.push(clone(material.data));
-            else
-                receive(s, material.id, material.count);
-        }
+        for (const material of reservation.materials) s.bag.push(clone(material.data));
         s = act(s, { ...a.command, type: 'craft', buyMissing: false }, a.nextEventAt);
         const toolIds = new Set(reservation.materials.filter((m: Rules) => m.tool).map((m: Rules) => m.assetId));
         const output = [...s.bag, ...s.bank, ...s.pending].filter((item: Rules) => !toolIds.has(item.uid));
@@ -181,7 +223,8 @@ async function settleActivityEvent(this: GameService, tx: Transaction, a: Activi
             returnTool(payerState, tool);
         const states = new Map([[c.id, { character: c, state: actorState }], [recipient.id, { character: recipient, state: recipientState }], [payer.id, { character: payer, state: payerState }]]);
         for (const { character, state } of states.values())
-            await persistCharacter(tx, character, state, state.wallAt, key, this.id);
+            await persistCharacter(tx, character, state, state.wallAt, key);
+        await finishReservationAssets(tx, reservation, key);
         reservation.status = 'consumed';
         await tx.put('reservations', { ...reservation, id: a.reservationId! });
         a.status = 'completed';
@@ -211,7 +254,7 @@ async function settleActivityEvent(this: GameService, tx: Transaction, a: Activi
         if (s.wallAt < deadline) a.nextEventAt = Math.min(a.nextEventAt, deadline);
         if (a.type === 'gather')
             s.rngState = c.rules.rngState;
-        await persistCharacter(tx, c, s, s.wallAt, key, this.id);
+        await persistCharacter(tx, c, s, s.wallAt, key);
         for (const member of s.party)
             await this.persistMember(tx, member, s.wallAt, key, s);
         if (!s.combat && ['idle', 'dead'].includes(s.activity.type) && !s.rest)

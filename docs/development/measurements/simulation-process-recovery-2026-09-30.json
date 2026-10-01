@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "at": "2026-09-30T13:41:00.821Z",
+  "schema": "sim2_recovery_6b859da9e3f34b60",
+  "elapsedMs": 31811,
+  "originalEpoch": 1,
+  "recoveredEpoch": 2,
+  "checks": [
+    "real PostgreSQL checkpoint",
+    "SIGKILL after durable receipt",
+    "unexpired lease rejects takeover",
+    "actual lease expiry",
+    "new process restores",
+    "duplicate input returns original receipt",
+    "RNG and paused clock preserved"
+  ],
+  "limits": [
+    "No game asset integration",
+    "No public WebSocket/client gameplay test",
+    "No capacity claim"
+  ]
+}

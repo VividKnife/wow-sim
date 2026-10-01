@@ -1,3 +1,4 @@
+import '@/lib/dev-performance';
 import {Component,lazy,Suspense,useCallback,useEffect,useMemo,useState,type ReactNode} from 'react';
 import type {BattleScene,BattleSkill} from '@/lib/battle-hd2d-types';
 import {groundTheme} from '@/lib/battle-hd2d.js';
@@ -14,6 +15,8 @@ export default function BattleHD2D({scene:input,skills,onSelect,active}:{scene:B
  const scene=useMemo(()=>({...input,units:input.units.map(unit=>({...unit,visual:{...unit.visual,model:battleModel(unit,input.clock)||unit.visual?.model}}))}),[input]);
  const [visible,setVisible]=useState(true),[ready,setReady]=useState(false),[lost,setLost]=useState(false),[generation,setGeneration]=useState(0),[supported,setSupported]=useState<boolean|null>(null);
  const [BattleCanvas,setBattleCanvas]=useState(()=>lazy(()=>import('./battle-hd2d/scene')));
+ const [mounted,setMounted]=useState(active);
+ useEffect(()=>{if(active)setMounted(true);},[active]);
  const [manual,setManual]=useState(false);
  const onManual=useCallback(()=>setManual(true),[]);
  useEffect(()=>{setManual(false);},[scene.encounterId,scene.layout.zoom]);
@@ -28,13 +31,13 @@ export default function BattleHD2D({scene:input,skills,onSelect,active}:{scene:B
  const theme=groundTheme(scene.ground);
  return <><div className="battle-3d-controls"><span>拖动旋转 · 滚轮缩放 · 右键平移</span><button type="button" onClick={()=>setManual(false)}>重置视角</button><BattleAudio scene={scene} skills={skills} active={active}/></div><div className={`hd2d-field ${scene.reducedMotion?'reduced-motion':''}`} data-renderer={ready&&!lost?'three':'loading'} data-ground={theme.id}>
   <div className="hd2d-scene" aria-label="3D 战场">
-   {active&&!lost&&supported&&<SceneError key={generation} onError={onLost}><Suspense fallback={null}><BattleCanvas scene={scene} skills={skills} onSelect={onSelect} visible={visible} onReady={onReady} onLoading={onLoading} onLost={onLost} manual={manual} onManual={onManual}/></Suspense></SceneError>}
+   {mounted&&!lost&&supported&&<SceneError key={generation} onError={onLost}><Suspense fallback={null}><BattleCanvas scene={scene} skills={skills} onSelect={onSelect} visible={visible&&active} onReady={onReady} onLoading={onLoading} onLost={onLost} manual={manual} onManual={onManual}/></Suspense></SceneError>}
    {!ready&&!lost&&supported!==false&&<div className="hd2d-loading hd2d-loading-progress" role="status">正在准备战场与角色素材…</div>}
    {supported===false&&<div className="hd2d-loading" role="alert"><strong>此设备暂时无法启用 3D 战场</strong><span>可继续使用下方队伍面板和战斗记录。</span><button onClick={retry}>重试图形连接</button></div>}
    {lost&&<div className="hd2d-loading" role="alert"><strong>战场画面暂时无法显示</strong><span>可继续查看队伍状态与战斗记录。</span><button onClick={retry}>恢复战场画面</button></div>}
   </div>
   <div className="hd2d-vignette"/>
-  <div className="hd2d-scene-title"><span className="hd2d-chapter">{scene.paused?'TACTICAL PAUSE':scene.live?'LIVE ENCOUNTER':'BATTLE RECORD'}</span><strong>{theme.name}</strong><span>3D · {scene.lowEffects?'流畅':'精细'}</span></div>
-  <div className="hd2d-scene-caption"><span className="hd2d-live-dot"/>{scene.layout.area?.name||'遭遇战'}<span>{scene.groundEffects.some(f=>f.terrain)?'岩岸可站立 · 橙色熔岩持续伤害':'选择角色查看目标与技能范围'}</span></div>
+  <div className="hd2d-scene-title"><span className="hd2d-chapter">{scene.mode==='preparation'?'PARTY PREPARATION':scene.paused?'TACTICAL PAUSE':scene.live?'LIVE ENCOUNTER':'BATTLE RECORD'}</span><strong>{scene.title||theme.name}</strong><span>3D · {scene.lowEffects?'流畅':'精细'}</span></div>
+  <div className="hd2d-scene-caption"><span className="hd2d-live-dot"/>{scene.subtitle||scene.layout.area?.name||'遭遇战'}<span>{scene.groundEffects.some(f=>f.terrain)?'岩岸可站立 · 橙色熔岩持续伤害':'选择角色查看目标与技能范围'}</span></div>
  </div></>;
 }

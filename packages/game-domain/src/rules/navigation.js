@@ -1,4 +1,3 @@
-import {isContentPending} from './runtime-content.js';
 import {nodes,baseTravelSpeed,flightNodes} from './catalog.js';
 import {travelRoute} from './mounts.js';
 
@@ -10,7 +9,7 @@ export function questNavigation(s,q){
  const objectives=concrete.length?concrete:unfinished;
  const turnIn=q.complete||!unfinished.length;
  const destinations=[...new Set(turnIn?q.endLocations:objectives.flatMap(o=>o.locations))].filter(id=>nodes[id]);
- const options=destinations.flatMap(to=>{try{return[{to,name:nodes[to].name,region:nodes[to].region,duration:travelRoute(s,to).duration,kind:turnIn?'turnin':'objective',here:to===s.location}];}catch(error){if(isContentPending(error))throw error;return[];}});
+ const options=destinations.flatMap(to=>{try{return[{to,name:nodes[to].name,region:nodes[to].region,duration:travelRoute(s,to).duration,kind:turnIn?'turnin':'objective',here:to===s.location}];}catch(error){return[];}});
  return options.sort((a,b)=>a.duration-b.duration)[0]||null;
 }
 
@@ -44,7 +43,7 @@ export function redirectedTravel(s,to){
     const tail=travelRoute({...s,location:choice.exit},to);
     const first={...leg,a:choice.origin,b:choice.exit,duration:choice.remaining,startProgress:choice.startProgress};
     return[{from:choice.origin,startedAt:s.clock,endsAt:s.clock+Math.ceil(choice.remaining+tail.duration),path:[first,...tail.path],duration:Math.ceil(choice.remaining+tail.duration)}];
-   }catch(error){if(isContentPending(error))throw error;return[];}});
+   }catch(error){return[];}});
    if(!options.length)throw new Error('目前没有连通的路线');
    return options.sort((left,right)=>left.duration-right.duration)[0];
   }

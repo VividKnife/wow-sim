@@ -1,0 +1,591 @@
+{
+  "date": "2026-10-01",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:c4ba5986d94b16fc9297453486d590cea546d7a1eca4dcacc06e02ec847815a8",
+    "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1"
+  },
+  "architectureComplete": false,
+  "sourceSha256": {
+    "packages/game-domain/src/social.ts": "eb11b01c44c56654f85543cb234a40fd379eb1971e0ba38c9b028d41ad0a4743",
+    "packages/game-domain/src/social-cleanup.ts": "e6e6f5516cd7c2c4b4d95cac6e4679264b2335ea046f674176d3b0dbc359f146",
+    "packages/game-domain/src/rules/npc-world.js": "64ebdb9215d1534222c1ac4b8d69544f6cbcd37b02bb1cb0f49951923e5169ab",
+    "apps/game-server/src/resident-game-service.ts": "a49aab19ca818be58830bd47ad49a728a4a582c84ef0df7c31baed75815ba82d",
+    "apps/web/app/social.tsx": "127f80574c64a2197c399705110d9e46cafc5b363ee4324e7529ff2cf8e780ea"
+  },
+  "validation": {
+    "simulation": {
+      "passed": 181,
+      "failed": 0,
+      "durationMs": 186359.976375,
+      "log": "/tmp/social-simulation-final.log"
+    },
+    "socialNpcGateway": {
+      "passed": 36,
+      "failed": 0,
+      "durationMs": 82702.498125,
+      "log": "/tmp/social-complete-final.log"
+    },
+    "uiRoutingAndLogs": {
+      "passed": 6,
+      "failed": 0
+    },
+    "rootTypes": "passed",
+    "webTypes": "passed",
+    "webBuild": "passed; existing large-chunk warning"
+  },
+  "population": {
+    "rows": [
+      {
+        "level": 10,
+        "residents": 10,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 11,
+        "residents": 10,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 12,
+        "residents": 10,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 13,
+        "residents": 10,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 14,
+        "residents": 10,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 15,
+        "residents": 10,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 16,
+        "residents": 20,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 17,
+        "residents": 20,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 18,
+        "residents": 20,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 19,
+        "residents": 20,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 20,
+        "residents": 20,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 21,
+        "residents": 20,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 22,
+        "residents": 30,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 23,
+        "residents": 30,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 24,
+        "residents": 30,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 25,
+        "residents": 30,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 26,
+        "residents": 30,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 27,
+        "residents": 30,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 28,
+        "residents": 40,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 29,
+        "residents": 40,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 30,
+        "residents": 40,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 31,
+        "residents": 40,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 32,
+        "residents": 40,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 33,
+        "residents": 40,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 34,
+        "residents": 50,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 35,
+        "residents": 50,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 36,
+        "residents": 50,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 37,
+        "residents": 50,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 38,
+        "residents": 50,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 39,
+        "residents": 50,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 40,
+        "residents": 60,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 41,
+        "residents": 60,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 42,
+        "residents": 60,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 43,
+        "residents": 60,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 44,
+        "residents": 60,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 45,
+        "residents": 60,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 46,
+        "residents": 70,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 47,
+        "residents": 70,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 48,
+        "residents": 70,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 49,
+        "residents": 70,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 50,
+        "residents": 70,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 51,
+        "residents": 70,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 52,
+        "residents": 80,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 53,
+        "residents": 80,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 54,
+        "residents": 80,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 55,
+        "residents": 80,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 56,
+        "residents": 80,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 57,
+        "residents": 80,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 58,
+        "residents": 90,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 59,
+        "residents": 90,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      },
+      {
+        "level": 60,
+        "residents": 90,
+        "eligible": 10,
+        "roles": {
+          "tank": 2,
+          "healer": 2,
+          "dps": 6
+        }
+      }
+    ],
+    "scope": "Sequential demand coverage; no capacity/performance claim"
+  },
+  "browser": {
+    "environment": "Isolated PGlite SQL + authenticated gateway + actual social components; no real save modified",
+    "actions": [
+      "world recruitment emitted on queue",
+      "second human joined as healer from world message",
+      "three NPCs filled missing tank and DPS roles",
+      "both humans confirmed; five-member group formed without teleport",
+      "party chat sent and displayed",
+      "friend request accepted and friend list populated",
+      "left party and rejoined through friend invitation",
+      "reload retained social membership"
+    ],
+    "viewport": {
+      "desktop": [
+        1280,
+        720
+      ],
+      "mobile": [
+        390,
+        844
+      ],
+      "mobileScrollWidth": 390
+    },
+    "screenshots": [
+      ".cache/qa/social-desktop-2026-10-01.png",
+      ".cache/qa/social-mobile-2026-10-01.png"
+    ],
+    "limitations": [
+      "Preview fixtures do not invoke real population creation; real owner command/persistence is covered by npc-characters tests",
+      "Earlier preview HMR emitted duplicate createRoot warnings; added dispose/unmount in preview bootstrap",
+      "No long-duration browser crash or server capacity claim"
+    ]
+  },
+  "limitations": [
+    "Social membership does not move combat ownership; shared multi-human dungeon entry remains unfinished",
+    "NPC candidate search currently uses participating characters worlds, not a global shared bot world",
+    "NPC encounter availability comes from committed checkpoints; no claim of atomic exclusion against uncommitted remote room operations",
+    "Initial social scheduling is bounded SQL/poll based, not an in-memory global AzerothCore service",
+    "No actual database reset or migration performed"
+  ]
+}

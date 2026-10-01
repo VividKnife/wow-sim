@@ -5,7 +5,8 @@ import {spells} from './catalog.js';
 import {stats} from './character.js';
 import {combatMembers} from './combat-members.js';
 import {combatRole} from './combat-roles.js';
-import {selectCombatPolicy,executeCombatIntent} from './combat.js';
+import {executeCombatIntent} from './combat.js';
+import {selectCombatPolicy} from './bot-strategies.js';
 
 export const POLICY_INTERVAL=200, SPELL_QUEUE_WINDOW=300, POLICY_REACTION=100;
 const hosts=new WeakMap();
@@ -84,8 +85,8 @@ export function stepCombatPolicy(s,c){
  if(c.totemUnit||c.escortNpc)return;
  const p=policyState(s),slot=slotFor(s,c),host=hosts.get(s);
  if(slot.queued?.manual)return;
- const config=JSON.stringify([c.rules,c.strategyPolicy,c.potions]);
- if(slot.config!==config){slot.config=config;slot.next=s.clock;slot.reaction=s.clock;slot.queued=null;}
+ const configVersion=c.strategyRevision||0;
+ if(slot.configVersion!==configVersion){slot.configVersion=configVersion;slot.next=s.clock;slot.reaction=s.clock;slot.queued=null;}
  if(slot.inflight!=null&&s.clock-slot.inflight<500)return;
  if(slot.inflight!=null){grantCombatControl(s,c.id,'local');host?.timeout?.(c.id);}
  const urgent=slot.dirty!=null&&slot.dirty<=s.clock;

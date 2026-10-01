@@ -8,8 +8,8 @@ function state(classId,id){const s=createGame('channel',11,0,{classId,raceId:cla
 test('Mend Pet channels on the actual pet and stops all future healing when interrupted',()=>{
  let s=state(3,136);const mana=s.mana;s=act(s,{type:'cast',id:136},0);
  assert.equal(s.activity.type,'classChannel');assert.equal(s.cast.target,s.pet.id);assert.equal(s.pet.hp,10);assert.equal(s.mana,mana-spellInfo(s,136).mana);
- s=advance(s,1000).state;assert.ok(s.pet.hp>10);const hp=s.pet.hp;
- s=act(s,{type:'stop'},1000);assert.equal(s.cast,null);s=advance(s,5000).state;assert.equal(s.pet.hp,hp);
+ s=advance(s,1000).state;assert.ok(s.pet.hp>10);const hp=s.pet.hp,heals=s.logs.filter(l=>l.kind==='heal'&&l.spellId===136);
+ s=act(s,{type:'stop'},1000);assert.equal(s.cast,null);s=advance(s,5000).state;assert.ok(s.pet.hp>=hp);assert.deepEqual(s.logs.filter(l=>l.kind==='heal'&&l.spellId===136),heals,'out-of-combat regeneration may continue, channel healing must stop');
 });
 test('Health Funnel spends health at start and each tick, and cannot funnel into another actor',()=>{
  let s=state(9,755);const hp=s.hp,mana=s.mana;assert.equal(classUtilityUse(s,755,s.id).canUse,false);
@@ -20,7 +20,7 @@ test('Health Funnel spends health at start and each tick, and cannot funnel into
 test('channel final ticks survive serialization and segmented advance exactly once',()=>{
  const initial=act(state(3,136),{type:'cast',id:136},0),whole=advance(initial,5000).state;
  let stepped=JSON.parse(JSON.stringify(advance(initial,2000).state));stepped=advance(stepped,5000).state;
- assert.equal(whole.pet.hp,110);assert.equal(whole.activity.type,'idle');assert.equal(whole.cast,null);assert.equal(stepped.pet.hp,whole.pet.hp);
+ const heals=whole.logs.filter(l=>l.kind==='heal'&&l.spellId===136);assert.equal(heals.length,5);assert.equal(heals.reduce((n,l)=>n+l.amount,0),100);assert.deepEqual(stepped.logs.filter(l=>l.kind==='heal'&&l.spellId===136),heals);assert.equal(whole.activity.type,'idle');assert.equal(whole.cast,null);assert.equal(stepped.pet.hp,whole.pet.hp);
 });
 test('Evocation is a usable channel and missing or dead pets block pet channels',()=>{
  let s=state(8,12051);s.mana=0;assert.equal(classUtilityUse(s,12051).canUse,true);s=act(s,{type:'cast',id:12051},0);assert.equal(s.activity.type,'classChannel');s=advance(s,2000).state;assert.ok(s.mana>=stats(s).maxMana*.15);

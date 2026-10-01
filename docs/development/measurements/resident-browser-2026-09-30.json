@@ -1,0 +1,246 @@
+{
+  "date": "2026-09-30",
+  "kind": "manual-browser-and-postgresql-evidence",
+  "schema": "sim2_gateway_20260930",
+  "browser": "Codex IAB",
+  "gateway": "127.0.0.1:8789",
+  "host": "127.0.0.1:8791",
+  "rulesetVersion": "owned-v1:900d21b76875846c8717db417a40b84da2f8f09206a3d46e443c6927341def78",
+  "contentHash": "7691bf09687eea722ce20cc09d3b19b513d2f4294f2d9d030393d877f7b0045b",
+  "solo": {
+    "characterId": "171d2b87-5c6f-4e73-bafc-860351f8758e",
+    "instanceId": "personal:3f9a0c8c-20cf-411b-9a85-8d2515b980da",
+    "ownerEpoch": 1,
+    "completedQuest": 783,
+    "kills": 2,
+    "xp": 280,
+    "inputSequence": 6,
+    "activity": {
+      "type": "idle",
+      "reason": "已停止。"
+    },
+    "pending": [],
+    "loot": [
+      {
+        "uid": "item:171d2b87-5c6f-4e73-bafc-860351f8758e:9",
+        "id": 7073,
+        "count": 2
+      },
+      {
+        "uid": "item:171d2b87-5c6f-4e73-bafc-860351f8758e:10",
+        "id": 4865,
+        "count": 3
+      }
+    ]
+  },
+  "dungeon": {
+    "characterId": "49170676-4cd3-4e16-b6d4-3dc9260279dd",
+    "instanceId": "personal:d430daaa-dc0d-4a1a-85cc-ff0d6621618f",
+    "ownerEpoch": 2,
+    "level": 20,
+    "party": [
+      {
+        "id": "npc:49170676-4cd3-4e16-b6d4-3dc9260279dd:1",
+        "name": "盾墙还有三秒",
+        "hp": 739,
+        "level": 20
+      },
+      {
+        "id": "npc:49170676-4cd3-4e16-b6d4-3dc9260279dd:33",
+        "name": "卡鲁·风鼓",
+        "hp": 500,
+        "level": 20
+      },
+      {
+        "id": "npc:49170676-4cd3-4e16-b6d4-3dc9260279dd:4",
+        "name": "潜行摸个箱",
+        "hp": 543,
+        "level": 20
+      },
+      {
+        "id": "npc:49170676-4cd3-4e16-b6d4-3dc9260279dd:26",
+        "name": "灵魂石已绑",
+        "hp": 514,
+        "level": 20
+      }
+    ],
+    "route": {
+      "id": "deadmines",
+      "cursor": 9,
+      "destination": "dm-rhahkzor",
+      "autoAdvance": false,
+      "defeated": {
+        "3600001": true,
+        "3600002": true,
+        "3600003": true,
+        "3600004": true,
+        "3600005": true,
+        "3600006": true,
+        "3600007": true,
+        "3600008": true,
+        "3600009": true,
+        "3600010": true,
+        "3600011": true,
+        "3600012": true,
+        "3600013": true,
+        "3600014": true,
+        "3600015": true,
+        "3600016": true,
+        "3600017": true,
+        "3600018": true,
+        "3600019": true,
+        "3600020": true,
+        "3600021": true,
+        "3600022": true,
+        "3600023": true,
+        "3600024": true,
+        "3600025": true,
+        "3600026": true,
+        "3600027": true,
+        "3600028": true,
+        "3600047": true,
+        "3600048": true,
+        "3600074": true,
+        "3600080": true,
+        "3600081": true,
+        "3600121": true,
+        "3600187": true,
+        "3600188": true,
+        "3600189": true,
+        "3600190": true,
+        "3600191": true
+      }
+    },
+    "boss": "拉克佐",
+    "bossItem": {
+      "name": "死神之锤",
+      "uid": "item:49170676-4cd3-4e16-b6d4-3dc9260279dd:56",
+      "id": 5187,
+      "count": 1
+    },
+    "persistedItem": {
+      "id": "item:49170676-4cd3-4e16-b6d4-3dc9260279dd:56",
+      "templateId": 5187,
+      "count": 1
+    },
+    "xp": 3156,
+    "kills": 39,
+    "inputSequence": 7,
+    "inputs": [
+      {
+        "command": {
+          "kind": "action",
+          "action": {
+            "type": "npcVisit"
+          }
+        },
+        "status": "applied"
+      },
+      {
+        "command": {
+          "kind": "action",
+          "action": {
+            "type": "npcRecommend",
+            "keep": false
+          }
+        },
+        "status": "applied"
+      },
+      {
+        "command": {
+          "kind": "action",
+          "action": {
+            "type": "travel",
+            "to": "deadmines"
+          }
+        },
+        "status": "applied"
+      },
+      {
+        "command": {
+          "kind": "action",
+          "action": {
+            "type": "enterDungeon",
+            "contentId": "deadmines"
+          }
+        },
+        "status": "applied"
+      },
+      {
+        "command": {
+          "kind": "action",
+          "action": {
+            "type": "dungeonNavigate",
+            "destination": "dm-rhahkzor"
+          }
+        },
+        "status": "applied"
+      },
+      {
+        "command": {
+          "kind": "action",
+          "action": {
+            "type": "settings",
+            "autoLoot": true
+          }
+        },
+        "status": "applied"
+      },
+      {
+        "command": {
+          "kind": "action",
+          "action": {
+            "type": "dungeonNext"
+          }
+        },
+        "status": "applied"
+      }
+    ],
+    "completionLog": [
+      {
+        "id": 2224,
+        "encounterId": "encounter-9",
+        "at": 1790780921769,
+        "text": "战斗结束",
+        "kind": "combat-end"
+      },
+      {
+        "id": 2225,
+        "encounterId": null,
+        "at": 1790780921769,
+        "text": "拾取 死神之锤 ×1",
+        "kind": "loot"
+      },
+      {
+        "id": 2226,
+        "encounterId": null,
+        "at": 1790780921769,
+        "text": "自动推进已暂停：已完成目的地，停止推进。",
+        "kind": "dungeon"
+      }
+    ]
+  },
+  "screenshots": [
+    ".cache/qa/host-loot-before.png",
+    ".cache/qa/host-hunt-bag.png",
+    ".cache/qa/host-rhahkzor-fight.png",
+    ".cache/qa/host-rhahkzor-complete.png",
+    ".cache/qa/host-rhahkzor-loot.png"
+  ],
+  "findings": [
+    {
+      "issue": "五人队血条使用低频队伍资料",
+      "status": "fixed and visually verified against battle actor HP"
+    },
+    {
+      "issue": "金团入口被发送到五人本规则入口",
+      "status": "fixed in source; gateway integration covers 40-player Onyxia admission; browser rerun pending"
+    }
+  ],
+  "limitations": [
+    "Browser run used the running pre-raid-entry-fix ruleset above; no implicit checkpoint version upgrade performed.",
+    "Keyboard activation exercised; no blanket pointer or mobile QA claim.",
+    "Onyxia combat, auction distribution, settlement and full architecture remain incomplete.",
+    "No capacity claims from these playtests."
+  ]
+}

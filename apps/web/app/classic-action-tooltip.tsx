@@ -1,5 +1,5 @@
 import {Tooltip} from 'radix-ui';
-import type {ReactElement} from 'react';
+import {useEffect,useState,type ReactElement} from 'react';
 import {ItemTooltip,type GameProps} from './game-ui';
 import './classic-action-tooltip.css';
 
@@ -23,13 +23,15 @@ export function SpellTooltipContent({spell,data:d,fallbackName='未找到技能'
 }
 
 export default function ClassicActionTooltip({action,binding,data:d,state:s,shortcut,children,disabled}:Props){
+ const [open,setOpen]=useState(false);
+ useEffect(()=>{if(disabled)setOpen(false);},[disabled]);
  const [kind,rawId]=(binding||'').split(':'),id=Number(rawId);
  const spell=kind==='spell'?d.skills?.find((skill:GameProps['data'])=>skill.spellId===id):null;
  const item=kind==='item'?d.items?.[id]:null;
  const uid=action?.command&&'uid' in action.command?action.command.uid:undefined;
  const instance=item?s.bag?.find((entry:GameProps['state'])=>entry.uid===uid)||s.bag?.find((entry:GameProps['state'])=>entry.id===id):null;
  const automatic=action&&'automatic' in action&&action.automatic;
- return <Tooltip.Root open={disabled?false:undefined}><Tooltip.Trigger asChild>{children}</Tooltip.Trigger><Tooltip.Portal><Tooltip.Content className="cu-action-tooltip" side="top" align="start" sideOffset={10} collisionPadding={12}>
+ return <Tooltip.Root open={open&&!disabled} onOpenChange={value=>setOpen(!disabled&&value)}><Tooltip.Trigger asChild>{children}</Tooltip.Trigger><Tooltip.Portal><Tooltip.Content className="cu-action-tooltip" side="top" align="start" sideOffset={10} collisionPadding={12}>
   {item?<ItemTooltip item={item} instance={instance}/>:<>
    <SpellTooltipContent spell={spell} data={d} fallbackName={action?.name||(binding?'未找到技能':'空栏位')}/>
   </>}

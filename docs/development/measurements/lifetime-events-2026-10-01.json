@@ -1,0 +1,67 @@
+{
+  "recordedAt": "2026-09-30T22:26:00.840Z",
+  "node": "v24.15.0",
+  "rulesetVersion": "owned-v1:fa09f13ae896de406f2d3345d1bb2b3dfa2a0de27891d5edbf5c5c34f88f811c",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "scope": "Root-owned event queue lifetime across encounter boundaries; applied healing-over-time and periodic class healing/mana recovery; existing cast, attack, projectile, damage-over-time and resource deadlines share that storage.",
+  "tests": {
+    "simulation": {
+      "total": 114,
+      "passed": 114,
+      "durationMs": 137367.662541
+    },
+    "gameplay": {
+      "total": 170,
+      "passed": 170,
+      "durationMs": 39533.80275
+    },
+    "periodicAndSpellEffects": {
+      "total": 44,
+      "passed": 44,
+      "durationMs": 2392.913417
+    },
+    "typecheck": "passed",
+    "diffCheck": "passed"
+  },
+  "comparison": {
+    "scenarios": [
+      "solo",
+      "dungeon",
+      "raid",
+      "arena",
+      "battleground"
+    ],
+    "snapshots": 75,
+    "periodMs": 1000,
+    "durationPerScenarioMs": 15000,
+    "excludedFields": [
+      "combatEvents",
+      "simulationEvents",
+      "periodicEventId"
+    ],
+    "normalization": "Absent and empty hots/periodicClass containers are equivalent; nonempty effects are fully compared.",
+    "result": "All other snapshot fields match the pre-change version, including RNG, resources, logs, deaths and assets",
+    "beforeArtifact": ".cache/qa/lifetime-before-2026-10-01.json.gz",
+    "beforeSha256": "6bc0989b9c93364947ad572030150ccde9e303bb929256129edf9b19de7789d3",
+    "captureAndComparisonElapsedMs": 4304.0801249999995
+  },
+  "benchmark": "lifetime-benchmark-2026-10-01.json",
+  "behaviorChanges": [
+    "Dead recipients lose pending persistent recovery effects; applied effects can continue after source death while that source remains present",
+    "Empty periodic containers are no longer allocated every rule step",
+    "Encounter completion preserves persistent recovery events and queue clock/sequence; it retires encounter-local timers",
+    "Effects remain present between their final pulse and a later expiry deadline"
+  ],
+  "limits": {
+    "persistentPeriodicTimers": 4096,
+    "sharedSimulationQueue": 23040
+  },
+  "limitations": [
+    "The 75 snapshots are regression evidence for these scenarios, not all encounters or mechanics",
+    "Arena still has two team execution contexts and battleground still uses its simplified combat path",
+    "Enemy-applied periodic auras, ground effects, global regeneration, aura expiry and boss timers require further migration",
+    "Outer 100ms progression, unit traversal and AI observation remain",
+    "No new full browser matrix or target-server end-to-end capacity validation under this ruleset hash",
+    "Local benchmark has no PostgreSQL, real WebSocket or capacity/speedup claim"
+  ]
+}

@@ -1,3 +1,4 @@
+import {addEnemyAura} from '../../../packages/game-domain/src/rules/enemy-aura-events.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,advance} from '../../../packages/game-domain/src/rules/engine.js';
@@ -29,7 +30,7 @@ test('incomplete regeneration uses bounded ticks then can fast-forward after rec
  assert.equal(advance(s,86400000,{maxTicks:500}).complete,true);
 });
 test('periodic damage, underwater hazards, timed quests and pets cannot take idle shortcut',()=>{
- const dot=createGame('持续伤害',123,0);dot.auras=[{type:3,spell:172,amount:3,school:5,interval:1000,next:1000,until:3000,caster:'test',casterName:'测试'}];
+ const dot=createGame('持续伤害',123,0);addEnemyAura(dot,dot,{type:3,spell:172,amount:3,school:5,interval:1000,next:1000,until:3000,caster:'test',casterName:'测试'});
  const timed=createGame('限时任务',123,0);timed.quests[783]={expiresAt:5000,kills:{}};
  const wet=createGame('水下',123,0);wet.location='mirror';wet.environment={mode:'underwater',breathMs:60000,lastTick:0};wet.swimming=true;
  for(const s of [dot,timed,wet]){const result=advance(s,86400000,{maxTicks:1});assert.equal(result.complete,false);assert.equal(result.state.clock,100);}

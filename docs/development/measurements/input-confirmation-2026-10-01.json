@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-01",
+  "scope": "ordinary combat input confirmation and periodic persistence",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:eaadbda201bf444065d34f7d042a8cce9acfe793e40e10d563d3250a04c714cd",
+    "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1"
+  },
+  "sourceHashes": {
+    "packages/protocol/src/simulation.ts": "233b55461fdde6b16b447e9ea238ec40ca93c6ce7bb0c4a63ebb0d399b9d5080",
+    "packages/contracts/src/game.ts": "58396730c44c533f73db29fd4ef7edab09d530be9aa2ed089397e3d69fdd6493",
+    "apps/simulation-host/src/session.ts": "8c56608d9d4c8364de2fa0b0eb65bfc75353c29e05a5d4aceae4daf60629d2de",
+    "apps/simulation-host/src/instance.ts": "5939aad1e65accaf63037db4693b2f5817e8c9dc1091757ac134c3aa7094dd67",
+    "apps/game-server/src/simulation-client.ts": "32b9b6b97282f8393f7e8aab247072aa8900ce9ca9f266fa270b99cfd83ded6d",
+    "apps/web/lib/input-receipts.js": "de03e1b8df3d7922067f11289415323e450d2f3a5575ebff61c6e2f77473a782",
+    "apps/web/app/input-progress.tsx": "94bc9d3382e74667ab16caf173e3148b0a4f3cbe626793c2b03c5497f0eb13a7",
+    "apps/web/app/game.tsx": "bf6c95cb2157d7e64586a38b143ac7c519c01556b4ae90d1b27997236d7f94a8"
+  },
+  "verification": {
+    "fullSimulationSuite": {
+      "command": "npm run simulation:test",
+      "passed": 187,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 181956.943792,
+      "log": "/tmp/input-confirmation-simulation-full.log"
+    },
+    "unitAndWorkerTests": {
+      "passed": 18,
+      "log": "/tmp/input-confirmation-tests.log"
+    },
+    "extendedWorkerLossTests": {
+      "passed": 2,
+      "log": "/tmp/input-confirmation-final.log"
+    },
+    "httpAndRecoveryAndResponseTests": {
+      "passed": 16,
+      "log": "/tmp/input-confirmation-integration.log"
+    },
+    "rootTypes": true,
+    "webTypes": true,
+    "webBuild": true,
+    "ioBurst": {
+      "commands": 20,
+      "storageReads": 0,
+      "transactions": 0,
+      "checkpoints": 0,
+      "followingPauseCheckpoints": 1
+    },
+    "browser": {
+      "url": "http://127.0.0.1:5201/input-receipts.html",
+      "actions": [
+        "ordinary hold-fire immediately completed without new checkpoint",
+        "delayed pause remained waiting while queued",
+        "applied pause awaited durable save",
+        "checkpoint released waiting state",
+        "ordinary order after save did not add a checkpoint"
+      ],
+      "consoleErrors": 0,
+      "screenshots": [
+        ".cache/qa/input-confirmation-applied-2026-10-01.png",
+        ".cache/qa/input-confirmation-durable-2026-10-01.png"
+      ]
+    }
+  },
+  "limitations": [
+    "Focused browser receipt harness uses real rule runtime with manually stepped time, not full production gameplay",
+    "No new throughput/capacity claim",
+    "Full solo/quest/dungeon/Onyxia browser matrix not rerun on this runtime version",
+    "Shared dungeon owner composition and entry remain incomplete"
+  ]
+}

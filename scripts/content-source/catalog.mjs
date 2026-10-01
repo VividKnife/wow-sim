@@ -1,5 +1,6 @@
 import {groupRows} from '../../packages/sim-core/src/collections.js';
 import spellCoefficients from '../../packages/game-data/data/classic-spell-coefficients.json' with {type:'json'};
+import spellThreat from '../../packages/game-data/data/spell-threat-reference.json' with {type:'json'};
 import raidCombatReference from '../../packages/game-data/data/raid-combat-reference.json' with {type:'json'};
 import moltenCoreLoot from '../../packages/game-data/data/molten-core-loot.json' with {type:'json'};
 import stockades from '../../packages/game-data/data/stockades-reference.json' with {type:'json'};
@@ -47,6 +48,8 @@ const tableKeys={
  spell_pet_auras:['spell','pet'],petcreateinfo_spell:['entry'],pet_levelstats:['creature_entry','level'],pet_familystats:['family'],creature_template_spells:['entry','setId'],
 };
 export function table(name) {
+  // This complete pinned table replaces the original level-20 regional slice.
+  if(name==='spell_threat')return spellThreat.tables.spell_threat;
   if (!cache.has(name)) {
     const decode=(bundle,row)=>Object.fromEntries(bundle.schemas[name].map((key,i)=>[key,row[i]]));
     const rows=(source.tables[name] || []).map(row=>decode(source,row));

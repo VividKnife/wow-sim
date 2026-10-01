@@ -47,7 +47,7 @@ export async function createSave(this:GameService,userId:string,input:{name:stri
   await tx.insert('characters',c);
   await tx.insert('parties',{id:partyId,accountId:saveId,characterIds:[id]});
   if(input.raidReady)await provisionRaidHero(this,tx,saveId,s,partyId,now);
-  else await persistAssets(tx,c,s,`create:${saveId}`,this.id);
+  else await persistAssets(tx,c,s,`create:${saveId}`);
   await tx.insert('receipts',{id:receiptId,userId,fingerprint});
  });
  return {id:saveId};

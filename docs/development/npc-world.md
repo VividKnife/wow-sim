@@ -63,7 +63,7 @@ NPC 猎人准备适配弓枪的弹药，并从自己的旅费补充；队伍休�
 
 ```sh
 node --test packages/game-domain/test/npc-world.test.ts packages/game-domain/test/gold-world.test.ts
-node --test packages/game-domain/test/gold-raid.test.ts packages/game-domain/test/local-simulation.test.ts
+node --test packages/game-domain/test/gold-raid.test.ts
 npm run typecheck
 npm run data:check
 PREVIEW_PORT=5196 node apps/web/scripts/serve-dungeon-preview.mjs

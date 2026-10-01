@@ -1,4 +1,4 @@
-import pg from 'pg';
+import {databasePool} from '../../../packages/persistence/src/pool.ts';
 import {experienceMultiplier} from '../../../packages/game-domain/src/rules/experience.js';
 import {PostgresStore} from '../../../packages/persistence/src/postgres.ts';
 import {offlineLimit} from '../../../packages/game-domain/src/presence.ts';
@@ -9,6 +9,7 @@ import {WORKER_INTERVAL_MS} from '../../../packages/game-domain/src/simulation-c
 
 export type WorkerEnvironment = {
   DATABASE_URL?: string;
+  GAME_DATABASE_SCHEMA?: string;
   GAME_XP_MULTIPLIER?: string;
   GAME_OFFLINE_LIMIT_MS?: string;
   GAME_WORKER_INTERVAL_MS?: string;
@@ -24,7 +25,7 @@ function positiveInteger(value: string | undefined, fallback: number, name: stri
 export async function startGameWorker(environment: WorkerEnvironment = process.env) {
   if (!environment.DATABASE_URL) throw new Error('DATABASE_URL is required');
   const xpMultiplier = experienceMultiplier(environment.GAME_XP_MULTIPLIER);
-  const pool = new pg.Pool({connectionString: environment.DATABASE_URL});
+  const pool = await databasePool({connectionString: environment.DATABASE_URL},environment.GAME_DATABASE_SCHEMA);
   const store = new PostgresStore(pool);
   try {
     await store.initialize();

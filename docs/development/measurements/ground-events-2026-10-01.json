@@ -1,0 +1,96 @@
+{
+  "recordedAt": "2026-09-30T23:29:36.988Z",
+  "node": "v24.15.0",
+  "rulesetVersion": "owned-v1:d33f61e1031a541f5124055180d061ecb431ebcc00178a63459945636e717e98",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "scope": "Ground pulse and expiry events in the single instance heap; exact cancellation on refresh/scene changes, joint arena identities, strict cold restoration and expired arena effect reclamation.",
+  "tests": {
+    "simulation": {
+      "total": 135,
+      "passed": 135,
+      "failed": 0,
+      "durationMs": 143554.747208
+    },
+    "groundEvents": {
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "durationMs": 1642.516041
+    },
+    "gameplay": {
+      "total": 81,
+      "passed": 81,
+      "failed": 0,
+      "durationMs": 29975.366125
+    },
+    "boundaries": {
+      "total": 57,
+      "passed": 57,
+      "failed": 0,
+      "durationMs": 19620.382208
+    },
+    "rootTypecheck": "passed",
+    "webTypecheck": "passed",
+    "productionBuild": "passed; existing large-chunk warning",
+    "diffCheck": "passed"
+  },
+  "comparison": {
+    "beforeRuleset": "owned-v1:15443997c2724c1733c2551b9dae5ef391345a8e8d343c4981390be5a22ae902",
+    "scenarios": [
+      "solo",
+      "dungeon",
+      "raid",
+      "arena",
+      "battleground"
+    ],
+    "snapshots": 75,
+    "durationPerScenarioMs": 15000,
+    "periodMs": 1000,
+    "result": "exact equality after scheduling-representation normalization",
+    "excludedFields": [
+      "simulationEvents",
+      "eventId",
+      "dotEventId",
+      "periodicEventId",
+      "groundEventId",
+      "attackEventIds",
+      "powerEventId",
+      "projectileSequence",
+      "projectileId"
+    ],
+    "projectileNormalization": "Existing arena projectile container normalization; sort by launch time/caster/spell; projectile records omit id/sequence/teamId. All combat results, RNG and assets remain compared.",
+    "beforeArtifact": "/tmp/wow-sim-ground-queue-before.json",
+    "comparisonScript": "/tmp/wow-sim-ground-queue-compare.mjs",
+    "currentGolden": "packages/simulation-tests/fixtures/current.json; historical baseline/behavior fixtures unchanged"
+  },
+  "semantics": {
+    "latticeMs": 100,
+    "phases": {
+      "friendlyPulse": 21,
+      "enemyPulse": 31,
+      "pveExpiry": 32,
+      "extendedPulse": 36,
+      "arenaExpiry": 37
+    },
+    "capacity": {
+      "effects": 2048,
+      "events": 4096
+    },
+    "deliberateFix": "Arena previously retained expired ground arrays. Cleanup now follows extended pulses, preserving the final pulse.",
+    "restoration": "Tests include missing/mismatched/duplicate identities and events, removed dispatched zones, late pulses, source death, target range/death and both arena scopes.",
+    "fixtureRepairs": "Old tests now use registered effect/cast/projectile creation. Meter fixtures include enemies; service fixtures seed a complete party and await actual corpse recovery rather than assuming 30 worker calls."
+  },
+  "benchmark": {
+    "file": "ground-events-benchmark-2026-10-01.json",
+    "rounds": 3,
+    "durationMs": 5000,
+    "workerCount": 1,
+    "rssBytes": 905691136
+  },
+  "limitations": [
+    "No new full browser hunting/quest/five-player/Onyxia loot and distribution acceptance in this change.",
+    "Previous native renderer crashes are not all attributed; React performance-buffer cleanup remains in place.",
+    "100ms main rule loop, other auras, regeneration, encounter timers and causal budget yielding remain unfinished.",
+    "Benchmark has no PostgreSQL/WebSocket/client load and does not establish 2-vCPU capacity or a speedup over the previous implementation."
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-01",
+  "environment": {
+    "mode": "Vite development / local HTTP+WebSocket / ResidentInstance in memory",
+    "platform": "macOS-26.4.1-arm64-arm-64bit",
+    "node": "24.15.0",
+    "productionDatabase": false
+  },
+  "verified": [
+    "Automatic hunting stayed active after equipping linen cloak and spending one fireball talent point through production Game UI and HTTP input",
+    "Bag sort succeeded while raid combat was tactically paused; canvas remained mounted and its frame counter stopped while covered",
+    "40-player run stopped repeatedly disconnecting after a large baseline; subsequent sampled messages were deltas",
+    "Immutable delta application, bounded log trim/append, owner and sequence validation passed regression tests"
+  ],
+  "browserEvidence": [
+    ".cache/qa/auto-advance-talents-2026-10-01.png",
+    ".cache/qa/live-combat-inventory-final-2026-10-01.png"
+  ],
+  "exploratoryMeasurement": {
+    "note": "Development observation after reconnect/log fixes but before final stable skill sorting; window includes combat progression and may include encounter end. Not a controlled before/after comparison or production capacity result.",
+    "elapsedSeconds": 81.2,
+    "recentFrameSamples": 1800,
+    "frameIntervalP50Ms": 16.7,
+    "frameIntervalP99Ms": 50.1,
+    "messages": 310,
+    "receivedUtf8Bytes": 30905837,
+    "snapshots": 0,
+    "deltas": 310,
+    "disconnects": 0,
+    "longTasks": 33
+  },
+  "limits": [
+    "Not stable 60 FPS acceptance",
+    "No mobile device or production PostgreSQL end-to-end capacity measurement",
+    "Large initial metadata and high-entity rendering remain performance targets",
+    "Talent reset retains trainer and cost rules; actual combat, death and casting still reject build changes"
+  ]
+}

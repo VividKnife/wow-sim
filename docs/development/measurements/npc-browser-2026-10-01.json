@@ -1,0 +1,130 @@
+{
+  "recordedAt": "2026-09-30T21:10:12.715Z",
+  "environment": {
+    "schema": "sim2_npc_assets_20261001",
+    "browser": "Codex IAB",
+    "webPort": 5183,
+    "gatewayPort": 8796,
+    "hostPort": 8795,
+    "rulesetVersion": "owned-v1:669c273fef554bf51c85f7de61f6edc5efbfd2746426a93e252958e180b897fa",
+    "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1"
+  },
+  "method": "All gameplay through browser UI; repeatable-read, read-only PostgreSQL snapshots for asset checks. No gameplay state injection.",
+  "recruitment": {
+    "npcRecords": 72,
+    "wallets": 73,
+    "embeddedResidents": false
+  },
+  "hunt": {
+    "characterId": "aa452d91-f5c4-4d56-85dd-e79d852a695a",
+    "level": 3,
+    "xp": 122,
+    "completed": {
+      "7": 1,
+      "783": 1
+    },
+    "wallet": 51,
+    "bag": [
+      {
+        "uid": "item:aa452d91-f5c4-4d56-85dd-e79d852a695a:6",
+        "itemId": 2070,
+        "count": 4
+      },
+      {
+        "uid": "item:aa452d91-f5c4-4d56-85dd-e79d852a695a:8",
+        "itemId": 6948,
+        "count": 1
+      },
+      {
+        "uid": "item:aa452d91-f5c4-4d56-85dd-e79d852a695a:9",
+        "itemId": 4536,
+        "count": 1
+      },
+      {
+        "uid": "item:aa452d91-f5c4-4d56-85dd-e79d852a695a:10",
+        "itemId": 755,
+        "count": 5
+      }
+    ],
+    "reloadPreservedAssetsAndLedger": true,
+    "screenshot": ".cache/qa/npc-independent-hunt-complete-2026-10-01.png"
+  },
+  "limitations": [
+    "Not a capacity benchmark.",
+    "Does not establish renderer crash resolution or 2.0 completion.",
+    "Previous Onyxia UI run used an earlier runtime hash and does not validate this NPC persistence revision."
+  ],
+  "five": {
+    "characterId": "fd040aec-750e-4af9-8d13-acbcf176dc53",
+    "encounterId": null,
+    "defeated": {
+      "634": true,
+      "644": true,
+      "1725": true,
+      "1729": true
+    },
+    "distribution": [
+      {
+        "uid": "item:fd040aec-750e-4af9-8d13-acbcf176dc53:40",
+        "itemId": 6563,
+        "winner": "灵魂石已绑"
+      },
+      {
+        "uid": "item:fd040aec-750e-4af9-8d13-acbcf176dc53:38",
+        "itemId": 1930,
+        "winner": "独立冒险法师"
+      }
+    ],
+    "npcRecords": 72,
+    "checkedNpcAssets": 883,
+    "npcGreedSale": {
+      "characterId": "npc:fd040aec-750e-4af9-8d13-acbcf176dc53:26",
+      "before": 730000,
+      "after": 730295,
+      "ledgerAmounts": [
+        295
+      ],
+      "history": [
+        {
+          "text": "贪婪获得幻光护腕，出售用于旅途补给。",
+          "sequence": 3
+        },
+        {
+          "text": "与你第1次组队，前往死亡矿井。",
+          "sequence": 2
+        },
+        {
+          "text": "来到冒险者大厅，期待结识新的伙伴。",
+          "sequence": 1
+        }
+      ]
+    },
+    "playerCloak": {
+      "uid": "item:fd040aec-750e-4af9-8d13-acbcf176dc53:38",
+      "itemId": 1930,
+      "owner": "fd040aec-750e-4af9-8d13-acbcf176dc53",
+      "container": "bag"
+    },
+    "boss": "RhahkZor",
+    "bossDurationMs": 72100,
+    "aliveParty": 5,
+    "bossLoot": {
+      "uid": "item:fd040aec-750e-4af9-8d13-acbcf176dc53:56",
+      "itemId": 5187,
+      "count": 1,
+      "container": "bag"
+    },
+    "reloadPreservedAssetsAndLedger": true,
+    "rendererCrashes": 1,
+    "reconnectionPreservedInstance": true,
+    "screenshot": ".cache/qa/npc-independent-five-boss-2026-10-01.png",
+    "lootScreenshot": ".cache/qa/npc-independent-five-loot-2026-10-01.png"
+  },
+  "tests": {
+    "simulation": {
+      "passed": 69,
+      "total": 69,
+      "durationMs": 166312.22475
+    }
+  }
+}

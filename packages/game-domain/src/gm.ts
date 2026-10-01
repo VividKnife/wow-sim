@@ -1,3 +1,4 @@
+import {residentStore} from './resident-store.ts';
 import {randomUUID} from 'node:crypto';
 import type {Store,Transaction} from '../../persistence/src/store.ts';
 import {requireThat,type Rules,type Character,type Instance,type Activity} from './model.ts';
@@ -32,7 +33,7 @@ export function buffDefinition(input:Rules){
 }
 export class GmService {
  store:Store;now:()=>number;
- constructor(store:Store,now=Date.now){this.store=store;this.now=now;}
+ constructor(store:Store,now=Date.now){this.store=residentStore(store);this.now=now;}
  async list(){return this.store.read(async tx=>({
   templates:(await tx.list('gm_templates')).sort((a,b)=>b.updatedAt-a.updatedAt).slice(0,100),
   buffs:(await tx.list('gm_buffs')).sort((a,b)=>b.createdAt-a.createdAt).slice(0,100),

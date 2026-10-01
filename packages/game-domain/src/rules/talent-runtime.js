@@ -1,3 +1,4 @@
+import {addCombatDot,addPeriodicEffect} from './simulation-events.js';
 import {pvpTriggeredControl} from './pvp-runtime.js';
 import {applySpellAura} from './spell-aura-lifecycle.js';
 import {resetSpellCooldowns} from './spell-timing.js';
@@ -10,7 +11,7 @@ function proc(c,key,until,extra={}){c.talentProcs??={};return c.talentProcs[key]
 function heal(s,c,target,amount,spell,api){if(api.healAmount)api.healAmount(s,c,target,amount,spell);else if(target?.hp>0)target.hp=Math.min(api.stats?.(target)?.maxHp||target.maxHp||target.hp,Math.round(target.hp+amount));}
 function restore(c,pool,amount,api){const max=pool==='rage'?1000:pool==='energy'?100+talentModifiers(c).energyFlat:api.stats?.(c)?.maxMana||c.maxMana||Infinity;c[pool]=Math.min(max,Math.max(0,(c[pool]||0)+Math.round(amount)));}
 function damage(s,c,target,amount,spell,api,school=spells[spell]?.School||0){if(target?.hp>0&&api.damage)api.damage(s,c,target,amount,spells[spell]?.SpellName||'天赋',1,{spellId:spell,school,talentProc:true});}
-function dot(s,c,target,amount,spell,api,interval=3000,ticks=4){if(!target)return;target.dots??=[];target.dots.push({caster:c.id,spellId:spell,school:spells[spell]?.School||0,amount:Math.round(amount),next:s.clock+interval,interval,remaining:ticks,label:spells[spell]?.SpellName||'天赋',talentProc:true});}
+function dot(s,c,target,amount,spell,api,interval=3000,ticks=4){if(!target)return;target.dots??=[];addCombatDot(s,target,{caster:c.id,spellId:spell,school:spells[spell]?.School||0,amount:Math.round(amount),next:s.clock+interval,interval,remaining:ticks,label:spells[spell]?.SpellName||'天赋',talentProc:true});}
 function armorBuff(s,target,pct,spell){target.classBuffs??=[];target.classBuffs=target.classBuffs.filter(b=>b.name!=='talent-armor');target.classBuffs.push({name:'talent-armor',spell,until:s.clock+15000,armorPct:pct,stats:{}});}
 export const talentActiveNames=new Set(['Presence of Mind',"Nature's Swiftness",'Elemental Mastery','Inner Focus','Cold Blood','Divine Favor','Arcane Power','Power Infusion','Combustion','Preparation','Cold Snap','Last Stand','Death Wish','Sweeping Strikes','Adrenaline Rush','Blade Flurry','Premeditation','Bestial Wrath','Intimidation','Trueshot Aura','Moonkin Form','Shadowform','Demonic Sacrifice','Soul Link','Dark Pact','Swiftmend','Lightwell','Fel Domination','Amplify Curse',"Nature's Grasp",'Omen of Clarity']);
 export function executeTalentActive(s,c,target,sp,api={}){
@@ -87,7 +88,7 @@ export function onTalentEvent(s,c,event,api={}){
     e.target.dots??=[];const previous=e.target.dots.find(d=>d.spellId===12654&&d.caster===c.id&&d.remaining>0);
     const bank=(previous?previous.amount*previous.remaining:0)+amount*.08*r.Ignite;
     e.target.dots=e.target.dots.filter(d=>d!==previous);
-    e.target.dots.push({caster:c.id,spellId:12654,school:2,amount:Math.floor(bank/2),next:now+2000,interval:2000,remaining:2,label:'点燃',talentProc:true});
+    addCombatDot(s,e.target,{caster:c.id,spellId:12654,school:2,amount:Math.floor(bank/2),next:now+2000,interval:2000,remaining:2,label:'点燃',talentProc:true});
    }
   }
   if(c.classId===8&&!e.periodic&&sp.School>0&&chance('Arcane Concentration',.02*r['Arcane Concentration']))proc(c,'clearcasting',now+15000);
@@ -134,8 +135,8 @@ export function onTalentEvent(s,c,event,api={}){
   if(e.critical){
    if(r.Enrage)proc(c,'enrage',now+12000,{charges:12});
    if(r.Redoubt)proc(c,'redoubt',now+10000,{charges:5,stats:{block:.06*r.Redoubt}});
-   if(r['Blood Craze']){c.hots??=[];c.hots.push({spell:16491,name:'Blood Craze',caster:c.id,amount:(api.stats?.(c)?.maxHp||c.maxHp||c.hp)*.01*r['Blood Craze']/3,next:now+2000,interval:2000,until:now+6000});}
-   if(r['Blessed Recovery']){c.hots??=[];c.hots.push({spell:27813,name:'Blessed Recovery',caster:c.id,amount:amount*[0,.08,.16,.25][r['Blessed Recovery']]/3,next:now+2000,interval:2000,until:now+6000});}
+   if(r['Blood Craze']){addPeriodicEffect(s,c,'hots',{spell:16491,name:'Blood Craze',caster:c.id,amount:(api.stats?.(c)?.maxHp||c.maxHp||c.hp)*.01*r['Blood Craze']/3,next:now+2000,interval:2000,until:now+6000});}
+   if(r['Blessed Recovery']){addPeriodicEffect(s,c,'hots',{spell:27813,name:'Blessed Recovery',caster:c.id,amount:amount*[0,.08,.16,.25][r['Blessed Recovery']]/3,next:now+2000,interval:2000,until:now+6000});}
    if(r['Eye for an Eye']&&sp.School>0)damage(s,c,e.target,Math.min(amount*.15*r['Eye for an Eye'],(api.stats?.(c)?.maxHp||c.hp)*.5),25997,api,1);
    if(chance('Reckoning',.2*r.Reckoning))proc(c,'reckoning',now+10000,{charges:Math.min(4,(c.talentProcs?.reckoning?.charges||0)+1)});
    if(r.Martyrdom)proc(c,'martyrdom',now+6000,{pushback:1});
@@ -163,7 +164,7 @@ export function onTalentEvent(s,c,event,api={}){
    if(c.pet?.hp>0&&r['Spirit Bond']){c.nextSpiritBond??=now+10000;if(c.nextSpiritBond<=now){c.nextSpiritBond+=10000;heal(s,c,c,(api.stats?.(c)?.maxHp||0)*.01*r['Spirit Bond'],19578,api);heal(s,c,c.pet,c.pet.maxHp*.01*r['Spirit Bond'],19578,api);}}
    const sacrifice=c.talentProcs?.demonicSacrifice;if(sacrifice?.until>now&&(c.nextSacrificeTick||0)<=now){c.nextSacrificeTick=now+4000;if(sacrifice.kind==='voidwalker')heal(s,c,c,(api.stats?.(c)?.maxHp||0)*.03,18790,api);if(sacrifice.kind==='felhunter')restore(c,'mana',(api.stats?.(c)?.maxMana||0)*.02,api);}
    if(r['Leader of the Pack']&&['cat','bear','direbear'].includes(c.form)||c.form==='moonkin')for(const ally of api.actors||[c])if(ally.id!==c.id&&Math.hypot((ally.position||0)-(c.position||0),(ally.positionY||0)-(c.positionY||0))<=45)proc(ally,c.form==='moonkin'?'moonkinAura':'leaderOfThePack',now+2500,{stats:c.form==='moonkin'?{spellCrit:.03}:{crit:.03,rangedCrit:.03}});
-   if(c.lightwell?.until>now&&c.lightwell.charges>0){const ally=(api.actors||[c]).find(t=>t.hp>0&&t.hp<(api.stats?.(t)?.maxHp||t.maxHp||0)*.7&&!t.hots?.some(h=>h.name==='Lightwell Renew'&&h.until>now));if(ally){const renew=Object.values(spells).find(a=>a.SpellName==='Lightwell Renew'&&a.Rank1===spells[c.lightwell.spell]?.Rank1)||spells[7001];if(renew){ally.hots??=[];ally.hots.push({name:'Lightwell Renew',spell:renew.Id,caster:c.id,amount:renew.EffectBasePoints1+1,interval:renew.EffectAmplitude1||2000,next:now+(renew.EffectAmplitude1||2000),until:now+(duration(renew)||6000)});c.lightwell.charges--;}}}
+   if(c.lightwell?.until>now&&c.lightwell.charges>0){const ally=(api.actors||[c]).find(t=>t.hp>0&&t.hp<(api.stats?.(t)?.maxHp||t.maxHp||0)*.7&&!t.hots?.some(h=>h.name==='Lightwell Renew'&&h.until>now));if(ally){const renew=Object.values(spells).find(a=>a.SpellName==='Lightwell Renew'&&a.Rank1===spells[c.lightwell.spell]?.Rank1)||spells[7001];if(renew){addPeriodicEffect(s,ally,'hots',{name:'Lightwell Renew',spell:renew.Id,caster:c.id,amount:renew.EffectBasePoints1+1,interval:renew.EffectAmplitude1||2000,next:now+(renew.EffectAmplitude1||2000),until:now+(duration(renew)||6000)});c.lightwell.charges--;}}}
   }
  }
  return Math.max(0,amount);

@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-01",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:697bc6d786ad500d93085ea86948b6f3f32dd346066ff13e9b826e0d0bc7a4f6",
+    "contentHash": "5910c11590fd3adc47ad8307b1a94d8b697dd9ca9e23757e3510a11c88e00154"
+  },
+  "tests": {
+    "simulation": {
+      "total": 260,
+      "passed": 260,
+      "failed": 0,
+      "durationMs": 260613.06625
+    },
+    "coreAndNpc": {
+      "total": 34,
+      "passed": 34,
+      "failed": 0,
+      "durationMs": 51095.150958
+    },
+    "httpAndQuestNeighbors": {
+      "total": 37,
+      "passed": 37,
+      "failed": 0,
+      "durationMs": 22924.193875
+    },
+    "lootAndDungeonNeighbors": {
+      "total": 35,
+      "passed": 35,
+      "failed": 0,
+      "durationMs": 11298.922041
+    }
+  },
+  "rootTypecheck": "passed",
+  "webTypecheck": "passed",
+  "webBuild": "passed; existing large chunk/asset warnings",
+  "verified": [
+    "One corpse coin roll conserved across actual durable character participants; dead participants remain eligible; no pets/totems/escorts/outside characters",
+    "Human quests and XP totals belong to each character; scripted quest attempts retain their per-character prerequisites",
+    "NPC wallets retain coin shares through synchronization; gold raid cash and profile wallet agree",
+    "One ordinary loot table roll, personal quest copies have distinct item identities, pending quest items suppress redundant drops",
+    "MemoryStore and embedded PostgreSQL commit/retry/recovery preserve both wallets, quests and quest item ownership; stale owner rejected",
+    "Private combat projections contain the current viewer coin share without disclosing the per-actor map"
+  ],
+  "goldens": {
+    "scope": "15 complete snapshots across five short scenarios",
+    "differences": {
+      "solo": [
+        {
+          "path": "/0/battleHistory/0/battle/lootGoldByActor",
+          "after": {
+            "player": 0
+          }
+        },
+        {
+          "path": "/0/lastCombat/lootGoldByActor",
+          "after": {
+            "player": 0
+          }
+        },
+        {
+          "path": "/1/battleHistory/0/battle/lootGoldByActor",
+          "after": {
+            "player": 0
+          }
+        },
+        {
+          "path": "/1/lastCombat/lootGoldByActor",
+          "after": {
+            "player": 0
+          }
+        },
+        {
+          "path": "/2/battleHistory/0/battle/lootGoldByActor",
+          "after": {
+            "player": 0
+          }
+        },
+        {
+          "path": "/2/lastCombat/lootGoldByActor",
+          "after": {
+            "player": 0
+          }
+        }
+      ],
+      "dungeon": [],
+      "raid": [],
+      "arena": [],
+      "battleground": []
+    },
+    "historicalReference": "unchanged; current fixture records new accounting field only"
+  },
+  "browser": {
+    "url": "http://127.0.0.1:5219/shared-loot.html",
+    "fixture": "Isolated ResidentInstance + MemoryStore; actual combatTick settles a pre-set dead creature 1706; three equipment drops are seeded for popup testing",
+    "alice": {
+      "before": 1111,
+      "share": 62,
+      "after": 1173,
+      "questKills": 1
+    },
+    "bob": {
+      "before": 2222,
+      "share": 61,
+      "after": 2283,
+      "questKills": 1
+    },
+    "screenshots": [
+      ".cache/qa/shared-rewards-alice-2026-10-01.png",
+      ".cache/qa/shared-rewards-bob-2026-10-01.png"
+    ],
+    "scope": "Personal visible rewards, not a complete natural boss battle or long-running crash test"
+  },
+  "limitations": [
+    "Shared dungeon activity commands remain gated pending participant-aware recovery, consumables and special object interactions",
+    "Skinning, tribute, lifecycle splitting/re-entry and NPC transfer from an absent human still require completion",
+    "External PostgreSQL faults, full gameplay browser acceptance, target-machine capacity, merge and deployment are not completed",
+    "Runtime Docker image and launcher still omit simulation-host; production topology/transport/health and CI need work"
+  ],
+  "discardedRun": "Initial full run overlapped module export rename and one Worker imported mixed source versions; frozen final source rerun passed all 260 tests.",
+  "sourceSha256": {
+    "packages/game-domain/src/rules/combat-rewards.js": "427ce4e22845e2d83e001276db8af1fc7e16a2e18bf37c075292bc3201386ffb",
+    "packages/game-domain/src/rules/combat-members.js": "ebfd7081441156ecaa5cf2d06c82baf092eb96826b3613c2843e21b2c63bbd84",
+    "packages/game-domain/src/rules/combat.js": "39f7727b85ffc8e440b33a19d105674d38da2f3cd692b5325b6d8ac357287a6f",
+    "packages/game-domain/src/rules/quests.js": "bab83cf6960a813c6ff12b90895fe1a5c0d98bf99699f71a02c345f750540dfa",
+    "packages/game-domain/src/rules/loot.js": "620702ed52a447aac3bb45eee24e23393e0c34a7d3025a9b3cce1a0201ff8143",
+    "packages/game-domain/src/rules/group-loot.js": "c00941234df23909360da1358d502f83e11459f39f7861a029784564adb7d178",
+    "packages/game-domain/src/rules/npc-world.js": "4272e8b8ede10ae4280ff081f414a743f07289e70385d9cf4fdcf1bd8f917cd9",
+    "packages/game-domain/src/rules/character.js": "d603e4d4873472169dae50ecc6512aa3b93a491b03a41932a4357e22f4880b59",
+    "packages/game-domain/src/rules/client-snapshot.ts": "e5326dbe74df4631dbfe25d16a39b981a5a9022b23a4705d72dd65d6efe263f9",
+    "apps/simulation-host/test/shared-rewards.test.ts": "c6739bb0e065a1fbd0fa24d62acee92550bff7cd7d5eff1f4d2c6de4c90ffa19"
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "date": "2026-10-01",
+  "scope": "Development browser memory leak and renderer stability investigation; not full 2.0 acceptance.",
+  "finding": {
+    "reactVersion": "19.2.6",
+    "beforeRetainedMeasures": 822796,
+    "beforePageUptimeMs": 6379735.7,
+    "profileDurationMs": 22240.676,
+    "profileFindings": [
+      "addObjectDiffToProperties/addValueToProperties in React development Performance Tracks consume measurable CPU",
+      "No clearMeasures calls in installed development React DOM build"
+    ],
+    "priorProcessExit": {
+      "reason": "crashed",
+      "exitCode": 5,
+      "limitation": "Native crash stack is unavailable. This finding does not prove every historical renderer crash had the same cause."
+    }
+  },
+  "changes": [
+    "Clear only React component/scheduler named performance measures immediately after recording; preserve original overloads/return values and observer delivery. Development only.",
+    "Unmount React root when Vite replaces the application entry.",
+    "Move standalone battle-3d preview rule execution to a Worker; keep real game server authority unchanged.",
+    "Development-only scalar canvas resource diagnostics, no scene object or frame history retention."
+  ],
+  "tests": {
+    "relatedTestsPassed": 57,
+    "rootTypecheck": "passed",
+    "webTypecheck": "passed",
+    "productionBuild": "passed with existing chunk-size warning",
+    "productionArtifactCheck": "React cleanup and renderStats strings absent from built JS",
+    "diffCheck": "passed"
+  },
+  "browser": {
+    "engine": "Codex in-app Chromium",
+    "frontend": "current working tree",
+    "five": {
+      "origin": "http://127.0.0.1:5183",
+      "schema": "sim2_npc_assets_20261001",
+      "backendRulesetVersion": "owned-v1:669c273fef554bf51c85f7de61f6edc5efbfd2746426a93e252958e180b897fa",
+      "fixedSamplePageUptimeMs": 504543.6,
+      "result": "Continued past RhahkZor through Sneed/Shredder and following patrol; manually paused at cursor 19. DOM, server read-only checkpoint and screenshot agree. No renderer crash observed during this run.",
+      "limitation": "Existing isolated QA host uses an earlier ruleset; this is frontend validation, not latest-kernel gameplay acceptance."
+    },
+    "raid": {
+      "origin": "http://127.0.0.1:5207/battle-3d.html",
+      "rulesetVersion": "owned-v1:15443997c2724c1733c2551b9dae5ef391345a8e8d343c4981390be5a22ae902",
+      "fixedSamplePageUptimeMs": 411705.5,
+      "result": "40-person Onyxia fixture loaded, progressed with adds/deaths, closed, paused and reopened. No renderer crash observed.",
+      "peakObservedJsHeapBytes": 1750506172,
+      "pausedJsHeapBytes": 447027188,
+      "remountedJsHeapBytes": 510132568,
+      "limitation": "Starts at 60% HP with forced breath. Not a full boss kill, loot/settlement run, mobile memory budget or capacity test; transient development allocations remain high."
+    },
+    "samples": [
+      {
+        "label": "five",
+        "at": 1790809396559,
+        "uptime": 205360.39999997616,
+        "hidden": false,
+        "measures": 0,
+        "canvasCount": 1,
+        "heap": {
+          "backingStorageSize": 59341520,
+          "embedderHeapUsedSize": 16222744,
+          "totalSize": 238534656,
+          "usedSize": 159171252
+        }
+      },
+      {
+        "label": "raid",
+        "at": 1790809396683,
+        "uptime": 112635,
+        "hidden": false,
+        "measures": 0,
+        "canvasCount": 1,
+        "heap": {
+          "backingStorageSize": 379569116,
+          "embedderHeapUsedSize": 193769664,
+          "totalSize": 1294123008,
+          "usedSize": 1212450196
+        }
+      },
+      {
+        "label": "five",
+        "at": 1790809560529,
+        "uptime": 369327.89999997616,
+        "hidden": false,
+        "measures": 0,
+        "canvasCount": 0,
+        "render": [],
+        "heap": {
+          "backingStorageSize": 67509015,
+          "embedderHeapUsedSize": 8031480,
+          "totalSize": 220184576,
+          "usedSize": 151000644
+        }
+      },
+      {
+        "label": "raid-paused",
+        "at": 1790809560535,
+        "uptime": 276485.2999999523,
+        "hidden": false,
+        "measures": 0,
+        "canvasCount": 0,
+        "render": [],
+        "heap": {
+          "backingStorageSize": 376832794,
+          "embedderHeapUsedSize": 6419216,
+          "totalSize": 451411968,
+          "usedSize": 447029860
+        }
+      },
+      {
+        "label": "five-stopped",
+        "at": 1790809695746,
+        "uptime": 504543.59999990463,
+        "hidden": false,
+        "measures": 0,
+        "canvasCount": 0,
+        "heap": {
+          "backingStorageSize": 72004027,
+          "embedderHeapUsedSize": 9683896,
+          "totalSize": 246104064,
+          "usedSize": 178389628
+        }
+      },
+      {
+        "label": "raid-remounted",
+        "at": 1790809695757,
+        "uptime": 411705.5,
+        "hidden": false,
+        "measures": 0,
+        "canvasCount": 1,
+        "heap": {
+          "backingStorageSize": 377185280,
+          "embedderHeapUsedSize": 58529576,
+          "totalSize": 575963136,
+          "usedSize": 510132568
+        }
+      }
+    ]
+  },
+  "sources": [
+    "https://github.com/react/react/pull/34803",
+    "https://github.com/react/react/issues/34770"
+  ],
+  "remaining": [
+    "Repeat complete Onyxia kill/loot/distribution with current server ruleset and fixed frontend.",
+    "Longer soak and production-build browser checks; native renderer crash root cause is not conclusively attributed without a crash stack."
+  ],
+  "artifacts": [
+    {
+      "path": ".cache/qa/browser-crash-timing-before-2026-10-01.json",
+      "sha256": "42eb02c7ccb526c69543faf1b485fbc85e20859264d7a378aabc0e556af536b5"
+    },
+    {
+      "path": ".cache/qa/browser-crash-profile-2026-10-01.json",
+      "sha256": "bc129e4f792f56aafcb01c4e7408579a5210457be572426d222f565ff5ffea92"
+    },
+    {
+      "path": ".cache/qa/browser-crash-fixed-samples-2026-10-01.json",
+      "sha256": "0fb0ccb8f3f03f026203253eeef05f80dfdb2b922383b93c019959aee3aa5af2"
+    },
+    {
+      "path": ".cache/qa/browser-crash-fixed-five-2026-10-01.png",
+      "sha256": "684e919f259437813e7b74d40a7ce74efffb17a48bde2f4633b6cb992798f16b"
+    },
+    {
+      "path": ".cache/qa/browser-crash-fixed-raid-2026-10-01.png",
+      "sha256": "cc6e14f1242a92e00d029d923e24ebcf715c6205414ff8f0c271bd00532a1629"
+    },
+    {
+      "path": ".cache/qa/browser-crash-five-final-dom-2026-10-01.txt",
+      "sha256": "ab8025a58cb27a1a8425e1137e1422fa4f937e4da0ee82e0eb3435e6e5595d1e"
+    },
+    {
+      "path": ".cache/qa/npc-independent-browser-crash-fixed-2026-10-01.json",
+      "sha256": "6739d577bfbc4690d118b4081b3dcf31a060f8506973db2ebda77468a36828c2"
+    }
+  ]
+}

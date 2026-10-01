@@ -1,0 +1,81 @@
+{
+  "recordedAt": "2026-09-30T22:45:40.685Z",
+  "node": "v24.15.0",
+  "rulesetVersion": "owned-v1:15443997c2724c1733c2551b9dae5ef391345a8e8d343c4981390be5a22ae902",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "scope": "One event queue and projectile identity sequence for both arena teams; retained team rule-order views; Blood Craze, Blessed Recovery and Lightwell use persistent scheduled healing.",
+  "tests": {
+    "simulation": {
+      "total": 124,
+      "passed": 124,
+      "durationMs": 141887.366167
+    },
+    "gameplay": {
+      "total": 99,
+      "passed": 99,
+      "durationMs": 29698.214209
+    },
+    "sharedArenaQueue": {
+      "total": 7,
+      "passed": 7,
+      "durationMs": 6295.214542
+    },
+    "typecheck": "passed",
+    "diffCheck": "passed"
+  },
+  "regression": {
+    "before": {
+      "tests": 3,
+      "failed": 3,
+      "effects": [
+        "Blood Craze",
+        "Blessed Recovery",
+        "Lightwell"
+      ]
+    },
+    "after": "All three dedicated tests pass as part of periodic-events and gameplay suites; opposing-team damage also has a dedicated arena test."
+  },
+  "comparison": {
+    "scope": "Arena queue migration, captured after the talent registration fix",
+    "scenarios": [
+      "solo",
+      "dungeon",
+      "raid",
+      "arena",
+      "battleground"
+    ],
+    "snapshots": 75,
+    "durationPerScenarioMs": 15000,
+    "periodMs": 1000,
+    "excludedFields": [
+      "simulationEvents",
+      "eventId",
+      "dotEventId",
+      "periodicEventId",
+      "attackEventIds",
+      "powerEventId",
+      "projectileSequence",
+      "projectileId"
+    ],
+    "normalization": "Arena projectile storage is combined and sorted by launch time/caster/spell; objects carrying landsAt and actorId exclude id/sequence/teamId. Other fields are compared without normalization.",
+    "result": "All remaining fields match, including RNG, health/resources, action counts, logs, deaths and assets",
+    "beforeArtifact": ".cache/qa/arena-queue-before-2026-10-01.json.gz",
+    "beforeSha256": "0bd7d56783768712aa401f32dd0b1cba2dccc4f08ae20bf37a2f6e70ec5956b4",
+    "captureAndComparisonElapsedMs": 4850.201167
+  },
+  "benchmark": "arena-queue-benchmark-2026-10-01.json",
+  "behaviorChanges": [
+    "Previously unscheduled talent recovery effects now pulse and restore correctly",
+    "Arena projectiles and scheduled subject IDs are unique across the entire match",
+    "Projectile ready records route by originating team even after their launcher disappears",
+    "Channel shortening resolves only against the current instance; the old global channel-owner map is removed"
+  ],
+  "limitations": [
+    "Arena still uses alternating team rule views and team ground-effect lists; permanent/runtime entity separation remains incomplete",
+    "Battleground simplified combat still needs consolidation",
+    "Enemy periodic auras, ground effects, global regeneration and boss timers remain to migrate",
+    "Outer 100ms rule progression and AI observation scans remain",
+    "Latest ruleset has not undergone the complete browser quest/dungeon/Onyxia matrix",
+    "Benchmark is local rules/IPC only, with no PostgreSQL, WebSocket or target-server capacity conclusion"
+  ]
+}

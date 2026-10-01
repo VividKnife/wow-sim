@@ -2,6 +2,25 @@ import { assertTable, validateRow, DatabaseBusyError, DatabaseOperationError } f
 import type { Row, Store, Transaction, ReadView, TableName, Where } from './store.ts';
 import { schemaSql } from './schema.ts';
 import { setTimeout as delay } from 'node:timers/promises';
+// Match the generated B-tree columns as well as JSON containment. Containment
+// alone cannot use these ownership indexes and can take broad SSI predicate
+// locks while unrelated instances commit their checkpoints.
+const lookupColumns: Readonly<Record<string, string>> = {
+    id: 'id', accountId: 'account_id', characterId: 'character_id',
+    ownerCharacterId: 'owner_character_id', actorId: 'actor_id',
+    instanceId: 'instance_id', businessKey: 'business_key', status: 'status',
+    userId: "(data->>'userId')",
+};
+function listQuery(table: string, where: Where) {
+    const values: unknown[] = [JSON.stringify(where)], predicates = ['data @> $1::jsonb'];
+    for (const [field, value] of Object.entries(where)) {
+        // Retain JSON's distinction between an absent field, null, numbers and
+        // strings. Only string values can safely use the generated text key.
+        if (typeof value !== 'string' || !Object.hasOwn(lookupColumns, field)) continue;
+        values.push(value); predicates.push(`${lookupColumns[field]}=$${values.length}`);
+    }
+    return {sql: `SELECT data FROM ${table} WHERE ${predicates.join(' AND ')} ORDER BY id`, values};
+}
 type QueryResult = {
     rows: any[];
 };
@@ -80,7 +99,10 @@ export class PostgresStore implements Store {
             };
             const tx: Transaction = {
                 get: async <T = Row>(table: TableName, id: string) => (await query(`SELECT data FROM ${tableName(table)} WHERE id=$1`, [id])).rows[0]?.data as T ?? null,
-                list: async <T = Row>(table: TableName, where: Where = {}) => (await query(`SELECT data FROM ${tableName(table)} WHERE data @> $1::jsonb ORDER BY id`, [JSON.stringify(where)])).rows.map(row => row.data as T),
+                list: async <T = Row>(table: TableName, where: Where = {}) => {
+                    const request = listQuery(tableName(table), where);
+                    return (await query(request.sql, request.values)).rows.map(row => row.data as T);
+                },
                 due: async <T = Row>(table: 'activities' | 'instances', now: number, limit: number, contentVersion: string) => (await query(`SELECT data FROM ${tableName(table)} WHERE status IN ('running','returning') AND next_event_at<=$1 AND data @> $3::jsonb ORDER BY next_event_at,id LIMIT $2`, [now, limit, JSON.stringify({contentVersion})])).rows.map(row => row.data as T),
                 insert: (table, row) => write(table, row, false), put: (table, row) => write(table, row, true),
                 delete: async (table, id) => { if (readOnly) throw new Error('Read-only view'); await query(`DELETE FROM ${tableName(table)} WHERE id=$1`, [id]); },

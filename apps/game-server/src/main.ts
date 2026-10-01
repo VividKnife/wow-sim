@@ -4,6 +4,7 @@ import {startGameServer} from './start.ts';
 export async function main() {
   const game = await startGameServer();
   console.log(`Game server listening on http://${game.host}:${game.port}`);
+  process.send?.({type:'ready',service:'api'});
   let closing = false;
   const close = async () => {
     if (closing) return;

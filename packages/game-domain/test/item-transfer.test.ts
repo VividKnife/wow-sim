@@ -10,7 +10,7 @@ async function fixture(){
  const store=new MemoryStore(),service=new GameService(store,{contentVersion:'test',now:()=>1000});
  const hero=(await service.createAccount('a',{name:'Hero',classId:8,raceId:1},'create')).account.primaryCharacterId;
  const helper=(await seedCompanion(service,'a',{name:'Helper',classId:1})).roster.find(c=>c.id!==hero)!.id;
- const add=async(owner:string,uid:string,id=2589,count=1,extra={})=>store.transaction(tx=>tx.insert('items',{id:uid,accountId:'a',ownerCharacterId:owner,container:'bag',position:100,data:{...makeItem({itemSequence:0},id,count),...extra},source:'test'}));
+ const add=async(owner:string,uid:string,id=2589,count=1,extra={})=>store.transaction(tx=>tx.insert('items',{id:uid,accountId:'a',ownerCharacterId:owner,container:'bag',position:100,data:{...makeItem({id:'fixture',itemSequence:0},id,count),...extra},source:'test'}));
  const move=(items:any[],requestId='move',recipientId=helper,characterId=hero)=>service.command('a',{type:'transferItems',characterId,recipientId,items,requestId});
  const row=(uid:string)=>store.transaction(tx=>tx.get<Item>('items',uid));
  return {store,service,hero,helper,add,move,row};
@@ -81,9 +81,12 @@ test('party members can transfer items inside a dungeon between pulls but not du
  await f.service.command('a',{type:'setParty',characterIds:party,requestId:'party'});
  await f.service.command('a',{type:'enterDungeon',characterId:f.hero,requestId:'enter'});
  await f.move([{uid:'cloth',count:1}],'inside',f.hero,f.helper);
+ const cursor=(await f.store.read(tx=>tx.get<Character>('characters',f.helper)))!.rules.itemSequence;
+ assert.equal((await f.service.snapshot('a',f.helper)).state.itemSequence,cursor,'instance and durable character must share the split allocator cursor');
  assert.equal((await f.row('cloth'))!.data.count,2);
  assert.equal((await f.service.snapshot('a',f.hero)).state.bag.filter((item:any)=>item.id===2589).reduce((sum:number,item:any)=>sum+item.count,0),1);
  await f.service.command('a',{type:'dungeonNext',characterId:f.hero,requestId:'pull'});
+ assert.ok((await f.store.read(tx=>tx.get<Character>('characters',f.helper)))!.rules.itemSequence>=cursor,'later instance persistence must not rewind item allocation');
  await assert.rejects(f.move([{uid:'cloth',count:1}],'in-combat',f.hero,f.helper),/战斗或赶路/);
  assert.equal((await f.row('cloth'))!.data.count,2);
 });

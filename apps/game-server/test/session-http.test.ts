@@ -31,12 +31,3 @@ test('public API authenticates cookies, enforces CSRF and scopes saves; gzip and
  const login=await request('/api/auth/login',{body:credentials});assert.equal(login.status,200);assert.equal((await request(path,{cookie:login.headers.get('set-cookie')!.split(';')[0]})).status,200);
  assert.equal((await request('/api/auth/login',{body:{...credentials,password:'x'.repeat(5000)}})).status,413);
 });
-
-test('CDN URL rewriting leaves canonical local checkpoints byte-for-byte intact',async t=>{
- const original={state:{name:'/icons/player-name',serverBuffs:[{id:'experience',icon:'/icons/class-assets/buff.jpg',xpMultiplier:2}]}};
- const game=createGameServer({appOrigin:'https://game.test',publicAssetBase:'https://cdn.test/public/version',accounts:{async session(){return {id:'owner',username:'owner'};},async logout(){},async login(){throw new Error();},async register(){throw new Error();}},service:{async localSimulation(){return structuredClone(original);}} as any});
- game.server.listen(0,'127.0.0.1');await once(game.server,'listening');t.after(()=>game.close());
- const url=`http://127.0.0.1:${(game.server.address() as any).port}/api/game/local`;
- const response=await fetch(url,{method:'POST',headers:{origin:'https://game.test','content-type':'application/json'},body:JSON.stringify({type:'claim',requestId:'checkpoint-url-test'})});
- assert.equal(response.status,200);assert.deepEqual(await response.json(),original);
-});

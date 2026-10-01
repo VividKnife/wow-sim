@@ -16,7 +16,7 @@ await service.store.transaction(async tx=>{const c=await tx.get('characters',her
 await service.command('preview',{type:'turnin',id:900001,requestId:'unlock'});
 await seedCompanion(service,'preview',{name:'测试法师',classId:8,raceId:1});
 await seedCompanion(service,'preview',{name:'测试牧师',classId:5,raceId:1});
-await service.store.transaction(async tx=>{const c=await tx.get('characters',hero),s=await context(tx,c,1000,false);for(const [id,n]of [[2589,17],[118,5],[159,7],[80,1]])receive(s,id,n);await persistAssets(tx,c,s,'fixture',service.id);});
+await service.store.transaction(async tx=>{const c=await tx.get('characters',hero),s=await context(tx,c,1000,false);for(const [id,n]of [[2589,17],[118,5],[159,7],[80,1]])receive(s,id,n);await persistAssets(tx,c,s,'fixture');});
 const api={name:'transfer-fixture',configureServer(server){server.middlewares.use(async(req,res,next)=>{
  if(!req.url?.startsWith('/fixture-api'))return next();
  try{let result;if(req.method==='POST'){let body='';for await(const chunk of req)body+=chunk;result=await service.command('preview',JSON.parse(body));}else result=await service.snapshot('preview',new URL(req.url,'http://localhost').searchParams.get('characterId')||undefined);res.setHeader('content-type','application/json');res.end(JSON.stringify({...result,data:view(result.state)}));}catch(e){res.statusCode=400;res.end(JSON.stringify({error:e.message}));}

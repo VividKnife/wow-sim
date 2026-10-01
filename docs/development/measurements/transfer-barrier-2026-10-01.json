@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-01",
+  "rulesetVersion": "owned-v1:ba7d70928d5fd456cb3f3dd6f8a53bd385959830c34208e6e14062ba5607166b",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "architectureComplete": false,
+  "scope": "Transfer preparation/cancellation barrier, durable owner sealing and stale-writer exclusion",
+  "sourceSha256": {
+    "apps/simulation-host/src/session.ts": "b8e7974aca36c12db5298a2574e9aa05709b9c6a7cf9bf1da806db335ce4e00c",
+    "apps/simulation-host/src/host.ts": "a330924ec69f02d32a81524e15cd6d193b0e90002de0fc7b97a2295e336bc286",
+    "apps/simulation-host/src/worker.ts": "3bbd86179178f63cd984567ddaa63a4098feb15851076608be2520b06d450c00",
+    "apps/simulation-host/src/messages.ts": "2f732391f07aeb8e4b2412fac1459e75de0aa618cef34b63da7de674ee59ee37",
+    "packages/persistence/src/simulation.ts": "8343f8abd02953d0992a7002377646be11f5318213770c83b0c28b06d98b0c2f",
+    "packages/game-domain/src/resident-store.ts": "0a64f139bf00ec2b5c0288e02cf9cac137622409a186e76762558512418ebd86"
+  },
+  "changes": [
+    "Worker quiesce freezes the exact state and removes scheduled wakes without pausing other rooms.",
+    "Session refuses new input/publication, drains accepted work, commits a checkpoint and seals its durable owner/cursor.",
+    "Sealed owners cannot checkpoint, renew, release or write resident assets through ordinary domain authority.",
+    "Abort validates durable owner/epoch/cursor before resuming; lost acknowledgements and decision timeout fence local execution.",
+    "Queue saturation refuses preparation without wedging the session; shutdown does not release uncertain transfer authority."
+  ],
+  "validation": {
+    "simulation": {
+      "tests": 180,
+      "passed": 180,
+      "failed": 0,
+      "durationMs": 183414.712792,
+      "log": "/tmp/wow-sim-transfer-complete.log"
+    },
+    "rootTypecheck": "passed",
+    "gitDiffCheck": "passed",
+    "postgres": {
+      "schema": "sim2_transfer_4b8bc089b630e3ee",
+      "rulesetVersion": "owned-v1:ba7d70928d5fd456cb3f3dd6f8a53bd385959830c34208e6e14062ba5607166b",
+      "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+      "durationMs": 2376,
+      "node": "v24.15.0",
+      "result": "passed",
+      "connections": "Two independent PostgreSQL pools",
+      "assertions": [
+        "sealed owner rejects checkpoint from another connection",
+        "sealed owner rejects direct participant wallet write",
+        "stale abort cannot resume after takeover",
+        "takeover preserves both participants items/wallets/ledger",
+        "in-flight pre-seal writer rolls back and re-reads the seal on serializable retry"
+      ],
+      "limitations": [
+        "local isolated schema, retained for inspection",
+        "no production join/leave UI path exercised",
+        "no capacity claim"
+      ]
+    },
+    "postgresEvidence": ".cache/qa/transfer-seal-1790818445002.json"
+  },
+  "limitations": [
+    "Preparation/cancellation only. Production join/leave, atomic claim reassignment and source owner retirement are not implemented by this change.",
+    "Room composition still needs event/time rebasing and cross-room input idempotence.",
+    "No browser playtest or capacity measurement in this turn; earlier browser evidence retains its own version.",
+    "The PostgreSQL check only created and modified its own isolated schema; it is retained for inspection."
+  ]
+}

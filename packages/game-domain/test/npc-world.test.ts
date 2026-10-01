@@ -7,9 +7,9 @@ import {stats} from '../src/rules/character.js';
 import {items} from '../src/rules/catalog.js';
 import {equipmentUpgrade} from '../src/rules/npc-equipment.js';
 import {queueGroupLoot,resolveGroupLoot,groupLootView,tickGroupLoot} from '../src/rules/group-loot.js';
+import {queueCombatLoot} from '../src/rules/loot.js';
 import {progressNpcWorld,syncNpcWorld,NPC_REFRESH_MS} from '../src/rules/npc-world.js';
 import {projectClientSnapshot} from '../src/rules/client-snapshot.ts';
-import {localEligible} from '../src/local-simulation.ts';
 import type {Rules} from '../src/model.ts';
 
 function world(){let s:Rules=createGame('旅人',1729,0);s.level=24;s.location='deadmines';const st=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;s=act(s,{type:'npcVisit'},0);return act(s,{type:'npcRecommend'},0);}
@@ -79,9 +79,9 @@ test('loot is awarded once; upgrades persist and no longer qualify as need; hidd
  const projected=projectClientSnapshot(s,view(s));assert.equal((projected.view as any).groupLoot.history.length,1);assert.ok(!(projected.player as any).npcWorld);
 });
 
-test('manual roll clock starts after combat, automatic policy resolves safely, quest drops keep old routing',()=>{
- const s=run();assert.equal(queueGroupLoot(s,5397,1),false);queueGroupLoot(s,5191,1);s.clock=100000;s.combat={id:'battle'};tickGroupLoot(s);assert.equal(s.groupLoot.pending[0].deadline,null);
- s.combat=null;tickGroupLoot(s);assert.equal(s.groupLoot.pending[0].deadline,160000);s.clock=160001;tickGroupLoot(s);assert.equal(s.groupLoot.pending.length,0);
+test('a lone human has no roll timeout, automatic policy resolves safely, quest drops keep old routing',()=>{
+ const s=run();assert.equal(queueGroupLoot(s,5397,1),false);queueGroupLoot(s,5191,1);s.clock=100000;s.combat={id:'battle',dungeon:true};tickGroupLoot(s);assert.equal(s.groupLoot.pending[0].deadline,null);
+ s.combat=null;tickGroupLoot(s);assert.equal(s.groupLoot.pending[0].deadline,null);s.clock=99999999;tickGroupLoot(s);assert.equal(s.groupLoot.pending.length,1);resolveGroupLoot(s,s.groupLoot.pending[0].id,'pass');
  queueGroupLoot(s,5191,1);s.npcWorld.autoLoot=true;tickGroupLoot(s);assert.equal(s.groupLoot.pending.length,0);
 });
 
@@ -95,7 +95,6 @@ test('service restores a persistent NPC roster after restart without owned compa
  const f=await fixture();let snap=await f.command('npcRecommend');const selected=snap.state.npcWorld.selection;
  const friend=selected[0];await f.command('npcFriend',{id:friend,friend:true});f.restart();snap=await f.snapshot();assert.deepEqual(snap.state.party,[]);
  snap=await f.command('enterDungeon',{contentId:'deadmines'});assert.equal(snap.state.party.length,4);assert.ok(snap.state.party.every((c:Rules)=>c.npcPlayer));assert.equal(snap.instance!.roster.filter((r:Rules)=>r.controller==='npc').length,4);
- const instance:any=await f.store.read(tx=>tx.get('instances',snap.instanceId!));assert.equal(localEligible(instance),true);
  assert.equal((await f.store.read(tx=>tx.list('actor_leases'))).length,1);
  await assert.rejects(f.command('npcGroup',{memberIds:[]}),/先离开|这项操作/);
  await f.command('leaveDungeon');f.restart();snap=await f.snapshot();assert.deepEqual(snap.state.party,[]);assert.deepEqual(snap.state.npcWorld.selection,selected);
@@ -186,4 +185,14 @@ test('service restart and duplicate refresh requests preserve the same batch and
  assert.ok(first.state.npcWorld.board.ids.every((id:string)=>!ids.includes(id)));
  await assert.rejects(f.command('npcRefresh'),/秒后/);
  const snapshot=await f.snapshot();assert.equal(view(snapshot.state).npcWorld.board!.remaining,NPC_REFRESH_MS);
+});
+
+
+test('ordinary dungeon loot rotates through NPC seats and credits the entire stack value without opening rolls',()=>{
+ const s=run(),npc=s.party[0],profile=s.npcWorld.residents.find((p:Rules)=>p.id===npc.id),wallet=profile.wallet;
+ s.combat={id:'ordinary-loot',dungeon:true};
+ queueCombatLoot(s,2770,3);queueCombatLoot(s,2770,3);
+ assert.equal(s.pending.find((i:Rules)=>i.id===2770).count,3);
+ assert.equal(profile.wallet,wallet+items[2770].SellPrice*3);
+ assert.equal(s.groupLoot?.pending.length||0,0);
 });

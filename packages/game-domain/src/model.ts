@@ -44,7 +44,6 @@ export interface Wallet {
 }
 export interface Activity {
     xpMultiplier?: number;
-    localSimulation?: import('./local-simulation.ts').LocalSession;
     playback?: PlaybackManifest;
     simulationVersion?: number;
     id: string;
@@ -68,7 +67,6 @@ export interface Activity {
     error?: string;
 }
 export interface Instance {
-    localSimulation?: import('./local-simulation.ts').LocalSession;
     playback?: PlaybackManifest;
     simulationVersion?: number;
     id: string;

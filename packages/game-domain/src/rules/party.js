@@ -1,4 +1,5 @@
 import {items,classAbilities,classDefinitions} from './catalog.js';
+import {setCombatStrategy} from './strategy-revision.js';
 import {newCharacter,stats,canEquip,slotOf,makeItem} from './character.js';
 import {npcBuildPlan,allocateNpcTalents} from './npc-builds.js';
 import {npcStrategy} from './npc-strategies.js';
@@ -51,7 +52,7 @@ export function createNpcMember(s,id,options={}){
  // Talent grants unlock trainable higher ranks (e.g. Aimed Shot and Mind Flay).
  c.learned=companionSkills(c);
  const preset=npcStrategy(c,plan),{priorities,...build}=plan;c.npcBuild={...build,name:preset.name};
- c.rules=preset.rules;c.strategyPolicy=preset.policy;c.autoBuffs=preset.autoBuffs;c.potions=preset.potions;
+ setCombatStrategy(c,{rules:preset.rules,strategyPolicy:preset.policy});c.autoBuffs=preset.autoBuffs;setCombatStrategy(c,{potions:preset.potions});
  for(const [slot,item]of Object.entries(starterGear(c,role)))c.equipment[slot]={...makeItem(s,item),issued:true,bound:true,ownerId:c.id};
  const st=stats(c);c.hp=st.maxHp;c.mana=st.maxMana;
  s.party.push(c);return c;

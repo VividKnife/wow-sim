@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-01",
+  "kind": "resident-presence-correctness",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:b323fed73030c3841363e0669e4bf23e6a531fcce0267777e374c7ced39f909b",
+    "contentHash": "7691bf09687eea722ce20cc09d3b19b513d2f4294f2d9d030393d877f7b0045b"
+  },
+  "node": "v24.15.0",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "verification": {
+    "tests": 46,
+    "passed": 46,
+    "failed": 0,
+    "durationMs": 82855.131459,
+    "typecheck": "passed",
+    "diffCheck": "passed"
+  },
+  "coverage": [
+    "bounded offline progression and deferred allowed time",
+    "exact state and RNG after reconnect and restore",
+    "pause preservation",
+    "account and controller fencing",
+    "real Worker sleep and authenticated wakeup",
+    "gateway online flag and default two-hour limit",
+    "transactional presence and asset rollback",
+    "process recovery and existing five-scenario goldens"
+  ],
+  "limitations": [
+    "No browser playthrough added in this run",
+    "No capacity or throughput measurement",
+    "Sleeping instances retain memory and low-frequency checkpoint IO",
+    "Save deletion and idle eviction remain unfinished",
+    "Long catch-up admission and asynchronous input receipts remain unfinished"
+  ],
+  "command": "node --test --test-concurrency=1 packages/bot-ai/test/*.test.mjs packages/combat-core/test/*.test.ts packages/simulation-tests/*.test.ts apps/simulation-host/test/*.test.ts packages/persistence/test/simulation.test.ts packages/game-domain/test/resident-characters.test.ts apps/game-server/test/resident-game.test.ts"
+}

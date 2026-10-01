@@ -1,0 +1,58 @@
+{
+  "measuredAt": "2026-09-30T20:52:02.303Z",
+  "node": "v24.15.0",
+  "cpu": "Apple M4",
+  "rulesetVersion": "owned-v1:669c273fef554bf51c85f7de61f6edc5efbfd2746426a93e252958e180b897fa",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "scope": "Independent NPC persistence and existing personal resident transaction boundary",
+  "tests": {
+    "simulation": {
+      "passed": 68,
+      "total": 68,
+      "durationMs": 118506.384458
+    },
+    "npcAssetsFinal": {
+      "passed": 3,
+      "total": 3,
+      "durationMs": 12958.965834
+    },
+    "existingNpcGoldSave": {
+      "initialPassed": 33,
+      "total": 37,
+      "repairedAndRerun": 4
+    },
+    "typecheck": "passed",
+    "simulationLatest": {
+      "passed": 69,
+      "total": 69,
+      "durationMs": 166312.22475,
+      "log": "/tmp/wow-sim-npc-full-1001.log",
+      "concurrentWorkload": "Two local browser QA sessions and their simulation host were running."
+    }
+  },
+  "evidence": [
+    "72 independent NPC records without embedded wallet/items",
+    "73 writer claims and wallets including the hero",
+    "real gold auction purchase, reagent cost and dividend materialized atomically",
+    "failure after materialization rolls back NPC rows, wallet, items, ledger and checkpoint",
+    "duplicate/old epoch cannot duplicate confirmed NPC assets",
+    "negative balance, duplicate ownership and permanent NPC removal rejected",
+    "fresh resident npcVisit creates records and claims together",
+    "save deletion removes account-scoped NPC rows and assets"
+  ],
+  "unchangedCheckpoint": {
+    "npcCount": 72,
+    "memoryMs": 33.8,
+    "embeddedPostgresMs": 53,
+    "npcRecordWalletItemWrites": 0,
+    "samplesPerBackend": 1
+  },
+  "limitations": [
+    "SQL backend is embedded PostgreSQL via PGlite, not a remote PostgreSQL latency benchmark",
+    "Checkpoint timing is one local sample per backend; no capacity conclusion",
+    "Runtime still carries NPC world and party snapshots inside the personal instance",
+    "NPCs remain scoped to their recruiting hero; independent multiaccount instance admission is not implemented",
+    "NPC ammunition quantities are still rule data rather than fully reserved ItemInstance assets",
+    "Earlier browser Onyxia proof belongs to its recorded old runtime hash; this persistence change has not yet repeated that full browser run"
+  ]
+}

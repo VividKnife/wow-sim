@@ -2,7 +2,6 @@ import {useState} from 'react';
 import {Flag,Shield,Swords,Heart,Move,Target,Users,ChevronRight} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
-import {useLocalBattleground} from '@/lib/local-combat-store';
 import type {GameProps} from './game-ui';
 import type {BattlegroundPoint,BattlegroundMap,BattlegroundMatch,BattlegroundFlag,BattlegroundMember,BattlegroundView} from '../../../packages/contracts/src/battleground';
 import './battleground.css';
@@ -85,7 +84,7 @@ function Match({match,map,orders,routes,busy,send}:{match:BattlegroundMatch;map:
  </>;
 }
 export default function Battleground({data,busy,send}:GameProps){
- const bg=useLocalBattleground(data.battleground);
+ const bg=data.battleground;
  if(!bg)return <p role="status">正在加载战场…</p>;
  return <section className="wsg-page"><header className="wsg-heading"><div><span className="wsg-eyebrow">BATTLEGROUNDS / 10 VS 10</span><h2><Flag size={24}/> 战歌峡谷</h2><p>夺取敌方旗帜并带回基地，率先交还三面旗帜获胜。</p></div><span className="wsg-level">20级开放</span></header>
   {bg.match?<Match key={bg.match.id} match={bg.match} map={bg.map} orders={bg.orders} routes={bg.routes} busy={busy} send={send}/>:<div className="wsg-lobby"><Field map={bg.map}/><div className="wsg-enlist"><span className="wsg-eyebrow">夺旗战 · 指挥官席位</span><h3>集结你的十人战队</h3><p>主角与当前同级、存活的队友出战，志愿队员补足十人。对手为另一支十人 NPC 战队。</p><div className="wsg-lobby-facts"><span><Flag/>三旗获胜</span><span><Shield/>己旗归位才能交旗</span><span><Users/>30秒集体复活</span></div><Button disabled={busy||!!bg.blockedReason} onClick={()=>void send({type:'battlegroundPrepare'})}>进入战场 · 战前部署</Button>{bg.blockedReason&&<p role="status" className="wsg-lock">{bg.blockedReason}</p>}<small>已参加 {bg.record.played} 场 · 获胜 {bg.record.won} 场 · 交旗 {bg.record.captures} 次</small></div></div>}

@@ -24,5 +24,8 @@ CREATE INDEX IF NOT EXISTS activities_due_idx ON activities(next_event_at,id) WH
 CREATE INDEX IF NOT EXISTS instances_due_idx ON instances(next_event_at,id) WHERE status IN ('running','returning');
 CREATE INDEX IF NOT EXISTS items_owner_idx ON items(owner_character_id);
 CREATE INDEX IF NOT EXISTS reservations_owner_idx ON reservations(owner_character_id);
+CREATE INDEX IF NOT EXISTS npc_characters_owner_idx ON npc_characters(owner_character_id);
+CREATE INDEX IF NOT EXISTS simulation_characters_instance_idx ON simulation_characters(instance_id);
+CREATE INDEX IF NOT EXISTS accounts_user_idx ON accounts((data->>'userId'));
 CREATE INDEX IF NOT EXISTS outbox_pending_idx ON outbox(status,id);
 `;

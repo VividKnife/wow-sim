@@ -1,4 +1,4 @@
-import {projectLocalCheckpoint} from '../src/rules/local-checkpoint.js';
+import {arenaMaps} from '../../sim-core/src/arena-maps.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance} from '../src/rules/engine.js';
@@ -11,7 +11,7 @@ import {effectiveArmor} from '../src/rules/companion-combat.js';
 import {canPolymorph} from '../src/rules/polymorph.js';
 import {addCombatAura,controlled,rooted} from '../../sim-core/src/combat-auras.js';
 import {pvpControlRemaining,syncPvpDiminishing,breakPvpControls} from '../../sim-core/src/pvp-control.js';
-import {arenaMaps,arenaPath,clearArenaSegment,arenaClipMove,arenaSight} from '../../sim-core/src/arena-space.js';
+import {scenePath,clearSceneSegment,clipSceneMove,sceneSight} from '../../sim-core/src/scene-space.js';
 import {distance,point} from '../../sim-core/src/geometry.js';
 import {moveToward} from '../src/rules/combat-space.js';
 import {projectClientSnapshot} from '../src/rules/client-snapshot.ts';
@@ -33,6 +33,17 @@ test('竞技场在60级开放，低等级无法进入',()=>{
  assert.equal(prepare().arena.phase,'preparing');
 });
 function start(s:Rules){return act(s,{type:'arenaStart',matchId:s.arena.id,revision:s.arena.planRevision,plan:s.arena.teams[0].plan},s.wallAt) as Rules;}
+
+test('arena event times use the arena clock even after a long adventuring lifetime',()=>{
+ let s=roster(3);s.clock=s.wallAt=900000000;s.nextTick=s.clock+100;s.nextRegen=s.clock+2000;
+ s=act(s,{type:'arenaPrepare',size:3,mapId:'courtyard',opponentId:'rmp',memberIds:[s.id,...s.party.map((c:Rules)=>c.id)]},s.wallAt);
+ s=start(s);s=advance(s,s.wallAt+12000).state;
+ const launches=s.arena.logs.filter((l:Rules)=>l.kind==='launch');assert.ok(launches.length>0);
+ const queues=[s.arena.simulationEvents.queue];
+ assert.ok(queues.length>0);
+ for(const queue of queues){assert.ok(queue.nowMs<=s.arena.clock);assert.ok(queue.nextSequence>0);for(const e of queue.events)assert.ok(e.atMs<600000,'must not use adventuring nextTick');}
+ assert.ok(s.nextTick>900000000,'arena injection must restore the world clock boundary');
+});
 
 test('preparation is unlimited, frozen, serializable and starts only after explicit validated command',()=>{
  const s=prepare(),frozen=JSON.stringify(s.arena),later=advance(s,7*86400000,{maxTicks:1});
@@ -80,10 +91,10 @@ test('surrender concludes once and leaves adventuring health and inventory untou
 });
 test('pillars block both line of sight and swept movement; paths go around inflated obstacles',()=>{
  const map=arenaMaps[0],from={x:-10,y:-8},to={x:10,y:-8};
- assert.equal(clearArenaSegment(map,from,to),false);const end=arenaClipMove(map,from,to);assert.ok(end.x<-3);
- const path=arenaPath(map,from,to);assert.ok(path.length>1);let previous=from;
- for(const next of path){assert.equal(clearArenaSegment(map,previous,next,.45),true);previous=next;}assert.deepEqual(previous,to);
- assert.equal(arenaSight({pvp:true,arenaArea:map,...from},to),false);
+ assert.equal(clearSceneSegment(map,from,to),false);const end=clipSceneMove(map,from,to);assert.ok(end.x<-3);
+ const path=scenePath(map,from,to);assert.ok(path.length>1);let previous=from;
+ for(const next of path){assert.equal(clearSceneSegment(map,previous,next,.45),true);previous=next;}assert.deepEqual(previous,to);
+ assert.equal(sceneSight(map,from,to),false);
 });
 test('a warrior pinned at a pillar corner reaches melee range and resumes attacks',()=>{
  const s=roster(1,60);createNpcMember(s,'warrior',{role:'tank'});createNpcMember(s,'priest',{role:'healer'});
@@ -106,12 +117,12 @@ test('pillar steering stays collision-free across corners, cached paths and both
   const radius=obstacle.radius+2;
   const from={x:obstacle.x+Math.cos(angle)*radius,y:obstacle.y+Math.sin(angle)*radius};
   const target={x:obstacle.x-Math.cos(angle)*radius,y:obstacle.y-Math.sin(angle)*radius};
-  const unit:Rules={pvp:true,arenaArea:area,position:from.x,positionY:from.y,moveSpeed:7,talents:{},auras:[]};
+  const unit:Rules={pvp:true,position:from.x,positionY:from.y,moveSpeed:7,talents:{},auras:[]};
   // An obsolete direct path must be discarded immediately, not retried into collision.
-  unit.arenaPath={target,until:60000,points:[target]};
+  unit.scenePath={target,until:60000,points:[target]};
   for(let clock=0;clock<10000&&distance(unit,target)>.01;clock+=100){
    const before=point(unit);moveToward({combat:{pvp:true,area}},unit,target,0,clock);
-   assert.ok(clearArenaSegment(area,before,unit,.45),'movement must never cross a pillar');
+   assert.ok(clearSceneSegment(area,before,unit,.45),'movement must never cross a pillar');
   }
   assert.ok(distance(unit,target)<.01,`${area.id}: path around pillar at ${obstacle.x},${obstacle.y}, angle ${angle}`);
  }
@@ -159,25 +170,4 @@ test('triggered stuns and roots use separate shared DR; character armor auras ap
  target.time=20;target.armor=stats(target).armor;
  assert.equal(effectiveArmor(target,20),stats(target).armor);
  target.classId=5;target.form='shadow';assert.equal(canPolymorph(target,spellInfo(c,118)),true);
-});
-test('service persists preparation, survives restart, accepts local checkpoints and restores world state',async()=>{
- const store=new MemoryStore();let now=1000;
- let service=new GameService(store,{contentVersion:'test',now:()=>now,seed:()=>283});
- const save=await service.createSave('arena-user',{name:'Arena captain',classId:8,raceId:1,raidReady:true},'arena');
- const original=await service.command(save.id,{type:'npcRecommend',requestId:'group'});
- const prepared=await service.command(save.id,{type:'arenaPrepare',size:5,mapId:'four-pillars',opponentId:'casters',memberIds:[original.state.id,...original.state.npcWorld.selection],requestId:'prepare'});
- const frozen=clone(prepared.state.arena);
- now+=86400000;service=new GameService(store,{contentVersion:'test',now:()=>now,seed:()=>283});
- const restored=await service.snapshot(save.id);assert.deepEqual(restored.state.arena,frozen);
- const started=await service.command(save.id,{type:'arenaStart',matchId:frozen.id,revision:0,plan:frozen.teams[0].plan,requestId:'start'});
- assert.equal(started.state.arena.phase,'countdown');
- const base={ownerId:started.localSimulation!.ownerId,characterId:started.state.id,clientId:'arena-browser',contentVersion:'test'};
- const session=await service.localSimulation(save.id,{...base,type:'claim',requestId:'claim'});
- now+=12000;const expected=advance(session.state,now).state;
- const saved=await service.localSimulation(save.id,{...base,type:'checkpoint',sessionId:session.session.id,sequence:1,state:expected,requestId:'checkpoint'});
- assert.equal(saved.state,undefined);
- assert.deepEqual((await service.snapshot(save.id)).state.arena,projectLocalCheckpoint(expected).arena);
- const finished=await service.command(save.id,{type:'arenaSurrender',matchId:frozen.id,localClientId:base.clientId,localSessionId:saved.session.id,requestId:'surrender'});
- assert.equal(finished.state.activity.type,'idle');assert.equal(finished.state.hp,original.state.hp);assert.deepEqual(finished.state.equipment,original.state.equipment);
- assert.equal(finished.state.arena.result.winner,1);
 });

@@ -39,4 +39,5 @@ export function addCombatAura(unit,aura,clock){
  unit.auras=(unit.auras||[]).filter(a=>a.until>clock&&!(a.spell===aura.spell&&a.effect===aura.effect&&(!aura.perCaster||a.caster===aura.caster)));
  unit.auras.push(aura);
  if([5,7,12].includes(aura.type)){unit.cast=null;unit.nextAction=clock;}
+ return aura;
 }

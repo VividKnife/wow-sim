@@ -12,7 +12,7 @@
 
 Actions 的 `verify-deployment` 最多等待 20 分钟，核对线上 commit、buildId、资源版本和构建模式，并检查登录页面、未登录 API 响应、静态入口资源的 MIME/CORS 与 R2 发布完成标记。结果及版本写入 Actions Summary；等待超时或检查失败会令工作流失败。连续 push 时，旧运行会标记为 superseded，由新 main 的工作流负责发布验收。
 
-此检查不会创建测试账号或修改玩家数据，也不验证 worker 的部署版本或完整登录后玩法。需要完整端到端验证时仍可运行 `verify-online.mjs`。CI 检查失败会阻止发布，需要修复代码后再次 push；自动部署不绕过检查，也不会自动回滚。
+此检查不会创建测试账号或修改玩家数据。另通过 `/api/health` 核对 API 构建身份、数据库连接、模拟线程就绪与规则/内容版本一致；仍不替代完整登录后玩法验收。需要完整端到端验证时仍可运行 `verify-online.mjs`。CI 检查失败会阻止发布，需要修复代码后再次 push；自动部署不绕过检查，也不会自动回滚。
 
 | 已配置服务 | Zeabur Service ID |
 | --- | --- |
@@ -46,9 +46,37 @@ CI 的 `validate` 成功后，`publish-deployment` 使用 `scripts/publish-zeabu
 | 服务 | 构建选择 | 运行变量 | 网络 |
 | --- | --- | --- | --- |
 | Web | 根 Dockerfile | GAME_SERVER_URL、PORT=8080 | HTTPS 域名 → 8080 |
-| game-api | ZBPACK_DOCKERFILE_NAME=runtime | DATABASE_URL、APP_ORIGIN、AUTH_TRUST_PROXY_HOPS=1、SERVICE_ROLE=api、PORT=8788、HOST=0.0.0.0 | 项目内网 8788 |
+| game-api | ZBPACK_DOCKERFILE_NAME=runtime | DATABASE_URL、APP_ORIGIN、AUTH_TRUST_PROXY_HOPS=1、SERVICE_ROLE=game、PORT=8788、HOST=0.0.0.0 | 项目内网 8788 |
 | game-worker | ZBPACK_DOCKERFILE_NAME=runtime | DATABASE_URL、SERVICE_ROLE=worker | 无公网，无 HTTP 健康检查 |
 | PostgreSQL | Zeabur PostgreSQL 模板 | 模板生成的认证配置 | 内网、持久化卷 |
+
+### 2.0 运行拓扑（发布目标配置，尚未修改线上变量）
+
+上表的 game-api 改用 `SERVICE_ROLE=game`；旧环境如果显式保存了 `SERVICE_ROLE=api`，
+发布前必须更新。runtime 镜像包含 simulation-host；一个容器内运行两个独立 Node 进程，
+先启动模拟服务，再启动 API。Worker Threads 池仍属于模拟服务，默认一个线程。
+只公开 API 的 8788，模拟 RPC 固定绑定 127.0.0.1，默认端口 8790，不配置公网路由。
+
+组合模式自动为两个子进程生成同一临时服务令牌，也可使用显式 `SIMULATION_TOKEN`。
+令牌不输出到日志、不发给浏览器，随容器重启更换不改变业务结算 ID。
+`SIMULATION_URL` 留空或设为对应 `http://127.0.0.1:<SIMULATION_PORT>`，
+误设外部地址会在启动前拒绝。`SERVICE_ROLE=api` 与 `SERVICE_ROLE=simulation` 仍用于明确管理的独立进程，
+需配置匹配令牌；远程客户端继续要求 HTTPS，不为跨容器方便而放开明文私有接口。
+
+任一子进程退出会停止另一进程，并以失败状态结束组合运行单元。正常关闭时先停止 API 接入，
+再让模拟进程提交现有检查点；每个子进程最多等待 15 秒，超时强制退出并报告失败。
+进程异常退出后的接管仍等待数据库执行权期限，不能跳过 fencing。
+`GET /api/health` 只有数据库可访问、模拟线程完成初始化且规则/内容版本一致时返回 200；
+否则返回不含内部错误的 503。探测合并并缓存一秒，避免每个探测重复查询数据库。
+
+CI 使用实际 runtime 镜像和一次性 PostgreSQL 容器验证注册、常驻角色、真实输入、WebSocket 转发、
+正常退出/重启和杀死模拟进程后的接管。它与完整模拟回归一起成为发布前置检查。
+本地复现：`RUNTIME_IMAGE=wow-sim-runtime:local-qa node scripts/verify-production.mjs`。
+不设置 RUNTIME_IMAGE 时用本地 Node 进程及隔离 PostgreSQL 运行同一流程。
+这些测试只创建并清理自己命名的临时容器，不操作已有数据库或卷。
+
+这次镜像与流程验收不代表已部署。正式切换还需完成玩法和网页验收、配置新的开发/发布 schema，
+保留现有生产数据，并按目标服务器实测设置准入上限。
 
 game-api 和 game-worker 默认提供 2 倍经验及永久经验加成 Buff。若在 Zeabur 控制台设置 `GAME_XP_MULTIPLIER`，两个服务必须都设为 `2`，否则显式配置会覆盖代码默认值。
 
@@ -103,3 +131,9 @@ docker build -f Dockerfile.runtime -t wow-sim-runtime .
 容器排除 `.env`、`.dev.vars`、Git 和预览状态；数据库应保留持久化卷。不要删除数据库卷排查应用部署问题。
 
 官方说明：[push 部署](https://zeabur.com/docs/en-US/deploy)、[Dockerfile 后缀](https://zeabur.com/docs/en-US/deploy/methods/dockerfile)、[Watch Paths](https://zeabur.com/docs/en-US/deploy/config/watch-paths)。
+
+## 2.0 首次实测发布
+
+runtime 镜像默认 `GAME_DATABASE_SCHEMA=wow_sim_v2`，API、模拟服务和后台业务 Worker 使用相同 schema。启动仅创建该 schema 和其中的新表，不删除、覆盖或迁移原有 public 数据；查询不回退 public。首次使用需要重新注册测试账号、创建角色，原账号和存档仍保留在旧数据区。切回旧镜像需同步恢复旧运行角色配置，不能让旧代码读取新 schema。
+
+API 服务需把 `SERVICE_ROLE=api` 改成 `game`；业务 Worker 保持 `worker`。默认模拟线程为 1。该版本用于玩家实测，完整玩法和容量验收尚未结束。[离线与回收规则](instance-lifecycle.md)。

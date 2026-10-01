@@ -1,0 +1,98 @@
+{
+  "measuredAt": "2026-09-30T20:39:13.234Z",
+  "node": "v24.15.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "cpu": "Apple M4",
+  "logicalCpus": 10,
+  "memoryBytes": 17179869184,
+  "rulesetVersion": "owned-v1:1e8c67c301e74aa58d4e0e2fe95fd4c92fa6f8b40129f89a19e9ce6ed4dab119",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "workerCount": 1,
+  "rounds": 3,
+  "durationMs": 2000,
+  "limitations": "Local real-worker scheduling measurement, no PostgreSQL, WebSocket or clients; CPU is whole-process CPU, not an isolated rule profile. Empty recovered idle actors have no NPC world, effects or auctions. No old-version comparison or capacity claim.",
+  "rows": [
+    {
+      "idle": 64,
+      "combat": 0,
+      "round": 0,
+      "wallMs": 2001.048334,
+      "processCpuMs": 0.263,
+      "dormantCheckpointsUnchanged": 64,
+      "combatSimElapsedMs": 0
+    },
+    {
+      "idle": 64,
+      "combat": 0,
+      "round": 1,
+      "wallMs": 2002.1759579999998,
+      "processCpuMs": 0.16,
+      "dormantCheckpointsUnchanged": 64,
+      "combatSimElapsedMs": 0
+    },
+    {
+      "idle": 64,
+      "combat": 0,
+      "round": 2,
+      "wallMs": 2001.8317500000003,
+      "processCpuMs": 0.352,
+      "dormantCheckpointsUnchanged": 64,
+      "combatSimElapsedMs": 0
+    },
+    {
+      "idle": 0,
+      "combat": 1,
+      "round": 0,
+      "wallMs": 2000.8681670000005,
+      "processCpuMs": 37.369,
+      "dormantCheckpointsUnchanged": 0,
+      "combatSimElapsedMs": 1999
+    },
+    {
+      "idle": 0,
+      "combat": 1,
+      "round": 1,
+      "wallMs": 2002.1766669999997,
+      "processCpuMs": 30.674,
+      "dormantCheckpointsUnchanged": 0,
+      "combatSimElapsedMs": 2002
+    },
+    {
+      "idle": 0,
+      "combat": 1,
+      "round": 2,
+      "wallMs": 2002.314709000002,
+      "processCpuMs": 17.677,
+      "dormantCheckpointsUnchanged": 0,
+      "combatSimElapsedMs": 2001
+    },
+    {
+      "idle": 64,
+      "combat": 1,
+      "round": 0,
+      "wallMs": 2002.354542000001,
+      "processCpuMs": 34.973,
+      "dormantCheckpointsUnchanged": 64,
+      "combatSimElapsedMs": 1999
+    },
+    {
+      "idle": 64,
+      "combat": 1,
+      "round": 1,
+      "wallMs": 2002.1337500000009,
+      "processCpuMs": 26.931,
+      "dormantCheckpointsUnchanged": 64,
+      "combatSimElapsedMs": 2001
+    },
+    {
+      "idle": 64,
+      "combat": 1,
+      "round": 2,
+      "wallMs": 2001.9666670000006,
+      "processCpuMs": 14.891,
+      "dormantCheckpointsUnchanged": 64,
+      "combatSimElapsedMs": 2000
+    }
+  ]
+}

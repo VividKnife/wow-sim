@@ -1,3 +1,7 @@
+import {addEnemyAura,prepareEnemyAuras,dueEnemyAuras,continueEnemyAura} from './enemy-aura-events.js';
+import {addGroundEffect,dueGroundEffects,continueGroundEffect,expireGroundEffects} from './ground-events.js';
+import {beginEnemyCast,takeEnemyCastReady} from './simulation-events.js';
+import {combatSight} from './combat-space.js';
 import {setCombatPosition} from './combat-area.js';
 import {onTalentEvent} from './talent-runtime.js';
 import {talentControlResistance,talentCombatDefense} from './talent-effects.js';
@@ -5,7 +9,7 @@ import {launchProjectile,takeImpacts} from './combat-projectiles.js';
 import {distance,point} from '../../../sim-core/src/geometry.js';
 import {spells,creatures,lookup,nameOf} from './catalog.js';
 import {effectRange,roll,rng,log,stats,armorReduction,enemy} from './character.js';
-import {addCombatAura,hasAura,controlled,castTimeMultiplier,schoolImmune,physicalDamageBonus} from '../../../sim-core/src/combat-auras.js';
+import {hasAura,controlled,castTimeMultiplier,schoolImmune,physicalDamageBonus} from '../../../sim-core/src/combat-auras.js';
 import {beginSpellTiming,finishSpellTiming,spellReady} from './spell-timing.js';
 import {ranks} from './talent-effects.js';
 
@@ -69,7 +73,7 @@ function applySpell(s,e,target,sp,actors,hurt,ancestors=[]){
   if([42,56].includes(effect)){summon(s,e,sp,n);continue;}
   if(effect===27){
    const interval=sp['EffectAmplitude'+n],radius=lookup.SpellRadius[sp['EffectRadiusIndex'+n]]?.radiusYards||0;
-   s.groundEffects??=[];s.groundEffects.push({spell:sp.Id,caster:e.id,casterName:e.name,position:target.position,positionY:target.positionY||0,center:point(target),radius,school:sp.School,amount:roll(s,...effectRange(e,sp,n)),interval,next:s.clock+interval,until:s.clock+sp.durationMs});continue;
+   s.groundEffects??=[];addGroundEffect(s,{spell:sp.Id,caster:e.id,casterName:e.name,position:target.position,positionY:target.positionY||0,center:point(target),radius,school:sp.School,amount:roll(s,...effectRange(e,sp,n)),interval,next:s.clock+interval,until:s.clock+sp.durationMs});continue;
   }
   if(effect===40){e.dualWield=true;continue;}
   if(effect===19){e.extraAttacks=(e.extraAttacks||0)+effectRange(e,sp,n)[0];continue;}
@@ -100,8 +104,8 @@ function applySpell(s,e,target,sp,actors,hurt,ancestors=[]){
     if(auraType===7&&unit.racialImmuneFearUntil>s.clock||resist>0&&rng(s)<resist)continue;
     const interval=sp['EffectAmplitude'+n]||0;
     if(auraType===36)unit.auras=(unit.auras||[]).filter(a=>a.type!==36&&!a.stancePassive);
-    addCombatAura(unit,{spell:sp.Id,effect:n,type:sp['EffectApplyAuraName'+n],amount,misc:sp['EffectMiscValue'+n],trigger:sp['EffectTriggerSpell'+n],school:sp.School,
-     positive:!actors.includes(unit),dispel:sp.Dispel,mechanic:sp.Mechanic||sp['EffectMechanic'+n],caster:e.id,casterName:e.name,until:sp.durationMs===Number.MAX_SAFE_INTEGER?sp.durationMs:s.clock+sp.durationMs,interval,next:interval?s.clock+interval:0},s.clock);
+    addEnemyAura(s,unit,{spell:sp.Id,effect:n,type:sp['EffectApplyAuraName'+n],amount,misc:sp['EffectMiscValue'+n],trigger:sp['EffectTriggerSpell'+n],school:sp.School,
+     positive:!actors.includes(unit),dispel:sp.Dispel,mechanic:sp.Mechanic||sp['EffectMechanic'+n],caster:e.id,casterName:e.name,until:sp.durationMs===Number.MAX_SAFE_INTEGER?sp.durationMs:s.clock+sp.durationMs,interval,next:interval?s.clock+interval:0});
     // The NPC stance spells use the same Classic stance passives as warriors.
     // Parent ownership lets a stance change remove its passive modifiers too.
     const passive=auraType===36?({7164:7376,7165:21156})[sp.Id]:null;
@@ -114,20 +118,21 @@ export function castEnemySpell(s,e,target,id,actors,hurt,flags=0){
  e.time=s.clock;const sp=enemySpellInfo(e,id),triggered=!!(flags&2);if(!sp||!target||e.hp<=0)return false;
  if(!triggered&&(e.cast||controlled(e,s.clock)||e.silenceUntil>s.clock||hasAura(e,27,s.clock)||(e.nextAction||0)>s.clock||(e.schoolLockouts?.[sp.School]||0)>s.clock||!spellReady(e,sp,s.clock)))return false;
  const separation=distance(target,e);
+ if(!triggered&&target!==e&&!combatSight(s,e,target))return false;
  if(!triggered&&!(flags&4)&&(e.mana<sp.mana||target!==e&&(separation>sp.range||separation<sp.minRange)))return false;
  if(flags&32&&(target.auras||[]).some(a=>a.spell===id&&a.until>s.clock))return false;
  const timing=!triggered?beginSpellTiming(e,sp,s.clock,{pool:'mana',cost:flags&4?Math.min(e.mana,sp.mana):sp.mana}):null;
  log(s,`${e.name} 施放 ${nameOf('spells',id)}`,'cast',{actorId:e.id,targetId:target.id,spellId:id,school:sp.School,duration:triggered?0:sp.castMs});
- if(!triggered&&sp.castMs)e.cast={timing,spell:id,target:target.id,startedAt:s.clock,until:s.clock+sp.castMs,center:[1,2,3].some(n=>sp['Effect'+n]===27)?point(target):null};
+ if(!triggered&&sp.castMs)beginEnemyCast(s,e,{timing,spell:id,target:target.id,startedAt:s.clock,until:s.clock+sp.castMs,center:[1,2,3].some(n=>sp['Effect'+n]===27)?point(target):null});
  else if(triggered||!launchProjectile(s,e,target,sp,'enemy'))applySpell(s,e,target,sp,actors,hurt);
  return true;
 }
-export function tickEnemySpell(s,e,actors,hurt){
+export function tickEnemySpell(s,e,actors,hurt,prepared=false){
  if(!e.cast)return;
  if(e.hp<=0||controlled(e,s.clock)){e.cast=null;e.nextAction=s.clock;return;}
- if(s.clock<e.cast.until)return;
+ if(!takeEnemyCastReady(s,e,prepared))return;
  const cast=e.cast;e.cast=null;const target=[...actors,...s.combat.enemies].find(u=>u.id===cast.target&&u.hp>0);
- const sp=enemySpellInfo(e,cast.spell),aim=cast.center?{id:cast.target,hp:target?.hp||1,position:cast.center.x,positionY:cast.center.y}:target;if(aim&&(target===e||distance(e,aim)<=sp.range&&distance(e,aim)>=sp.minRange)&&finishSpellTiming(e,cast.timing,s.clock)){if(!launchProjectile(s,e,aim,sp,'enemy'))applySpell(s,e,aim,sp,actors,hurt);}else log(s,'施法取消：目标失效、资源不足或超出距离','cancel',{actorId:e.id,spellId:cast.spell});
+ const sp=enemySpellInfo(e,cast.spell),aim=cast.center?{id:cast.target,hp:target?.hp||1,position:cast.center.x,positionY:cast.center.y}:target;if(aim&&(target===e||distance(e,aim)<=sp.range&&distance(e,aim)>=sp.minRange&&combatSight(s,e,aim))&&finishSpellTiming(e,cast.timing,s.clock)){if(!launchProjectile(s,e,aim,sp,'enemy'))applySpell(s,e,aim,sp,actors,hurt);}else log(s,'施法取消：目标失效、资源不足或超出距离','cancel',{actorId:e.id,spellId:cast.spell});
 }
 export function tickEnemyAuras(s,actors,hurt){
  const hurtAuraTarget=(state,caster,target,amount,label,detail)=>{
@@ -139,29 +144,33 @@ export function tickEnemyAuras(s,actors,hurt){
   log(state,`${caster.name} 的${label}对 ${target.name} 造成 ${damage} 点伤害`,'damage',
    {actorId:caster.id,targetId:target.id,amount:damage,action:label,...detail});
  };
- for(const area of s.groundEffects||[])if(area.interval&&area.side!=='friendly'){
+ for(const area of dueGroundEffects(s,'enemy')){
   while(area.next<=s.clock&&area.next<=area.until){
    for(const unit of actors.filter(u=>u.hp>0&&distance(u,area)<=area.radius))if(!schoolImmune(unit,area.school,area.next-1))hurt(s,{id:area.caster,name:area.casterName},unit,area.amount,nameOf('spells',area.spell),{spellId:area.spell,periodic:true});
    area.next+=area.interval;
   }
+  continueGroundEffect(s,area);
  }
- s.groundEffects=(s.groundEffects||[]).filter(a=>a.until>s.clock);
+ expireGroundEffects(s);
+ prepareEnemyAuras(s);
  for(const unit of [...actors,...(s.combat?.enemies||[])]){
-  if(unit.hp<=0){unit.auras=[];continue;}
+  if(unit.hp<=0){unit.auras=[];dueEnemyAuras(s,unit,3);continue;}
   // NPC periodic trigger auras (for example Herod's Whirlwind) use the same
   // spell effects and radius checks as their ordinary casts.
-  for(const aura of [...(unit.auras||[])])if(aura.type===23&&aura.interval&&aura.trigger){
+  for(const aura of dueEnemyAuras(s,unit,23)){
    const caster=s.combat?.enemies.find(e=>e.id===aura.caster&&e.hp>0&&!e.removed);
-   if(!caster)continue;
-   const spell=enemySpellInfo(caster,aura.trigger);if(!spell)continue;
+   const spell=caster&&enemySpellInfo(caster,aura.trigger);
+   if(!spell){continueEnemyAura(s,unit,aura);continue;}
    while(aura.next<=s.clock&&aura.next<=aura.until&&unit.hp>0){applySpell(s,caster,unit,spell,actors,hurtAuraTarget,[aura.spell]);aura.next+=aura.interval;}
+   continueEnemyAura(s,unit,aura);
   }
-  for(const aura of unit.auras||[])if(aura.type===3&&aura.interval){
+  for(const aura of dueEnemyAuras(s,unit,3)){
    while(aura.next<=s.clock&&aura.next<=aura.until&&unit.hp>0){
     const caster=s.combat?.enemies.find(e=>e.id===aura.caster)||{id:aura.caster,name:aura.casterName};
     if(!schoolImmune(unit,aura.school,aura.next-1))hurtAuraTarget(s,caster,unit,aura.amount,nameOf('spells',aura.spell),{spellId:aura.spell,periodic:true});
     aura.next+=aura.interval;
    }
+   continueEnemyAura(s,unit,aura);
   }
   unit.auras=(unit.auras||[]).filter(a=>a.until>s.clock);
  }

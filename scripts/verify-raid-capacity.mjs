@@ -10,7 +10,6 @@ import {projectCombatPlayback} from '../packages/game-domain/src/rules/client-sn
 import {combatCommandView} from '../packages/game-domain/src/rules/combat-command.js';
 import {raidCommandView} from '../packages/game-domain/src/rules/raid-command.js';
 import {goldRaidView} from '../packages/game-domain/src/rules/gold-raid.js';
-import {projectLocalCheckpoint} from '../packages/game-domain/src/rules/local-checkpoint.js';
 
 const arg=name=>process.argv.find(a=>a.startsWith(`--${name}=`))?.slice(name.length+3);
 const fixtures=arg('fixtures'),tracePath=arg('trace'),expectedPath=arg('expected');
@@ -31,7 +30,7 @@ for(const boss of ['lucifron','majordomo'])for(const size of [25,40]){
    if(!cachedRaid||at%1000===0)cachedRaid={combatCommand:combatCommandView(state),raidCommand:raidCommandView(state),...(state.goldRaid?{goldRaid:goldRaidView(state)}:{})};
    Object.assign(frame.view,cachedRaid);sample.frame=hash(frame);
   }
-  if(at%10000===0)sample.checkpoint=hash(projectLocalCheckpoint(state));
+  if(at%10000===0)sample.checkpoint=hash(structuredClone(state));
   sample.state=hash(state);result.slices.push(sample);
  }
  console.error(`Traced ${name}: ${result.slices.length} slices`);

@@ -14,7 +14,7 @@ async function fixture(){
  const helper=(await seedCompanion(service,'a',{type:'createCompanion',name:'Helper',classId:8,raceId:1,requestId:'helper'})).roster.find(row=>row.id!==hero)!.id;
  await service.command('a',{type:'setParty',characterIds:[hero,helper],requestId:'party'});
  async function reward(uid:string,extra={}){
-  const item={...makeItem({itemSequence:0},80),...extra};assert.equal(item.bound,true);
+  const item={...makeItem({id:'fixture',itemSequence:0},80),...extra};assert.equal(item.bound,true);
   await store.transaction(tx=>tx.insert('items',{id:uid,accountId:'a',ownerCharacterId:hero,container:'bag',position:100,data:item,source:'boss-loot'}));
  }
  const row=(uid:string)=>store.transaction(tx=>tx.get<Item>('items',uid));

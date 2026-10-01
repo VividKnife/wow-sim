@@ -102,7 +102,10 @@ export function strategyAllows(s,c,e,sp,rule,center){
  if(sp.SpellName!=='Polymorph'){
   const tank=waitingTank(s,c);
   const tanks=s.combat?.raidEncounter?combatMembers(s).filter(a=>a.hp>0&&combatRole(a)==='tank'):[tank].filter(Boolean);
-  if(tank&&!(order?.kind==='kite'&&order.targetId===e?.id)&&(waitingForPull(s,c)||targets.some(x=>!tanks.some(t=>x.target===t.id&&x.threat?.[t.id]>0))))return false;
+  // Airborne targets cannot be held by ordinary melee tank attacks. Use this
+  // visible state, not a boss/phase exception; landing restores the same aggro
+  // discipline. Pull timing, CC and each skill's reach still apply separately.
+  if(tank&&!(order?.kind==='kite'&&order.targetId===e?.id)&&(waitingForPull(s,c)||targets.some(x=>!x.airborne&&!tanks.some(t=>x.target===t.id&&x.threat?.[t.id]>0))))return false;
  }
  return true;
 }

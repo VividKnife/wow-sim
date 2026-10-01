@@ -1,10 +1,13 @@
+import {addGroundEffect} from '../../../packages/game-domain/src/rules/ground-events.js';
+import {beginActorCast,beginEnemyCast} from '../../../packages/game-domain/src/rules/simulation-events.js';
+import {launchProjectile} from '../../../packages/game-domain/src/rules/combat-projectiles.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {newCharacter} from '../../../packages/game-domain/src/rules/character.js';
 import {meterRows} from '../../../packages/sim-core/src/combat-meter.js';
 import {initializeMetrics,recordMetric,finishCombat} from '../../../packages/game-domain/src/rules/combat-metrics.js';
 
-const state=()=>({...newCharacter('同名'),bag:[],clock:1000,party:[{...newCharacter('同名'),id:'mage-2'}],logs:[],combat:{startedAt:1000,dungeon:true,runId:'run-1'},dungeon:{runId:'run-1'}});
+const state=()=>({...newCharacter('同名'),bag:[],clock:1000,party:[{...newCharacter('同名'),id:'mage-2'}],logs:[],combat:{enemies:[],startedAt:1000,dungeon:true,runId:'run-1'},dungeon:{runId:'run-1'}});
 test('actor and spell identities survive names, periodic hits and truncated logs',()=>{
  const s=state();initializeMetrics(s);
  recordMetric(s,s,{hp:80},100,{spellId:133,label:'火球术',critical:true});
@@ -43,7 +46,7 @@ test('finalization freezes encounter duration and accumulates each dungeon segme
  assert.deepEqual(meterRows(battle,90000),meterRows(battle,3000));
  s.combat=battle;s.clock=4000;finishCombat(s);
  assert.equal(s.dungeon.metrics.durationMs,2000);assert.equal(meterRows(s.dungeon.metrics,s.clock)[0].damage,100);
- s.clock=20000;s.combat={startedAt:20000,dungeon:true,runId:'run-1'};initializeMetrics(s);
+ s.clock=20000;s.combat={enemies:[],startedAt:20000,dungeon:true,runId:'run-1'};initializeMetrics(s);
  recordMetric(s,s,{hp:1000},200,{spellId:133});s.clock=24000;finishCombat(s);
  const aggregate=meterRows(s.dungeon.metrics,90000)[0];
  assert.equal(s.dungeon.metrics.durationMs,6000);assert.equal(aggregate.damage,300);assert.equal(aggregate.dps,50);
@@ -55,7 +58,7 @@ test('hunter and warlock party pets stay attributed across encounters and dungeo
  const owners=[s,...s.party];
  for(const [index,owner] of owners.entries())owner.pet={...newCharacter(index?'Imp':'灰牙'),id:`${owner.id}-pet`,ownerId:owner.id,classId:0,petUnit:true,kind:index?'imp':'beast'};
  for(let segment=1;segment<=2;segment++){
-  s.combat={startedAt:s.clock,dungeon:true,runId:'run-1'};
+  s.combat={enemies:[],startedAt:s.clock,dungeon:true,runId:'run-1'};
   initializeMetrics(s);
   for(const [index,owner] of owners.entries()){
    recordMetric(s,owner,{hp:500},70,{spellId:0,label:'近战攻击'});
@@ -116,18 +119,19 @@ test('restored legacy battles report only their observed time and preserve parti
  finishCombat(s);
  assert.equal(s.dungeon.metrics.durationMs,2000);
  assert.equal(meterRows(s.dungeon.metrics,60000)[0].partial,true);
- s.combat={startedAt:11000,dungeon:true,runId:'run-1'};initializeMetrics(s);s.clock=13000;finishCombat(s);
+ s.combat={enemies:[],startedAt:11000,dungeon:true,runId:'run-1'};initializeMetrics(s);s.clock=13000;finishCombat(s);
  assert.equal(s.dungeon.metrics.partial,true);
  assert.equal(meterRows(s.dungeon.metrics,60000)[0].dps,25);
 });
 test('battle end cancels casts and projectiles but preserves enemy persistent ground hazards',()=>{
- const s=state();s.combat.id='encounter-7';s.combat.projectiles=[{id:'friendly'},{id:'hostile'}];
- s.cast={spell:133};s.party[0].cast={spell:116};s.combat.enemies=[{id:'enemy',cast:{spell:133}}];
- s.groundEffects=[{side:'friendly',spell:2120},{caster:'enemy',spell:900}];
+ const s=state();s.combat.id='encounter-7';s.combat.enemies=[{id:'enemy',hp:100,position:20}];const enemy=s.combat.enemies[0];
+ beginActorCast(s,s,{spell:133,until:2000});beginActorCast(s,s.party[0],{spell:116,until:2000});beginEnemyCast(s,enemy,{spell:133,until:2000});
+ assert.equal(launchProjectile(s,s,enemy,{Id:133,School:2,Speed:20}),true);assert.equal(launchProjectile(s,enemy,s,{Id:133,School:2,Speed:20},'enemy'),true);
+ addGroundEffect(s,{side:'friendly',caster:s.id,spell:2120,interval:1000,next:2000,until:4000});const hostile=addGroundEffect(s,{caster:'enemy',spell:900,interval:1000,next:2000,until:4000});
  s.logs=Array.from({length:140},(_,i)=>({id:i+1}));s.logSequence=140;
  const battle=finishCombat(s);
  assert.deepEqual(battle.projectiles,[]);assert.equal(s.cast,null);assert.equal(s.party[0].cast,null);
- assert.equal(battle.enemies[0].cast,null);assert.deepEqual(s.groundEffects,[{caster:'enemy',spell:900}]);
+ assert.equal(battle.enemies[0].cast,null);assert.deepEqual(s.groundEffects,[hostile]);assert.equal(Object.keys(s.simulationEvents.grounds).length,1);
  assert.equal(s.logs.length,140);assert.equal(s.logs.at(-1).kind,'combat-end');
  assert.equal(s.logs.at(-1).encounterId,'encounter-7');assert.equal(s.logs.at(-1).id,141);
  s.combat=battle;finishCombat(s);assert.equal(s.logSequence,141);

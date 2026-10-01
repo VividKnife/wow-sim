@@ -1,0 +1,68 @@
+{
+  "recordedAt": "2026-09-30T22:00:46.809Z",
+  "node": "v24.15.0",
+  "rulesetVersion": "owned-v1:2730d09acae04643e7015cdd262459d5c34c6c178d08b3a55b3b71b45340d119",
+  "contentHash": "ca8feb582a56135a356aab62363e9ffc593b4ba243e0aa48867bde2122d75bf1",
+  "scope": "Player/NPC/bot applied enemy-container damage-over-time (including arena), talent bleeds/Ignite, mana drain and leech; registered at application and dispatched through per-target readiness.",
+  "tests": {
+    "simulation": {
+      "passed": 103,
+      "total": 103,
+      "durationMs": 140734.606166
+    },
+    "gameplay": {
+      "passed": 115,
+      "total": 115,
+      "durationMs": 52056.418917
+    },
+    "periodicDamage": {
+      "passed": 9,
+      "total": 9,
+      "durationMs": 1525.728417
+    },
+    "defensiveTalentFixture": {
+      "passed": 1,
+      "total": 1,
+      "durationMs": 276.886042
+    },
+    "typecheck": "passed",
+    "diffCheck": "passed"
+  },
+  "comparison": {
+    "scenarios": [
+      "solo",
+      "dungeon",
+      "raid",
+      "arena",
+      "battleground"
+    ],
+    "snapshots": 75,
+    "periodMs": 1000,
+    "durationPerScenarioMs": 15000,
+    "excludedFields": [
+      "combatEvents",
+      "dotEventId"
+    ],
+    "result": "Every other snapshot field, including logs, RNG, resources, deaths and assets, matches the pre-change version",
+    "beforeArtifact": ".cache/qa/dot-before-2026-10-01.json.gz",
+    "beforeSha256": "98d515e608424136342f5530d33307eb4a13a9520f414ac1f0cbb9b68af926f0",
+    "captureAndComparisonElapsedMs": 5158.327708000001
+  },
+  "benchmark": "dot-benchmark-2026-10-01.json",
+  "behaviorChanges": [
+    "A recipient killed by an earlier same-time pulse receives no later pulse execution; pending damage effects on that dead recipient are retired",
+    "An already applied effect survives caster death while that caster remains part of the encounter, as before",
+    "Expired damage holders are removed at their effect boundary instead of filtering every enemy damage list every 100ms"
+  ],
+  "limits": {
+    "periodicDamageTimers": 8192,
+    "sharedCombatQueue": 18944
+  },
+  "limitations": [
+    "The 75 snapshots do not prove all encounter time lines; death ordering has dedicated tests",
+    "Healing, enemy applied periodic auras, ground effects, aura expiry and out-of-combat persistent effects remain on their existing paths",
+    "Outer 100ms progression and unit/AI observation scans remain",
+    "Local benchmark uses Apple M4 with existing QA services present, three measured rounds after warmup, no PostgreSQL or real WebSocket and no capacity or speedup claim",
+    "Full browser matrix has not been rerun under this ruleset hash"
+  ]
+}

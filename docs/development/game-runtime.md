@@ -6,7 +6,8 @@
 | --- | --- | --- |
 | `apps/web` | 静态 HTML、UI 与 API 流式代理 | 不访问数据库 |
 | `apps/game-server` | `/api/auth/*`、`/api/game`、`/api/game/content`、`/api/game/workshop`、`/api/events`，账号会话、DTO 投影与权限边界 | 通过 `PostgresStore` |
-| `apps/game-worker` | 主动结算到期活动与实例 | 通过 `PostgresStore` |
+| `apps/simulation-host` | 常驻战斗实例、单写者 Worker 池与检查点 | 通过持久化协调层 |
+| `apps/game-worker` | 非常驻活动的到期业务 | 通过 `PostgresStore` |
 | `packages/game-domain` | 账号、角色、资产、活动、实例与确定性规则 | 只依赖 `Store` 接口 |
 | `packages/game-data/data` | 编译后的静态内容与版本摘要 | 只读 |
 
@@ -17,15 +18,15 @@ npm run data:check
 docker compose up -d postgres
 ```
 
-将根 `.env.example` 复制为 `.env`，设置 `APP_ORIGIN=http://127.0.0.1:5173` 与数据库地址。示例数据库账号仅用于本地开发。三个进程分别运行：
+将根 `.env.example` 复制为 `.env`，设置 `APP_ORIGIN=http://127.0.0.1:5173` 与数据库地址。示例数据库账号仅用于本地开发。组合运行时会启动并监管 API 和模拟服务；业务 worker 与网页分别运行：
 
 ```sh
-npm run game:server:dev
+node --env-file-if-exists=.env scripts/start-runtime.mjs
 npm run game:worker:dev
 npm --prefix apps/web run dev
 ```
 
-本地开发命令会在导入的规则或内容文件变化时重启 API 和 worker。已经开始的旧版本活动不会自动迁移；读取游戏状态、操作角色或接管本地模拟时，服务端会自动脱离卡死并结束旧活动，无需玩家手动操作。此操作保留已保存的角色、金币和物品，但不补发尚未结算的收益。
+本地开发命令会在导入的规则或内容文件变化时重启 API 和 worker。已经开始的旧版本活动不会自动迁移；读取游戏状态、操作角色时，服务端会自动脱离卡死并结束旧活动，无需玩家手动操作。此操作保留已保存的角色、金币和物品，但不补发尚未结算的收益。
 
 API 与 worker 使用根 `.env`。`APP_ORIGIN` 是浏览器访问的完整 origin，用于 API 的 CSRF 校验；本地默认 `http://127.0.0.1:5173`。`AUTH_TRUST_PROXY_HOPS=0` 用于本地直连；生产经 Zeabur ingress 使用 `1`。
 
@@ -51,9 +52,9 @@ worker 关闭后到期活动留在数据库，重新启动继续处理。客户�
 
 战斗窗口打开时，浏览器以 200 毫秒为目标周期串行请求 `/api/game?scope=combat`。该响应只重新生成战斗所需的 view 字段，保留完整的公开 player 状态；客户端将其与当前角色、相同内容版本的完整快照合并。结束战斗自动返回 `scope: "full"`，关闭窗口立即恢复完整同步。两种 scope 使用不同 ETag；过期请求、切换角色和内容版本不一致时不能覆盖当前画面。请求超时为 8 秒，隐藏页面停止轮询。
 
-worker 默认每 100 毫秒检查到期任务（`GAME_WORKER_INTERVAL_MS=100`）。最近 5 秒仍有请求的账号在战斗中每 200 毫秒结算一次；离线战斗和非战斗活动恢复 1 秒周期。共享实例只要有非佣兵账号在线即使用快速周期，离线时限规则不变。已有部署如果显式设置了 `GAME_WORKER_INTERVAL_MS=1000`，需改为 `100` 并重启 worker；协议与 Web/API 改动应一起发布。
+常驻角色由 simulation-host 推进，game-worker 不重复推进其战斗。API 与实例通过本机 RPC 交换命令和投影，浏览器通过 WebSocket 获取状态。组合运行时详情见 [2.0 实施记录](simulation-2.0.md)。
 
-战场使用 Three.js / React Three Fiber：精细模式按浏览器帧循环绘制，简化模式以 30 Hz 请求绘制并关闭实时阴影和后处理；页面隐藏时停止画布帧循环。HUD 每 100 毫秒更新，进度条通过 CSS 连续过渡；折叠策略首次展开才挂载。显示时钟不回退，只做有限时间的视觉插值，生命值和命中仍由服务端决定。实现、素材和验证见 [HD-2D 战场](hd2d-battle.md)。
+战场使用 Three.js / React Three Fiber：精细模式按浏览器帧循环绘制，简化模式关闭实时阴影和后处理；页面隐藏时停止画布帧循环。HUD 每 100 毫秒更新，进度条通过 CSS 连续过渡；折叠策略首次展开才挂载。显示时钟不回退，只做有限时间的视觉插值，生命值和命中仍由服务端决定。实现、素材和验证见 [HD-2D 战场](hd2d-battle.md)。
 
 ## 内容更新与验证
 

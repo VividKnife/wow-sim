@@ -31,7 +31,7 @@ function makeActor(source,side,index){
 }
 const lineup=[['druid','tank'],['priest','healer'],['paladin','healer'],['warrior','melee'],['rogue','melee'],['mage','ranged'],['hunter','ranged'],['warlock','ranged'],['shaman','healer'],['warrior','tank']];
 function fillTeam(s,side,sources){
- const staging={...s,party:[],logs:[],journey:[],money:0,itemSequence:0,growthPolicy:undefined};
+ const staging={...s,id:`battleground-items:${s.id}:${(s.battleground?.serial||0)+1}:${side}`,party:[],logs:[],journey:[],money:0,itemSequence:0,growthPolicy:undefined};
  return Array.from({length:10},(_,i)=>{
   let source=sources[i];
   if(!source){staging.party=[];const [id,role]=lineup[i];source=createNpcMember(staging,id,{role});source.name=`${side?'战歌':'银翼'}·${source.name}`;}

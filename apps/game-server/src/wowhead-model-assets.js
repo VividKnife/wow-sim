@@ -20,7 +20,10 @@ async function fetchAsset(url,timeout){
  for(let attempt=0;attempt<2;attempt++){
   try{
    const response=await fetch(url,{signal:AbortSignal.timeout(timeout),redirect:'manual'});
-   if(attempt===0&&[502,503,504].includes(response.status)){await response.body?.cancel();continue;}
+   // Neither caller consumes unsuccessful bodies. Release their connection
+   // before returning a local error, including the final retry and XML path.
+   if(!response.ok)await response.body?.cancel();
+   if(attempt===0&&[502,503,504].includes(response.status))continue;
    return response;
   }catch(error){if(attempt===1)throw error;}
  }

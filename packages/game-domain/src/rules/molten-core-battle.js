@@ -1,4 +1,5 @@
 import {raidScaling} from './raid-scaling.js';
+import {bossCombatArea} from './combat-area.js';
 import {initializeRaidBattlefield} from './raid-battlefield.js';
 import {raidPlan,initRaidCommand} from './raid-command.js';
 import {startCombat} from './combat.js';
@@ -16,7 +17,7 @@ export function beginMoltenCoreBattle(s,bossId,tactics){
  const group=addGroups[bossId];
  if(group)for(let i=0;i<group[0];i++)foes.push({...profile('mc-add-'+i,bossId==='majordomo'?(i<4?'烈焰行者精英':'烈焰行者医师'):group[1],bossId==='majordomo'?(i<4?11664:11663):group[2]),raidHealer:bossId==='sulfuron'||bossId==='majordomo'&&i>=4});
  if(bossId==='majordomo')foes[0].auras.push({spell:20620,type:39,misc:127,until:s.clock+raidScaling.encounterLimitMs,positive:true});
- startCombat(s,[],true,foes,{shape:'rectangle',minX:-20,maxX:bossId==='ragnaros'?58:50,minY:-28,maxY:28});
+ startCombat(s,[],true,foes,bossCombatArea(bossId)||{shape:'rectangle',minX:-20,maxX:bossId==='ragnaros'?58:50,minY:-28,maxY:28});
  s.combat.ground=bossId==='onyxia'?'onyxia':'molten';
  s.combat.area.name=def.name+' · '+(bossId==='ragnaros'?'螺旋熔岩祭坛':bossId==='onyxia'?'龙巢':'熔火战场');
  s.combat.raidMode=s.goldRaid?.active?'gold':'demo';
@@ -28,7 +29,11 @@ export function beginMoltenCoreBattle(s,bossId,tactics){
   c.position=['tank','melee'].includes(combatRole(c))?22:4+(i%3)*2;c.positionY=(i%5-2)*spread+(Math.floor(i/5)%2?2:0);
  }
  for(const [i,e]of foes.entries()){e.position=30;e.positionY=i===0?0:8;e.target=(i===0?tanks[0]:(tanks.slice(1)[(i-1)%Math.max(1,tanks.length-1)]||tanks[0]))?.id||s.id;e.threat[e.target]=2500;}
- if(bossId==='onyxia')for(const [i,c]of actors.entries()){c.position=c.raidMainTank?25:combatRole(c)==='melee'?30:20;c.positionY=c.raidMainTank?0:(i%2?1:-1)*(combatRole(c)==='melee'?5:16+(i%3)*3);}
+ if(bossId==='onyxia'){
+  const {boss,mainTank}=s.combat.area.anchors;
+  foes[0].position=boss.x;foes[0].positionY=boss.y;
+  for(const [i,c]of actors.entries()){c.position=c.raidMainTank?mainTank.x:combatRole(c)==='melee'?boss.x:boss.x-10;c.positionY=c.raidMainTank?mainTank.y:boss.y+(i%2?1:-1)*(combatRole(c)==='melee'?5:16+(i%3)*3);}
+ }
  const at=s.clock;
  s.combat.raidEncounter={id:bossId,attemptEndsAt:at+raidScaling.encounterLimitMs,kind:node?.kind||'boss',bossId:foes[0].id,tactics:{...tactics},nextDoom:at+8000,nextCurse:at+12000,nextShock:at+5000,nextFrenzy:at+30000,nextFear:at+8000,nextBomb:at+12000,nextManaBomb:at+18000,nextSpecial:at+8000,nextPulse:at+12000,nextHeal:at+7000,nextSubmerge:at+180000,deadAdds:[],bombs:[],fieldSequence:0,fires:[],events:[],support:{dispels:0,tranquilizes:0,wards:0},failures:{doom:0,fire:0,feared:0}};
  initializeRaidBattlefield(s,foes[0]);

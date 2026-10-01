@@ -1,0 +1,191 @@
+{
+  "at": "2026-09-30T15:50:14.178Z",
+  "rulesetVersion": "owned-v1:0ecfd91a863c23401c07e3e186f00530eee2fb30a32dd58f0513bacb8f34f2f9",
+  "contentHash": "7691bf09687eea722ce20cc09d3b19b513d2f4294f2d9d030393d877f7b0045b",
+  "kind": "offline_diagnostic_replay",
+  "status": "failed_attempt_not_browser_acceptance",
+  "source": "actual browser Onyxia admission and ordered inputs reconstructed to boss pull",
+  "sourceSha256": "6e877f13bed4c7854245762623a99b8cc0d46ef19d53f9cf66eb7fb732b93bfd",
+  "partySize": 40,
+  "changes": [
+    "automatic tank taunts respect living allied tanks and main-tank assignment",
+    "assigned warrior tank may continue Sunder Armor for threat after five stacks"
+  ],
+  "samplingMs": 100,
+  "progress": [
+    {
+      "at": 10000,
+      "alive": 40,
+      "boss": 1032902
+    },
+    {
+      "at": 20000,
+      "alive": 40,
+      "boss": 922453
+    },
+    {
+      "at": 30000,
+      "alive": 39,
+      "boss": 848795
+    },
+    {
+      "at": 40000,
+      "alive": 35,
+      "boss": 788999
+    },
+    {
+      "at": 50000,
+      "alive": 29,
+      "boss": 740341
+    },
+    {
+      "at": 60000,
+      "alive": 28,
+      "boss": 701488
+    },
+    {
+      "at": 70000,
+      "alive": 27,
+      "boss": 698070
+    },
+    {
+      "at": 80000,
+      "alive": 21,
+      "boss": 693945
+    },
+    {
+      "at": 90000,
+      "alive": 15,
+      "boss": 692920
+    },
+    {
+      "at": 100000,
+      "alive": 14,
+      "boss": 690699
+    },
+    {
+      "at": 110000,
+      "alive": 10,
+      "boss": 690210
+    },
+    {
+      "at": 120000,
+      "alive": 4,
+      "boss": 690210
+    },
+    {
+      "at": 130000,
+      "alive": 4,
+      "boss": 684460
+    },
+    {
+      "at": 140000,
+      "alive": 2,
+      "boss": 679099
+    },
+    {
+      "at": 150000,
+      "alive": 1,
+      "boss": 678130
+    }
+  ],
+  "result": {
+    "attempt": {
+      "review": {
+        "bossRemaining": 62,
+        "healerMana": 6,
+        "firstDeath": {
+          "name": "黑巷无声",
+          "at": 1790782063601,
+          "role": "melee",
+          "cause": "烈焰吐息"
+        },
+        "plan": {
+          "mainTank": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:55",
+          "offTank": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:37",
+          "focus": "adds",
+          "formation": "spread",
+          "movement": "early",
+          "dispelPolicy": "assigned",
+          "jobs": {
+            "magic": [
+              "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:23",
+              "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:59"
+            ],
+            "curse": [
+              "0f6c40cb-f9cc-4fca-8bf8-1645e867ed04",
+              "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:7"
+            ],
+            "tranquilize": [
+              "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:66",
+              "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:39"
+            ],
+            "ward": [
+              "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:23",
+              "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:59"
+            ]
+          },
+          "cooldowns": {
+            "wall": {
+              "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:55",
+              "trigger": "automatic"
+            },
+            "rescue": {
+              "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:65",
+              "trigger": "automatic"
+            },
+            "mana": {
+              "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:45",
+              "trigger": "automatic"
+            }
+          }
+        },
+        "events": [
+          {
+            "at": 1790782063601,
+            "text": "橡木与月光 执行激活 → 月下橡树",
+            "key": "mana",
+            "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:45"
+          },
+          {
+            "at": 1790782066401,
+            "text": "黑铁壁垒 执行盾墙 → 黑铁壁垒",
+            "key": "wall",
+            "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:55"
+          },
+          {
+            "at": 1790782083201,
+            "text": "圣光长明 执行圣疗术 → 黑铁壁垒",
+            "key": "rescue",
+            "actorId": "npc:0f6c40cb-f9cc-4fca-8bf8-1645e867ed04:65"
+          }
+        ],
+        "used": {
+          "mana": 1,
+          "wall": 1,
+          "rescue": 1
+        },
+        "failures": {
+          "doom": 0,
+          "fire": 18,
+          "feared": 0
+        },
+        "suggestions": [
+          "火区受伤：改为提前撤离、分散站位；金团优先招募执行机制更稳定的成员。",
+          "治疗法力不足：安排激活；减少全员驱散占用，先清治疗小怪以缩短战斗。"
+        ],
+        "unused": []
+      },
+      "bossId": "onyxia",
+      "won": false,
+      "seconds": 151.532,
+      "deaths": 40
+    },
+    "ongoing": false
+  },
+  "limitations": [
+    "AI changes alter subsequent RNG consumption; individual damage rolls are not paired comparisons",
+    "No asset writes or browser interaction in this diagnostic replay",
+    "Existing live QA processes still run the earlier version; this is not a deployment or recovery across versions"
+  ]
+}

@@ -1,0 +1,337 @@
+{
+  "date": "2026-10-01",
+  "status": "requested-browser-scenarios-passed",
+  "rulesetVersion": "owned-v1:d33f61e1031a541f5124055180d061ecb431ebcc00178a63459945636e717e98",
+  "environment": {
+    "node": "24.15.0",
+    "schema": "sim2_ground_playtest_20261001",
+    "web": "production build :5184",
+    "gateway": 8798,
+    "simulationHost": 8797,
+    "workers": 1
+  },
+  "fix": {
+    "symptom": "Level 60 raid preset creation failed with DatabaseBusyError while resident characters committed checkpoints.",
+    "change": "Ownership list queries now include generated text-column predicates alongside exact JSON containment; added NPC owner, instance character, and account user indexes. SERIALIZABLE transactions and fencing are unchanged.",
+    "verification": {
+      "storage": {
+        "passed": 19,
+        "durationMs": 16669.292125
+      },
+      "realPostgresConcurrency": {
+        "passed": 6,
+        "durationMs": 2828.527875
+      },
+      "typecheck": "passed",
+      "diffCheck": "passed",
+      "browserCreateAfterRestart": "succeeded"
+    },
+    "limits": [
+      "Successful retry is not a capacity or latency guarantee.",
+      "No captured PostgreSQL conflict graph proves each original serialization failure had the same cause."
+    ]
+  },
+  "scenarios": {
+    "solo": {
+      "character": "新核北郡旅人",
+      "status": "passed",
+      "actions": [
+        "Accepted and delivered 身边的危机",
+        "Accepted 剿灭狗头人; traveled and killed 10 quest targets",
+        "Collected loot, returned and delivered quest",
+        "Reloaded production page and observed completed quest and level 3 XP 118/1400"
+      ],
+      "artifact": ".cache/qa/ground-playtest-hunt-complete-2026-10-01.json"
+    },
+    "fivePlayer": {
+      "character": "新核五人法师",
+      "status": "passed",
+      "target": "拉克佐",
+      "members": 5,
+      "startedAt": 1790812684769,
+      "endedAt": 1790812783369,
+      "defeated": [
+        {
+          "name": "拉克佐",
+          "hp": 0
+        },
+        {
+          "name": "迪菲亚哨兵",
+          "hp": 0
+        },
+        {
+          "name": "迪菲亚哨兵",
+          "hp": 0
+        }
+      ],
+      "reloaded": true,
+      "loot": [
+        {
+          "itemId": 5187,
+          "name": "死神之锤",
+          "instanceId": "item:0c7236c0-b454-4bc4-8560-822cd26cb2a1:52"
+        },
+        {
+          "itemId": 3311,
+          "name": "典礼皮护踝",
+          "instanceId": "item:0c7236c0-b454-4bc4-8560-822cd26cb2a1:53"
+        }
+      ],
+      "artifact": ".cache/qa/ground-playtest-five-complete-2026-10-01.json"
+    },
+    "raid": {
+      "character": "新核黑龙法师",
+      "status": "passed",
+      "target": "奥妮克希亚",
+      "members": 40,
+      "tanks": 3,
+      "healers": 8,
+      "dps": 29,
+      "firstAttempt": {
+        "result": "wipe",
+        "durationMs": 392918,
+        "bossRemainingPercent": 21,
+        "healerManaPercent": 12,
+        "firstDeath": "黑铁壁垒 · 坦克 · 烈焰吐息",
+        "phases": [
+          1,
+          2,
+          3
+        ],
+        "unusedCooldowns": [
+          "盾墙",
+          "圣疗术"
+        ],
+        "preparation": "Stopped incomplete buff preparation before attempt; second attempt will complete it."
+      },
+      "secondAttempt": {
+        "preparation": "All available buffs and NPC consumables completed: coverage 390/431; unavailable Divine Spirit and missing leader flask remain.",
+        "manualCommands": [
+          "治疗节约蓝量",
+          "集中首领",
+          "正常治疗"
+        ],
+        "checkpoint": ".cache/qa/ground-playtest-raid-second-middle-2026-10-01.json",
+        "observedCooldowns": {
+          "rescue": 1,
+          "mana": 1
+        },
+        "result": "victory",
+        "durationMs": 405394,
+        "participants": 40,
+        "survivors": 12
+      },
+      "assets": {
+        "checkedAt": "2026-10-01T00:13:14.577Z",
+        "durationMs": 405394,
+        "participants": 40,
+        "auctions": 11,
+        "sold": 7,
+        "unsold": 4,
+        "pot": 1463433,
+        "fee": 73171,
+        "playerIncome": 100611,
+        "awarded": [
+          {
+            "saleId": "1:onyxia:1",
+            "itemId": 18422,
+            "instanceId": "item:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:115",
+            "ownerId": "npc:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:47",
+            "price": 100000
+          },
+          {
+            "saleId": "1:onyxia:2",
+            "itemId": 18423,
+            "instanceId": "item:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:116",
+            "ownerId": "npc:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:42",
+            "price": 100000
+          },
+          {
+            "saleId": "1:onyxia:3",
+            "itemId": 18705,
+            "instanceId": "item:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:117",
+            "ownerId": "npc:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:66",
+            "price": 100000
+          },
+          {
+            "saleId": "1:onyxia:5",
+            "itemId": 16963,
+            "instanceId": "item:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:118",
+            "ownerId": "npc:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:55",
+            "price": 150000
+          },
+          {
+            "saleId": "1:onyxia:10",
+            "itemId": 17963,
+            "instanceId": "item:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:119",
+            "ownerId": "npc:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:10",
+            "price": 100523
+          },
+          {
+            "saleId": "1:onyxia:4",
+            "itemId": 16963,
+            "instanceId": "item:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:120",
+            "ownerId": "npc:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:19",
+            "price": 200000
+          },
+          {
+            "saleId": "1:onyxia:6",
+            "itemId": 18205,
+            "instanceId": "item:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:121",
+            "ownerId": "npc:e58b22a0-eda0-4399-a8ca-9129c0c8d4af:55",
+            "price": 712910
+          }
+        ],
+        "identicalAfterReload": [
+          "wallets",
+          "items",
+          "ledger"
+        ],
+        "permanentCharacters": 73,
+        "permanentWallets": 73,
+        "auctionDebits": {
+          "method": "Net wallet and ledger changes after all escrow releases, with intervening combat consumable spending accounted for.",
+          "membersChecked": 39,
+          "auctionTotal": 1463433,
+          "consumableTotal": 124000
+        }
+      },
+      "returnedToWorld": true,
+      "weeklyLockoutPreserved": true,
+      "awardedItemIdentityAndOwnershipPreservedAfterLeaving": true
+    }
+  },
+  "browser": {
+    "crashesObservedThisRun": 0,
+    "limits": "This desktop in-app browser production run passed the requested workflows without an observed crash. Sampled heap values are not peak RSS or a long-duration leak proof. Historical native exits still lack a crash stack; mobile and 2-vCPU capacity acceptance remain open.",
+    "uiFindings": [
+      "At 1280x720 the expanded raid frame, command panel, and damage meter obscure much of the battle field. Client layout acceptance remains open."
+    ],
+    "samples": [
+      {
+        "at": "2026-09-30T23:36:29.195Z",
+        "stage": "solo-hunting",
+        "heap": {
+          "backingStorageSize": 16181603,
+          "embedderHeapUsedSize": 6625704,
+          "totalSize": 114950144,
+          "usedSize": 84042056
+        }
+      },
+      {
+        "scenario": "raid-camp",
+        "at": "2026-09-30T23:47:41.553Z",
+        "heap": {
+          "backingStorageSize": 14613810,
+          "embedderHeapUsedSize": 12251320,
+          "totalSize": 139116544,
+          "usedSize": 90074520
+        }
+      },
+      {
+        "scenario": "raid-guards",
+        "at": "2026-09-30T23:49:52.293Z",
+        "heap": {
+          "backingStorageSize": 31586764,
+          "embedderHeapUsedSize": 54375392,
+          "totalSize": 249282560,
+          "usedSize": 128496696
+        }
+      },
+      {
+        "scenario": "raid-boss-start",
+        "at": "2026-09-30T23:50:57.130Z",
+        "heap": {
+          "backingStorageSize": 42027363,
+          "embedderHeapUsedSize": 87130560,
+          "totalSize": 328925184,
+          "usedSize": 163841528
+        }
+      },
+      {
+        "scenario": "raid-boss-middle",
+        "at": "2026-09-30T23:51:55.652Z",
+        "heap": {
+          "backingStorageSize": 58281878,
+          "embedderHeapUsedSize": 239881272,
+          "totalSize": 337461248,
+          "usedSize": 274105020
+        }
+      },
+      {
+        "scenario": "raid-boss-later",
+        "at": "2026-09-30T23:53:02.136Z",
+        "heap": {
+          "backingStorageSize": 61165144,
+          "embedderHeapUsedSize": 232906024,
+          "totalSize": 332333056,
+          "usedSize": 280141468
+        }
+      },
+      {
+        "scenario": "raid-phase-three",
+        "at": "2026-09-30T23:55:01.896Z",
+        "heap": {
+          "backingStorageSize": 41850386,
+          "embedderHeapUsedSize": 86074552,
+          "totalSize": 342556672,
+          "usedSize": 192480772
+        }
+      },
+      {
+        "scenario": "raid-attempt-late",
+        "at": "2026-09-30T23:57:59.770Z",
+        "heap": {
+          "backingStorageSize": 76024399,
+          "embedderHeapUsedSize": 14347320,
+          "totalSize": 330235904,
+          "usedSize": 206080188
+        }
+      },
+      {
+        "scenario": "raid-second-flight",
+        "at": "2026-10-01T00:06:45.993Z",
+        "heap": {
+          "backingStorageSize": 50254833,
+          "embedderHeapUsedSize": 147115088,
+          "totalSize": 356859904,
+          "usedSize": 234776344
+        }
+      },
+      {
+        "scenario": "raid-auctions",
+        "at": "2026-10-01T00:11:34.705Z",
+        "heap": {
+          "backingStorageSize": 108836072,
+          "embedderHeapUsedSize": 45907080,
+          "totalSize": 347537408,
+          "usedSize": 273166864
+        }
+      },
+      {
+        "scenario": "raid-returned-world",
+        "at": "2026-10-01T00:13:42.587Z",
+        "heap": {
+          "backingStorageSize": 35797837,
+          "embedderHeapUsedSize": 11347880,
+          "totalSize": 187875328,
+          "usedSize": 136540564
+        }
+      }
+    ],
+    "firstSampleAt": "2026-09-30T23:36:29.195Z",
+    "lastSampleAt": "2026-10-01T00:13:42.587Z",
+    "sampledHeapMinBytes": 84042056,
+    "sampledHeapMaxBytes": 280141468,
+    "finalPerformanceEntries": {
+      "marks": 0,
+      "measures": 0
+    },
+    "javascriptErrorsObserved": 0
+  },
+  "architectureComplete": false,
+  "screenshots": [
+    ".cache/qa/ground-five-complete-2026-10-01.png",
+    ".cache/qa/ground-raid-settlement-2026-10-01.png"
+  ]
+}

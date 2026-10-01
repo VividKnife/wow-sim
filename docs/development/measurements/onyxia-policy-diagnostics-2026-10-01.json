@@ -1,0 +1,149 @@
+{
+  "measuredAt": "2026-09-30T18:54:27.478Z",
+  "rulesetVersion": "owned-v1:aa91de335d986d856f09301333fbd4e6eb9d892cf3c618992aa7f9dcf93115bc",
+  "contentHash": "7691bf09687eea722ce20cc09d3b19b513d2f4294f2d9d030393d877f7b0045b",
+  "workload": {
+    "initialFixture": ".cache/qa/host-ony-replay.json",
+    "initialFixtureSha256": "54b2c496436b14ca7e49cf3ced9c54ad3f9e756a1f115a8dff05173ac7ff3b22",
+    "composition": {
+      "size": 40,
+      "tanks": 4,
+      "healers": 10
+    },
+    "recruitPriority": "progress",
+    "setup": "Replay first five legal actions from admission; recommend steady composition, party buffs, recover, publish recommended plan, navigate full route. Advance owned kernel in 100ms slices, stop after boss outcome or 600 seconds total.",
+    "simulationOnly": true
+  },
+  "runs": [
+    {
+      "mode": "diagnostic",
+      "rulesetVersion": "owned-v1:71765c7ad1848a1670083418ffc036ce6967fbf16233c43d63ac8e101e3b0fc2",
+      "commands": [
+        "recommended plan: focus adds, spread, early movement"
+      ],
+      "artifact": ".cache/qa/ony-steady-diagnostic-2026-10-01.json",
+      "sha256": "1b1a9b40d0857e01abdc7a2475bcab3c74ffd4af20df102c665d3c92c103785f",
+      "won": false,
+      "ongoing": true,
+      "bossElapsedMs": 574700,
+      "bossHp": 626379,
+      "bossMaxHp": 1099230,
+      "survivors": 23,
+      "phaseTransitions": [
+        {
+          "atMs": 48778,
+          "phase": 2
+        }
+      ],
+      "healerManaPercent": null,
+      "firstDeathCause": null,
+      "configuredHealerInnervates": 4
+    },
+    {
+      "mode": "coordinated",
+      "rulesetVersion": "owned-v1:71765c7ad1848a1670083418ffc036ce6967fbf16233c43d63ac8e101e3b0fc2",
+      "commands": [
+        "recommended plan: focus adds, spread, early movement",
+        "conserveMana and focusBoss on boss entry"
+      ],
+      "artifact": ".cache/qa/ony-steady-coordinated-2026-10-01.json",
+      "sha256": "92b9c1793979a1992a0ea98eb84210930741d6ef5a297182a1aa546a0702b8cc",
+      "won": false,
+      "ongoing": false,
+      "bossElapsedMs": 326178,
+      "bossHp": 506489,
+      "bossMaxHp": 1099230,
+      "survivors": 0,
+      "phaseTransitions": [
+        {
+          "atMs": 52378,
+          "phase": 2
+        }
+      ],
+      "healerManaPercent": 21,
+      "firstDeathCause": "顺劈斩",
+      "configuredHealerInnervates": 0
+    },
+    {
+      "mode": "conservation-fixed",
+      "rulesetVersion": "owned-v1:74b2b0660081838bf73504c4de120fc7645cc0af2bbd3af1f7868b356049f5ab",
+      "commands": [
+        "recommended plan: focus adds, spread, early movement",
+        "conserveMana and focusBoss on boss entry"
+      ],
+      "artifact": ".cache/qa/ony-steady-conservation-fixed-2026-10-01.json",
+      "sha256": "267a26a92c08c73054f0cac4b914c700979025314a87297faed87b92888fec7c",
+      "won": false,
+      "ongoing": false,
+      "bossElapsedMs": 202578,
+      "bossHp": 605849,
+      "bossMaxHp": 1099230,
+      "survivors": 0,
+      "phaseTransitions": [
+        {
+          "atMs": 53978,
+          "phase": 2
+        }
+      ],
+      "healerManaPercent": 19,
+      "firstDeathCause": "顺劈斩",
+      "configuredHealerInnervates": 2
+    },
+    {
+      "mode": "policy-fixed",
+      "rulesetVersion": "owned-v1:aa91de335d986d856f09301333fbd4e6eb9d892cf3c618992aa7f9dcf93115bc",
+      "commands": [
+        "recommended plan: focus adds, spread, early movement",
+        "conserveMana and focusBoss on boss entry"
+      ],
+      "artifact": ".cache/qa/ony-steady-policy-fixed-2026-10-01.json",
+      "sha256": "512f0195f68807d8fd1f294d1ec8755f9dffea0cfd1a168880a61d8acf4d910b",
+      "won": false,
+      "ongoing": false,
+      "bossElapsedMs": 224378,
+      "bossHp": 429597,
+      "bossMaxHp": 1099230,
+      "survivors": 0,
+      "phaseTransitions": [
+        {
+          "atMs": 53978,
+          "phase": 2
+        },
+        {
+          "atMs": 196378,
+          "phase": 3
+        }
+      ],
+      "healerManaPercent": 13,
+      "firstDeathCause": "顺劈斩",
+      "configuredHealerInnervates": 2
+    }
+  ],
+  "checks": {
+    "spatial": {
+      "passed": 17,
+      "total": 17,
+      "log": "/tmp/wow-sim-spatial-check-2026-10-01.log"
+    },
+    "targetedStrategiesAndHealing": {
+      "passed": 40,
+      "total": 40,
+      "log": "/tmp/wow-sim-raid-policy-targeted.log"
+    },
+    "baselineWorkerAndGoldLifecycle": {
+      "passed": 9,
+      "total": 9,
+      "log": "/tmp/wow-sim-raid-policy-runtime.log"
+    },
+    "typecheck": {
+      "passed": true,
+      "log": "/tmp/wow-sim-raid-policy-types.log"
+    }
+  },
+  "limitations": [
+    "One seeded roster and input sequence; changed decisions change later RNG consumption. These are diagnostic outcomes, not a statistical win-rate comparison.",
+    "No browser flow, loot distribution, database capacity or production performance acceptance in these runs.",
+    "All four runs failed to complete Onyxia. First run was still active at the diagnostic horizon.",
+    "Initial and conservation-only runtime hashes reconstructed by reversing precisely the two reviewed source edits; final runtime hash checked against runtimeVersion."
+  ]
+}

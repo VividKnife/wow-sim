@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-01",
+  "kind": "resident-save-deletion-correctness",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:3d33aa0a212ac461b5c816428cfbcaf29536e70ad3bb0db8107ffabc3e0d3399",
+    "contentHash": "7691bf09687eea722ce20cc09d3b19b513d2f4294f2d9d030393d877f7b0045b"
+  },
+  "sources": {
+    "files": [
+      "packages/persistence/src/simulation.ts",
+      "packages/game-domain/src/resident-store.ts",
+      "packages/game-domain/src/resident-characters.ts",
+      "packages/protocol/src/simulation-service.ts",
+      "apps/simulation-host/src/session.ts",
+      "apps/simulation-host/src/directory.ts",
+      "apps/simulation-host/src/server.ts",
+      "apps/game-server/src/simulation-client.ts",
+      "apps/game-server/src/resident-game-service.ts"
+    ],
+    "sha256": "5d84d63911711619a3d726884bdbfbed331319337135ac0c99cf9b2693742e66"
+  },
+  "node": "v24.15.0",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "verification": {
+    "tests": 64,
+    "passed": 64,
+    "failed": 0,
+    "durationMs": 142082.99625,
+    "typecheck": "passed",
+    "diffCheck": "passed"
+  },
+  "coverage": [
+    "memory and embedded SQL atomic deletion of multiple actor owners",
+    "rollback of owner revocation, assets and deletion receipt",
+    "ownership checks and other-account isolation",
+    "active Worker discard and cached route rejection",
+    "admission before first owner cannot resurrect a deleted save",
+    "delayed checkpoint loses to durable revocation and drains",
+    "delete retries and create retries cannot recreate assets",
+    "authenticated HTTP deletion of a forty-participant raid save",
+    "existing retirement, process recovery, save provisioning, asset and golden-state regressions"
+  ],
+  "limitations": [
+    "No actual development or production save was deleted",
+    "No additional browser playthrough in this run",
+    "Cross-account shared-instance member removal remains unfinished",
+    "Immediate cross-host publication revocation notification remains unfinished",
+    "No capacity or throughput measurement"
+  ],
+  "command": "node --test --test-concurrency=1 packages/bot-ai/test/*.test.mjs packages/combat-core/test/*.test.ts packages/simulation-tests/*.test.ts apps/simulation-host/test/*.test.ts packages/persistence/test/simulation.test.ts packages/game-domain/test/resident-characters.test.ts packages/game-domain/test/saves.test.ts apps/game-server/test/resident-game.test.ts"
+}

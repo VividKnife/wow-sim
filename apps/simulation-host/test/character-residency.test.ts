@@ -1,0 +1,85 @@
+import {runtimeVersion} from '../src/version.ts';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {randomBytes} from 'node:crypto';
+import {setTimeout as delay} from 'node:timers/promises';
+import {MemoryStore} from '../../../packages/persistence/src/memory.ts';
+import {SimulationRepository} from '../../../packages/persistence/src/simulation.ts';
+import {GameService} from '../../../packages/game-domain/src/service.ts';
+import {ResidentCharacters} from '../../../packages/game-domain/src/resident-characters.ts';
+import {residentStore} from '../../../packages/game-domain/src/resident-store.ts';
+import {context, persistCharacter} from '../../../packages/game-domain/src/context.ts';
+import {companionSkills} from '../../../packages/game-domain/src/rules/party.js';
+import {stats} from '../../../packages/game-domain/src/rules/character.js';
+import type {Character} from '../../../packages/game-domain/src/model.ts';
+import type {SimulationCommand} from '../../../packages/protocol/src/simulation.ts';
+import type {InstanceCheckpoint} from '../src/instance.ts';
+import {SimulationDirectory} from '../src/directory.ts';
+import {createSimulationServer} from '../src/server.ts';
+import {SimulationClient} from '../../game-server/src/simulation-client.ts';
+
+test('real character -> HTTP -> resident Worker -> atomic quest, hunting loot, pickup and restart', {timeout:30_000}, async () => {
+  const store=residentStore(new MemoryStore()),game=new GameService(store,{contentVersion:'test',seed:()=>283});
+  const initial=(await game.createAccount('alice',{name:'驻留法师',classId:8,raceId:1},'create')).state;
+  const other=(await game.createAccount('bob',{name:'另一个角色',classId:8,raceId:1},'create')).state;
+  await store.transaction(async tx=>{
+    const character=(await tx.get<Character>('characters',initial.id))!,state=await context(tx,character,Date.now(),false);
+    state.level=20;state.learned=companionSkills(state);state.hp=stats(state).maxHp;state.mana=stats(state).maxMana;
+    await persistCharacter(tx,character,state,state.wallAt,'fixture');
+  });
+  const characters=new ResidentCharacters(store,{version:runtimeVersion}),repository=new SimulationRepository(store,Date.now,characters.commit);
+  const errors:unknown[]=[];
+  const directory=new SimulationDirectory(repository,{characters,maxInstances:1,onError:(_id,error)=>{errors.push(error);}});
+  const token=randomBytes(32).toString('base64url'),service=createSimulationServer(directory,{token});
+  await new Promise<void>(resolve=>service.server.listen(0,'127.0.0.1',resolve));
+  const address=service.server.address();assert.ok(address&&typeof address!=='string');
+  const client=new SimulationClient({url:`http://127.0.0.1:${address.port}`,token});
+  try{
+    await assert.rejects(client.openCharacter('mallory',initial.id),/不属于/);
+    const [first,duplicate]=await Promise.all([client.openCharacter('alice',initial.id),client.openCharacter('alice',initial.id)]);
+    assert.deepEqual(first,duplicate);
+    assert.equal((await client.inspect()).instances,1);
+    await assert.rejects(client.openCharacter('bob',other.id),/capacity/);
+    assert.equal(await store.read(tx=>tx.get('simulation_characters',other.id)),null,'refused admission must not claim a character');
+    let sequence=0;
+    const input=(command:SimulationCommand)=>({instanceId:first.instanceId,actorId:initial.id,controllerGeneration:1,
+      clientSequence:++sequence,requestId:`intent-${sequence}`,command});
+    const send=async(command:SimulationCommand)=>{const reply=await client.input('alice',input(command));assert.equal(reply.status,'applied',reply.reason);assert.equal(reply.durable,true);return reply;};
+    await send({kind:'questAccept',questId:783});
+    const turnIn=input({kind:'questTurnIn',questId:783,choiceId:null});
+    const questReceipt=await client.input('alice',turnIn);assert.equal(questReceipt.status,'applied',questReceipt.reason);
+    const questSaved=(await repository.load<InstanceCheckpoint>(first.instanceId))!;
+    assert.ok(questSaved.checkpoint.state.completed[783]);
+    const permanent=(await store.read(tx=>tx.get<Character>('characters',initial.id)))!;
+    assert.deepEqual(permanent.rules.completed,questSaved.checkpoint.state.completed);
+    assert.deepEqual(await client.input('alice',turnIn),questReceipt,'a duplicate quest command cannot grant XP twice');
+    const xp=questSaved.checkpoint.state.xp;
+    assert.equal((await repository.load<InstanceCheckpoint>(first.instanceId))!.checkpoint.state.xp,xp);
+    await assert.rejects(game.command('alice',{type:'settings',characterId:initial.id,autoLoot:true,requestId:'external-write'}),/模拟实例/);
+    await send({kind:'hunt',monsterId:299});
+    // Wall-time wait with no gateway polling: the server Worker does the work.
+    await delay(6100);
+    await client.checkpoint(first.instanceId);
+    const killed=(await repository.load<InstanceCheckpoint>(first.instanceId))!.checkpoint.state;
+    assert.ok(killed.totals.kills>=1,'hunting must advance while the gateway is idle');
+    assert.ok(killed.pending.length>0,'a real rules-engine kill produces durable loot');
+    const drops=killed.pending.map((item:any)=>({id:item.uid,count:item.count}));
+    const pending=await store.read(tx=>tx.list('items',{ownerCharacterId:initial.id,container:'pending'}));
+    for(const drop of drops)assert.equal(pending.find(row=>row.id===drop.id)?.data.count,drop.count);
+    await send({kind:'stop'});
+    const pickup=input({kind:'loot',itemIds:drops.map((drop:any)=>drop.id)});
+    const picked=await client.input('alice',pickup);assert.equal(picked.status,'applied',picked.reason);
+    const bag=await store.read(tx=>tx.list('items',{ownerCharacterId:initial.id,container:'bag'}));
+    for(const drop of drops)assert.equal(bag.find(row=>row.id===drop.id)?.data.count,drop.count);
+    const ledger=await store.read(tx=>tx.list('ledger'));
+    await client.remove(first.instanceId);
+    await assert.rejects(game.command('alice',{type:'sellJunk',characterId:initial.id,requestId:'after-unload'}),/模拟实例/);
+    const restored=await client.openCharacter('alice',initial.id);
+    assert.equal(restored.instanceId,first.instanceId);assert.equal(restored.ownerEpoch,first.ownerEpoch+1);
+    assert.deepEqual(await client.input('alice',pickup),picked);
+    assert.deepEqual(await store.read(tx=>tx.list('ledger')),ledger,'reload and duplicate pickup cannot issue loot again');
+    const publicFrame=await client.project(first.instanceId,true);
+    assert.equal('state' in publicFrame,false);assert.equal('rngState' in publicFrame,false);
+    assert.deepEqual(errors,[]);
+  }finally{await service.close();await store.close();}
+});

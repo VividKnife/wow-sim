@@ -15,7 +15,7 @@ import {dispelSpellAuras,applySpellAura} from './spell-aura-lifecycle.js';
 import {consumeHunterAmmo} from './ammunition.js';
 
 export {moltenCoreBosses} from './molten-core-content.js';
-import {extendedMoltenCoreTick,raidNotice,raidAnimation} from './molten-core-mechanics.js';
+import {extendedMoltenCoreTick,raidNotice,raidAnimation,publishRaidWarnings} from './molten-core-mechanics.js';
 export const defaultRaidTactics = {focusAdds:true,dispel:true,tranquilize:true,fearWard:true,avoidFire:true};
 function randomTargets(s,actors,count) {
  const pool=actors.filter(c=>c.hp>0&&!c.petUnit&&!c.totemUnit),chosen=[];
@@ -24,13 +24,18 @@ function randomTargets(s,actors,count) {
 }
 export function moltenCoreTick(s,actors,hurt) {
  const raid=s.combat?.raidEncounter;if(!raid)return;
- if(raid.id==='onyxia'){onyxiaTick(s,actors,hurt);return;}
+ publishRaidWarnings(s);
+ // Shared participant upkeep precedes encounter dispatch, including encounters
+ // with their own script. Do not charge for potions after the encounter ends.
+ const active=raid.kind==='trash'?s.combat.enemies.some(e=>e.hp>0&&!e.removed)
+  :s.combat.enemies.some(e=>e.id===raid.bossId&&e.hp>0&&!e.removed);
+ if(active)goldNpcTick(s,actors);
+ if(raid.id==='onyxia'){onyxiaTick(s,actors,hurt);publishRaidWarnings(s);return;}
  const original=s.combat.enemies.find(e=>e.id===raid.bossId);
  if(raid.id==='golemagg'&&original?.hp<=0)for(const e of s.combat.enemies)e.hp=0;
  const boss=raid.kind==='trash'?s.combat.enemies.find(e=>e.hp>0):original,living=actors.filter(c=>c.hp>0);
  if(!boss||boss.hp<=0)return;
  extendedMoltenCoreTick(s,actors,boss,hurt,randomTargets);
- goldNpcTick(s,actors);
  raidCommandTick(s,actors);
  const adds=s.combat.enemies.filter(e=>e.id!==boss.id&&e.hp>0).sort((a,b)=>Number(!!b.raidHealer)-Number(!!a.raidHealer)||Number(b.trashType==='priest')-Number(a.trashType==='priest'));
  const focus=raid.tactics.focusAdds,offTanks=living.filter(c=>combatRole(c)==='tank'&&!c.raidMainTank);
@@ -90,4 +95,5 @@ export function moltenCoreTick(s,actors,hurt) {
   }
  }
  if(boss.enraged&&!boss.auras?.some(a=>a.dispel===9&&a.until>s.clock))boss.enraged=false;
+ publishRaidWarnings(s);
 }

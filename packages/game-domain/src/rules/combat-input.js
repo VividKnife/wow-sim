@@ -4,12 +4,12 @@ import {combatMembers} from './combat-members.js';
 import {aliveEnemy,inSpellRange} from './combat-space.js';
 import {controlled,hasAura} from '../../../sim-core/src/combat-auras.js';
 import {cooldownUntil,gcdUntil} from './spell-timing.js';
-import {arenaSight} from '../../../sim-core/src/arena-space.js';
+import {combatSight} from './combat-space.js';
 
 // An executable input contract, not an inference from the presence of a DBC row.
 // Add families only with target/legality/settlement tests. Ranks remain explicit.
 const families={
- enemy:'Fireball|Frostbolt|Fire Blast|Arcane Missiles|Arcane Explosion|Flamestrike|Blizzard|Scorch|Pyroblast|Counterspell|Sunder Armor|Taunt|Pummel|Shield Bash|Sinister Strike|Eviscerate|Kick|Smite|Shadow Word: Pain|Mind Blast|Hammer of Justice|Arcane Shot|Serpent Sting|Aimed Shot|Multi-Shot|Volley|Tranquilizing Shot|Lightning Bolt|Chain Lightning|Earth Shock|Flame Shock|Frost Shock|Purge|Shadow Bolt|Immolate|Corruption|Curse of Agony|Searing Pain|Drain Life|Fear|Wrath|Moonfire|Starfire',
+ enemy:'Fireball|Frostbolt|Fire Blast|Arcane Missiles|Arcane Explosion|Flamestrike|Blizzard|Scorch|Pyroblast|Counterspell|Sunder Armor|Taunt|Growl|Pummel|Shield Bash|Sinister Strike|Eviscerate|Kick|Smite|Shadow Word: Pain|Mind Blast|Hammer of Justice|Arcane Shot|Serpent Sting|Aimed Shot|Multi-Shot|Volley|Tranquilizing Shot|Lightning Bolt|Chain Lightning|Earth Shock|Flame Shock|Frost Shock|Purge|Shadow Bolt|Immolate|Corruption|Curse of Agony|Searing Pain|Drain Life|Fear|Wrath|Moonfire|Starfire',
  friendly:'Lesser Heal|Heal|Flash Heal|Greater Heal|Renew|Power Word: Shield|Fear Ward|Power Infusion|Holy Light|Flash of Light|Lay on Hands|Cleanse|Purify|Healing Wave|Lesser Healing Wave|Chain Heal|Healing Touch|Regrowth|Rejuvenation|Innervate|Remove Curse|Remove Lesser Curse',
  either:'Dispel Magic',
  self:'Ice Block|Cold Snap|Shield Wall|Shield Block|Last Stand|Bloodrage|Evasion|Sprint|Divine Shield|Rapid Fire|Barkskin',
@@ -33,8 +33,8 @@ export function combatInputReadyReason(s,c,sp,target){
  if(sp.SpellName==='Power Word: Shield'&&target.weakenedSoulUntil>s.clock)return '目标受到虚弱灵魂影响，暂时无法施加真言术：盾';
  if(sp.School>0&&(c.silenceUntil>s.clock||hasAura(c,27,s.clock))||(c.schoolLockouts?.[sp.School]||0)>s.clock)return '学派被锁定或施法者被沉默';
  if(cooldownUntil(c,sp)>s.clock)return '技能仍在冷却';
- if(c!==target&&!inSpellRange(c,target,sp))return '目标超出施法距离';
- if(c!==target&&!arenaSight(c,target))return '目标不在视线内';
+ if(c!==target&&!combatSight(s,c,target))return '目标不在视线内';
+ if(c!==target&&!inSpellRange(s,c,target,sp))return '目标超出施法距离';
  const pool=sp.PowerType===1?'rage':sp.PowerType===2?'focus':sp.PowerType===3?'energy':[-2,4294967294].includes(sp.PowerType)?'hp':'mana';
  if((c[pool]||0)<sp.mana||pool==='hp'&&c.hp<=sp.mana)return '资源不足';
  if(s.combat.command?.holdFire&&damagingInput(sp))return '团队正在停火';

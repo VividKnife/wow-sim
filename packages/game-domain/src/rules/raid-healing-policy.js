@@ -1,6 +1,6 @@
 import {spells} from './catalog.js';
 import {stats,spellInfo,knownRank,effectRange} from './character.js';
-import {conservingRaidMana,raidHealingThreshold} from './raid-healing.js';
+import {raidHealingThreshold} from './raid-healing.js';
 import {combatRole} from './combat-roles.js';
 import {classAbilityKind} from './class-spell-registry.js';
 import {selectClass} from './class-mechanics.js';
@@ -49,7 +49,7 @@ export function raidHealMetrics(s,c,sp,target,actors,readStats=stats){
 
 export function selectRaidHealing(s,c,enemy,actors){
  const mode=raidHealingMode(s,c);if(!mode)return null;
- if(mode==='conserve')actors=projectRaidHealingTargets(s,c,actors);
+ actors=projectRaidHealingTargets(s,c,actors);
  const sheets=new Map(),readStats=a=>{if(!sheets.has(a))sheets.set(a,stats(a));return sheets.get(a);};
  // Configured conditions and disabled skills still apply. Without a configured
  // rotation, consider every learned healing family, resolving its highest rank.
@@ -89,7 +89,7 @@ export function projectRaidHealingTargets(s,c,actors){
 }
 export function cancelWastefulRaidHeal(s,c,actors){
  const cast=c.cast;
- if(!conservingRaidMana(s,c)||!cast?.policyControlled||cast.commanded||cast.channel||!rankedHeal(spells[cast.spell]))return false;
+ if(!raidHealingMode(s,c)||!cast?.policyControlled||cast.commanded||cast.channel||!rankedHeal(spells[cast.spell]))return false;
  const target=actors.find(a=>a.id===cast.target);if(!target||target.hp<=0)return false;
  // Cancel only on observed recovery, never because another heal might land.
  return target.hp>=stats(target).maxHp*raidHealingThreshold(s,c,target,.95);

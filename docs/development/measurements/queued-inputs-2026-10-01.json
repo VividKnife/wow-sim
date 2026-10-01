@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-01",
+  "kind": "durable-queued-inputs",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:71765c7ad1848a1670083418ffc036ce6967fbf16233c43d63ac8e101e3b0fc2",
+    "contentHash": "7691bf09687eea722ce20cc09d3b19b513d2f4294f2d9d030393d877f7b0045b"
+  },
+  "sources": {
+    "files": [
+      "apps/simulation-host/src/instance.ts",
+      "apps/simulation-host/src/worker.ts",
+      "apps/simulation-host/src/session.ts",
+      "apps/game-server/src/resident-game-service.ts",
+      "packages/protocol/src/simulation.ts",
+      "packages/contracts/src/game.ts",
+      "apps/web/app/game.tsx",
+      "apps/web/app/input-progress.tsx",
+      "apps/web/lib/input-receipts.js"
+    ],
+    "sha256": "b3e3ce0b165ce77b342ce6d3b370d3e5353f41c957f04d86ed9a7d69a5964ff7"
+  },
+  "node": "v24.15.0",
+  "verification": {
+    "regression": {
+      "tests": 77,
+      "passed": 77,
+      "failed": 0,
+      "durationMs": 108245.116166
+    },
+    "finalBoundaries": {
+      "tests": 9,
+      "passed": 9,
+      "failed": 0,
+      "durationMs": 6487.982708
+    },
+    "typecheck": "passed",
+    "webBuild": "passed with existing chunk-size warning",
+    "diffCheck": "passed"
+  },
+  "coverage": [
+    "bounded 64-command input journal in consistent checkpoints",
+    "server-assigned input time, stable acceptance order and duplicate requests",
+    "same-time budget yield and deferred rule rejection",
+    "accepted versus applied durable cursors",
+    "exact state and RNG after queued pause/resume recovery",
+    "real Worker accepts commands during a 120-second backlog without blocking checkpoints",
+    "frontend waits for durable result and displays deferred rejection",
+    "local waits end when a save disappears or authentication expires"
+  ],
+  "browser": {
+    "url": "http://127.0.0.1:5201/input-receipts.html",
+    "fixture": "server ResidentInstance and MemoryStore with manual rule advancement",
+    "sharedProductionCode": [
+      "InputProgress",
+      "createInputReceiptTracker"
+    ],
+    "stages": [
+      "queued at 0ms, no success",
+      "applied at 5000ms, awaits durable confirmation",
+      "checkpoint committed, success shown"
+    ],
+    "screenshots": [
+      ".cache/qa/input-awaiting-confirmation-2026-10-01.png",
+      ".cache/qa/input-durable-result-2026-10-01.png"
+    ],
+    "cleanup": "temporary tab closed and dedicated preview process stopped"
+  },
+  "limitations": [
+    "This UI check is not a complete game-page or dungeon playthrough",
+    "No capacity, hard realtime or latency percentile claim",
+    "Priority and admission policy for long catch-up workloads still require measurement",
+    "Cross-account shared-instance assets and external commit result recovery remain unfinished",
+    "Onyxia kill, loot and distribution browser acceptance remains incomplete"
+  ]
+}

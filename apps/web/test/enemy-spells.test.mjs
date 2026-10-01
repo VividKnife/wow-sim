@@ -1,3 +1,4 @@
+import {addGroundEffect} from '../../../packages/game-domain/src/rules/ground-events.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,stats,advance} from '../../../packages/game-domain/src/rules/engine.js';
@@ -49,7 +50,10 @@ test('a source cast spends mana once, persists over serialization, and is cancel
  assert.equal(enemySpells.castEnemySpell(s,e,s,9053,[s],hurt),true);
  assert.equal(e.mana,before);assert.equal(e.cast.timing.cost,90);assert.equal(e.cast.until,3000);assert.equal(s.hp,hp);
  const restored=JSON.parse(JSON.stringify(s)),caster=restored.combat.enemies[0];restored.clock=3000;
- enemySpells.tickEnemySpell(restored,caster,[restored],hurt);assert.equal(restored.hp,hp);restored.clock=restored.combat.projectiles[0].landsAt;enemySpells.tickEnemyProjectiles(restored,[restored],hurt);
+ enemySpells.tickEnemySpell(restored,caster,[restored],hurt);assert.equal(restored.hp,hp);
+ const flight=restored.combat.projectiles[0],impact=restored.simulationEvents.queue.events.find(e=>e.kind==='ProjectileImpact');
+ assert.ok(impact.atMs>=flight.landsAt&&impact.atMs-flight.landsAt<100);
+ restored.clock=impact.atMs;enemySpells.tickEnemyProjectiles(restored,[restored],hurt);
  assert.ok(hp-restored.hp>=64&&hp-restored.hp<=86);assert.equal(caster.cast,null);
  enemySpells.tickEnemySpell(restored,caster,[restored],hurt);assert.equal(caster.mana,before-90);
  const interrupted=encounter(4418);enemySpells.castEnemySpell(interrupted.s,interrupted.e,interrupted.s,9053,[interrupted.s],hurt);
@@ -109,7 +113,7 @@ test('departing an instance clears ground zones but preserves attached harmful a
  s.clock=3000;enemySpells.tickEnemySpell(s,e,[s],hurt);assert.equal(s.groundEffects.length,1);
  s.combat=null;s.dungeon={id:'deadmines'};s.auras=[{spell:5213,type:3,until:10000}];leaveDungeon(s);
  assert.equal(s.groundEffects.length,0);assert.equal(s.auras[0].spell,5213);
- s.groundEffects=[{spell:11829}];startCombat(s,[598]);assert.equal(s.groundEffects.length,0);
+ addGroundEffect(s,{caster:e.id,spell:11829,interval:1000,next:s.clock+1000,until:s.clock+3000});startCombat(s,[598]);assert.equal(s.groundEffects.length,0);
 });
 
 test('pirate Attack targets the original summoned pet and never buffs the pirate',()=>{

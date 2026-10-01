@@ -1,3 +1,4 @@
+import {isPublishedInputReceipt,type PublishedInputReceipt} from '../../protocol/src/simulation.ts';
 export const PROTOCOL_VERSION = 1 as const;
 
 export type JsonRecord = Record<string, unknown>;
@@ -12,14 +13,15 @@ export type ClientSnapshot = Readonly<{
 }>;
 
 export type GameResponse = Readonly<{
+  execution?: Readonly<{instanceId:string;ownerEpoch:number;streamSequence:number;actorId:string;controllerGeneration:number;clientSequence:number;pendingInputs:number;receipts:readonly PublishedInputReceipt[]}>;
+  commandReceipt?: PublishedInputReceipt;
   protocolVersion: typeof PROTOCOL_VERSION;
   contentVersion: string;
   revision: number;
   scope: 'full' | 'combat';
   snapshot: ClientSnapshot | null;
   replayed?: boolean;
-  combatMode?: 'recorded' | 'realtime' | 'local' | null;
-  localSimulation?: Readonly<{ownerId:string;sessionId:string|null}> | null;
+  combatMode?: 'recorded' | 'realtime' | null;
   playback?: Readonly<{id:string;encounterId:string;startsAt:number;endsAt:number;startClock:number;endClock:number}> | null;
   account?: ClientAccount | null;
   roster?: readonly ClientRosterMember[];
@@ -34,6 +36,13 @@ export function isGameResponse(value: unknown): value is GameResponse {
   if (response.protocolVersion !== PROTOCOL_VERSION || typeof response.contentVersion !== 'string' || !response.contentVersion) return false;
   if (response.scope !== 'full' && response.scope !== 'combat') return false;
   if (!Number.isSafeInteger(response.revision) || (response.revision as number) < 0 || !Object.hasOwn(response, 'snapshot')) return false;
+  if(response.commandReceipt!==undefined&&!isPublishedInputReceipt(response.commandReceipt))return false;
+  if(response.execution!==undefined){
+    const e=response.execution as Record<string,unknown>;
+    if(!e||typeof e!=='object'||Array.isArray(e)||typeof e.instanceId!=='string'||!e.instanceId||typeof e.actorId!=='string'||!e.actorId)return false;
+    if(!Number.isSafeInteger(e.pendingInputs)||Number(e.pendingInputs)<0||Number(e.pendingInputs)>64||!Array.isArray(e.receipts)||e.receipts.length>80||e.receipts.some(r=>!isPublishedInputReceipt(r)))return false;
+    for(const key of ['ownerEpoch','controllerGeneration','streamSequence','clientSequence'])if(!Number.isSafeInteger(e[key])||Number(e[key])<(['ownerEpoch','controllerGeneration'].includes(key)?1:0))return false;
+  }
   if (response.snapshot === null) return true;
   if (!response.snapshot || typeof response.snapshot !== 'object' || Array.isArray(response.snapshot)) return false;
   const snapshot = response.snapshot as Record<string, unknown>;

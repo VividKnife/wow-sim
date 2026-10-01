@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-01",
+  "scope": "Shared dungeon leader progression, per-character recovery and cooperative out-of-combat resurrection",
+  "rulesetVersion": "owned-v1:4eaef8736bc42e5f708626176484788ccf1e0aaac9b3d4c80045f273a82616f4",
+  "contentHash": "5910c11590fd3adc47ad8307b1a94d8b697dd9ca9e23757e3510a11c88e00154",
+  "validation": {
+    "focused": {
+      "passed": 32,
+      "failed": 0
+    },
+    "simulation": {
+      "passed": 270,
+      "failed": 0,
+      "durationMs": 270251.768
+    },
+    "rootTypecheck": "passed",
+    "webTypecheck": "passed"
+  },
+  "browser": {
+    "fixture": "apps/web/scripts/serve-shared-dungeon.mjs",
+    "storage": "isolated MemoryStore; no production saves",
+    "progress": "Alice cannot start route; Bob can. Route pause keeps current fight running. First encounter completed with progress 1/58.",
+    "resurrection": "PREVIEW_RESCUE=1: dead human leader Bob requested living human Alice resurrection; 10 second cast; Alice mana 1040 -> 635, Bob health 0 -> 84.",
+    "screenshots": [
+      ".cache/qa/shared-dungeon-progress-2026-10-01.png",
+      ".cache/qa/cooperative-resurrection-2026-10-01.png"
+    ]
+  },
+  "limitations": [
+    "Not a complete dungeon lifecycle or full boss-run acceptance test.",
+    "No production deployment or capacity measurement in this validation."
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-01",
+  "node": "v24.15.0",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:79b5da1059158e93ca350c91fea182c0c989e94e9f270f8081b502532b491fcf",
+    "contentHash": "b9ff4b2efacd37f486432eccae403b4f1db9afd8c6d11fb91c5db60d282c2e01"
+  },
+  "scope": "Bounded alignment of quiesced live source rooms and integration with the existing atomic dungeon checkpoint/claim transfer. Public manual entry is not connected.",
+  "tests": {
+    "simulation": {
+      "passed": 230,
+      "total": 230,
+      "durationMs": 216294.64625
+    },
+    "alignmentAndTransferBarriers": {
+      "passed": 14,
+      "total": 14,
+      "durationMs": 40486.573334
+    },
+    "rootTypecheck": "passed",
+    "goldenScenarios": "Five existing complete state/RNG/reward fixtures unchanged; verified by full simulation suite",
+    "browser": "not run; no frontend changes"
+  },
+  "verified": [
+    "Freeze all sources before choosing the common wall boundary; other rooms keep advancing",
+    "Advance with the ordinary kernel in ten-tick slices; bounded 256-slice coordinator and existing lease checks",
+    "Drain twelve same-time accepted commands without skipping or treating pending-input progress as an offline stall",
+    "Reject backward/future boundaries and preserve offline limits",
+    "Group source failure releases the preparation barrier; successful sealed source resumes through fenced abort",
+    "Two real-time human rooms plus three active NPCs transfer all twenty-two persistent identity claims",
+    "Committed target recovers via character routing and a fresh Worker admission; old sources cannot reacquire or unseal",
+    "Both humans retain private presentation access; foreign participant access is denied",
+    "Target participation records count once; transfer itself preserves item and wallet rows"
+  ],
+  "initialFailures": [
+    {
+      "test": "real-time source alignment",
+      "cause": "Fixture used separately anchored historical benchmark clocks instead of the shared UTC domain used by production character rooms",
+      "resolution": "Use production-like presence and UTC wall clocks; retain future-advancement rejection"
+    },
+    {
+      "test": "live dungeon transfer presentation authorization",
+      "cause": "Expected error regex did not match the actual access-denied error",
+      "resolution": "Assert Presentation access denied; unauthorized access was correctly rejected"
+    }
+  ],
+  "limitations": [
+    "Live integration uses MemoryStore; existing PGlite atomic transfer tests passed in the full suite",
+    "No production PostgreSQL multi-connection fault or capacity measurement in this turn",
+    "Group authorization, readiness, public entry/routing and member departure are not wired",
+    "Only idle, out-of-combat personal sources with the required prepared roster are composable",
+    "No new browser, full shared encounter, boss kill or loot distribution acceptance"
+  ],
+  "sourceSha256": {
+    "apps/simulation-host/src/session.ts": "755775f4cbf1edf3f0fbd509e46af288261ecd1a16db75c1e0ad49750893964f",
+    "apps/simulation-host/src/worker.ts": "b7a20921f24d72dcf81e912c5f68493b0fe89a2cb80ac5d29f708a0168a8d451",
+    "apps/simulation-host/src/host.ts": "d8c0496539b2e1b016a327a05a92050948b71572d7b3ed8b16f4861f450f491d",
+    "apps/simulation-host/src/messages.ts": "9859020e41680b0bb5c5040a9c327d703faed37d8108f47f108f322169c1d430",
+    "apps/simulation-host/src/instance.ts": "5939aad1e65accaf63037db4693b2f5817e8c9dc1091757ac134c3aa7094dd67",
+    "apps/simulation-host/test/transfer-alignment.test.ts": "a7677aa76518612ad2a7ecd91f768480700668e7f0fb5ed0b95230767b765e57",
+    "apps/simulation-host/test/realtime-dungeon-transfer.test.ts": "d76adba6ef0e1669269aac44cdaf730b0ddcbfcc7688929c89f5eb14bb64057e",
+    "package.json": "d87d593b0655124e0469b3b35a31aa10a1faa6ac041186f56a9e25579f6806c7"
+  }
+}
