@@ -1,0 +1,11 @@
+{
+ "date":"2026-10-01",
+ "sourceCommit":"7192067e",
+ "environment":"Local Edge production frontend build; real HTTP/WS; in-memory simulation; no PostgreSQL or worker pool",
+ "scene":"Lucifron, 40-member roster, 39 alive at capture",
+ "injectedDelayMs":0,
+ "metrics":{"frames":1800,"p50":16.7,"p99":34.1,"messages":275,"bytes":4739123,"longTasks":0,"snapshots":0,"deltas":275,"disconnects":0,"maxPacketGap":407,"seconds":35.3,"consoleErrors":0},
+ "averagePublicationHz":7.79,
+ "tests":{"publicationAndServer":27,"rootTypecheck":"passed","webTypecheck":"passed"},
+ "limitations":["Not a controlled comparison with prior runs","Frame percentiles cover the most recent 1800 frames","Not a deployment or capacity test","Target 10Hz publication and P99 <= 33.3ms are not yet achieved in this sample"]
+}
