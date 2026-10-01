@@ -65,3 +65,21 @@ test('departure rejects unsupported active boundaries and missing identities wit
  source.state.activity={type:'travel'};assert.throws(()=>splitDungeonCheckpoint(source,ids[0],personal,remaining),/当前/);
  source.state.activity=before.state.activity;assert.deepEqual(source,before);
 });
+
+test('healing applied by the other human survives separation into independently restored instances',async()=>{
+ const {source,ids}=await fixture(),actors=[source.state,source.state.party.find((a:Rules)=>a.id===ids[1])];
+ for(const [i,target]of actors.entries()){
+  target.hp=stats(target).maxHp-200;
+  addPeriodicEffect(source.state,target,'hots',{spell:139,name:'Renew from teammate',caster:actors[1-i].id,amount:10,next:source.state.clock+1000,interval:1000,until:source.state.clock+3000});
+ }
+ const outputs=splitDungeonCheckpoint(source,ids[0],{instanceId:'personal:cross-heal',ownerEpoch:1},{instanceId:'dungeon:cross-heal',ownerEpoch:1});
+ for(const cp of outputs){
+  const otherId=ids.find(id=>id!==cp.state.id)!;
+  assert.ok(cp.controllers.every(c=>c.actorId!==otherId));assert.ok(cp.state.party.every((a:Rules)=>a.id!==otherId));
+  const restored=ResidentInstance.restore(JSON.parse(JSON.stringify(cp)),2).checkpoint();
+  for(const state of [cp.state,restored.state])advanceOwned(state,state.wallAt+3100);
+  assert.deepEqual(JSON.parse(JSON.stringify(cp.state)),restored.state);
+  const heals=cp.state.logs.filter((l:Rules)=>l.kind==='heal'&&l.actorId===otherId&&l.targetId===cp.state.id);
+  assert.equal(heals.length,3);assert.equal(heals.reduce((n:number,l:Rules)=>n+l.amount,0),30);
+ }
+});

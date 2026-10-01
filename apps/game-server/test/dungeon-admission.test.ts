@@ -43,7 +43,7 @@ for(const order of ['leader-first','leader-later','outside','cross-owner'])test(
   // Live companions belong to the admission, not the permanent character row.
   const admission=await characters.admission('bob',ids[1]);
   admission.state.party=admission.state.npcWorld.residents.filter((p:Rules)=>npcIds.includes(p.id)).map((p:Rules)=>structuredClone(p.unit));
-  for(const npc of admission.state.party)addPeriodicEffect(admission.state,npc,'hots',{spell:139,name:'Renew',caster:npc.id,amount:10,next:admission.state.clock+1000,interval:1000,until:admission.state.clock+30000});
+  for(const npc of admission.state.party)addPeriodicEffect(admission.state,npc,'hots',{spell:139,name:'Renew',caster:admission.state.id,amount:10,next:admission.state.clock+1000,interval:1000,until:admission.state.clock+30000});
   const owner=await repository.acquire(admission.instanceId,'fixture');
   await repository.commit(owner,1,new ResidentInstance({...admission,ownerEpoch:owner.epoch}).checkpoint());
   owner.commitSequence=1;await repository.release(owner);

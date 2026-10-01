@@ -40,7 +40,7 @@ const characters=new ResidentCharacters(store,{version:runtimeVersion}),reposito
 if(process.env.PREVIEW_NPC_EFFECTS==='1'){
  const accountId=process.env.PREVIEW_NPC_OWNER??'alice',admission=await characters.admission(accountId,ids[accountId==='bob'?1:0]);
  admission.state.party=admission.state.npcWorld.residents.filter(p=>npcIds.includes(p.id)).map(p=>structuredClone(p.unit));
- for(const npc of admission.state.party)addPeriodicEffect(admission.state,npc,'hots',{spell:139,name:'Renew',caster:npc.id,amount:10,next:admission.state.clock+1000,interval:1000,until:admission.state.clock+600000});
+ for(const npc of admission.state.party)addPeriodicEffect(admission.state,npc,'hots',{spell:139,name:'Renew',caster:process.env.PREVIEW_CROSS_HEAL==='1'?admission.state.id:npc.id,amount:10,next:admission.state.clock+1000,interval:1000,until:admission.state.clock+600000});
  const owner=await repository.acquire(admission.instanceId,'fixture');
   await repository.commit(owner,1,new ResidentInstance({...admission,ownerEpoch:owner.epoch}).checkpoint());
   owner.commitSequence=1;await repository.release(owner);

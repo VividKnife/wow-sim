@@ -1,3 +1,4 @@
+import {effectSource,validEffectSource} from './effect-source.js';
 import {ENEMY_AURA_PHASE,restoreEnemyAuraEvents,validEnemyAuraEvent,dispatchEnemyAuraEvent} from './enemy-aura-events.js';
 import {restoreGroundEvents,validGroundEvent,dispatchGroundEvent} from './ground-events.js';
 import {combatMembers} from './combat-members.js';
@@ -129,7 +130,7 @@ export function simulationEventRuntime(s){
  }
  for(const event of periodicEvents.values())if(!storage.periodics[event.subjectId])throw new Error('Persistent periodic event requires timer');
  const boundPeriodics=new Set();
- for(const target of actors)for(const container of ['hots','periodicClass'])for(const effect of target[container]||[]){const timer=storage.periodics[effect.periodicEventId];if(!timer||timer.targetId!==target.id||timer.container!==container||boundPeriodics.has(timer.id))throw new Error('Persistent periodic requires its own timer');boundPeriodics.add(timer.id);}
+ for(const target of actors)for(const container of ['hots','periodicClass'])for(const effect of target[container]||[]){const timer=storage.periodics[effect.periodicEventId];if(!timer||timer.targetId!==target.id||timer.container!==container||boundPeriodics.has(timer.id)||!validEffectSource(effect.source,effect.caster))throw new Error('Persistent periodic requires its own timer');boundPeriodics.add(timer.id);}
  const ground=restoreGroundEvents(s,storage,queue);
  owned={enemyAuras:restoreEnemyAuraEvents(s,storage,queue),ground,queue,records,index,readyCasts,castCount:casts.length,readyResources,resourceCount:resources.length,readyAttacks,attackCount:attacks.length,readyDots,dotBindings,dotsByTarget,readyDotsByTarget,dotCount:dots.length,periodicBindings,readyPeriodics,periodicsByTarget,readyPeriodicsByTarget,periodicCount:periodics.length};runtimes.set(storage,owned);
  return owned;
@@ -455,14 +456,16 @@ function armPeriodic(s,owned,timer){
  timer.eventSequence=owned.queue.schedule({kind:'AuraPeriodic',atMs:timer.atMs,phase:PERIODIC_PHASE,entitySlot:0,entityGeneration:1,subjectId:timer.id,subjectVersion:1}).sequence;
 }
 export function addPeriodicEffect(s,target,container,effect){
- if(!['hots','periodicClass'].includes(container)||!eventActors(s).includes(target)||!validPeriodic(effect))throw new Error('Periodic recovery requires a local target and valid deadlines');
+ const actors=eventActors(s);
+ if(!['hots','periodicClass'].includes(container)||!actors.includes(target)||!validPeriodic(effect))throw new Error('Periodic recovery requires a local target and valid deadlines');
+ const source=effectSource(actors.find(c=>c.id===effect.caster));
  const owned=simulationEventRuntime(s),storage=s.simulationEvents;
  for(const id of owned.periodicsByTarget.get(target.id)||[]){const timer=storage.periodics[id];if(!periodicMatches(owned,id,target,timer)){if(!timer.ready)owned.queue.cancel(timer.eventSequence);retirePeriodic(storage,owned,id);}}
  if(effect.until<=s.clock||target.hp<=0)return effect;
  if(owned.periodicCount>=PERIODIC_CAPACITY)throw new Error('Persistent periodic capacity exceeded');
  const id=storage.periodicSequence+1;if(!Number.isSafeInteger(id))throw new Error('Persistent periodic sequence exhausted');
  const timer={id,targetId:target.id,container,next:effect.next,until:effect.until,atMs:0,ready:false,eventSequence:null};
- storage.periodicSequence=id;effect.periodicEventId=id;(target[container]??=[]).push(effect);storage.periodics[id]=timer;owned.periodicCount++;owned.periodicBindings.set(id,{target,effect});
+ storage.periodicSequence=id;effect.source=source;effect.periodicEventId=id;(target[container]??=[]).push(effect);storage.periodics[id]=timer;owned.periodicCount++;owned.periodicBindings.set(id,{target,effect});
  if(!owned.periodicsByTarget.has(target.id))owned.periodicsByTarget.set(target.id,new Set());owned.periodicsByTarget.get(target.id).add(id);
  armPeriodic(s,owned,timer);return effect;
 }

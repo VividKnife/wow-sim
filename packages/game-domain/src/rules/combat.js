@@ -1,3 +1,4 @@
+import {healAmount} from './healing.js';
 import {addGroundEffect,removeGroundEffects,dueGroundEffects,continueGroundEffect,expireGroundEffects} from './ground-events.js';
 import {flatSpellThreat} from './spell-threat.js';
 import {clearCombatEvents,addCombatDot,dueCombatDots,continueCombatDot,autoAttackReady,scheduleAutoAttack,dueEnemyCastIds,takePowerRegenReady,beginActorCast,prepareActorCasts,takeActorCastReady,channelProgress,continueChannel,shortenCombatChannel} from './simulation-events.js';
@@ -57,7 +58,7 @@ import {consumeHunterAmmo} from './ammunition.js';
 import {dismount} from './mounts.js';
 import {moltenCoreTick} from './molten-core-encounter.js';
 import {canPolymorph,polymorphTarget,applyPolymorph,tickPolymorph} from './polymorph.js';
-import {selectClass,executeClassAbility,classEffect,tickClassEffects,petTick,selectRacialReaction,executeRacialReaction,healAmount} from './class-mechanics.js';
+import {selectClass,executeClassAbility,classEffect,tickClassEffects,petTick,selectRacialReaction,executeRacialReaction} from './class-mechanics.js';
 import {talentModifiers,abilityDamageMultiplier,spellCritBonus,ranks,talentSpellValue,talentSchoolThreat,talentOffhandMultiplier,talentArmorPenetration,talentCombatDefense} from './talent-effects.js';
 
 export const defaultRules = [

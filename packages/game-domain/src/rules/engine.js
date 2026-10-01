@@ -1,3 +1,4 @@
+import {healAmount} from './healing.js';
 import {personalBuildActions,buildChangeBlocked} from './character-action-state.js';
 import {partyLeaderId,controlledPartyMembers,dungeonControlActions} from './party-control.js';
 import {removeGroundEffects} from './ground-events.js';
@@ -53,7 +54,7 @@ import {movementMultiplier} from './experience.js';
 import {soulstoneRevive,reincarnationUse,reincarnate} from './class-items.js';
 import {petCommand} from './class-spell-effects.js';
 import {combatMembers} from './combat-members.js';
-import {tickClassEffects,healAmount} from './class-mechanics.js';
+import {tickClassEffects} from './class-mechanics.js';
 import {ammoPromptView,ammoView,handleTownAmmo,configureAmmo,loadAmmo} from './ammunition.js';
 export {stats,killXp,questProgress};
 
