@@ -1,0 +1,374 @@
+{
+  "date": "2026-10-01",
+  "previewUrl": "http://127.0.0.1:5287/battle-3d.html?boss=lucifron",
+  "command": "RAID_PREVIEW_URL=http://127.0.0.1:5287 node apps/web/test/browser/raid-room-check.mjs",
+  "browser": "Playwright Chromium headless",
+  "cases": [
+    {
+      "bossId": "lucifron",
+      "stage": "battle",
+      "roomId": "lucifron-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/lucifron-battle.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "lucifron",
+      "stage": "preparation",
+      "roomId": "lucifron-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/lucifron-preparation.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "magmadar",
+      "stage": "battle",
+      "roomId": "magmadar-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/magmadar-battle.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "magmadar",
+      "stage": "preparation",
+      "roomId": "magmadar-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/magmadar-preparation.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "gehennas",
+      "stage": "battle",
+      "roomId": "gehennas-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/gehennas-battle.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "gehennas",
+      "stage": "preparation",
+      "roomId": "gehennas-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/gehennas-preparation.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "garr",
+      "stage": "battle",
+      "roomId": "garr-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/garr-battle.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "garr",
+      "stage": "preparation",
+      "roomId": "garr-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/garr-preparation.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "baron-geddon",
+      "stage": "battle",
+      "roomId": "baron-geddon-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/baron-geddon-battle.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "baron-geddon",
+      "stage": "preparation",
+      "roomId": "baron-geddon-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/baron-geddon-preparation.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "shazzrah",
+      "stage": "battle",
+      "roomId": "shazzrah-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/shazzrah-battle.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "shazzrah",
+      "stage": "preparation",
+      "roomId": "shazzrah-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/shazzrah-preparation.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "sulfuron",
+      "stage": "battle",
+      "roomId": "sulfuron-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/sulfuron-battle.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "sulfuron",
+      "stage": "preparation",
+      "roomId": "sulfuron-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/sulfuron-preparation.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "golemagg",
+      "stage": "battle",
+      "roomId": "golemagg-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/golemagg-battle.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "golemagg",
+      "stage": "preparation",
+      "roomId": "golemagg-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/golemagg-preparation.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "majordomo",
+      "stage": "battle",
+      "roomId": "majordomo-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/majordomo-battle.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "majordomo",
+      "stage": "preparation",
+      "roomId": "majordomo-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/majordomo-preparation.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "ragnaros",
+      "stage": "battle",
+      "roomId": "ragnaros-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/ragnaros-battle.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "ragnaros",
+      "stage": "preparation",
+      "roomId": "ragnaros-chamber",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/ragnaros-preparation.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "onyxia",
+      "stage": "battle",
+      "roomId": "onyxia-lair",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/onyxia-battle.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "onyxia",
+      "stage": "preparation",
+      "roomId": "onyxia-lair",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/onyxia-preparation.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "baron-geddon",
+      "stage": "battle",
+      "roomId": "baron-geddon-chamber",
+      "quality": "low",
+      "screenshot": "/tmp/wow-raid-room-review/baron-geddon-low.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "ragnaros",
+      "stage": "battle",
+      "roomId": "ragnaros-chamber",
+      "quality": "low",
+      "screenshot": "/tmp/wow-raid-room-review/ragnaros-low.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "onyxia",
+      "stage": "battle",
+      "roomId": "onyxia-lair",
+      "quality": "low",
+      "screenshot": "/tmp/wow-raid-room-review/onyxia-low.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "onyxia",
+      "stage": "mechanic",
+      "quality": "low",
+      "screenshot": "/tmp/wow-raid-room-review/onyxia-breath-low.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "onyxia",
+      "stage": "mechanic",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/onyxia-breath-full.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      }
+    },
+    {
+      "bossId": "onyxia",
+      "stage": "mechanic",
+      "quality": "full",
+      "screenshot": "/tmp/wow-raid-room-review/onyxia-mobile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "bossId": "lucifron",
+      "stage": "battle",
+      "quality": "full",
+      "zoom": 3,
+      "viewport": {
+        "width": 1440,
+        "height": 1080
+      },
+      "waitStrategy": "renderer ready, networkidle, then 4000 ms for actor Suspense completion",
+      "screenshot": "docs/development/screenshots/raid-rooms-lucifron-closeup.png",
+      "pageErrors": [],
+      "consoleErrors": [],
+      "failedRequests": []
+    }
+  ],
+  "checks": {
+    "allElevenBosses": true,
+    "preparationAndBattle": true,
+    "fortyMembersInEachPreparation": true,
+    "webglRendererReady": true,
+    "nativeSelectCount": 0,
+    "mechanicFloorStencil": "Checked in full and low modes, with matching authoritative floor triangles in renderer tests",
+    "actorAssets": "Confirmed separately in network-idle close-up; initial matrix primarily validates room and terrain rendering."
+  },
+  "pageErrors": [],
+  "consoleErrors": [],
+  "visualReview": {
+    "reviewed": [
+      "lucifron-battle",
+      "magmadar-preparation",
+      "baron-geddon-battle",
+      "ragnaros-low",
+      "onyxia-breath-full",
+      "onyxia-mobile",
+      "lucifron-closeup"
+    ],
+    "observations": [
+      "Authored wall contours and floor palettes are distinct between rooms.",
+      "Onyxia breath area is visibly clipped to the authored floor in full and low modes.",
+      "Preview command HUD is initially hidden to expose room geometry; the checkbox restores the production command controls.",
+      "The initial floor-ready matrix could capture actor placeholders while models streamed. A separate network-idle + 4-second close-up at the existing 3x battle zoom confirms humanoid bodies and equipment render above the floor; no failed asset requests or browser errors occurred.",
+      "The reusable browser check now waits for networkidle after floor readiness. No production actor scaling or model rendering behavior was changed."
+    ],
+    "durableScreenshots": [
+      "docs/development/screenshots/raid-rooms-baron-geddon.png",
+      "docs/development/screenshots/raid-rooms-onyxia-breath.png",
+      "docs/development/screenshots/raid-rooms-lucifron-closeup.png"
+    ]
+  },
+  "validation": {
+    "roomRenderer": {
+      "passed": 15,
+      "failed": 0
+    },
+    "expandedWebSuite": {
+      "passed": 42,
+      "failed": 1,
+      "environmentLimitation": "battle-hd2d-assets.test.mjs cannot import the pre-existing sharp dependency; no dependency installation or unrelated package change was performed."
+    },
+    "webTypecheck": "passed"
+  }
+}

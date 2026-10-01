@@ -98,6 +98,7 @@ export default function Game(){
    throw error;
   }
  });
+ const getAmmoSnapshot=useCallback(()=>acceptedResponse.current?.snapshot?.player?.id===selectedCharacterRef.current?acceptedResponse.current.snapshot:null,[]);
  const send=useCallback(async(body:any)=>{manualPending.current++;setBusy(true);setError('');try{const characterId=selectedCharacterRef.current;const success=await queue.current!({...body,...(characterId?{characterId}:{}),requestId:crypto.randomUUID()});if(success){setConnectionError('');playQuestSound(body);}if(success&&['enterDungeon','goldLaunch'].includes(body.type)){setActiveTab('world');if(classicActive.current)setClassicPanel(null);}if(success&&classicActive.current&&['hunt','travel','navigateQuest','goldStart','raidStart','dungeonNext','dungeonNavigate','raidNavigate','goldNavigate'].includes(body.type))setClassicPanel(null);if(success&&!classicActive.current&&opensBattleDialog(body,inlineBattleRef.current))setBattleOpen(true);return success;}catch(e:any){if(e.status===401){setSignedIn(false);setConnectionError('');setError('');return false;}if(body.type==='goldBid'&&e.status>=400&&e.status<500){try{const id=selectedCharacterRef.current;await apply(await readGameResponse(await saveFetch(`/api/game?${new URLSearchParams(id?{characterId:id}:{})}`)));}catch{/* Keep the original rejection when refresh is unavailable. */}}setError(gameErrorMessage(e));return false;}finally{manualPending.current--;setBusy(manualPending.current>0);}},[]);
  useEffect(()=>{
   let cancelled=false;
@@ -151,7 +152,7 @@ export default function Game(){
 </details>:null;
  if(!s||!d)return <main className="game-shell"><section className="panel"><h1>{loading?'正在读取存档…':'无法进入游戏'}</h1>{error&&<p role="alert">{error}</p>}<a href={signedIn?'/':'/login'}>{signedIn?'返回角色选择':'重新登录'}</a></section>{!loading&&signedIn&&error&&<UnstuckControl busy={busy} send={send}/>}</main>;
  const overlays=<>{signedIn&&<GroupLootPopup {...props}/>}{s&&signedIn&&!d.goldRaid?.active&&!d.groupLoot?.pending.length&&(!game.instance||game.instance.leaderId===s.id)&&<LootWindow settingsInMenu={interfaceStyle==='classic'} key={`${s.id}:${s.lastCombat?.id||'pending'}`} {...props}/>}
-{s&&d.ammoPrompt&&<AmmoRestockDialog key={`${d.ammoPrompt.memberId}:${d.ammoPrompt.trigger}`} prompt={d.ammoPrompt} item={d.items[d.ammoPrompt.itemId]} busy={busy} send={send}/>}
+{s&&d.ammoPrompt&&<AmmoRestockDialog key={`${s.id}:${d.ammoPrompt.memberId}:${d.ammoPrompt.visit}`} actorId={s.id} getSnapshot={getAmmoSnapshot} prompt={d.ammoPrompt} item={d.items[d.ammoPrompt.itemId]} busy={busy} send={send}/>}
 {error&&<div className="error toast" role="alert">{error}<button aria-label="关闭提示" onClick={()=>setError('')}>×</button></div>}</>;
  const toggleInterface=()=>{
   if(interfaceStyle==='classic'){setActiveTab(webTabForClassic(classicPanel));setInterfaceStyle('web');}

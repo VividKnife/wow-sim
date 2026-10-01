@@ -1,0 +1,316 @@
+{
+  "contentVersion": "3d96ae3fca91814e25e8ab9b1b65bc5656b08906b5d4fca19c19bb295112deb8",
+  "method": "Independent 40-player full-engine pulls, fixed seed, real challenge equipment, no damage/health multipliers or injected healing. Every 100 ms checks all living participants and enemies against the authored floor. A JSON checkpoint at five seconds must reproduce the entire durable state at ten seconds. Results are single cases, not balance or win-rate certification.",
+  "seed": 60325,
+  "gear": "fullEpic",
+  "tanks": 4,
+  "healers": 10,
+  "durationMs": 901000,
+  "results": [
+    {
+      "boss": "lucifron",
+      "roomId": "lucifron-chamber",
+      "geometryHash": "1ec0d35fb1b4af2ef3fc515e2cb36889bdaf102156cccbcea36538937864b5a1",
+      "initialHash": "91c0bca31ea7c580f3d5e0f35ca9caaaaf0b8fe13634c826b28b0b4b4f930b41",
+      "finalHash": "493133c8473f21d0c1f54d4ac5c6ae1ea9471127b35eb088805133b23b57a034",
+      "seconds": 82.4,
+      "ended": true,
+      "won": true,
+      "timedOut": false,
+      "alive": 40,
+      "bossRemainingPercent": 0,
+      "phases": [
+        "1"
+      ],
+      "fields": [],
+      "checkedUnits": 39158,
+      "checkpointReplay": true,
+      "wallMs": 58122
+    },
+    {
+      "boss": "magmadar",
+      "roomId": "magmadar-chamber",
+      "geometryHash": "f1e9f523dabb232dfe660c8ed304625b26b1cd2292e93caa8ab5567676390bad",
+      "initialHash": "fc03cc27c618c38f16b2313621164b05e97d91daffb6653fbae0d67d4ee09f15",
+      "finalHash": "106f5b89a1f1513c6f6df933ce520f98c7f5907264306b44271f854207bc049e",
+      "seconds": 174.9,
+      "ended": true,
+      "won": true,
+      "timedOut": false,
+      "alive": 40,
+      "bossRemainingPercent": 0,
+      "phases": [
+        "1"
+      ],
+      "fields": [
+        "熔岩炸弹"
+      ],
+      "checkedUnits": 82243,
+      "checkpointReplay": true,
+      "wallMs": 129855
+    },
+    {
+      "boss": "gehennas",
+      "roomId": "gehennas-chamber",
+      "geometryHash": "12b0d6850a1e9d94bb91ccd849d0f1321a068a46a9c88008a6703a83194f5eb2",
+      "initialHash": "71de2dbef0f0d76f3af0413f5f46e07764661db0c5511283c7995f4cb8ea3f1b",
+      "finalHash": "e1e1e205b84ad2d70ca04126812fd8f90ebaa5c407a303c39fd85a5732b08077",
+      "seconds": 82.5,
+      "ended": true,
+      "won": true,
+      "timedOut": false,
+      "alive": 38,
+      "bossRemainingPercent": 0,
+      "phases": [
+        "1"
+      ],
+      "fields": [
+        "火焰之雨"
+      ],
+      "checkedUnits": 38248,
+      "checkpointReplay": true,
+      "wallMs": 81087
+    },
+    {
+      "boss": "garr",
+      "roomId": "garr-chamber",
+      "geometryHash": "f8c365494f8ec41c5c80c5f93e5ce8aa59cbf8cec9d57764ac970f25761f7af3",
+      "initialHash": "5c19e556a1018e1bd0f515c84457dbea02548d847e8c1bbff3a262315ddf0510",
+      "finalHash": "234a8dcbb514298c018b00293f65a48d67d57ae546944285fdd94e03d24a6cb5",
+      "seconds": 190.1,
+      "ended": true,
+      "won": false,
+      "timedOut": false,
+      "alive": 0,
+      "bossRemainingPercent": 65.21,
+      "phases": [
+        "1"
+      ],
+      "fields": [
+        "火誓者爆炸"
+      ],
+      "checkedUnits": 52347,
+      "checkpointReplay": true,
+      "wallMs": 66811
+    },
+    {
+      "boss": "baron-geddon",
+      "roomId": "baron-geddon-chamber",
+      "geometryHash": "88bbebda1c41a8bea07442ad7c3fd8c53c4e071b2df1e07692ab87a67d93d6b5",
+      "initialHash": "d5fde0c29ef32ec5c418cd1a55134af5c6e7f293ae60e9c25e450e3e0ae2b99f",
+      "finalHash": "dae7938d2dae7952e8e1b3a7dd65d60a4a830b4b5e666e03125a0eb651e399e0",
+      "seconds": 148,
+      "ended": true,
+      "won": false,
+      "timedOut": false,
+      "alive": 0,
+      "bossRemainingPercent": 0.41,
+      "phases": [
+        "1"
+      ],
+      "fields": [
+        "地狱火"
+      ],
+      "checkedUnits": 50442,
+      "checkpointReplay": true,
+      "wallMs": 78439
+    },
+    {
+      "boss": "shazzrah",
+      "roomId": "shazzrah-chamber",
+      "geometryHash": "7b7debc8b83f03bca69c917fff0db612ec74517f90741afbc203187a41630740",
+      "initialHash": "d3b9944cc35f52fa619be033462c501e367c5a2f74f980b04210944b23c7447e",
+      "finalHash": "8f255a97047c4770f43a927e62bbf3f4d3c174c1e1496b6203c08dcf72f0ab33",
+      "seconds": 74.8,
+      "ended": true,
+      "won": false,
+      "timedOut": false,
+      "alive": 0,
+      "bossRemainingPercent": 22.82,
+      "phases": [
+        "1"
+      ],
+      "fields": [],
+      "checkedUnits": 21876,
+      "checkpointReplay": true,
+      "wallMs": 30020
+    },
+    {
+      "boss": "sulfuron",
+      "roomId": "sulfuron-chamber",
+      "geometryHash": "8d92ce9c6a5277fd600d11d0dcf21299f7c887e19a960ffa1d4834bf66c90ed2",
+      "initialHash": "11953c24fe5e7cd8bcb54a6cca89ae1f8a90173e45f0ecba58f26d0e2de44315",
+      "finalHash": "6ec3b1f6e7539e70520a8ff031f3dd732958b27a9f49dc3b6053e43c306e76c2",
+      "seconds": 107.3,
+      "ended": true,
+      "won": true,
+      "timedOut": false,
+      "alive": 40,
+      "bossRemainingPercent": 0,
+      "phases": [
+        "1"
+      ],
+      "fields": [],
+      "checkedUnits": 51374,
+      "checkpointReplay": true,
+      "wallMs": 78322
+    },
+    {
+      "boss": "golemagg",
+      "roomId": "golemagg-chamber",
+      "geometryHash": "a42c031aef45d468fce319292f0cef9f55a3fb6847292e46303169773d381993",
+      "initialHash": "05961d4f33773f13e2bf037cedb994d1b52c7dc1751ccf1c6f391228c40b07a7",
+      "finalHash": "ed0f423f339feb9fdc1c206a0154a237ab08cae848762d6c3e537526dbed652a",
+      "seconds": 142,
+      "ended": true,
+      "won": true,
+      "timedOut": false,
+      "alive": 24,
+      "bossRemainingPercent": 0,
+      "phases": [
+        "1"
+      ],
+      "fields": [],
+      "checkedUnits": 65812,
+      "checkpointReplay": true,
+      "wallMs": 112880
+    },
+    {
+      "boss": "majordomo",
+      "roomId": "majordomo-chamber",
+      "geometryHash": "55c699e573cb2317f7c5203e743fe081f321290ccac8ae5e03416e0456bf7642",
+      "initialHash": "ca5105cfff8fa45e5d11c5e1ccaceb0004e074aa3c1ab4e3db9e7a777c91d3fc",
+      "finalHash": "cce3366ded8f718d1a0ea05679162d95a87812529f4b084886d3253af3b78bcc",
+      "seconds": 64.8,
+      "ended": true,
+      "won": true,
+      "timedOut": false,
+      "alive": 40,
+      "bossRemainingPercent": 0,
+      "phases": [
+        "1"
+      ],
+      "fields": [],
+      "checkedUnits": 33729,
+      "checkpointReplay": true,
+      "wallMs": 37935
+    },
+    {
+      "boss": "ragnaros",
+      "roomId": "ragnaros-chamber",
+      "geometryHash": "bdbf212f12f1292f14c7fb88f3a9cdbfbdc947c2f3757fcae25e5d5a1bdc7d63",
+      "initialHash": "6a0b43642f39fb56eadefc0da56da6a6d7b8eacd9cebc29c68ae67918718a454",
+      "finalHash": "9322207d27af7f246e75437b0b9bdd7cdd2664d4af3eaa824aa682c453a39cc7",
+      "seconds": 184.9,
+      "ended": true,
+      "won": false,
+      "timedOut": false,
+      "alive": 0,
+      "bossRemainingPercent": 43.98,
+      "phases": [
+        "1",
+        "submerged"
+      ],
+      "fields": [
+        "螺旋熔岩",
+        "炎魔熔池",
+        "熔岩爆发"
+      ],
+      "checkedUnits": 50777,
+      "checkpointReplay": true,
+      "wallMs": 62553
+    },
+    {
+      "boss": "onyxia",
+      "roomId": "onyxia-lair",
+      "geometryHash": "101a379717c005e6f86f95ef994c501aa6f353e6032b55d2f46d7439d9276bf4",
+      "initialHash": "a5138c165cdf925f5061f22f8c098ec5b8347f730d28d877b9035594efaf4824",
+      "finalHash": "8481dfa7edce8cae9384ffc9dab81064067f97f33d7d375f54adbc9a98965ec4",
+      "seconds": 126.3,
+      "ended": true,
+      "won": false,
+      "timedOut": false,
+      "alive": 0,
+      "bossRemainingPercent": 61.09,
+      "phases": [
+        "1",
+        "2"
+      ],
+      "fields": [
+        "烈焰吐息",
+        "扫尾",
+        "深呼吸"
+      ],
+      "checkedUnits": 38941,
+      "checkpointReplay": true,
+      "wallMs": 56709
+    }
+  ],
+  "compiledContentVersion": "c510c75b527f36548a18c3930d5f7cd6e67ad507742bb9168b0cb39415020197",
+  "versionNote": "contentVersion is the manifest loaded by the full-pull processes. compiledContentVersion includes the subsequent rebuild of runtime/version.json; encounter sources and compiled room geometry did not change during these pulls.",
+  "expectedBosses": [
+    "lucifron",
+    "magmadar",
+    "gehennas",
+    "garr",
+    "baron-geddon",
+    "shazzrah",
+    "sulfuron",
+    "golemagg",
+    "majordomo",
+    "ragnaros",
+    "onyxia"
+  ],
+  "complete": true,
+  "summary": {
+    "bosses": 11,
+    "wins": 6,
+    "losses": 5,
+    "checkedLivingUnitPositions": 524947,
+    "checkpointReplays": 11
+  },
+  "validation": {
+    "raidAndSpatialRegression": {
+      "passed": 72,
+      "total": 72
+    },
+    "sharedSummonAndClassRegression": {
+      "passed": 119,
+      "total": 119
+    },
+    "compilerRegression": {
+      "passed": 5,
+      "total": 5
+    },
+    "simulationSuite": {
+      "passed": 297,
+      "total": 298,
+      "initialFailure": {
+        "test": "inactive rooms retire early without spending or resetting the two-hour offline allowance",
+        "code": "SIMULATION_VERSION",
+        "message": "运行规则或内容版本不一致",
+        "context": "The content manifest was recompiled while the suite was running. The affected test passed on a fresh isolated run after compilation.",
+        "isolatedRerun": {
+          "passed": 1,
+          "total": 1
+        }
+      }
+    },
+    "rootTypecheck": "passed",
+    "webTypecheck": "passed",
+    "webProductionBuild": "passed",
+    "dataCheck": "passed",
+    "goldenReview": {
+      "passed": 1,
+      "total": 1,
+      "changedScenario": "raid",
+      "unchangedScenarios": [
+        "solo",
+        "dungeon",
+        "arena",
+        "battleground"
+      ]
+    },
+    "browserReport": "raid-rooms-browser-2026-10-01.json"
+  }
+}

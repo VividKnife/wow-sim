@@ -1,8 +1,8 @@
 import {raidSpellValue} from './raid-spells.js';
 import {roll} from './character.js';
 import {addRaidField} from './raid-battlefield.js';
-import {fieldSafePoint,rectangleField} from '../../../sim-core/src/encounter-geometry.js';
-import {setCombatPosition} from './combat-area.js';
+import {fieldSafePoint} from '../../../sim-core/src/encounter-geometry.js';
+import {setCombatPosition,placeCombatUnit} from './combat-area.js';
 import {raidEnemy} from './molten-core-content.js';
 import {log} from './character.js';
 export function raidAnimation(s,unit,action='cast',duration=1200){
@@ -44,7 +44,7 @@ export function extendedMoltenCoreTick(s,actors,boss,hurt,targets){
   if(!r.submerged&&s.clock>=r.nextSubmerge){
    r.submerged=true;r.emergeAt=s.clock+90000;boss.stunUntil=r.emergeAt;raidAnimation(s,boss,'submerge',90000);
    addCombatAura(boss,{spell:21107,type:39,misc:127,until:r.emergeAt,positive:true},s.clock);
-   for(let i=0;i<8;i++){const e=raidEnemy(s,`son-${s.clock}-${i}`,'烈焰之子',12143);const angle=i*Math.PI/4,p=fieldSafePoint({x:boss.position+Math.cos(angle)*10,y:boss.positionY+Math.sin(angle)*10},r.fires.filter(f=>f.terrain),s.combat.area);e.position=p.x;e.positionY=p.y;e.target=living.find(c=>combatRole(c)==='tank'&&!c.raidMainTank)?.id||s.id;e.threat[e.target]=2500;s.combat.enemies.push(e);}
+   for(let i=0;i<8;i++){const e=raidEnemy(s,`son-${s.clock}-${i}`,'烈焰之子',12143),anchor=s.combat.area.anchors[`son${i}`];if(!anchor)throw new Error(`拉格纳罗斯房间缺少烈焰之子落点 ${i}。`);placeCombatUnit(s,e,fieldSafePoint(anchor,r.fires.filter(f=>f.terrain),s.combat.area));e.target=living.find(c=>combatRole(c)==='tank'&&!c.raidMainTank)?.id||s.id;e.threat[e.target]=2500;s.combat.enemies.push(e);}
    raidNotice(s,'拉格纳罗斯潜入熔岩：击败八名烈焰之子，迫使炎魔现身。');
   }
   if(r.submerged){
@@ -75,7 +75,7 @@ export function extendedMoltenCoreTick(s,actors,boss,hurt,targets){
   if(due('explosion',6000,5000,9000))for(const c of near(20))hit(c,raidSpellValue(s,19712),'魔爆术',6);
   if(due('counterspell',15000,16000,20000))for(const c of near(40).filter(c=>c.cast)){c.cast=null;c.silenceUntil=s.clock+10000;}
   if(due('deadenMagic',24000,35000))addCombatAura(boss,{spell:19714,type:87,misc:126,amount:-50,positive:true,dispel:1,until:s.clock+30000},s.clock);
-  if(due('teleport',30000,45000)){const c=targets(s,living,1)[0];if(c){boss.position=c.position;boss.positionY=c.positionY;boss.threat={};for(const target of near(20))hit(target,raidSpellValue(s,19712),'魔爆术',6);}raidNotice(s,'沙斯拉尔传送并清空仇恨，坦克重新接怪。');}
+  if(due('teleport',30000,45000)){const c=targets(s,living,1)[0];if(c){placeCombatUnit(s,boss,c);boss.threat={};for(const target of near(20))hit(target,raidSpellValue(s,19712),'魔爆术',6);}raidNotice(s,'沙斯拉尔传送并清空仇恨，坦克重新接怪。');}
  }
  if(r.id==='sulfuron'){
   for(const e of adds.filter(e=>e.raidHealer&&!controlled(e,s.clock))){
@@ -92,7 +92,7 @@ export function extendedMoltenCoreTick(s,actors,boss,hurt,targets){
   if(boss.hp<=boss.maxHp*.1&&due('earthquake',0,3000))for(const c of near(15))hit(c,raidSpellValue(s,19798),'地震',0);
  }
  if(r.id==='majordomo'){
-  if(due('teleport',15000,25000,30000)){const c=targets(s,living,1)[0];if(c){setCombatPosition(s,c,{x:boss.position,y:boss.positionY});boss.threat[c.id]=0;}}
+  if(due('teleport',15000,25000,30000)){const c=targets(s,living,1)[0];if(c){placeCombatUnit(s,c,boss);boss.threat[c.id]=0;}}
   if(due('reflection',15000,30000)){const magical=roll(s,0,1)===1;for(const e of adds)e.raidReflection={magical,until:s.clock+10000};raidNotice(s,magical?'魔法反射护盾：暂缓法术攻击。':'伤害反射护盾：近战注意反伤。');}
   const dead=s.combat.enemies.filter(e=>e.id!==boss.id&&e.hp<=0).length;
   if(dead>=4)for(const e of adds.filter(e=>e.raidHealer)){e.mechanicImmuneMask|=1<<16;e.auras=e.auras.filter(a=>a.type!==56);e.polyUntil=0;}
@@ -106,7 +106,7 @@ export function extendedMoltenCoreTick(s,actors,boss,hurt,targets){
  for(const c of living)for(const a of c.auras||[])if(a.until>s.clock&&(a.raidIgnite||a.raidPain)&&s.clock>=a.next){a.next+=3000;if(a.raidIgnite){const burned=Math.min(c.mana,raidSpellValue(s,19659));c.mana-=burned;hit(c,burned,'点燃法力');}else hit(c,raidSpellValue(s,19776),'暗言术：痛',5);}
  for(const bomb of r.bombs){const c=actors.find(c=>c.id===bomb.actorId);if(!c||c.hp<=0)continue;
   if(s.clock>=bomb.at){for(const ally of living.filter(a=>distance(a,c)<10)){hit(ally,raidSpellValue(s,20476),'活体炸弹');r.failures.fire++;}raidNotice(s,`${c.name}的活体炸弹爆炸。`);}
-  else if(r.tactics.avoidFire&&!controlled(c,s.clock)){c.cast=null;moveToward(s,c,{position:-12,positionY:(c.raidIndex%2?1:-1)*22},0,s.clock,100,{source:'hazard'});c.raidEvadingAt=s.clock;}
+  else if(r.tactics.avoidFire&&!controlled(c,s.clock)){c.cast=null;const anchor=s.combat.area.anchors[c.raidIndex%2?'bombEscapeNorth':'bombEscapeSouth'];moveToward(s,c,anchor,0,s.clock,100,{source:'hazard'});c.raidEvadingAt=s.clock;}
  }r.bombs=r.bombs.filter(b=>b.at>s.clock);
 }
 

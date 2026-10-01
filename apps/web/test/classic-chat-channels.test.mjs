@@ -14,3 +14,16 @@ test('combat status and spell logs stay in combat details',()=>{
  assert.deepEqual(chatChannelLogs(logs,'combat').map(log=>log.id),[4,3,2,1]);
  assert.deepEqual(chatChannelLogs(logs,'general').map(log=>log.id),[5]);
 });
+
+test('general categories are independent of combat and unknown events remain visible',async()=>{
+ const {chatLogCategory}=await import('../lib/classic-chat-channels.js');
+ assert.equal(chatLogCategory({kind:'loot'}).id,'reward');
+ assert.equal(chatLogCategory({kind:'quest'}).id,'quest');
+ assert.equal(chatLogCategory({kind:'travel'}).id,'travel');
+ assert.equal(chatLogCategory({kind:'info',encounterId:'fight'}).id,'combat');
+ assert.equal(chatLogCategory({kind:'new-event'}).id,'system');
+ const logs=Array.from({length:150},(_,id)=>({id,kind:'loot'}));
+ assert.equal(chatChannelLogs(logs,'general',100).length,100);
+ assert.equal(chatChannelLogs(logs,'general',100).at(-1).id,50);
+ assert.equal(logs[0].id,0);
+});

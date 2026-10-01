@@ -4,7 +4,7 @@ import {damagingInput} from './combat-input.js';
 import {shouldAutoTaunt} from './tank-coordination.js';
 import {raidHealingThreshold,conservingRaidMana} from './raid-healing.js';
 import {resolveSpellDamage} from './spell-resolution.js';
-import {setCombatPosition} from './combat-area.js';
+import {placeCombatUnit} from './combat-area.js';
 import {pvpApplyControl,pvpAbilityAllowed} from './pvp-runtime.js';
 import {combatSight} from './combat-space.js';
 import {weaponAttack} from './weapon-attacks.js';
@@ -66,7 +66,7 @@ function applyClassEffect(s,c,target,sp,actors,api){
  if(heals.has(name)){api.heal(s,c,target,sp);if(name==='Regrowth')applyHot(s,c,target,sp,2);return;}
  if(hots.has(name)){applyHot(s,c,target,sp);return;}
  if(name==='Tame Beast'){tameClassPet(s,c,target,sp);return;}
- if(name==='Revive Pet'){if(c.pet&&c.pet.hp<=0){c.pet.hp=Math.max(1,Math.round(c.pet.maxHp*(sp.EffectBasePoints1+1)/100));setCombatPosition(s,c.pet,c);c.pet.nextSwing=s.clock+1000;}return;}
+ if(name==='Revive Pet'){if(c.pet&&c.pet.hp<=0){c.pet.hp=Math.max(1,Math.round(c.pet.maxHp*(sp.EffectBasePoints1+1)/100));placeCombatUnit(s,c.pet,c);c.pet.nextSwing=s.clock+1000;}return;}
  if(summons.has(name)){if(c.classId!==3||!c.pet)petProfile(s,c,sp);return;}
  if(buffs.has(name)){const recipients=['Devotion Aura','Battle Shout'].includes(name)?actors.filter(a=>a.hp>0&&distance(c,a)<=30*(name==='Battle Shout'?1+.1*(r['Booming Voice']||0):1)):[target];for(const a of recipients){putBuff(s,a,sp,buffValues(c,sp));for(let n=1;n<=3;n++)if(sp['EffectApplyAuraName'+n]===143)addCombatAura(a,{spell:sp.Id,effect:n,type:143,positive:true,misc:sp['EffectMiscValue'+n],amount:talentSpellValue(c,sp,8,effectRange(c,sp,n)[0]),until:s.clock+sp.durationMs,caster:c.id},s.clock);}if(name==='Thorns')target.thorns={spell:sp.Id,amount:effectRange(c,sp)[0],until:s.clock+sp.durationMs};return;}
  if(name==='Power Word: Shield'){target.absorb={spell:sp.Id,amount:Math.round((effectRange(c,sp)[0]+spellPowerBonus(stats(c),sp,{healing:true}))*(1+.05*(r['Improved Power Word: Shield']||0))),until:s.clock+sp.durationMs};target.weakenedSoulUntil=s.clock+15000;return;}

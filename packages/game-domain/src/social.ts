@@ -134,7 +134,7 @@ export class SocialService {
         requireThat((await tx.list('social_groups',{status:'queued'})).length<256,'QUEUE_CAPACITY','查找器繁忙，请稍后再试',503);
         requireThat(profile.lastRecruitAt===undefined||now-profile.lastRecruitAt>=15000,'RECRUIT_RATE','请等待 15 秒再发布新的匹配招募',429);
         group.status='queued';group.dungeonId=body.dungeonId;group.queuedAt=now;group.updatedAt=now;group.recruitmentId=randomUUID();await saveGroup(tx,group);profile.lastRecruitAt=now;
-        await appendChat(tx,'world',{kind:'recruitment',actorId,name:self.name,at:now,groupId:group.id,recruitmentId:group.recruitmentId,dungeonId:definition.id,
+        await appendChat(tx,'world',{kind:'recruitment',actorId,name:self.name,classId:self.classId,at:now,groupId:group.id,recruitmentId:group.recruitmentId,dungeonId:definition.id,
           minimumLevel:Math.max(definition.minimumLevel,Math.max(...group.members.map(m=>m.level))-5),maximumLevel:Math.min(60,Math.min(...group.members.map(m=>m.level))+5),
           text:`${self.name} 正在寻找 ${definition.name} 的队友`});
       }else if(body.type==='recruitJoin'){
@@ -171,7 +171,7 @@ export class SocialService {
         requireThat(text.length>0&&text.length<=300&&!/[\u0000-\u0008\u000b-\u001f\u007f]/.test(text),'CHAT_TEXT','消息需要 1–300 个字符，不能包含控制字符');
         requireThat(profile.lastChatAt===undefined||now-profile.lastChatAt>=1000,'CHAT_RATE','发送太快，请稍后重试',429);
         if(body.channel==='party')requireThat(group,'PARTY_MISSING','加入队伍后才能使用队伍频道');
-        await appendChat(tx,body.channel==='world'?'world':`party:${group!.id}`,{actorId,name:self.name,text,at:now});profile.lastChatAt=now;
+        await appendChat(tx,body.channel==='world'?'world':`party:${group!.id}`,{actorId,name:self.name,classId:self.classId,text,at:now});profile.lastChatAt=now;
       }else requireThat(false,'SOCIAL_COMMAND','未知社交操作',400);
       profile.seenAt=now;profile.receipts=[...(profile.receipts??[]),{id:body.requestId,signature}].slice(-64);await tx.put('social_people',profile);
       await this.match(tx,now);

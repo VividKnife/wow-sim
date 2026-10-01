@@ -1,11 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {act,advance,createGame,view} from '../src/rules/engine.js';
-import {ammoCount,consumeHunterAmmo,handleTownAmmo,resolveAmmoPrompt} from '../src/rules/ammunition.js';
+import {ammoCount,consumeHunterAmmo,handleTownAmmo,configureAmmo} from '../src/rules/ammunition.js';
 import {addItem} from '../src/rules/character.js';
-import {MemoryStore} from '../../persistence/src/memory.ts';
-import {GameService} from '../src/service.ts';
-import type {Character,Rules} from '../src/model.ts';
 
 test('hunter shots consume matching ammunition and stop using the bow when it is empty',()=>{
  let state=createGame('Archer',12345,0,{classId:3,raceId:2});
@@ -21,25 +18,25 @@ test('hunter shots consume matching ammunition and stop using the bow when it is
  assert.equal((state.logs as any[]).filter(row=>row.text.includes('自动射击')).length,shots);
 });
 
-test('returning to town prompts below 400 and auto-buys the highest level matching ammunition',()=>{
+test('town arrival queues a client restock without changing money or ammunition',()=>{
  let state:any=createGame('Archer',12345,0,{classId:3,raceId:2});
  state.level=30;state.location='northwood';state.money=1000;state.ammunition={2512:399};
  state=act(state,{type:'travel',to:'northshire'},0);
  state=advance(state,state.activity.endsAt).state;
  assert.equal(view(state).ammoPrompt.memberId,state.id);
- resolveAmmoPrompt(state,{memberId:state.id,enabled:true,target:400});
+ assert.equal(view(state).ammoPrompt.itemId,2512,'only choose ammunition sold locally');
+ configureAmmo(state,{memberId:state.id,enabled:true,target:400});
  assert.deepEqual(state.ammoPolicy,{enabled:true,target:400});
- assert.equal(state.ammunition[3030],200);
- assert.equal(ammoCount(state),599);
- assert.equal(state.money,700);
- state.ammunition={3030:1};state.money=1000;
- handleTownAmmo(state,'town');
- assert.equal(state.ammunition[3030],401);
- assert.equal(state.money,400);
+ assert.equal(ammoCount(state),399);
+ assert.equal(state.money,1000);
  assert.equal(view(state).ammoPrompt,null);
+ handleTownAmmo(state,'town');
+ assert.equal(view(state).ammoPrompt.enabled,true);
+ assert.equal(ammoCount(state),399,'an enabled policy never spends money in the server simulation');
+ assert.equal(state.money,1000);
+ state.location='stormwind';
+ assert.equal(view(state).ammoPrompt.itemId,3030,'choose the highest usable tier in the local shop');
 });
-
-
 
 test('declining each hunter prompt ends the queue until the next town visit',()=>{
  const state:any=createGame('Leader',12345,0,{classId:3,raceId:2});
@@ -47,9 +44,9 @@ test('declining each hunter prompt ends the queue until the next town visit',()=
  companion.id='friend';state.party=[companion];
  handleTownAmmo(state);
  assert.equal(state.ammoRestockPrompt.memberId,state.id);
- resolveAmmoPrompt(state,{memberId:state.id,enabled:false,target:400});
+ configureAmmo(state,{memberId:state.id,enabled:false,target:400});
  assert.equal(state.ammoRestockPrompt.memberId,companion.id);
- resolveAmmoPrompt(state,{memberId:companion.id,enabled:false,target:400});
+ configureAmmo(state,{memberId:companion.id,enabled:false,target:400});
  assert.equal(state.ammoRestockPrompt,undefined);
  handleTownAmmo(state);
  assert.equal(state.ammoRestockPrompt.memberId,state.id);
@@ -89,7 +86,7 @@ test('saved settings can change quantity and disable purchases without immediate
  state.money=1000;
  state=act(state,{type:'ammoSettings',memberId:state.id,enabled:true,target:800},0);
  assert.equal(state.money,1000);
- handleTownAmmo(state);assert.equal(ammoCount(state),800);
+ handleTownAmmo(state);assert.equal(ammoCount(state),200);assert.equal(state.money,1000);
  state=act(state,{type:'ammoSettings',memberId:state.id,enabled:false,target:1200},0);
  state.ammunition={};const balance=state.money;
  handleTownAmmo(state);

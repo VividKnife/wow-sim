@@ -14,7 +14,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT=true;
 before(async()=>{
  const web=fileURLToPath(new URL('../',import.meta.url));directory=await mkdtemp(join(web,'.raid-field-test-'));
  const outfile=join(directory,'fields.mjs');
- await build({absWorkingDir:web,stdin:{contents:"export {BattleFrames} from './app/battle-hd2d/frame';export {GroundArea,visibleGroundEffects} from './app/battle-hd2d/effects';",resolveDir:web,loader:'tsx'},outfile,bundle:true,platform:'node',format:'esm',packages:'external',jsx:'automatic',logLevel:'silent',plugins:[{name:'headless-labels',setup(builder){builder.onResolve({filter:/^@react-three\/drei$/},()=>({path:'drei',namespace:'probe'}));builder.onLoad({filter:/.*/,namespace:'probe'},()=>({contents:'export const Html=()=>null;export const OrbitControls=()=>null;'}));}}]});
+ await build({absWorkingDir:web,stdin:{contents:"export {BattleFrames} from './app/battle-hd2d/frame';export {GroundArea,visibleGroundEffects} from './app/battle-hd2d/effects';",resolveDir:web,loader:'tsx'},outfile,bundle:true,platform:'node',format:'esm',packages:'external',jsx:'automatic',logLevel:'silent',plugins:[{name:'headless-labels',setup(builder){builder.onResolve({filter:/^@react-three\/drei$/},()=>({path:'drei',namespace:'probe'}));builder.onLoad({filter:/.*/,namespace:'probe'},()=>({contents:'export const Html=()=>null;export const OrbitControls=()=>null;export {useMask} from "@react-three/drei/core/Mask.js";',resolveDir:web}));}}]});
  components=await import(pathToFileURL(outfile).href);
 });
 after(async()=>{if(directory)await rm(directory,{recursive:true,force:true});});

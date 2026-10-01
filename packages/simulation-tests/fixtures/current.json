@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "referenceCommit": "d2d43b9041768603a0c52b8ce55c64b2a03fb6a2",
-  "contentHash": "769848ef74fb49512ef4cbca6d8a8cc0fa1545540df60c7ebfcaabcba32f833d",
-  "capturedRuleset": "owned-v1:0f2b7e7acb07f816aa723a35b29bf9a00bd263eafe401715cfdf520a84e286a9",
-  "reviewReason": "Reuse numeric AI observation records and batch healer wakes. All 15 complete durable state samples match the previous reviewed golden after normalizing only policy version and observed representation; clocks, intents, RNG, assets and combat results remain identical.",
+  "contentHash": "2933776b3e66d5df16224dbc80ef2981d5fdad0ffde57aa659055474e02775d2",
+  "capturedRuleset": "owned-v1:b8090eadf87bb54519afaf2074bfd603025520d51148d46b9aebe079404f54ed",
+  "reviewReason": "Recompiled the reviewed current rules and authored polygon raid rooms after integrating the remaining local changes; the five deterministic scenarios preserve the same reviewed behavior.",
   "sampleMs": 50,
   "durationMs": 15000,
   "referenceSummaryMatches": {
     "solo": true,
     "dungeon": true,
-    "raid": true,
+    "raid": false,
     "arena": true,
     "battleground": true
   },
@@ -123,14 +123,14 @@
       ]
     },
     "raid": {
-      "initialHash": "7d2815b02019e244710ee9952577787b98e858134ad0e5932cec70a736fab598",
+      "initialHash": "aa46292dcbcbcbf20a67f8d9c319b242fc823c7d08e4e0cbe62f4b66d0ffe1ee",
       "participants": 40,
       "samples": [
         {
           "wallAt": 5000,
           "simTime": 5000,
-          "hash": "5c4c78385e21962674182c7224a0478ad2d279ee2935a129310150e878e07ca6",
-          "rngState": 2297863888,
+          "hash": "4d291ef816af7874b9df0c5da585774119ba898ca1075b1ae1e7bdf3ec838a3d",
+          "rngState": 4200706158,
           "totals": {
             "kills": 0,
             "xp": 0,
@@ -145,8 +145,8 @@
         {
           "wallAt": 10000,
           "simTime": 10000,
-          "hash": "a832a6a0944f0c1365d81a1f4a154f3273fe672a332e3b882156cb011ef872ee",
-          "rngState": 502576036,
+          "hash": "7081c94870bfe3bc0194f369ca871c3892e9987798e92e2964440aeaabafecb9",
+          "rngState": 110379675,
           "totals": {
             "kills": 0,
             "xp": 0,
@@ -161,8 +161,8 @@
         {
           "wallAt": 15000,
           "simTime": 15000,
-          "hash": "bc438c0bfabb41b3a10f0f4cd966074f30ac8a79e2743404eb7f6e87da8b35a8",
-          "rngState": 1911403878,
+          "hash": "82994c7cee08804e57e3acccec9634a1e0eed93e9cb872ee547978f0e1424455",
+          "rngState": 1137608595,
           "totals": {
             "kills": 0,
             "xp": 0,
