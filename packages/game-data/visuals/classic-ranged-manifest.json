@@ -1,0 +1,591 @@
+{
+  "copyright": "Blizzard Entertainment artwork; Classic assets hosted by Wowhead.",
+  "itemStyles": {
+    "1046": "rifle",
+    "1047": "rifle",
+    "2098": "rifle",
+    "2099": "rifle",
+    "2100": "rifle",
+    "2504": "bow",
+    "2505": "bow",
+    "2506": "bow",
+    "2507": "bow",
+    "2508": "rifle",
+    "2509": "rifle",
+    "2510": "rifle",
+    "2511": "rifle",
+    "2550": "bow",
+    "2551": "crossbow",
+    "2552": "rifle",
+    "2773": "bow",
+    "2774": "rifle",
+    "2777": "bow",
+    "2778": "rifle",
+    "2780": "bow",
+    "2781": "rifle",
+    "2782": "bow",
+    "2783": "rifle",
+    "2785": "bow",
+    "2786": "rifle",
+    "2824": "bow",
+    "2825": "bow",
+    "2903": "bow",
+    "2904": "rifle",
+    "3021": "bow",
+    "3023": "rifle",
+    "3024": "rifle",
+    "3025": "rifle",
+    "3026": "bow",
+    "3027": "bow",
+    "3036": "bow",
+    "3037": "bow",
+    "3039": "bow",
+    "3040": "rifle",
+    "3041": "rifle",
+    "3042": "rifle",
+    "3078": "bow",
+    "3079": "rifle",
+    "3430": "rifle",
+    "3493": "bow",
+    "3567": "rifle",
+    "3742": "bow",
+    "3778": "bow",
+    "3780": "rifle",
+    "4025": "bow",
+    "4026": "rifle",
+    "4086": "rifle",
+    "4087": "bow",
+    "4089": "rifle",
+    "4127": "rifle",
+    "4362": "rifle",
+    "4369": "rifle",
+    "4372": "rifle",
+    "4379": "rifle",
+    "4383": "rifle",
+    "4474": "bow",
+    "4576": "bow",
+    "4577": "rifle",
+    "4763": "bow",
+    "4899": "crossbow",
+    "4931": "bow",
+    "5258": "bow",
+    "5259": "bow",
+    "5260": "bow",
+    "5261": "bow",
+    "5262": "bow",
+    "5290": "bow",
+    "5309": "rifle",
+    "5346": "bow",
+    "5596": "bow",
+    "5748": "bow",
+    "5817": "bow",
+    "6255": "rifle",
+    "6315": "crossbow",
+    "6469": "bow",
+    "6696": "bow",
+    "6739": "bow",
+    "6798": "rifle",
+    "7729": "rifle",
+    "8179": "bow",
+    "8180": "bow",
+    "8181": "rifle",
+    "8182": "rifle",
+    "8183": "bow",
+    "8188": "rifle",
+    "9400": "bow",
+    "9412": "rifle",
+    "9422": "rifle",
+    "9426": "bow",
+    "9456": "rifle",
+    "9487": "rifle",
+    "10508": "rifle",
+    "10510": "rifle",
+    "10567": "bow",
+    "10624": "bow",
+    "11021": "rifle",
+    "11303": "bow",
+    "11304": "bow",
+    "11305": "bow",
+    "11306": "bow",
+    "11307": "bow",
+    "11308": "bow",
+    "11628": "bow",
+    "11629": "rifle",
+    "12446": "rifle",
+    "12447": "bow",
+    "12448": "rifle",
+    "12449": "bow",
+    "12523": "rifle",
+    "12651": "crossbow",
+    "12653": "bow",
+    "13019": "bow",
+    "13020": "bow",
+    "13021": "bow",
+    "13022": "bow",
+    "13023": "bow",
+    "13037": "crossbow",
+    "13038": "crossbow",
+    "13039": "crossbow",
+    "13040": "crossbow",
+    "13136": "rifle",
+    "13137": "rifle",
+    "13138": "rifle",
+    "13139": "rifle",
+    "13146": "rifle",
+    "13147": "bow",
+    "13248": "rifle",
+    "13380": "rifle",
+    "13474": "rifle",
+    "13824": "bow",
+    "13825": "rifle",
+    "13923": "rifle",
+    "13924": "rifle",
+    "14105": "bow",
+    "14118": "bow",
+    "14394": "bow",
+    "14642": "rifle",
+    "15205": "rifle",
+    "15284": "bow",
+    "15285": "bow",
+    "15286": "bow",
+    "15287": "bow",
+    "15288": "bow",
+    "15289": "bow",
+    "15291": "bow",
+    "15294": "bow",
+    "15295": "bow",
+    "15296": "bow",
+    "15322": "rifle",
+    "15323": "rifle",
+    "15324": "rifle",
+    "15325": "rifle",
+    "15460": "rifle",
+    "15691": "rifle",
+    "15807": "crossbow",
+    "15808": "crossbow",
+    "15809": "crossbow",
+    "15995": "rifle",
+    "16004": "rifle",
+    "16007": "rifle",
+    "16622": "bow",
+    "16992": "rifle",
+    "16996": "bow",
+    "17042": "rifle",
+    "17069": "bow",
+    "17072": "rifle",
+    "17686": "bow",
+    "17687": "rifle",
+    "17717": "rifle",
+    "17753": "bow",
+    "18282": "rifle",
+    "18323": "bow",
+    "18388": "crossbow",
+    "18460": "rifle",
+    "18482": "bow",
+    "18680": "bow",
+    "18713": "bow",
+    "18729": "bow",
+    "18738": "crossbow",
+    "18755": "rifle",
+    "19114": "bow",
+    "19558": "bow",
+    "19559": "bow",
+    "19560": "bow",
+    "19561": "bow",
+    "19562": "bow",
+    "19563": "bow",
+    "19564": "bow",
+    "19565": "bow",
+    "20437": "bow",
+    "20438": "bow",
+    "20646": "bow",
+    "20663": "bow",
+    "21550": "bow",
+    "21554": "rifle",
+    "21564": "rifle",
+    "22318": "bow",
+    "22347": "crossbow",
+    "22656": "rifle"
+  },
+  "models": {
+    "bow": {
+      "point": 0,
+      "src": "/characters/classic/ranged-bow.glb",
+      "mode": "ranged",
+      "itemId": 2504
+    },
+    "rifle": {
+      "point": 1,
+      "src": "/characters/classic/ranged-rifle.glb",
+      "mode": "ranged",
+      "itemId": 2508
+    },
+    "crossbow": {
+      "point": 1,
+      "src": "/characters/classic/ranged-crossbow.glb",
+      "mode": "ranged",
+      "itemId": 15807
+    }
+  },
+  "items": {
+    "2504": {
+      "displayId": 8104,
+      "slot": 15,
+      "source": "https://www.wowhead.com/classic/item=2504",
+      "sha256": "3e327b25b33a7e508d3418094708647319ba9b9b3ef6c96f805e5b9af512b6d4"
+    },
+    "2508": {
+      "displayId": 2409,
+      "slot": 26,
+      "source": "https://www.wowhead.com/classic/item=2508",
+      "sha256": "5acbb416e5ddc28ffeed795ffc8a910d97b2d11af2c63ee2bc34d1dca2315995"
+    },
+    "15807": {
+      "displayId": 10671,
+      "slot": 26,
+      "source": "https://www.wowhead.com/classic/item=15807",
+      "sha256": "a551f99fea29646bec5d0e35a6a24e495a8df2286ff744997e28ba5808eb3b77"
+    }
+  },
+  "gear": {
+    "bow": {
+      "displayId": "ranged-bow",
+      "modelId": 145095,
+      "path": "/characters/classic/ranged-bow.glb",
+      "sha256": "1b6b2ed1b0f1edd7091b7fe95665fcf5346c5cd6bb5d4f237a166f46b1af97e3",
+      "bytes": 21860,
+      "vertices": 66,
+      "bones": 9,
+      "height": 0.2116178572177887,
+      "minY": -0.08116266131401062,
+      "animations": [],
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/145095.m2",
+          "sha256": "c219f0081e5d3087f53e2af0e069fa984c244a69f0d68a3624d9ccd6f99f4a45",
+          "bytes": 6338
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/491839.skin",
+          "sha256": "69d1fb6ee7fe1ade5c51a4df296b500c1659d35bad334c0c8cf48fb05f4f7374",
+          "bytes": 1248
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/145096.webp",
+          "sha256": "5d538cd4dadd3b71572274ec9d4345a16d334c98fcd4c3112ad9392a38b3f675",
+          "bytes": 4470
+        }
+      ]
+    },
+    "rifle": {
+      "displayId": "ranged-rifle",
+      "modelId": 145319,
+      "path": "/characters/classic/ranged-rifle.glb",
+      "sha256": "195201e8a92ffd64bcb7e76e24f5293d57d90191f86dda25268c47b2874386c3",
+      "bytes": 27108,
+      "vertices": 104,
+      "bones": 11,
+      "height": 0.3172394931316376,
+      "minY": -0.1844026744365692,
+      "animations": [],
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/145319.m2",
+          "sha256": "22a05cc61e5a232fabd82ae5867baa5c152d0d39a24ba15663aa21016938b00e",
+          "bytes": 17008
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/491038.skin",
+          "sha256": "0f6f28f6e71e49a4590e3debbd8ab17fcc4ca917bddd0272be183263f44eeb61",
+          "bytes": 1728
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/145322.webp",
+          "sha256": "0d02b35a57618ca2bf5f5cc5c6cd8391a58a109281c00ce8e4cac4cad054f575",
+          "bytes": 5496
+        }
+      ]
+    },
+    "crossbow": {
+      "displayId": "ranged-crossbow",
+      "modelId": 145170,
+      "path": "/characters/classic/ranged-crossbow.glb",
+      "sha256": "29badaaec1820772b3fbf5cfcc1720b08d6b0417c8ea6eafb57ed051795fe130",
+      "bytes": 24984,
+      "vertices": 102,
+      "bones": 9,
+      "height": 0.20681827142834663,
+      "minY": -0.15430320799350739,
+      "animations": [],
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/145170.m2",
+          "sha256": "a7c8da85fd9268000ae88353275e91ff00b9015d0f61f8437cd4d5ac92e54797",
+          "bytes": 7842
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/490677.skin",
+          "sha256": "10d375506d11f03b8a6b56c127df675ba4ae063492b3d6f589bc5ced7dbfefdd",
+          "bytes": 1792
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/145172.webp",
+          "sha256": "2d90f4cabee2b58977b496790b88e61b3e306d6adac640024d8db5d61e5c7a47",
+          "bytes": 4728
+        }
+      ]
+    }
+  },
+  "bodies": {
+    "2-0": {
+      "modelId": 121287,
+      "path": "/characters/classic/ranged-animations-2-0.glb",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121287.m2",
+          "sha256": "593a5a317ff9de0d5e3debc529aa6ef8841bfea4929ad356912049b94e50fd19",
+          "bytes": 1720436
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471537.skin",
+          "sha256": "73c834e498f90eea33db50527d4680a7afc89b43fc8b125b8ef2975428243f7c",
+          "bytes": 40816
+        }
+      ],
+      "sha256": "4f6c328d230ab20a2298d03ed57e2ee13a1e86e599800836e02cf48309ef760f",
+      "bytes": 167048,
+      "animations": [
+        29,
+        46,
+        48,
+        49
+      ]
+    },
+    "2-1": {
+      "modelId": 121087,
+      "path": "/characters/classic/ranged-animations-2-1.glb",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121087.m2",
+          "sha256": "013cafe8348cfe63ecf2cb9d03492086b716ca63d44382a24fde675b6b401754",
+          "bytes": 1984962
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471401.skin",
+          "sha256": "c931779545714b62d823c7ec271eb83694f52fa481a7f93964d426bf59f5f35e",
+          "bytes": 41840
+        }
+      ],
+      "sha256": "7b0cb530d51cfb2b519ddbdd37dd1627975262876d98cff63ae261c90838dddc",
+      "bytes": 145136,
+      "animations": [
+        29,
+        46,
+        48,
+        49
+      ]
+    },
+    "3-0": {
+      "modelId": 118355,
+      "path": "/characters/classic/ranged-animations-3-0.glb",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/118355.m2",
+          "sha256": "b73a92b7f9b4674803f71f6e32148e31c099a566f833ed108725014a59953745",
+          "bytes": 1695042
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470288.skin",
+          "sha256": "e6976ed95a379e5a1ed28e4130cf6e9f8e196bcc97deb8f9aabdb5e37ca1eee4",
+          "bytes": 48928
+        }
+      ],
+      "sha256": "199f40c330643a28d4cf95be1b1433b149413c0dfe137617229b8d8a619cd340",
+      "bytes": 241548,
+      "animations": [
+        29,
+        46,
+        48,
+        49
+      ]
+    },
+    "3-1": {
+      "modelId": 118135,
+      "path": "/characters/classic/ranged-animations-3-1.glb",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/118135.m2",
+          "sha256": "1c3cf6def24881a88936abcea18f87415c8a44f50ef7d8c01eb66fba13099158",
+          "bytes": 1900306
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/470268.skin",
+          "sha256": "29ddf861a11097b895c3fc42a7338a074a3fc8997b28ef405f0c674d79e09ccc",
+          "bytes": 50464
+        }
+      ],
+      "sha256": "4f0db34c76c3fc4c42383e925ce47d4d80884891abc7ed210cdbf9ebae3ba833",
+      "bytes": 175672,
+      "animations": [
+        29,
+        46,
+        48,
+        49
+      ]
+    },
+    "4-0": {
+      "modelId": 120791,
+      "path": "/characters/classic/ranged-animations-4-0.glb",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/120791.m2",
+          "sha256": "d7640b86b8f1ae1e2f412e90ee5d2bb136286bdcf6f0843238e9e7e6acda6404",
+          "bytes": 2047048
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471277.skin",
+          "sha256": "ba5ce44b60dfd99cabb43b1aed5d2642de29e2600b5e7e1e0b2524dded7781cd",
+          "bytes": 40208
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/120792.webp",
+          "sha256": "6166734fd8345a2c448536a447d68294d1df65dda3af99debe671ffd9af2d964",
+          "bytes": 738
+        }
+      ],
+      "sha256": "3d05a648b1cb95253f8e4ed3af77e718dbe0f07ff2b4331e36799a0051b55eab",
+      "bytes": 188328,
+      "animations": [
+        29,
+        46,
+        48,
+        49
+      ]
+    },
+    "4-1": {
+      "modelId": 120590,
+      "path": "/characters/classic/ranged-animations-4-1.glb",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/120590.m2",
+          "sha256": "f7040f9a1fa459153f859e821b77ebb3e45033ea3dde97730b5befc44d38fa74",
+          "bytes": 4028392
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/471230.skin",
+          "sha256": "07361da86cd2e87518df9488673384824ec327aa755dca22b1fe4bacfbd7d134",
+          "bytes": 36128
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/textures/120591.webp",
+          "sha256": "947a016e8d0251a61d98f6a27119e062415a6c1edc691877cf1e250382b9ef71",
+          "bytes": 794
+        }
+      ],
+      "sha256": "2885aefe2f6b18f8ca97be5375c1f9a962196379d4634a936b63c7b7314fe450",
+      "bytes": 237980,
+      "animations": [
+        29,
+        46,
+        48,
+        49
+      ]
+    },
+    "6-0": {
+      "modelId": 122055,
+      "path": "/characters/classic/ranged-animations-6-0.glb",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122055.m2",
+          "sha256": "7820d0ad18eba27d839ef331039c2233c6778c844e042146e61106b0247bb5b8",
+          "bytes": 1714444
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472132.skin",
+          "sha256": "0881a92d158dc89ddf56e604ebc84d48ead13d149e4028ad7dcf20e372d43631",
+          "bytes": 43792
+        }
+      ],
+      "sha256": "373259b2d96184958bf54b4490ba73911c8f68d2c673a794a8fed6077fc850ba",
+      "bytes": 184284,
+      "animations": [
+        29,
+        46,
+        48,
+        49
+      ]
+    },
+    "6-1": {
+      "modelId": 121961,
+      "path": "/characters/classic/ranged-animations-6-1.glb",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/121961.m2",
+          "sha256": "ab3e5ac20a3a72828388fae60705588b68b11c4f52029d17c566c1ff8846f94a",
+          "bytes": 2580420
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472044.skin",
+          "sha256": "5644119610ad73ba4167b3e2448a76dd55bf0ef3bef05d12b04a7946d02054b1",
+          "bytes": 32576
+        }
+      ],
+      "sha256": "7154f8bbaa8134b2ae84be58dc0246fcb805068573e1b7cff4b59762e0ac52e6",
+      "bytes": 213600,
+      "animations": [
+        29,
+        46,
+        48,
+        49
+      ]
+    },
+    "8-0": {
+      "modelId": 122560,
+      "path": "/characters/classic/ranged-animations-8-0.glb",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122560.m2",
+          "sha256": "47aa02dc5e862758a13517be9ac5df415f7da9c6a7dee4869494dae84e9f0387",
+          "bytes": 1653190
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472211.skin",
+          "sha256": "d47c040db779bfb8e22757677814c5510ea3c465fa83dce1b96d084e474e32b7",
+          "bytes": 48240
+        }
+      ],
+      "sha256": "a8e3a994f92f2de4c38d278b9656d81f5c0cb877523a0efaa7d0d32f04b72b30",
+      "bytes": 153200,
+      "animations": [
+        29,
+        46,
+        48,
+        49
+      ]
+    },
+    "8-1": {
+      "modelId": 122414,
+      "path": "/characters/classic/ranged-animations-8-1.glb",
+      "sources": [
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/m2/122414.m2",
+          "sha256": "5ccfb96ca45eeea0482dad23874c7b2492e592f602b67d80f65957fe78855c2e",
+          "bytes": 1234966
+        },
+        {
+          "url": "https://wow.zamimg.com/modelviewer/classic/skin/472179.skin",
+          "sha256": "b7750c84495cb57b0b0684445929c560c2b59f88af16f77f8724a841b4e8d093",
+          "bytes": 46304
+        }
+      ],
+      "sha256": "2d085d3f131f9f98700d981b812ce17b7421d18c6f4c60ca91cfad8704251ea5",
+      "bytes": 131992,
+      "animations": [
+        29,
+        46,
+        48,
+        49
+      ]
+    }
+  }
+}

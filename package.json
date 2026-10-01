@@ -28,7 +28,9 @@
     "demo:classic-ui": "node apps/web/scripts/serve-classic-ui-demo.mjs",
     "demo:journey-ui": "node apps/web/scripts/serve-journey-ui-demo.mjs",
     "simulation:transfer-check": "node --env-file-if-exists=.env apps/simulation-host/scripts/verify-transfer-seal.ts",
-    "social:test": "node --test packages/game-domain/test/dungeon-entry.test.ts packages/game-domain/test/social.test.ts apps/game-server/test/social.test.ts packages/game-domain/test/npc-match-supply.test.mjs"
+    "social:test": "node --test packages/game-domain/test/dungeon-entry.test.ts packages/game-domain/test/social.test.ts apps/game-server/test/social.test.ts packages/game-domain/test/npc-match-supply.test.mjs",
+    "prepare": "node scripts/install-git-hooks.mjs",
+    "hooks:install": "node scripts/install-git-hooks.mjs"
   },
   "engines": {
     "node": ">=24.11.1"

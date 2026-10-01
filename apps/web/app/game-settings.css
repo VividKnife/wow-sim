@@ -25,7 +25,9 @@ body .cu-dialog.cu-live-dialog.cu-panel-settings{width:min(800px,calc(100vw - 28
 .cu-settings.classic-settings .panel{background:none;border:0;box-shadow:none;padding:0}
 .classic-settings .cu-settings-notice{min-height:20px;color:#e8c879;font-size:12px}
 .classic-settings .settings-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:18px;padding-top:16px;border-top:2px ridge #6c5b3d}
-.classic-settings .settings-footer>span{font-size:11px;color:#a99b82}
+.classic-settings .settings-build-info{display:flex;flex-direction:column;gap:5px;font-size:11px;color:#a99b82;min-width:0;line-height:1.5}
+.classic-settings .settings-build-info time{color:#e5c982;font-variant-numeric:tabular-nums;white-space:nowrap}
+.classic-settings .settings-build-info small{font-size:10px;color:#a99b82}
 .cu-settings.classic-settings .cu-settings-return{width:auto;min-width:148px;min-height:40px;font-size:15px}
 body .cu-panel-settings .cu-settings-navigation{display:flex;flex-wrap:wrap;gap:8px;padding-top:12px;margin-top:14px;border-top:1px solid #493e2d}
 body .cu-panel-settings .cu-settings-navigation button{display:flex;align-items:center;justify-content:center;gap:6px;flex:1;background:var(--wow-metal);font-size:12px;padding:8px 12px;min-height:38px}

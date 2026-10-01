@@ -3,6 +3,7 @@ WORKDIR /app
 ENV NODE_ENV=production HOST=0.0.0.0 PORT=8788 SERVICE_ROLE=game
 ENV GAME_DATABASE_SCHEMA=wow_sim_v2
 COPY package.json package-lock.json ./
+COPY scripts/install-git-hooks.mjs ./scripts/
 COPY packages ./packages
 RUN npm ci --omit=dev && npm cache clean --force
 COPY apps/game-server ./apps/game-server

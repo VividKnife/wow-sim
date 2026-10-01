@@ -1,3 +1,6 @@
+import {build} from 'esbuild';
+import {creatureVisual as resolveCreatureVisual} from '../../../packages/game-data/creature-visuals.js';
+import world from '../../../packages/game-data/data/world-visuals.json' with {type:'json'};
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -30,4 +33,32 @@ test('checked-in original model bytes match the resource manifest',async()=>{
   assert.equal(createHash('sha256').update(bytes).digest('hex'),asset.sha256);
   assert.equal(bytes.toString('ascii',0,4),'RIFF');assert.equal(bytes.toString('ascii',8,12),'WEBP');
  }
+});
+
+async function browserVisuals(base){
+ const result=await build({
+  entryPoints:[new URL('../lib/creature-visuals.js',import.meta.url).pathname],
+  bundle:true,write:false,platform:'browser',format:'esm',logLevel:'silent',
+  define:{__PUBLIC_ASSET_BASE__:JSON.stringify(base)},
+ });
+ return import(`data:text/javascript;base64,${Buffer.from(result.outputFiles[0].text).toString('base64')}`);
+}
+
+for(const base of ['', 'https://cdn.test/public/version'])test(`creature portraits resolve runtime paths in ${base?'R2':'bundled'} builds`,async()=>{
+ const {creatureVisual}=await browserVisuals(base);
+ // The four NPCs reported missing in Valley of Trials.
+ for(const [entry,display] of [[3287,2025],[11378,12089],[3145,1875],[3159,1883]]){
+  assert.equal(creatureVisual({entry}).src,`${base}/creatures/portraits/classic-display-${display}.webp`);
+ }
+ // Shared battle/raid model portraits also assemble their paths at runtime.
+ for(const entry of [40,11502]){
+  const original=resolveCreatureVisual({entry});
+  assert.ok(original.model);
+  assert.ok(original.src?.startsWith('/creatures/'));
+  assert.equal(creatureVisual({entry}).src,base+original.src);
+ }
+ const fallback=Object.keys(world.entries).map(entry=>({entry:Number(entry)})).find(unit=>resolveCreatureVisual(unit).kind==='type-icon');
+ assert.ok(fallback,'fixture must exercise a species icon fallback');
+ assert.equal(creatureVisual(fallback).src,base+resolveCreatureVisual(fallback).src);
+ assert.equal(creatureVisual({entry:-1}).src,null);
 });

@@ -67,3 +67,26 @@ test('a slow download is cancelled instead of playing an old cue after its deadl
  assert.equal(pending.size,0);assert.equal(player.activeCount,1);
  player.dispose();assert.equal(player.activeCount,0);
 });
+
+test('hunter releases sound at launch even on a miss, without a second shot at impact',()=>{
+ const event={id:1,actorId:'hunter',kind:'launch',spellId:75,school:0,visual:'hunter-shot'};
+ assert.equal(combatSoundForEvent(event),'bow-release');
+ assert.equal(combatSoundForEvent(event,{}, {visual:{model:{rangedStyle:'rifle'}}}),'gun-fire');
+ assert.equal(combatSoundForEvent(event,{}, {visual:{model:{rangedStyle:'crossbow'}}}),'bow-release');
+ assert.equal(combatSoundForEvent({...event,kind:'damage'}),null);
+ assert.equal(combatSoundForEvent({...event,kind:'miss'}),null);
+ assert.equal(combatSoundForEvent({...event,spellId:3044,school:6}),'bow-release');
+});
+
+test('future impact plays once at its due time without another state update and cancels on teardown',async()=>{
+ const {scheduleCombatSounds}=await import('../lib/combat-audio.js');
+ let now=1000,next=0;const timers=new Map(),played=[],heard=new Set();
+ const options={now:()=>now,schedule:(fn,ms)=>{timers.set(++next,{fn,ms});return next;},cancel:id=>timers.delete(id)};
+ const events=[{id:1,kind:'launch',spellId:75,shownAt:1000},{id:2,kind:'damage',spellId:3044,school:6,shownAt:1300}];
+ const stop=scheduleCombatSounds(events,[],[],heard,c=>played.push(c),options);
+ assert.deepEqual(played,['bow-release']);assert.equal(heard.has(2),false);assert.equal(timers.get(1).ms,300);
+ now=1300;timers.get(1).fn();assert.deepEqual(played,['bow-release','arcane-impact']);assert.equal(heard.has(2),true);stop();
+ const replay=scheduleCombatSounds(events,[],[],heard,c=>played.push(c),options);assert.equal(played.length,2);replay();
+ const cancel=scheduleCombatSounds([{...events[1],id:3,shownAt:1600}],[],[],heard,c=>played.push(c),options);
+ assert.equal(timers.size,1);cancel();assert.equal(timers.size,0);assert.equal(heard.has(3),false);
+});

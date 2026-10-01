@@ -47,6 +47,8 @@ npm run data:check
 docker compose up -d postgres
 ```
 
+根目录的 `npm ci` 会安装 `.githooks/pre-commit`，也可运行 `npm run hooks:install`。每次提交自动生成并暂存 `game-version.json`，版本格式为北京时间 `YYYY.MM.DD-HHmm`。设置窗口底部显示当前构建的版本号和短提交号，同一分钟的多次更新可用提交号区分。版本随构建固定，刷新页面后才会切换到新版本；它不改变战斗规则／检查点版本。钩子只暂存版本文件，不创建额外提交或执行 push；不要使用 `--no-verify` 绕过自动编号。
+
 复制 `.env.example` 为 `.env`，配置数据库 URL 和 `APP_ORIGIN=http://127.0.0.1:5173`。Web 使用 React + Vite，只代理 `/api` 到 game-api；认证、会话和限流由 game-api 管理。需要覆盖 API 地址时，在 Web 的 `.env.local` 设置 `GAME_SERVER_URL`。分别启动三个进程：
 
 ```sh

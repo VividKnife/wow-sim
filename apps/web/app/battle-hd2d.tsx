@@ -3,7 +3,7 @@ import {Component,lazy,Suspense,useCallback,useEffect,useMemo,useState,type Reac
 import type {BattleScene,BattleSkill} from '@/lib/battle-hd2d-types';
 import {groundTheme} from '@/lib/battle-hd2d.js';
 import {BattleAudio} from './battle-audio';
-import {battleModel} from '../../../packages/game-data/battle-models.js';
+import {battleModel} from '@/lib/battle-models.js';
 
 class SceneError extends Component<{children:ReactNode;onError:()=>void},{failed:boolean}>{
  state={failed:false};

@@ -8,6 +8,7 @@ import {useAudioPreference} from '@/lib/use-audio-preference';
 import type {GameProps} from './game-ui';
 import UnstuckControl from './unstuck-control';
 import AccountMenu from './account-menu';
+import {gameVersion} from '@/lib/game-version';
 
 export default function GameSettings({state:s,busy,send,onClose}:{state:GameProps['state'];busy:boolean;send:GameProps['send'];onClose:()=>void}){
  const [music,setMusic]=useAudioPreference('musicEnabled'),[musicVolume,setMusicVolume]=useAudioPreference('musicVolume');
@@ -46,6 +47,6 @@ export default function GameSettings({state:s,busy,send,onClose}:{state:GameProp
   <Tabs.Content value="account"><header className="settings-section-heading"><h3>账号</h3><p>管理当前角色与登录状态。</p></header><fieldset><legend>角色与账号</legend><AccountMenu settings/><p className="cu-settings-hint">退出游戏将退出当前账号并返回登录页。</p></fieldset></Tabs.Content>
    </div>
   </Tabs.Root>
-  <footer className="settings-footer"><span>选项修改后自动保存</span><button className="cu-gold-button cu-settings-return" onClick={onClose}>返回游戏 <kbd>Esc</kbd></button></footer>
+  <footer className="settings-footer"><div className="settings-build-info"><span>选项修改后自动保存</span><span aria-label="游戏版本">版本 <time dateTime={gameVersion.updatedAt}>{gameVersion.version}</time> <small>北京时间</small></span><small>{gameVersion.commit==='local'?'开发预览':`构建 ${gameVersion.commit.slice(0,8)}`}</small></div><button className="cu-gold-button cu-settings-return" onClick={onClose}>返回游戏 <kbd>Esc</kbd></button></footer>
  </div>;
 }

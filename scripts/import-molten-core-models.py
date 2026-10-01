@@ -114,7 +114,7 @@ class GLB:
         if not self.doc['animations']:del self.doc['animations']
         for node in self.doc['nodes']:
             if node.get('children')==[]:del node['children']
-        for mesh in self.doc['meshes']:
+        for mesh in self.doc.get('meshes',[]):
             for primitive in mesh['primitives']:
                 for index in primitive['attributes'].values():
                     self.doc['bufferViews'][self.doc['accessors'][index]['bufferView']]['target']=34962
@@ -305,6 +305,10 @@ def convert(display, meta, out=None, url_root='/creatures/molten-core', animatio
         while seq[actual]['flags']&64:
             assert actual not in seen;seen.add(actual);actual=seq[actual]['alias']
         clip={'name':f"anim_{animation['id']}",'samplers':[],'channels':[]}
+        if animation['id'] in [46,49]:
+            # Hair/global loops can outlast a shot. Preserve the native action
+            # duration so clients do not hold a finished shot for several seconds.
+            clip['extras']={'nativeDurationMs':animation['duration']}
         for bi,bone in enumerate(bones):
             for kind,offset in [('translation',16),('rotation',36),('scale',56)]:
                 times,values,interp=track(bone['offset']+offset,actual,kind)
