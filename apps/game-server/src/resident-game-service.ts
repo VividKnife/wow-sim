@@ -84,8 +84,8 @@ export class ResidentGameService {
     if(action.type==='npcMatchSupply')action={type:'npcMatchSupply',...await this.social.supply(accountId,actorId,action.dungeonId)};
     requireThat(execution&&typeof execution.instanceId==='string'&&Number.isSafeInteger(execution.clientSequence)&&execution.clientSequence>0&&
       Number.isSafeInteger(execution.controllerGeneration)&&execution.controllerGeneration>0,'COMMAND_OWNER','操作缺少有效执行权信息',409);
-    if(action.type==='enterDungeon'&&(await this.social.snapshot(accountId,actorId)).group?.status==='matched'){
-      const entered=await this.simulation.enterDungeon(accountId,{instanceId:execution.instanceId,actorId,controllerGeneration:execution.controllerGeneration,
+    if(['enterDungeon','leaveDungeon'].includes(action.type)&&(await this.social.snapshot(accountId,actorId)).group?.status==='matched'){
+      const entered=await this.simulation[action.type==='enterDungeon'?'enterDungeon':'leaveDungeon'](accountId,{instanceId:execution.instanceId,actorId,controllerGeneration:execution.controllerGeneration,
         clientSequence:execution.clientSequence,requestId,command:{kind:'action',action:action as {type:string}}});
       this.routes.clear();
       const snapshot=await this.snapshot(accountId,actorId);

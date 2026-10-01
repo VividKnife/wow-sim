@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "referenceCommit": "d2d43b9041768603a0c52b8ce55c64b2a03fb6a2",
-  "contentHash": "2933776b3e66d5df16224dbc80ef2981d5fdad0ffde57aa659055474e02775d2",
-  "capturedRuleset": "owned-v1:b8090eadf87bb54519afaf2074bfd603025520d51148d46b9aebe079404f54ed",
-  "reviewReason": "Recompiled the reviewed current rules and authored polygon raid rooms after integrating the remaining local changes; the five deterministic scenarios preserve the same reviewed behavior.",
+  "contentHash": "3807be60d020d04d040e7d3e9d4d247152b586401a49c23266e7d8a5bf076af0",
+  "capturedRuleset": "owned-v1:3b9a2126c5a3860ea6b2868f0e2271adc9a28d530bd65d2ff4c3b36ddc084d52",
+  "reviewReason": "Reviewed the shared dungeon departure and return integration; the five deterministic scenarios preserve the same reviewed behavior.",
   "sampleMs": 50,
   "durationMs": 15000,
   "referenceSummaryMatches": {

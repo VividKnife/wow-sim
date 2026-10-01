@@ -86,12 +86,13 @@ export function composeRoomBoundary(sources: readonly Rules[], primaryActorId: s
     // their live effects and timer bindings.
     for(const room of rooms)if(!room.dungeon)syncNpcWorld(room);
     const humans=members.filter(actor=>!actor.npcPlayer),leaderPresent=humans.some(actor=>actor.id===roster.leaderId);
-    const selected=leaderPresent?roster.members.filter(m=>m.npc).map(member=>{
+    const selected=(leaderPresent||destination.dungeonPresentNpcIds)?roster.members.filter(m=>m.npc).flatMap(member=>{
       const live=members.find(actor=>actor.id===member.id&&actor.npcPlayer);
-      if(live)return live;
+      if(live)return [live];
       const profiles=humans.flatMap(actor=>(actor.npcWorld?.residents??[]).filter((p:Rules)=>p.id===member.id));
+      if(!profiles.length&&destination.dungeonPresentNpcIds)return [];
       if(profiles.length!==1)throw new Error('匹配 NPC 尚未完成实例归属交接，请稍后进入');
-      return structuredClone(profiles[0].unit);
+      return [structuredClone(profiles[0].unit)];
     }):[];
     members=[...humans,...selected];
     for(const actor of humans)if(actor.npcWorld)actor.npcWorld.selection=selected.filter(npc=>actor.npcWorld.residents.some((p:Rules)=>p.id===npc.id)).map(npc=>npc.id);
@@ -99,6 +100,7 @@ export function composeRoomBoundary(sources: readonly Rules[], primaryActorId: s
   for (const room of rooms.slice(1)) {room.party=[];delete room.simulationEvents;}
   destination.party=members.filter(actor=>actor!==destination);
   destination.dungeonRoster=structuredClone(roster);
+  if(destination.dungeonPresentNpcIds)destination.dungeonPresentNpcIds=members.filter(actor=>actor.npcPlayer).map(actor=>actor.id);
   destination.sharedParty={leaderId:roster.leaderId,participantIds:members.filter(actor=>!actor.npcPlayer).map(actor=>actor.id)};
   destination.simulationEvents=storage;
   validateDungeonOccupants(destination);

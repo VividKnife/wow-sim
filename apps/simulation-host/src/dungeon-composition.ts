@@ -1,3 +1,5 @@
+import type {Rules} from '../../../packages/game-domain/src/model.ts';
+import {rebaseSimulation} from '../../../packages/game-domain/src/simulation-clock.ts';
 import {composeRoomBoundary} from '../../../packages/game-domain/src/room-composition.ts';
 import {dungeonEntryReason,enterDungeon} from '../../../packages/game-domain/src/rules/dungeon.js';
 import {ResidentInstance,type InstanceCheckpoint} from './instance.ts';
@@ -10,7 +12,7 @@ import type {DungeonRoster} from '../../../packages/game-domain/src/dungeon-rost
  * checkpoints must be the sealed boundaries, not gateway state or DB profiles.
  * Group consent and membership are checked by the caller before this boundary. */
 export function composeDungeonCheckpoint(sources: readonly InstanceCheckpoint[], options: {
-  instanceId:string; ownerEpoch:number; primaryActorId:string; roster:DungeonRoster;selectMatchedNpcs?:boolean;
+  instanceId:string; ownerEpoch:number; primaryActorId:string; roster:DungeonRoster;selectMatchedNpcs?:boolean;parked?:{clock:number;dungeon:Rules};
 }): InstanceCheckpoint {
   if (sources.length<1 || sources.length>5 || new Set(sources.map(s=>s.instanceId)).size!==sources.length ||
     sources.some(s=>s.instanceId===options.instanceId)) throw new Error('Invalid dungeon transfer sources');
@@ -26,11 +28,18 @@ export function composeDungeonCheckpoint(sources: readonly InstanceCheckpoint[],
     if (!(existing&&source===ordered[0])&&source.state.dungeonSaves?.[options.roster.dungeonId]) throw new Error('Reset saved personal dungeon progress before creating a shared run');
   }
   const state=composeRoomBoundary(ordered.map(s=>s.state),options.primaryActorId,options.roster,options.selectMatchedNpcs);
+  if(options.parked){
+    if(existing||options.parked.dungeon.id!==options.roster.dungeonId)throw new Error('Invalid parked dungeon');
+    state.dungeonSaves??={};
+    state.dungeonSaves[options.roster.dungeonId]=rebaseSimulation(structuredClone(options.parked),state.clock).dungeon;
+  }
   const actors=[state,...state.party];
   const incoming=existing?ordered.slice(1):ordered;
+  const priorRun=state.dungeon??state.dungeonSaves?.[options.roster.dungeonId];
+  const admitted=new Set<string>(priorRun?.admittedHumanIds??[]);
   for (const source of incoming) {
     const actor=actors.find(c=>c.id===source.state.id)!;
-    const reason=dungeonEntryReason({...actor,dungeon:undefined,wallAt:state.wallAt,party:actors.filter(c=>c!==actor),sharedParty:state.sharedParty,dungeonRoster:state.dungeonRoster},options.roster.dungeonId);
+    const reason=dungeonEntryReason({...actor,dungeon:undefined,wallAt:state.wallAt,party:actors.filter(c=>c!==actor),sharedParty:state.sharedParty,dungeonRoster:state.dungeonRoster,dungeonPresentNpcIds:state.dungeonPresentNpcIds,dungeonSaves:admitted.has(actor.id)?{[options.roster.dungeonId]:priorRun}:{}},options.roster.dungeonId);
     if(reason)throw new Error(reason);
   }
   const solo=options.roster.members.filter(m=>!m.npc).length===1;
@@ -60,10 +69,15 @@ export function composeDungeonCheckpoint(sources: readonly InstanceCheckpoint[],
   // Human entrance locations were checked above. NPCs join the selected
   // instance directly; their old world location is not a travel requirement.
   for(const actor of actors)if(actor.npcPlayer)actor.location=dungeonDefinition(options.roster.dungeonId).entrance;
-  for(const source of existing?incoming:incoming.slice(1)){
-    const actor=state.party.find((c:{id:string})=>c.id===source.state.id)!;
-    actor.dungeonEntries=[...(actor.dungeonEntries||[]).filter((at:number)=>at>state.wallAt-3600000),state.wallAt];
+  for(const source of incoming){
+    const actor=actors.find((c:{id:string})=>c.id===source.state.id)!;
+    // A fresh run already charged its root in enterDungeon. Each other human
+    // is charged once for this run, regardless of repeated exits and arrivals.
+    if(!admitted.has(actor.id)&&(existing||options.parked||actor!==state))
+      actor.dungeonEntries=[...(actor.dungeonEntries||[]).filter((at:number)=>at>state.wallAt-3600000),state.wallAt];
+    admitted.add(actor.id);
   }
+  state.dungeon.admittedHumanIds=[...admitted];
   const checkpoint:InstanceCheckpoint={version:1,...runtimeVersion,instanceId:options.instanceId,ownerEpoch:options.ownerEpoch,
     state,controllers,presence,inputSequence,appliedInputSequence:inputSequence,cursors,recentInputs:recentInputs.slice(-256)};
   // Re-adoption verifies controller identities, input cursors and bounded

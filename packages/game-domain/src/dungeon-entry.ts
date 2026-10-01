@@ -6,7 +6,7 @@ import {combatRole} from './rules/combat-roles.js';
 import {currentEntry,fits,supportedRoles,type Group} from './social-party.ts';
 import {validateDungeonOccupants} from './dungeon-roster.ts';
 
-export type DungeonEntryRequest={accountId:string;actorId:string;groupId:string;entryId:string};
+export type DungeonEntryRequest={accountId:string;actorId:string;groupId:string;entryId:string;visitId?:string};
 
 async function validateRoster(tx:ReadView,group:Group,dungeonId:string){
   const definition=Object.hasOwn(dungeonDefinitions,dungeonId)?dungeonDefinitions[dungeonId]:null;
@@ -74,6 +74,15 @@ export async function bindDungeonEntry(tx:Transaction,request:DungeonEntryReques
     const actor=actors.find(a=>a.id===member.id),role=combatRole(actor);
     requireThat((role==='tank'||role==='healer'?role:'dps')===member.role,'PARTY_ROLE','运行 NPC 职责已改变');
   }
+  delete group.entry!.parked;
   group.instanceId=checkpoint.instanceId;group.updatedAt=now;
   await tx.put('social_groups',group);
+}
+
+export async function authorizeDungeonDeparture(tx:ReadView,request:DungeonEntryRequest):Promise<Group>{
+  await owned(tx,request.accountId,request.actorId);
+  const group=await tx.get<Group>('social_groups',request.groupId);
+  requireThat(group&&group.members.some(m=>m.id===request.actorId&&!m.npc),'PARTY_MEMBER','只有副本队员可以离开',403);
+  requireThat(currentEntry(group!)&&group!.entry!.id===request.entryId&&group!.instanceId,'ENTRY_EXPIRED','副本队伍已改变');
+  return group!;
 }

@@ -1,3 +1,5 @@
+import {dungeonDepartureBoundary,dungeonDepartureTransferId} from '../src/dungeon-departure-transfer.ts';
+import type {SimulationInput} from '../../../packages/protocol/src/simulation.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {setTimeout as delay} from 'node:timers/promises';
@@ -163,6 +165,35 @@ for(const backend of ['memory','sql'])for(const mode of ['together','separate'])
     for(const [index,accountId]of ['alice','bob'].entries()){
       assert.ok(await target.presentation(accountId,admissions[index].state.id,'full',true));
       await assert.rejects(target.presentation(accountId,admissions[index?0:1].state.id,'full'),/Presentation access denied/);
+    }
+    const departing=checkpoint.controllers.find(c=>c.accountId==='alice')!;
+    const exitInput:SimulationInput={instanceId:destinationId,actorId:departing.actorId,controllerGeneration:departing.generation,
+      clientSequence:1,requestId:'exit-'+backend+'-'+mode,command:{kind:'action',action:{type:'leaveDungeon'}}};
+    const exitId=dungeonDepartureTransferId('alice',exitInput),sealed=await target.prepareTransfer(exitId);
+    const exitRequest={...request,accountId:'alice',actorId:departing.actorId};
+    const exitBoundary=dungeonDepartureBoundary(exitRequest,exitInput),destinationIds=['personal:departed','dungeon:remaining'];
+    const claimsBefore=await store.read(tx=>tx.list('simulation_characters'));
+    await assert.rejects(repository.transfer<InstanceCheckpoint>(exitId,[sealed.owner],destinationIds,async(tx,context)=>{
+      await exitBoundary(tx,context);throw new Error('Departure rollback');
+    }),/Departure rollback/);
+    assert.equal((await social.snapshot('alice',departing.actorId)).group!.instanceId,destinationId);
+    assert.deepEqual(await store.read(tx=>tx.list('simulation_characters')),claimsBefore);
+    assert.equal(await repository.load(destinationIds[0]),null);
+    await repository.transfer(exitId,[sealed.owner],destinationIds,exitBoundary);
+    assert.equal((await repository.transfer(exitId,[sealed.owner],destinationIds,exitBoundary)).duplicate,true);
+    await assert.rejects(repository.unseal(sealed.owner,exitId),/fenced/);
+    await target.discard();target=undefined;
+    assert.equal((await social.snapshot('bob',admissions[1].state.id)).group!.instanceId,destinationIds[1]);
+    for(const [index,accountId]of ['alice','bob'].entries()){
+      const recovered=(await characters.find(accountId,admissions[index].state.id))!;
+      assert.equal(recovered.instanceId,destinationIds[index]);
+      const session=await SimulationSession.open(host,repository,'departed-host',recovered,{checkpointMs:10000});sessions.push(session);
+      const view=await session.presentation(accountId,admissions[index].state.id,'full',true);
+      assert.ok(view.snapshot);assert.equal(!!view.snapshot.player.dungeon,index===1);
+      const persisted=await host.checkpoint(recovered.instanceId);
+      assert.equal(persisted.controllers.length,1);
+      assert.equal(persisted.state.party.length,index===0?3:0);
+      if(index===1)assert.equal(persisted.state.dungeon.runId,checkpoint.state.dungeon.runId);
     }
   }finally{
     await target?.close();await Promise.allSettled(sessions.map(s=>s.close()));await host.close();await store.close();

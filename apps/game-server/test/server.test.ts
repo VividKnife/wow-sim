@@ -461,3 +461,30 @@ test('client simulation endpoints are absent and commands retain the small input
  const response:any=await(await fetch(url+'/api/game',{headers})).json();
  assert.equal(Object.hasOwn(response,'localSimulation'),false);
 });
+
+for(const staleFailure of [false,true])test(`a pending old-character ${staleFailure?'denial':'snapshot'} cannot replace or close a new subscription`,{timeout:10000},async t=>{
+ const service=fakeService();let release!:()=>void,entered!:()=>void;
+ const blocked=new Promise<void>(resolve=>{release=resolve;}),started=new Promise<void>(resolve=>{entered=resolve;});
+ const calls:string[]=[];
+ service.snapshot=async(accountId,characterId)=>{
+  calls.push(characterId!);
+  if(characterId==='account-a-old'){
+   entered();await blocked;
+   if(staleFailure)throw Object.assign(new Error('old character unavailable'),{status:403,code:'FORBIDDEN'});
+  }
+  return {...snapshot(accountId,characterId,1),response:{protocolVersion:1,contentVersion:'test',revision:1,scope:'full',snapshot:{player:{id:characterId!},view:{}}}};
+ };
+ const {game,url}=await start(service);t.after(()=>game.close());
+ const socket=new WebSocket(url.replace('http:','ws:')+'/api/events',{headers:await auth('account-a')});t.after(()=>{release();socket.close();});
+ const events:any[]=[];socket.on('message',raw=>events.push(JSON.parse(raw.toString())));
+ await once(socket,'open');socket.send(JSON.stringify({type:'subscribe',characterId:'account-a-old',mode:'delta',realtime:true}));
+ await started;
+ socket.send(JSON.stringify({type:'subscribe',characterId:'account-a-new',mode:'delta',realtime:true}));
+ // The pong follows the preceding subscribe frame, so the new subscription is
+ // installed before releasing the old asynchronous projection.
+ const pong=once(socket,'pong');socket.ping();await pong;
+ const received=once(socket,'message');release();await received;
+ assert.equal(events.length,1);assert.equal(events[0].type,'snapshot');
+ assert.equal(events[0].snapshot.player.id,'account-a-new');assert.equal(socket.readyState,WebSocket.OPEN);
+ assert.deepEqual(calls.slice(0,2),['account-a-old','account-a-new']);
+});

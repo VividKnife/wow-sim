@@ -1,3 +1,4 @@
+import {dungeonDepartureTransferId,dungeonDepartureBoundary} from './dungeon-departure-transfer.ts';
 import {DEFAULT_IDLE_RETIRE_MS,idleRetireDelay} from './retirement-policy.ts';
 import {runtimeVersion} from './version.ts';
 import {createHash,randomUUID} from 'node:crypto';
@@ -88,6 +89,7 @@ export class SimulationDirectory {
  }
  async input(accountId:string,input:SimulationInput){return this.withActorSession(input.instanceId,accountId,input.actorId,session=>session.input(accountId,input));}
  async enterDungeon(accountId:string,input:SimulationInput){
+  if(input.command.kind!=='action'||input.command.action.type!=='enterDungeon')throw new Error('Invalid arrival command');
   if(this.closed||!this.characters||!this.dungeons)throw new Error('Dungeon admission is unavailable');
   const plan=await this.dungeons.plan(accountId,input);
   if(plan.receipt)return {...await this.openCharacter(accountId,input.actorId),receipt:{...plan.receipt,durable:true,confirmation:'durable' as const}};
@@ -124,6 +126,44 @@ export class SimulationDirectory {
     await Promise.allSettled(sessions.map(s=>s.abortTransfer(transferId)));
     throw error;
    }
+  })();
+  this.dungeonEntries.set(group.id,{fingerprint,work});
+  try{return await work;}finally{if(this.dungeonEntries.get(group.id)?.work===work)this.dungeonEntries.delete(group.id);}
+ }
+ async leaveDungeon(accountId:string,input:SimulationInput){
+  if(input.command.kind!=='action'||input.command.action.type!=='leaveDungeon')throw new Error('Invalid departure command');
+  if(this.closed||!this.characters||!this.dungeons)throw new Error('Dungeon admission is unavailable');
+  const plan=await this.dungeons.plan(accountId,input);
+  if(plan.receipt)return {...await this.openCharacter(accountId,input.actorId),receipt:{...plan.receipt,durable:true,confirmation:'durable' as const}};
+  const {request,group}=plan,fingerprint=JSON.stringify([accountId,input]),pending=this.dungeonEntries.get(group.id);
+  if(pending){if(pending.fingerprint!==fingerprint)throw new Error('队伍正在交接实例，请稍后重试');return pending.work;}
+  if(this.dungeonEntries.size>=16)throw new Error('Dungeon admission queue full');
+  const work=(async()=>{
+   const identity=await this.openCharacter(accountId,input.actorId);
+   if(identity.instanceId!==input.instanceId)throw new Error('Controller fenced');
+   const session=await this.entries.get(identity.instanceId)!.session,transferId=dungeonDepartureTransferId(accountId,input);
+   let reserved=false;
+   try{
+    const prepared=await session.prepareTransfer(transferId,async cp=>Math.max(cp.state.wallAt,...cp.recentInputs.filter(r=>r.receipt.status==='queued').map(r=>r.receipt.effectiveWallAt)));
+    const multiple=prepared.checkpoint.controllers.length>1;
+    if(multiple){
+     if(this.entries.size+this.reservedAdmissions>=this.maximum)throw new Error('Instance capacity reached');
+     this.reservedAdmissions++;reserved=true;
+    }
+    const suffix=transferId.slice(5),destinations=['personal:'+suffix,...(multiple?['dungeon:'+suffix]:[])];
+    await this.repository.transfer(transferId,[prepared.owner],destinations,dungeonDepartureBoundary(request,input));
+    await session.discard();this.entries.delete(prepared.owner.id);
+    if(reserved){this.reservedAdmissions--;reserved=false;}
+    const receipt=(await this.dungeons!.plan(accountId,input)).receipt;
+    if(!receipt)throw new Error('Dungeon departure receipt missing');
+    // Reopen the remaining room immediately so connected teammates continue.
+    if(multiple){
+     const other=prepared.checkpoint.controllers.find(c=>c.actorId!==input.actorId)!;
+     await this.openCharacter(other.accountId,other.actorId);
+    }
+    return {...await this.openCharacter(accountId,input.actorId),receipt:{...receipt,durable:true,confirmation:'durable' as const}};
+   }catch(error){await session.abortTransfer(transferId);throw error;}
+   finally{if(reserved)this.reservedAdmissions--;}
   })();
   this.dungeonEntries.set(group.id,{fingerprint,work});
   try{return await work;}finally{if(this.dungeonEntries.get(group.id)?.work===work)this.dungeonEntries.delete(group.id);}

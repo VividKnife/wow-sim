@@ -46,7 +46,7 @@ export function participantPresentationState(room: Rules, characterId: string): 
   return {...actor, clock: room.clock, wallAt: room.wallAt, location: room.location,
     party: [room, ...room.party].filter(c => c.id !== characterId),
     combat: room.combat, lastCombat: room.lastCombat, dungeon: room.dungeon,
-    dungeonRoster: room.dungeonRoster, sharedParty: room.sharedParty,
+    dungeonRoster: room.dungeonRoster, dungeonPresentNpcIds: room.dungeonPresentNpcIds, sharedParty: room.sharedParty,
     activity: room.activity, groundEffects: room.groundEffects, groupLoot: room.groupLoot, logs,
     logSequence: encounter ? room.logSequence : actor.logSequence};
 }

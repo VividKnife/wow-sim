@@ -7,7 +7,7 @@ export type SimulationServiceRequest=
  | {operation:'presentation';instanceId:string;accountId:string;actorId:string;scope:'full'|'combat';online:boolean}
  | {operation:'open';admission:{instanceId:string;state:Record<string,any>;controllers:{actorId:string;accountId:string;generation:number;canPause:boolean}[]}}
  | {operation:'input';accountId:string;input:SimulationInput}
- | {operation:'enterDungeon';accountId:string;input:SimulationInput}
+ | {operation:'enterDungeon'|'leaveDungeon';accountId:string;input:SimulationInput}
  | {operation:'project';instanceId:string;full:boolean}
  | {operation:'checkpoint'|'remove';instanceId:string}
  | {operation:'inspect'};
@@ -27,7 +27,7 @@ export function validateServiceRequest(value:SimulationServiceRequest){
     if(!Number.isSafeInteger(c.generation)||c.generation<1||typeof c.canPause!=='boolean')throw new Error('Invalid controller');}
    return;
   }
-  case 'input':case 'enterDungeon':fields(value,['operation','accountId','input']);id(value.accountId);validateSimulationInput(value.input);return;
+  case 'input':case 'enterDungeon':case 'leaveDungeon':fields(value,['operation','accountId','input']);id(value.accountId);validateSimulationInput(value.input);return;
   case 'project':fields(value,['operation','instanceId','full']);id(value.instanceId);if(typeof value.full!=='boolean')throw new Error('Invalid projection request');return;
   case 'checkpoint':case 'remove':fields(value,['operation','instanceId']);id(value.instanceId);return;
   case 'inspect':fields(value,['operation']);return;
