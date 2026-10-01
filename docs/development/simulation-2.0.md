@@ -2094,3 +2094,35 @@ node apps/simulation-host/scripts/benchmark-publication.mjs
 30FPS、无技能停顿或目标机器容量。数据见
 [publication-quest-index-browser-2026-10-01.json](measurements/publication-quest-index-browser-2026-10-01.json)。
 本轮在 main 提交，未部署；差量遍历、发布尖峰及完整架构验收继续进行。
+
+## 2026-10-01：合并差量校验与比较遍历
+
+`diffProjectedState` 原先先完整校验前后快照，再遍历一次生成差量。现改为在比较字段时
+同时校验：共享元数据每次调用仍校验一次，替换/插入时在复制值的过程中校验，删除分支也
+检查原值。没有引入跨帧信任缓存、取消 JSON 边界校验或改变协议/序号/owner 约束。
+稀疏数组在复制时会显式拒绝，不能把缺失元素静默带入公开快照。
+
+45 项相关回归通过，覆盖实际 WebSocket 的基线/差量/重订阅/慢连接、发布调度、500 组
+嵌套状态补丁往返、共享对象后续被修改、删除日志和数组中间段中的非法值、实际嵌套深度，
+根项目类型检查通过。
+
+测量基线为 `9f8cf4f4`，只替换 `packages/contracts/src/events.ts`，避免把同一工作树中
+其他已合入的技能缓存和 Worker 补算优化归功于此次变更：
+
+```sh
+node apps/simulation-host/scripts/benchmark-publication.mjs 9f8cf4f4 packages/contracts/src/events.ts
+node apps/simulation-host/scripts/benchmark-publication.mjs
+```
+
+同样的 40 人团本初态、20 秒模拟、丢弃首秒，三轮交替顺序运行；各轮分位数的中位值：
+差量 P50 11.792 → 8.798ms（减少约 25%），P95 26.288 → 22.692ms。
+六次运行的完整差量消息序列 SHA-256、最终公开投影和最终规则状态分别一致。
+测量不含 PostgreSQL、Worker 传输、真实 WebSocket 或手机性能，不能直接换算并发量。
+原始数据见 [publication-delta-traversal-2026-10-01.json](measurements/publication-delta-traversal-2026-10-01.json)。
+
+发布构建网页另测 61.7 秒活跃团本：567 条差量、0 次基线重发、0 次断线、控制台无错误，
+最长包间隔 288ms；末尾 1800 帧 P50 16.7ms、P99 18.8ms，整段有 2 个主线程长任务。
+截图时只有 8/40 队员存活，因此不能把尾段帧率用作全员战斗的稳定 30FPS 证明，也不能将
+全部网页表现变化归因于此差量优化。详见
+[publication-delta-traversal-browser-2026-10-01.json](measurements/publication-delta-traversal-browser-2026-10-01.json)。
+本轮未部署；大房间完整投影体积、发布尖峰和完整重构/目标机器验收仍需继续。

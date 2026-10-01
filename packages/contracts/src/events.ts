@@ -40,7 +40,7 @@ function cloneJson(value:unknown,depth=0):any{
  if(depth>100)throw new TypeError('projected state is too deep');
  if(value===null||typeof value==='string'||typeof value==='boolean')return value;
  if(typeof value==='number'&&Number.isFinite(value))return value;
- if(Array.isArray(value))return value.map(item=>cloneJson(item,depth+1));
+ if(Array.isArray(value))return Array.from(value,item=>cloneJson(item,depth+1));
  if(value&&typeof value==='object'){
   const prototype=Object.getPrototypeOf(value);
   if(prototype!==Object.prototype&&prototype!==null)throw new TypeError('projected state must contain plain JSON objects');
@@ -74,10 +74,14 @@ function validateJson(value:unknown,depth=0):void{
 function samePrimitive(left:unknown,right:unknown){return Object.is(left,right);}
 
 export function diffProjectedState(previous:unknown,next:unknown):ProjectedStateOperation[]{
- validateJson(previous);validateJson(next);
  const operations:ProjectedStateOperation[]=[];
  const walk=(left:any,right:any,path:(string|number)[])=>{
-  if(samePrimitive(left,right))return;
+  const depth=path.length;
+  if(depth>100)throw new TypeError('projected state is too deep');
+  // Validate while comparing, rather than walking both entire snapshots and
+  // then walking them again. Shared metadata still gets validated once: callers
+  // may mutate it between calls, so no persistent trust/cache is assumed.
+  if(samePrimitive(left,right)){validateJson(left,depth);return;}
   if(Array.isArray(left)&&Array.isArray(right)){
    // Logs are a bounded chronological window. Retain its overlap by record ID
    // instead of replacing the window (or changing every shifted array index).
@@ -85,9 +89,11 @@ export function diffProjectedState(previous:unknown,next:unknown):ProjectedState
     const offset=left.findIndex(row=>row?.id!==undefined&&row.id===right[0]?.id);
     const overlap=Math.min(left.length-offset,right.length);
     if(offset>=0&&right.slice(0,overlap).every((row,index)=>row?.id!==undefined&&row.id===left[offset+index]?.id)){
+     for(let index=0;index<offset;index++)validateJson(left[index],depth+1);
+     for(let index=offset+overlap;index<left.length;index++)validateJson(left[index],depth+1);
      if(offset)operations.push({op:'splice',path,index:0,deleteCount:offset,values:[]});
      for(let index=0;index<overlap;index++)walk(left[offset+index],right[index],[...path,index]);
-     if(left.length-offset!==overlap||right.length!==overlap)operations.push({op:'splice',path,index:overlap,deleteCount:left.length-offset-overlap,values:cloneJson(right.slice(overlap))});
+     if(left.length-offset!==overlap||right.length!==overlap)operations.push({op:'splice',path,index:overlap,deleteCount:left.length-offset-overlap,values:cloneJson(right.slice(overlap),depth)});
      return;
     }
    }
@@ -101,8 +107,9 @@ export function diffProjectedState(previous:unknown,next:unknown):ProjectedState
     let prefix=0,suffix=0;
     while(prefix<Math.min(left.length,right.length)&&aligned(left[prefix],right[prefix]))prefix++;
     while(suffix<Math.min(left.length,right.length)-prefix&&aligned(left[left.length-1-suffix],right[right.length-1-suffix]))suffix++;
-    if(!prefix&&!suffix){operations.push({op:'set',path,value:cloneJson(right)});return;}
-    operations.push({op:'splice',path,index:prefix,deleteCount:left.length-prefix-suffix,values:cloneJson(right.slice(prefix,right.length-suffix))});
+    if(!prefix&&!suffix){validateJson(left,depth);operations.push({op:'set',path,value:cloneJson(right,depth)});return;}
+    for(let index=prefix;index<left.length-suffix;index++)validateJson(left[index],depth+1);
+    operations.push({op:'splice',path,index:prefix,deleteCount:left.length-prefix-suffix,values:cloneJson(right.slice(prefix,right.length-suffix),depth)});
     for(let index=0;index<prefix;index++)walk(left[index],right[index],[...path,index]);
     for(let offset=suffix;offset>0;offset--)walk(left[left.length-offset],right[right.length-offset],[...path,right.length-offset]);
     return;
@@ -111,14 +118,21 @@ export function diffProjectedState(previous:unknown,next:unknown):ProjectedState
    return;
   }
   if(left&&right&&typeof left==='object'&&typeof right==='object'&&!Array.isArray(left)&&!Array.isArray(right)){
-   for(const key of Object.keys(left).sort())if(!own(right,key))operations.push({op:'remove',path:[...path,key]});
+   for(const value of [left,right]){
+    const prototype=Object.getPrototypeOf(value);
+    if(prototype!==Object.prototype&&prototype!==null)throw new TypeError('projected state must contain plain JSON objects');
+   }
+   for(const key of Object.keys(left).sort()){
+    if(unsafeSegments.has(key))throw new TypeError('projected state contains an unsafe key');
+    if(!own(right,key)){validateJson(left[key],depth+1);operations.push({op:'remove',path:[...path,key]});}
+   }
    for(const key of Object.keys(right).sort()){
     const child=[...path,key];validatePath(child);
-    if(!own(left,key))operations.push({op:'set',path:child,value:cloneJson(right[key])});else walk(left[key],right[key],child);
+    if(!own(left,key))operations.push({op:'set',path:child,value:cloneJson(right[key],depth+1)});else walk(left[key],right[key],child);
    }
    return;
   }
-  operations.push({op:'set',path,value:cloneJson(right)});
+  validateJson(left,depth);operations.push({op:'set',path,value:cloneJson(right,depth)});
  };
  walk(previous,next,[]);
  return operations;

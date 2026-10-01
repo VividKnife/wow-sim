@@ -17,6 +17,7 @@ const {localScenarios}=await import('../../../packages/simulation-tests/support/
 const {createDeltaEvent}=await import('../../../packages/contracts/src/events.ts');
 const state=localScenarios().raid,room=new ResidentInstance({instanceId:'publication-benchmark',ownerEpoch:1,state,controllers:[{actorId:state.id,accountId:'preview',generation:1,canPause:true}]});
 let previous={type:'snapshot',sequence:1,...room.presentation('preview',state.id)};
+const deltaStreamHash=createHash('sha256');
 const start=room.wallAt,samples={advance:[],full:[],combat:[],diff:[],encode:[]};
 for(let i=1;i<=200;i++){
  const collect=(key,at)=>{if(i>10)samples[key].push(performance.now()-at);};
@@ -25,7 +26,7 @@ for(let i=1;i<=200;i++){
  let next={type:'snapshot',sequence:response.execution.streamSequence,...response};
  if(scope==='combat')next={...next,snapshot:{...next.snapshot,view:{...previous.snapshot.view,...next.snapshot.view}}};
  at=performance.now();const delta=createDeltaEvent(previous,next);collect('diff',at);
- at=performance.now();JSON.stringify(delta);collect('encode',at);previous=next;
+ at=performance.now();const wire=JSON.stringify(delta);collect('encode',at);deltaStreamHash.update(wire);previous=next;
 }
 const result=Object.fromEntries(Object.entries(samples).map(([key,values])=>{values.sort((a,b)=>a-b);return[key,{count:values.length,total:values.reduce((a,b)=>a+b,0),p50:values[Math.floor(values.length*.5)],p95:values[Math.floor(values.length*.95)],max:values.at(-1)}];}));
-console.log(JSON.stringify({node:process.version,baseline,scenario:'40-person raid / 20 simulated seconds / discard first 1 second',unit:'milliseconds',timings:result,maxRssKiB:process.resourceUsage().maxRSS,finalStateHash:createHash('sha256').update(JSON.stringify(room.checkpoint().state)).digest('hex'),finalProjectionHash:createHash('sha256').update(JSON.stringify(previous)).digest('hex')},null,2));
+console.log(JSON.stringify({node:process.version,baseline,scenario:'40-person raid / 20 simulated seconds / discard first 1 second',unit:'milliseconds',timings:result,deltaStreamHash:deltaStreamHash.digest('hex'),maxRssKiB:process.resourceUsage().maxRSS,finalStateHash:createHash('sha256').update(JSON.stringify(room.checkpoint().state)).digest('hex'),finalProjectionHash:createHash('sha256').update(JSON.stringify(previous)).digest('hex')},null,2));

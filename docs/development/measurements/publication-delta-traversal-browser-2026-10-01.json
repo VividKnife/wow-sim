@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-01",
+  "browser": "Edge / macOS arm64",
+  "command": "PREVIEW_SCENE=raid PREVIEW_BUILD=1 node apps/web/scripts/serve-live-combat.mjs",
+  "backend": "Actual HTTP/WebSocket and in-memory ResidentInstance, no PostgreSQL or Worker pool",
+  "metrics": {"frames":1800,"p50":16.7,"p99":18.8,"messages":567,"bytes":6889046,"longTasks":2,"snapshots":0,"deltas":567,"disconnects":0,"maxPacketGap":288,"seconds":61.7},
+  "consoleErrors": 0,
+  "notes": [
+    "Sampling reset after continuing the paused encounter. Boss still alive at capture, 312833 / 351780 health; 8 of 40 party members alive.",
+    "Frame percentiles cover the last 1800 samples, while transport and long-task counters span 61.7 seconds. 567 deltas / 61.7 seconds = 9.19 Hz.",
+    "Changing living-unit count and sampling duration prevent direct comparison with earlier browser runs. This does not prove stable full-raid 30 FPS or elimination of animation stalls.",
+    "The current base also contains the separately committed learned-spell and catch-up optimizations. Only the controlled CPU comparison isolates this diff change.",
+    "This task ran no CPU test or benchmark during the browser window; unrelated machine work was not controlled."
+  ]
+}

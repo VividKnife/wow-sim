@@ -92,3 +92,51 @@ test('array insertion retains stable spell and unit ends but still patches their
   }
  }
 });
+
+test('diff validation covers unchanged, removed, inserted and replaced branches',()=>{
+ const invalid=[undefined,NaN,Infinity,1n,()=>0,new Date(),new Map(),JSON.parse('{"__proto__":{}}'),{constructor:1},new Array(2)];
+ for(const value of invalid){
+  for(const [before,after] of [
+   [value,value],[{value},{value}],[{value},{}],[{value},{value:null}], [{}, {value}],
+   [{rows:[{id:1,bad:value},{id:2}]},{rows:[{id:2}]}],
+   [{rows:[{id:1}]},{rows:[{id:1},{id:2,bad:value}]}],
+   [{logs:[{id:1,bad:value},{id:2}]},{logs:[{id:2}]}],
+   [{logs:[{id:1},{id:2,bad:value}]},{logs:[{id:1}]}],
+   [{rows:[{id:1},{id:2,bad:value},{id:3}]},{rows:[{id:1},{id:3}]}],
+  ])assert.throws(()=>diffProjectedState(before,after),TypeError);
+ }
+ const shared={metadata:{value:1}};
+ assert.deepEqual(diffProjectedState({shared},{shared}),[]);
+ shared.metadata.value=Infinity;
+ assert.throws(()=>diffProjectedState({shared},{shared}),/JSON/,'shared identities are revalidated on every call');
+});
+
+test('replacement and splice validation count depth from their actual position',()=>{
+ const chain=(depth:number)=>{let value:any=1;while(depth--)value={next:value};return value;};
+ assert.doesNotThrow(()=>diffProjectedState(null,chain(100)));
+ assert.throws(()=>diffProjectedState(null,chain(101)),/deep/);
+ assert.throws(()=>diffProjectedState({rows:[{id:1}]},{rows:[{id:1},{id:2,value:chain(98)}]}),/deep/);
+ assert.throws(()=>diffProjectedState({logs:[{id:1}]},{logs:[{id:1},{id:2,value:chain(98)}]}),/deep/);
+ assert.throws(()=>diffProjectedState({removed:chain(100)},{}),/deep/);
+ assert.throws(()=>applyGameEvent(null,{...initial,snapshot:{player:{sparse:new Array(1)},view:{}}}),/JSON/);
+});
+
+test('generated nested patches round-trip without mutating either input or sharing inserted values',()=>{
+ let seed=137;const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed;};
+ const tree=(depth:number):any=>{
+  const choice=random()%(depth?6:3);
+  if(choice===0)return random()%30;if(choice===1)return 'value'+random()%10;if(choice===2)return null;
+  if(choice===3)return Array.from({length:random()%5},()=>tree(depth-1));
+  const result:Record<string,unknown>={};for(let i=0,n=random()%5;i<n;i++)result['k'+random()%8]=tree(depth-1);
+  return result;
+ };
+ for(let i=0;i<500;i++){
+  const before=tree(4),after=tree(4),savedBefore=structuredClone(before),savedAfter=structuredClone(after);
+  const patch=diffProjectedState(before,after);
+  assert.deepEqual(applyProjectedState(before,patch),after);
+  assert.deepEqual(before,savedBefore);assert.deepEqual(after,savedAfter);
+ }
+ const before={rows:[{id:1}]},after={rows:[{id:1},{id:2,nested:{value:3}}]};
+ const patch=diffProjectedState(before,after);after.rows[1].nested!.value=4;
+ assert.equal((applyProjectedState(before,patch) as typeof after).rows[1].nested!.value,3);
+});

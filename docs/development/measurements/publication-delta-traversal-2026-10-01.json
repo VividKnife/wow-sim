@@ -1,0 +1,311 @@
+{
+  "date": "2026-10-01",
+  "baselineRef": "9f8cf4f4",
+  "modules": [
+    "packages/contracts/src/events.ts"
+  ],
+  "machine": {
+    "cpu": "Apple M4",
+    "cores": 10,
+    "memoryBytes": 17179869184,
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "method": "Three alternating-order pairs in fresh processes, no profiler. Same current content and input, 20 simulated seconds, discard first second. Only events.ts changes. Not database/WS/worker capacity.",
+  "runs": [
+    {
+      "round": 1,
+      "mode": "baseline",
+      "node": "v24.15.0",
+      "baseline": "9f8cf4f4",
+      "scenario": "40-person raid / 20 simulated seconds / discard first 1 second",
+      "unit": "milliseconds",
+      "timings": {
+        "advance": {
+          "count": 190,
+          "total": 1351.9665530000134,
+          "p50": 6.560542000000169,
+          "p95": 10.112291999999798,
+          "max": 12.251207999999679
+        },
+        "full": {
+          "count": 19,
+          "total": 1268.6984170000019,
+          "p50": 66.32029200000034,
+          "p95": 73.57104199999958,
+          "max": 73.57104199999958
+        },
+        "combat": {
+          "count": 171,
+          "total": 3582.4903739999922,
+          "p50": 20.462250000000495,
+          "p95": 24.379249999999956,
+          "max": 30.800999999999476
+        },
+        "diff": {
+          "count": 190,
+          "total": 2486.0851260000077,
+          "p50": 11.471292000000176,
+          "p95": 26.213832999999795,
+          "max": 33.196083000000726
+        },
+        "encode": {
+          "count": 190,
+          "total": 12.048378000002685,
+          "p50": 0.052458000000115135,
+          "p95": 0.14474999999947613,
+          "max": 0.30975000000034925
+        }
+      },
+      "deltaStreamHash": "8616d331b008b6832030b6c9d61f14c9a9948e9a155dfdcb7fd0f908590fb4df",
+      "maxRssKiB": 920208,
+      "finalStateHash": "6c96e25cf34ef9a8220e68e03d97dbc6e9014324682717b815f6d4c62853dbbe",
+      "finalProjectionHash": "7c6b3d64d41a0d5336f2e33f0e1abc77a97047a19e641921ad76b8a26f40cdd8"
+    },
+    {
+      "round": 1,
+      "mode": "current",
+      "node": "v24.15.0",
+      "baseline": null,
+      "scenario": "40-person raid / 20 simulated seconds / discard first 1 second",
+      "unit": "milliseconds",
+      "timings": {
+        "advance": {
+          "count": 190,
+          "total": 1389.6345099999949,
+          "p50": 6.698667000000569,
+          "p95": 11.062957999998616,
+          "max": 14.90099999999984
+        },
+        "full": {
+          "count": 19,
+          "total": 1265.0447500000014,
+          "p50": 65.79783300000008,
+          "p95": 80.21458300000086,
+          "max": 80.21458300000086
+        },
+        "combat": {
+          "count": 171,
+          "total": 3630.563873000005,
+          "p50": 20.558583,
+          "p95": 24.78491699999995,
+          "max": 39.80754200000047
+        },
+        "diff": {
+          "count": 190,
+          "total": 1931.448959999987,
+          "p50": 8.664709000000585,
+          "p95": 22.683208000000377,
+          "max": 25.176124999999956
+        },
+        "encode": {
+          "count": 190,
+          "total": 13.87379599998485,
+          "p50": 0.05104200000005221,
+          "p95": 0.1533339999996315,
+          "max": 1.0111250000009022
+        }
+      },
+      "deltaStreamHash": "8616d331b008b6832030b6c9d61f14c9a9948e9a155dfdcb7fd0f908590fb4df",
+      "maxRssKiB": 855808,
+      "finalStateHash": "6c96e25cf34ef9a8220e68e03d97dbc6e9014324682717b815f6d4c62853dbbe",
+      "finalProjectionHash": "7c6b3d64d41a0d5336f2e33f0e1abc77a97047a19e641921ad76b8a26f40cdd8"
+    },
+    {
+      "round": 2,
+      "mode": "current",
+      "node": "v24.15.0",
+      "baseline": null,
+      "scenario": "40-person raid / 20 simulated seconds / discard first 1 second",
+      "unit": "milliseconds",
+      "timings": {
+        "advance": {
+          "count": 190,
+          "total": 1382.1311180000152,
+          "p50": 6.79333300000053,
+          "p95": 10.683042000000569,
+          "max": 14.067250000000058
+        },
+        "full": {
+          "count": 19,
+          "total": 1345.4425419999957,
+          "p50": 68.546792000001,
+          "p95": 92.15408399999978,
+          "max": 92.15408399999978
+        },
+        "combat": {
+          "count": 171,
+          "total": 3675.522407000004,
+          "p50": 21.021500000000287,
+          "p95": 25.011207999999897,
+          "max": 34.56550000000061
+        },
+        "diff": {
+          "count": 190,
+          "total": 1966.0186170000038,
+          "p50": 8.798291000000972,
+          "p95": 22.691667000000052,
+          "max": 27.017541999999594
+        },
+        "encode": {
+          "count": 190,
+          "total": 12.241961000011997,
+          "p50": 0.05175000000053842,
+          "p95": 0.14708299999983865,
+          "max": 0.45558300000084273
+        }
+      },
+      "deltaStreamHash": "8616d331b008b6832030b6c9d61f14c9a9948e9a155dfdcb7fd0f908590fb4df",
+      "maxRssKiB": 828256,
+      "finalStateHash": "6c96e25cf34ef9a8220e68e03d97dbc6e9014324682717b815f6d4c62853dbbe",
+      "finalProjectionHash": "7c6b3d64d41a0d5336f2e33f0e1abc77a97047a19e641921ad76b8a26f40cdd8"
+    },
+    {
+      "round": 2,
+      "mode": "baseline",
+      "node": "v24.15.0",
+      "baseline": "9f8cf4f4",
+      "scenario": "40-person raid / 20 simulated seconds / discard first 1 second",
+      "unit": "milliseconds",
+      "timings": {
+        "advance": {
+          "count": 190,
+          "total": 1384.7829989999955,
+          "p50": 6.7835419999992155,
+          "p95": 10.659583000000566,
+          "max": 12.856291000000056
+        },
+        "full": {
+          "count": 19,
+          "total": 1289.1798759999992,
+          "p50": 66.8622089999999,
+          "p95": 79.69604199999958,
+          "max": 79.69604199999958
+        },
+        "combat": {
+          "count": 171,
+          "total": 3641.652172,
+          "p50": 20.77062500000102,
+          "p95": 23.253332999999657,
+          "max": 48.12404200000037
+        },
+        "diff": {
+          "count": 190,
+          "total": 2542.4450829999873,
+          "p50": 11.79216600000018,
+          "p95": 26.287874999999985,
+          "max": 30.542959000000337
+        },
+        "encode": {
+          "count": 190,
+          "total": 12.432510999994065,
+          "p50": 0.04937500000050932,
+          "p95": 0.14216699999997218,
+          "max": 0.517667000000074
+        }
+      },
+      "deltaStreamHash": "8616d331b008b6832030b6c9d61f14c9a9948e9a155dfdcb7fd0f908590fb4df",
+      "maxRssKiB": 832352,
+      "finalStateHash": "6c96e25cf34ef9a8220e68e03d97dbc6e9014324682717b815f6d4c62853dbbe",
+      "finalProjectionHash": "7c6b3d64d41a0d5336f2e33f0e1abc77a97047a19e641921ad76b8a26f40cdd8"
+    },
+    {
+      "round": 3,
+      "mode": "baseline",
+      "node": "v24.15.0",
+      "baseline": "9f8cf4f4",
+      "scenario": "40-person raid / 20 simulated seconds / discard first 1 second",
+      "unit": "milliseconds",
+      "timings": {
+        "advance": {
+          "count": 190,
+          "total": 1385.8929219999964,
+          "p50": 6.831166999999368,
+          "p95": 10.692041000000245,
+          "max": 12.722874999999476
+        },
+        "full": {
+          "count": 19,
+          "total": 1313.273752,
+          "p50": 69.0766249999997,
+          "p95": 80.28974999999991,
+          "max": 80.28974999999991
+        },
+        "combat": {
+          "count": 171,
+          "total": 3667.8165889999937,
+          "p50": 21.106832999999824,
+          "p95": 23.314916999999696,
+          "max": 44.17229099999986
+        },
+        "diff": {
+          "count": 190,
+          "total": 2539.1729560000117,
+          "p50": 11.813083000000915,
+          "p95": 27.21087499999885,
+          "max": 30.160415999999714
+        },
+        "encode": {
+          "count": 190,
+          "total": 12.017247999989195,
+          "p50": 0.05304199999955017,
+          "p95": 0.1426249999999527,
+          "max": 0.38533300000017334
+        }
+      },
+      "deltaStreamHash": "8616d331b008b6832030b6c9d61f14c9a9948e9a155dfdcb7fd0f908590fb4df",
+      "maxRssKiB": 756944,
+      "finalStateHash": "6c96e25cf34ef9a8220e68e03d97dbc6e9014324682717b815f6d4c62853dbbe",
+      "finalProjectionHash": "7c6b3d64d41a0d5336f2e33f0e1abc77a97047a19e641921ad76b8a26f40cdd8"
+    },
+    {
+      "round": 3,
+      "mode": "current",
+      "node": "v24.15.0",
+      "baseline": null,
+      "scenario": "40-person raid / 20 simulated seconds / discard first 1 second",
+      "unit": "milliseconds",
+      "timings": {
+        "advance": {
+          "count": 190,
+          "total": 1402.2465090000023,
+          "p50": 6.918083000000479,
+          "p95": 10.765125000000808,
+          "max": 12.7871669999995
+        },
+        "full": {
+          "count": 19,
+          "total": 1339.1825820000045,
+          "p50": 68.27895800000078,
+          "p95": 106.72562500000004,
+          "max": 106.72562500000004
+        },
+        "combat": {
+          "count": 171,
+          "total": 3687.5777069999963,
+          "p50": 21.17679199999975,
+          "p95": 24.361291999999594,
+          "max": 28.17095800000061
+        },
+        "diff": {
+          "count": 190,
+          "total": 1980.3121629999905,
+          "p50": 8.981792000000496,
+          "p95": 23.302833000001556,
+          "max": 29.357499999999163
+        },
+        "encode": {
+          "count": 190,
+          "total": 14.98787099999845,
+          "p50": 0.04970800000046438,
+          "p95": 0.1740829999998823,
+          "max": 2.3718330000001515
+        }
+      },
+      "deltaStreamHash": "8616d331b008b6832030b6c9d61f14c9a9948e9a155dfdcb7fd0f908590fb4df",
+      "maxRssKiB": 939120,
+      "finalStateHash": "6c96e25cf34ef9a8220e68e03d97dbc6e9014324682717b815f6d4c62853dbbe",
+      "finalProjectionHash": "7c6b3d64d41a0d5336f2e33f0e1abc77a97047a19e641921ad76b8a26f40cdd8"
+    }
+  ]
+}
