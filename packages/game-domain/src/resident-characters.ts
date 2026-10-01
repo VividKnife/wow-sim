@@ -5,8 +5,8 @@ import type {Ownership} from '../../persistence/src/simulation.ts';
 import {randomUUID} from 'node:crypto';
 import type {Store,Transaction} from '../../persistence/src/store.ts';
 import type {CheckpointBoundary} from '../../persistence/src/simulation.ts';
-import {context, owned, persistCharacter, bump} from './context.ts';
-import {requireThat, type Character, type Rules} from './model.ts';
+import {context, owned, persistCharacter, bump, validAccountPresence} from './context.ts';
+import {DomainError, requireThat, type AccountPresence, type Character, type Rules} from './model.ts';
 import {residentStore, withResidentAuthority, withResidentDeletion, withResidentRetirement, type CharacterClaim} from './resident-store.ts';
 import {applyExperienceBuff, experienceMultiplier} from './rules/experience.js';
 
@@ -86,7 +86,13 @@ export class ResidentCharacters {
       await withResidentRetirement(tx,claim.instanceId,async()=>{
         for(const row of claims)await tx.delete('simulation_characters',row.id);
         await tx.delete('simulation_residencies',claim.instanceId);
-        await this.retireState?.(tx,character,Date.now());
+        const now=Date.now();
+        await this.retireState?.(tx,character,now);
+        if(this.retireState){
+          const presence=await tx.get<AccountPresence>('account_presence',accountId);
+          if(!presence||!validAccountPresence(presence))throw new DomainError('ACCOUNT_STATE','账号在线状态无效');
+          await tx.put('account_presence',{...presence,lastSeenAt:Math.max(presence.lastSeenAt,now)});
+        }
       });
     });
   }
