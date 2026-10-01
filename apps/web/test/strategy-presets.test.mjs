@@ -12,9 +12,9 @@ import {startCombat,combatTick} from '../../../packages/game-domain/src/rules/co
 import {distance} from '../../../packages/sim-core/src/geometry.js';
 import {MAX_STRATEGY_RULES} from '../../../packages/sim-core/src/strategy-config.js';
 
-function trained(classId=8,level=20){
+function trained(classId=8,level=20,characterId){
  const definition=classDefinitions.find(c=>c.id===classId);
- const s=createGame('策略测试',731,0,{classId,raceId:definition.races[0]});s.level=level;
+ const s=createGame('策略测试',731,0,{classId,raceId:definition.races[0],characterId});s.level=level;
  s.learned=[...new Set([...s.learned,...(classAbilities[classId]||[]).filter(a=>a.requiredLevel<=level&&['trainer','weapon'].includes(a.acquisition)).map(a=>a.spellId)])];
  s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;return s;
 }
@@ -208,7 +208,7 @@ test('templates and role settings round-trip through service persistence and ins
   ids.push(snap.roster.find(c=>!ids.includes(c.id)).id);
  }
  await store.transaction(async tx=>{
-  for(const id of ids){const c=await tx.get('characters',id),s=trained(c.rules.classId);s.id=id;s.location='deadmines';await persistCharacter(tx,c,s,0,randomUUID(),randomUUID);}
+  for(const id of ids){const c=await tx.get('characters',id),s=trained(c.rules.classId,20,id);s.location='deadmines';await persistCharacter(tx,c,s,0,randomUUID(),randomUUID);}
  });
  await service.command('preset-account',{type:'setParty',characterIds:ids,requestId:randomUUID()});
  for(const id of ids){

@@ -1,6 +1,8 @@
 import {PROTOCOL_VERSION} from '../../../contracts/src/game.ts';
 import {view,combatView} from './engine.js';
 import {projectClientSnapshot} from './client-snapshot.ts';
+import {withSpellInfoProjection} from './character.js';
+import {combatMembers} from './combat-members.js';
 import {CONTENT_VERSION} from './client-content.js';
 
 const pick=(source,keys)=>source&&typeof source==='object'?Object.fromEntries(keys.filter(key=>Object.hasOwn(source,key)).map(key=>[key,source[key]])):null;
@@ -9,6 +11,9 @@ const rosterView=roster=>Array.isArray(roster)?roster.map(row=>pick(row,['id','c
 const activityView=activities=>Array.isArray(activities)?activities.map(row=>pick(row,['id','actorId','type','status','location','startedAt','settledUntil','nextEventAt','contentVersion','error'])):[];
 const instanceView=instance=>{const result=pick(instance,['id','leaderId','contentId','status','capacity','sequence']);if(!result)return null;result.roster=Array.isArray(instance.roster)?instance.roster.map(row=>pick(row,['characterId','accountId','controller'])):[];return result;};
 export function buildGameResponse(state,revision,extra={}){
+ return withSpellInfoProjection(state?combatMembers(state,null):[],()=>projectResponse(state,revision,extra));
+}
+function projectResponse(state,revision,extra){
  if(!Number.isSafeInteger(revision)||revision<0)throw new TypeError('revision must be a non-negative integer');
  const scope=extra.scope==='combat'&&state?.combat?'combat':'full';
  const payload={protocolVersion:PROTOCOL_VERSION,contentVersion:CONTENT_VERSION,revision,scope,snapshot:state==null?null:projectClientSnapshot(state,extra.view||(scope==='combat'?combatView(state):view(state)),{instanceState:extra.instanceState??state})};

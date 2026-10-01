@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-01",
+  "browser": "Edge / macOS arm64",
+  "command": "PREVIEW_SCENE=raid PREVIEW_BUILD=1 node apps/web/scripts/serve-live-combat.mjs",
+  "backend": "Actual HTTP/WebSocket routing and isolated in-memory ResidentInstance, no PostgreSQL or worker pool",
+  "metrics": {
+    "frames": 1800,
+    "p50": 16.7,
+    "p99": 32.9,
+    "messages": 234,
+    "bytes": 4381961,
+    "longTasks": 1,
+    "snapshots": 0,
+    "deltas": 234,
+    "disconnects": 0,
+    "seconds": 33
+  },
+  "consoleErrors": 0,
+  "notes": [
+    "40-person raid still active, 39/40 alive at capture.",
+    "Frames show last 1800 samples, counters cover entire 33-second window.",
+    "Other development and regression work ran concurrently.",
+    "234 messages / 33 seconds = 7.09 Hz, still below the 10 Hz target.",
+    "One main-thread long task occurred; do not describe this as zero-long-frame or stable 60 FPS acceptance."
+  ]
+}

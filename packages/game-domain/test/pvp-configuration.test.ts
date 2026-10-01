@@ -9,6 +9,7 @@ import {recommendedPvpProfile,applyPvpProfile,validatePvpTalents,pvpConfiguratio
 import {arenaTacticalTick} from '../src/rules/arena-tactics.js';
 import {pvpApplyControl} from '../src/rules/pvp-runtime.js';
 import {spellInfo} from '../src/rules/character.js';
+import {beginActorCast} from '../src/rules/simulation-events.js';
 import {projectClientSnapshot} from '../src/rules/client-snapshot.ts';
 import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
@@ -106,7 +107,10 @@ test('the real arena pipeline interrupts an off-focus healer and locks its spell
  s.arena.clock=4000;s.arena.rngState=12345;const team=s.arena.teams[0],enemy=s.arena.teams[1].members,mage=team.members[0],healer=enemy[2];
  for(const t of s.arena.teams)for(const c of t.members){c.baseRules=[];c.nextAction=100000;c.nextSwing=100000;c.position=-12;c.positionY=0;}
  for(const a of team.plan.assignments){a.task='focus';a.interrupt='healer';}
- mage.baseRules=[rule(mage,'Counterspell','targetCasting')];mage.nextAction=0;healer.position=-2;healer.cast={spell:585,target:mage.id,startedAt:3000,until:7000};
+ mage.baseRules=[rule(mage,'Counterspell','targetCasting')];mage.nextAction=0;healer.position=-2;
+ const castRoot:Rules={clock:s.arena.clock,nextTick:s.arena.clock+100,simulationEvents:s.arena.simulationEvents,
+  arenaActors:enemy,arenaAllActors:s.arena.teams.flatMap((t:Rules)=>t.members),combat:{id:s.arena.id,pvp:true,enemies:team.members}};
+ beginActorCast(castRoot,healer,{spell:585,target:mage.id,startedAt:3000,until:7000});s.arena.simulationEvents=castRoot.simulationEvents;
  s=advance(s,100).state;const target=s.arena.teams[1].members[2];
  assert.equal(target.cast,null);assert.ok(target.schoolLockouts[spells[2061].School]>4100);
  assert.ok(s.arena.logs.some((l:Rules)=>l.kind==='cast'&&l.spellId===2139&&l.targetId===healer.id));

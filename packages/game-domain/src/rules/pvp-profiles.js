@@ -1,3 +1,4 @@
+import {memoizeDerived} from './derived-cache.js';
 import {talents,spells,classTalentTrees,classAbilities,icon,nameOf} from './catalog.js';
 import {grantTalentRank,resetTalentGrants,talentGrantIds} from './talent-acquisition.js';
 import {supportedTalentNames} from './class-support.js';
@@ -75,10 +76,12 @@ function skillCatalog(c){
  for(const id of c.dormantTalentSpells||[])if(!actor.learned.includes(id))actor.learned.push(id);
  return strategySpellIds(actor).map(id=>({spellId:id,name:nameOf('spells',id),nameEn:spells[id]?.SpellName,icon:icon('spells',id),known:true,talentId:owners.get(spells[id]?.SpellName)}));
 }
-export function pvpConfiguration(s){
- return{locked:['countdown','combat'].includes(s.arena?.phase),members:[s,...s.party].filter(c=>!c.npcPlayer).map(c=>({
+const memberConfiguration=memoizeDerived(['id','name','classId','level','raceId','learned','dormantTalentSpells','talents','pvpProfile'],c=>({
   id:c.id,name:c.name,classId:c.classId,level:c.level,revision:c.pvpProfile?.revision||0,automatic:!c.pvpProfile,profile:effectivePvpProfile(c),budget:pvpTalentBudget(c),
   presets:pvpPresets.filter(p=>p.classId===c.classId).map(p=>({id:p.id,name:p.name,description:p.description,profile:recommendedPvpProfile(c,p.id)})),
   skills:skillCatalog(c),trees:classTalentTrees.filter(t=>t.classId===c.classId).map(tree=>({id:tree.id,name:tree.name,background:tree.background,talents:Object.values(talents).filter(t=>t.tree===tree.id).map(t=>({id:t.id,name:t.nameZhCN||t.name,row:t.row,col:t.col,maxRank:t.maxRank,requiredTreePoints:t.requiredTreePoints,prerequisites:t.prerequisites||[],supported:supportedTalentNames.has(t.name),icon:icon('talents',t.id),descriptions:(t.rankEffects||[]).map(r=>r.descriptionZhCN||r.descriptionEn)}))}))
- }))};
+}));
+export function pvpConfiguration(s){
+ // Arena locking is live; class/build metadata changes only with these inputs.
+ return{locked:['countdown','combat'].includes(s.arena?.phase),members:[s,...s.party].filter(c=>!c.npcPlayer).map(c=>memberConfiguration(c))};
 }

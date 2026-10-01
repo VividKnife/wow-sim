@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-01",
+  "environment": "macOS arm64, Apple M4; other development tasks not CPU-isolated",
+  "method": "Sequential baseline/current processes, same workload/current content; baseline overrides only five optimized JS modules, no CPU profiler enabled in either run",
+  "baseline": {
+    "node": "v24.15.0",
+    "baseline": "b85501b5",
+    "scenario": "40-person raid / 20 simulated seconds / discard first 1 second",
+    "unit": "milliseconds",
+    "timings": {
+      "advance": {
+        "count": 190,
+        "total": 2331.5156759999973,
+        "p50": 11.868083999999726,
+        "p95": 17.051000000001295,
+        "max": 22.09770800000115
+      },
+      "full": {
+        "count": 19,
+        "total": 8150.379877000001,
+        "p50": 421.1315419999992,
+        "p95": 580.9549999999981,
+        "max": 580.9549999999981
+      },
+      "combat": {
+        "count": 171,
+        "total": 7702.994906999983,
+        "p50": 44.43104200000016,
+        "p95": 48.51512500000172,
+        "max": 59.463708000001134
+      },
+      "diff": {
+        "count": 190,
+        "total": 2519.385158000001,
+        "p50": 11.615458000000217,
+        "p95": 26.04320799999914,
+        "max": 55.88025000000016
+      },
+      "encode": {
+        "count": 190,
+        "total": 12.27974300000551,
+        "p50": 0.05033299999922747,
+        "p95": 0.16737500000090222,
+        "max": 0.33087499999965075
+      }
+    },
+    "finalProjectionHash": "f151b49b9ea9096dc8376925c6ee04aeb0a066de59feb190e62c60313d116f09"
+  },
+  "current": {
+    "node": "v24.15.0",
+    "baseline": null,
+    "scenario": "40-person raid / 20 simulated seconds / discard first 1 second",
+    "unit": "milliseconds",
+    "timings": {
+      "advance": {
+        "count": 190,
+        "total": 2381.187912000007,
+        "p50": 12.144666000000143,
+        "p95": 16.730500000000575,
+        "max": 25.117749999999432
+      },
+      "full": {
+        "count": 19,
+        "total": 2321.721333000001,
+        "p50": 120.0242500000004,
+        "p95": 133.80837500000007,
+        "max": 133.80837500000007
+      },
+      "combat": {
+        "count": 171,
+        "total": 4002.0273000000057,
+        "p50": 22.84941699999945,
+        "p95": 27.015625,
+        "max": 44.1762090000002
+      },
+      "diff": {
+        "count": 190,
+        "total": 2519.067631999994,
+        "p50": 11.730250000000524,
+        "p95": 26.182875000000422,
+        "max": 30.88195799999994
+      },
+      "encode": {
+        "count": 190,
+        "total": 12.220295000007809,
+        "p50": 0.053167000000030384,
+        "p95": 0.1637500000001637,
+        "max": 0.3303329999998823
+      }
+    },
+    "finalProjectionHash": "f151b49b9ea9096dc8376925c6ee04aeb0a066de59feb190e62c60313d116f09"
+  },
+  "notes": [
+    "One 200-sample run per implementation, discard first 10 samples. Not a multi-run confidence interval.",
+    "Final public projection SHA-256 matches; separate tests compare uncached and cached public views and scalar talent rules.",
+    "No PostgreSQL, worker transport, websocket framing or browsers in these CPU measurements. No concurrency capacity claim."
+  ]
+}
