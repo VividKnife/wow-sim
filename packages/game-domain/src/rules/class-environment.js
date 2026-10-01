@@ -1,11 +1,15 @@
 import {spells,lookup,nodes} from './catalog.js';
 import {racialModifiers} from './racial-effects.js';
+import {memoizeDerived} from './derived-cache.js';
 export const environmentSpellNames=new Set(['Slow Fall','Levitate','Water Breathing','Water Walking','Unending Breath','Safe Fall','Feline Grace','Aquatic Form']);
 export const waterNodeIds=new Set(['mirror','crystal','coastnorth','coast','lighthouse']);
 const members=s=>[s,...(s.party||[])];
 function environment(c,clock=0){if(!c.environment)c.environment={mode:'shore',breathMs:60000*(1+racialModifiers(c).underwaterBreathingPct),lastTick:clock};return c.environment;}
 function activeEffects(c,clock){return(c.environmentBuffs||[]).filter(b=>b.until>clock);}
-export function environmentModifiers(c,clock=c.time||0){const buffs=activeEffects(c,clock),source=[...(c.learned||[]).map(id=>spells[id]).filter(sp=>sp&&(sp.Attributes&64)),...buffs.map(b=>spells[b.spell]).filter(Boolean)];let safeFall=0,slowFall=false,waterWalk=false,waterBreathing=c.form==='aquatic';for(const sp of source){if(sp.SpellName==='Feline Grace'&&c.form!=='cat')continue;for(let i=1;i<=3;i++){const aura=sp['EffectApplyAuraName'+i];if(aura===144)safeFall+=sp['EffectBasePoints'+i]+1;if([105,106].includes(aura))slowFall=true;if(aura===104)waterWalk=true;if(aura===82)waterBreathing=true;}}
+// Only the learned passive list is stable. Form and timed effects must still
+// be evaluated at the caller's clock on every invocation.
+const environmentPassives=memoizeDerived(['learned'],c=>(c.learned||[]).map(id=>spells[id]).filter(sp=>sp&&(sp.Attributes&64)));
+export function environmentModifiers(c,clock=c.time||0){const buffs=activeEffects(c,clock),source=[...environmentPassives(c),...buffs.map(b=>spells[b.spell]).filter(Boolean)];let safeFall=0,slowFall=false,waterWalk=false,waterBreathing=c.form==='aquatic';for(const sp of source){if(sp.SpellName==='Feline Grace'&&c.form!=='cat')continue;for(let i=1;i<=3;i++){const aura=sp['EffectApplyAuraName'+i];if(aura===144)safeFall+=sp['EffectBasePoints'+i]+1;if([105,106].includes(aura))slowFall=true;if(aura===104)waterWalk=true;if(aura===82)waterBreathing=true;}}
  return{safeFall,slowFall,waterWalk,waterBreathing,breathMaxMs:60000*(1+racialModifiers(c).underwaterBreathingPct),swimSpeed:4.722222*(c.form==='aquatic'?1.5:1)};
 }
 export function environmentSpellUse(s,sp,target=s){if(!environmentSpellNames.has(sp?.SpellName))return null;const unit=typeof target==='string'?members(s).find(c=>c.id===target):target||s;let reason=!unit?'目标不在小队中':unit.hp<=0?'目标已死亡':sp.SpellName==='Aquatic Form'&&(!waterNodeIds.has(s.location)||!['swim','underwater'].includes((s.environment?.mode||'shore')))?'需要先进入水中':'';return{canUse:!reason,reason,description:sp.SpellName==='Aquatic Form'?'进入水栖形态，提高游泳速度并获得水下呼吸':'施加环境移动或呼吸效果'};}
@@ -28,5 +32,4 @@ export function environmentTick(s,api={}){
 }
 export function environmentView(s){const state=s.environment||{mode:'shore',breathMs:environmentModifiers(s,s.clock).breathMaxMs},mods=environmentModifiers(s,s.clock),water=waterNodeIds.has(s.location);return{environment:{locationName:nodes[s.location]?.name||s.location,hasWater:water,mode:state.mode,breathMs:state.breathMs,breathMaxMs:mods.breathMaxMs,waterBreathing:mods.waterBreathing,waterWalking:mods.waterWalk,slowFall:mods.slowFall,safeFall:mods.safeFall,swimSpeed:mods.swimSpeed,canChangeMode:water&&s.hp>0&&!s.combat&&!s.dungeon&&['idle','hunt'].includes(s.activity?.type||'idle'),forms:s.form,falling:!!s.fall}};}
 export function environmentDamage(c){c.environmentBuffs=(c.environmentBuffs||[]).filter(b=>!((spells[b.spell]?.AuraInterruptFlags||0)&2));}
-
 
