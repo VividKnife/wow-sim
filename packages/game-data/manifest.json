@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "2933776b3e66d5df16224dbc80ef2981d5fdad0ffde57aa659055474e02775d2",
+  "contentVersion": "3807be60d020d04d040e7d3e9d4d247152b586401a49c23266e7d8a5bf076af0",
   "bundles": {
     "boss-rooms.json": {
       "sha256": "a0879292bd1f5a35ec45618d75a23f0472df8576eaf9db205f7de9609a8dad61",
@@ -235,7 +235,7 @@
       "bytes": 49766233
     },
     "runtime/version.json": {
-      "sha256": "eeb62855595aa75e49b013909764d5417fa1a89fca5239ccf40860b64fee88d4",
+      "sha256": "da6f1a4c3abc9248ce46a228e01b67fc49e75a9f878ed4ff2f2535e977c99686",
       "bytes": 79
     }
   },
@@ -637,8 +637,8 @@
       "bytes": 10148
     },
     "../game-domain/src/rules/npc-world.js": {
-      "sha256": "4272e8b8ede10ae4280ff081f414a743f07289e70385d9cf4fdcf1bd8f917cd9",
-      "bytes": 22705
+      "sha256": "8ca99a17484c0f5fa08cd697c118a55b714f24e0ddbdc5e9ea71d99bfb9d7449",
+      "bytes": 22848
     },
     "../game-domain/src/rules/onyxia-content.js": {
       "sha256": "28ace5e0f73e376296cb281d47d18d703db6a529ec90c43eea2743c821fd85f8",
