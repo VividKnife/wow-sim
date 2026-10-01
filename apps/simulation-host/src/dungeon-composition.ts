@@ -1,3 +1,4 @@
+import type {NpcArrival} from '../../../packages/game-domain/src/npc-residency.ts';
 import type {Rules} from '../../../packages/game-domain/src/model.ts';
 import {rebaseSimulation} from '../../../packages/game-domain/src/simulation-clock.ts';
 import {composeRoomBoundary} from '../../../packages/game-domain/src/room-composition.ts';
@@ -12,7 +13,7 @@ import type {DungeonRoster} from '../../../packages/game-domain/src/dungeon-rost
  * checkpoints must be the sealed boundaries, not gateway state or DB profiles.
  * Group consent and membership are checked by the caller before this boundary. */
 export function composeDungeonCheckpoint(sources: readonly InstanceCheckpoint[], options: {
-  instanceId:string; ownerEpoch:number; primaryActorId:string; roster:DungeonRoster;selectMatchedNpcs?:boolean;parked?:{clock:number;dungeon:Rules};
+  instanceId:string; ownerEpoch:number; primaryActorId:string; roster:DungeonRoster;selectMatchedNpcs?:boolean;npcArrivals?:NpcArrival[];parked?:{clock:number;dungeon:Rules};
 }): InstanceCheckpoint {
   if (sources.length<1 || sources.length>5 || new Set(sources.map(s=>s.instanceId)).size!==sources.length ||
     sources.some(s=>s.instanceId===options.instanceId)) throw new Error('Invalid dungeon transfer sources');
@@ -27,7 +28,7 @@ export function composeDungeonCheckpoint(sources: readonly InstanceCheckpoint[],
       throw new Error('Dungeon arrivals require personal source instances');
     if (!(existing&&source===ordered[0])&&source.state.dungeonSaves?.[options.roster.dungeonId]) throw new Error('Reset saved personal dungeon progress before creating a shared run');
   }
-  const state=composeRoomBoundary(ordered.map(s=>s.state),options.primaryActorId,options.roster,options.selectMatchedNpcs);
+  const state=composeRoomBoundary(ordered.map(s=>s.state),options.primaryActorId,options.roster,options.selectMatchedNpcs,options.npcArrivals);
   if(options.parked){
     if(existing||options.parked.dungeon.id!==options.roster.dungeonId)throw new Error('Invalid parked dungeon');
     state.dungeonSaves??={};

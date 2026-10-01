@@ -1,3 +1,5 @@
+import {ResidentInstance} from '../../simulation-host/src/instance.ts';
+import {addPeriodicEffect} from '../../../packages/game-domain/src/rules/simulation-events.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {once} from 'node:events';
@@ -32,12 +34,20 @@ for(const order of ['leader-first','leader-later','outside','cross-owner'])test(
     ensureNpcMatchSupply(state);
     npcIds.push(...['tank','healer','dps'].map(role=>state.npcWorld.residents.find((p:Rules)=>{const r=combatRole(p.unit);return (r==='tank'||r==='healer'?r:'dps')===role;}).id));
    }
-   // No NPC party is preinstalled: the owner must select the matched roster.
    assert.equal(state.party.length,0);
    await persistCharacter(tx,row,state,state.wallAt,'fixture:'+accountId);
   });
  }
  const characters=new ResidentCharacters(store,{version:runtimeVersion}),repository=new SimulationRepository(store,Date.now,characters.commit);
+ if(order==='cross-owner'){
+  // Live companions belong to the admission, not the permanent character row.
+  const admission=await characters.admission('bob',ids[1]);
+  admission.state.party=admission.state.npcWorld.residents.filter((p:Rules)=>npcIds.includes(p.id)).map((p:Rules)=>structuredClone(p.unit));
+  for(const npc of admission.state.party)addPeriodicEffect(admission.state,npc,'hots',{spell:139,name:'Renew',caster:npc.id,amount:10,next:admission.state.clock+1000,interval:1000,until:admission.state.clock+30000});
+  const owner=await repository.acquire(admission.instanceId,'fixture');
+  await repository.commit(owner,1,new ResidentInstance({...admission,ownerEpoch:owner.epoch}).checkpoint());
+  owner.commitSequence=1;await repository.release(owner);
+ }
  const directory=new SimulationDirectory(repository,{characters,dungeons:new DungeonAdmissions(store)}),token=randomBytes(32).toString('base64url');
  const originalEnter=directory.enterDungeon.bind(directory);
  directory.enterDungeon=async(...args)=>{try{return await originalEnter(...args);}catch(error){if(error instanceof AggregateError)console.error('Transfer causes:',error.errors);throw error;}};
@@ -97,6 +107,10 @@ for(const order of ['leader-first','leader-later','outside','cross-owner'])test(
   const duplicate=await request(first,'',input);assert.equal(duplicate.status,200,JSON.stringify(duplicate.body));assert.equal(duplicate.body.execution.instanceId,firstInstance);
   const changed={...input,contentId:'wailingCaverns'};assert.equal((await request(first,'',changed)).status,409);
   if(order==='cross-owner'){
+   await client.checkpoint(firstInstance);
+   const enteredState=(await repository.load<any>(firstInstance))!.checkpoint.state;
+   assert.ok(enteredState.party.filter((a:Rules)=>a.npcPlayer).every((a:Rules)=>a.hots?.length===1),'live NPC effects must travel through the public entry route');
+   assert.equal(Object.values(enteredState.simulationEvents.periodics).length,3);
    const outside=await read('bob');
    assert.equal(outside.snapshot.player.dungeon,undefined);
    assert.equal(outside.snapshot.player.location,'deadmines');

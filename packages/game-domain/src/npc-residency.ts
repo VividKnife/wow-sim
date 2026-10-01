@@ -4,6 +4,7 @@ import type {Rules} from './model.ts';
  * exactly one resident instance. Outside owners retain only this small marker. */
 export type AwayNpc={id:string;index:number;name:string;classId:number;level:number};
 export type GuestNpc={ownerCharacterId:string;ownerRaceId:number;profile:Rules};
+export type NpcArrival={clock:number;wallAt:number;nextTick:number;guests:GuestNpc[];simulationEvents:Rules};
 export function awayNpc(profile:Rules):AwayNpc{
  return {id:profile.id,index:profile.index,name:profile.unit.name,classId:profile.unit.classId,level:profile.unit.level};
 }

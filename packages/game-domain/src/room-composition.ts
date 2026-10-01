@@ -1,16 +1,16 @@
-import {reuniteNpcProfiles} from './npc-residency.ts';
+import {reuniteNpcProfiles,type NpcArrival} from './npc-residency.ts';
+import {mergeRoomEffects,suspendNpcEffects,resumeNpcEffects} from './room-effects.ts';
 import type {Rules} from './model.ts';
 import {rebaseSimulation} from './simulation-clock.ts';
 import {combatMembers} from './rules/combat-members.js';
 import {advanceSimulationEvents, simulationEventRuntime} from './rules/simulation-events.js';
-import {EventQueue} from '../../combat-core/scheduling/event-queue.ts';
 import {isDeepStrictEqual} from 'node:util';
 import {validateDungeonRoster,validateDungeonOccupants,type DungeonRoster} from './dungeon-roster.ts';
 import {syncNpcWorld} from './rules/npc-world.js';
 
 /** Boundary composition only. Live owners must already be quiesced and saved.
  * The caller supplies the agreed party, never a client-authored character. */
-export function composeRoomBoundary(sources: readonly Rules[], primaryActorId: string, roster: DungeonRoster, selectMatchedNpcs=false): Rules {
+export function composeRoomBoundary(sources: readonly Rules[], primaryActorId: string, roster: DungeonRoster, selectMatchedNpcs=false,npcArrivals:readonly NpcArrival[]=[]): Rules {
   validateDungeonRoster(roster);
   if (sources.length < 1 || sources.length > 5 || new Set(sources.map(s => s.id)).size !== sources.length)
     throw new Error('Invalid source party');
@@ -37,52 +37,21 @@ export function composeRoomBoundary(sources: readonly Rules[], primaryActorId: s
     ids.add(actor.id);
   }
   // Rebase remaining deadlines, not creation dates, wallet values or item IDs.
-  const clock = Math.max(...ordered.map(s => s.clock));
+  for(const arrival of npcArrivals)if(arrival.wallAt!==wallAt)throw new Error('NPC sources require a common saved wall boundary');
+  const clock = Math.max(...ordered.map(s => s.clock),...npcArrivals.map(s=>s.clock));
   const rooms = ordered.map(s => rebaseSimulation(structuredClone(s),clock));
-  const destination = rooms[0], merged: Rules = new EventQueue().ownedState();
-  // Every source finishes readiness dispatch at this same phase. This does not
-  // apply damage/healing, consume RNG, or execute a queued player intention.
-  merged.nowMs=clock; merged.phase=60;
-  const storage: Rules = {queue:merged,ready:{friendly:[],enemy:[]},readySweepAt:-1};
-  const groups = [['periodics','periodicSequence','periodicEventId'],['enemyAuras','enemyAuraSequence','enemyAuraEventId']] as const;
-  for (const [table,sequence] of groups) { storage[table]={}; storage[sequence]=0; }
-  for (const [table,sequence] of [['casts','castSequence'],['resources','resourceSequence'],['attacks','attackSequence'],['dots','dotSequence'],['grounds','groundSequence']]) {
-    storage[table]={}; storage[sequence]=0;
-  }
-  for (const room of rooms) {
-    advanceSimulationEvents(room,60);
-    const original=room.simulationEvents;
-    if (['casts','resources','attacks','dots','grounds'].some(key=>Object.keys(original[key]).length) ||
-      original.ready.friendly.length || original.ready.enemy.length)
-      throw new Error('Non-portable events remain in source room');
-    // Combat teardown retires these timers but leaves unit-side IDs behind.
-    // They must not accidentally bind to another actor's new room timer.
-    for (const actor of combatMembers(room)) {delete actor.attackEventIds;delete actor.powerEventId;}
-    const eventOffset=storage.queue.nextSequence;
-    for (const [table,sequence,binding] of groups) {
-      const offset=storage[sequence];
-      if (!Number.isSafeInteger(offset+original[sequence])) throw new Error('Effect sequence exhausted');
-      for (const timer of Object.values(original[table]) as Rules[]) {
-        const next={...timer,id:timer.id+offset,eventSequence:timer.eventSequence===null?null:timer.eventSequence+eventOffset};
-        storage[table][next.id]=next;
-      }
-      // Touch only live effect bindings. Private history and inactive NPC
-      // records have their own identity space and must not be rewritten.
-      for (const actor of combatMembers(room)) for (const effect of table==='periodics'?[...(actor.hots||[]),...(actor.periodicClass||[])]:actor.auras||[]) {
-        if (effect[binding]!==undefined) effect[binding]+=offset;
-      }
-      for (const event of original.queue.events) if (event.kind==='AuraPeriodic' && event.phase===(table==='periodics'?35:33))
-        storage.queue.events.push({...event,subjectId:event.subjectId+offset,sequence:event.sequence+eventOffset});
-      storage[sequence]+=original[sequence];
-    }
-    if (original.queue.events.some((e: Rules)=>e.kind!=='AuraPeriodic'||![33,35].includes(e.phase)))
-      throw new Error('Non-portable event kind');
-    storage.queue.nextSequence+=original.queue.nextSequence;
-    if (!Number.isSafeInteger(storage.queue.nextSequence)) throw new Error('Event sequence exhausted');
-  }
-  const guests=rooms.flatMap(room=>room.npcGuests??[]);
+  const destination = rooms[0];
+  const arrivals=npcArrivals.map(arrival=>rebaseSimulation(structuredClone(arrival),clock) as NpcArrival);
+  for(const room of rooms)advanceSimulationEvents(room,60);
+  let storage=mergeRoomEffects([
+    ...rooms.map(room=>({storage:room.simulationEvents,units:combatMembers(room)})),
+    ...arrivals.map(arrival=>({storage:arrival.simulationEvents,units:arrival.guests.flatMap(g=>combatMembers(g.profile.unit))}))
+  ],clock);
+  const guests=[...rooms.flatMap(room=>room.npcGuests??[]),...arrivals.flatMap(a=>a.guests)];
   for(const room of rooms)delete room.npcGuests;
-  let members=rooms.flatMap(room=>[room,...room.party]);
+  // Persistent profiles are snapshots, not aliases to live units: JSON restore
+  // must have the same object ownership as the newly composed runtime.
+  let members=[...rooms.flatMap(room=>[room,...room.party]),...arrivals.flatMap(a=>a.guests.map(g=>structuredClone(g.profile.unit)))];
   if(guests.length){
     const joined={...destination,party:members.filter(a=>a!==destination),npcGuests:guests};
     reuniteNpcProfiles(joined);
@@ -100,8 +69,15 @@ export function composeRoomBoundary(sources: readonly Rules[], primaryActorId: s
       const profiles=[...humans.flatMap(actor=>(actor.npcWorld?.residents??[]).filter((p:Rules)=>p.id===member.id)),...(destination.npcGuests??[]).filter((g:Rules)=>g.profile.id===member.id).map((g:Rules)=>g.profile)];
       if(!profiles.length&&destination.dungeonPresentNpcIds)return [];
       if(profiles.length!==1)throw new Error('匹配 NPC 尚未完成实例归属交接，请稍后进入');
+      const resumed=resumeNpcEffects(profiles[0],clock);
+      if(resumed)storage=mergeRoomEffects([{storage,units:members.flatMap(a=>combatMembers({...a,party:[]}))},{storage:resumed,units:combatMembers(profiles[0].unit)}],clock);
       return [structuredClone(profiles[0].unit)];
     }):[];
+    for(const npc of members.filter(a=>a.npcPlayer&&!selected.some(chosen=>chosen.id===a.id))){
+      const profile=[...humans.flatMap(a=>a.npcWorld?.residents??[]),...(destination.npcGuests??[]).map((g:Rules)=>g.profile)].find(p=>p.id===npc.id);
+      if(!profile)throw new Error('NPC standby identity missing');
+      suspendNpcEffects(profile,npc,storage,clock);
+    }
     members=[...humans,...selected];
     for(const actor of humans)if(actor.npcWorld)actor.npcWorld.selection=selected.filter(npc=>actor.npcWorld.residents.some((p:Rules)=>p.id===npc.id)).map(npc=>npc.id);
   }

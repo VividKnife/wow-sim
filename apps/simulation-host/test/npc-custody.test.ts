@@ -47,8 +47,8 @@ for(const backend of ['memory','sql'])test(`${backend}: standby NPC custody move
   const before=await store.read(async tx=>({items:await tx.list('items'),wallets:await tx.list('wallets'),claims:await tx.list('simulation_characters')}));
   const boundary:TransferBoundary<InstanceCheckpoint>=async(tx,{transferId,destinations,sources})=>{
    const detached=detachStandbyNpcs(sources[1].checkpoint,ids,{instanceId:destinations[1].id,ownerEpoch:destinations[1].epoch});
-   const arrival=structuredClone(sources[0].checkpoint);arrival.state.npcGuests=detached.guests;
-   const room=composeDungeonCheckpoint([arrival],{instanceId:destinations[0].id,ownerEpoch:destinations[0].epoch,primaryActorId:arrival.state.id,roster,selectMatchedNpcs:true});
+   const arrival=structuredClone(sources[0].checkpoint);
+   const room=composeDungeonCheckpoint([arrival],{instanceId:destinations[0].id,ownerEpoch:destinations[0].epoch,primaryActorId:arrival.state.id,roster,selectMatchedNpcs:true,npcArrivals:[detached.arrival]});
    const result=[room,detached.checkpoint];await transferResidentClaims(tx,transferId,sources.map(s=>s.owner),result.map(residency));return result;
   };
   await assert.rejects(repository.transfer<InstanceCheckpoint>('borrow',owners,['dungeon:borrowed','personal:outside'],async(tx,transfer)=>{await boundary(tx,transfer);throw Error('Rollback borrowed NPC');}),/Rollback borrowed/);
