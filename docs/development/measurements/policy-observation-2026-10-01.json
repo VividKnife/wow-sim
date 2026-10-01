@@ -1,0 +1,35 @@
+{
+  "node": "v24.15.0",
+  "cpu": "Apple M4",
+  "arch": "arm64",
+  "actors": 40,
+  "enemies": 8,
+  "iterations": 2000,
+  "rounds": 7,
+  "scenarios": {
+    "unchanged-team": {
+      "reference": {
+        "medianWallMs": 107.7886669999998,
+        "maxWallMs": 130.38529199999994,
+        "medianCpuMs": 102.607
+      },
+      "current": {
+        "medianWallMs": 94.313083,
+        "maxWallMs": 124.20816700000023,
+        "medianCpuMs": 90.874
+      }
+    },
+    "raid-health-threshold-burst": {
+      "reference": {
+        "medianWallMs": 208.07979200000045,
+        "maxWallMs": 250.83574999999973,
+        "medianCpuMs": 198.086
+      },
+      "current": {
+        "medianWallMs": 78.81679199999962,
+        "maxWallMs": 82.74225000000024,
+        "medianCpuMs": 77.365
+      }
+    }
+  }
+}

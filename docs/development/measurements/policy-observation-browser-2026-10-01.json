@@ -1,0 +1,37 @@
+{
+  "environment": "Local Edge, Vite development UI, real Game HTTP/WebSocket handlers and ResidentInstance, isolated memory fixture; no PostgreSQL",
+  "command": "PREVIEW_SCENE=raid node apps/web/scripts/serve-live-combat.mjs",
+  "url": "http://127.0.0.1:5221/live-combat.html",
+  "scenario": "40 players versus Lucifron and two guards",
+  "observed": {
+    "initial": "40/40 alive; simulation paused",
+    "afterResume": "22 seconds of combat displayed, 104.8k damage, one guard dead, health changes and healing visible",
+    "pauseAcknowledged": "Continue combat button and frozen tactical time status; 39/40 alive",
+    "consoleErrors": 0,
+    "consoleWarnings": ["THREE.Clock deprecated; use THREE.Timer"],
+    "frameIntervalP50MsAtCombatScreenshot": 16.7,
+    "frameIntervalP99MsAtCombatScreenshot": 66.8,
+    "websocketMessagesAtCombatScreenshot": 141,
+    "longTasksAtCombatScreenshot": 17
+  },
+  "screenshot": ".cache/qa/policy-observation-raid.png",
+  "finalCodeRetest": {
+    "serverRestartAt": "2026-10-01T10:26:13+00:00",
+    "combatDisplayedSeconds": 51,
+    "damageDisplayed": "191.1k",
+    "survivors": "5/40",
+    "guards": "both dead",
+    "pauseAcknowledged": true,
+    "newConsoleErrorsSinceServerRestart": 0,
+    "frameIntervalP50Ms": 16.7,
+    "frameIntervalP99Ms": 83.4,
+    "screenshot": ".cache/qa/policy-observation-raid-final.png",
+    "note": "Concurrent UI edits triggered Vite HMR during the run. Earlier reload errors predated this server restart; this is gameplay smoke evidence, not an isolated frontend performance measurement."
+  },
+  "limits": [
+    "Short smoke test, not a long-running crash or memory-growth test",
+    "Includes initial loads; other simulation tests were running on the same machine",
+    "Long frames remain; does not establish stable 60 FPS",
+    "No target 2-vCPU capacity claim or full shared dungeon workflow validation"
+  ]
+}

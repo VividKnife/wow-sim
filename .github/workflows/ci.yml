@@ -35,6 +35,7 @@ jobs:
       - run: node --test packages/sim-core/test/packed-content.test.mjs packages/game-domain/test/runtime-content.test.mjs
       - run: node --test scripts/game-runtime.test.mjs
       - run: npm run simulation:test
+      - run: node --test packages/game-domain/test/combat-policy.test.mjs packages/game-domain/test/policy-observation.test.mjs packages/game-domain/test/raid-healing-policy.test.mjs
       - run: npm run typecheck
       - run: node --test apps/web/test/route-performance.test.mjs apps/web/test/mounts.test.mjs apps/web/test/navigation.test.mjs apps/web/test/snapshot-poller.test.mjs packages/game-domain/test/mounts-service.test.ts
       - run: node --test --test-concurrency=2 apps/web/test/account-store.test.ts apps/game-server/test/*.test.ts apps/game-worker/test/*.test.ts

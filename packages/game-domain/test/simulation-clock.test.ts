@@ -6,6 +6,9 @@ import {classDefinitions} from '../src/rules/catalog.js';
 import {startCombat} from '../src/rules/combat.js';
 import {addPeriodicEffect, simulationEventRuntime, preparePeriodicEffects} from '../src/rules/simulation-events.js';
 import {tickClassEffects} from '../src/rules/class-mechanics.js';
+import {observePolicyChanges} from '../src/rules/combat-policy.js';
+import {combatMembers} from '../src/rules/combat-members.js';
+import {observationFixture} from './support/policy-observation.mjs';
 import type {Rules} from '../src/model.ts';
 
 function fixture(): Rules {
@@ -81,6 +84,21 @@ test('shared object references shift only once, and invalid ranges leave the ent
   const before=structuredClone(bad);
   assert.throws(()=>rebaseSimulation(bad,2000),/clock range/);assert.deepEqual(bad,before);
   for(const target of [-1,NaN,Infinity,1.5,Number.MAX_SAFE_INTEGER+1])assert.throws(()=>rebaseSimulation(bad,target),/clock/);
+});
+
+test('clock translation preserves AI observations of debuffs, active casts starting at zero and absent casts',()=>{
+ const original:Rules=observationFixture(5);
+ original.party[0].auras=[{spell:16403,dispel:1,until:5000}];
+ original.combat.enemies[0].cast={spell:133,startedAt:0,until:3000};
+ observePolicyChanges(original,combatMembers(original));
+ for(const slot of Object.values(original.combat.policy.slots) as Rules[])slot.dirty=null;
+ const shifted=structuredClone(original);rebaseSimulation(shifted,1000000);
+ assert.equal(shifted.combat.policy.observed.actors[original.party[0].id].debuffs[0].until,1005000);
+ assert.equal(shifted.combat.policy.observed.enemies['enemy:0'].startedAt,1000000);
+ assert.equal(shifted.combat.policy.observed.enemies['enemy:1'].startedAt,null);
+ for(const state of [original,shifted])observePolicyChanges(state,combatMembers(state));
+ assert.ok((Object.values(shifted.combat.policy.slots) as Rules[]).every(slot=>slot.dirty===null));
+ rebaseSimulation(shifted,original.clock);assert.deepEqual(shifted,original);
 });
 
 for (const definition of classDefinitions) test(`class ${definition.id}: translating an active combat preserves continuation and recorded presentation`,()=>{

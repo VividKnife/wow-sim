@@ -12,7 +12,7 @@ export const POLICY_INTERVAL=200, SPELL_QUEUE_WINDOW=300, POLICY_REACTION=100;
 const hosts=new WeakMap();
 export function setCombatPolicyHost(state,host){if(host)hosts.set(state,host);else hosts.delete(state);}
 const phase=id=>[...String(id)].reduce((v,c)=>(v*31+c.charCodeAt(0))>>>0,0)%POLICY_INTERVAL;
-export function policyState(s){return s.combat.policy??={version:1,observation:0,slots:{},timeline:[],receipts:[],metrics:{evaluations:0,requests:0,rejected:0,queued:0}};}
+export function policyState(s){return s.combat.policy??={version:2,observation:0,slots:{},timeline:[],receipts:[],metrics:{evaluations:0,requests:0,rejected:0,queued:0}};}
 function slotFor(s,c){const p=policyState(s);return p.slots[c.id]??={controller:'local',generation:1,sequence:0,next:0,reaction:0,dirty:null,queued:null,inflight:null};}
 export function grantCombatControl(s,actorId,controller){
  const c=combatMembers(s).find(a=>a.id===actorId);if(!c)throw new Error('Unknown controlled actor');
@@ -20,21 +20,50 @@ export function grantCombatControl(s,actorId,controller){
 }
 export function wakeCombatPolicy(s,ids,at=s.clock+POLICY_REACTION){
  if(!s.combat)return;
- for(const c of combatMembers(s))if(ids.includes(c.id)){const slot=slotFor(s,c);slot.dirty=slot.dirty==null?at:Math.min(slot.dirty,at);}
+ const selected=new Set(ids);
+ for(const c of combatMembers(s))if(selected.has(c.id))wakeActor(s,c,at);
 }
+function wakeActor(s,c,at){const slot=slotFor(s,c);slot.dirty=slot.dirty==null?at:Math.min(slot.dirty,at);}
 // Changes are coalesced once per tick. Only healers and the affected actor wake
 // on critical health; cast/death/focus changes wake actors targeting that enemy.
+// Keep numeric observations in the checkpoint so adoption does not produce
+// extra reactions. Reuse entries and debuff arrays; do not serialize the team
+// or repeatedly derive every healer's role for each changed recipient.
 export function observePolicyChanges(s,actors){
  const p=policyState(s);p.observation++;
- const old=p.observed||{},next={};const wake=new Set();
- for(const c of actors){const critical=c.hp>0&&c.hp<stats(c).maxHp*.4;next[c.id]=critical?1:0;if(critical&&old[c.id]!==1){wake.add(c.id);for(const healer of actors)if(combatRole(healer)==='healer')wake.add(healer.id);}
-  const debuffs=(c.auras||[]).filter(a=>!a.positive&&(a.dispel||spells[a.spell]?.Dispel)).map(a=>a.spell+':'+a.until).join(',');
-  next['debuff:'+c.id]=debuffs;if(debuffs&&old['debuff:'+c.id]!==debuffs)for(const healer of actors)if(combatRole(healer)==='healer')wake.add(healer.id);
+ const observed=p.observed??={actors:{},enemies:{},focus:null,initialized:false};
+ const at=s.clock+POLICY_REACTION,changedTargets=new Set();let wakeHealers=false,wakeAll=false;
+ for(const c of actors){
+  const old=observed.actors[c.id]??={critical:false,debuffs:[],seen:0};
+  const critical=c.hp>0&&c.hp<stats(c).maxHp*.4;
+  if(critical&&!old.critical){wakeActor(s,c,at);wakeHealers=true;}
+  old.critical=critical;old.seen=p.observation;
+  let count=0,changed=false;
+  for(const aura of c.auras||[])if(!aura.positive&&(aura.dispel||spells[aura.spell]?.Dispel)){
+   const previous=old.debuffs[count];
+   if(!previous||previous.spell!==aura.spell||previous.until!==aura.until)changed=true;
+   const effect=previous??(old.debuffs[count]={});effect.spell=aura.spell;effect.until=aura.until;count++;
+  }
+  if(count&& (changed||old.debuffs.length!==count))wakeHealers=true;
+  old.debuffs.length=count;
  }
  const focus=s.combat.command?.focusId??null;
- for(const e of s.combat.enemies){const key='enemy:'+e.id,value=`${e.hp>0}:${e.cast?.spell||0}:${e.cast?.startedAt||0}`;next[key]=value;if(old[key]!==value)for(const c of actors)if(c.target===e.id||e.cast)wake.add(c.id);}
- if(old.focus!==focus)for(const c of actors)wake.add(c.id);next.focus=focus;p.observed=next;
- wakeCombatPolicy(s,[...wake]);
+ for(const e of s.combat.enemies){
+  // No cast has no timestamp. Zero is a real cast start and must translate
+  // with the room clock; using it as absence creates false wakes on transfer.
+  const old=observed.enemies[e.id],alive=e.hp>0,spell=e.cast?.spell||0,startedAt=e.cast?(e.cast.startedAt||0):null;
+  if(!old||old.alive!==alive||old.spell!==spell||old.startedAt!==startedAt){
+   if(e.cast)wakeAll=true;else changedTargets.add(e.id);
+  }
+  const entry=old??(observed.enemies[e.id]={});
+  entry.alive=alive;entry.spell=spell;entry.startedAt=startedAt;entry.seen=p.observation;
+ }
+ if(!observed.initialized||observed.focus!==focus)wakeAll=true;
+ observed.focus=focus;observed.initialized=true;
+ // Summons and despawns cannot leave an ever-growing observation history.
+ for(const id in observed.actors)if(observed.actors[id].seen!==p.observation)delete observed.actors[id];
+ for(const id in observed.enemies)if(observed.enemies[id].seen!==p.observation)delete observed.enemies[id];
+ for(const c of actors)if(wakeAll||changedTargets.has(c.target)||wakeHealers&&combatRole(c)==='healer')wakeActor(s,c,at);
 }
 export function receiveCombatIntent(s,envelope){
  const reject=reason=>({accepted:false,reason});
