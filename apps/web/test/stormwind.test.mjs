@@ -66,5 +66,5 @@ test('district services and quest destinations use their actual city NPC locatio
  assert.deepEqual(creatureLocations[12336],['cathedral']);
  assert.ok(view({...player(),location:'dwarven'}).shop.length>0);
  assert.equal(view(player()).hearthstone.hasInn,true);
- assert.equal(view({...player(),location:'magetower'}).quests.find(q=>q.id===1920).startLocations.includes('magetower'),true);
+ assert.equal(view({...player(),level:15,location:'magetower'}).quests.find(q=>q.id===1920).startLocations.includes('magetower'),true);
 });

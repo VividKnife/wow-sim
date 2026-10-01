@@ -30,7 +30,7 @@ import {tickRacialEffects,racialModifiers} from './racial-effects.js';
 import {classSupplyShop,trainingBookReason,consumeTrainingBook} from './class-acquisition.js';
 import {nodes,monsterIdsAt,creatures,items,spells,spellChain,talents,classDefinitions,raceDefinitions,classAbilities,classTalentTrees,xpTable,quests,questLinks,trainerNodes,flightNodes,flights,icon,nameOf,table,creatureLocations} from './catalog.js';
 import {LEVEL_CAP,refreshPetStats,clone,newCharacter,equipStarter,stats,killXp,log,countItem,takeItem,addItem,bagCapacity,canEquip,equipmentBlockedReason,equipFromBag,spellInfo,knownRank} from './character.js';
-import {acceptQuest,abandonQuest,turnIn,questProgress,questMonsterIds,gather,gatherables,gatherableQuestIds,questGathering,eventNodes,creditExploration} from './quests.js';
+import {acceptQuest,abandonQuest,turnIn,questProgress,visibleQuestIds,questMonsterIds,gather,gatherables,gatherableQuestIds,questGathering,eventNodes,creditExploration} from './quests.js';
 import {questTools,beginQuestTool,finishQuestTool} from './quest-tools.js';
 import {startCombat,combatTick,expireCapture,hurtPlayer,abandonCombat,commandCombatCast} from './combat.js';
 import {tickEnemyAuras} from './enemy-spells.js';
@@ -344,7 +344,7 @@ export function combatView(s){
  return{buildChangeBlockedReason:buildChangeBlocked(s),playerEffects:playerEffects(s),battleground:battlegroundView(s),arena:arenaView(s),groupLoot:groupLootView(s),combatCommand:combatCommandView(s),raidCommand:raidCommandView(s),goldRaid:goldRaidView(s),partyBuffCheck:partyBuffCheckView(s),battleView,combatSkills,stats:stats(s),characterAttributes:characterAttributes(s),resource:battleView?.units[s.id]?.resource,nextXp:s.level>=LEVEL_CAP?0:xpTable[s.level]?.xp_for_next_level||0,location:nodes[s.location],reincarnation:s.classId===7?reincarnationUse(s):null,canSoulstoneRevive:s.hp<=0&&!s.combat&&s.soulstone?.until>s.clock,questTools:questTools(s)};
 }
 export function view(s){
- const questViews=Object.values(quests).map(q=>{const p=questProgress(s,q.entry);return{...p,navigation:questNavigation(s,p)}});
+ const questViews=visibleQuestIds(s).map(id=>{const p=questProgress(s,id);return{...p,navigation:questNavigation(s,p)}});
  const localMonsterIds=monsterIdsAt(s.location),questMonsters=questMonsterIds(s,localMonsterIds);
  const classId=s.classId||8,raceId=s.raceId||1,classDef=classDefinitions.find(c=>c.id===classId),raceDef=raceDefinitions.find(r=>r.id===raceId),st=stats(s);
  const skillViews=[...new Map(trainingAbilities(classId).filter(a=>!(a.raceIds||a.startingRaces)?.length||(a.raceIds||a.startingRaces).includes(s.raceId||1)).map(a=>[a.spellId,a])).values()].map(a=>{const blocked=trainingBlocked(s,a),info=spellInfo(s,a.spellId),powerType=spells[a.spellId]?.PowerType;return{...a,details:spellbookDetails(s,a.petSpellId?spellInfo(s,a.petSpellId):info),name:nameOf('spells',a.petSpellId||a.spellId),nameEn:spells[a.petSpellId||a.spellId]?.SpellName,icon:icon('spells',a.petSpellId||a.spellId),known:abilityKnown(s,a),cast:info?.castMs,channelMs:(info?.AttributesEx&68)?info.durationMs:0,powerName:powerType===1?'怒气':powerType===3?'能量':'法力',powerCost:powerType===1?(info?.mana||0)/10:info?.mana||0,supported:!!a.petSpellId||supportedSpellNames.has(spells[a.spellId]?.SpellName||a.name),canTrain:!blocked,blockedReason:blocked,acquisitionLabel:({petTrainer:'宠物训练师',classQuest:'训练师职业解锁',book:'技能书',talent:'天赋',racial:'种族能力',starting:'初始技能'})[a.acquisition]||'训练师'}});

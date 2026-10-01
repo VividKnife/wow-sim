@@ -38,6 +38,22 @@ export function questAvailable(s,q,seen=new Set()){if(questContentReason(q))retu
  return !q.RequiredCondition||meetsCondition(s,q.RequiredCondition,seen);
 }
 export function atEndpoint(s,q,kind){return(questLinks[q.entry]?.[kind]||[]).some(e=>e.type==='item'?kind==='starts'&&countItem(s,e.id)>0:endpointNodes(e).includes(s.location));}
+// Immutable content indices shared by all instances in this worker. Runtime
+// availability still uses the current actor (level, race/class, prerequisites,
+// reputation, professions, repeatable deadlines and carried item counts).
+const startsByLocation=new Map(),startsByItem=new Map();
+for(const q of Object.values(quests))for(const endpoint of questLinks[q.entry]?.starts||[]){
+ const index=endpoint.type==='item'?startsByItem:startsByLocation;
+ for(const key of endpoint.type==='item'?[endpoint.id]:endpointNodes(endpoint)){
+  if(!index.has(key))index.set(key,new Set());index.get(key).add(q.entry);
+ }
+}
+export function visibleQuestIds(s){
+ const ids=new Set(Object.keys(s.quests).filter(id=>s.quests[id]).map(Number));
+ for(const id of startsByLocation.get(s.location)||[])ids.add(id);
+ for(const item of s.bag)for(const id of startsByItem.get(item.id)||[])ids.add(id);
+ return [...ids].filter(id=>quests[id]&&(s.quests[id]||questAvailable(s,quests[id])&&atEndpoint(s,quests[id],'starts'))).sort((a,b)=>a-b);
+}
 export function needsQuestItem(s,id){return Object.keys(s.quests||{}).some(qid=>[1,2,3,4].some(n=>['Item','Source'].some(kind=>quests[qid]['Req'+kind+'Id'+n]===id&&countItem(s,id)+(s.pending||[]).filter(i=>i.id===id).reduce((n,i)=>n+i.count,0)<quests[qid]['Req'+kind+'Count'+n])));}
 function hasNeededCreatureLoot(s,rows,needed,depth=0){
  if(depth>8)return false;

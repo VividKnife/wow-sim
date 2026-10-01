@@ -1,15 +1,16 @@
 import {execFileSync} from 'node:child_process';
-import {registerHooks} from 'node:module';
+import {registerHooks,stripTypeScriptTypes} from 'node:module';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 
-// Optional baseline substitutes only the five optimized modules, retaining the
-// same current content, scenarios and unrelated worktree changes in both runs.
+// Optional baseline substitutes only the named modules, retaining the same
+// current content/scenarios. Without paths it measures the original spell-cache
+// optimization; pass repository-relative module paths for later comparisons.
 const baseline=process.argv[2]||null,root=new URL('../../../',import.meta.url);
 if(baseline){
- const paths=['character.js','talent-effects.js','server-response.js','combat-strategy.js','pvp-profiles.js'].map(name=>'packages/game-domain/src/rules/'+name);
+ const paths=process.argv.length>3?process.argv.slice(3):['character.js','talent-effects.js','server-response.js','combat-strategy.js','pvp-profiles.js'].map(name=>'packages/game-domain/src/rules/'+name);
  const sources=new Map(paths.map(path=>[new URL(path,root).href,execFileSync('git',['show',`${baseline}:${path}`],{cwd:fileURLToPath(root),encoding:'utf8'})]));
- registerHooks({load(url,context,next){return sources.has(url)?{format:'module',shortCircuit:true,source:sources.get(url)}:next(url,context);}});
+ registerHooks({load(url,context,next){return sources.has(url)?{format:'module',shortCircuit:true,source:url.endsWith('.ts')?stripTypeScriptTypes(sources.get(url)):sources.get(url)}:next(url,context);}});
 }
 const {ResidentInstance}=await import('../src/instance.ts');
 const {localScenarios}=await import('../../../packages/simulation-tests/support/baseline.ts');
@@ -27,4 +28,4 @@ for(let i=1;i<=200;i++){
  at=performance.now();JSON.stringify(delta);collect('encode',at);previous=next;
 }
 const result=Object.fromEntries(Object.entries(samples).map(([key,values])=>{values.sort((a,b)=>a-b);return[key,{count:values.length,total:values.reduce((a,b)=>a+b,0),p50:values[Math.floor(values.length*.5)],p95:values[Math.floor(values.length*.95)],max:values.at(-1)}];}));
-console.log(JSON.stringify({node:process.version,baseline,scenario:'40-person raid / 20 simulated seconds / discard first 1 second',unit:'milliseconds',timings:result,finalProjectionHash:createHash('sha256').update(JSON.stringify(previous)).digest('hex')},null,2));
+console.log(JSON.stringify({node:process.version,baseline,scenario:'40-person raid / 20 simulated seconds / discard first 1 second',unit:'milliseconds',timings:result,maxRssKiB:process.resourceUsage().maxRSS,finalStateHash:createHash('sha256').update(JSON.stringify(room.checkpoint().state)).digest('hex'),finalProjectionHash:createHash('sha256').update(JSON.stringify(previous)).digest('hex')},null,2));

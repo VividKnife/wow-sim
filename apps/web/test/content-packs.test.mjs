@@ -5,6 +5,7 @@ import {clientContent} from '../../../packages/game-domain/src/rules/client-cont
 import {contentPack} from '../../../packages/game-domain/src/rules/content-packs.js';
 import {createGame,view} from '../../../packages/game-domain/src/rules/engine.js';
 import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
+import {quests} from '../../../packages/game-domain/src/rules/catalog.js';
 import {workshopView} from '../../../packages/game-domain/src/rules/workshop.js';
 import {createContentLoader,referencedItemIds,createItemReferenceReader} from '../lib/content-loader.js';
 
@@ -55,7 +56,8 @@ test('snapshot and workshop references hydrate equipment, inventory, rewards and
  const snapshot=projectClientSnapshot(state,view(state));
  const original=view(state).quests;
  assert.deepEqual(snapshot.view.quests.map(q=>q.id),original.filter(q=>q.active||q.canAccept||q.canTurnIn).map(q=>q.id));
- assert.ok(snapshot.view.quests.length<original.length);
+ assert.deepEqual(snapshot.view.quests,original,'rule view already selects public quests');
+ assert.ok(original.length<Object.keys(quests).length);
  const requests=[];
  const loader=createContentLoader(async url=>{
   const params=new URL(url,'http://local').searchParams;requests.push(params);

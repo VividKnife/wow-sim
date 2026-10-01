@@ -5,11 +5,13 @@ import tailwind from '@tailwindcss/postcss';
 import {fileURLToPath} from 'node:url';
 import {readdir,symlink} from 'node:fs/promises';
 import {createGameServer} from '../../game-server/src/server.ts';
+import {createGame} from '../../../packages/game-domain/src/rules/engine.js';
 import {makeItem} from '../../../packages/game-domain/src/rules/character.js';
 import {ResidentInstance} from '../../simulation-host/src/instance.ts';
 import {localScenarios} from '../../../packages/simulation-tests/support/baseline.ts';
 const app=fileURLToPath(new URL('../',import.meta.url)),origin='http://127.0.0.1:5221',token=crypto.randomUUID();
-const state=localScenarios()[process.env.PREVIEW_SCENE==='raid'?'raid':'dungeon'];state.settings.autoLoot=true;state.combat.command={paused:true,marks:{},orders:[],focusId:null,holdFire:false};
+const state=process.env.PREVIEW_SCENE==='world'?createGame('任务实测',67,1000):localScenarios()[process.env.PREVIEW_SCENE==='raid'?'raid':'dungeon'];state.settings.autoLoot=true;
+if(state.combat)state.combat.command={paused:true,marks:{},orders:[],focusId:null,holdFire:false};
 if(process.env.PREVIEW_SCENE==='recovery'){state.combat=null;state.activity={type:'hunt',target:299};state.nextPull=state.clock+300000;state.bag.push(makeItem(state,2570));}
 const runtime=new ResidentInstance({instanceId:'live-preview',ownerEpoch:1,state,controllers:[{actorId:state.id,accountId:'preview',generation:1,canPause:true}]});
 const accounts={session:async value=>value===token?{id:'preview',username:'preview'}:null,logout:async()=>{},login:async()=>{throw Error('Fixture only');},register:async()=>{throw Error('Fixture only');}};

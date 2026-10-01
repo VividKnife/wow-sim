@@ -8,7 +8,9 @@ export function openPackedContent(bundle, {cacheBudget = 8 * 1024 * 1024, onRead
  function read(id) {
   globalThis.__contentNodeRead?.(id);
   onRead(id);
-  const existing = live.get(id)?.deref();
+  // Hot records already have a strong reference. Avoid registering another
+  // WeakRef keep-alive on every field lookup; the weak path serves evicted rows.
+  const existing = hot.get(id)?.target ?? live.get(id)?.deref();
   if (existing) return existing;
   const stored = bundle.nodes[id];
   if (stored===undefined) return missing(id);
