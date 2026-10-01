@@ -20,15 +20,15 @@ import {ResidentGameService} from '../src/resident-game-service.ts';
 import {createGameServer} from '../src/server.ts';
 import {accounts,issueSession,appOrigin} from './session-fixture.ts';
 
-for(const order of ['leader-first','leader-later','outside'])test(`authenticated finder entry: ${order}`,{timeout:60000},async()=>{
+for(const order of ['leader-first','leader-later','outside','cross-owner'])test(`authenticated finder entry: ${order}`,{timeout:60000},async()=>{
  const store=residentStore(new MemoryStore()),domain=new GameService(store,{contentVersion:'test',seed:()=>283});
- const ids:string[]=[],npcIds:string[]=[];
+ const ids:string[]=[],npcIds:string[]=[],npcOwnerAccount=order==='cross-owner'?'bob':'alice';
  for(const accountId of ['alice','bob']){
   const made=await domain.createAccount(accountId,{name:accountId,classId:8,raceId:1},'create');ids.push(made.state.id);
   await store.transaction(async tx=>{
    const row=(await tx.get<Character>('characters',made.state.id))!,state=await context(tx,row,Date.now(),false);
    state.level=20;state.location=order==='outside'?'goldshire':'deadmines';
-   if(accountId==='alice'){
+   if(accountId===npcOwnerAccount){
     ensureNpcMatchSupply(state);
     npcIds.push(...['tank','healer','dps'].map(role=>state.npcWorld.residents.find((p:Rules)=>{const r=combatRole(p.unit);return (r==='tank'||r==='healer'?r:'dps')===role;}).id));
    }
@@ -82,7 +82,7 @@ for(const order of ['leader-first','leader-later','outside'])test(`authenticated
    assert.equal((await read('alice')).execution.clientSequence,original.alice.execution.clientSequence);
    return;
   }
-  const first=order==='leader-first'?'alice':'bob',last=first==='alice'?'bob':'alice';
+  const first=order==='leader-first'||order==='cross-owner'?'alice':'bob',last=first==='alice'?'bob':'alice';
   const input=enterBody(original[first]);
   const forged={...input,requestId:crypto.randomUUID(),execution:{...input.execution,controllerGeneration:999}};
   assert.equal((await request(first,'',forged)).status,409);
@@ -96,6 +96,17 @@ for(const order of ['leader-first','leader-later','outside'])test(`authenticated
   const firstInstance=entered.body.execution.instanceId;
   const duplicate=await request(first,'',input);assert.equal(duplicate.status,200,JSON.stringify(duplicate.body));assert.equal(duplicate.body.execution.instanceId,firstInstance);
   const changed={...input,contentId:'wailingCaverns'};assert.equal((await request(first,'',changed)).status,409);
+  if(order==='cross-owner'){
+   const outside=await read('bob');
+   assert.equal(outside.snapshot.player.dungeon,undefined);
+   assert.equal(outside.snapshot.player.location,'deadmines');
+   assert.equal(outside.snapshot.view.npcWorld.away.length,3);
+   assert.notEqual(outside.execution.instanceId,original.bob.execution.instanceId);
+   const personalBefore=await read('alice'),leave={...enterBody(personalBefore),type:'leaveDungeon',contentId:undefined};
+   const result=await request('alice','',leave);assert.equal(result.status,200,JSON.stringify(result.body));
+   const back=await request('alice','',enterBody(await read('alice')));assert.equal(back.status,200,JSON.stringify(back.body));
+   assert.equal(back.body.snapshot.view.instanceScene.memberCount,4);
+  }
   const arrived=await request(last,'',enterBody(await read(last)));assert.equal(arrived.status,200,JSON.stringify(arrived.body));
   const destination=arrived.body.execution.instanceId;
   assert.notEqual(destination,firstInstance);assert.equal(arrived.body.snapshot.view.instanceScene.memberCount,5);
@@ -104,7 +115,7 @@ for(const order of ['leader-first','leader-later','outside'])test(`authenticated
   await client.checkpoint(destination);
   const saved=(await repository.load<any>(destination))!.checkpoint;
   assert.equal(saved.state.dungeon.runId,entered.body.snapshot.player.dungeon.runId);
-  assert.equal(saved.recentInputs.filter((r:Rules)=>r.input.command.action.type==='enterDungeon').length,2);
+  assert.equal(saved.recentInputs.filter((r:Rules)=>r.input.command.action.type==='enterDungeon').length,order==='cross-owner'?3:2);
   for(const npc of await store.read(tx=>tx.list('npc_characters')))assert.equal(npc.profile.runs,npcIds.includes(npc.id)?1:0);
   assert.equal((await client.inspect()).instances,1);
   await directory.remove(destination);
@@ -124,7 +135,7 @@ for(const order of ['leader-first','leader-later','outside'])test(`authenticated
   assert.notEqual(exited.body.execution.instanceId,destination);
   const stillInside=await read(stayed);
   assert.equal(stillInside.snapshot.player.dungeon.runId,saved.state.dungeon.runId);
-  assert.equal(stillInside.snapshot.view.instanceScene.memberCount,left==='alice'?1:4);
+  assert.equal(stillInside.snapshot.view.instanceScene.memberCount,left===npcOwnerAccount?1:4);
   assert.notEqual(stillInside.execution.instanceId,exited.body.execution.instanceId);
   const exitRetry=await request(left,'',exitInput);
   assert.equal(exitRetry.status,200,JSON.stringify(exitRetry.body));

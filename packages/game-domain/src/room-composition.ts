@@ -1,3 +1,4 @@
+import {reuniteNpcProfiles} from './npc-residency.ts';
 import type {Rules} from './model.ts';
 import {rebaseSimulation} from './simulation-clock.ts';
 import {combatMembers} from './rules/combat-members.js';
@@ -79,7 +80,14 @@ export function composeRoomBoundary(sources: readonly Rules[], primaryActorId: s
     storage.queue.nextSequence+=original.queue.nextSequence;
     if (!Number.isSafeInteger(storage.queue.nextSequence)) throw new Error('Event sequence exhausted');
   }
+  const guests=rooms.flatMap(room=>room.npcGuests??[]);
+  for(const room of rooms)delete room.npcGuests;
   let members=rooms.flatMap(room=>[room,...room.party]);
+  if(guests.length){
+    const joined={...destination,party:members.filter(a=>a!==destination),npcGuests:guests};
+    reuniteNpcProfiles(joined);
+    if(joined.npcGuests?.length)destination.npcGuests=joined.npcGuests;
+  }
   if(selectMatchedNpcs){
     // Bench only at this saved idle boundary. Preserve permanent equipment and
     // growth before choosing the matched cohort; existing active units retain
@@ -89,7 +97,7 @@ export function composeRoomBoundary(sources: readonly Rules[], primaryActorId: s
     const selected=(leaderPresent||destination.dungeonPresentNpcIds)?roster.members.filter(m=>m.npc).flatMap(member=>{
       const live=members.find(actor=>actor.id===member.id&&actor.npcPlayer);
       if(live)return [live];
-      const profiles=humans.flatMap(actor=>(actor.npcWorld?.residents??[]).filter((p:Rules)=>p.id===member.id));
+      const profiles=[...humans.flatMap(actor=>(actor.npcWorld?.residents??[]).filter((p:Rules)=>p.id===member.id)),...(destination.npcGuests??[]).filter((g:Rules)=>g.profile.id===member.id).map((g:Rules)=>g.profile)];
       if(!profiles.length&&destination.dungeonPresentNpcIds)return [];
       if(profiles.length!==1)throw new Error('匹配 NPC 尚未完成实例归属交接，请稍后进入');
       return [structuredClone(profiles[0].unit)];

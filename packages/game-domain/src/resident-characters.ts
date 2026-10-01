@@ -1,3 +1,6 @@
+import {residentNpcProfiles} from './npc-residency.ts';
+import {persistNpcResident} from './npc-characters.ts';
+import {syncNpcWorld} from './rules/npc-world.js';
 import {participantState, participantCheckpointState, validateParticipants, type ResidentParticipant} from './resident-participants.ts';
 import {DEFAULT_OFFLINE_LIMIT_MS, offlineLimit} from './presence.ts';
 import {removeInvalidSave} from './account-reset.ts';
@@ -190,7 +193,9 @@ export class ResidentCharacters {
       presence.accounts.every(([id, at]) => accountIds.has(id) && Number.isSafeInteger(at) && at >= 0),
       'SIMULATION_STATE', '实例在线记录无效');
     const actors = members.map(p => participantState(state, p.characterId));
-    const npcIds = new Set(actors.flatMap(actor => (actor.npcWorld?.residents ?? []).map((npc: Rules) => npc.id)));
+    const profiles=residentNpcProfiles(state);
+    const npcIds=new Set(profiles.map(p=>p.profile.id));
+    requireThat(npcIds.size===profiles.length,'SIMULATION_STATE','NPC 运行身份重复');
     const humanIds = new Set(members.map(p => p.characterId));
     requireThat(new Set([state.id, ...state.party.map((c: Rules) => c.id)]).size === state.party.length + 1 &&
       state.party.every((c: Rules) => humanIds.has(c.id) || c.npcPlayer === true && npcIds.has(c.id)),
@@ -206,6 +211,17 @@ export class ResidentCharacters {
         await tx.insert('outbox', {id: `${businessKey}:character:${character.id}`, businessKey, accountId: participant.accountId,
           type: 'simulation-commit', payload: {instanceId: owner.id, ownerEpoch: owner.epoch, characterId: character.id}, delivered: false});
       }
+      syncNpcWorld(state);
+      const guestAccounts=new Set<string>();
+      for(const guest of state.npcGuests??[]){
+        const origin=await tx.get<Character>('characters',guest.ownerCharacterId);
+        const claim=await tx.get<CharacterClaim>('simulation_characters',guest.profile.id);
+        requireThat(origin&&origin.rules.raceId===guest.ownerRaceId&&!members.some(p=>p.characterId===origin.id)&&
+          claim?.instanceId===owner.id&&claim.accountId===origin.accountId,'SIMULATION_STATE','客居冒险者身份或执行权无效');
+        await persistNpcResident(tx,origin,guest.profile,businessKey,owner.id);
+        guestAccounts.add(origin.accountId);
+      }
+      for(const accountId of guestAccounts)if(!accountIds.has(accountId))await bump(tx,accountId);
       for (const [accountId, at] of presence.accounts) {
         const previous = await tx.get('account_presence', accountId);
         if (at > Number(previous?.lastSeenAt ?? -1))

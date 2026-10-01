@@ -26,12 +26,13 @@ export function splitDungeonCheckpoint(source:InstanceCheckpoint,actorId:string,
  const members=[room,...room.party],humans=members.filter(a=>!a.npcPlayer);
  const ownerOf=new Map<string,string>();
  for(const human of humans)for(const npc of human.npcWorld?.residents??[]){if(ownerOf.has(npc.id))throw new Error('Duplicate NPC identity');ownerOf.set(npc.id,human.id);}
+ for(const guest of room.npcGuests??[])ownerOf.set(guest.profile.id,guest.ownerCharacterId);
  for(const actor of members.filter(a=>a.npcPlayer))if(!ownerOf.has(actor.id))throw new Error('NPC owner missing');
  const leavingIds=new Set([actorId,...members.filter(a=>a.npcPlayer&&ownerOf.get(a.id)===actorId).map(a=>a.id)]);
  const outputs:InstanceCheckpoint[]=[];
  for(const destination of [personal,...(remaining?[remaining]:[])]){
   const outside=destination===personal;
-  const selected=members.filter(a=>leavingIds.has(a.id)===outside);
+  const selected=members.filter(a=>(!remaining||leavingIds.has(a.id))===outside);
   const primary=outside?selected.find(a=>a.id===actorId)!:selected.find(a=>a.id===room.id)||selected.find(a=>!a.npcPlayer)!;
   const presentation=participantPresentationState(room,primary.id);
   const state=structuredClone({...primary,party:selected.filter(a=>a!==primary).map(a=>({...a,party:a.npcPlayer?a.party:[]})),
@@ -39,6 +40,7 @@ export function splitDungeonCheckpoint(source:InstanceCheckpoint,actorId:string,
    activity:room.activity,dungeon:room.dungeon,lastCombat:room.lastCombat,groupLoot:room.groupLoot,groundEffects:room.groundEffects,
    logs:presentation.logs,logSequence:Math.max(room.logSequence,primary.logSequence),rngState:room.rngState,
    nextPull:room.nextPull,dungeonSequence:room.dungeonSequence,dungeonRoster:room.dungeonRoster,
+   npcGuests:(room.npcGuests??[]).filter((g:Rules)=>selected.some(a=>a.id===g.profile.id)),
    sharedParty:{leaderId:room.sharedParty.leaderId,participantIds:selected.filter(a=>!a.npcPlayer).map(a=>a.id)}});
   // Each retained human keeps only their own permanent cohort in npcWorld.
   for(const human of [state,...state.party].filter(a=>!a.npcPlayer)){

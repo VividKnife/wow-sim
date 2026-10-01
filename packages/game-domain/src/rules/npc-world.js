@@ -89,7 +89,7 @@ function newResident(s,index){
 export function ensureNpcWorld(s,population=names.length){
  if(s.npcPlayer||s.growthPolicy==='companion'||!partyUnlocked(s))throw new Error('主角达到10级后可邀请地下城 NPC 玩家。');
  if(!s.npcWorld)s.npcWorld={selection:[],autoLoot:false,residents:[],board:{ids:[],shown:{},rngState:seedOf(`${s.id}:hall`),refreshAt:0,sequence:0}};
- const world=s.npcWorld,indices=new Set(world.residents.map(p=>p.index));
+ const world=s.npcWorld,indices=new Set([...world.residents,...(world.away??[])].map(p=>p.index));
  for(let index=0;index<population;index++)if(!indices.has(index)){
   const p=newResident(s,index);note(p,'开始新的冒险，期待结识同行的伙伴。');world.residents.push(p);
  }
@@ -115,9 +115,9 @@ export function ensureNpcMatchSupply(s,minimumLevel=Math.max(10,s.level-5),maxim
   const total=missing.reduce((sum,[,count])=>sum+count,0);
   if(total<totalMissing){deficits=missing;totalMissing=total;}
  }
- const additional=world.residents.filter(p=>p.index>=names.length).length;
+ const additional=[...world.residents,...(world.away??[])].filter(p=>p.index>=names.length).length;
  if(additional+totalMissing>NPC_MATCH_SUPPLY.maximumResidents-names.length)throw new Error('NPC 候选池已满，请等待现有队员结束活动。');
- let cursor=Math.max(names.length,...world.residents.map(p=>p.index+1));
+ let cursor=Math.max(names.length,...[...world.residents,...(world.away??[])].map(p=>p.index+1));
  const additions=[];
  for(const [role,missing] of deficits){
   for(let count=0;count<missing;count++){
@@ -142,7 +142,7 @@ function refreshBoard(s){
   const classes=new Set(chosen.map(p=>p.unit.classId));
   const pool=order.filter(({p})=>group(p)===role&&!chosen.includes(p));
   pool.sort((a,c)=>Number(previous.has(a.p.id))-Number(previous.has(c.p.id))||(b.shown[a.p.id]||0)-(b.shown[c.p.id]||0)||Number(classes.has(a.p.unit.classId))-Number(classes.has(c.p.unit.classId))||a.tie-c.tie);
-  chosen.push(pool[0].p);
+  if(pool[0])chosen.push(pool[0].p);
  }
  b.ids=chosen.map(p=>p.id);for(const id of b.ids)b.shown[id]=(b.shown[id]||0)+1;
  b.refreshAt=s.wallAt+NPC_REFRESH_MS;b.sequence++;
@@ -199,6 +199,9 @@ export function progressNpcWorld(s){
  }
 }
 export function syncNpcWorld(s){
+ for(const guest of s.npcGuests??[]){
+  const c=s.party.find(c=>c.id===guest.profile.id);if(c)syncNpcProfile(guest.profile,c,s.wallAt);
+ }
  if(s.sharedParty){
   for(const owner of [s,...s.party].filter(c=>s.sharedParty.participantIds.includes(c.id))){
    const own=new Set(owner.npcWorld?.residents.map(p=>p.id)||[]);
@@ -211,11 +214,13 @@ export function syncNpcWorld(s){
  for(const c of s.party||[]){
   if(!c.npcPlayer)continue;
   const p=s.npcWorld.residents.find(p=>p.id===c.id);if(!p)continue;
-  // Preserve durable character data, not the entire battle object graph.
-  for(const key of ['level','xp','itemSequence','equipment','bag',...trainingFields,'hunterPet','ammunition','raidCollection','raidPendingEquipment'])if(c[key]!==undefined)p.unit[key]=structuredClone(c[key]);
-  if(c.goldNpc)p.wallet=c.money;
-  p.lastProgressWall=s.wallAt;
+  syncNpcProfile(p,c,s.wallAt);
  }
+}
+function syncNpcProfile(p,c,wallAt){
+ for(const key of ['level','xp','itemSequence','equipment','bag',...trainingFields,'hunterPet','ammunition','raidCollection','raidPendingEquipment'])if(c[key]!==undefined)p.unit[key]=structuredClone(c[key]);
+ if(c.goldNpc)p.wallet=c.money;
+ p.lastProgressWall=wallAt;
 }
 export function selectedDungeonMembers(s){
  if(s.sharedParty||s.dungeon||!s.npcWorld?.selection)return s.party.filter(c=>!c.goldNpc);
@@ -265,8 +270,11 @@ export function npcRunStarted(s,memberIds=null){
 }
 function npcOwner(s,id){
  const owner=[s,...s.party].find(c=>c.npcWorld?.residents.some(p=>p.id===id));
- if(!owner)throw new Error('冒险者缺少所属角色。');
- return owner;
+ if(owner)return owner;
+ const guest=s.npcGuests?.find(g=>g.profile.id===id);
+ if(!guest)throw new Error('冒险者缺少所属角色。');
+ // Training origin only; no human controller, private inventory or wallet.
+ return {id:guest.ownerCharacterId,raceId:guest.ownerRaceId,clock:s.clock,wallAt:s.wallAt,location:s.location,npcWorld:{residents:[guest.profile]}};
 }
 export function creditNpcMoney(s,c,amount){
  const p=npcOwner(s,c.id).npcWorld.residents.find(p=>p.id===c.id);
@@ -283,7 +291,7 @@ export function npcWorldView(s){
  const w=s.npcWorld,selected=selectedDungeonMembers(s),active=!!s.dungeon||!!s.goldRaid?.active;
  const member=c=>({id:c.id,name:c.name,classId:c.classId,level:c.level,role:combatRole(c),npc:!!c.npcPlayer,hp:c.hp});
  return {unlocked:partyUnlocked(s)&&!s.npcPlayer&&s.growthPolicy!=='companion',ready:!!w,locked:!!s.combat||active||s.goldRaid?.active||s.activity.type!=='idle',autoLoot:!!w?.autoLoot,selected:selected.map(member),
-  total:w?.residents.length||names.length,board:w?{ids:w.board.ids,sequence:w.board.sequence,remaining:Math.max(0,w.board.refreshAt-s.wallAt),cooldown:NPC_REFRESH_MS}:null,
+  away:w?.away??[],total:w?(w.residents.length+(w.away?.length??0)):names.length,board:w?{ids:w.board.ids,sequence:w.board.sequence,remaining:Math.max(0,w.board.refreshAt-s.wallAt),cooldown:NPC_REFRESH_MS}:null,
   residents:(w?.residents||[]).map(p=>{const c=s.party.find(c=>c.id===p.id)||p.unit;return {...member(c),friend:p.friend,personality:p.personality,runs:p.runs,history:p.history,wallet:c.goldNpc?c.money:p.wallet,raidRuns:p.raidRuns,raidProfile:p.raidProfile,status:active&&s.party.some(c=>c.id===p.id)?'与你冒险':p.steps%2?'正在任务历练':'等待组队',equipment:Object.entries(c.equipment).map(([slot,item])=>({slot:Number(slot),...item})),talents:c.talents,stats:stats(c),nextXp:xpTable[c.level]?.xp_for_next_level||0,xp:c.xp};})};
 }
 

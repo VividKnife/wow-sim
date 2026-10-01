@@ -39,7 +39,19 @@ export class DungeonAdmissions{
    if(leaving)requireThat(group!.instanceId===input.instanceId,'DUNGEON_INSTANCE','角色不在当前队伍副本中');
    const residency=group!.instanceId?await tx.get('simulation_residencies',group!.instanceId):null;
    requireThat(!group!.instanceId||residency,'DUNGEON_INSTANCE','副本执行权记录不完整');
-   return {request,group:group!,existing:residency?{accountId:residency.accountId as string,characterId:residency.characterId as string}:null};
+   const npcSources:{accountId:string;characterId:string}[]=[];
+   if(!leaving&&request.actorId===group!.leaderId){
+    const known=new Set<string>();
+    for(const member of group!.members.filter(m=>m.npc)){
+     const claim=await tx.get('simulation_characters',member.id);
+     const holder=claim?await tx.get('simulation_residencies',claim.instanceId):null;
+     const origin=await tx.get('characters',member.ownerCharacterId!);
+     requireThat(origin&&(!claim||holder),'NPC_STATE','NPC 执行权记录不完整');
+     const host={accountId:(holder?.accountId??origin!.accountId) as string,characterId:(holder?.characterId??origin!.id) as string};
+     if(!known.has(host.characterId)){known.add(host.characterId);npcSources.push(host);}
+    }
+   }
+   return {request,group:group!,npcSources,existing:residency?{accountId:residency.accountId as string,characterId:residency.characterId as string}:null};
   });
  }
 }

@@ -5,14 +5,14 @@ import {loadNpcWorld, persistNpcWorld} from './npc-characters.ts';
 import type { ReadView, Transaction } from '../../persistence/src/store.ts';
 import { DomainError, requireThat } from './model.ts';
 import type { Account, AccountPresence, Character, Item, Wallet, Rules, Activity } from './model.ts';
-const separated = ['serverBuffs', 'id', 'money', 'bag', 'bags', 'bank', 'equipment', 'pending', 'auctions', 'party', 'activity', 'dungeon', 'receipts'];
+const separated = ['serverBuffs', 'id', 'money', 'bag', 'bags', 'bank', 'equipment', 'pending', 'auctions', 'party', 'activity', 'dungeon', 'receipts', 'npcGuests'];
 export const clone = <T>(value: T): T => structuredClone(value);
 import {rebaseSimulation} from './simulation-clock.ts';
 export {rebaseSimulation} from './simulation-clock.ts';
 export function characterRules(state: Rules): Rules { syncNpcWorld(state); const rules = clone(state); for (const key of separated)
     delete rules[key];
     if (rules.npcWorld) {
-        rules.npcWorld.residentIds = rules.npcWorld.residents.map((p: Rules) => p.id);
+        rules.npcWorld.residentIds = [...rules.npcWorld.residents,...(rules.npcWorld.away??[])].map((p: Rules) => p.id);
         delete rules.npcWorld.residents;
     }
     return rules; }

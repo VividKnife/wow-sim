@@ -27,7 +27,7 @@ for(const accountId of ['alice','bob']){
  await store.transaction(async tx=>{
   const row=await tx.get('characters',made.state.id),state=await context(tx,row,Date.now(),false);
   state.level=20;state.location='deadmines';
-  if(accountId==='alice'){
+  if(accountId===(process.env.PREVIEW_NPC_OWNER??'alice')){
    ensureNpcMatchSupply(state);
    npcIds.push(...['tank','healer','dps'].map(role=>state.npcWorld.residents.find(p=>{const r=combatRole(p.unit);return (r==='tank'||r==='healer'?r:'dps')===role;}).id));
   }

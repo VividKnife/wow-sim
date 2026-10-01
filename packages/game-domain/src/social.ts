@@ -92,7 +92,7 @@ export class SocialService {
         requireThat(typeof targetId==='string'&&targetId.length<=200&&targetId!==actorId,'SOCIAL_TARGET','请选择其他角色',400);
         const npc=body.type==='npcInvite'||targetId.startsWith('npc:');
         const target=await tx.get(npc?'npc_characters':'characters',targetId);
-        requireThat(target&&(!npc?target.kind==='hero':target.ownerCharacterId===actorId),'SOCIAL_TARGET','找不到可邀请的角色',404);
+        requireThat(target&&(npc||target.kind==='hero'),'SOCIAL_TARGET','找不到可邀请的角色',404);
         if(body.type==='friendRequest'){
           requireThat(([...await tx.list('social_links',{from:actorId}),...await tx.list('social_links',{to:actorId})]).filter(l=>l.kind==='friend'&&(l.status==='accepted'||l.expiresAt>now)).length<100,'FRIEND_LIMIT','好友及申请最多 100 位');
           const id=pair(actorId,targetId),existing=await tx.get('social_links',id);
