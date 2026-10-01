@@ -1,3 +1,4 @@
+import {splitDungeonCheckpoint} from '../src/dungeon-departure.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../../packages/persistence/src/memory.ts';
@@ -103,7 +104,7 @@ test('a later arrival preserves the existing dungeon, RNG, periodic effects and 
   const before=structuredClone([current,arrival]);
   const joined=composeDungeonCheckpoint([arrival,current],{instanceId:'dungeon:joined',ownerEpoch:1,primaryActorId:current.state.id,roster});
   assert.deepEqual([current,arrival],before);
-  assert.deepEqual(joined.state.dungeon,current.state.dungeon);assert.equal(joined.state.rngState,current.state.rngState);
+  assert.deepEqual(joined.state.dungeon,{...current.state.dungeon,admittedHumanIds:[...current.state.dungeon.admittedHumanIds,arrival.state.id],npcParticipants:joined.state.dungeon.npcParticipants});assert.equal(joined.state.rngState,current.state.rngState);
   assert.equal(joined.state.dungeonSequence,current.state.dungeonSequence);
   assert.equal(joined.state.party.length,4);assert.equal(joined.controllers.length,2);
   for(const source of [current,arrival]){
@@ -135,7 +136,7 @@ test('a third human joins an already shared room with a newer clock without losi
   assert.ok(sources[2].state.clock>shared.state.clock);
   const joined=composeDungeonCheckpoint([sources[2],shared],{instanceId:'dungeon:three',ownerEpoch:1,primaryActorId:shared.state.id,roster});
   assert.equal(joined.state.clock,sources[2].state.clock);assert.equal(joined.state.party.length,4);
-  assert.deepEqual(joined.state.dungeon,rebaseSimulation(structuredClone(shared.state),joined.state.clock).dungeon);
+  assert.deepEqual(joined.state.dungeon,{...rebaseSimulation(structuredClone(shared.state),joined.state.clock).dungeon,admittedHumanIds:[...shared.state.dungeon.admittedHumanIds,sources[2].state.id]});
   assert.equal(joined.state.rngState,shared.state.rngState);
   const restored=ResidentInstance.restore(JSON.parse(JSON.stringify(joined)),2);
   for(const controller of joined.controllers){
@@ -170,4 +171,16 @@ test('arrival rejects foreign roster, duplicate occupants, missing controller, w
   for(const mutate of cases){const rooms=structuredClone([first,sources[0]]);mutate(rooms);const before=structuredClone(rooms);assert.throws(()=>composeDungeonCheckpoint(rooms,options));assert.deepEqual(rooms,before);}
   const corrupt=structuredClone(first);corrupt.state.dungeonRoster.members[0].id=corrupt.state.dungeonRoster.members[1].id;
   assert.throws(()=>ResidentInstance.restore(corrupt,2),/roster/);
+});
+
+test('three human room keeps both remaining private projections after leader departure',async()=>{
+ const {sources,roster}=await fixture(3);sources[0].state.location='deadmines';
+ const shared=composeDungeonCheckpoint(sources,{instanceId:'shared:three',ownerEpoch:1,primaryActorId:roster.leaderId,roster});
+ const [,remaining]=splitDungeonCheckpoint(shared,roster.leaderId,{instanceId:'personal:left',ownerEpoch:1},{instanceId:'shared:two',ownerEpoch:1});
+ const runtime=ResidentInstance.restore(remaining,2);
+ for(const controller of remaining.controllers){
+  const projected=runtime.presentation(controller.accountId,controller.actorId,'full');
+  assert.ok(projected.snapshot);
+  assert.equal((projected.snapshot.view.instanceScene as Rules).memberCount,2);
+ }
 });

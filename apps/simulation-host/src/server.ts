@@ -30,6 +30,7 @@ export function createSimulationServer(directory:SimulationDirectory,options:{to
     case 'presentation':result=await directory.presentation(message.instanceId,message.accountId,message.actorId,message.scope,message.online);break;
     case 'open':result=await directory.open(message.admission);break;
     case 'input':result=await directory.input(message.accountId,message.input);break;
+    case 'leaveDungeon':result=await directory.leaveDungeon(message.accountId,message.input);break;
     case 'enterDungeon':result=await directory.enterDungeon(message.accountId,message.input);break;
     case 'project':result=await directory.project(message.instanceId,message.full);break;
     case 'checkpoint':result=await directory.checkpoint(message.instanceId);break;

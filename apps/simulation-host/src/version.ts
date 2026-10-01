@@ -18,7 +18,7 @@ for (const directory of ['packages/game-domain/src/', 'packages/sim-core/src/', 
 for (const file of readdirSync(new URL('../../../packages/game-data/', import.meta.url)).filter(name => name.endsWith('.js')).sort()) {
   hash.update(file + '\0'); hash.update(readFileSync(new URL(`../../../packages/game-data/${file}`, import.meta.url)));
 }
-for (const file of ['./presence.ts', './dungeon-composition.ts', './dungeon-transfer.ts', './dungeon-input.ts', './instance.ts', './worker.ts', './version.ts']) {
+for (const file of ['./presence.ts', './dungeon-composition.ts', './dungeon-transfer.ts', './dungeon-input.ts', './dungeon-departure.ts', './dungeon-departure-transfer.ts', './instance.ts', './worker.ts', './version.ts']) {
   hash.update(file + '\0'); hash.update(readFileSync(new URL(file, import.meta.url)));
 }
 export const runtimeVersion = {rulesetVersion: `owned-v1:${hash.digest('hex')}`, contentHash: manifest.contentVersion};

@@ -20,6 +20,10 @@ export function validateDungeonOccupants(state:Rules):void{
   if(!Array.isArray(participants)||participants.length!==humanIds.length||new Set(participants).size!==participants.length||
     participants.some(id=>!humanIds.includes(id)))throw new Error('Dungeon participant presence mismatch');
   const leaderPresent=humanIds.includes(roster.leaderId),npcCount=actors.filter(a=>a.npcPlayer).length;
-  if(npcCount!==(leaderPresent?roster.members.filter(m=>m.npc).length:0))
+  const present=state.dungeonPresentNpcIds;
+  if(present!==undefined){
+    if(!Array.isArray(present)||new Set(present).size!==present.length||present.some(id=>!roster.members.some(m=>m.npc&&m.id===id))||
+      present.length!==npcCount||actors.some(a=>a.npcPlayer&&!present.includes(a.id)))throw new Error('Dungeon NPC presence mismatch');
+  }else if(npcCount!==(leaderPresent?roster.members.filter(m=>m.npc).length:0))
     throw new Error('Dungeon NPCs must enter together with the party leader');
 }

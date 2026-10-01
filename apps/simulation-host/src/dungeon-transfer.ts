@@ -13,12 +13,13 @@ import {recordDungeonInput} from './dungeon-input.ts';
 /** A matched run admits humans independently. Retries of one arrival use the
  * same durable identity; a different arrival must not reuse its receipt. */
 export const dungeonEntryTransferId=(request:DungeonEntryRequest)=>'entry:'+createHash('sha256')
-  .update(JSON.stringify([request.groupId,request.entryId,request.actorId])).digest('hex');
+  .update(JSON.stringify([request.groupId,request.entryId,request.actorId,request.visitId??null])).digest('hex');
 
 /** Pure runtime composition and ordinary domain writes within the repository's
  * existing transfer transaction. No Worker calls or additional transaction. */
 export function dungeonTransferBoundary(request:DungeonEntryRequest,now:()=>number=Date.now,input?:SimulationInput):TransferBoundary<InstanceCheckpoint>{
   return async(tx,{transferId,destinations,sources})=>{
+    if(input&&(input.command.kind!=='action'||input.command.action.type!=='enterDungeon'))throw new Error('Invalid arrival command');
     if(destinations.length!==1)throw new Error('Dungeon arrival requires one destination');
     const [destination]=destinations;
     const group=await authorizeDungeonEntry(tx,request);
@@ -28,6 +29,7 @@ export function dungeonTransferBoundary(request:DungeonEntryRequest,now:()=>numb
     if(!sources.some(s=>s!==existing&&s.checkpoint.state.id===request.actorId))throw new Error('Requesting human must be a new arrival');
     const checkpoint=composeDungeonCheckpoint(sources.map(source=>source.checkpoint),{
       instanceId:destination.id,ownerEpoch:destination.epoch,primaryActorId:existing?.checkpoint.state.id??request.actorId,selectMatchedNpcs:!!input,
+      parked:group.entry!.parked,
       roster:{groupId:group.id,leaderId:group.leaderId,dungeonId:group.entry!.dungeonId,members:group.members.map(m=>({id:m.id,npc:m.npc}))}});
     if(input){
       const source=sources.find(s=>s.checkpoint.state.id===input.actorId);

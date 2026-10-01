@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-01",
+  "node": "v24.15.0",
+  "branch": "main",
+  "runtimeVersion": {
+    "rulesetVersion": "owned-v1:3b9a2126c5a3860ea6b2868f0e2271adc9a28d530bd65d2ff4c3b36ddc084d52",
+    "contentHash": "2933776b3e66d5df16224dbc80ef2981d5fdad0ffde57aa659055474e02775d2"
+  },
+  "tests": {
+    "httpArrivalsDeparturesAndNpcBuilds": {
+      "passed": 20,
+      "total": 20
+    },
+    "compositionDepartureSqlRecoveryAndGoldens": {
+      "passed": 12,
+      "total": 12
+    },
+    "adjacentDomainSocialAndPrivateProjection": {
+      "passed": 10,
+      "total": 10
+    },
+    "rootTypecheck": "passed",
+    "webTypecheck": "passed"
+  },
+  "browser": {
+    "browser": "Edge",
+    "ui": "production Game components served by Vite development server",
+    "backend": "real Game HTTP/WS and simulation-host Worker pool",
+    "storage": "isolated MemoryStore",
+    "accounts": 2,
+    "npcs": 3,
+    "steps": [
+      "Alice enters with three NPCs; Bob enters separately",
+      "Alice leaves; Bob remains in the dungeon",
+      "Alice returns; Bob independently leaves",
+      "Alice leaves last, parking group progress",
+      "Bob enters first, then Alice and NPCs; five occupants visible"
+    ],
+    "consoleErrors": 0,
+    "screenshots": [
+      ".cache/qa/departure-bob-remains.png",
+      ".cache/qa/departure-rejoined.png"
+    ],
+    "limits": "Idle entrance scene; no FPS or capacity claim. Final entry-count changes verified by automated tests after this browser pass."
+  },
+  "observations": [
+    "One concurrent-load HTTP test attempt returned Unable to prepare all transfer sources; isolated retry passed. Aggregate-error diagnostics retained in integration test; no root cause established."
+  ],
+  "limitations": [
+    "Cross-owner NPC admission without its owning human remains unavailable",
+    "NPC cohorts currently leave with their persistent human owner",
+    "Social roster editing while any teammate remains inside is still restricted",
+    "No production deployment or target-machine capacity test in this change"
+  ]
+}

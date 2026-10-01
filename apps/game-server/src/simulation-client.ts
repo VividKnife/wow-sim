@@ -28,6 +28,7 @@ export class SimulationClient {
  presentation(instanceId:string,accountId:string,actorId:string,scope:'full'|'combat'='full',online=false){return this.call<GameResponse>({operation:'presentation',instanceId,accountId,actorId,scope,online});}
  input(accountId:string,input:SimulationInput){return this.call<PublishedInputReceipt>({operation:'input',accountId,input});}
  enterDungeon(accountId:string,input:SimulationInput){return this.call<{instanceId:string;ownerEpoch:number;receipt:PublishedInputReceipt}>({operation:'enterDungeon',accountId,input});}
+ leaveDungeon(accountId:string,input:SimulationInput){return this.call<{instanceId:string;ownerEpoch:number;receipt:PublishedInputReceipt}>({operation:'leaveDungeon',accountId,input});}
  project(instanceId:string,full=false){return this.call<PublicFrame>({operation:'project',instanceId,full});}
  checkpoint(instanceId:string){return this.call<{sequence:number;ownerEpoch:number}>({operation:'checkpoint',instanceId});}
  remove(instanceId:string){return this.call<{removed:true}>({operation:'remove',instanceId});}

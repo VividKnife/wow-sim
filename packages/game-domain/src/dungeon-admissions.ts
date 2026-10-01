@@ -4,14 +4,14 @@ import type {SimulationInput,InputReceipt} from '../../protocol/src/simulation.t
 import {validateSimulationInput} from '../../protocol/src/simulation.ts';
 import {owned} from './context.ts';
 import {requireThat} from './model.ts';
-import {authorizeDungeonEntry,type DungeonEntryRequest} from './dungeon-entry.ts';
+import {authorizeDungeonEntry,authorizeDungeonDeparture,type DungeonEntryRequest} from './dungeon-entry.ts';
 import type {Group} from './social-party.ts';
 
 const digest=(value:unknown)=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const receiptId=(accountId:string,input:SimulationInput)=>'dungeon-input:'+digest([accountId,input.requestId]);
 export function validateDungeonInput(input:SimulationInput){
  validateSimulationInput(input);
- requireThat(input.command.kind==='action'&&input.command.action.type==='enterDungeon'&&typeof input.command.action.contentId==='string',
+ requireThat(input.command.kind==='action'&&(input.command.action.type==='leaveDungeon'||input.command.action.type==='enterDungeon'&&typeof input.command.action.contentId==='string'),
   'DUNGEON_INPUT','请选择要进入的副本');
 }
 /** One durable arrival receipt, in the same transaction as group binding and
@@ -32,9 +32,11 @@ export class DungeonAdmissions{
     return {receipt:previous.receipt as InputReceipt};
    }
    const membership=await tx.get('social_members',input.actorId),group=membership&&await tx.get<Group>('social_groups',membership.groupId);
-   requireThat(group?.entry&&input.command.kind==='action'&&group.dungeonId===input.command.action.contentId,'DUNGEON_MATCH','请先匹配所选副本');
-   const request:DungeonEntryRequest={accountId,actorId:input.actorId,groupId:group!.id,entryId:group!.entry!.id};
-   await authorizeDungeonEntry(tx,request);
+   const leaving=input.command.kind==='action'&&input.command.action.type==='leaveDungeon';
+   requireThat(group?.entry&&input.command.kind==='action'&&(leaving||group.dungeonId===input.command.action.contentId),'DUNGEON_MATCH','请先匹配所选副本');
+   const request:DungeonEntryRequest={accountId,actorId:input.actorId,groupId:group!.id,entryId:group!.entry!.id,visitId:input.requestId};
+   await (leaving?authorizeDungeonDeparture:authorizeDungeonEntry)(tx,request);
+   if(leaving)requireThat(group!.instanceId===input.instanceId,'DUNGEON_INSTANCE','角色不在当前队伍副本中');
    const residency=group!.instanceId?await tx.get('simulation_residencies',group!.instanceId):null;
    requireThat(!group!.instanceId||residency,'DUNGEON_INSTANCE','副本执行权记录不完整');
    return {request,group:group!,existing:residency?{accountId:residency.accountId as string,characterId:residency.characterId as string}:null};

@@ -72,7 +72,7 @@ export class SocialService {
       const incoming=links.filter(l=>l.to===actorId&&l.status==='pending'&&l.expiresAt>now).map(l=>({id:l.id,kind:l.kind,from:l.from,name:l.name,groupId:l.groupId}));
       const proposal=group?.proposalId?await tx.get('social_proposals',group.proposalId):null;
       const world=await tx.get('social_channels','world'),party=group?await tx.get('social_channels',`party:${group.id}`):null;
-      return {self:{...self,roles:supportedRoles(self.classId)},friends,incoming,outgoing:links.filter(l=>l.from===actorId&&l.status==='pending'&&l.expiresAt>now).map(l=>({kind:l.kind,to:l.to})),players,npcs,group,proposal,
+      return {self:{...self,roles:supportedRoles(self.classId)},friends,incoming,outgoing:links.filter(l=>l.from===actorId&&l.status==='pending'&&l.expiresAt>now).map(l=>({kind:l.kind,to:l.to})),players,npcs,group:group?{...group,entry:group.entry?{id:group.entry.id,dungeonId:group.entry.dungeonId,rosterKey:group.entry.rosterKey,requested:group.entry.requested}:undefined}:null,proposal,
         messages:{world:await Promise.all((world?.messages??[]).map(async(m:Rules)=>{if(m.kind!=='recruitment')return m;const current=await tx.get<Group>('social_groups',m.groupId);return {...m,open:current?.status==='queued'&&current.recruitmentId===m.recruitmentId,needed:Object.fromEntries(Object.entries(limits).map(([r,n])=>[r,Math.max(0,n-(current?.members.filter(p=>p.role===r).length??0))]))};})),party:party?.messages??[]},
         dungeons:Object.values(dungeonDefinitions).map(d=>({id:d.id,name:d.name,minimumLevel:d.minimumLevel,recommendedLevel:d.recommendedLevel,entrance:d.entrance})),
         policy:{levelSpread:5,npcDelayMs:8000,autoTeleport:false}};

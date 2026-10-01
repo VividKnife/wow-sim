@@ -39,6 +39,8 @@ for(const order of ['leader-first','leader-later','outside'])test(`authenticated
  }
  const characters=new ResidentCharacters(store,{version:runtimeVersion}),repository=new SimulationRepository(store,Date.now,characters.commit);
  const directory=new SimulationDirectory(repository,{characters,dungeons:new DungeonAdmissions(store)}),token=randomBytes(32).toString('base64url');
+ const originalEnter=directory.enterDungeon.bind(directory);
+ directory.enterDungeon=async(...args)=>{try{return await originalEnter(...args);}catch(error){if(error instanceof AggregateError)console.error('Transfer causes:',error.errors);throw error;}};
  const host=createSimulationServer(directory,{token});host.server.listen(0,'127.0.0.1');await once(host.server,'listening');
  const ha=host.server.address();assert.ok(ha&&typeof ha==='object');
  const client=new SimulationClient({url:`http://127.0.0.1:${ha.port}`,token});
@@ -110,5 +112,48 @@ for(const order of ['leader-first','leader-later','outside'])test(`authenticated
    const restored=await read(accountId);assert.equal(restored.execution.instanceId,destination);assert.equal(restored.snapshot.view.instanceScene.memberCount,5);
    assert.equal(restored.execution.receipts.find((r:Rules)=>r.requestId===input.requestId)?.durable,accountId===first?true:undefined);
   }
+  // Both root promotion and member departure go through the authenticated
+  // gateway. Repeated visits must not resolve to an earlier transfer receipt.
+  const left=order==='leader-first'?'alice':'bob',stayed=left==='alice'?'bob':'alice';
+  const leaveBody=(view:Rules)=>({...enterBody(view),type:'leaveDungeon',contentId:undefined});
+  const beforeExit=await read(left),exitInput=leaveBody(beforeExit);
+  const exited=await request(left,'',exitInput);
+  assert.equal(exited.status,200,JSON.stringify(exited.body));
+  assert.equal(exited.body.snapshot.player.dungeon,undefined);
+  assert.equal(exited.body.commandReceipt.durable,true);
+  assert.notEqual(exited.body.execution.instanceId,destination);
+  const stillInside=await read(stayed);
+  assert.equal(stillInside.snapshot.player.dungeon.runId,saved.state.dungeon.runId);
+  assert.equal(stillInside.snapshot.view.instanceScene.memberCount,left==='alice'?1:4);
+  assert.notEqual(stillInside.execution.instanceId,exited.body.execution.instanceId);
+  const exitRetry=await request(left,'',exitInput);
+  assert.equal(exitRetry.status,200,JSON.stringify(exitRetry.body));
+  assert.deepEqual(exitRetry.body.commandReceipt,exited.body.commandReceipt);
+  const returned=await request(left,'',enterBody(await read(left)));
+  assert.equal(returned.status,200,JSON.stringify(returned.body));
+  assert.equal(returned.body.snapshot.view.instanceScene.memberCount,5);
+  assert.equal(returned.body.snapshot.player.dungeon.runId,saved.state.dungeon.runId);
+  // Everyone exits; the same matched party parks one shared run and can return
+  // in either human order. Hidden encounter state never enters social payloads.
+  for(const who of ['bob','alice']){
+   const result=await request(who,'',leaveBody(await read(who)));
+   assert.equal(result.status,200,JSON.stringify(result.body));
+   assert.equal(result.body.snapshot.player.dungeonSaves?.deadmines,undefined);
+  }
+  const publicGroup=(await social('alice')).group;
+  assert.equal(publicGroup.instanceId,undefined);assert.equal(publicGroup.entry.parked,undefined);
+  const parked=await store.read(tx=>tx.get('social_groups',publicGroup.id));
+  assert.equal(parked!.entry.parked.dungeon.runId,saved.state.dungeon.runId);
+  for(const who of ['bob','alice']){
+   const result=await request(who,'',enterBody(await read(who)));
+   assert.equal(result.status,200,JSON.stringify(result.body));
+   assert.equal(result.body.snapshot.player.dungeon.runId,saved.state.dungeon.runId);
+  }
+  assert.equal((await read('alice')).snapshot.view.instanceScene.memberCount,5);
+  const finalRoom=(await read('alice')).execution.instanceId;await client.checkpoint(finalRoom);
+  const finalState=(await repository.load<any>(finalRoom))!.checkpoint.state;
+  for(const human of [finalState,...finalState.party].filter((a:Rules)=>!a.npcPlayer))assert.equal(human.dungeonEntries.length,1);
+  for(const npc of await store.read(tx=>tx.list('npc_characters')))assert.equal(npc.profile.runs,npcIds.includes(npc.id)?1:0);
+  assert.equal((await store.read(tx=>tx.get('social_groups',publicGroup.id)))!.entry.parked,undefined);
  }finally{await gateway.close();await host.close();await store.close();}
 });

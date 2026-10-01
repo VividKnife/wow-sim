@@ -252,7 +252,10 @@ export function npcAction(s,a){
 }
 /** @param {any} s @param {string[] | null} [memberIds] */
 export function npcRunStarted(s,memberIds=null){
+ const participants=s.dungeonRoster?(s.dungeon.npcParticipants??=[]):[];
  for(const c of s.party.filter(c=>c.npcPlayer&&(!memberIds||memberIds.includes(c.id)))){
+  if(participants.includes(c.id))continue;
+  participants.push(c.id);
   const owner=npcOwner(s,c.id),p=owner.npcWorld.residents.find(p=>p.id===c.id);p.runs++;note(p,`与你第${p.runs}次组队，前往${dungeonJournal.find(d=>d.id===s.dungeon.id)?.name||s.dungeon.id}。`);
   const training=buildUnit(owner,p.index,c.level,false,{skill:p.raidProfile.skill,temperament:p.personality.id,spending:p.raidProfile.personality});
   Object.assign(c,npcTraining(training));
