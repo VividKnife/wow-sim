@@ -53,7 +53,7 @@ export function npcWeaponAllowed(c,item){
 export function equipmentUpgrade(c,item){
  const data=typeof item==='number'?items[item]:item;
  if(!data||![2,4].includes(data.class)||!data.InventoryType||[4,19].includes(data.InventoryType)||!canEquip(c,data)||data.RequiredReputationFaction||data.requiredhonorrank||data.RequiredCityRank)return {need:false,reason:'不符合装备条件'};
- if([...(c.bag||[]),...(c.bank||[]),...(c.pending||[]),...(c.pendingRewards||[])].some(i=>i.id===data.entry))return {need:false,reason:'已经拥有这件装备，先领取或换装'};
+ if([...(c.bag||[]),...(c.bank||[]),...(c.pending||[])].some(i=>i.id===data.entry))return {need:false,reason:'已经拥有这件装备，先领取或换装'};
  const role=combatRole(c);
  if(!npcWeaponAllowed(c,data))return {need:false,reason:'不符合当前天赋方案的武器类型'};
  if(role==='tank'&&c.classId!==11&&(data.InventoryType===17||slotOf(data)===17&&data.InventoryType!==14))return {need:false,reason:'当前坦克职责保留盾牌'};
@@ -74,7 +74,7 @@ export function equipmentUpgrade(c,item){
 }
 export function canReceiveEquipment(c,item){
  if(!item.maxcount||item.maxcount<0)return true;
- const owned=[...Object.values(c.equipment),...(c.bag||[]),...(c.bank||[]),...(c.pending||[]),...(c.pendingRewards||[])].filter(i=>i.id===item.entry).reduce((n,i)=>n+(i.count||1),0);
+ const owned=[...Object.values(c.equipment),...(c.bag||[]),...(c.bank||[]),...(c.pending||[]),...(c.auctions||[]).map(a=>a.item)].filter(i=>i.id===item.entry).reduce((n,i)=>n+(i.count||1),0);
  return owned<item.maxcount;
 }
 export function equipNpcItem(c,item,plan=equipmentUpgrade(c,items[item.id])){

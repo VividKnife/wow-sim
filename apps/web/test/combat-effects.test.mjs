@@ -14,6 +14,6 @@ test('repeated Fireball refreshes its own damage aura rather than stacking copie
 });
 test('a resisted Frostbolt applies neither damage nor its slow effect',()=>{
  const s=createGame('命中',21,0);s.level=4;s.learned=[116];s.mana=1000;s.rules=[{spell:116,condition:'always',value:0,enabled:true}];startCombat(s,[299]);s.combat.enemies[0].level=4;s.combat.enemies[0].hp=10000;s.combat.enemies[0].rootUntil=1000000;
- for(let t=0;t<=1400;t+=100){s.clock=t;combatTick(s);}s.clock=1500;combatTick(s);const impact=s.combat.projectiles[0].landsAt;s.rules=[];s.nextSwing=1e9;s.rngState=1;s.clock=impact;combatTick(s);
+ for(let t=0;t<=1400;t+=100){s.clock=t;combatTick(s);}s.clock=1500;combatTick(s);const projectile=s.combat.projectiles[0],impact=s.simulationEvents.queue.events.find(e=>e.kind==='ProjectileImpact'&&e.subjectId===projectile.sequence).atMs;s.rules=[];s.nextSwing=1e9;s.rngState=1;s.clock=impact;combatTick(s);
  assert.ok(s.logs.some(l=>l.text.includes('抵抗了')));assert.equal(s.combat.enemies[0].slowUntil,0);assert.deepEqual(s.combat.damage,{});
 });

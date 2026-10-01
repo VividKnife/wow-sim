@@ -1,3 +1,6 @@
+import {addGroundEffect} from '../../../packages/game-domain/src/rules/ground-events.js';
+import {beginActorCast} from '../../../packages/game-domain/src/rules/simulation-events.js';
+import {launchProjectile} from '../../../packages/game-domain/src/rules/combat-projectiles.js';
 import {recruitForTest} from './support/party-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -11,8 +14,8 @@ test('abandon kills the entire encounter roster and summons, stops effects and p
  let s=group();const id=s.combat.id;s.party[0].hp=0;
  s.pet={id:'pet',ownerId:s.id,petUnit:true,hp:10,level:20,equipment:{},learned:[],talents:{}};s.combat.participantIds.push('pet');
  s.totems={fire:{id:'totem',ownerId:s.id,totemUnit:true,petUnit:true,hp:5,level:20,equipment:{},learned:[],talents:{}}};s.combat.participantIds.push('totem');
- s.cast={spell:7322,until:s.clock+1000};s.party[1].talentProcs={spiritOfRedemption:{until:s.clock+15000}};
- s.combat.projectiles=[{impactAt:s.clock+1000}];s.combat.pendingSpawns=[{at:s.clock+1000}];s.groundEffects=[{side:'enemy'}];
+ beginActorCast(s,s,{spell:7322,until:s.clock+1000});s.party[1].talentProcs={spiritOfRedemption:{until:s.clock+15000}};
+ assert.equal(launchProjectile(s,s,s.combat.enemies[0],{Id:133,School:2,Speed:20}),true);s.combat.pendingSpawns=[{at:s.clock+1000}];addGroundEffect(s,{side:'enemy',caster:s.combat.enemies[0].id,interval:1000,next:s.clock+1000,until:s.clock+3000});
  const before={money:s.money,xp:s.totals.xp,kills:s.totals.kills,deaths:s.totals.deaths,bag:structuredClone(s.bag)};
  s=act(s,{type:'abandonCombat',encounterId:id},s.wallAt);
  assert.equal(s.combat,null);assert.equal(s.lastCombat.abandoned,true);assert.equal(s.activity.type,'dead');

@@ -4,14 +4,12 @@ import ClassicActionTooltip from './classic-action-tooltip';
 import {Settings2,Swords,X} from 'lucide-react';
 import {actionAfterElapsed,actionKeys,actionBarStorageKey,normalizeActionSlots,upgradeActionSlots,quickActions,quickActionChoices,defaultActionSlots,quickActionKey} from '@/lib/classic-action-bar.js';
 import {Icon,type GameProps} from './game-ui';
-import {useLocalCombat} from '@/lib/local-combat-store';
 import {useCombatPlayback} from '@/lib/use-combat-playback';
 import LiveCastBar from './live-cast-bar';
 import './classic-action-bar.css';
 
 export default function ClassicActionBar({state,data,playback,contentVersion,busy,send,blocked}:{blocked:boolean}&GameProps){
- const local=useLocalCombat(state,data,true);
- const {state:s,data:d}=useCombatPlayback(local.state,local.data,playback,contentVersion,true);
+ const {state:s,data:d}=useCombatPlayback(state,data,playback,contentVersion,true);
  const [expanded,setExpanded]=useState(false),frameId=useId();
  const mode=s.combat?'combat':'peace';
  const baseActions=useMemo(()=>quickActions(s,d,mode),[s,d,mode]);

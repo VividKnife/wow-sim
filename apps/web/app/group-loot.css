@@ -1,0 +1,16 @@
+.hall-loot article{border-top:1px solid #dcb97433;padding:14px 0}
+.hall-loot-result{display:flex;flex-direction:column;gap:5px;padding:10px 0;border-bottom:1px solid #ffffff12}
+.hall-loot-result small{color:#a5a196;line-height:1.8}
+.hall-loot>details{margin-top:12px}
+.hall-loot article>p{font-size:12px;color:#b9a884}
+.hall-loot article>small{font-size:11px;color:#a5a196}
+.hall-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.loot-roll-stack{position:fixed;z-index:140;right:max(18px,env(safe-area-inset-right));top:max(16vh,env(safe-area-inset-top));width:min(340px,calc(100vw - 24px));display:grid;gap:8px;pointer-events:none;color:#dfd3b7;font-size:13px}
+.loot-roll-stack>header{display:flex;justify-content:space-between;gap:8px;padding:5px 10px;background:#171a19ee;border:1px solid #9c804b;border-radius:4px;font-size:12px;text-shadow:1px 1px #000}
+.loot-roll-stack>header span{color:#c5bba7}
+.loot-roll-card{pointer-events:auto;background:linear-gradient(120deg,#27251ff5,#111918f5);border:1px solid #b49451;border-radius:5px;box-shadow:0 4px 18px #0009,inset 0 0 0 2px #0b0b09;padding:12px}
+.loot-roll-card>p{font-size:12px;margin:8px 0;color:#cbbb94;min-height:18px}
+.loot-roll-actions{display:flex;gap:8px;margin-top:9px}.loot-roll-actions>button{flex:1;height:32px;min-width:0}
+.loot-roll-timer{height:5px;border:1px solid #b0945444;background:#080a08;border-radius:3px;overflow:hidden}.loot-roll-timer>i{display:block;height:100%;background:linear-gradient(90deg,#775c20,#dbb756);transition:width .2s linear}
+@media(max-width:600px){.loot-roll-stack{top:max(12px,env(safe-area-inset-top));right:12px;width:min(310px,calc(100vw - 24px))}.loot-roll-card{padding:9px}}
+@media(prefers-reduced-motion:reduce){.loot-roll-timer>i{transition:none}}

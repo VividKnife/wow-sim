@@ -68,4 +68,4 @@ export function Item({item,instance,details,onEquip,onSell}:{item:any;instance?:
  if(!item)return null;
  return <div className="item-row"><ItemDisplay item={item} instance={instance} details={details}/>{onEquip&&item.slot>0&&<Button variant="outline" size="sm" onClick={onEquip}>装备</Button>}{onSell&&item.sell>0&&<Button variant="ghost" size="sm" onClick={onSell}>卖出</Button>}</div>;
 }
-export type GameProps={roster?:readonly any[];state:any;data:any;busy:boolean;revision?:number;playback?:any;contentVersion?:string;simulationStatus?:string;send:(body:any)=>Promise<boolean>};
+export type GameProps={roster?:readonly any[];state:any;data:any;busy:boolean;revision?:number;playback?:any;contentVersion?:string;send:(body:any)=>Promise<boolean>};

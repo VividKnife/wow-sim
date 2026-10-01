@@ -1,0 +1,112 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {PGlite} from '@electric-sql/pglite';
+import {MemoryStore} from '../../persistence/src/memory.ts';
+import {PostgresStore, type SqlPool} from '../../persistence/src/postgres.ts';
+import type {Store} from '../../persistence/src/store.ts';
+import {SimulationRepository, type TransferBoundary} from '../../persistence/src/simulation.ts';
+import {residentStore, transferResidentClaims} from '../src/resident-store.ts';
+import {ResidentCharacters, type CharacterAdmission, type Residency} from '../src/resident-characters.ts';
+import {GameService} from '../src/service.ts';
+import {context, persistCharacter} from '../src/context.ts';
+import type {Character,Rules} from '../src/model.ts';
+import {ensureNpcMatchSupply} from '../src/rules/npc-world.js';
+import {ResidentInstance, type InstanceCheckpoint} from '../../../apps/simulation-host/src/instance.ts';
+import {composeDungeonCheckpoint} from '../../../apps/simulation-host/src/dungeon-composition.ts';
+import {rebaseSimulation} from '../src/simulation-clock.ts';
+import {addPeriodicEffect} from '../src/rules/simulation-events.js';
+import {runtimeVersion} from '../../../apps/simulation-host/src/version.ts';
+
+function pool(db: PGlite): SqlPool {
+  let tail = Promise.resolve();
+  return {async connect() {const previous=tail;let release!:()=>void;tail=new Promise(r=>release=r);await previous;
+    return {query:async(sql,values)=>sql.includes('CREATE TABLE')?(await db.exec(sql),{rows:[]}):db.query(sql,values),release};},end:()=>db.close()};
+}
+
+for (const backend of ['memory','sql'] as const) test(`${backend}: sealed residents transfer all identities atomically and retired rooms can never recover`, async()=>{
+  const raw:Store=backend==='memory'?new MemoryStore():new PostgresStore(pool(new PGlite()));
+  if(raw instanceof PostgresStore)await raw.initialize();
+  const store=residentStore(raw),game=new GameService(store,{contentVersion:'transfer',seed:()=>283});
+  const characters=new ResidentCharacters(store,{version:runtimeVersion}),repository=new SimulationRepository(store,Date.now,characters.commit);
+  try {
+    const admissions:CharacterAdmission[]=[];
+    for(const accountId of ['alice','bob']){
+      const created=await game.createAccount(accountId,{name:accountId,classId:8,raceId:1},'create');
+      await store.transaction(async tx=>{
+        const row=(await tx.get<Character>('characters',created.state.id))!,state=await context(tx,row,Date.now(),false);
+        state.level=20;ensureNpcMatchSupply(state);await persistCharacter(tx,row,state,state.wallAt,'supply:'+accountId);
+      });
+      const admission=await characters.admission(accountId,created.state.id);
+      admissions.push(admission);
+    }
+    const owners=[],boundaryWall=Date.now();
+    for(const [index,admission]of admissions.entries()){
+      const state=admission.state;state.wallAt=boundaryWall;state.location='deadmines';
+      rebaseSimulation(state,10000+index*12345);
+      state.party=state.npcWorld.residents.slice(0,index?1:2).map((p:Rules)=>structuredClone(p.unit));
+      state.npcWorld.selection=state.party.map((c:Rules)=>c.id);
+      addPeriodicEffect(state,state,'hots',{spell:139,name:'Renew',caster:state.id,amount:10,next:state.clock+1000,interval:1000,until:state.clock+3000});
+      const owner=await repository.acquire(admission.instanceId,'source-host',60000);
+      const runtime=new ResidentInstance({...admission,ownerEpoch:owner.epoch});
+      await repository.commit(owner,1,runtime.checkpoint());owner.commitSequence=1;owners.push(await repository.seal(owner,'join-party'));
+    }
+    const before=await store.read(async tx=>({claims:await tx.list('simulation_characters'),items:await tx.list('items'),wallets:await tx.list('wallets'),npcs:await tx.list('npc_characters')}));
+    assert.equal(before.claims.length,22);
+    let fail=true,calls=0,omitNpc=false;
+    const create:TransferBoundary<InstanceCheckpoint>=async(tx,{transferId,destination,sources})=>{
+      calls++;
+      const checkpoint=composeDungeonCheckpoint(sources.map(s=>s.checkpoint),{instanceId:destination.id,ownerEpoch:destination.epoch,primaryActorId:admissions[0].state.id,roster:{groupId:'test:party',leaderId:admissions[0].state.id,dungeonId:'deadmines',members:sources.flatMap(s=>[s.checkpoint.state,...s.checkpoint.state.party].map((c:Rules)=>({id:c.id,npc:!!c.npcPlayer}))) }});
+      const {state,controllers,presence}=checkpoint;
+      if(omitNpc)state.party.find((c:Rules)=>c.id===admissions[1].state.id).npcWorld.residents.pop();
+      const admission:CharacterAdmission={instanceId:destination.id,state,controllers,presence:presence!};
+      const residency:Residency={id:destination.id,characterId:state.id,accountId:'alice',...runtimeVersion,
+        participants:controllers.map(c=>({characterId:c.actorId,accountId:c.accountId})),encodedAdmission:JSON.stringify(admission)};
+      await transferResidentClaims(tx,transferId,sources.map(s=>s.owner),residency);
+      await assert.rejects(tx.put('wallets',{id:state.id,characterId:state.id,balance:0}),/模拟实例/,'transfer never grants general asset write access');
+      if(fail)throw new Error('failure after moving claims');
+      return checkpoint;
+    };
+    await assert.rejects(repository.transfer('join-party',owners,'shared:joined',create),/failure after moving/);
+    assert.deepEqual(await store.read(tx=>tx.list('simulation_characters')),before.claims);
+    assert.equal(await repository.load('shared:joined'),null);
+    assert.equal(await store.read(tx=>tx.get('simulation_owners','shared:joined')),null);
+    assert.equal((await characters.find('bob',admissions[1].state.id))!.instanceId,owners[1].id);
+    fail=false;omitNpc=true;
+    await assert.rejects(repository.transfer('join-party',owners,'shared:joined',create),/全部真人与 NPC/);
+    omitNpc=false;
+    assert.deepEqual(await repository.transfer('join-party',owners,'shared:joined',create),{instanceId:'shared:joined',duplicate:false});
+    const callsAfterCommit=calls;
+    assert.equal((await repository.transfer('join-party',owners,'shared:joined',create)).duplicate,true);assert.equal(calls,callsAfterCommit);
+    await assert.rejects(repository.transfer('join-party',owners,'shared:different',create),/reused/);
+    const after=await store.read(async tx=>({claims:await tx.list('simulation_characters'),items:await tx.list('items'),wallets:await tx.list('wallets'),npcs:await tx.list('npc_characters')}));
+    assert.deepEqual(after.items,before.items);assert.deepEqual(after.wallets,before.wallets);assert.deepEqual(after.npcs,before.npcs);
+    assert.equal(after.claims.length,22);assert.ok(after.claims.every(c=>c.instanceId==='shared:joined'));
+    for(const [i,owner]of owners.entries()){
+      assert.equal(await store.read(tx=>tx.get('simulation_residencies',owner.id)),null);
+      assert.equal((await characters.find(i?'bob':'alice',admissions[i].state.id))!.instanceId,'shared:joined');
+      await assert.rejects(repository.acquire(owner.id,'stale-admission'),/permanently transferred/);
+      await assert.rejects(repository.unseal(owner,'join-party'),/fenced/);
+      await assert.rejects(repository.renew(owner),/fenced/);
+      assert.equal(await repository.load(owner.id),null,'retired rooms do not retain duplicate full state');
+      const old=new ResidentInstance({...admissions[i],ownerEpoch:owner.epoch}).checkpoint();
+      await assert.rejects(repository.commit(owner,2,old),/fenced/);
+    }
+    // Crash after transaction, before target Worker startup: recover solely
+    // from durable claims and checkpoint with the normal owner protocol.
+    const recovered=await repository.acquire('shared:joined','replacement-host',60000);
+    assert.equal(recovered.epoch,2);assert.equal(recovered.commitSequence,1);
+    const loaded=(await repository.load<InstanceCheckpoint>('shared:joined'))!.checkpoint;
+    assert.equal(loaded.state.dungeon.id,'deadmines');assert.equal(loaded.state.party.length,4);
+    assert.equal(loaded.state.party.filter((c:Rules)=>!c.npcPlayer).length,1);
+    const restored=ResidentInstance.restore(loaded,recovered.epoch);
+    await repository.commit(recovered,2,restored.checkpoint());
+    assert.equal((await repository.load<InstanceCheckpoint>('shared:joined'))!.checkpoint.controllers.length,2);
+    assert.equal((await store.read(tx=>tx.list('simulation_characters',{instanceId:'shared:joined'}))).length,22);
+    const activeNpcIds=new Set(loaded.state.party.filter((c:Rules)=>c.npcPlayer).map((c:Rules)=>c.id));
+    const persistedNpcs=await store.read(tx=>tx.list('npc_characters'));
+    assert.equal(activeNpcIds.size,3);
+    for(const npc of persistedNpcs)assert.equal(npc.profile.runs,activeNpcIds.has(npc.id)?1:0);
+    await repository.commit(recovered,2,restored.checkpoint());
+    assert.deepEqual(await store.read(tx=>tx.list('npc_characters')),persistedNpcs,'retry does not increment participation twice');
+  } finally {await store.close();}
+});

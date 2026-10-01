@@ -5,7 +5,7 @@ import {createGame,act,advance,stats} from '../../../packages/game-domain/src/ru
 import {enterDungeon,leaveDungeon,prepareEncounter,finishDungeonCannon,recordDungeonProgress,interactDungeon,dungeonRoute as routeFor} from '../../../packages/game-domain/src/rules/dungeon.js';
 const dungeonRoute=routeFor('deadmines');
 import {combatTick} from '../../../packages/game-domain/src/rules/combat.js';
-import {addItem,countItem} from '../../../packages/game-domain/src/rules/character.js';
+import {addItem,countItem,makeItem} from '../../../packages/game-domain/src/rules/character.js';
 import {creatureLoot} from '../../../packages/game-domain/src/rules/catalog.js';
 import {lootRows,questProgress} from '../../../packages/game-domain/src/rules/quests.js';
 
@@ -84,9 +84,9 @@ test('stopping a fired cannon cannot consume powder without opening the door',()
 });
 
 test('party rest consumes individual supplies and restores living members without a browser heartbeat',()=>{
- let s=group();enterDungeon(s);s.bag=[];addItem(s,117,5);addItem(s,159,5);
- for(const c of [s,...s.party]){c.hp=1;c.mana=0;c.lastManaUse=0;}
- s=act(s,{type:'rest'},0);assert.equal(countItem(s,117),0);assert.equal(countItem(s,159),2);
+ let s=group();enterDungeon(s);
+ for(const c of [s,...s.party]){c.bag=[makeItem(s,117),makeItem(s,159)];c.hp=1;c.mana=0;c.lastManaUse=0;}
+ s=act(s,{type:'rest'},0);assert.equal(countItem(s,117),0);assert.equal(countItem(s,159),0);
  assert.ok([s,...s.party].every(c=>c.rest));
  const background=advance(s,18000).state;assert.ok(background.clock>0);assert.ok(background.party.every(c=>c.hp>1));
  const whole=advance(s,18000,{}).state;let chunk=s;

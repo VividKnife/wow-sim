@@ -18,6 +18,7 @@ import {workshopView} from '../../../packages/game-domain/src/rules/workshop.js'
 import {createDeltaEvent,type GameSnapshotEvent} from '../../../packages/contracts/src/events.ts';
 
 export type GameSnapshot = {
+  response?: import('../../../packages/contracts/src/game.ts').GameResponse;
   state: Record<string, any> | null;
   revision: number;
   account: object | null;
@@ -25,19 +26,19 @@ export type GameSnapshot = {
   activities: object[];
   instanceId: string | null;
   combatMode?: 'recorded' | 'realtime' | 'local' | null;
-  localSimulation?: {ownerId:string;sessionId:string|null} | null;
   playback?: import('../../../packages/game-domain/src/model.ts').PlaybackManifest | null;
   instance?: null | {sequence?: number; [key: string]: any};
 };
 
 export interface GameServiceLike {
+  socialSnapshot?(accountId:string,actorId:string,query?:string):Promise<unknown>;
+  socialCommand?(accountId:string,actorId:string,body:Record<string,any>):Promise<unknown>;
   gmInbox?(accountId:string):Promise<unknown>;
-  localSimulation?(accountId:string, input:Record<string,any>):Promise<unknown>;
   listSaves?: (userId:string)=>Promise<unknown>;
   createSave?: (userId:string,input:{name:string;classId:number;raceId:number;gender?:'male'|'female';boost?:boolean;raidReady?:boolean},requestId:string)=>Promise<unknown>;
   deleteSave?: (userId:string,saveId:string)=>Promise<void>;
   resolveSave?: (userId:string,saveId:string|null)=>Promise<string>;
-  snapshot(accountId: string, characterId?: string, online?: boolean): Promise<GameSnapshot>;
+  snapshot(accountId: string, characterId?: string, online?: boolean, scope?:'full'|'combat'): Promise<GameSnapshot>;
   createAccount(accountId: string, input: {name: string; classId: number; raceId: number; gender?: 'male' | 'female'}, requestId: string): Promise<GameSnapshot>;
   command(accountId: string, command: Record<string, any>): Promise<GameSnapshot>;
   work(now?: number, limit?: number): Promise<unknown>;
@@ -57,6 +58,8 @@ export type GameServerOptions = {
   content?: () => Content;
   workshop?: typeof workshopView;
   pollIntervalMs?: number;
+  readiness?:()=>Promise<boolean>;
+  deployment?:{commit?:string;buildId?:string};
 };
 
 const requestIdPattern = /^[\w-]{8,100}$/;
@@ -70,8 +73,7 @@ function acceptsGzip(value:string='') {
 }
 function json(response:ServerResponse,status:number,body:unknown,headers:Record<string,string>={}) {
  const context=responseContext.get(response);
- // Checkpoints are canonical engine state: never rewrite their asset strings.
- const base=context?.request.url?.split('?')[0]==='/api/game/local'?'':context?.assetBase;
+ const base=context?.assetBase;
  const bytes=Buffer.from(JSON.stringify(body,(key,value)=>/^(?:icon|image|src|background|portrait|texture|url|path)$/.test(key)?publicAssetUrl(value,base):value));
  const compressed=acceptsGzip(context?.request.headers['accept-encoding']);
  const result:Record<string,string>={'content-type':'application/json; charset=utf-8','cache-control':'no-store',vary:'Accept-Encoding',...headers};
@@ -109,6 +111,7 @@ async function readJson(request: IncomingMessage, maximumBytes = maximumBodyByte
 }
 
 function gameResponse(snapshot: GameSnapshot, scope: 'full' | 'combat' = 'full') {
+  if(snapshot.response)return snapshot.response;
   return buildGameResponse(snapshot.state, snapshot.revision, {
     account: snapshot.account,
     roster: snapshot.roster,
@@ -118,7 +121,6 @@ function gameResponse(snapshot: GameSnapshot, scope: 'full' | 'combat' = 'full')
     scope,
     combatMode: snapshot.combatMode ?? null,
     playback: snapshot.playback ?? null,
-    localSimulation: snapshot.localSimulation ?? null,
   });
 }
 
@@ -129,9 +131,9 @@ function characterId(url: URL): string | undefined {
   return value;
 }
 
-async function readGame(service: GameServiceLike, accountId: string, selectedCharacterId?: string): Promise<GameSnapshot> {
+async function readGame(service: GameServiceLike, accountId: string, selectedCharacterId?: string,scope:'full'|'combat'='full'): Promise<GameSnapshot> {
   try {
-    return await service.snapshot(accountId, selectedCharacterId, true);
+    return await service.snapshot(accountId, selectedCharacterId, true,scope);
   } catch (error) {
     if (!selectedCharacterId && error && typeof error === 'object' && (error as any).code === 'NOT_FOUND') {
       return {state: null, revision: 0, account: null, roster: [], activities: [], instanceId: null, instance: null};
@@ -183,12 +185,18 @@ export function createGameServer(options: GameServerOptions) {
   };
   if (!Number.isFinite(pollIntervalMs) || pollIntervalMs < 10) throw new Error('pollIntervalMs must be at least 10');
 
+  let healthAt=0,healthRunning=false,health:Promise<boolean>|undefined;
   const server = createServer((request, response) => {
     void (async () => {
       responseContext.set(response,{request,assetBase:options.publicAssetBase||''});
       const url = new URL(request.url || '/', origin);
       if(!['GET','HEAD','OPTIONS'].includes(request.method||'')&&!sameOrigin(request,origin)){
         json(response,403,{error:'请求来源无效'});return;
+      }
+      if(url.pathname==='/api/health'&&request.method==='GET'){
+        if(!health||!healthRunning&&Date.now()-healthAt>=1000){healthRunning=true;health=Promise.resolve().then(()=>options.readiness?.()??false).catch(()=>false).finally(()=>{healthAt=Date.now();healthRunning=false;});}
+        const ready=await health;
+        json(response,ready?200:503,{ready,...(ready&&options.deployment?{deployment:options.deployment}:{})});return;
       }
       if(url.pathname.startsWith('/api/admin/')){
         const admin=options.admin;
@@ -309,12 +317,18 @@ export function createGameServer(options: GameServerOptions) {
         json(response, 200, recording, {'cache-control': 'private, no-store'});
         return;
       }
+      if(url.pathname==='/api/game/social'&&options.service.socialSnapshot&&options.service.socialCommand){
+        const accountId=await selectedAccount(request,url),actorId=characterId(url);
+        if(!actorId){json(response,400,{error:'请选择角色'});return;}
+        if(request.method==='GET'){json(response,200,await options.service.socialSnapshot(accountId,actorId,url.searchParams.get('q')??''));return;}
+        if(request.method==='POST'){const body=await readJson(request);validateCommand(body);json(response,200,await options.service.socialCommand(accountId,actorId,cleanCommand(body)));return;}
+      }
       if (url.pathname === '/api/game' && request.method === 'GET') {
         const accountId = await selectedAccount(request, url);
         const selectedCharacterId = characterId(url);
-        const snapshot = await readGame(options.service, accountId, selectedCharacterId);
         const scope = url.searchParams.get('scope') === 'combat' ? 'combat' : 'full';
-        const etag = '"' + createHash('sha256').update(JSON.stringify([accountId, selectedCharacterId || snapshot.state?.id, snapshot.revision, snapshot.instanceId, snapshot.instance?.sequence, getContent().contentVersion, scope, snapshot.state?.serverBuffs, snapshot.state?.party?.map((actor:any)=>actor.serverBuffs)])).digest('hex') + '"';
+        const snapshot = await readGame(options.service, accountId, selectedCharacterId,scope);
+        const etag = '"' + createHash('sha256').update(JSON.stringify([snapshot.response?.execution,accountId, selectedCharacterId || snapshot.state?.id, snapshot.revision, snapshot.instanceId, snapshot.instance?.sequence, getContent().contentVersion, scope, snapshot.state?.serverBuffs, snapshot.state?.party?.map((actor:any)=>actor.serverBuffs)])).digest('hex') + '"';
         if (request.headers['if-none-match']?.replace(/^W\//,'') === etag) {
           response.writeHead(304, {etag: acceptsGzip(request.headers['accept-encoding'])?'W/'+etag:etag, vary:'Accept-Encoding', 'cache-control': 'private, no-cache'});
           response.end();
@@ -326,22 +340,10 @@ export function createGameServer(options: GameServerOptions) {
       if(url.pathname==='/api/game/gm-inbox'&&request.method==='GET'&&options.service.gmInbox){
         json(response,200,{gifts:await options.service.gmInbox(await selectedAccount(request,url))});return;
       }
-      if (url.pathname === '/api/game/local' && request.method === 'POST' && options.service.localSimulation) {
-        const accountId = await selectedAccount(request, url);
-        const body = await readJson(request, 8 * 1024 * 1024);
-        validateCommand(body);
-        json(response, 200, await options.service.localSimulation(accountId, cleanCommand(body)));
-        return;
-      }
       if (url.pathname === '/api/game' && request.method === 'POST') {
         const accountId = await selectedAccount(request, url);
-        const body = await readJson(request, 8 * 1024 * 1024);
+        const body = await readJson(request);
         validateCommand(body);
-        if(body.localCheckpoint===undefined&&Buffer.byteLength(JSON.stringify(body))>maximumBodyBytes)throw Object.assign(new Error('操作内容过长'),{status:413,code:'BODY_TOO_LARGE'});
-        if(body.localCheckpoint!==undefined){
-          if(!body.localCheckpoint||typeof body.localCheckpoint!=='object'||Array.isArray(body.localCheckpoint))throw Object.assign(new Error('检查点无效'),{status:400,code:'LOCAL_STATE'});
-          validateCommand(body.localCheckpoint);
-        }
         const result = body.type === 'create'
           ? await options.service.createAccount(accountId, {name: body.name.trim(), classId: body.classId, raceId: body.raceId, ...(body.gender ? {gender: body.gender} : {})}, body.requestId)
           : await options.service.command(accountId, cleanCommand(body));
@@ -397,6 +399,7 @@ export function createGameServer(options: GameServerOptions) {
     let selectedCharacter: string | undefined;
     let lastKey = '';
     let deliveryMode: 'snapshot' | 'delta' = 'snapshot';
+    let realtime=false,lastReadAt=0,lastFullAt=0,lastAuthAt=0,lastPingAt=0,lastHeartbeatAt=0,backloggedAt=0;
     let baseline: GameSnapshotEvent | null = null;
     let subscriptionId = 0;
     let lastPongAt = Date.now();
@@ -404,30 +407,53 @@ export function createGameServer(options: GameServerOptions) {
 
     const sendEvent = (event: object) => {
       if (socket.readyState !== socket.OPEN) return false;
-      if (socket.bufferedAmount > maximumSocketBufferBytes) {
-        socket.close(1013, 'Slow receiver');
-        return false;
-      }
-      socket.send(JSON.stringify(event));
+      if (socket.bufferedAmount > maximumSocketBufferBytes) return false;
+      socket.send(JSON.stringify(event,function(key,value){
+        const field=key==='value'&&this?.op==='set'&&Array.isArray(this.path)?this.path.at(-1):key;
+        return /^(?:icon|image|src|background|portrait|texture|url|path)$/.test(field)?publicAssetUrl(value,options.publicAssetBase||''):value;
+      }));
       return true;
     };
 
     const sendSnapshot = async (force = false) => {
       if (running || socket.readyState !== socket.OPEN) return;
       if (Date.now() - lastPongAt > 30_000) { socket.terminate(); return; }
-      socket.ping();
+      const now=Date.now();
+      // One full baseline may exceed the watermark. Let it drain instead of
+      // disconnecting when the immediate heartbeat sees its buffered bytes.
+      // Do not enqueue more data behind it; persistently slow peers time out.
+      if(socket.bufferedAmount>maximumSocketBufferBytes){
+        if(!backloggedAt)backloggedAt=now;
+        if(now-backloggedAt>=5000)socket.close(1013,'Slow receiver');
+        return;
+      }
+      backloggedAt=0;
+      if(now-lastPingAt>=10000){socket.ping();lastPingAt=now;}
+      const fighting=!!baseline?.snapshot?.player?.combat;
+      const interval=realtime&&fighting?100:pollIntervalMs;
+      if(!force&&now-lastReadAt<interval)return;
+      lastReadAt=now;
+      const scope=realtime&&fighting&&!force&&now-lastFullAt<1000?'combat':'full';
       running = true;
       const activeSubscription = subscriptionId;
       const activeCharacter = selectedCharacter;
       try {
-        await accountFrom(_request,options.accounts);
-        const snapshot = await options.service.snapshot(accountId, activeCharacter, true);
+        if(now-lastAuthAt>=1000){await accountFrom(_request,options.accounts);lastAuthAt=now;}
+        const snapshot = await options.service.snapshot(accountId, activeCharacter, true,scope);
+        if(scope==='full')lastFullAt=now;
         if (activeSubscription !== subscriptionId) return;
-        const sequence = snapshot.instance?.sequence ?? 0;
-        const key = `${snapshot.revision}:${sequence}:${activeCharacter || ''}:${JSON.stringify(snapshot.state?.serverBuffs||[])}`;
+        const sequence = snapshot.response?.execution?.streamSequence??snapshot.instance?.sequence ?? 0;
+        const key = `${snapshot.response?.execution?.ownerEpoch??0}:${snapshot.revision}:${sequence}:${activeCharacter || ''}:${JSON.stringify(snapshot.state?.serverBuffs||[])}`;
         if (force || key !== lastKey) {
-          const next = {type: 'snapshot', sequence, ...gameResponse(snapshot)} as GameSnapshotEvent;
-          const event = !force && deliveryMode === 'delta' && baseline &&
+          let next = {type: 'snapshot', sequence, ...gameResponse(snapshot,scope)} as GameSnapshotEvent;
+          const sameOwner=baseline&&next.execution?.ownerEpoch===baseline.execution?.ownerEpoch&&next.execution?.instanceId===baseline.execution?.instanceId&&next.execution?.actorId===baseline.execution?.actorId&&next.execution?.controllerGeneration===baseline.execution?.controllerGeneration&&next.snapshot?.player.id===baseline.snapshot?.player.id&&next.contentVersion===baseline.contentVersion;
+          // Keep slow metadata in the stream baseline across combat updates.
+          // Switching projection cadence must not delete and resend the world.
+          if(next.scope==='combat'&&sameOwner&&baseline?.snapshot&&next.snapshot)next={...next,snapshot:{...next.snapshot,view:{...baseline.snapshot.view,...next.snapshot.view}}};
+          const event = !force && deliveryMode === 'delta' && baseline && sameOwner &&
+            next.execution?.ownerEpoch===baseline.execution?.ownerEpoch&&next.execution?.instanceId===baseline.execution?.instanceId&&
+            next.execution?.actorId===baseline.execution?.actorId&&next.execution?.controllerGeneration===baseline.execution?.controllerGeneration&&
+            next.contentVersion===baseline.contentVersion&&
             next.revision >= baseline.revision && next.sequence >= baseline.sequence &&
             (next.revision > baseline.revision || next.sequence > baseline.sequence)
             ? createDeltaEvent(baseline, next)
@@ -435,8 +461,10 @@ export function createGameServer(options: GameServerOptions) {
           if (sendEvent(event)) {
             baseline = next;
             lastKey = key;
+            lastHeartbeatAt=now;
           }
         }
+        if(realtime&&now-lastHeartbeatAt>=1000){sendEvent({type:'heartbeat'});lastHeartbeatAt=now;}
       } catch (error) {
         const details = errorDetails(error);
         sendEvent({type: 'error', ...details.body});
@@ -450,6 +478,7 @@ export function createGameServer(options: GameServerOptions) {
       try {
         const message = JSON.parse(raw.toString());
         if (!message || message.type !== 'subscribe' ||
+          (message.realtime !== undefined && typeof message.realtime !== 'boolean') ||
           (message.mode !== undefined && message.mode !== 'snapshot' && message.mode !== 'delta') ||
           (message.characterId !== undefined && (typeof message.characterId !== 'string' || !message.characterId || message.characterId.length > 200)) ||
           (message.revision !== undefined && (!Number.isSafeInteger(message.revision) || message.revision < 0)) ||
@@ -458,12 +487,13 @@ export function createGameServer(options: GameServerOptions) {
         }
         selectedCharacter = message.characterId;
         deliveryMode = message.mode ?? 'snapshot';
+        realtime=message.realtime===true;lastFullAt=0;lastReadAt=0;
         subscriptionId++;
         lastKey = '';
         baseline = null;
         if (timer) clearInterval(timer);
         void sendSnapshot(true);
-        timer = setInterval(() => void sendSnapshot(), pollIntervalMs);
+        timer = setInterval(() => void sendSnapshot(), realtime?Math.min(100,pollIntervalMs):pollIntervalMs);
       } catch {
         sendEvent({type: 'error', error: '订阅请求无效', code: 'INVALID_SUBSCRIPTION'});
         socket.close(1008, 'Invalid subscription');

@@ -1,3 +1,4 @@
+import {assignTeamMovement,cancelTeamMovement,validateTeamDestination} from './team-movement.js';
 import {invalidatePolicyIntents} from './combat-policy.js';
 import {queueCombatInput,combatInputSkills,damagingInput,inputResult} from './combat-input.js';
 import {spells,creatures,icon,nameOf} from './catalog.js';
@@ -65,6 +66,17 @@ export function combatCommandAction(s,a){
  // A live order enables command mode without pausing or restarting the fight.
  const cmd=battle.command??={paused:false,marks:{},orders:[],focusId:null,holdFire:false};
  if(a.order==='pause'||a.order==='resume'){invalidatePolicyIntents(s,combatMembers(s).map(c=>c.id));cmd.paused=a.order==='pause';log(s,cmd.paused?'指挥暂停。':'指挥完成，继续战斗。','info');return;}
+ if(a.order==='moveTo'||a.order==='cancelMove'){
+  const ids=a.memberIds;
+  if(!Array.isArray(ids)||!ids.length||ids.length>40||new Set(ids).size!==ids.length||ids.some(id=>typeof id!=='string'))throw new Error('请选择至多40名不重复的参战成员');
+  const actors=commandActors(s),selected=ids.map(id=>actors.find(c=>c.id===id));
+  if(selected.some(c=>!c||a.order==='moveTo'&&c.hp<=0))throw new Error('请选择存活的参战成员');
+  if(a.order==='cancelMove'){cancelTeamMovement(s,ids);invalidatePolicyIntents(s,ids);return;}
+  const destination=validateTeamDestination(s,a.destination);
+  for(const input of [...(cmd.inputs||[])])if(ids.includes(input.memberId))inputResult(s,input,'cancelled','执行新的站位任务');
+  cmd.orders=cmd.orders.filter(o=>!ids.includes(o.memberId));
+  assignTeamMovement(s,selected,destination);invalidatePolicyIntents(s,ids);return;
+ }
  if(a.order==='holdFire'){
   if(typeof a.enabled!=='boolean')throw new Error('停火指令无效');invalidatePolicyIntents(s,combatMembers(s).map(c=>c.id));cmd.holdFire=a.enabled;
   if(a.enabled){
@@ -75,16 +87,17 @@ export function combatCommandAction(s,a){
  }
  if(a.order==='cast'||a.order==='stopCast'){
   const c=commandActors(s).find(c=>c.id===a.memberId&&c.hp>0);if(!c)throw new Error('请选择存活的参战成员');
-  if(a.order==='cast'){queueCombatInput(s,c,a.spellId,a.targetId);invalidatePolicyIntents(s,[c.id]);return;}
+  if(a.order==='cast'){queueCombatInput(s,c,a.spellId,a.targetId);cancelTeamMovement(s,[c.id],'被指定施法接管');invalidatePolicyIntents(s,[c.id]);return;}
   for(const input of cmd.inputs||[])if(input.memberId===c.id)inputResult(s,input,'cancelled','停止施法');
   if(c.cast)log(s,c.name+' 停止施法','cancel',{actorId:c.id,spellId:c.cast.spell,targetId:c.cast.target,reason:'command'});
   invalidatePolicyIntents(s,[c.id]);c.cast=null;c.queuedStrike=null;c.nextAction=s.clock;return;
  }
- if(a.order==='clearAll'){for(const input of cmd.inputs||[])inputResult(s,input,'cancelled','恢复自动战斗');cmd.orders=[];cmd.marks={};cmd.focusId=null;cmd.holdFire=false;cmd.mode='auto';cmd.memberModes={};return;}
+ if(a.order==='clearAll'){cancelTeamMovement(s,null,'恢复自动战斗');invalidatePolicyIntents(s,combatMembers(s).map(c=>c.id));for(const input of cmd.inputs||[])inputResult(s,input,'cancelled','恢复自动战斗');cmd.orders=[];cmd.marks={};cmd.focusId=null;cmd.holdFire=false;cmd.mode='auto';cmd.memberModes={};return;}
  if(a.order==='mode'){
   if(!['auto','single','aoe'].includes(a.mode))throw new Error('输出模式无效');
   const members=a.memberId?commandActors(s).filter(c=>c.id===a.memberId&&c.hp>0):commandActors(s);
   if(!members.length)throw new Error('请选择存活的参战成员');
+  if(a.mode==='auto')cancelTeamMovement(s,members.map(c=>c.id),'恢复自动战斗');
   if(a.mode==='auto')for(const input of cmd.inputs||[])if(!a.memberId||input.memberId===a.memberId)inputResult(s,input,'cancelled','恢复自动战斗');
   if(a.memberId){cmd.memberModes??={};cmd.memberModes[a.memberId]=a.mode;if(a.mode==='auto')cmd.orders=cmd.orders.filter(o=>o.memberId!==a.memberId);}
   else{cmd.mode=a.mode;cmd.memberModes={};if(a.mode==='auto'){cmd.orders=[];cmd.focusId=null;cmd.holdFire=false;}}
@@ -105,6 +118,7 @@ export function combatCommandAction(s,a){
   const reason=commandSkillReason(s,c,e,sp);if(reason)throw new Error(reason);
  }
  if(a.order==='kite'&&![3,8,9,7,11,5].includes(c.classId))throw new Error('请选择可以远程牵制的成员');
+ cancelTeamMovement(s,[c.id],'被新的战术指令接管');
  const persistent=['soft','kite'].includes(kind);
  cmd.orders=cmd.orders.filter(o=>persistent?!(o.memberId===c.id&&['soft','kite'].includes(o.kind)||o.targetId===e.id&&['soft','kite'].includes(o.kind)):!(o.memberId===c.id&&!['soft','kite'].includes(o.kind)));
  cmd.orders.push({kind,memberId:c.id,targetId:e.id,...(a.order==='control'?{spellId:a.spellId}:{})});
@@ -119,5 +133,5 @@ export function combatCommandAction(s,a){
 export function combatCommandView(s){
  if(!commandAvailable(s))return null;
  const members=commandActors(s),enemies=s.combat.enemies.filter(e=>aliveEnemy(e)&&!e.controlledBy);
- return {inputSkills:Object.fromEntries(members.map(c=>[c.id,combatInputSkills(c)])),members:members.map(c=>({id:c.id,name:c.name,classId:c.classId,hp:c.hp,canAoe:commandAreaSkills(c).length>0,canKite:c.hp>0&&[3,8,9,7,11,5].includes(c.classId)})),skills:members.filter(c=>c.hp>0).flatMap(c=>commandSkills(c).map(id=>{const sp=spellInfo(c,id);return {memberId:c.id,memberName:c.name,spellId:id,name:nameOf('spells',id),icon:icon('spells',id),kind:commandSkillKind(sp),cooldownUntil:cooldownUntil(c,sp),range:sp.range||5,targets:Object.fromEntries(enemies.map(e=>[e.id,{reason:commandSkillReason(s,c,e,sp),status:commandWaiting(s,c,e,sp)}]))};}))};
+ return {inputSkills:Object.fromEntries(members.map(c=>[c.id,combatInputSkills(c)])),members:members.map(c=>({id:c.id,name:c.name,classId:c.classId,hp:c.hp,position:c.position,positionY:c.positionY||0,squad:c.raidSquad??null,canAoe:commandAreaSkills(c).length>0,canKite:c.hp>0&&[3,8,9,7,11,5].includes(c.classId)})),skills:members.filter(c=>c.hp>0).flatMap(c=>commandSkills(c).map(id=>{const sp=spellInfo(c,id);return {memberId:c.id,memberName:c.name,spellId:id,name:nameOf('spells',id),icon:icon('spells',id),kind:commandSkillKind(sp),cooldownUntil:cooldownUntil(c,sp),range:sp.range||5,targets:Object.fromEntries(enemies.map(e=>[e.id,{reason:commandSkillReason(s,c,e,sp),status:commandWaiting(s,c,e,sp)}]))};}))};
 }

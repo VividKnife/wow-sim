@@ -1,3 +1,5 @@
+import {autoAttackReady,scheduleAutoAttack} from './simulation-events.js';
+import {combatSight} from './combat-space.js';
 import {onTalentEvent} from './talent-runtime.js';
 import {distance} from '../../../sim-core/src/geometry.js';
 import {rollAttackTable,weaponMissChance} from '../../../sim-core/src/attack-table.js';
@@ -8,7 +10,7 @@ import {items} from './catalog.js';
 import {facesAttacker} from './weapon-attacks.js';
 
 export function enemyMeleeTick(s,e,target,actors,hurt,api={}){
- if(e.hp<=0||target.hp<=0||distance(e,target)>5)return;
+ if(e.hp<=0||target.hp<=0||distance(e,target)>5||!combatSight(s,e,target))return;
  function hit(hand,extraAttack=false){
   if(target.hp<=0)return;
   const school=e.damageSchool||0,st=stats(target),skill=e.level*5,defense=st.defense||target.level*5,delta=defense-skill;
@@ -41,8 +43,8 @@ export function enemyMeleeTick(s,e,target,actors,hurt,api={}){
   const critical=outcome==='critical',crushing=outcome==='crushing';amount*=critical?2:crushing?1.5:1;
   hurt(s,e,target,amount,hand==='off'?'副手攻击':extraAttack?'额外攻击':'攻击',{school,hand,extraAttack,critical,crushing,outcome});
  }
- if(s.clock>=e.nextAttack){e.swingStartedAt=s.clock;e.nextAttack=s.clock+e.swing*attackTimeMultiplier(e,s.clock);hit('main');}
- if(e.dualWield){e.nextOffhand??=s.clock;if(s.clock>=e.nextOffhand){e.nextOffhand=s.clock+e.swing*attackTimeMultiplier(e,s.clock);hit('off');}}
+ if(autoAttackReady(s,e,'main','enemy')){e.swingStartedAt=s.clock;scheduleAutoAttack(s,e,'main',s.clock+e.swing*attackTimeMultiplier(e,s.clock),'enemy');hit('main');}
+ if(e.dualWield){e.nextOffhand??=s.clock;if(autoAttackReady(s,e,'off','enemy')){scheduleAutoAttack(s,e,'off',s.clock+e.swing*attackTimeMultiplier(e,s.clock),'enemy');hit('off');}}
  const extra=e.extraAttacks||0;e.extraAttacks=0;
  for(let n=0;n<extra&&target.hp>0;n++)hit('main',true);
 }

@@ -3,6 +3,7 @@ import {grantTalentRank,resetTalentGrants,talentGrantIds} from './talent-acquisi
 import {supportedTalentNames} from './class-support.js';
 import {strategySpellIds,validateRules,currentStrategyRules} from './combat-strategy.js';
 import {pvpPresets} from './pvp-presets.js';
+import {setCombatStrategy} from './strategy-revision.js';
 
 const copy=value=>structuredClone(value);
 const profileActor=c=>({classId:c.classId,level:c.level,raceId:c.raceId,learned:copy(c.learned||[]),dormantTalentSpells:copy(c.dormantTalentSpells||[]),talents:copy(c.talents||{}),equipment:{},bag:[]});
@@ -52,8 +53,8 @@ export function effectivePvpProfile(c){
  profile.rules=currentStrategyRules(actor,profile.rules);return profile;
 }
 export function applyPvpProfile(c,profile=effectivePvpProfile(c)){
- applyPvpTalents(c,profile.talents);c.rules=copy(profile.rules);
- c.strategyPolicy={role:profile.role,protectCC:true,waitForTank:false,pullDelaySeconds:0};
+ applyPvpTalents(c,profile.talents);
+ setCombatStrategy(c,{rules:copy(profile.rules),strategyPolicy:{role:profile.role,protectCC:true,waitForTank:false,pullDelaySeconds:0}});
  c.pvpProfileName=profile.name;c.pvpProfileRevision=profile.revision||0;
  return c;
 }

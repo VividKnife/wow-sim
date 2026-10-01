@@ -46,22 +46,12 @@ test('quest displays base XP while server buff increases awarded XP without dupl
  const retry=await boosted.service.command('a',{type:'turnin',id:783,requestId:'again'});
  assert.equal(retry.state.totals.xp,extra.state.totals.xp);
 });
-for(const kind of ['personal','instance'])test(`${kind}: local simulation receives buff and rejects modified rate`,async()=>{
+for(const kind of ['personal','instance'])test(`${kind}: server owns experience and movement buffs`,async()=>{
  const f=await fixture(2);
  if(kind==='personal')await f.service.command('a',{type:'hunt',id:299,requestId:'hunt'});
  else {const formed=await f.service.command('a',{type:'createInstance',requestId:'form'});await f.service.command('a',{type:'startInstance',instanceId:formed.instanceId,requestId:'start'});}
- const snapshot=await f.service.snapshot('a');
- const base={ownerId:snapshot.localSimulation!.ownerId,characterId:snapshot.state.id,clientId:'browser',contentVersion:'test'};
- const claim=await f.service.localSimulation('a',{...base,type:'claim',requestId:'claim'});
- assert.equal(claim.state.serverBuffs[0].xpMultiplier,2);
- f.time(3000);const next=advance(claim.state,3000).state;
- next.serverBuffs[0].xpMultiplier=10;
- await assert.rejects(f.service.localSimulation('a',{...base,type:'checkpoint',sessionId:claim.session.id,sequence:1,state:next,requestId:'bad'}),/服务器增益/);
- next.serverBuffs[0].xpMultiplier=2;
- next.serverBuffs[1].movementMultiplier=10;
- await assert.rejects(f.service.localSimulation('a',{...base,type:'checkpoint',sessionId:claim.session.id,sequence:1,state:next,requestId:'bad-speed'}),/服务器增益/);
- next.serverBuffs[1].movementMultiplier=2;
- const saved=await f.service.localSimulation('a',{...base,type:'checkpoint',sessionId:claim.session.id,sequence:1,state:next,requestId:'good'});
- assert.equal(saved.state,undefined);
- assert.equal((await f.service.snapshot('a')).state.serverBuffs[0].xpMultiplier,2);
+ f.time(3000);
+ const {state}=await f.service.snapshot('a');
+ assert.equal(state.serverBuffs[0].xpMultiplier,2);
+ assert.equal(state.serverBuffs[1].movementMultiplier,2);
 });

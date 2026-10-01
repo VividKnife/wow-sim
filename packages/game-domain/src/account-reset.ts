@@ -1,8 +1,11 @@
+import {removeSocialCharacters} from './social-cleanup.ts';
 import {tables, type Transaction} from '../../persistence/src/store.ts';
 import type {Account, Instance} from './model.ts';
 
 // Transactional removal for explicit deletion and invalid development saves.
 export async function removeInvalidSave(tx: Transaction, accountId: string) {
+    const socialActors=[...await tx.list('characters',{accountId}),...await tx.list('npc_characters',{accountId})];
+    await removeSocialCharacters(tx,new Set(socialActors.map(c=>c.id)));
     const affected = (await tx.list<Instance>('instances')).filter(instance =>
         instance.creatorAccountId === accountId || instance.roster.some(row => row.accountId === accountId));
     const otherAccounts = new Set<string>();

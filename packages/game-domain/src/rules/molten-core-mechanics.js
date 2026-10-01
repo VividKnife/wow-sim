@@ -106,11 +106,13 @@ export function extendedMoltenCoreTick(s,actors,boss,hurt,targets){
  for(const c of living)for(const a of c.auras||[])if(a.until>s.clock&&(a.raidIgnite||a.raidPain)&&s.clock>=a.next){a.next+=3000;if(a.raidIgnite){const burned=Math.min(c.mana,raidSpellValue(s,19659));c.mana-=burned;hit(c,burned,'点燃法力');}else hit(c,raidSpellValue(s,19776),'暗言术：痛',5);}
  for(const bomb of r.bombs){const c=actors.find(c=>c.id===bomb.actorId);if(!c||c.hp<=0)continue;
   if(s.clock>=bomb.at){for(const ally of living.filter(a=>distance(a,c)<10)){hit(ally,raidSpellValue(s,20476),'活体炸弹');r.failures.fire++;}raidNotice(s,`${c.name}的活体炸弹爆炸。`);}
-  else if(r.tactics.avoidFire&&!controlled(c,s.clock)){c.cast=null;moveToward(s,c,{position:-12,positionY:(c.raidIndex%2?1:-1)*22},0,s.clock);c.raidEvadingAt=s.clock;}
+  else if(r.tactics.avoidFire&&!controlled(c,s.clock)){c.cast=null;moveToward(s,c,{position:-12,positionY:(c.raidIndex%2?1:-1)*22},0,s.clock,100,{source:'hazard'});c.raidEvadingAt=s.clock;}
  }r.bombs=r.bombs.filter(b=>b.at>s.clock);
 }
 
-export function raidNextMechanics(enc){
+// Private encounter schedule. Only the encounter publisher can read these
+// timers; strategy and public projection consume announced warnings below.
+function scheduledRaidMechanics(enc){
  if(!enc)return [];
  if(enc.id==='onyxia')return (enc.phase===2?[['火球','nextSpecial'],['深呼吸','nextBreath'],['雏龙','nextWhelps']]:[['烈焰吐息','nextSpecial'],...(enc.phase===3?[['低沉咆哮','nextFear']]:[])]).map(([name,key])=>({name,at:enc[key]}));
  const fields=enc.id==='lucifron'?[['末日','nextDoom'],['诅咒','nextCurse']]:enc.id==='magmadar'?[['狂暴','nextFrenzy'],['恐慌','nextFear'],['熔岩','nextBomb']]:enc.kind==='trash'?[['下次机制','nextSpecial']]:[];
@@ -120,3 +122,18 @@ export function raidNextMechanics(enc){
  if(enc.id==='ragnaros')result.push({name:enc.submerged?'重新现身':'潜入熔岩',at:enc.submerged?enc.emergeAt:enc.nextSubmerge});
  return result;
 }
+
+const mechanicKinds={'恐慌':'fear','低沉咆哮':'fear','狂暴':'enrage','深呼吸':'deep-breath'};
+export function publishRaidWarnings(s){
+ const enc=s.combat?.raidEncounter;if(!enc)return;
+ const boss=s.combat.enemies.find(e=>e.id===enc.bossId);
+ if(!boss||boss.hp<=0||boss.removed){enc.warnings=[];return;}
+ const previous=enc.warnings||[];
+ // This is an intentional, player-visible two-second warning window. It does
+ // not publish a full future schedule or consume random values to predict one.
+ enc.warnings=scheduledRaidMechanics(enc).filter(m=>Number.isSafeInteger(m.at)&&m.at>=s.clock&&m.at-s.clock<=2000).slice(0,16).map(m=>{
+  const id=`${enc.bossId}:${m.name}:${m.at}`,old=previous.find(w=>w.id===id);
+  return {id,sourceId:enc.bossId,name:m.name,mechanic:mechanicKinds[m.name]||'encounter',announcedAt:old?.announcedAt??s.clock,at:m.at};
+ });
+}
+export function raidNextMechanics(enc){return (enc?.warnings||[]).map(w=>({...w}));}

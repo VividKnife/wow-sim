@@ -1,0 +1,20 @@
+{
+  "onyxia": {
+    "id": "onyxia-lair",
+    "version": 1,
+    "name": "奥妮克希亚 · 龙巢",
+    "ground": "onyxia",
+    "shape": "polygon",
+    "boundary": [{"x":-20,"y":-6},{"x":-10,"y":-6},{"x":-10,"y":-16},{"x":0,"y":-28},{"x":36,"y":-28},{"x":50,"y":-16},{"x":50,"y":16},{"x":36,"y":28},{"x":0,"y":28},{"x":-10,"y":16},{"x":-10,"y":6},{"x":-20,"y":6}],
+    "anchors": {
+      "entrance": {"x":-17,"y":0},
+      "assembly": {"x":10,"y":0},
+      "boss": {"x":30,"y":0},
+      "mainTank": {"x":25,"y":0},
+      "whelpNorth": {"x":15,"y":22},
+      "whelpSouth": {"x":15,"y":-22}
+    },
+    "breathLanes": [-12,0,12],
+    "appearance": {"floor":"#68514c","wall":"#392e35","rim":"#aa7861"}
+  }
+}

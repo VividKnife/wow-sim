@@ -8,7 +8,7 @@ import {CommandPreparation} from './combat-command';
 
 const statuses:Record<string,string>={cleared:'已清理',skipped:'已绕过',absent:'本次未出现',current:'下一场',ahead:'未清理'};
 type MapEncounter={description?:string;id:string;name:string;kind:string;status:string;bossIds:number[];path:string[];canNavigate:boolean;navigateReason:string;enemies:{entry:number;name:string}[];quests:{questId:number;questName:string;name:string;count:number;required:number}[]};
-type DungeonMapView={id:string;name:string;route:MapEncounter[];locationId:string;destination:string;path:string[];autoAdvance:boolean;canFullClear:boolean;navigateReason:string;map:{attribution?:string;width:number;height:number;points:Record<string,[number,number]>;edgePaths?:Record<string,[number,number][]>;floors:{id:number;name:string;image:string|null}[];floorByNode:Record<string,number>;edges:[string,string][]}};
+type DungeonMapView={id:string;name:string;route:MapEncounter[];locationId:string;destination:string;path:string[];autoAdvance:boolean;canPause:boolean;canFullClear:boolean;navigateReason:string;map:{attribution?:string;width:number;height:number;points:Record<string,[number,number]>;edgePaths?:Record<string,[number,number][]>;floors:{id:number;name:string;image:string|null}[];floorByNode:Record<string,number>;edges:[string,string][]}};
 
 export default function DungeonMap({state:s,data:d,busy,send,raid}:GameProps&{raid?:'gold'}){
  const raidView=raid==='gold'?d.goldRaid:null;
@@ -73,7 +73,7 @@ export default function DungeonMap({state:s,data:d,busy,send,raid}:GameProps&{ra
   <p className="footnote">点击首领查看掉落，点击区域规划路线。金色连线为所选路线；放大后可滚动查看。{raid?'沿途自动清怪，首领前确认挑战。掉落在后台拍卖，可折叠竞拍面板继续战斗。':'战斗中改道在本场结束后生效。'}</p>
   <div className="atlas-legend"><span>☠ 首领</span><span>数字 · 怪物群</span><span>⚙ 机关</span><span className="quest-color">! 未完成任务</span><span>✓ 已清理</span><span>蓝圈 · 小队位置</span><span>{map.attribution||'原版地图 · 暴雪客户端纹理'}</span></div>
   </details>
-  <div className="action-row atlas-actions"><Button disabled={busy||!dm.canFullClear} onClick={()=>navigate('full')}>{dm.destination==='full'&&dm.autoAdvance?'重新规划全清路线':'全清副本'}</Button>{dm.autoAdvance&&<Button variant="outline" disabled={busy} onClick={()=>send({type:raid==='gold'?'goldPause':'dungeonPause'})}>本场结束后停止</Button>}</div>
+  <div className="action-row atlas-actions"><Button disabled={busy||!dm.canFullClear} onClick={()=>navigate('full')}>{dm.destination==='full'&&dm.autoAdvance?'重新规划全清路线':'全清副本'}</Button>{dm.autoAdvance&&<Button variant="outline" disabled={busy||!raid&&!dm.canPause} onClick={()=>send({type:raid==='gold'?'goldPause':'dungeonPause'})}>本场结束后停止</Button>}</div>
   {dm.navigateReason&&<p className="footnote">{dm.navigateReason}</p>}
   {selected?<div ref={detailRef} tabIndex={-1} className="atlas-selection" aria-label="所选区域详情">
    <div className="atlas-destination"><div className="section-heading"><div><div className="eyebrow">{selected.kind==='boss'?'首领目的地':'区域目的地'} · {statuses[selected.status]}</div><h3>{selected.name}</h3></div><Button size="sm" variant="ghost" onClick={closeSelection}>返回地图</Button></div>

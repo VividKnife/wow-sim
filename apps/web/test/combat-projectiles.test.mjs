@@ -9,7 +9,7 @@ test('Fireball launches on cast completion and settles once after its flight',()
  const s=fixture(),e=s.combat.enemies[0];combatTick(s);s.clock=s.cast.until;combatTick(s);
  assert.equal(e.hp,10000);assert.equal(s.combat.projectiles.length,1);const p=s.combat.projectiles[0];assert.ok(p.landsAt>s.clock);
  s.rules=[];s.nextSwing=1e9;s.clock=p.landsAt-1;combatTick(s);assert.equal(e.hp,10000);
- s.clock=p.landsAt;combatTick(s);assert.ok(e.hp<10000);const hp=e.hp;combatTick(s);assert.equal(e.hp,hp);
+ s.clock=s.simulationEvents.queue.events.find(e=>e.kind==='ProjectileImpact'&&e.subjectId===p.sequence).atMs;combatTick(s);assert.ok(e.hp<10000);const hp=e.hp;combatTick(s);assert.equal(e.hp,hp);
 });
 test('restoring an in-flight projectile produces the same damage and RNG',()=>{
  const s=fixture();combatTick(s);s.clock=s.cast.until;combatTick(s);s.rules=[];const end=s.combat.projectiles?.[0]?.landsAt;assert.ok(end);
@@ -28,7 +28,7 @@ test('enemy missiles share authority flight timing and can outlive their caster'
  const hurt=(state,c,target,amount)=>{target.hp-=Math.round(amount);};
  castEnemySpell(s,e,s,9053,[s],hurt);s.clock=e.cast.until;tickEnemySpell(s,e,[s],hurt);
  assert.equal(s.hp,before);assert.equal(s.combat.projectiles.length,1);
- const p=s.combat.projectiles[0];e.hp=0;s.clock=p.landsAt;tickEnemyProjectiles(s,[s],hurt);assert.ok(s.hp<before);
+ const p=s.combat.projectiles[0];e.hp=0;s.clock=s.simulationEvents.queue.events.find(e=>e.kind==='ProjectileImpact'&&e.subjectId===p.sequence).atMs;tickEnemyProjectiles(s,[s],hurt);assert.ok(s.hp<before);
  const hp=s.hp;tickEnemyProjectiles(s,[s],hurt);assert.equal(s.hp,hp);
 });
 test('hunter shots get arrow flights even for zero-speed data and visual-only arrows never settle damage',()=>{
@@ -36,6 +36,6 @@ test('hunter shots get arrow flights even for zero-speed data and visual-only ar
  assert.equal(launchProjectile(s,s,e,{Id:3044,SpellName:'Arcane Shot',School:6,Speed:0}),true);
  assert.equal(s.combat.projectiles[0].visual,'hunter-shot');assert.ok(s.combat.projectiles[0].landsAt>s.clock);
  assert.equal(launchProjectile(s,s,e,{Id:75,SpellName:'Auto Shot',School:0,Speed:55},'friendly',{presentationOnly:true}),true);
- s.clock=Math.max(...s.combat.projectiles.map(projectile=>projectile.landsAt));
+ s.clock=Math.max(...s.simulationEvents.queue.events.filter(e=>e.kind==='ProjectileImpact').map(e=>e.atMs));
  const impacts=takeImpacts(s,'friendly');assert.deepEqual(impacts.map(projectile=>projectile.spellId),[3044]);
 });

@@ -32,29 +32,7 @@ test('SQL due query filters rule versions before LIMIT for activities and instan
  }finally{await store.close();}
 });
 
-test('local checkpoints survive SQL serialization, restart and duplicate result delivery',async()=>{
- const store=new PostgresStore(embeddedPool(new PGlite()));let now=1000;
- try{
-  await store.initialize();
-  const service=new GameService(store,{contentVersion:'test',now:()=>now,seed:()=>283});
-  await service.createAccount('local',{name:'SQL',classId:8,raceId:1},'create');
-  const initial=await service.command('local',{type:'hunt',id:299,requestId:'hunt'});
-  const base={ownerId:initial.localSimulation!.ownerId,clientId:'browser',contentVersion:'test'};
-  const session=await service.localSimulation('local',{...base,type:'claim',requestId:'claim'});
-  now=10000;const state=advance(session.state,now).state;
-  const input={...base,type:'checkpoint',sessionId:session.session.id,sequence:1,state,requestId:'save'};
-  const saved=await service.localSimulation('local',input);
-  const restarted=new GameService(store,{contentVersion:'test',now:()=>now});
-  assert.deepEqual(JSON.parse(JSON.stringify(await restarted.localSimulation('local',input))),JSON.parse(JSON.stringify(saved)));
-  assert.equal((await restarted.snapshot('local')).state.wallAt,state.wallAt);
-  now+=10000;assert.deepEqual(await restarted.work(),{activities:0,instances:0,errors:[]});
-  const persisted=(await restarted.snapshot('local')).state;
-  assert.equal(saved.state,undefined);
-  const bad={...input,sequence:2,requestId:'bad',state:{...persisted,money:-1}};
-  await assert.rejects(restarted.localSimulation('local',bad),{code:'BALANCE'});
-  assert.equal((await restarted.snapshot('local')).state.money,persisted.money);
- }finally{await store.close();}
-});
+
 
 test('PostgreSQL schema enforces uniqueness and rollback with real SQL',async()=>{
  const db=new PGlite(),store=new PostgresStore(embeddedPool(db));
@@ -170,4 +148,28 @@ test('offline pause survives SQL database reload and returns to the due index on
   assert.equal(snapshot.state.clock, 4000);
   assert.equal(snapshot.state.location, 'northshire');
  } finally {await restored.close();}
+});
+
+test('ownership lookups use generated-column indexes while preserving exact JSON containment semantics',async()=>{
+ const db=new PGlite(),observed:{sql:string;values?:any[]}[]=[],base=embeddedPool(db);
+ const pool:SqlPool={connect:async()=>{const client=await base.connect();return {...client,query:async(sql,values)=>{if(sql.startsWith('SELECT data FROM items WHERE'))observed.push({sql,values});return client.query(sql,values);}};},end:()=>base.end()};
+ const store=new PostgresStore(pool);
+ try{
+  await store.initialize();
+  // Many independent owners make an unscoped scan observably different from
+  // the ownership index; this is not just an assertion about SQL spelling.
+  await db.exec(`INSERT INTO items(id,data) SELECT 'i'||n,jsonb_build_object('id','i'||n,'ownerCharacterId','owner-'||n,'accountId','a-'||n,'count',1) FROM generate_series(1,3000) n;
+   INSERT INTO items(id,data) VALUES ('missing','{"id":"missing"}'),('null','{"id":"null","ownerCharacterId":null}'),('number','{"id":"number","ownerCharacterId":7}'),('string','{"id":"string","ownerCharacterId":"7"}');ANALYZE items;`);
+  const rows=await store.read(tx=>tx.list<any>('items',{ownerCharacterId:'owner-1573',accountId:'a-1573'}));
+  assert.deepEqual(rows.map(r=>r.id),['i1573']);
+  const {sql,values}=observed.at(-1)!;
+  const plan=await db.query('EXPLAIN (FORMAT JSON) '+sql,values);
+  const encoded=JSON.stringify(plan.rows);
+  assert.match(encoded,/items_(?:owner|account)_idx/);assert.doesNotMatch(encoded,/Seq Scan/);
+  assert.deepEqual((await store.read(tx=>tx.list<any>('items',{ownerCharacterId:null}))).map(r=>r.id),['null']);
+  assert.deepEqual((await store.read(tx=>tx.list<any>('items',{ownerCharacterId:7}))).map(r=>r.id),['number']);
+  assert.deepEqual((await store.read(tx=>tx.list<any>('items',{ownerCharacterId:'7'}))).map(r=>r.id),['string']);
+  assert.deepEqual(await store.read(tx=>tx.list('items',{'ownerCharacterId); DROP TABLE items;--':'owner-1'})),[]);
+  assert.equal((await store.read(tx=>tx.list('items'))).length,3004);
+ }finally{await store.close();}
 });

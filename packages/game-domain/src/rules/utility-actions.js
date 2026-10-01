@@ -1,3 +1,4 @@
+import {removeGroundEffects} from './ground-events.js';
 import {buffTooltip} from './buff-tooltip.js';
 import {drinkPotion} from './consumables.js';
 import {beginSpellTiming,finishSpellTiming,cooldownUntil,gcdUntil} from './spell-timing.js';
@@ -63,7 +64,7 @@ export function finishUtilitySpell(s){
   if(required.some(r=>usableCount(s,r.id)<r.count)){s.activity={type:'idle',reason:'传送材料不足，施法已取消'};return;}
   if(!finishSpellTiming(s,a.timing,s.clock))return;for(const r of required)consume(s,r.id,r.count);
   s.activity={type:'idle'};if(s.dungeon)leaveDungeon(s);
-  s.location=a.to;if(!s.visited.includes(a.to))s.visited.push(a.to);s.groundEffects=[];
+  s.location=a.to;if(!s.visited.includes(a.to))s.visited.push(a.to);removeGroundEffects(s);
   log(s,'传送至 '+nodes[a.to].name,'travel');
   handleTownAmmo(s,'town');
  }

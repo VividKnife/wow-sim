@@ -19,7 +19,7 @@ for(const failure of ['timeout','network','body','503'])test(`content retries tr
 });
 test('exhausted content downloads use a recoverable Chinese error',async()=>{
  let calls=0;
- await assert.rejects(fetchContentJson('/content',{sleep:async()=>{},fetchImpl:async()=>{calls++;throw new DOMException('signal timed out','TimeoutError');}}),error=>error.code==='LOCAL_CONTENT_NETWORK'&&/冒险资料下载/.test(error.message)&&!error.message.includes('signal'));
+ await assert.rejects(fetchContentJson('/content',{sleep:async()=>{},fetchImpl:async()=>{calls++;throw new DOMException('signal timed out','TimeoutError');}}),error=>error.code==='CONTENT_NETWORK'&&/冒险资料下载/.test(error.message)&&!error.message.includes('signal'));
  assert.equal(calls,2);
 });
 for(const status of [401,404,409])test(`content does not retry permanent HTTP ${status}`,async()=>{

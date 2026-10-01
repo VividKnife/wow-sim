@@ -99,7 +99,7 @@ export async function unstuck(this: GameService, tx: Transaction, actor: Charact
             const encounter = dungeonRoute(saved.id)[saved.cursor];
             if (action.type === 'dungeonCannon' && encounter?.id === action.routeId && encounter.interaction && !saved.interactions[encounter.id]) {
                 receive(s, encounter.interaction.item, 1);
-                await persistAssets(tx, c, s, `${key}:cannon`, this.id);
+                await persistAssets(tx, c, s, `${key}:cannon`);
             }
         }
         if(instance?.leaderId===c.id && instance.simulation?.goldRaid?.active){
@@ -109,7 +109,7 @@ export async function unstuck(this: GameService, tx: Transaction, actor: Charact
         }
         if (s.goldRaid?.active) {
             emergencyGoldExit(s);
-            await persistAssets(tx, c, s, `${key}:gold`, this.id);
+            await persistAssets(tx, c, s, `${key}:gold`);
         }
         delete s.dungeon;
         delete s.preparationTravel;
@@ -128,7 +128,7 @@ export async function unstuck(this: GameService, tx: Transaction, actor: Charact
         if (lease) await this.release(tx, c.id, lease.ownerId);
         accounts.add(c.accountId);
     }
-    if (owner) { delete owner.resumeEventAt; delete owner.localSimulation; }
+    if (owner) { delete owner.resumeEventAt; }
     if (lease?.kind === 'instance') {
         await tx.delete('instance_leases', lease.ownerId);
 

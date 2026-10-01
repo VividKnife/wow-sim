@@ -1,13 +1,16 @@
+import {partyLeader} from './party-control.js';
+import {removeGroundEffects} from './ground-events.js';
 import {hasBlockingLoot} from './loot.js';
 import {dungeonDefinition,dungeonIdFor,dungeonRoute} from './dungeon-registry.js';
 export {dungeonRoute} from './dungeon-registry.js';
-import {clone,enemy,rng,log,countItem,takeItem,addItem,bagCapacity,stats,knownRank} from './character.js';
+import {clone,enemy,rng,log,countItem,takeItem,addItem,bagCapacity,stats} from './character.js';
 import {startCombat} from './combat.js';
 import {sceneCombatArea} from './combat-area.js';
 import {startRecovery,stopRecovery,resurrectionFor,beginResurrection} from './recovery.js';
 import {spellReady} from './spell-timing.js';
 import {dungeonDestinationPath} from './dungeon-map.js';
 import {selectedDungeonMembers,npcRunStarted,syncNpcWorld} from './npc-world.js';
+import {validateDungeonOccupants} from '../dungeon-roster.ts';
 import {lootRows} from './quests.js';
 import {objectLoot,nameOf} from './catalog.js';
 
@@ -27,19 +30,20 @@ export function resetDungeon(s,id=dungeonIdFor(s)){const definition=dungeonDefin
 
 export function dungeonEntryReason(s,id=dungeonIdFor(s)){
  const definition=dungeonDefinition(id),party=selectedDungeonMembers(s);
+ if(s.dungeonRoster){validateDungeonOccupants(s);if(s.dungeonRoster.dungeonId!==id)return '请进入队伍选择的副本。';}
  if(s.dungeon)return '你已经在副本中。';
  if(s.goldRaid?.active)return '请先离开团队副本。';
  if(s.combat)return '请先结束这场战斗。';
  if(s.activity.type!=='idle')return '请先结束当前活动。';
  if(s.location!==definition.entrance)return '请先前往'+definition.name+'入口。';
  if([s,...party].some(c=>c.level<definition.minimumLevel))return '所有成员至少需要达到 '+definition.minimumLevel+' 级。';
- if(party.length!==4||[s,...party].some(c=>c.hp<=0))return '需要五名存活的小队成员。';
+ if((!s.dungeonRoster&&party.length!==4)||[s,...party].some(c=>c.hp<=0))return '需要五名存活的小队成员。';
  if(!s.dungeonSaves?.[id]&&recentEntries(s).length>=5)return '每小时最多进入五个新副本，请稍后再试。';
  return '';
 }
 export function enterDungeon(s,id=dungeonIdFor(s)){
  const definition=dungeonDefinition(id),reference=definition.reference,reason=dungeonEntryReason(s,id);if(reason)throw new Error(reason);
- if(s.npcWorld?.selection)s.party=selectedDungeonMembers(s).map(clone);
+ if(s.npcWorld?.selection&&!s.sharedParty)s.party=selectedDungeonMembers(s).map(clone);
  s.dungeonSaves??={};
  if(s.dungeonSaves[id]){s.dungeon=s.dungeonSaves[id];delete s.dungeonSaves[id];npcRunStarted(s);return;}
  s.dungeonEntries=[...recentEntries(s),s.wallAt];
@@ -57,7 +61,7 @@ export function enterDungeon(s,id=dungeonIdFor(s)){
  npcRunStarted(s);
  log(s,'进入'+definition.name+'。小队等待你的下一步指令。','dungeon');
 }
-export function leaveDungeon(s){idle(s);if(s.groupLoot?.pending.length)throw new Error('请先分配队伍战利品再离开。');syncNpcWorld(s);if(!s.dungeon)throw new Error('当前不在副本中。');pauseDungeonAdvance(s);const definition=dungeonDefinition(s.dungeon.id);s.dungeonSaves??={};s.dungeonSaves[s.dungeon.id]=s.dungeon;delete s.dungeon;s.groundEffects=[];stopRecovery(s);log(s,'离开'+definition.name+'，保留本次副本进度。','dungeon');}
+export function leaveDungeon(s){idle(s);if(s.groupLoot?.pending.length)throw new Error('请先分配队伍战利品再离开。');syncNpcWorld(s);if(!s.dungeon)throw new Error('当前不在副本中。');pauseDungeonAdvance(s);const definition=dungeonDefinition(s.dungeon.id);s.dungeonSaves??={};s.dungeonSaves[s.dungeon.id]=s.dungeon;delete s.dungeon;removeGroundEffects(s);stopRecovery(s);log(s,'离开'+definition.name+'，保留本次副本进度。','dungeon');}
 export function remainingDungeonEnemies(s,e){const d=s.dungeon,guids=e.waves?(d.interactions[e.id+':started']?e.waves[d.interactions[e.id+':wave']||0]||[]:[]):e.sourceGuids,result=guids.map(g=>d.spawns[g]).filter(p=>p&&!d.defeated[p.sourceGuid]);
  if(e.id==='dm-sneed'&&d.defeated['3600073']&&!d.defeated['3600073:643'])result.push(d.phases['3600073:643']);return result;
 }
@@ -80,6 +84,10 @@ function advanceRoute(s,e,skipped=false){const d=s.dungeon;if(current(s)?.id!==e
 }
 function gateReason(s,e){const a=e.activation,d=s.dungeon;if(a?.afterDeathEntry&&!d.defeatedBosses[a.afterDeathEntry])return '通道尚未打开，请先击败前方首领。';if(a?.afterInteraction&&!d.interactions[a.afterInteraction])return '需要先使用火炮打开铁门。';return '';}
 function gate(s,e){const reason=gateReason(s,e);if(reason)throw new Error(reason);}
+export function dungeonInventoryReason(s){
+ const c=[s,...s.party].find(c=>!c.npcPlayer&&c.quests&&(hasBlockingLoot(c)||c.bag.length>=bagCapacity(c)));
+ return c?(c.id===s.id?'请先整理背包与待拾取战利品。':`等待 ${c.name} 整理背包与待拾取战利品。`):'';
+}
 export function dungeonAdvanceReason(s){
  const e=current(s);
  if(!s.dungeon)return '请先进入副本。';
@@ -88,10 +96,11 @@ export function dungeonAdvanceReason(s){
  if(!e)return '这条路线已经完成。';
  if([s,...s.party].some(c=>c.hp<=0))return '先让倒下的成员复活，再继续推进。';
  if(s.party.length!==4)return '需要五名小队成员才能继续推进。';
- if(hasBlockingLoot(s)||s.bag.length>=bagCapacity(s))return '请先整理背包与待拾取战利品。';
+ if(!partyLeader(s))return '等待队长进入副本。';
+ const inventoryReason=dungeonInventoryReason(s);if(inventoryReason)return inventoryReason;
  const reason=gateReason(s,e);if(reason)return reason;
- if(e.id==='dm-cannon'&&!countItem(s,e.interaction.item))return '需要迪菲亚火药。';
- if(!s.dungeon.interactions[e.id+':started'])for(const [id,count]of e.interaction?.inputs||[])if(countItem(s,id)<count)return '需要 '+nameOf('items',id)+' ×'+count+'。';
+ if(e.id==='dm-cannon'&&!countItem(partyLeader(s),e.interaction.item))return '需要迪菲亚火药。';
+ if(!s.dungeon.interactions[e.id+':started'])for(const [id,count]of e.interaction?.inputs||[])if(countItem(partyLeader(s),id)<count)return '需要 '+nameOf('items',id)+' ×'+count+'。';
  return '';
 }
 export function pauseDungeonAdvance(s,reason=''){
@@ -140,18 +149,14 @@ export function advanceDungeon(s,immediate=false){
  if(s.groupLoot?.pending.length)return;
  const members=[s,...s.party],fallen=members.filter(c=>c.hp<=0);
  if(fallen.length){
-  const priests=members.filter(c=>c.classId===5&&c.hp>0);
-  if(!priests.length){pauseDungeonAdvance(s,fallen.length===members.length?'全队阵亡，请先复活小队。':'没有存活的牧师，请先复活倒下的成员。');return;}
-  // Resurrection is out of combat only, and uses the priest's learned rank,
-  // real cast time, mana cost and cooldown. The dead leader is also eligible.
   if(s.combat||!['idle','dead'].includes(s.activity.type))return;
-  const priest=priests.find(c=>knownRank(c,2006));
-  if(!priest){pauseDungeonAdvance(s,'存活的牧师尚未学会复活术。');return;}
-  const {info}=resurrectionFor(s,fallen[0].id,priest.id);
-  if(info.mana>stats(priest).maxMana){pauseDungeonAdvance(s,'牧师的法力上限不足以施放复活术。');return;}
-  if(priest.mana<info.mana){startRecovery(s,{[priest.id]:info.mana});return;}
-  if(!spellReady(priest,info,s.clock))return;
-  beginResurrection(s,fallen[0].id,priest.id);return;
+  const option=resurrectionFor(s,fallen[0].id);
+  if(!option){pauseDungeonAdvance(s,fallen.length===members.length?'全队阵亡，请先复活小队。':'没有存活且可施放复活法术的队员，请先复活倒下的成员。');return;}
+  const {caster,info}=option;
+  if(info.mana>stats(caster).maxMana){pauseDungeonAdvance(s,'复活施法者的法力上限不足。');return;}
+  if(caster.mana<info.mana){startRecovery(s,{[caster.id]:info.mana});return;}
+  if(!spellReady(caster,info,s.clock))return;
+  beginResurrection(s,fallen[0].id,caster.id);return;
  }
  if(s.combat||s.activity.type!=='idle')return;
  if(d.cursor>=dungeonRoute(s).length){pauseDungeonAdvance(s);return;}
@@ -165,9 +170,9 @@ export function prepareEncounter(s){idle(s);const d=s.dungeon;if(!d?.spawns)thro
  while(e&&e.optional&&!e.interaction&&!remaining(s,e).length){log(s,'本次冒险未发现'+e.nameZh+'。','dungeon');advanceRoute(s,e,true);e=current(s);}
  if(!e){pauseDungeonAdvance(s);return;}gate(s,e);
  if([s,...s.party].some(c=>c.hp<=0))throw new Error('先让倒下的成员复活，再继续推进。');
- if(hasBlockingLoot(s)||s.bag.length>=bagCapacity(s))throw new Error('请先整理背包与待拾取战利品。');
+ const inventoryReason=dungeonInventoryReason(s);if(inventoryReason)throw new Error(inventoryReason);
  if(!remaining(s,e).length&&e.interaction)throw new Error('这里有待完成的交互。');
- stopRecovery(s);s.groundEffects=[];
+ stopRecovery(s);removeGroundEffects(s);
  d.locationId=e.id;
  if(e.sourceCentroid)d.position=clone(e.sourceCentroid);
  const enemies=remaining(s,e).map(clone);if(!enemies.length){if(!e.interaction)advanceRoute(s,e);return;}
@@ -187,23 +192,23 @@ export function recordDungeonProgress(s){const d=s.dungeon;if(!d?.spawns)return;
  if(e.waves&&!d.interactions[e.id]){const wave=(d.interactions[e.id+':wave']||0)+1;d.interactions[e.id+':wave']=wave;if(wave<e.waves.length){log(s,'下一波挑战即将开始。','dungeon');return;}d.interactions[e.id]=true;}
  if(!e.interaction||d.interactions[e.id])advanceRoute(s,e);
 }
-export function interactDungeon(s){idle(s);const e=current(s),d=s.dungeon;if(!e?.interaction)throw new Error('这里没有待完成的交互。');
+export function interactDungeon(s){idle(s);const e=current(s),d=s.dungeon,leader=partyLeader(s);if(!leader)throw new Error('等待队长进入副本。');if(!e?.interaction)throw new Error('这里没有待完成的交互。');
  gate(s,e);
  if(remaining(s,e).length)throw new Error('请先击败看守的敌人。');if(d.interactions[e.id])throw new Error('交互已完成。');
  if(e.waves){
   if(d.interactions[e.id+':started'])throw new Error('挑战已经开始。');
-  for(const [id,count]of e.interaction.inputs||[])if(countItem(s,id)<count)throw new Error('需要 '+nameOf('items',id)+' ×'+count+'。');
-  for(const [id,count]of e.interaction.inputs||[])takeItem(s,id,count);
+  for(const [id,count]of e.interaction.inputs||[])if(countItem(leader,id)<count)throw new Error('需要 '+nameOf('items',id)+' ×'+count+'。');
+  for(const [id,count]of e.interaction.inputs||[])takeItem(leader,id,count);
   d.interactions[e.id+':started']=true;d.interactions[e.id+':wave']=0;log(s,e.nameZh+'已开始。','dungeon');prepareEncounter(s);
  }else if(e.id==='gordok-tribute'){
   const guards=[14326,14322,14321,14323,14325,14324];d.tribute=guards.filter(id=>!d.defeatedBosses[id]).length;
-  lootRows(s,objectLoot[16577]);s.classBuffs??=[];s.classBuffs.push({spell:22799,until:s.clock+7200000});
+  lootRows(s,objectLoot[16577],0,true);for(const c of [s,...s.party]){c.classBuffs??=[];c.classBuffs.push({spell:22799,until:s.clock+7200000});}
   d.interactions[e.id]=true;log(s,'接受戈多克王位，保留 '+d.tribute+' 名守卫，领取贡品。','dungeon');advanceRoute(s,e);
  }else if(e.id==='dm-gunpowder'){
-  const before=clone(s.bag);if(!addItem(s,e.interaction.item,1,false)){s.bag=before;throw new Error('背包需要一个空位存放火药。');}
+  const before=clone(leader.bag);if(!addItem(leader,e.interaction.item,1,false)){leader.bag=before;throw new Error('背包需要一个空位存放火药。');}
   d.interactions[e.id]=true;log(s,'从火药箱中取出一份迪菲亚火药。','loot');advanceRoute(s,e);
  }else if(e.id==='dm-cannon'){
-  if(!countItem(s,e.interaction.item))throw new Error('需要迪菲亚火药。');takeItem(s,e.interaction.item,1);
+  if(!countItem(leader,e.interaction.item))throw new Error('需要迪菲亚火药。');takeItem(leader,e.interaction.item,1);
   s.activity={type:'dungeonCannon',routeId:e.id,startedAt:s.clock,endsAt:s.clock+e.interaction.doorDelayMs};
  }
 }

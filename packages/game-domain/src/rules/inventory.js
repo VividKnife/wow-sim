@@ -1,3 +1,4 @@
+import {nextItemIdentity} from './item-identity.js';
 import {capitals} from '../../../game-data/world-content.js';
 import {items,nameOf,quests} from './catalog.js';
 import {bagCapacity,clone,makeItem,log} from './character.js';
@@ -66,6 +67,8 @@ export function storageAction(s,a){
  if(a.type==='bankDepositMaterials'){const selected=s.bag.filter(i=>materialIds.has(i.id)&&!protectedItem(i));if(!selected.length)throw new Error('没有可存入的未锁定材料');for(const i of selected){put(s.bank,i,bankCapacity(s));s.bag=s.bag.filter(x=>x.uid!==i.uid);}return;}
  const deposit=a.type==='bankDeposit',source=deposit?s.bag:s.bank,target=deposit?s.bank:s.bag,capacity=deposit?bankCapacity(s):bagCapacity(s);
  const i=source.find(i=>i.uid===a.uid);if(!i)throw new Error('找不到这件物品');const count=quantity(a.count,Math.max(1,i.count));if(!bankable(i))throw new Error('任务物品、炉石或配发装备不能存入银行');
- const moved={...i,count,uid:count===i.count?i.uid:'i'+(++s.itemSequence)};put(target,moved,capacity);i.count-=count;if(!i.count)source.splice(source.indexOf(i),1);
+ const moved={...i,count,uid:count===i.count?i.uid:nextItemIdentity(s)};put(target,moved,capacity);i.count-=count;if(!i.count)source.splice(source.indexOf(i),1);
 }
+// Pure personal inventory operations do not occupy the character's activity.
+export const personalInventoryActions=new Set(['sortBag','discardJunk','discardItem','lockItem']);
 export const storageActions=new Set(['sortBag','discardJunk','discardItem','lockItem','auctionBuy','auctionSell','auctionSellBatch','auctionSellAll','auctionCancel','sortBank','expandBank','bankDepositMaterials','bankDeposit','bankWithdraw']);

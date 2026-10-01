@@ -1,3 +1,4 @@
+import {beginEnemyCast} from '../../../packages/game-domain/src/rules/simulation-events.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,stats,view} from '../../../packages/game-domain/src/rules/engine.js';
@@ -41,7 +42,7 @@ test('one-shot control preserves a member kite assignment',()=>{
  let s=group();s=order(s,'kite',{targetId:s.combat.enemies[1].id,memberId:s.id});
  s=order(s,'control',{targetId:s.combat.enemies[0].id,memberId:s.id,spellId:2139});
  assert.equal(s.combat.command.orders.length,2);assert.ok(s.combat.command.orders.some(o=>o.kind==='kite'));
- assert.equal(commandOrder(s,s).kind,'kite');s.combat.enemies[0].cast={spell:133,until:10000};assert.equal(commandOrder(s,s).kind,'interrupt');
+ assert.equal(commandOrder(s,s).kind,'kite');beginEnemyCast(s,s.combat.enemies[0],{spell:133,until:10000});assert.equal(commandOrder(s,s).kind,'interrupt');
  s=order(s,'mode',{mode:'auto',memberId:s.id});assert.equal(s.combat.command.orders.length,0);
 });
 test('area output mode actually casts a learned area spell and keeps reserved sheep safe',()=>{
@@ -102,7 +103,7 @@ test('assigned interrupt waits for an enemy cast before spending its cooldown',(
  let s=group();s.rules=[];s.combat.pull.engagedAt=3000;s.position=10;
  const target=s.combat.enemies[0];s=order(s,'control',{targetId:target.id,memberId:s.id,spellId:2139});s=order(s,'resume');
  s.clock=3000;combatTick(s);assert.equal(s.logs.filter(l=>l.spellId===2139&&l.kind==='cast').length,0);assert.equal(s.combat.command.orders.length,1);
- s.combat.enemies[0].cast={spell:133,until:10000,target:s.id};s.cast=null;s.nextAction=3100;s.clock=3100;combatTick(s);
+ beginEnemyCast(s,s.combat.enemies[0],{spell:133,until:10000,target:s.id});s.cast=null;s.nextAction=3100;s.clock=3100;combatTick(s);
  assert.ok(s.logs.some(l=>l.spellId===2139&&l.kind==='cast'&&l.targetId===target.id),JSON.stringify(s.logs));assert.equal(s.combat.enemies[0].cast,null);
 });
 test('kite selects assigned target, retreats from its pursuer, and tank does not steal it',()=>{

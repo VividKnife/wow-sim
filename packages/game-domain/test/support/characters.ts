@@ -9,7 +9,7 @@ export async function seedCompanion(service:GameService, accountId:string, cmd:R
   const c:Character={id,accountId,kind:'companion',rules:characterRules(s),professionReadyAt:{},resourceReadyAt:{}};
   await tx.insert('characters',c);
   await tx.insert('companions',{id,characterId:id,accountId,ownerCharacterId:a.primaryCharacterId,growthPolicy:'independent'});
-  await persistAssets(tx,c,s,`fixture:${id}`,service.id);
+  await persistAssets(tx,c,s,`fixture:${id}`);
  });
  return service.snapshot(accountId);
 }

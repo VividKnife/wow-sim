@@ -14,7 +14,7 @@ import {simulationInterval, simulationTickBudget} from './simulation-cadence.ts'
 export async function advancePersonal(this: GameService, id: string, now: number): Promise<boolean> {
     const input = await this.store.read(async tx => {
         const activity = await tx.get<Activity>('activities', id);
-        if (!activity || activity.localSimulation || activity.type !== 'personal' || activity.status !== 'running' || activity.nextEventAt > now) return null;
+        if (!activity || activity.type !== 'personal' || activity.status !== 'running' || activity.nextEventAt > now) return null;
         requireThat(activity.contentVersion === this.contentVersion, 'CONTENT_VERSION', '活动内容版本暂不可用');
         const owner = await account(tx, activity.accountId);
         const deadline = await this.activityDeadline(tx, activity), until = Math.min(now, deadline);
@@ -49,7 +49,7 @@ export async function advanceInstance(this: GameService, instanceId: string, wor
         const lease = await tx.get<InstanceLease>('instance_leases', instanceId);
         const instance = await tx.get<Instance>('instances', instanceId);
         requireThat(lease && instance && lease.workerId === workerId && lease.epoch === epoch && instance.epoch === epoch && lease.expiresAt > now, 'STALE_EPOCH', '副本执行租约已失效');
-        if (instance.localSimulation || instance.status !== 'running' || instance.nextEventAt > now) return null;
+        if (instance.status !== 'running' || instance.nextEventAt > now) return null;
         requireThat(instance.contentVersion === this.contentVersion, 'CONTENT_VERSION', '副本内容版本暂不可用');
         const owners = [], ids = new Set(instance.roster.filter(r => r.controller !== 'npc').map(r => r.accountId));
         let lastSeenAt = 0;

@@ -2,7 +2,6 @@ import {useState} from 'react';
 import {Swords,Shield,Target,Flag,Columns3,ChevronUp,ChevronDown} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
-import {useLocalArena} from '@/lib/local-combat-store';
 import ClassIcon from './class-icon';
 import ArenaBattle from './arena-battle';
 import PvpConfiguration from './pvp-configuration';
@@ -65,7 +64,7 @@ function Preparation({match,busy,send}:{match:any;busy:boolean;send:GameProps['s
  </>;
 }
 export default function Arena(props:GameProps){
- const {state:s,data:d,busy,send}=props,arena=useLocalArena(d.arena),match=arena?.match;
+ const {state:s,data:d,busy,send}=props,arena=d.arena,match=arena?.match;
  const [section,setSection]=useState('battle');
  const [size,setSize]=useState(3),[mapId,setMapId]=useState('courtyard'),[opponentId,setOpponentId]=useState('rmp'),[selected,setSelected]=useState<string[]|null>(null);
  const roster=(arena?.roster||[]).map((c:any)=>({...c,role:d.pvp?.members.find((m:any)=>m.id===c.id)?.profile.role||c.role})),memberIds=selected||[s.id,...s.party.slice(0,size-1).map((c:any)=>c.id)];

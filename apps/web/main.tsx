@@ -1,3 +1,4 @@
+import './lib/dev-performance';
 import {Component, lazy, Suspense, useEffect, useState, type ReactNode} from 'react';
 import {createRoot} from 'react-dom/client';
 import './app/globals.css';
@@ -30,4 +31,6 @@ function App(){
  if(!user)return <p role="status">正在连接艾泽拉斯…</p>;
  return <><AccountMenu username={user.username}/>{new URLSearchParams(location.search).get('saveId')?<Game/>:<Saves/>}</>;
 }
-createRoot(document.getElementById('root')!).render(<LoadBoundary><Suspense fallback={<p role="status">正在加载冒险界面…</p>}>{location.pathname.replace(/\/$/,'')==='/admin'?<Admin/>:<App/>}</Suspense></LoadBoundary>);
+const root=createRoot(document.getElementById('root')!);
+root.render(<LoadBoundary><Suspense fallback={<p role="status">正在加载冒险界面…</p>}>{location.pathname.replace(/\/$/,'')==='/admin'?<Admin/>:<App/>}</Suspense></LoadBoundary>);
+import.meta.hot?.dispose(()=>root.unmount());

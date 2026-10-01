@@ -4,8 +4,8 @@ import {spells} from './catalog.js';
 
 // Explicit observable fields. No logs, loot, bags, economy, saved encounters,
 // future spawns, boss scripts or encounter plans cross the policy boundary.
-const actorFields=`id mode targetId racialReady classId raceId level role hp mana rage energy focus power time position positionY maxHp maxMana target combo comboTarget nextAction nextSwing nextRanged nextOffhand cast cooldowns categoryCooldowns globalCooldowns form stance learned talents buffs classBuffs itemBuffs talentBuffs auras dots hots periodicClass absorb manaShield seal judgement reactiveClass weaponEnchants weaponEnchant talentProcs racialEffects racialBuff cannibalize bloodrage totemWeaponEnchant lightwell rootUntil stunUntil fearUntil polyUntil slowUntil slow movementSlows moveSpeed speed sprintUntil silenceUntil schoolLockouts weakenedSoulUntil stealthed invisible combatFacing combatMotion castRangeFailure fade feignUntil feignResisted parryUntil dodgeUntil revengeUntil overpowerUntil inCombat pvp teamId arenaTargetId arenaControlSpell arenaControlTarget arenaInterruptSpell arenaInterruptTarget arenaRetreatTarget arenaWaitingBurst arenaBurstSpells raidTargetId raidReservedSpells partyBlessingPrepared hunterPet petUnit totemUnit escortNpc ownerId kind spell entry armor attackPower resistances creatureType rank capturePhase captureUntil controlledBy controlUntil removed dead airborne tauntedBy tauntUntil sunder threat trap thorns enrage vampiricEmbrace environment classDetection potionReady npcPlayer ammunition`.split(' ');
-const ownedFields=['rules','strategyPolicy','potions'];
+const actorFields=`id mode targetId racialReady classId raceId level role hp mana rage energy focus power time position positionY maxHp maxMana target combo comboTarget nextAction nextSwing nextRanged nextOffhand cast cooldowns categoryCooldowns globalCooldowns form stance learned talents buffs classBuffs itemBuffs talentBuffs auras dots hots periodicClass absorb manaShield seal judgement reactiveClass weaponEnchants weaponEnchant talentProcs racialEffects racialBuff cannibalize bloodrage totemWeaponEnchant lightwell rootUntil stunUntil fearUntil polyUntil slowUntil slow movementSlows moveSpeed speed sprintUntil silenceUntil schoolLockouts weakenedSoulUntil stealthed invisible combatFacing combatMotion castRangeFailure fade feignUntil feignResisted parryUntil dodgeUntil revengeUntil overpowerUntil inCombat pvp teamId arenaTargetId arenaControlSpell arenaControlTarget arenaInterruptSpell arenaInterruptTarget arenaRetreatTarget arenaWaitingBurst arenaBurstSpells raidTargetId raidMainTank raidReservedSpells partyBlessingPrepared hunterPet petUnit totemUnit escortNpc ownerId summonedBy kind spell entry armor attackPower resistances creatureType rank capturePhase captureUntil controlledBy controlUntil removed dead airborne tauntedBy tauntUntil sunder threat trap thorns enrage vampiricEmbrace environment classDetection potionReady npcPlayer ammunition`.split(' ');
+const ownedFields=['rules','strategyPolicy','potions','scenePath'];
 const pick=(value,keys)=>Object.fromEntries(keys.filter(key=>value?.[key]!==undefined).map(key=>[key,value[key]]));
 function actorView(actor,owned){
  const result=pick(actor,actorFields);
@@ -24,9 +24,12 @@ export function projectCombatObservation(s,controlledIds=combatMembers(s).filter
  const result={...actorView(s,owned.has(s.id)),clock:s.clock,version:1,observation:p.observation,
   party:(s.party||[]).map(c=>actorView(c,owned.has(c.id))),
   combat:{...pick(s.combat,['id','startedAt','pvp','area','pull','participantIds','controlTargetId','stealthUsers','engagedMemberIds']),
-   command:s.combat.command?pick(s.combat.command,['focusId','holdFire','orders','mode','memberModes']):null,
+   command:s.combat.command?pick(s.combat.command,['focusId','holdFire','orders','mode','memberModes','movementTasks']):null,
    enemies:s.combat.enemies.map(e=>actorView(e,false)),
-   ...(s.combat.raidEncounter?{raidEncounter:{command:s.combat.raidEncounter.command?pick(s.combat.raidEncounter.command,['healingMode']):null}}:{})},
+   ...(s.combat.raidEncounter?{raidEncounter:{command:s.combat.raidEncounter.command?pick(s.combat.raidEncounter.command,['healingMode','formation']):null,
+    warnings:(s.combat.raidEncounter.warnings||[]).filter(w=>w.announcedAt<=s.clock&&w.at>=s.clock).map(w=>pick(w,['id','sourceId','name','mechanic','announcedAt','at'])),
+    // Navigation may use already visible terrain, never future encounter timers.
+    ...(s.combat.raidEncounter.tactics?.avoidFire?{tactics:{avoidFire:true},fires:(s.combat.raidEncounter.fires||[]).filter(f=>f.terrain&&f.startedAt<=s.clock&&f.until>s.clock).map(f=>pick(f,['terrain','center','points','radius','until']))}:{})}}:{})},
   groundEffects:(s.groundEffects||[]).map(e=>pick(e,['caster','spell','until','radius','position','positionY'])),
  };
  if(s.arenaActors)result.arenaActors=members.map(c=>actorView(c,owned.has(c.id)));

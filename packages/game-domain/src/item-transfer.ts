@@ -7,6 +7,7 @@ import {items} from './rules/catalog.js';
 import {bagCapacity} from './rules/character.js';
 import {put, quantity, transferBlockedReason} from './rules/inventory.js';
 import {invalidateCombatPlan} from './combat-execution.ts';
+import {nextItemIdentity} from './rules/item-identity.js';
 
 // All validation and both inventories are committed together by command().
 export async function transferItems(this:GameService, tx:Transaction, source:Character, cmd:Rules, now:number) {
@@ -59,7 +60,7 @@ export async function transferItems(this:GameService, tx:Transaction, source:Cha
   const held=[...to.bag,...to.bags,...to.bank,...to.pending,...Object.values(to.equipment),...to.auctions.map((a:Rules)=>a.item)] as Rules[];
   requireThat(!maximum||held.filter(i=>i.id===item.id).reduce((n,i)=>n+i.count,0)+count<=maximum,'UNIQUE_ITEM','接收角色已达到唯一物品持有上限');
   const whole=count===item.count;
-  const moved={...item,count,uid:whole?item.uid:this.id(),...(item.ownerId?{ownerId:target.id}:{})};
+  const moved={...item,count,uid:whole?item.uid:nextItemIdentity(from),...(item.ownerId?{ownerId:target.id}:{})};
   put(to.bag,moved,bagCapacity(to));
   if(whole) {
    from.bag=from.bag.filter((i:Rules)=>i.uid!==item.uid);
@@ -69,12 +70,12 @@ export async function transferItems(this:GameService, tx:Transaction, source:Cha
   }else item.count-=count;
  }
  const key=`command:${source.accountId}:${cmd.requestId}`;
- await persistAssets(tx,source,from,key,this.id);
- await persistAssets(tx,target,to,key,this.id);
+ await persistAssets(tx,source,from,key);
+ await persistAssets(tx,target,to,key);
  if(instance) {
   for(const [id,state] of [[source.id,from],[target.id,to]] as [string,Rules][]) {
    const actor=instance.simulation!.id===id?instance.simulation!:instance.simulation!.party.find((member:Rules)=>member.id===id);
-   if(actor)actor.bag=clone(state.bag);
+   if(actor){actor.bag=clone(state.bag);actor.itemSequence=state.itemSequence;}
   }
   await invalidateCombatPlan(tx,instance);
   await tx.put('instances',instance);

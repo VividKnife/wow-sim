@@ -16,7 +16,7 @@ export function dungeonCharmTick(s,c,actors,hurt){
  c.cast=null;if(controlled(c,s.clock))return true;
  const target=actors.filter(a=>a.id!==c.id&&a.hp>0&&!a.totemUnit).sort((a,b)=>distance(a,c)-distance(b,c))[0];
  if(!target)return true;
- if(distance(c,target)>5){moveToward(s,c,target,5,s.clock);return true;}
+ if(distance(c,target)>5){moveToward(s,c,target,5,s.clock,100,{source:'control'});return true;}
  if((c.charmNextAttack||0)>s.clock)return true;
  const weapon=items[c.equipment?.[16]?.id],speed=weapon?.delay||2000,attack=weaponAttack(s,c,target);
  c.charmNextAttack=s.clock+speed;

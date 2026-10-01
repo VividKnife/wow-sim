@@ -1,6 +1,6 @@
 # wow-sim
 
-面向手机网页的 2D 魔兽冒险模拟器。目标是以 2019 年 Classic 首发阶段为基础，保留角色成长、旅行、配装、队伍和副本策略。单人活动与单账号副本可由浏览器 Worker 接管模拟，Node 游戏服务与 PostgreSQL 保存检查点及资产；后台 worker 推进多人实例和未交给本地的活动。
+面向手机网页的 2D 魔兽冒险模拟器。目标是以 2019 年 Classic 首发阶段为基础，保留角色成长、旅行、配装、队伍和副本策略。战斗由服务器常驻实例执行，simulation-host 的 Worker 池独占推进状态，PostgreSQL 保存检查点与资产；浏览器只提交意图并渲染服务器投影。
 
 ## 当前进度
 
@@ -50,7 +50,7 @@ docker compose up -d postgres
 复制 `.env.example` 为 `.env`，配置数据库 URL 和 `APP_ORIGIN=http://127.0.0.1:5173`。Web 使用 React + Vite，只代理 `/api` 到 game-api；认证、会话和限流由 game-api 管理。需要覆盖 API 地址时，在 Web 的 `.env.local` 设置 `GAME_SERVER_URL`。分别启动三个进程：
 
 ```sh
-npm run game:server:dev
+node --env-file-if-exists=.env scripts/start-runtime.mjs
 npm run game:worker:dev
 npm --prefix apps/web run dev
 ```
@@ -100,9 +100,10 @@ console.log(result.state.world.location); // camp
 - [60级团本设计与编队原型](docs/design/level-60-raids.md)：40人容量、自由坦奶配额与推荐阵容；旧沙盘单独保留。
 - [重构后架构复核](docs/superpowers/specs/2026-09-16-post-refactor-architecture-review.md)：最终目标对照、新复现问题与下一轮收口门槛。
 - [基础架构重构交付记录](docs/development/foundation-refactor.md)：当前模块边界、验证结果、测量和交付限制。
+- [2.0 架构评审与实施记录](docs/development/simulation-2.0.md)：常驻实例、Worker 池、事件堆、恢复及当前验收边界。
 - [游戏运行说明](docs/development/game-runtime.md)：PostgreSQL、Node API、worker 与 Web 的本地配置。
 - [战斗运行与回放](docs/development/combat-execution.md)：单人预模拟、多人实时、挂机批量结算与性能验证。
-- [本地模拟与战斗渲染](docs/development/local-simulation.md)：单人浏览器执行、异步检查点、离线补算与高频战斗订阅。
+- [客户端与服务器模拟边界](docs/development/client-simulation-boundary.md)：服务器权威、公开状态同步与渲染。
 - [首版设计](docs/superpowers/specs/2026-09-15-wow-sim-first-playable-design.md)：人类法师 1—20 级，四名 AI 队友与死亡矿井。
 - [实施路线](docs/superpowers/plans/2026-09-15-wow-sim-roadmap.md)：数据、战斗、活动、存档、副本和手机界面的依赖顺序。
 - [模拟基础计划](docs/superpowers/plans/2026-09-15-simulation-foundation.md)：本阶段的接口和测试要求。

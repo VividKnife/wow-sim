@@ -22,5 +22,5 @@ test('workers skip incompatible activities before leases or simulation and canno
  const result=await current.work(now,1);assert.equal(result.activities,1);assert.deepEqual(result.errors,[]);
  // Recovery does not advance old rules or require a working local session.
  const recovered=await current.command('old-personal',{type:'unstuck',requestId:'recover'});
- assert.equal(recovered.state.activity.type,'idle');assert.equal(recovered.localSimulation,null);
+ assert.equal(recovered.state.activity.type,'idle');assert.equal(Object.hasOwn(recovered,'localSimulation'),false);
 });

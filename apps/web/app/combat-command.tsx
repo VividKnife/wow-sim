@@ -3,6 +3,7 @@ import {useEffect,useState,type ReactNode} from 'react';
 import {Swords,Flame,Footprints,Hand,Crosshair,RotateCcw,Pause,Play,Flag,ChevronDown,X,Droplets,HeartPulse} from 'lucide-react';
 import ClassIcon from './class-icon';
 import CombatSpellOrder from './combat-spell-order';
+import CombatPositionOrder from './combat-position-order';
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
 import {GameProps} from './game-ui';
 import {useCommandHidden} from '@/lib/use-command-hidden';
@@ -31,7 +32,7 @@ export default function CombatCommand({state:s,data:d,busy,send,memberId,targetI
   ...(member.canAoe?[{key:'aoe',label:'范围',icon:<Flame/>,pressed:mode==='aoe',disabled:locked||dead,detail:'范围输出：优先已学群攻，仍保护软控目标',run:()=>request('mode',{mode:'aoe',memberId:member.id})}]:[]),
   ...skills.map((skill:any)=>{const state=skill.targets[target?.id],invalid=target?state?.reason:!Object.values(skill.targets).some((x:any)=>!x.reason);return {key:String(skill.spellId),label:skill.name,icon:<img src={skill.icon} alt=""/>,pressed:tasks.some((o:any)=>o.spellId===skill.spellId),disabled:locked||!!invalid,detail:state?.reason||state?.status||'选择敌人后下达'+skill.name,cooldown:Math.max(0,Math.ceil((skill.cooldownUntil-s.clock)/1000)),run:()=>request('control',{memberId:member.id,spellId:skill.spellId,label:skill.name},true)};}),
   ...(member.canKite?[{key:'kite',label:'风筝',icon:<Footprints/>,pressed:tasks.some((o:any)=>o.kind==='kite'),disabled:locked||dead,detail:'攻击指定敌人并在被追击时撤退，坦克不抢回该目标',run:()=>request('kite',{memberId:member.id,label:'风筝'},true)}]:[]),
-  {key:'auto',label:'自动',icon:<RotateCcw/>,pressed:mode==='auto'&&!tasks.length,disabled:locked||dead,detail:'取消该队员的临时任务，恢复原策略',run:()=>request('mode',{mode:'auto',memberId:member.id})},
+  {key:'auto',label:'自动',icon:<RotateCcw/>,pressed:mode==='auto'&&!tasks.length&&!(command?.movementTasks||[]).some((t:any)=>t.memberId===member.id),disabled:locked||dead,detail:'取消该队员的临时任务，恢复原策略',run:()=>request('mode',{mode:'auto',memberId:member.id})},
  ]:[];
  const captain:Slot[]=[
   {key:'focus',label:'集火',icon:<Crosshair/>,pressed:!!target&&command?.focusId===target.id,disabled:locked,detail:'选中敌人后全队集火；治疗继续救人，坦克继续接怪',run:()=>request('focus',{label:'全队集火'},true)},
@@ -72,6 +73,7 @@ export default function CombatCommand({state:s,data:d,busy,send,memberId,targetI
    {members.length>5?<GameSelect aria-label="选择受令队员" value={member.id} onValueChange={onMemberChange}>{members.map((m:any)=><GameSelectOption key={m.id} value={m.id}>{m.name}</GameSelectOption>)}</GameSelect>:<div className={`command-member-picker ${embedded?'command-members-mobile':''}`} aria-label="选择受令队员">{members.map((m:any)=><button key={m.id} type="button" aria-pressed={member.id===m.id} onClick={()=>onMemberChange(m.id)}><ClassIcon classId={m.classId} size={20}/>{m.name}</button>)}</div>}
    <header className="command-hotbar-heading"><button type="button" className="command-pause" aria-expanded={true} onClick={()=>{setHidden(true);setHint('');onCancel();}}>隐藏队伍指挥</button><div><ClassIcon classId={member.classId} size={25}/><strong>{member.name}</strong><span>{taskLabel||(mode==='aoe'?'范围输出':mode==='single'?'单体输出':'按原策略行动')}</span></div><button type="button" className="command-pause" disabled={locked} onClick={()=>request(command?.paused?'resume':'pause')}>{command?.paused?<Play size={13}/>:<Pause size={13}/>}<span>{command?.paused?'继续战斗':'战术暂停'}</span></button></header>
    <div className="command-hotbar-rows"><div className="command-personal" role="group" aria-label={`${member.name}职业快捷栏`}>{(more?slots:slots.slice(0,8)).map((slot,i)=>button(slot,i))}{slots.length>8&&<button type="button" className="command-more" aria-expanded={more} onClick={()=>setMore(!more)}>{more?'收起':'更多'}<ChevronDown size={14}/></button>}</div><div className={`command-captain ${captainOpen?'is-open':''}`}><button type="button" className="command-captain-title" aria-expanded={captainOpen} onClick={()=>setCaptainOpen(!captainOpen)}><Flag size={13}/><span>队长指挥</span></button><div className="command-captain-slots" role="group" aria-label="队长快捷栏">{captain.map((slot,i)=>button(slot,i,true))}</div></div></div>
+   <CombatPositionOrder battle={battle} view={view} memberId={member.id} locked={locked} request={request}/>
    <details className="combat-spell-details"><summary>指定技能与目标</summary><CombatSpellOrder battle={battle} view={view} memberId={member.id} locked={locked||dead} request={request}/></details>
    <div className="command-feedback" role="status">{pending?<><span>{pending.label||'下达指令'} → 点击敌人或上方目标列表</span><button type="button" onClick={onCancel}>取消 · Esc</button></>:<span>{!canLead?'由队长发布指令':hint||(command?.paused?'战术暂停 · 时间冻结，布置完成后继续':`实时指挥 · F1–F5 选队员 · ${embedded?'Alt+':''}1–8 技能 · Shift+数字 队长命令`)}</span>}</div>
   </section>

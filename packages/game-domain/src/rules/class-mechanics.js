@@ -1,9 +1,12 @@
+import {addPeriodicEffect,preparePeriodicEffects,duePeriodicEffects,continuePeriodicEffect,expirePeriodicEffect,addCombatDot,autoAttackReady,scheduleAutoAttack} from './simulation-events.js';
+import {beginActorCast} from './simulation-events.js';
 import {damagingInput} from './combat-input.js';
+import {shouldAutoTaunt} from './tank-coordination.js';
 import {raidHealingThreshold,conservingRaidMana} from './raid-healing.js';
 import {resolveSpellDamage} from './spell-resolution.js';
 import {setCombatPosition} from './combat-area.js';
 import {pvpApplyControl,pvpAbilityAllowed} from './pvp-runtime.js';
-import {arenaSight} from '../../../sim-core/src/arena-space.js';
+import {combatSight} from './combat-space.js';
 import {weaponAttack} from './weapon-attacks.js';
 import {weaponDamage,effectiveArmor} from './companion-combat.js';
 import {spellPowerBonus} from './spell-scaling.js';
@@ -42,7 +45,7 @@ export function healAmount(s,c,target,amount,spell,label){
  if(s.combat){const enemies=s.combat.enemies.filter(e=>e.hp>0&&!e.removed);for(const e of enemies)e.threat[c.id]=(e.threat[c.id]||0)+actual*.5/Math.max(1,enemies.length);const key=c.name+' · '+text;s.combat.healing[key]=(s.combat.healing[key]||0)+actual;}
  log(s,`${c.name} 的${text}为 ${target.name} 恢复 ${actual} 点生命`,'heal',{actorId:c.id,targetId:target.id,spellId:spell,amount:actual});
 }
-function applyHot(s,c,target,sp,effect=1){const interval=sp['EffectAmplitude'+effect]||3000;target.hots=(target.hots||[]).filter(h=>h.name!==sp.SpellName||h.caster!==c.id);target.hots.push({spell:sp.Id,name:sp.SpellName,caster:c.id,amount:(effectRange(c,sp,effect)[0]+spellPowerBonus(stats(c),sp,{healing:true,periodic:true,effect}))*healingMultiplier(c,sp),next:s.clock+interval,interval,until:s.clock+sp.durationMs});}
+function applyHot(s,c,target,sp,effect=1){const interval=sp['EffectAmplitude'+effect]||3000;target.hots=(target.hots||[]).filter(h=>h.name!==sp.SpellName||h.caster!==c.id);addPeriodicEffect(s,target,'hots',{spell:sp.Id,name:sp.SpellName,caster:c.id,amount:(effectRange(c,sp,effect)[0]+spellPowerBonus(stats(c),sp,{healing:true,periodic:true,effect}))*healingMultiplier(c,sp),next:s.clock+interval,interval,until:s.clock+sp.durationMs});}
 function putBuff(s,target,sp,values){target.classBuffs=(target.classBuffs||[]).filter(b=>b.name!==sp.SpellName);target.classBuffs.push({spell:sp.Id,name:sp.SpellName,until:s.clock+(sp.durationMs||1800000),stats:values});}
 function buffValues(c,sp){const result={},r=ranks(c);for(let i=1;i<=3;i++){const aura=sp['EffectApplyAuraName'+i],misc=sp['EffectMiscValue'+i],amount=effectRange(c,sp,i)[0];if(aura===29){const key=['str','agi','sta','int','spi'][misc];if(key)result[key]=amount;else if(misc===-1)for(const key of ['str','agi','sta','int','spi'])result[key]=amount;}if(aura===22&&(misc&1))result.armor=amount;if(aura===99)result.attackPower=amount;if(aura===124)result.rangedAttackPower=amount;}
  if(sp.SpellName==='Battle Shout'||sp.SpellName==='Blessing of Might')result.attackPower=effectRange(c,sp)[0]*(1+(sp.SpellName==='Battle Shout'?.05*(r['Improved Battle Shout']||0):.04*(r['Improved Blessing of Might']||0)));
@@ -82,7 +85,7 @@ function applyClassEffect(s,c,target,sp,actors,api){
   api.damage(s,c,target,raw*attack.multiplier*(1-armorReduction(effectiveArmor(target,s.clock),c.level)),nameOf('spells',sp.Id),1,{spellId:sp.Id,school:0,critical:attack.critical});
   c.combo=Math.min(5,(c.comboTarget===target.id?c.combo||0:0)+1+(name==='Ambush'&&r.Initiative&&rng(s)<.25*r.Initiative?1:0));c.comboTarget=target.id;return;
  }
- if(name==='Rip'){target.dots.push({caster:c.id,spellId:sp.Id,school:0,amount:effectRange(c,sp)[0]+sp.EffectPointsPerComboPoint1*c.combo,next:s.clock+2000,interval:2000,remaining:Math.floor(sp.durationMs/2000),label:nameOf('spells',sp.Id)});c.combo=0;return;}
+ if(name==='Rip'){addCombatDot(s,target,{caster:c.id,spellId:sp.Id,school:0,amount:effectRange(c,sp)[0]+sp.EffectPointsPerComboPoint1*c.combo,next:s.clock+2000,interval:2000,remaining:Math.floor(sp.durationMs/2000),label:nameOf('spells',sp.Id)});c.combo=0;return;}
  if(name==='Growl'){target.threat[c.id]=Math.max(0,...Object.values(target.threat));target.tauntedBy=c.id;target.tauntUntil=s.clock+sp.durationMs;target.target=c.id;return;}
  if(name.endsWith('Totem')){const element=name==='Searing Totem'?'fire':name==='Healing Stream Totem'?'water':'earth';c.totems??={};c.totems[element]={spell:sp.Id,name,until:s.clock+sp.durationMs,next:s.clock+2000,position:c.position,positionY:c.positionY||0};return;}
  if(name==='Hammer of Justice'||name==='Gouge'){if(!mechanicImmune(target,sp.Mechanic||12)&&api.lands(s,c,target,sp)){const duration=sp.durationMs+(name==='Gouge'?500*(r['Improved Gouge']||0):0);if(!pvpApplyControl(s,c,target,sp,12,duration))target.stunUntil=s.clock+duration;target.cast=null;}return;}
@@ -133,7 +136,7 @@ export function selectClass(s,c,e,actors,api,rules=c.rules||defaultClassRules(c.
   if(name==='Cold Snap'){target=c;if(!c.learned.some(sid=>sid!==id&&spells[sid]?.School===4&&cooldownUntil(c,spells[sid])>s.clock))continue;}
   if(name==='Bear Form'||name==='Cat Form'){target=c;if(c.form===(name==='Bear Form'?'bear':'cat'))continue;}
   if(['Battle Stance','Defensive Stance'].includes(name)){target=c;if(c.stance===(name==='Battle Stance'?'battle':'defensive'))continue;}
-  if(name==='Maul'||name==='Growl'){if(c.form!=='bear'||name==='Growl'&&e.target===c.id)continue;}
+  if(name==='Maul'||name==='Growl'){if(c.form!=='bear'||name==='Growl'&&!input&&!shouldAutoTaunt(s,c,e))continue;}
   if(name==='Claw'||name==='Rip'){if(c.form!=='cat'||name==='Rip'&&(!c.combo||c.comboTarget!==e.id))continue;}
   if(name==='Kick'&&!e.cast)continue;
   if(name==='Stealth'){
@@ -153,8 +156,8 @@ export function selectClass(s,c,e,actors,api,rules=c.rules||defaultClassRules(c.
   if(!pvpAbilityAllowed(c,target,sp,s.clock))continue;
   // The condition was checked above; selection has not changed gameplay state.
   if(!input&&target===e&&!strategyAllows(s,c,e,sp))continue;
-  if(!s.combat.pvp&&['Backstab','Ambush','Shred'].includes(name)&&(!behindTarget(c,target)||!inSpellRange(c,target,sp))){return {kind:'move',mode:'rear',targetId:target.id,range:sp.range||5};}
-  if(target!==c&&!inSpellRange(c,target,sp)){if(target===e&&!mayApproachForSpell(s,c,target,sp))continue;if(distance(c,target)<sp.minRange){if(effectiveSpeed(c,s.clock)<=effectiveSpeed(target,s.clock))continue;return {kind:'move',mode:'away',targetId:target.id,range:0};}else return {kind:'move',mode:'toward',targetId:target.id,range:sp.range||5};}
+  if(!s.combat.pvp&&['Backstab','Ambush','Shred'].includes(name)&&(!behindTarget(c,target)||!inSpellRange(s,c,target,sp))){return {kind:'move',mode:'rear',targetId:target.id,range:sp.range||5};}
+  if(target!==c&&!inSpellRange(s,c,target,sp)){if(target===e&&!mayApproachForSpell(s,c,target,sp))continue;if(distance(c,target)<sp.minRange){if(effectiveSpeed(c,s.clock)<=effectiveSpeed(target,s.clock))continue;return {kind:'move',mode:'away',targetId:target.id,range:0};}else return {kind:'move',mode:'toward',targetId:target.id,range:sp.range||5};}
   return {kind:'cast',family:'class',spellId:id,targetId:target.id};
  }
  return null;
@@ -177,16 +180,17 @@ export function executeClassAbility(s,c,target,sp,actors,api,input=null){
   if(consumesHunterAmmo(c,name))consumeHunterAmmo(c);
   const talentCast=beginTalentCast(s,c,sp),timing=beginSpellTiming(c,sp,s.clock,{channel:name==='Tame Beast'||!!prepared?.channel,pool});if(c===s||input)for(const r of reagents)consume(c,r.id,r.count);
   s.combat.casts++;log(s,`${c.name} 施放 ${nameOf('spells',id)}`,'cast',{actorId:c.id,targetId:target.id,spellId:id,school:sp.School,duration:sp.castMs});
-  if(name==='Tame Beast'){c.cast={spell:id,target:e.id,talentCast,timing,startedAt:s.clock,until:s.clock+sp.durationMs,next:s.clock+1000,interval:1000,channel:true,taming:true};c.nextAction=c.cast.until;}else if(prepared?.channel){if(target!==c&&!actors.includes(target)&&!sp.radius&&api.lands&&!api.lands(s,c,target,sp)){endTalentCast(s,c,sp,talentCast,{...api,actors,stats,rng,healAmount},{target});return true;}const interval=classChannelInterval(sp);c.cast={spell:id,target:target.id,talentCast,timing,startedAt:s.clock,until:s.clock+sp.durationMs,next:s.clock+interval,interval,channel:true,extendedChannel:true,commanded:!!input,center:{x:e.position,y:e.positionY||0},friendly:target===c||actors.includes(target)};c.nextAction=c.cast.until;endTalentCast(s,c,sp,talentCast,{...api,actors,stats,rng,healAmount},{target});}
-  else if(sp.castMs)c.cast={spell:id,target:target.id,talentCast,timing,commanded:!!input,friendly:target===c||actors.includes(target),startedAt:s.clock,until:s.clock+sp.castMs,classSpecial:specials.has(name)||extendedSpellNames.has(name)||talentActiveNames.has(name)||racialActiveNames.has(name)};
+  if(name==='Tame Beast'){beginActorCast(s,c,{spell:id,target:e.id,talentCast,timing,startedAt:s.clock,until:s.clock+sp.durationMs,next:s.clock+1000,interval:1000,channel:true,taming:true});c.nextAction=c.cast.until;}else if(prepared?.channel){if(target!==c&&!actors.includes(target)&&!sp.radius&&api.lands&&!api.lands(s,c,target,sp)){endTalentCast(s,c,sp,talentCast,{...api,actors,stats,rng,healAmount},{target});return true;}const interval=classChannelInterval(sp);beginActorCast(s,c,{spell:id,target:target.id,talentCast,timing,startedAt:s.clock,until:s.clock+sp.durationMs,next:s.clock+interval,interval,channel:true,extendedChannel:true,commanded:!!input,center:{x:e.position,y:e.positionY||0},friendly:target===c||actors.includes(target)});c.nextAction=c.cast.until;endTalentCast(s,c,sp,talentCast,{...api,actors,stats,rng,healAmount},{target});}
+  else if(sp.castMs)beginActorCast(s,c,{spell:id,target:target.id,talentCast,timing,commanded:!!input,friendly:target===c||actors.includes(target),startedAt:s.clock,until:s.clock+sp.castMs,classSpecial:specials.has(name)||extendedSpellNames.has(name)||talentActiveNames.has(name)||racialActiveNames.has(name)});
   else if(specials.has(name)||extendedSpellNames.has(name)||talentActiveNames.has(name)||racialActiveNames.has(name))classEffect(s,c,target,{...sp,talentCast},actors,api);else api.cast(s,c,e,{...sp,talentCast});
   return true;
 }
 
 export function tickClassEffects(s,actors,api){
+ preparePeriodicEffects(s);
  tickExtendedClassEffects(s,actors,{...api,healAmount});
  for(const c of actors.filter(a=>a.hp>0)){tickRacialEffects(s,c,{...api,actors,stats,healAmount});
-  for(const hot of c.hots||[]){const source=actors.find(a=>a.id===hot.caster);while(source&&hot.next<=s.clock&&hot.next<=hot.until){healAmount(s,source,c,hot.amount,hot.spell);hot.next+=hot.interval;}}c.hots=(c.hots||[]).filter(h=>h.until>s.clock);
+  for(const hot of duePeriodicEffects(s,c,'hots')){const source=actors.find(a=>a.id===hot.caster);while(source&&hot.next<=s.clock&&hot.next<=hot.until){healAmount(s,source,c,hot.amount,hot.spell);continuePeriodicEffect(s,c,hot);}expirePeriodicEffect(s,hot);}
   if(c.bloodrage&&c.bloodrage.next<=s.clock&&c.bloodrage.next<=c.bloodrage.until){c.rage=Math.min(1000,(c.rage||0)+10);c.bloodrage.next+=1000;}
   for(const [element,t]of Object.entries(c.totems||{})){if(extendedSpellNames.has(t.name))continue;if(t.until<=s.clock){delete c.totems[element];continue;}if(t.next>s.clock)continue;t.next+=2000;const sp=spellInfo(c,t.spell),r=ranks(c);
    if(t.name==='Searing Totem'){const target=s.combat?.enemies.find(e=>e.hp>0&&!e.removed&&!protectCombatTarget(s,e)&&distance(t,e)<=20&&strategyAllows(s,c,e,{SpellName:'Totem Attack'}));if(target)api.damage(s,c,target,roll(s,...effectRange(c,spells[sp.Id===3599?3606:6350])),nameOf('spells',sp.Id),1,{spellId:sp.Id,school:2});}
@@ -201,9 +205,9 @@ export function petTick(s,pet,actors,damage){
  const e=s.combat.enemies.find(e=>e.id===pet.target&&e.hp>0&&!e.removed);if(!e)return;
  if(s.combat.command?.holdFire)return;
  pet.ownerMasterDemonologist=ranks(owner)['Master Demonologist']||0;
- if(!arenaSight(pet,e)){moveToward(s,pet,e,pet.kind==='imp'?25:5,s.clock);return;}
- pet.ownerMasterDemonologist=ranks(owner)['Master Demonologist']||0;const range=pet.kind==='imp'?25:5;if(distance(pet,e)>range){moveToward(s,pet,e,range,s.clock);return;}if(pet.nextSwing>s.clock)return;pet.nextSwing=s.clock+pet.swing;
- const r=ranks(owner),mod=talentPetModifiers(owner,pet),mult=mod.damage*petHappinessMultiplier(pet)*(owner.raceId===2?1.05:1),critical=rng(s)<.05+mod.crit;pet.nextSwing=s.clock+pet.swing/(1+mod.haste);const before=e.hp;
+ if(!combatSight(s,pet,e)){moveToward(s,pet,e,pet.kind==='imp'?25:5,s.clock);return;}
+ pet.ownerMasterDemonologist=ranks(owner)['Master Demonologist']||0;const range=pet.kind==='imp'?25:5;if(distance(pet,e)>range){moveToward(s,pet,e,range,s.clock);return;}if(!autoAttackReady(s,pet))return;
+ const r=ranks(owner),mod=talentPetModifiers(owner,pet),mult=mod.damage*petHappinessMultiplier(pet)*(owner.raceId===2?1.05:1),critical=rng(s)<.05+mod.crit;scheduleAutoAttack(s,pet,'main',s.clock+pet.swing/(1+mod.haste));const before=e.hp;
  damage(s,pet,e,roll(s,Math.floor(pet.low),Math.ceil(pet.high))*mult*(critical?2:1)*(pet.kind==='imp'?1:1-armorReduction(e.armor,pet.level)),'宠物 · '+pet.name,pet.kind==='voidwalker'?2*(1+.1*(r['Improved Voidwalker']||0)):1,{spellId:pet.spell,school:pet.kind==='imp'?2:0,ownerId:owner.id,critical});onPetTalentEvent(s,owner,pet,{type:'damage',target:e,amount:before-e.hp,critical},{damage,healAmount,rng,stats,actors});
 }
 

@@ -1,7 +1,10 @@
+import {selectCombatPolicy} from '../src/rules/bot-strategies.js';
+import {DecisionTrace} from '../../bot-ai/src/decision.js';
+import {setCombatStrategy} from '../src/rules/strategy-revision.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,stats,advanceOwned} from '../src/rules/engine.js';
-import {startCombat,combatTick,selectCombatPolicy,executeCombatIntent} from '../src/rules/combat.js';
+import {startCombat,combatTick,executeCombatIntent} from '../src/rules/combat.js';
 import {newCharacter} from '../src/rules/character.js';
 import {policyState,receiveCombatIntent,grantCombatControl,wakeCombatPolicy,stepCombatPolicy,replayCombatIntent,flushQueuedCombatIntent} from '../src/rules/combat-policy.js';
 import {projectCombatObservation} from '../src/rules/combat-observation.js';
@@ -13,10 +16,33 @@ function fixture(classId=8,id=133){
 }
 function freeze(value){if(value&&typeof value==='object'&&!Object.isFrozen(value)){Object.freeze(value);for(const child of Object.values(value))freeze(child);}return value;}
 function envelope(s,intent,sequence=1){policyState(s);return {encounterId:s.combat.id,actorId:s.id,controller:'local',generation:1,sequence,observation:s.combat.policy.observation,expiresAt:s.clock+500,intent};}
+test('strategy revisions wake changed configurations but preserve identical pending decisions across restore',()=>{
+ const s=fixture();stepCombatPolicy(s,s);
+ const slot=policyState(s).slots[s.id];slot.next=500;slot.reaction=500;slot.queued={intent:{kind:'cast',spellId:133},expiresAt:300};
+ const before=structuredClone(slot),evaluations=s.combat.policy.metrics.evaluations;
+ assert.equal(setCombatStrategy(s,{rules:structuredClone(s.rules),strategyPolicy:structuredClone(s.strategyPolicy)}),false);
+ stepCombatPolicy(s,s);assert.deepEqual(slot,before);
+ const restored=JSON.parse(JSON.stringify(s));stepCombatPolicy(restored,restored);assert.deepEqual(restored.combat.policy.slots[s.id],before);
+ assert.equal(setCombatStrategy(s,{rules:[]}),true);
+ stepCombatPolicy(s,s);assert.equal(slot.queued,null);assert.equal(slot.configVersion,s.strategyRevision);
+ assert.equal(s.combat.policy.metrics.evaluations,evaluations+1);
+});
 for(const [classId,id]of [[1,7386],[2,635],[3,2973],[4,1752],[5,585],[7,403],[8,133],[9,686],[11,5176]])test(`class ${classId} policy is read-only and identical on a permitted observation`,()=>{
  const s=fixture(classId,id);const observation=projectCombatObservation(s),before=structuredClone(s);
  const a=selectCombatPolicy(freeze(s),s),b=selectCombatPolicy(freeze(observation),observation);
  assert.deepEqual(s,before);assert.deepEqual(b,a);assert.ok(a);
+ const trace=new DecisionTrace();assert.deepEqual(selectCombatPolicy(s,s,{trace}),a);
+ assert.equal(trace.entries.at(-1).status,'selected');assert.equal(trace.truncated,false);
+});
+test('strategy composition preserves player rule order and explains the winning layer',()=>{
+ const s=fixture();s.learned.push(116);
+ s.combat.enemies[0].position=25;
+ for(const ids of [[133,116],[116,133]]){
+  s.rules=ids.map(spell=>({spell,enabled:true,condition:'always',value:0}));
+  const source=freeze(structuredClone(s)),trace=new DecisionTrace(),intent=selectCombatPolicy(source,source,{trace});
+  assert.equal(intent.spellId,ids[0]);
+  assert.equal(trace.entries.at(-1).strategy,'rotation');
+ }
 });
 test('all rejected stale, duplicate, unauthorized and malformed actions preserve authoritative gameplay',()=>{
  const s=fixture(),intent={kind:'cast',spellId:133,targetId:s.combat.enemies[0].id},base=envelope(s,intent);
@@ -85,7 +111,7 @@ test('policy cadence is bounded and does not consume the combat RNG for idle dec
 });
 test('policy observation excludes inventory, history and hidden encounter plans',()=>{
  const s=fixture();s.bag=[{id:118,count:2,uid:'secret'}];s.combat.pendingSpawns=[{secret:'future'}];s.combat.raidEncounter={command:{healingMode:'conserve',secret:'boss-plan'}};
- const o=projectCombatObservation(s);assert.equal(o.bag,undefined);assert.equal(o.logs,undefined);assert.equal(o.rngState,undefined);assert.equal(o.combat.pendingSpawns,undefined);assert.deepEqual(o.combat.raidEncounter,{command:{healingMode:'conserve'}});assert.equal(o.inventoryCounts[118],2);assert.ok(!JSON.stringify(o).includes('secret'));
+ const o=projectCombatObservation(s);assert.equal(o.bag,undefined);assert.equal(o.logs,undefined);assert.equal(o.rngState,undefined);assert.equal(o.combat.pendingSpawns,undefined);assert.deepEqual(o.combat.raidEncounter,{command:{healingMode:'conserve'},warnings:[]});assert.equal(o.inventoryCounts[118],2);assert.ok(!JSON.stringify(o).includes('secret'));
 });
 test('a normalized received input stream settles identically across coarse and fine replay',()=>{
  const initial=fixture();initial.rules=[];

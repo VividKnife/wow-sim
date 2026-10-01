@@ -223,7 +223,7 @@ for (const online of [false,true]) test(`snapshot automatically recovers expired
     f.service.contentVersion='v2';f.time(10_000_000);
     const result=await f.service.snapshot('b',undefined,online);
     assert.equal(result.instanceId,null);assert.equal(result.state.activity.type,'idle');
-    assert.equal(result.localSimulation,null);
+    assert.equal(Object.hasOwn(result,'localSimulation'),false);
     const leader=await f.service.snapshot('a');
     assert.equal(leader.instanceId,null);assert.ok(leader.revision>before.revision);
     assert.deepEqual(await f.store.read(tx=>tx.list('actor_leases')),[]);
@@ -235,7 +235,7 @@ for (const online of [false,true]) test(`snapshot automatically recovers expired
 
 test('a normal command automatically releases an outdated personal activity and starts fresh',async()=>{
     const f=await fixture();
-    await f.service.command('a',{type:'hunt',id:299,requestId:'hunt',localClientId:'old-browser'});
+    await f.service.command('a',{type:'hunt',id:299,requestId:'hunt'});
     f.service.contentVersion='v2';
     const result=await f.service.command('a',{type:'travel',to:'goldshire',requestId:'travel'});
     assert.equal(result.state.activity.type,'travel');

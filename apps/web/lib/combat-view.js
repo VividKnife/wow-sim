@@ -82,10 +82,11 @@ export function battleLayout(allies,enemies,zoom=1,area=null){
 }
 export function fieldPoint(layout,p){return{x:layout.originX+p.x*layout.scale,y:layout.originY+p.y*(layout.scaleY??layout.scale)};}
 // A cast temporarily overrides the auto-attack target, including friendly casts.
-export function battleTarget(unit,units,clock){
+export function battleTarget(unit,units,clock,index){
  if(unit.hp<=0||unit.removed)return null;
  const id=unit.cast?.until>clock?unit.cast.target:unit.target;
- return units.find(target=>target.id===id&&target.hp>0&&!target.removed)||null;
+ const target=index?index.get(id):units.find(target=>target.id===id);
+ return target&&target.hp>0&&!target.removed?target:null;
 }
 /** @returns {Array<{actorId:string,targetId:string,friendly:boolean,x1:number,y1:number,x2:number,y2:number,arrow:string}>} */
 export function battleTargetLinks(units,layout,clock){

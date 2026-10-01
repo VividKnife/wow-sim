@@ -113,7 +113,7 @@ test('coverage ledger explicitly reconciles every talent node to an executor',as
  const {talentExecutionCoverage}=await import('../../../packages/game-domain/src/rules/class-support.js');const missing=Object.values(talents).filter(t=>!talentExecutionCoverage(t).supported).map(t=>`${t.classId}:${t.name}`);assert.deepEqual(missing,[]);
 });
 test('remaining defensive talents modify real detection and resistance hooks',async()=>{
- const {detectsTarget}=await import('../../../packages/game-domain/src/rules/combat-space.js');const observer=character(1,{}, {position:0}),rogue=character(4,{}, {position:4,stealthed:true});assert.equal(detectsTarget(observer,rogue,0),true);rogue.talents=character(4,{'Master of Deception':5}).talents;assert.equal(detectsTarget(observer,rogue,0),false);
+ const {detectsTarget}=await import('../../../packages/game-domain/src/rules/combat-space.js');const observer=character(1,{}, {position:0}),rogue=character(4,{}, {position:4,stealthed:true});assert.equal(detectsTarget({},observer,rogue,0),true);rogue.talents=character(4,{'Master of Deception':5}).talents;assert.equal(detectsTarget({},observer,rogue,0),false);
  const defenses=effects.talentCombatDefense(character(4,{'Sleight of Hand':2,'Heightened Senses':2}));assert.equal(defenses.meleeCritReduction,.02);assert.equal(defenses.spellAvoidance,.04);assert.equal(defenses.stealthDetection,6);
 });
 test('Magic Absorption returns source mana with a one-second cooldown',async()=>{

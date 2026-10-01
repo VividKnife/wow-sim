@@ -13,8 +13,8 @@ test('client snapshot exposes only the player and view allowlists',()=>{
  state.unknownAuthority={token:'secret-token'};
  const serverView=view(state);
  state.pet={id:'pet',name:'伙伴',rngState:44,presence:{owner:'hidden'},receipts:['hidden']};
- state.party=[{id:'ally',name:'同伴',rngState:55,presence:{owner:'hidden'},receipts:['hidden']}];
- state.dungeon={id:'run',metrics:{damage:{}},hiddenSpawns:[{entry:999}],rngState:66,receipts:['hidden']};
+ state.party=[{...createGame('同伴',55,1000),id:'ally',rngState:55,presence:{owner:'hidden'},receipts:['hidden']}];
+ state.dungeon={id:'deadmines',runId:'run',locationId:'entrance',metrics:{damage:{}},hiddenSpawns:[{entry:999}],rngState:66,receipts:['hidden']};
  const projected=projectClientSnapshot(state,{...serverView,serverSecret:'hidden'});
  assert.deepEqual(Object.keys(projected).sort(),['player','view']);
  assert.equal(projected.player.name,'边界');

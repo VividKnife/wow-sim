@@ -9,6 +9,7 @@ import {detectsTarget,inSpellRange} from './combat-space.js';
 import {combatRole} from './combat-roles.js';
 import {ruleMatches} from './combat-strategy.js';
 import {prepareClassAbility} from './class-spell-effects.js';
+import {setCombatStrategy} from './strategy-revision.js';
 
 export const arenaControlNames=new Set(['Polymorph','Fear','Hammer of Justice','Kidney Shot','Gouge','Bash','Psychic Scream','Intimidating Shout','Blind','Sap']);
 const interrupts=new Set(['Counterspell','Kick','Earth Shock','Pummel','Shield Bash','Silence']);
@@ -17,7 +18,7 @@ const labels={focus:'集火',pressure:'压制',protect:'保护',control:'控制�
 function usable(s,c,target,names){
  if(!target||c.cast||controlled(c,s.clock)||c.nextAction>s.clock)return[];
  return c.baseRules.filter(r=>r.enabled&&names.has(spells[r.spell]?.SpellName)).map(rule=>({rule,sp:spellInfo(c,knownRank(c,rule.spell))})).filter(({rule,sp})=>{
-  if(!sp||!pvpAbilityAllowed(c,target,sp,s.clock)||!stanceAllows(c,sp)||!spellReady(c,sp,s.clock)||!inSpellRange(c,target,sp)||!detectsTarget(c,target,s.clock)||prepareClassAbility(s,c,target,sp,[c,...(s.party||[])])===null)return false;
+  if(!sp||!pvpAbilityAllowed(c,target,sp,s.clock)||!stanceAllows(c,sp)||!spellReady(c,sp,s.clock)||!inSpellRange(s,c,target,sp)||!detectsTarget(s,c,target,s.clock)||prepareClassAbility(s,c,target,sp,[c,...(s.party||[])])===null)return false;
   const pool=sp.PowerType===1?'rage':sp.PowerType===3?'energy':'mana';
   return (c[pool]||0)>=sp.mana&&!(c.schoolLockouts?.[sp.School]>s.clock)&&!(sp.School>0&&(c.silenceUntil>s.clock||hasAura(c,27,s.clock)))&&ruleMatches(s,c,target,rule,sp);
  });
@@ -60,7 +61,7 @@ export function arenaTacticalTick(root,team,enemy){
   const threats=protect?alive.filter(e=>e.target===protect.id&&distance(e,protect)<12).sort((a,b)=>distance(a,protect)-distance(b,protect)):[];
   let target=assignment.task==='pressure'?alive.find(e=>e.id===assignment.targetId)||focus:focus,reason=labels[assignment.task];
   if(assignment.task==='protect'&&threats.length){target=threats[0];reason='保护 '+protect.name;}
-  if(target&&!detectsTarget(c,target,clock))target=alive.find(e=>detectsTarget(c,e,clock)&&e!==control);
+  if(target&&!detectsTarget(root,c,target,clock))target=alive.find(e=>detectsTarget(root,c,e,clock)&&e!==control);
   const retreat=protect&&protect!==c&&(c.hp/c.maxHp*100<assignment.retreatBelow||distance(c,protect)>assignment.leash||c.arenaRetreatTarget===protect.id&&distance(c,protect)>8);
   c.arenaRetreatTarget=retreat?protect.id:null;if(retreat)reason='回撤寻求支援';
   const peel=c!==controller&&assignment.task==='protect'&&threats[0]&&!controlled(threats[0],clock)?controlSpell(root,c,threats[0],1000):null;
@@ -78,7 +79,7 @@ export function arenaTacticalTick(root,team,enemy){
   if(c.arenaIntent!==reason){c.arenaIntent=reason;log(root,c.name+'：'+reason,'tactic',{actorId:c.id,targetId:target?.id});}
   const urgent=interrupt||c===controller&&chain||peel;
   // The commander can schedule configured skills, never grant disabled/unlearned ones.
-  c.rules=[...(urgent?[{...urgent.rule,spell:urgent.sp.Id}]:[]),...c.baseRules.filter(r=>!arenaControlNames.has(spells[r.spell]?.SpellName)&&!interrupts.has(spells[r.spell]?.SpellName))];
+  setCombatStrategy(c,{rules:[...(urgent?[{...urgent.rule,spell:urgent.sp.Id}]:[]),...c.baseRules.filter(r=>!arenaControlNames.has(spells[r.spell]?.SpellName)&&!interrupts.has(spells[r.spell]?.SpellName))]});
   c.arenaWaitingBurst=plan.burst==='controlled'&&!!root.combat.controlTargetId&&!window&&!waited;
   c.arenaBurstSpells=burstSpells;
  }

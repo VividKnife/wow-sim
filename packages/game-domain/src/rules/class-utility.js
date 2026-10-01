@@ -1,3 +1,4 @@
+import {removeGroundEffects} from './ground-events.js';
 import {beginSpellTiming,finishSpellTiming,spellReady,cooldownUntil,gcdUntil} from './spell-timing.js';
 import {petTrainingCost,petTrainingReason} from './pet-progression.js';
 import {ritualUse,finishRitual} from './class-ritual.js';
@@ -88,7 +89,7 @@ export function tickClassChannel(s){
  while(cast.nextTick<=s.clock&&cast.nextTick<=cast.until){classChannelTick(s,s,target,sp,cast,actors,{healAmount});cast.nextTick+=cast.interval;if(!s.cast){cancelClassChannel(s);return;}}
 }
 export function finishClassChannel(s){tickClassChannel(s);cancelClassChannel(s);}
-function relocate(s,to){if(s.dungeon)leaveDungeon(s);s.location=to;if(!s.visited.includes(to))s.visited.push(to);s.groundEffects=[];log(s,'传送至 '+nodes[to].name,'travel');handleTownAmmo(s,'town');}
+function relocate(s,to){if(s.dungeon)leaveDungeon(s);s.location=to;if(!s.visited.includes(to))s.visited.push(to);removeGroundEffects(s);log(s,'传送至 '+nodes[to].name,'travel');handleTownAmmo(s,'town');}
 export function finishClassUtility(s){
  const a=s.activity,sp=spellInfo(s,a.spell);s.activity={type:'idle'};if(!sp)return;
  if(sp.SpellName==='Ritual of Summoning'&&!ritualUse(s,a.target).canUse){log(s,'召唤仪式条件不再满足','cancel');return;}

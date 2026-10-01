@@ -1,4 +1,5 @@
 import {MAX_STRATEGY_PROFILES,MAX_STRATEGY_PROFILE_NAME} from '../../../sim-core/src/strategy-config.js';
+import {setCombatStrategy} from './strategy-revision.js';
 import {validateRules,currentStrategyRules,defaultPolicy} from './combat-strategy.js';
 import {combatRoles} from './combat-roles.js';
 import {validateAutoBuffs,defaultAutoBuffs} from './auto-buffs.js';
@@ -22,7 +23,7 @@ function strategyConfig(c,input){
   potions:validatePotions(input.potions===undefined?{...defaultPotions,...c.potions}:input.potions),
  };
 }
-function applyConfig(c,config){c.rules=copy(config.rules);c.strategyPolicy=copy(config.policy);c.autoBuffs=copy(config.autoBuffs);c.potions=copy(config.potions);}
+function applyConfig(c,config){setCombatStrategy(c,{rules:copy(config.rules),strategyPolicy:copy(config.policy),potions:copy(config.potions)});c.autoBuffs=copy(config.autoBuffs);}
 
 // Match current learned ranks when loading, without changing the stored template.
 export function strategyProfiles(c){return(c.strategyProfiles||[]).map(profile=>{

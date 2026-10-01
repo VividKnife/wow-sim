@@ -16,7 +16,6 @@ import {prepareGoldNpc} from '../packages/game-domain/src/rules/gold-raid-npcs.j
 import {stockGoldReagents} from '../packages/game-domain/src/rules/gold-raid-reagents.js';
 import {battlePresentation} from '../packages/game-domain/src/rules/battle-presentation.js';
 import {projectCombatPlayback,projectClientSnapshot} from '../packages/game-domain/src/rules/client-snapshot.ts';
-import {projectLocalCheckpoint} from '../packages/game-domain/src/rules/local-checkpoint.js';
 import {combatCommandView} from '../packages/game-domain/src/rules/combat-command.js';
 import {raidCommandView} from '../packages/game-domain/src/rules/raid-command.js';
 
@@ -80,7 +79,7 @@ function run(initial){
    Object.assign(frame.view,cachedRaid);
    const transportStart=performance.now();structuredClone(frame);timings.transportClone.push(performance.now()-transportStart);
   }
-  if(at%10000===0){const saveStart=performance.now();structuredClone(projectLocalCheckpoint(s));timings.checkpoint.push(performance.now()-saveStart);}
+  if(at%10000===0){const saveStart=performance.now();structuredClone(s);timings.checkpoint.push(performance.now()-saveStart);}
   timings.slice.push(performance.now()-sliceStart);
   minAlive=Math.min(minAlive,[s,...s.party].filter(c=>c.hp>0).length);
   maxUnits=Math.max(maxUnits,combatMembers(s).length);
@@ -120,6 +119,6 @@ for(const c of cases){
   totalMs:ms.map(m=>round(m.elapsed)),processCpuMs:ms.map(m=>round(m.cpuMs)),wallBudgetPercent:round(sum(ms.map(m=>m.elapsed))/runs/duration*100),timings:times,
   componentTotalMs:Object.fromEntries(Object.keys(last.timings).filter(k=>k!=='slice').map(k=>[k,round(sum(ms.map(m=>sum(m.timings[k])))/runs)])),
   minAlive:last.minAlive,maxFriendlyUnits:last.maxUnits,activeTicks:last.activeTicks,expectedTicks:duration/100,combatStillActive:!!s.combat,enemyCount:(s.combat||s.lastCombat).enemies.length,
-  fullSnapshotMs:summary(full),frameBytes:Buffer.byteLength(JSON.stringify(frame)),checkpointBytes:Buffer.byteLength(JSON.stringify(projectLocalCheckpoint(s))),fullSnapshotBytes:Buffer.byteLength(JSON.stringify(snapshot)),
+  fullSnapshotMs:summary(full),frameBytes:Buffer.byteLength(JSON.stringify(frame)),checkpointBytes:Buffer.byteLength(JSON.stringify(s)),fullSnapshotBytes:Buffer.byteLength(JSON.stringify(snapshot)),
   raidCommandVisible:!!raidCommandView(s),hash:last.hash}));
 }

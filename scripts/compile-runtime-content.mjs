@@ -1,15 +1,11 @@
 import fs from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
-import vm from 'node:vm';
 import {createHash} from 'node:crypto';
-import {gzipSync,gunzipSync} from 'node:zlib';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {build} from '../apps/web/node_modules/esbuild/lib/main.js';
 import {packContent} from './content-source/pack.mjs';
 
-// Gzip's OS header differs between macOS and Linux; normalize the transport.
-const gzip=value=>{const output=gzipSync(value,{level:9});output[9]=255;return output;};
 const root=fileURLToPath(new URL('..',import.meta.url));
 const temporary=await fs.mkdtemp(path.join(tmpdir(),'wow-content-'));
 try {
@@ -61,44 +57,14 @@ try {
  data.escortNearby=[...nearby.values()];
  const packed=packContent(data);packed.nodes=packed.nodes.map(row=>JSON.stringify(row));
  const bytes=JSON.stringify(packed)+'\n';
- const used=new Set();
- const warm=await build({absWorkingDir:root,stdin:{contents:"import './apps/web/lib/local-simulation-runtime.ts';export {createGame,view} from './packages/game-domain/src/rules/engine.js';",resolveDir:root},globalName:'__contentEngine',bundle:true,platform:'browser',format:'iife',write:false,logLevel:'silent',plugins:[{name:'warm-content',setup(build){
-  build.onResolve({filter:/runtime-content\.js$/},()=>({path:'runtime',namespace:'warm'}));
-  build.onLoad({filter:/.*/,namespace:'warm'},()=>({contents:`import {openPackedContent} from ${JSON.stringify(path.join(root,'packages/sim-core/src/packed-content.js'))};
-   const store=openPackedContent(globalThis.__runtime);export const runtime=store.root;export const contentStats=store.stats;export const clearContentCache=store.clear;
-   export const beginContentScope=()=>{};export const endContentScope=()=>{};export const isContentPending=()=>false;export const resolveContent=async e=>{throw e;};`,resolveDir:root}));
- }}]});
- const scope={__runtime:packed,__contentNodeRead:id=>used.add(id),performance,structuredClone,TextEncoder,TextDecoder,crypto,setTimeout:()=>0,clearTimeout:()=>{},postMessage:()=>{}};
- scope.self=scope;vm.runInNewContext(warm.outputFiles[0].text,scope,{timeout:120000});
- // A profile can change when initialization/view code changes even if the graph
- // is identical. Include its build inputs so immutable URLs never serve stale packs.
  const versionHash=createHash('sha256').update(bytes);
- const versionInputs=['scripts/compile-runtime-content.mjs','scripts/content-source/pack.mjs','packages/sim-core/src/packed-content.js','apps/web/lib/local-simulation-runtime.ts',
+ const versionInputs=['scripts/compile-runtime-content.mjs','scripts/content-source/pack.mjs','packages/sim-core/src/packed-content.js',
   ...(await fs.readdir(path.join(root,'packages/game-domain/src/rules'))).filter(name=>name.endsWith('.js')).sort().map(name=>'packages/game-domain/src/rules/'+name)];
  for(const name of versionInputs)versionHash.update(name).update(await fs.readFile(path.join(root,name)));
- const version=versionHash.digest('hex'),shardSize=8192;
- const browser=path.join(root,'packages/game-data/runtime/browser');
- const outputs=new Map();
- const boot={format:packed.format,root:packed.root,schemas:packed.schemas,nodes:Object.fromEntries([...used].sort((a,b)=>a-b).map(id=>[id,packed.nodes[id]])),version,shardSize,totalNodes:packed.nodes.length};
- for(const cls of c.classDefinitions){
-  const ids=new Set(),probe={__runtime:packed,__contentNodeRead:id=>ids.add(id),performance,structuredClone,TextEncoder,TextDecoder,crypto,setTimeout:()=>0,clearTimeout:()=>{},postMessage:()=>{}};
-  probe.self=probe;vm.runInNewContext(warm.outputFiles[0].text,probe,{timeout:120000});
-  for(const raceId of cls.races){
-   const state=probe.__contentEngine.createGame('内容预取',93,0,{classId:cls.id,raceId});probe.__contentEngine.view(state);
-   state.level=60;probe.__contentEngine.view(state);
-  }
-  const nodes=Object.fromEntries([...ids].filter(id=>!used.has(id)).sort((a,b)=>a-b).map(id=>[id,packed.nodes[id]]));
-  outputs.set(`class-${cls.id}.json.gz`,gzip(JSON.stringify({version,nodes})));
-  // End the job so WeakRef dereferences in the previous VM can be collected.
-  await new Promise(resolve=>setImmediate(resolve));
- }
- outputs.set('boot.json.gz',gzip(JSON.stringify(boot)));
- for(let start=0;start<packed.nodes.length;start+=shardSize)outputs.set(`${start/shardSize}.json.gz`,gzip(JSON.stringify({version,start,nodes:packed.nodes.slice(start,start+shardSize)})));
- outputs.set('../version.json',Buffer.from(JSON.stringify({version,shardSize,totalNodes:packed.nodes.length})+'\n'));
- if(!process.argv.includes('--check'))await fs.mkdir(browser,{recursive:true});
- for(const [name,content]of outputs){const filename=path.join(browser,name);if(process.argv.includes('--check')){const actual=await fs.readFile(filename);const equal=name.endsWith('.gz')?gunzipSync(actual).equals(gunzipSync(content)):actual.equals(content);if(!equal)throw new Error('Browser content is stale: '+name);}else await fs.writeFile(filename,content);}
- if(!process.argv.includes('--check'))for(const name of await fs.readdir(browser))if(!outputs.has(name))await fs.unlink(path.join(browser,name));
- console.log(`Browser boot: ${used.size} records, ${outputs.get('boot.json.gz').length} gzip bytes; ${Math.ceil(packed.nodes.length/shardSize)} on-demand shards`);
+ const versionFile=path.join(root,'packages/game-data/runtime/version.json');
+ const versionBytes=JSON.stringify({version:versionHash.digest('hex')})+'\n';
+ if(process.argv.includes('--check')){if(await fs.readFile(versionFile,'utf8')!==versionBytes)throw new Error('Runtime version is stale: npm run data:compile');}
+ else await fs.writeFile(versionFile,versionBytes);
  const destination=path.join(root,'packages/game-data/runtime/catalog.json');
  if(process.argv.includes('--check')){if(await fs.readFile(destination,'utf8')!==bytes)throw new Error('Runtime content is stale: npm run data:compile');}
  else {await fs.mkdir(path.dirname(destination),{recursive:true});await fs.writeFile(destination,bytes);}

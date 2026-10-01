@@ -5,13 +5,17 @@ import {combatMembers} from './combat-members.js';
 import {activateRacial,racialAbilityBlocked} from './racial-effects.js';
 import {talentModifiers} from './talent-effects.js';
 
-export const recoveryMembers=s=>combatMembers(s).filter(c=>!c.escortNpc&&!c.petUnit);
+export const recoveryMembers=s=>combatMembers(s).filter(c=>!c.escortNpc&&!c.petUnit&&!c.totemUnit);
 export function stopRecovery(s){for(const c of [s,...s.party]){c.rest=null;c.cannibalize=null;}}
 const resurrectionRoots={2:7328,5:2006,7:2008};
 const resurrectionSpell=c=>{const first=resurrectionRoots[c.classId];return first&&knownRank(c,first)};
+// Out-of-combat rescue is a cooperative party action, including human casters.
+// Prefer someone who can cast now, preserving stable roster order on ties.
 export function resurrectionFor(s,targetId,casterId){
- const members=[s,...s.party],target=members.find(c=>c.id===targetId),caster=members.find(c=>c!==target&&c.hp>0&&(!casterId||c.id===casterId)&&resurrectionSpell(c));if(!target||!caster)return null;
- const spell=resurrectionSpell(caster);return{caster,spell,info:spellInfo(caster,spell)};
+ const members=[s,...s.party],target=members.find(c=>c.id===targetId);if(!target||target.hp>0)return null;
+ const options=members.filter(c=>c!==target&&c.hp>0&&!c.cast&&(!casterId||c.id===casterId)&&resurrectionSpell(c)).map(caster=>{const spell=resurrectionSpell(caster);return{caster,spell,info:spellInfo(caster,spell)}});
+ const ready=o=>spellReady(o.caster,o.info,s.clock),affordable=o=>o.caster.mana>=o.info.mana,capacity=o=>stats(o.caster).maxMana>=o.info.mana;
+ return options.find(o=>ready(o)&&affordable(o))||options.find(o=>ready(o)&&capacity(o))||options.find(capacity)||options[0]||null;
 }
 export function beginResurrection(s,targetId,casterId){
  if(s.combat||!['idle','dead'].includes(s.activity.type))throw new Error('请先结束当前活动或战斗。');
@@ -33,22 +37,23 @@ export function startRecovery(s,minimumMana={},members=recoveryMembers(s)){let n
  if(s.combat)return false;
  for(const c of members){
   if(c.hp<=0)continue;if(c.cannibalize){needed=true;continue;}if(c.rest){needed=true;continue;}
-  const st=stats(c),foodNeeded=c.hp<st.maxHp*s.settings.health/100,waterNeeded=c.mana<Math.max(st.maxMana*s.settings.mana/100,minimumMana[c.id]||0);
+  const settings=c.settings||s.settings;
+  const st=stats(c),foodNeeded=c.hp<st.maxHp*settings.health/100,waterNeeded=c.mana<Math.max(st.maxMana*settings.mana/100,minimumMana[c.id]||0);
   if(!foodNeeded&&!waterNeeded)continue;needed=true;
-  const racial=c.raceId===5&&foodNeeded&&s.settings.autoFood&&c.learned?.includes(20577)?spellInfo(c,20577):null;
+  const racial=c.raceId===5&&foodNeeded&&settings.autoFood&&c.learned?.includes(20577)?spellInfo(c,20577):null;
   if(racial&&spellReady(c,racial,s.clock)&&racialAbilityBlocked(s,c,racial)===null){
    beginSpellTiming(c,racial,s.clock,{channel:true});activateRacial(s,c,racial,{stats});
    log(s,c.name+' 开始食尸恢复生命。','rest',{actorId:c.id,spellId:20577});continue;
   }
-  const find=aura=>s.bag.find(i=>items[i.id]?.RequiredLevel<=c.level&&spells[items[i.id]?.spellid_1]?.EffectApplyAuraName1===aura);
-  const food=foodNeeded&&s.settings.autoFood?find(84):null,water=waterNeeded&&s.settings.autoWater?find(85):null;
+  const find=aura=>(c.bag||[]).find(i=>items[i.id]?.RequiredLevel<=c.level&&spells[items[i.id]?.spellid_1]?.EffectApplyAuraName1===aura);
+  const food=foodNeeded&&settings.autoFood?find(84):null,water=waterNeeded&&settings.autoWater?find(85):null;
   // Keep the activity pending while passive regeneration restores missing resources.
   // Food and water accelerate recovery independently; neither is required.
   if(!food&&!water)continue;
   const fs=food&&spellInfo(c,items[food.id].spellid_1),ws=water&&spellInfo(c,items[water.id].spellid_1);
   const foodUntil=fs?s.clock+fs.durationMs:0,waterUntil=ws?s.clock+ws.durationMs:0;
   c.rest={until:Math.max(foodUntil,waterUntil),foodUntil,waterUntil,food:fs?fs.EffectBasePoints1+1:0,water:ws?ws.EffectBasePoints1+1:0,nextFood:s.clock+5000,foodPeriod:fs?.EffectAmplitude1||5000};
-  if(food){takeItem(s,food.id,1);s.totals.food++;}if(water){takeItem(s,water.id,1);s.totals.water++;}
+  if(food){takeItem(c,food.id,1);if(c.totals)c.totals.food++;}if(water){takeItem(c,water.id,1);if(c.totals)c.totals.water++;}
   log(s,c.name+' 坐下恢复生命与法力。','rest');
  }
  return needed;

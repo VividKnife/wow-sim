@@ -33,6 +33,9 @@ export async function checkDeployment(origin, expected, {fetchImpl = fetch, sign
       assert.ok([origin, '*'].includes(response.headers.get('access-control-allow-origin')), `Missing CDN CORS: ${resource}`);
     }
   }
+  const health=await (await request('/api/health')).json();
+  assert.equal(health.ready,true,'API, database and simulation workers must be ready');
+  for(const key of ['commit','buildId'])assert.equal(health.deployment?.[key],expected[key],`Deployed runtime ${key} does not match web artifact`);
   const session = await (await request('/api/auth/session', 401)).json();
   assert.equal(typeof session.error, 'string', 'API must return the unauthenticated session response');
   if (expected.assetMode === 'r2') {
@@ -83,6 +86,6 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     process.exitCode = 1;
   } finally {
     if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY,
-      `### Production deployment: ${result}\n\nSource: \`${expected.commit}\`\n\nBuild: \`${expected.buildId}\`\n\nSite: ${origin}\n\nChecks: Web build identity, login shell, API session endpoint, static assets and R2 release markers. This does not attest the worker version or authenticated gameplay.\n`);
+      `### Production deployment: ${result}\n\nSource: \`${expected.commit}\`\n\nBuild: \`${expected.buildId}\`\n\nSite: ${origin}\n\nChecks: Web build identity, login shell, API session endpoint, static assets and R2 release markers. Readiness checks database connectivity, simulation worker initialization and matching simulation rules/content. This does not attest authenticated gameplay.\n`);
   }
 }

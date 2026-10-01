@@ -11,9 +11,8 @@ import {items,talents} from '../src/rules/catalog.js';
 import {canEquip,stats} from '../src/rules/character.js';
 import {goldRaidView,goldRaidAction,goldAuctionStep,finishGoldRun} from '../src/rules/gold-raid.js';
 import {GOLD,goldAvoidsFire,npcWantsConsumables} from '../src/rules/gold-raid-npcs.js';
-import {localEligible} from '../src/local-simulation.ts';
-import {PAUSED_EVENT_AT} from '../src/presence.ts';
 import type {Rules} from '../src/model.ts';
+import {PAUSED_EVENT_AT} from '../src/presence.ts';
 async function fixture(){
  // NPC equipment and recruitment also derive randomness from the character ID.
  // A fixed battle seed alone still gives a different raid on every test run.
@@ -90,7 +89,6 @@ test('the persistent hall supplies legal gear/talents and locks announced contra
  await assert.rejects(f.command('goldRules',{rules:{leaderFee:0,dpsBonus:0,supportBonus:0}}),/当前阶段/);
  await f.command('goldRecommend');snap=await f.command('goldLaunch');assert.equal(snap.state!.party.length,39);
  assert.equal((await f.store.read(tx=>tx.list('actor_leases'))).length,1);assert.equal((await f.store.read(tx=>tx.list('characters',{accountId:f.save.id}))).length,1);
- const instance:any=await f.store.read(tx=>tx.get('instances',snap.instanceId!));assert.equal(localEligible(instance),true,'NPC seats remain local simulation actors under one player owner');
  await assert.rejects(f.command('goldInvite',{id:'unknown'}),/当前阶段/);
  await assert.rejects(f.command('strategy',{target:snap.state!.party.find((c:Rules)=>c.goldNpc).id}),/NPC自行/);
  await assert.rejects(f.command('leaveInstance'),/结算/);

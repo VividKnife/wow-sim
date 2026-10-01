@@ -1,3 +1,4 @@
+import {seedCompanion} from './support/characters.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
@@ -20,7 +21,9 @@ async function setup(contentId='deadmines') {
   await tx.put('characters',leader);
  });
  const send = (command:Record<string, unknown>) => service.command('a', {...command, requestId:`command-${++request}`});
- await send({type:'npcVisit'});await send({type:'npcRecommend'});
+ // This fixture tests service persistence, not NPC recommendation. Seed four
+ // explicit controllable records before selecting the five-character party.
+ for(const [classId,name]of [[1,'坦克'],[5,'牧师'],[4,'盗贼'],[8,'法师']] as const)await seedCompanion(service,'a',{classId,name});
  const ids = await store.transaction(async tx => {
   const characters = await tx.list<Character>('characters', {accountId:'a'});
   for (const c of characters) {
@@ -46,7 +49,11 @@ test('Stockades service entry, worker, exit and restart preserve the selected co
  await game.send({type:'dungeonPause'});
  for(let i=0;i<120&&(await game.snapshot()).state.combat;i++)await game.work(1000);
  const settled=await game.snapshot();assert.equal(settled.state.combat,null);
- if(settled.state.hp<=0){await game.send({type:'revive'});for(let i=0;i<30;i++)await game.work(1000);}
+ if(settled.state.hp<=0){
+  await game.send({type:'revive'});
+  for(let i=0;i<60&&(await game.snapshot()).state.hp<=0;i++)assert.deepEqual((await game.work(1000)).errors,[]);
+  assert.ok((await game.snapshot()).state.hp>0,'corpse recovery must complete before leaving');
+ }
  await game.send({type:'leaveDungeon'});game.restart();
  const saved=await game.snapshot();assert.equal(saved.state.dungeonSaves.stockades.runId,runId);
  const returned=await game.send({type:'enterDungeon',contentId:'stockades'});

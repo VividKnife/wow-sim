@@ -1,0 +1,278 @@
+{
+  "sourceCommit": "d2d43b9041768603a0c52b8ce55c64b2a03fb6a2",
+  "contentHash": "7691bf09687eea722ce20cc09d3b19b513d2f4294f2d9d030393d877f7b0045b",
+  "sampleMs": 50,
+  "durationMs": 15000,
+  "scenarios": {
+    "solo": {
+      "initialHash": "b0beecb9f4824e697a083a0135b2e8daff51d966075994daa5418756fb799d25",
+      "participants": 1,
+      "samples": [
+        {
+          "wallAt": 5000,
+          "simTime": 5000,
+          "hash": "72bc04faef3c04211ba53a74d2418c7c365fc3f0d9535a99247cd12b2c7ed317",
+          "rngState": 1014274473,
+          "totals": {
+            "kills": 1,
+            "xp": 0,
+            "money": 0,
+            "items": 2,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 1
+        },
+        {
+          "wallAt": 10000,
+          "simTime": 10000,
+          "hash": "a5d2dee18eb6382e3f7c93ff8ce87e002eb58ed4a49f165e1e84788efe06819f",
+          "rngState": 1014274473,
+          "totals": {
+            "kills": 1,
+            "xp": 0,
+            "money": 0,
+            "items": 2,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 1
+        },
+        {
+          "wallAt": 15000,
+          "simTime": 15000,
+          "hash": "316155c952d272804b14b84842a54b3442830e1177de8d1bcca700529f82dade",
+          "rngState": 1014274473,
+          "totals": {
+            "kills": 1,
+            "xp": 0,
+            "money": 0,
+            "items": 2,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 1
+        }
+      ]
+    },
+    "dungeon": {
+      "initialHash": "eee412f641cccd646a022a5abd08d93d9f1c76ca1d7df5e92e25fabbe906ab40",
+      "participants": 5,
+      "samples": [
+        {
+          "wallAt": 5000,
+          "simTime": 5000,
+          "hash": "2f78785d6b894c838a3fcaab30f0fe51ba2b5be0cf8a2325667a9d00cf3d2111",
+          "rngState": 909334371,
+          "totals": {
+            "kills": 0,
+            "xp": 0,
+            "money": 0,
+            "items": 0,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 5
+        },
+        {
+          "wallAt": 10000,
+          "simTime": 10000,
+          "hash": "6c36c5aa3dc48aaf158ca995941cc61878c099511af1c15433313879e8d08189",
+          "rngState": 1239081475,
+          "totals": {
+            "kills": 0,
+            "xp": 0,
+            "money": 0,
+            "items": 0,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 5
+        },
+        {
+          "wallAt": 15000,
+          "simTime": 15000,
+          "hash": "9115d5ba06626b158278b7d83783361a5a32260210e3c6b28b8e43631c2d244f",
+          "rngState": 2966982265,
+          "totals": {
+            "kills": 0,
+            "xp": 0,
+            "money": 0,
+            "items": 0,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 5
+        }
+      ]
+    },
+    "raid": {
+      "initialHash": "22b5691da010e87a8e8c521016864b0ef114002bd0fe292e8d5248a3cfbab764",
+      "participants": 40,
+      "samples": [
+        {
+          "wallAt": 5000,
+          "simTime": 5000,
+          "hash": "573707009ce2fdc694e45e5bca27641ad424e0d437f791b5fec8663d65ccd006",
+          "rngState": 2297863888,
+          "totals": {
+            "kills": 0,
+            "xp": 0,
+            "money": 0,
+            "items": 0,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 40
+        },
+        {
+          "wallAt": 10000,
+          "simTime": 10000,
+          "hash": "79f97251cd2ae454f56699ce820ac5ec4d63dc51ca044ef6b4a6a93891278f7a",
+          "rngState": 502576036,
+          "totals": {
+            "kills": 0,
+            "xp": 0,
+            "money": 0,
+            "items": 0,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 40
+        },
+        {
+          "wallAt": 15000,
+          "simTime": 15000,
+          "hash": "fb72c32a3b6c4afe9ba3d910456586b982e8672af380d74f27484065bf41bf78",
+          "rngState": 1911403878,
+          "totals": {
+            "kills": 0,
+            "xp": 0,
+            "money": 0,
+            "items": 0,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 40
+        }
+      ]
+    },
+    "arena": {
+      "initialHash": "343fed804ad5fa0b713e12d7a368abd1e3199ed52ac82dd3837b9431ec890bb6",
+      "participants": 5,
+      "samples": [
+        {
+          "wallAt": 5000,
+          "simTime": 5000,
+          "hash": "9dec6b1f507ffbe4ce5227fe2d335814d000c2e3b5c5134d178fbb300be46d1c",
+          "rngState": 283,
+          "totals": {
+            "kills": 0,
+            "xp": 0,
+            "money": 0,
+            "items": 0,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 5
+        },
+        {
+          "wallAt": 10000,
+          "simTime": 10000,
+          "hash": "9323ebfce226e16eb12236207259091a0e48f1ce2d27f1542c16d47fafa1c6b0",
+          "rngState": 283,
+          "totals": {
+            "kills": 0,
+            "xp": 0,
+            "money": 0,
+            "items": 0,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 5
+        },
+        {
+          "wallAt": 15000,
+          "simTime": 15000,
+          "hash": "f31ce304e8067c6975ab5569261c856f22c5823949a078cd678bb242f8fe9a23",
+          "rngState": 283,
+          "totals": {
+            "kills": 0,
+            "xp": 0,
+            "money": 0,
+            "items": 0,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 5
+        }
+      ]
+    },
+    "battleground": {
+      "initialHash": "43dcb3f5cd5d978a248c1ef210933c83747f36a2938c962343cfd981e0448b44",
+      "participants": 1,
+      "samples": [
+        {
+          "wallAt": 5000,
+          "simTime": 5000,
+          "hash": "98cdc41177aba32a2949463ea1f95a8e56ebf2b5f4756209df3e06951501db94",
+          "rngState": 283,
+          "totals": {
+            "kills": 0,
+            "xp": 0,
+            "money": 0,
+            "items": 0,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 1
+        },
+        {
+          "wallAt": 10000,
+          "simTime": 10000,
+          "hash": "10fcc2b2f992e280fd0642ffc3c918ca4b1badf288138208455c584f48e0ab9d",
+          "rngState": 283,
+          "totals": {
+            "kills": 0,
+            "xp": 0,
+            "money": 0,
+            "items": 0,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 1
+        },
+        {
+          "wallAt": 15000,
+          "simTime": 15000,
+          "hash": "7dcc14859fcbb684e00c032d7103fe0fb18c05490215da9ab9d3bf6d5ecc0d17",
+          "rngState": 283,
+          "totals": {
+            "kills": 0,
+            "xp": 0,
+            "money": 0,
+            "items": 0,
+            "deaths": 0,
+            "food": 0,
+            "water": 0
+          },
+          "living": 1
+        }
+      ]
+    }
+  }
+}

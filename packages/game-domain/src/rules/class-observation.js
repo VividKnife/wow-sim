@@ -1,3 +1,4 @@
+import {removeGroundEffects} from './ground-events.js';
 import {items,spells,creatures,classLocks,table,monsterIdsAt,nameOf,objectSpawnsByNode,objectTemplates} from './catalog.js';
 import {log,roll} from './character.js';
 import {lootRows} from './quests.js';
@@ -27,7 +28,7 @@ export function executeObservation(s,sp,targetId){const use=observationUse(s,sp,
  if(visions.has(name))s.scouting={spell:sp.Id,entry:target?.entry||s.pet?.entry||0,location:s.location,targetId,until:s.clock+(sp.durationMs||60000)};
  if(name==='Pick Pocket'){const entry=creatures[target.entry].PickpocketLootId;lootRows(s,table('pickpocketing_loot_template').filter(r=>r.entry===entry));target.picked=true;s.money+=10*(roll(s,0,Math.floor(target.level/2))+roll(s,0,Math.floor(s.level/2)));}
  if(name==='Pick Lock'){const instance=s.bag.find(i=>i.uid===targetId),required=classLocks[items[instance.id].lockid].requirements.find(r=>r.type===2&&r.index===1).skill;if(instance.id!==6712){instance.count--;if(!instance.count)s.bag=s.bag.filter(i=>i.uid!==instance.uid);lootRows(s,table('item_loot_template').filter(r=>r.entry===instance.id));}if((s.lockpicking||1)<Math.min(s.level*5,required+75))s.lockpicking=(s.lockpicking||1)+1;}
- if(name==='Disarm Trap')s.groundEffects=s.groundEffects.filter(e=>e.id!==targetId);
+ if(name==='Disarm Trap')removeGroundEffects(s,e=>e.id===targetId);
  log(s,'使用 '+nameOf('spells',sp.Id),'cast',{spellId:sp.Id,targetId});return true;
 }
 export function observationView(s){const active=s.scouting?.until>s.clock&&s.scouting.location===s.location?s.scouting:null,raw=active&&creatures[active.entry];return{trackingKind:s.tracking==='treasure'?'treasure':null,trackedTreasures:s.tracking==='treasure'?Object.keys(objectSpawnsByNode).filter(key=>key.startsWith(s.location+':')).map(key=>objectTemplates[Number(key.split(':')[1])]).filter(o=>o&&/Chest|Footlocker|Coffer|Strongbox/.test(o.name)).map(o=>({id:o.entry,name:o.name})):[],lockpicking:s.learned.includes(1804)?{skill:s.lockpicking||1,max:s.level*5}:null,trackedTargets:typeof s.tracking==='object'?monsterIdsAt(s.location).filter(id=>creatures[id]?.CreatureType===s.tracking.type).map(id=>({id,name:nameOf('npcs',id)})):[],scouting:raw?{name:nameOf('npcs',active.entry),level:[raw.MinLevel,raw.MaxLevel],armor:raw.Armor,type:raw.CreatureType,until:active.until}:null,lockTargets:s.bag.filter(i=>items[i.id]?.lockid).map(i=>({id:i.uid,name:nameOf('items',i.id)}))};}

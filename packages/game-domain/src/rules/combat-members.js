@@ -8,3 +8,8 @@ export function combatMembers(s,battle=s.combat){
  if(Array.isArray(battle.participantIds))return all.filter(c=>battle.participantIds.includes(c.id));
  return battle.dungeon?all:[s];
 }
+
+export function rewardCharacters(s){
+ // Combat-only templates have no persistent inventory or wallet identity.
+ return combatMembers(s).filter(c=>!c.petUnit&&!c.totemUnit&&!c.escortNpc&&(c.npcPlayer||Array.isArray(c.pending)));
+}

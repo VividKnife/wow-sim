@@ -1,3 +1,5 @@
+import {publishRaidWarnings,raidNextMechanics} from '../src/rules/molten-core-mechanics.js';
+import {projectCombatObservation} from '../src/rules/combat-observation.js';
 import {combatRole} from '../src/rules/combat-roles.js';
 import {restoreRaidMember} from '../src/rules/raid-recovery.js';
 import {addRaidField} from '../src/rules/raid-battlefield.js';
@@ -13,7 +15,7 @@ import {stats,spellInfo,knownRank} from '../src/rules/character.js';
 import {advance,act} from '../src/rules/engine.js';
 import {buildGameResponse} from '../src/rules/server-response.js';
 import type {Rules} from '../src/model.ts';
-function fixture(){const s=createMoltenCoreDemo().state;s.party=s.party.slice(0,4);s.growthPolicy='player';enterGoldRaid(s);for(const type of ['goldPublish','goldRecommend'])goldRaidAction(s,{type});
+function fixture(raidId='molten-core'){const s=createMoltenCoreDemo().state;s.party=s.party.slice(0,4);s.growthPolicy='player';enterGoldRaid(s,raidId);for(const type of ['goldPublish','goldRecommend'])goldRaidAction(s,{type});
  // These scenarios exercise Shield Wall, so explicitly recruit warrior tanks.
  const g=s.goldRaid,warriors=g.applicants.filter((c:Rules)=>combatRole(c)==='tank'&&c.classId===1).slice(0,3);
  g.selected=[...warriors.map((c:Rules)=>c.id),...g.selected.filter((id:string)=>combatRole(g.applicants.find((c:Rules)=>c.id===id))!=='tank')].slice(0,39);
@@ -58,11 +60,41 @@ test('automatic emergency skills obey health thresholds and real resource costs'
 test('scheduled shield wall covers the fear window and focus commands redirect actual damage targets',()=>{
  const s=fixture(),plan=raidPlan(s,'magmadar');plan.cooldowns.wall.trigger='fear';raidCommandAction(s,{type:'raidPlan',bossId:'magmadar',plan});start(s);
  const tank=[s,...s.party].find(c=>c.id===plan.mainTank)!;tank.stance='defensive';
- s.clock=s.combat.raidEncounter.nextFear-2100;raidCommandTick(s,[s,...s.party]);assert.equal(s.combat.raidEncounter.command.used.wall,undefined);
- s.clock+=200;raidCommandTick(s,[s,...s.party]);assert.equal(s.combat.raidEncounter.command.used.wall,1);
+ s.clock=s.combat.raidEncounter.nextFear-2100;publishRaidWarnings(s);raidCommandTick(s,[s,...s.party]);assert.equal(s.combat.raidEncounter.command.used.wall,undefined);
+ s.clock+=200;publishRaidWarnings(s);raidCommandTick(s,[s,...s.party]);assert.equal(s.combat.raidEncounter.command.used.wall,1);
  const g=start(fixture(),'golemagg');moltenCoreTick(g,[g,...g.party],()=>{});assert.equal(g.raidTargetId,g.combat.raidEncounter.bossId);
  raidCommandAction(g,{type:'raidOrder',order:'focusAdds',encounterId:g.combat.id});moltenCoreTick(g,[g,...g.party],()=>{});assert.notEqual(g.raidTargetId,g.combat.raidEncounter.bossId);
  assert.throws(()=>raidCommandAction(g,{type:'raidOrder',order:'focusBoss',encounterId:g.combat.id}),/5秒/);
+});
+
+test('team trigger cannot inspect hidden fear timers and consumes the same warning as the public view',()=>{
+ const s=fixture(),plan=raidPlan(s,'magmadar');plan.cooldowns.wall.trigger='fear';
+ raidCommandAction(s,{type:'raidPlan',bossId:'magmadar',plan});start(s);
+ const actors=[s,...s.party],tank=actors.find(c=>c.id===plan.mainTank)!,enc=s.combat.raidEncounter;
+ tank.stance='defensive';s.clock=enc.nextFear-1900;
+ assert.deepEqual(raidNextMechanics(enc),[]);
+ raidCommandTick(s,actors);assert.equal(enc.command.used.wall,undefined,'private timer is not an announced warning');
+ publishRaidWarnings(s);
+ const visible=raidNextMechanics(enc),observed=projectCombatObservation(s)!;
+ const observedEncounter=observed.combat.raidEncounter!;
+ assert.ok(visible.some((w:Rules)=>w.mechanic==='fear'));
+ assert.deepEqual(observedEncounter.warnings,visible);
+ assert.equal(Object.hasOwn(observedEncounter,'nextFear'),false);
+ visible[0].at=0;assert.notEqual(enc.warnings[0].at,0,'public readers cannot modify the authoritative warning');
+ s.clock+=200;raidCommandTick(s,actors);assert.equal(enc.command.used.wall,1);
+ enc.nextFear=s.clock+30000;publishRaidWarnings(s);
+ assert.equal(raidNextMechanics(enc).some((w:Rules)=>w.mechanic==='fear'),false);
+});
+
+test('a player can reuse the fear-triggered plan on another boss; publisher clears dead-source warnings',()=>{
+ const s=fixture('onyxias-lair'),plan=raidPlan(s,'onyxia');plan.cooldowns.wall.trigger='fear';
+ raidCommandAction(s,{type:'raidPlan',bossId:'onyxia',plan});start(s,'onyxia');
+ const actors=[s,...s.party],enc=s.combat.raidEncounter,tank=actors.find(c=>c.id===plan.mainTank)!;
+ tank.stance='defensive';enc.phase=3;enc.nextFear=s.clock+1500;
+ publishRaidWarnings(s);raidCommandTick(s,actors);assert.equal(enc.command.used.wall,1);
+ const restored=JSON.parse(JSON.stringify(s));assert.deepEqual(raidNextMechanics(restored.combat.raidEncounter),raidNextMechanics(enc));
+ s.combat.enemies.find((e:Rules)=>e.id===enc.bossId).hp=0;
+ publishRaidWarnings(s);assert.deepEqual(raidNextMechanics(enc),[]);
 });
 
 test('assigned dispellers are exclusive and leaving the mechanic unassigned produces observable failures',()=>{

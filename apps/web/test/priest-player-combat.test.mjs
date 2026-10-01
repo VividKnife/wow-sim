@@ -1,3 +1,4 @@
+import {beginActorCast} from '../../../packages/game-domain/src/rules/simulation-events.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,stats,advance} from '../../../packages/game-domain/src/rules/engine.js';
@@ -14,7 +15,7 @@ test('player priest obeys healing rules instead of the companion 85 percent resc
  assert.equal(s.cast?.spell,585);assert.equal(s.logs.some(l=>l.kind==='cast'&&l.spellId===2050),false);
 });
 test('player priest does not interrupt configured Smite for the companion rescue policy',()=>{
- const s=priest();s.hp=Math.floor(stats(s).maxHp*.7);s.cast={spell:585,target:s.combat.enemies[0].id,startedAt:0,until:6000};s.nextAction=6000;s.clock=700;
+ const s=priest();s.hp=Math.floor(stats(s).maxHp*.7);beginActorCast(s,s,{spell:585,target:s.combat.enemies[0].id,startedAt:0,until:6000});s.nextAction=6000;s.clock=700;
  combatTick(s);assert.equal(s.cast?.spell,585);assert.equal(s.cast.until,6000);
 });
 test('disabled player healing and shielding stay disabled while injured',()=>{

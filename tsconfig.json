@@ -5,6 +5,6 @@
   "allowJs":true, "checkJs":false, "skipLibCheck":true,
   "resolveJsonModule":true, "types":["node"], "esModuleInterop":true
  },
- "include":["packages/**/*.ts","apps/game-server/**/*.ts","apps/game-worker/**/*.ts"],
+ "include":["packages/**/*.ts","apps/game-server/**/*.ts","apps/game-worker/**/*.ts","apps/simulation-host/**/*.ts"],
  "exclude":["node_modules"]
 }

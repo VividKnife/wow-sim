@@ -52,7 +52,7 @@ test('Chain Lightning bounce scales base damage and spell power together',()=>{
 });
 
 test('periodic heal talent multiplier is applied exactly once',()=>{
- const heal=rank=>{const s=actor(11);if(rank)talent(s,'Improved Rejuvenation',rank);const sp=spellInfo(s,774),t=actor(1);genericEffects(s,s,t,sp,[s,t],{},{});return t.periodicClass[0].amount;};
+ const heal=rank=>{const s=actor(11);if(rank)talent(s,'Improved Rejuvenation',rank);const sp=spellInfo(s,774),t=actor(1);t.id='healing-target';s.party=[t];s.combat.participantIds=[s.id,t.id];genericEffects(s,s,t,sp,[s,t],{},{});return t.periodicClass[0].amount;};
  assert.equal(heal(3),heal(0)*1.15);
 });
 
@@ -72,7 +72,7 @@ test('combo point effects cap at five and switch their target without NaN state'
 });
 
 test('effect selection executes one aura slot without replaying the sibling direct hit',()=>{
- const s=actor(9),t=target(),{hits,api}=collector(),sp=spellInfo(s,348),dot=spellProgram(sp).effects.find(e=>e.aura===3);genericEffects(s,s,t,sp,[s],api,{effects:[dot.index]});assert.equal(hits.length,0);assert.equal(t.dots.length,1);
+ const s=actor(9),t=target(),{hits,api}=collector(),sp=spellInfo(s,348),dot=spellProgram(sp).effects.find(e=>e.aura===3);s.combat.enemies=[t];genericEffects(s,s,t,sp,[s],api,{effects:[dot.index]});assert.equal(hits.length,0);assert.equal(t.dots.length,1);
 });
 
 test('unsupported effects and trigger cycles are explicit execution results',()=>{
@@ -137,7 +137,7 @@ test('Blast Wave critical damage triggers Ignite through the shared combat event
 });
 
 test('Ignite refresh carries remaining damage rather than adding parallel copies',()=>{
- const s=actor();talent(s,'Ignite',5);const enemy=target();
+ const s=actor();talent(s,'Ignite',5);const enemy=target();s.combat.enemies=[enemy];
  onTalentEvent(s,s,{type:'damage',target:enemy,spell:spells[133],amount:1000,critical:true},{});
  enemy.dots[0].remaining=1;s.clock=2000;
  onTalentEvent(s,s,{type:'damage',target:enemy,spell:spells[11113],amount:500,critical:true},{});
@@ -149,7 +149,7 @@ test('every periodic damage and healing rank applies the source amount to the se
  for(const definition of classDefinitions){const s=actor(definition.id);
   for(const row of classAbilities[definition.id]){const sp=spellInfo(s,row.spellId);
    for(const effect of spellProgram(sp).effects.filter(e=>[6,35].includes(e.id)&&[3,8,53,64,89,161].includes(e.aura))){
-    const t=target();genericEffects(s,s,t,sp,[s],{}, {effects:[effect.index]});
+    const t=target(),harmful=[3,53,64,89].includes(effect.aura);s.combat.enemies=harmful?[t]:[];s.party=harmful?[]:[t];s.combat.participantIds=[s.id,...s.party.map(c=>c.id)];genericEffects(s,s,t,sp,[s,...s.party],{}, {effects:[effect.index]});
     const state=[3,53,64,89].includes(effect.aura)?t.dots[0]:t.periodicClass[0];assert.ok(state,`${sp.Id}/${effect.index}`);
     const level=Math.max(0,Math.min(s.level,sp.MaxLevel||s.level)-sp.SpellLevel),expected=Math.floor(effect.basePoints+level*effect.pointsPerLevel+Math.max(1,effect.baseDice));
     assert.equal(state.amount,expected,`${sp.Id}/${effect.index}`);assert.ok(state.interval>0);assert.ok(Number.isFinite(state.next));count++;

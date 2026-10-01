@@ -1,14 +1,13 @@
+import {residentStore} from './resident-store.ts';
 import {applyGmBuffs} from './gm-buffs.ts';
 import {claimGmGift,giftInbox} from './gm.ts';
 import {experienceMultiplier, applyExperienceBuff} from './rules/experience.js';
-import {localSimulation, localManifest, guardLocalCommand, resetLocalSession, reserveLocalSimulation} from './local-simulation.ts';
 import {advancePersonal, advanceInstance} from './background-simulation.ts';
 import {talentSummary} from './rules/talent-summary.js';
 import {listSaves,resolveSave,createSave,deleteSave} from './saves.ts';
 import { createInstance, instanceFor, joinInstance, startInstance, bumpInstanceAccounts, instanceCommand, persistInstance, leaveInstance, acquireInstanceLease } from './instances.ts';
 import { startActivity, recall, restoreReservation, settleActivity } from './activities.ts';
-import { randomUUID, randomBytes, createHash } from 'node:crypto';
-import {remapItemReferences} from '../../sim-core/src/item-identities.js';
+import { randomUUID, randomBytes } from 'node:crypto';
 import { removeInvalidSave } from './account-reset.ts';
 import { unstuck, recoverExpiredActivities } from './unstuck.ts';
 import { validAccountPresence } from './context.ts';
@@ -37,7 +36,6 @@ type Options = {
     xpMultiplier?: number;
 };
 export class GameService {
-    localSimulation = localSimulation;
     gmInbox(accountId:string){return giftInbox(this.store,accountId);}
     listSaves = listSaves;
     resolveSave = resolveSave;
@@ -56,7 +54,7 @@ export class GameService {
     refreshPresence = refreshPresence;
     activityDeadline = activityDeadline;
     instanceDeadline = instanceDeadline;
-    constructor(store: Store, options: Options) { this.xpMultiplier = experienceMultiplier(options.xpMultiplier); this.offlineLimitMs = offlineLimit(options.offlineLimitMs); this.store = store; this.contentVersion = options.contentVersion; this.now = options.now || Date.now; this.id = options.id || randomUUID; this.seed = options.seed || (() => randomBytes(4).readUInt32LE(0) || 1); }
+    constructor(store: Store, options: Options) { this.xpMultiplier = experienceMultiplier(options.xpMultiplier); this.offlineLimitMs = offlineLimit(options.offlineLimitMs); this.store = residentStore(store); this.contentVersion = options.contentVersion; this.now = options.now || Date.now; this.id = options.id || randomUUID; this.seed = options.seed || (() => randomBytes(4).readUInt32LE(0) || 1); }
     async createAccount(accountId: string, input: {
         name: string;
         classId: number;
@@ -70,7 +68,7 @@ export class GameService {
             const previous = await tx.get<Rules>('receipts', `${accountId}:${requestId}`); if (previous) {
             requireThat(previous.fingerprint === JSON.stringify({ type: 'createAccount', ...input }), 'REQUEST_REUSED', 'requestId 已被其他命令使用');
             return;
-        } requireThat(!await tx.get('accounts', accountId), 'EXISTS', '账号已有主角'); const now = this.now(), id = this.id(), partyId = this.id(); const s = newState(input.name, input.classId, input.raceId, this.seed(), now, id, input.gender); const c: Character = { id, accountId, kind: 'hero', rules: characterRules(s), professionReadyAt: {}, resourceReadyAt: {} }; await tx.insert('accounts', { id: accountId, primaryCharacterId: id, partyId, revision: 1, createdAt: now }); await tx.insert('account_presence', {id:accountId, accountId, lastSeenAt:now}); await tx.insert('characters', c); await tx.insert('parties', { id: partyId, accountId, characterIds: [id] }); await persistAssets(tx, c, s, `create:${accountId}`, this.id); await this.receipt(tx, accountId, requestId, { type: 'createAccount', ...input }); });
+        } requireThat(!await tx.get('accounts', accountId), 'EXISTS', '账号已有主角'); const now = this.now(), id = this.id(), partyId = this.id(); const s = newState(input.name, input.classId, input.raceId, this.seed(), now, id, input.gender); const c: Character = { id, accountId, kind: 'hero', rules: characterRules(s), professionReadyAt: {}, resourceReadyAt: {} }; await tx.insert('accounts', { id: accountId, primaryCharacterId: id, partyId, revision: 1, createdAt: now }); await tx.insert('account_presence', {id:accountId, accountId, lastSeenAt:now}); await tx.insert('characters', c); await tx.insert('parties', { id: partyId, accountId, characterIds: [id] }); await persistAssets(tx, c, s, `create:${accountId}`); await this.receipt(tx, accountId, requestId, { type: 'createAccount', ...input }); });
         return this.snapshot(accountId);
     }
     request(id: unknown) { requireThat(typeof id === 'string' && id.length > 0 && id.length <= 160, 'INVALID_REQUEST', '需要有效的 requestId', 400); }
@@ -91,6 +89,7 @@ export class GameService {
             if (!lease) {
                 for (const member of [state, ...state.party]) {
                     if (await tx.get<ActorLease>('actor_leases', member.id)) continue;
+                    if (await tx.get('simulation_characters', member.id)) continue;
                     const current = await context(tx, await owned(tx, accountId, member.id), now, false);
                     if (!current.combat && !quietIdle(current) && now-current.wallAt >= current.nextRegen-current.clock)
                         recovering.push(member.id);
@@ -118,7 +117,7 @@ export class GameService {
             }));
             const activities = await tx.list<Activity>('activities', { accountId });
             const owner = instance || activity;
-            return { recovering, state, revision: a.revision, account: a, roster, activities, localSimulation: localManifest(owner), combatMode: owner && state.combat ? combatExecutionMode(owner, state) : null, playback: owner?.playback ?? null, instanceId: instance?.id || null, instance: instance ? { id: instance.id, leaderId: instance.leaderId, contentId: instance.contentId, status: instance.status, capacity: instance.capacity, roster: instance.roster, sequence: instance.sequence, epoch: instance.epoch } : null };
+            return { recovering, state, revision: a.revision, account: a, roster, activities, combatMode: owner && state.combat ? combatExecutionMode(owner, state) : null, playback: owner?.playback ?? null, instanceId: instance?.id || null, instance: instance ? { id: instance.id, leaderId: instance.leaderId, contentId: instance.contentId, status: instance.status, capacity: instance.capacity, roster: instance.roster, sequence: instance.sequence, epoch: instance.epoch } : null };
         });
         let result = await readSnapshot();
         if (result.recovering.length) {
@@ -128,10 +127,11 @@ export class GameService {
                     let changed = false;
                     for (const id of result.recovering) {
                         if (await tx.get('actor_leases', id)) continue;
+                        if (await tx.get('simulation_characters', id)) continue;
                         const c = await owned(tx, accountId, id), current = await context(tx, c, now, false);
                         if (current.combat || quietIdle(current) || now-current.wallAt < current.nextRegen-current.clock) continue;
                         const next = advance(current, now).state;
-                        await persistCharacter(tx, c, next, next.wallAt, `recovery:${id}:${next.wallAt}`, this.id);
+                        await persistCharacter(tx, c, next, next.wallAt, `recovery:${id}:${next.wallAt}`);
                         changed = true;
                     }
                     if (changed) await bump(tx, accountId);
@@ -146,7 +146,7 @@ export class GameService {
         const {recovering, ...snapshot} = result;
         return snapshot;
     }
-    member(s: Rules) { const { party, bag, bags, bank, pending, auctions, money, activity, combat, lastCombat, dungeon, receipts, ...member } = s; return member; }
+    member(s: Rules) { const { party, bank, auctions, activity, combat, lastCombat, dungeon, receipts, ...member } = s; return member; }
     async personalContext(tx: ReadView, c: Character, now: number, settleFree = false) {
         let s = await context(tx, c, now);
         const ownLease = await tx.get<ActorLease>('actor_leases', c.id);
@@ -192,12 +192,7 @@ export class GameService {
     async command(accountId: string, command: Rules) {
         this.request(command?.requestId);
         requireThat(typeof command.type === 'string', 'INVALID_COMMAND', '缺少操作类型', 400);
-        const {localCheckpoint,...submittedCommand}=command;
-        command=submittedCommand;
-        if(localCheckpoint!==undefined)requireThat(localCheckpoint && localCheckpoint.type==='checkpoint' && localCheckpoint.characterId===command.characterId &&
-            localCheckpoint.clientId===command.localClientId && localCheckpoint.sessionId===command.localSessionId,
-            'LOCAL_STATE','操作与检查点会话不一致',400);
-        const receiptCommand=localCheckpoint?{...command,localCheckpointHash:createHash('sha256').update(JSON.stringify(localCheckpoint)).digest('hex')}:command;
+        const receiptCommand=command;
         if (command.type !== 'unstuck') await recoverExpiredActivities.call(this, accountId);
         const selectedLease = await this.store.read(async tx => {
             const a = await account(tx, accountId);
@@ -225,14 +220,7 @@ export class GameService {
                     requireThat(old.fingerprint === JSON.stringify(receiptCommand), 'REQUEST_REUSED', 'requestId 已被其他命令使用');
                     return;
                 }
-                // Persist the paused Worker and the command in one transaction.
-                // A rejected command rolls back both; receipt retries skip both.
-                let action=command;
-                if(localCheckpoint){
-                    const saved=await this.localSimulation(accountId,localCheckpoint,tx);
-                    action=remapItemReferences(structuredClone(command),new Map(saved.itemIds));
-                    if(!saved.active)delete action.localSessionId;
-                }
+                const action=command;
                 const now = this.now();
                 // Polling heartbeats update account_presence frequently. Reading it in
                 // every long command transaction makes raid writes repeatedly fail
@@ -245,7 +233,6 @@ export class GameService {
                 }
                 const c = await owned(tx, accountId, action.characterId || a.primaryCharacterId);
                 const lease = await tx.get<ActorLease>('actor_leases', c.id);
-                await guardLocalCommand(this, tx, c.id, action, now);
                 if (action.type === 'unstuck')
                     await unstuck.call(this, tx, c, now, action.requestId);
                 else if (action.type === 'transferItems')
@@ -282,8 +269,6 @@ export class GameService {
                 }
                 else
                     await this.personalCommand(tx, c, action, now);
-                if(typeof action.localClientId==='string'&&action.localClientId.length>0)
-                    await reserveLocalSimulation(tx,c.id,now);
                 await this.receipt(tx, accountId, command.requestId, receiptCommand);
                 await bump(tx, accountId);
             });
@@ -313,9 +298,8 @@ export class GameService {
             // simulation or replace/release the leader's activity and leases.
             const result = cmd.type==='claimGmGift'?await claimGmGift(tx,c,selected,cmd.id,now):act(selected, cmd, selected.wallAt);
             const key = `command:${c.accountId}:${cmd.requestId}`;
-            await persistCharacter(tx, c, result, result.wallAt, key, this.id);
+            await persistCharacter(tx, c, result, result.wallAt, key);
             await invalidateCombatPlan(tx, existing);
-            resetLocalSession(existing);
             await tx.put('activities', existing);
             await economicEvent(tx, key, c.accountId, 'command', {characterId:c.id});
             return;
@@ -326,7 +310,6 @@ export class GameService {
             c = await owned(tx, c.accountId, c.id);
         }
         let s = await this.personalContext(tx, c, now, true);
-        if (existing?.localSimulation) now = s.wallAt;
         const action = { ...cmd };
         if (action.target && ['strategy', 'pvpConfigure', 'equip', 'equipBag'].includes(action.type)) {
             const target = s.party.find((p: Rules) => p.id === action.target);
@@ -350,14 +333,14 @@ export class GameService {
             requireThat(!await tx.get('reward_claims', rewardKey), 'ALREADY_CLAIMED', '已领取任务奖励');
             rewardPlan = questProgress(s, action.id)!;
         }
-        s = action.type==='claimGmGift'?await claimGmGift(tx,c,s,action.id,now):act(s, action, now);
+        s = action.type==='claimGmGift'?await claimGmGift(tx,c,s,action.id,now):act(s, action, now, {equipmentTargetId: action.type==='equip'?action.target:null});
         const key = rewardKey || `command:${c.accountId}:${cmd.requestId}`;
         if (rewardPlan)
             await this.claimEquipmentRewards(tx, c, s, action, rewardPlan, now, key);
         if (action.type === 'equip')
             await this.transferEquipment(tx, c, s);
         for (const member of s.party) await this.persistMember(tx, member, now, key, s);
-        await persistCharacter(tx, c, s, now, key, this.id);
+        await persistCharacter(tx, c, s, now, key);
         await this.trackPersonal(tx, c, s, now, existing?.id);
         if (rewardKey)
             await tx.insert('reward_claims', { id: rewardKey, businessKey: rewardKey, accountId: c.accountId, characterId: c.id, questId: action.id, round: s.completed[action.id], rewardGroup: 'personal' });
@@ -382,10 +365,10 @@ export class GameService {
                 continue;
             }
             if (!isActor) {
-                const recipient = await owned(tx, actor.accountId, member.id), recipientState = await context(tx, recipient, now, false);
-                for (const reward of rewards)
-                    receive(recipientState, reward.id, reward.count);
-                await persistAssets(tx, recipient, recipientState, `${key}:equipment:${member.id}`, this.id);
+                await owned(tx, actor.accountId, member.id);
+                // Persist this same updated member below; a second stale copy
+                // would overwrite the granted equipment during party persistence.
+                for (const reward of rewards) receive(member, reward.id, reward.count);
             }
             await tx.insert('reward_claims', { id: claimId, businessKey: claimId, accountId: actor.accountId, characterId: member.id, questId: action.id, round, rewardGroup: 'equipment', rewards });
         }
@@ -428,10 +411,6 @@ export class GameService {
         if (!c)
             return;
         const old = await context(tx, c, now, false);
-        if(member.pendingRewards?.length){
-            old.pending.push(...member.pendingRewards);
-            delete member.pendingRewards;
-        }
         const s: Rules = { ...old, ...member, bags:old.bags };
         if (shared) {
             s.clock = shared.clock;
@@ -444,12 +423,12 @@ export class GameService {
             if (!s.visited.includes(s.location))
                 s.visited.push(s.location);
         }
-        await persistCharacter(tx, c, s, s.wallAt, key, this.id);
+        await persistCharacter(tx, c, s, s.wallAt, key);
     }
     async trackPersonal(tx: Transaction, c: Character, s: Rules, now: number, existingId?: string) {
         const active = !!s.combat || !['idle', 'dead'].includes(s.activity.type) || !!s.rest;
         let a = existingId ? await tx.get<Activity>('activities', existingId) : null;
-        if (a) { await invalidateCombatPlan(tx, a); resetLocalSession(a); }
+        if (a) { await invalidateCombatPlan(tx, a); }
         if (!active) {
             if (a) {
                 a.status = 'completed';
@@ -471,7 +450,6 @@ export class GameService {
         // An authenticated command is itself proof of online activity. Avoid
         // reading the frequently updated presence row in this long transaction.
         a.nextEventAt = now + simulationInterval(s.combat, now, now);
-        if (a.localSimulation) a.nextEventAt = Number.MAX_SAFE_INTEGER;
         await tx.put('activities', a);
     }
     startActivity = startActivity;

@@ -1,4 +1,3 @@
-import {useLocalCombat} from '@/lib/local-combat-store';
 import {useCombatPlayback} from '@/lib/use-combat-playback';
 import {classCombatMeta,classResource} from '../../../packages/sim-core/src/class-combat.js';
 import BattleRaidFrames from './battle-raid-frames';
@@ -9,8 +8,7 @@ export default function LiveRaidFrames({state,data,playback,contentVersion,selec
  state:GameProps['state'];data:GameProps['data'];playback?:GameProps['playback'];
  contentVersion?:string;selectedId:string;onSelect:(id:string)=>void;
 }){
- const local=useLocalCombat(state,data,true);
- const {state:s,data:d}=useCombatPlayback(local.state,local.data,playback,contentVersion,true);
+ const {state:s,data:d}=useCombatPlayback(state,data,playback,contentVersion,true);
  const current=[{...s,stats:d.stats},...(d.party||[])];
  const units=(s.combat&&d.battleView?.actors||current).filter((unit:any)=>!unit.escortNpc);
  // At camp the battle projection describes the last fight. Use current HP and

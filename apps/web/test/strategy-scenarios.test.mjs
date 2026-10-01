@@ -8,6 +8,7 @@ import {ruleMatches,validateRules,strategyAllows} from '../../../packages/game-d
 import {spellInfo} from '../../../packages/game-domain/src/rules/character.js';
 import {startCombat,combatTick,hurtPlayer} from '../../../packages/game-domain/src/rules/combat.js';
 import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
+import {projectCombatObservation} from '../../../packages/game-domain/src/rules/combat-observation.js';
 
 function scenario(classId,template,count=1,extra=[],level=20){
  let s=createGame('模板实战',743,0,{classId,raceId:classDefinitions.find(c=>c.id===classId).races[0]});s.level=level;
@@ -118,7 +119,7 @@ test('frost can reset its emergency nova before attempting to retreat',()=>{
  combatTick(s);assert.equal(casts(s)[0],'Cold Snap');assert.equal(s.cooldowns[122]||0,0);
 });
 test('warrior rescues a loose enemy without dropping its ready weapon swing',()=>{
- const s=scenario(1,163,1,[71,355]);s.position=27;s.stance='defensive';s.rage=100;s.nextSwing=0;const e=s.combat.enemies[0];combatTick(s);
+ const s=scenario(1,163,1,[71,355]);s.party[0].strategyPolicy={...s.party[0].strategyPolicy,role:'healer'};s.position=27;s.stance='defensive';s.rage=100;s.nextSwing=0;const e=s.combat.enemies[0];combatTick(s);
  assert.equal(casts(s)[0],'Taunt');assert.equal(e.target,s.id);
  assert.ok(s.logs.some(l=>l.actorId===s.id&&l.targetId===e.id&&(l.kind==='damage'||l.kind==='miss')));
 });
@@ -172,4 +173,30 @@ test('subtlety Premeditation awards combo points on the enemy before the opener'
  combatTick(s);
  assert.equal(casts(s)[0],'Premeditation');
  assert.equal(s.comboTarget,e.id);assert.equal(s.combo,2);
+});
+
+test('ranged policy attacks visible airborne targets without waiting for impossible melee tank threat',()=>{
+ const s=scenario(8,61),enemy=s.combat.enemies[0],tank=s.party[0];
+ s.rules=s.rules.filter(r=>spells[r.spell].SpellName==='Frostbolt');
+ s.position=21.5; // Inside tank support, outside the caster's close-range retreat threshold.
+ enemy.target=s.id;enemy.threat={[s.id]:1000};enemy.airborne=true;
+ const bolt=spellInfo(s,s.rules[0].spell);
+ assert.equal(strategyAllows(s,s,enemy,bolt),true);
+ const observed=projectCombatObservation(s);
+ assert.equal(strategyAllows(observed,observed,observed.combat.enemies[0],bolt),true);
+ combatTick(s);assert.equal(casts(s)[0],'Frostbolt');
+ enemy.airborne=false;assert.equal(strategyAllows(s,s,enemy,bolt),false,'landing restores tank aggro discipline');
+ enemy.target=tank.id;enemy.threat[tank.id]=2000;assert.equal(strategyAllows(s,s,enemy,bolt),true);
+ enemy.airborne=true;s.strategyPolicy.pullDelaySeconds=3;
+ assert.equal(strategyAllows(s,s,enemy,bolt),false,'initial pull delay still applies');
+});
+
+test('airborne threat exception never releases untanked ground AoE targets or crowd control',()=>{
+ const s=scenario(3,363,3),[air,ground,controlled]=s.combat.enemies;
+ air.airborne=true;air.target=s.id;air.threat={[s.id]:1000};
+ const multi=spellInfo(s,s.rules.find(r=>spells[r.spell].SpellName==='Multi-Shot').spell);
+ assert.equal(strategyAllows(s,s,air,multi),true);
+ ground.target=s.id;ground.threat={[s.id]:1000};assert.equal(strategyAllows(s,s,air,multi),false);
+ ground.target=s.party[0].id;ground.threat={[s.party[0].id]:1000};controlled.polyUntil=10000;
+ assert.equal(strategyAllows(s,s,air,multi),false);
 });

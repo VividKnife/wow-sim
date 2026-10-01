@@ -11,11 +11,12 @@ export function PartyBuffOrder({state:s,data:d,busy,send}:GameProps){
   const entries=member.entries.filter((entry:any)=>entry.status!=='unavailable');
   return {...member,entries,missing:entries.filter((entry:any)=>entry.status!=='ready').length};
  }).filter((m:any)=>showAll||m.missing||m.dead)||[];
+ const allDead=!!check?.members.length&&check.members.every((member:any)=>member.dead);
  const fraction=check?.total?Math.round(check.present/check.total*100):0;
  return <section className="party-buff-check" aria-label="团队增益检查">
   <div className="action-row"><Button variant="outline" disabled={busy||!!s.combat||s.hp<=0||(!active&&s.activity.type!=='idle')} onClick={async()=>{if(await send({type:active?'stop':'partyBuffs'}))setExpanded(true);}}>{active?'停止补 Buff':'全团补 Buff'}</Button><PartyBuffAudio state={s} data={d}/><Button variant="ghost" aria-expanded={expanded} aria-controls="party-buff-members" onClick={()=>setExpanded(!expanded)}>{expanded?'收起检查':'查看缺失增益'}</Button></div>
   {check?<>
-   <div className="buff-check-overview" role="status"><strong>{active?'正在补充增益':check.missing?'团队增益待补充':check.unavailable.length?'团队仍有阵容缺项':'团队增益已补齐'}</strong><span>已覆盖 {check.present} / {check.total} 项</span><span>待补 {check.missing} 项</span>{active&&<><span>已施放 {check.completed} 次 · 剩余 {check.remainingCasts} 次施法</span><span>已用道具 {check.completedItems} 件 · 剩余 {check.remainingItems} 件</span></>}</div>
+   <div className="buff-check-overview" role="status"><strong>{allDead?'全团已倒下，请先复活':active?'正在补充增益':check.missing?'团队增益待补充':check.unavailable.length?'团队仍有阵容缺项':'团队增益已补齐'}</strong><span>已覆盖 {check.present} / {check.total} 项</span><span>待补 {check.missing} 项</span>{active&&<><span>已施放 {check.completed} 次 · 剩余 {check.remainingCasts} 次施法</span><span>已用道具 {check.completedItems} 件 · 剩余 {check.remainingItems} 件</span></>}</div>
    <progress className="buff-check-progress" aria-label="团队增益覆盖率" value={fraction} max={100}/>
    {check.lastCast&&<p className="buff-check-last">最近施放：{check.lastCast}</p>}
    {check.unavailable.length>0&&<p className="buff-check-unavailable">阵容暂无法补齐：{check.unavailable.map((b:any)=>b.name).join('、')}。</p>}

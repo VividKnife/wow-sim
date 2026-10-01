@@ -74,28 +74,7 @@ async function auth(accountId: string) {
   return {Origin:appOrigin,Cookie: `wow_session=${await issueSession({sub: accountId})}`};
 }
 
-test('authenticated local simulation accepts checkpoints larger than a command and fences foreign characters',async t=>{
-  let now=1000;
-  const store=new MemoryStore(),service=new GameService(store,{contentVersion:CONTENT_VERSION,now:()=>now});
-  await service.createAccount('local-a',{name:'Local',classId:8,raceId:1},'create');
-  const initial=await service.command('local-a',{type:'hunt',id:299,requestId:'hunt'});
-  const {game,url}=await start(service);t.after(()=>game.close());
-  const input={type:'claim',ownerId:initial.localSimulation!.ownerId,characterId:initial.state.id,contentVersion:CONTENT_VERSION,clientId:'browser',requestId:'claim-0001'};
-  const post=async(body:any,who='local-a')=>fetch(`${url}/api/game/local`,{method:'POST',headers:{...await auth(who),'content-type':'application/json'},body:JSON.stringify(body)});
-  assert.equal((await fetch(`${url}/api/game/local`,{method:'POST',headers:{Origin:appOrigin},body:JSON.stringify(input)})).status,401);
-  const claim=await post(input);assert.equal(claim.status,200);const session=await claim.json();
-  now=2000;const state=advance(session.state,now).state;
-  // An unfiltered upload must still be pruned by the server.
-  state.logs.push({id:999,at:state.clock,text:'checkpoint evidence '.repeat(2000)});
-  const command={...input,type:'checkpoint',sessionId:session.session.id,sequence:1,state,requestId:'check-0001'};
-  assert.ok(JSON.stringify(command).length>16384);
-  const first=await post(command);assert.equal(first.status,200);
-  const ack=await first.json();assert.equal(ack.state,undefined);assert.ok(JSON.stringify(ack).length<1000);
-  assert.deepEqual(await (await post(command)).json(),ack);
-  assert.deepEqual((await service.snapshot('local-a')).state.logs,[]);
-  await service.createAccount('local-b',{name:'Other',classId:8,raceId:1},'create');
-  assert.equal((await post({...input,requestId:'foreign-1'},'local-b')).status,403);
-});
+
 
 test('server startup rejects an origin containing a path', () => {
  assert.throws(()=>createGameServer({service:fakeService(),accounts,appOrigin:'https://game.test/path'}),/APP_ORIGIN/);
@@ -316,7 +295,6 @@ test('the HTTP boundary integrates with a real GameService and isolates its crea
     snapshot: null,
     combatMode: null,
     playback: null,
-    localSimulation: null,
     account: null,
     roster: [],
     activities: [],
@@ -415,21 +393,71 @@ test('conditional snapshots validate identity and stop unchanged response serial
  assert.equal(changed.status,200);assert.notEqual(changed.headers.get('etag'),etag);
 });
 
-test('a task command and its large local checkpoint use one authenticated request and replay once',async t=>{
- let now=1000;
- const service=new GameService(new MemoryStore(),{contentVersion:CONTENT_VERSION,now:()=>now});
- await service.createAccount('combined',{name:'Combined',classId:8,raceId:1},'create');
- const started=await service.command('combined',{type:'hunt',id:299,requestId:'hunt'});
- const session=await service.localSimulation('combined',{type:'claim',ownerId:started.localSimulation!.ownerId,characterId:started.state.id,contentVersion:CONTENT_VERSION,clientId:'browser',requestId:'claim'});
- now=1100;
- const state=advance(session.state,now).state;state.logs.push({id:999,text:'log '.repeat(5000)});
- const localCheckpoint={type:'checkpoint',ownerId:started.localSimulation!.ownerId,characterId:started.state.id,contentVersion:CONTENT_VERSION,clientId:'browser',sessionId:session.session.id,sequence:1,state,requestId:'combined-checkpoint'};
- const input={type:'settings',autoLoot:true,characterId:started.state.id,localClientId:'browser',localSessionId:session.session.id,localCheckpoint,requestId:'combined-command'};
+
+
+test('realtime subscriptions send compact combat projections between full refreshes',async t=>{
+ const service=fakeService(),scopes:string[]=[];let revision=0;
+ const state:any=structuredClone(baseState);state.hp=10000;startCombat(state,[299]);
+ service.snapshot=async(accountId,characterId,_online,scope='full')=>{
+  scopes.push(scope);const result=snapshot(accountId,characterId,++revision);result.state={...state,id:characterId||'account-a-hero',clock:revision*100};return result;
+ };
  const {game,url}=await start(service);t.after(()=>game.close());
- const post=async (body:any)=>fetch(`${url}/api/game`,{method:'POST',headers:{...await auth('combined'),'content-type':'application/json'},body:JSON.stringify(body)});
- const response=await post(input);assert.equal(response.status,200);
- const result=await response.json();assert.equal(result.snapshot.player.settings.autoLoot,true);assert.equal(result.snapshot.player.wallAt,1100);
- const replay=await post(input);assert.equal(replay.status,200);assert.equal((await replay.json()).revision,result.revision);
- assert.equal((await post({...input,localCheckpoint:[]})).status,400);
- assert.equal((await post({type:'settings',requestId:'oversize-command',unused:'x'.repeat(20_000)})).status,413);
+ const token=await issueSession({sub:'account-a'}),socket=new WebSocket(url.replace('http:','ws:')+'/api/events',{headers:{Origin:appOrigin,Cookie:`wow_session=${token}`}});t.after(()=>socket.close());
+ const events:any[]=[];let completed!:()=>void;const done=new Promise<void>(resolve=>completed=resolve);
+ socket.on('message',raw=>{const event=JSON.parse(raw.toString());if(event.type!=='heartbeat'){events.push(event);if(events.length>=13)completed();}});
+ await once(socket,'open');socket.send(JSON.stringify({type:'subscribe',mode:'delta',realtime:true,characterId:'account-a-hero'}));
+ await Promise.race([done,new Promise((_,reject)=>{const timeout=setTimeout(()=>reject(new Error('Realtime subscription timed out')),4000);timeout.unref();})]);
+ assert.equal(scopes[0],'full');assert.ok(scopes.slice(1).includes('combat'));
+ let current:GameSnapshotEvent|null=null;for(const event of events)current=applyGameEvent(current,event);
+ assert.ok(scopes.filter(scope=>scope==='full').length>=2);
+ assert.ok(events.slice(1).every(event=>event.type==='delta'),'cadence changes must keep the delta baseline');
+ assert.ok((current!.snapshot!.view as any).talentTrees,'slow metadata remains present between full refreshes');
+ assert.equal((current!.snapshot!.player as any).id,'account-a-hero');
+});
+
+test('websocket baseline and changed asset paths both use the configured asset host',async t=>{
+ const service=fakeService();let revision=1;
+ service.snapshot=async()=>({...snapshot('account-a',undefined,revision),response:{protocolVersion:1,contentVersion:'content',revision,scope:'full',snapshot:{player:{id:'account-a-hero'},view:{portrait:{src:`/icons/assets/icon-${revision}.png`}}}}});
+ const game=createGameServer({service,accounts,appOrigin,pollIntervalMs:15,publicAssetBase:'https://assets.test'});t.after(()=>game.close());
+ game.server.listen(0,'127.0.0.1');await once(game.server,'listening');const address=game.server.address();assert.ok(address&&typeof address==='object');
+ const socket=new WebSocket(`ws://127.0.0.1:${address.port}/api/events`,{headers:await auth('account-a')});t.after(()=>socket.close());await once(socket,'open');
+ socket.send(JSON.stringify({type:'subscribe',mode:'delta'}));let [raw]=await once(socket,'message');let current=applyGameEvent(null,JSON.parse(raw.toString()));
+ assert.equal((current.snapshot!.view as any).portrait.src,'https://assets.test/icons/assets/icon-1.png');
+ const next=once(socket,'message');revision=2;[raw]=await next;current=applyGameEvent(current,JSON.parse(raw.toString()));
+ assert.equal((current.snapshot!.view as any).portrait.src,'https://assets.test/icons/assets/icon-2.png');
+});
+
+
+test('a large initial baseline drains without a heartbeat-induced reconnect',async t=>{
+ const service=fakeService();let revision=0;
+ service.snapshot=async()=>{revision++;return {...snapshot('account-a',undefined,revision),response:{protocolVersion:1,contentVersion:'large',revision,scope:'full',snapshot:{player:{id:'account-a-hero'},view:{metadata:'x'.repeat(2_000_000)}}}};};
+ const {game,url}=await start(service);t.after(()=>game.close());
+ const socket=new WebSocket(url.replace('http:','ws:')+'/api/events',{headers:await auth('account-a')});t.after(()=>socket.close());
+ const events:any[]=[];let resolve!:()=>void,reject!:(error:Error)=>void;const done=new Promise<void>((a,b)=>{resolve=a;reject=b;});
+ const timer=setTimeout(()=>reject(new Error('Large baseline stalled')),4000);t.after(()=>clearTimeout(timer));
+ socket.on('close',code=>{if(events.length<2)reject(new Error(`Disconnected before delta: ${code}`));});
+ socket.on('message',raw=>{const event=JSON.parse(raw.toString());if(event.type==='heartbeat')return;events.push(event);if(events.length>=2)resolve();});
+ await once(socket,'open');socket.send(JSON.stringify({type:'subscribe',mode:'delta',realtime:true}));await done;
+ assert.equal(events[0].type,'snapshot');assert.equal(events[1].type,'delta');
+ assert.ok(JSON.stringify(events[1]).length<1000);assert.equal(socket.readyState,WebSocket.OPEN);
+});
+
+
+test('public readiness coalesces probes and hides internal failures',async t=>{
+ let calls=0;
+ const game=createGameServer({service:fakeService(),accounts,appOrigin,readiness:async()=>{calls++;throw new Error('private database credentials');}});t.after(()=>game.close());
+ game.server.listen(0,'127.0.0.1');await once(game.server,'listening');const address=game.server.address();assert.ok(address&&typeof address==='object');
+ const responses=await Promise.all(Array.from({length:8},()=>fetch(`http://127.0.0.1:${address.port}/api/health`)));
+ for(const response of responses){assert.equal(response.status,503);assert.deepEqual(await response.json(),{ready:false});}
+ assert.equal(calls,1);
+});
+
+test('client simulation endpoints are absent and commands retain the small input limit',async t=>{
+ const {game,url}=await start(fakeService());t.after(()=>game.close());const headers={...await auth('account-a'),'content-type':'application/json'};
+ const removed=await fetch(url+'/api/game/local',{method:'POST',headers,body:JSON.stringify({type:'claim',requestId:'old-claim'})});
+ assert.equal(removed.status,404);
+ const oversized=await fetch(url+'/api/game',{method:'POST',headers,body:JSON.stringify({type:'settings',requestId:'oversized',state:'x'.repeat(20000)})});
+ assert.equal(oversized.status,413);
+ const response:any=await(await fetch(url+'/api/game',{headers})).json();
+ assert.equal(Object.hasOwn(response,'localSimulation'),false);
 });

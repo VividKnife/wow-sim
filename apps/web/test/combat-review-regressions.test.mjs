@@ -1,3 +1,4 @@
+import {launchProjectile} from '../../../packages/game-domain/src/rules/combat-projectiles.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,stats} from '../../../packages/game-domain/src/rules/engine.js';
@@ -12,10 +13,10 @@ test('a weaker later Frostbolt does not replace a stronger slow and survives its
  const other={...newCharacter('普通法师',8,20),id:'other-mage',learned:[116],rules:[],hp:10000,mana:10000};s.party=[other];
  startCombat(s,[299],true);const e=s.combat.enemies[0];e.hp=e.maxHp=10000;e.level=1;e.nextAttack=1e9;e.position=5;e.positionY=0;e.moveSpeed=10;
  other.position=0;other.positionY=0;s.nextSwing=other.nextSwing=1e9;
- const land=actor=>{s.combat.projectiles.push({actorId:actor.id,targetId:e.id,spellId:116,side:'friendly',landsAt:s.clock});combatTick(s);};
- land(s);assert.equal(effectiveSpeed(e,0),5);
- s.clock=4000;land(other);assert.equal(effectiveSpeed(e,4000),5);
- const restored=JSON.parse(JSON.stringify(e));assert.equal(effectiveSpeed(restored,8000),6);assert.equal(effectiveSpeed(restored,9000),10);
+ const land=actor=>{launchProjectile(s,actor,e,spells[116]);s.clock=s.simulationEvents.queue.events.find(event=>event.kind==='ProjectileImpact').atMs;combatTick(s);return s.clock;};
+ const first=land(s);assert.equal(effectiveSpeed(e,first),5);
+ s.clock=4000;const second=land(other);assert.equal(effectiveSpeed(e,second),5);
+ const restored=JSON.parse(JSON.stringify(e));assert.equal(effectiveSpeed(restored,first+8000),6);assert.equal(effectiveSpeed(restored,second+5000),10);
 });
 
 test('Ignite uses its own periodic spell identity alongside a melee hit',()=>{

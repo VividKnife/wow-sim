@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readGameResponse,responseMatchesSelection,syncErrorMessage} from '../lib/game-response.js';
+import {readGameResponse,responseMatchesSelection,mergeGameResponse,syncErrorMessage} from '../lib/game-response.js';
 import {buildGameResponse} from '../../../packages/game-domain/src/rules/server-response.js';
 import {createGame} from '../../../packages/game-domain/src/rules/engine.js';
 
@@ -44,12 +44,7 @@ test('sync notices distinguish expired rules, database contention, timeouts and 
  assert.match(syncErrorMessage({status:401}),/重新登录/);
  assert.equal(syncErrorMessage(null),'');
 });
-test('local engine failures are never described as a server connection failure',()=>{
- for(const code of ['LOCAL_WORKER','LOCAL_WORKER_FAILED']){
-  const message='冒险引擎恢复失败，请刷新页面重新加载。';
-  assert.equal(syncErrorMessage({code,message}),message);
- }
-});
+
 test('invalid success payloads cannot replace a valid saved-game view',async()=>{
  for(const value of [null,[],{}, {protocolVersion:1,contentVersion:'abc',snapshot:null,revision:'3'},{protocolVersion:2,contentVersion:'abc',snapshot:null,revision:3},{protocolVersion:1,contentVersion:'',snapshot:null,revision:3},{protocolVersion:1,contentVersion:'abc',revision:3}])await assert.rejects(readGameResponse(Response.json(value)),/存档响应.*重试/);
 });
@@ -60,4 +55,32 @@ test('actor selection rejects late responses even when account revisions match',
  assert.equal(responseMatchesSelection(hero,'alt',-1),false);
  assert.equal(responseMatchesSelection(alt,'alt',8),true);
  assert.equal(responseMatchesSelection(alt,'alt',9),false);
+});
+
+test('owner recovery needs a full baseline and fences delayed responses from the old owner',()=>{
+ const base=buildGameResponse({...createGame('恢复角色',43,0),id:'hero'},80);
+ const frame=(epoch,sequence,scope='full')=>({...base,scope,revision:sequence,execution:{pendingInputs:0,receipts:[],instanceId:'room',ownerEpoch:epoch,streamSequence:sequence,actorId:'hero',controllerGeneration:1,clientSequence:4}});
+ const old=frame(1,80),recovered=frame(2,1),partial=frame(2,2,'combat');
+ assert.equal(responseMatchesSelection(recovered,'hero',80,old),true,'new owner restarts its public sequence');
+ assert.equal(responseMatchesSelection(partial,'hero',80,old),false,'partial state cannot establish a new owner');
+ assert.equal(mergeGameResponse(old,partial),null);
+ assert.equal(responseMatchesSelection(frame(1,999),'hero',1,recovered),false,'large old sequence does not override fencing');
+ assert.equal(responseMatchesSelection(frame(2,0),'hero',1,recovered),false);
+ assert.equal(responseMatchesSelection(partial,'hero',1,recovered),true);
+ assert.equal(mergeGameResponse(recovered,partial).execution.ownerEpoch,2);
+ assert.equal(responseMatchesSelection({...recovered,execution:{...recovered.execution,instanceId:'other'}},'hero',1,recovered),false);
+});
+
+test('a dungeon transfer replaces the baseline without accepting late personal-room frames',()=>{
+ const base=buildGameResponse({...createGame('入场角色',51,0),id:'hero'},90);
+ const personal={...base,scope:'full',execution:{instanceId:'personal',ownerEpoch:8,streamSequence:90,actorId:'hero',controllerGeneration:1,clientSequence:4,pendingInputs:0,receipts:[]}};
+ const dungeon={...personal,revision:1,execution:{...personal.execution,instanceId:'dungeon',ownerEpoch:2,streamSequence:1,controllerGeneration:2}};
+ assert.equal(responseMatchesSelection(dungeon,'hero',90,personal),true);
+ assert.equal(mergeGameResponse(personal,dungeon),dungeon);
+ assert.equal(responseMatchesSelection({...dungeon,scope:'combat'},'hero',90,personal),false);
+ assert.equal(responseMatchesSelection({...personal,revision:999,execution:{...personal.execution,streamSequence:999}},'hero',1,dungeon),false);
+ assert.equal(responseMatchesSelection({...dungeon,execution:{...dungeon.execution,instanceId:'foreign'}},'hero',1,dungeon),false);
+ const later={...dungeon,execution:{...dungeon.execution,instanceId:'joined',controllerGeneration:3}};
+ assert.equal(responseMatchesSelection(later,'hero',1,dungeon),true);
+ assert.equal(responseMatchesSelection(dungeon,'hero',1,later),false);
 });

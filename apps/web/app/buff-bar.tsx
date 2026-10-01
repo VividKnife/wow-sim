@@ -2,7 +2,6 @@ import {useState,useRef,useEffect} from 'react';
 import {Popover} from 'radix-ui';
 import {Icon,type GameProps} from './game-ui';
 import {hudEffects,buffDuration,buffRemaining} from '@/lib/player-effects.js';
-import {useLocalCombat} from '@/lib/local-combat-store';
 import {useCombatPlayback} from '@/lib/use-combat-playback';
 import './buff-bar.css';
 
@@ -20,8 +19,7 @@ function BuffIcon({buff,clock}:{buff:Buff;clock:number}) {
  </Popover.Content></Popover.Portal></Popover.Root>;
 }
 export default function BuffBar({state,data,playback,contentVersion,classic=false}:Pick<GameProps,'state'|'data'|'playback'|'contentVersion'>&{classic?:boolean}) {
- const local=useLocalCombat(state,data,true);
- const {state:s,data:d}=useCombatPlayback(local.state,local.data,playback,contentVersion,true);
+ const {state:s,data:d}=useCombatPlayback(state,data,playback,contentVersion,true);
  const effects=hudEffects(s,d) as Buff[];
  if(!effects.length)return null;
  return <div className={`hud-buffs${classic?' cu-buffs':''}`}>

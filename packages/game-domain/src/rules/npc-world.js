@@ -6,7 +6,7 @@ import {equipmentUpgrade,equipNpcItem,npcEquipmentValue,npcWeaponAllowed} from '
 import {dungeonJournal} from './dungeon-journal.js';
 import {partyUnlocked} from './party-unlock.js';
 
-export const npcCommands=['npcVisit','npcRefresh','npcFriend','npcGroup','npcRecommend','npcLootPolicy'];
+export const npcCommands=['npcMatchSupply','npcVisit','npcRefresh','npcFriend','npcGroup','npcRecommend','npcLootPolicy'];
 export const NPC_BATCH_SIZE=6,NPC_REFRESH_MS=5*60*1000;
 // Eight residents per class provide enough alternatives for 40-player raid compositions.
 const names=[
@@ -73,26 +73,65 @@ function buildUnit(s,index,level,initial=true,behavior=behaviorFor(index)){
  const classDef=classDefinitions.find(c=>c.id===def.classId);
  const raceId=classDef.races.find(id=>raceDefinitions.find(r=>r.id===id)?.faction===faction)||classDef.races[0];
  const host={id:s.id,level,clock:s.clock,location:s.location,itemSequence:0,logs:[],logSequence:0,party:[],money:0,bag:[],bags:[]};
- const c=createNpcMember(host,def.id,{name:names[index],role,raceId,behavior});
+ const c=createNpcMember(host,def.id,{name:names[index%names.length]+(index>=names.length?`·${Math.floor(index/names.length)+1}`:''),role,raceId,behavior});
  c.id=`npc:${s.id}:${index+1}`;c.growthPolicy='npcPlayer';c.npcPlayer=true;c.professions={};
- delete c.bags;
+ c.itemSequence=0;
+ for(const key of ['bag','bags','bank','pending','auctions','raidCollection','raidPendingEquipment'])c[key]??=[];
  for(const [slot,item] of Object.entries(c.equipment)){item.uid=`${c.id}:starter:${slot}`;item.ownerId=c.id;}
  if(initial)initialEquipment(c,index);
  if(c.classId===3){c.ammunition={2512:2000,2516:2000};c.ammoPolicy={enabled:false,target:2000};}
  return c;
 }
-export function ensureNpcWorld(s){
- if(s.npcPlayer||s.growthPolicy==='companion'||!partyUnlocked(s))throw new Error('主角达到10级后开放冒险者大厅。');
- if(s.npcWorld)return s.npcWorld;
- s.npcWorld={selection:[],autoLoot:false,residents:names.map((name,index)=>{
-  const unit=buildUnit(s,index,s.level);
-  const behavior=behaviorFor(index);
-  return {id:unit.id,index,unit,friend:false,personality:styles.find(style=>style.id===behavior.temperament),runs:0,events:0,history:[],completedQuests:[],rngState:seedOf(unit.id),lastProgressWall:s.wallAt,steps:0,wallet:Math.round((45+(index*137)%650)*(s.level/60))*10000,raidProfile:{personality:behavior.spending,skill:behavior.skill},raidRuns:0};
- })};
- for(const p of s.npcWorld.residents)note(p,'来到冒险者大厅，期待结识新的伙伴。');
- s.npcWorld.board={ids:[],shown:{},rngState:seedOf(`${s.id}:hall`),refreshAt:0,sequence:0};
- refreshBoard(s);
- return s.npcWorld;
+function newResident(s,index){
+ const unit=buildUnit(s,index,s.level),behavior=behaviorFor(index);
+ return {id:unit.id,index,unit,friend:false,personality:styles.find(style=>style.id===behavior.temperament),runs:0,events:0,history:[],completedQuests:[],rngState:seedOf(unit.id),lastProgressWall:s.wallAt,steps:0,wallet:Math.round((45+(index*137)%650)*(s.level/60))*10000,raidProfile:{personality:behavior.spending,skill:behavior.skill},raidRuns:0};
+}
+export function ensureNpcWorld(s,population=names.length){
+ if(s.npcPlayer||s.growthPolicy==='companion'||!partyUnlocked(s))throw new Error('主角达到10级后可邀请地下城 NPC 玩家。');
+ if(!s.npcWorld)s.npcWorld={selection:[],autoLoot:false,residents:[],board:{ids:[],shown:{},rngState:seedOf(`${s.id}:hall`),refreshAt:0,sequence:0}};
+ const world=s.npcWorld,indices=new Set(world.residents.map(p=>p.index));
+ for(let index=0;index<population;index++)if(!indices.has(index)){
+  const p=newResident(s,index);note(p,'开始新的冒险，期待结识同行的伙伴。');world.residents.push(p);
+ }
+ if(population>=6&&!world.board.ids.length)refreshBoard(s);
+ return world;
+}
+// Demand replenishment uses the requesting character's actual level and a
+// separate identity sequence. Existing NPCs keep their level, items and history.
+export const NPC_MATCH_SUPPLY={levelSpread:5,target:{tank:2,healer:2,dps:6},maximumResidents:192};
+export function ensureNpcMatchSupply(s,minimumLevel=Math.max(10,s.level-5),maximumLevel=Math.min(60,s.level+5),unavailableIds=[]){
+ if(!Number.isInteger(minimumLevel)||!Number.isInteger(maximumLevel)||minimumLevel<10||maximumLevel>60||minimumLevel>s.level||maximumLevel<s.level)throw new Error('NPC 匹配等级范围无效。');
+ minimumLevel=Math.max(minimumLevel,s.level-5);maximumLevel=Math.min(maximumLevel,s.level+5);
+ if(!Array.isArray(unavailableIds)||unavailableIds.length>192||unavailableIds.some(id=>typeof id!=='string'))throw new Error('NPC 预留名单无效。');
+ const world=ensureNpcWorld(s,0),active=activeNpcIds(s);for(const id of unavailableIds)active.add(id);
+ const group=unit=>['tank','healer'].includes(combatRole(unit))?combatRole(unit):'dps';
+ const eligible=world.residents.filter(p=>!active.has(p.id)&&p.unit.hp>0&&p.unit.level>=minimumLevel&&p.unit.level<=maximumLevel);
+ // Every standby role must fit ONE five-level window. Counting a level-15
+ // tank together with a level-25 healer for a level-20 player is not supply.
+ let deficits,totalMissing=Infinity;
+ for(let lower=minimumLevel;lower<=s.level;lower++){
+  const upper=Math.min(maximumLevel,lower+NPC_MATCH_SUPPLY.levelSpread);if(upper<s.level)continue;
+  const missing=Object.entries(NPC_MATCH_SUPPLY.target).map(([role,target])=>[role,Math.max(0,target-eligible.filter(p=>p.unit.level>=lower&&p.unit.level<=upper&&group(p.unit)===role).length)]);
+  const total=missing.reduce((sum,[,count])=>sum+count,0);
+  if(total<totalMissing){deficits=missing;totalMissing=total;}
+ }
+ const additional=world.residents.filter(p=>p.index>=names.length).length;
+ if(additional+totalMissing>NPC_MATCH_SUPPLY.maximumResidents-names.length)throw new Error('NPC 候选池已满，请等待现有队员结束活动。');
+ let cursor=Math.max(names.length,...world.residents.map(p=>p.index+1));
+ const additions=[];
+ for(const [role,missing] of deficits){
+  for(let count=0;count<missing;count++){
+   // Choose a class/build that really implements the required role. No role
+   // label overrides, level scaling, borrowed assets or combat RNG draws.
+   let def=roles[cursor%roles.length],selected=def.roles[Math.floor(cursor/roles.length)%def.roles.length];
+   while((['tank','healer'].includes(selected)?selected:'dps')!==role){cursor++;def=roles[cursor%roles.length];selected=def.roles[Math.floor(cursor/roles.length)%def.roles.length];}
+   const index=cursor++,profile=newResident(s,index);
+   note(profile,'响应地下城查找器的同行招募。');additions.push(profile);
+  }
+ }
+ world.residents.push(...additions);
+ if(!world.board.ids.length)refreshBoard(s);
+ return world;
 }
 function refreshBoard(s){
  const w=s.npcWorld,b=w.board,previous=new Set(b.ids),chosen=[];
@@ -101,8 +140,8 @@ function refreshBoard(s){
  const group=p=>['tank','healer'].includes(combatRole(p.unit))?combatRole(p.unit):'dps';
  for(const role of ['tank','healer','dps','dps','dps','dps']){
   const classes=new Set(chosen.map(p=>p.unit.classId));
-  const pool=order.filter(({p})=>group(p)===role&&!previous.has(p.id)&&!chosen.includes(p));
-  pool.sort((a,c)=>(b.shown[a.p.id]||0)-(b.shown[c.p.id]||0)||Number(classes.has(a.p.unit.classId))-Number(classes.has(c.p.unit.classId))||a.tie-c.tie);
+  const pool=order.filter(({p})=>group(p)===role&&!chosen.includes(p));
+  pool.sort((a,c)=>Number(previous.has(a.p.id))-Number(previous.has(c.p.id))||(b.shown[a.p.id]||0)-(b.shown[c.p.id]||0)||Number(classes.has(a.p.unit.classId))-Number(classes.has(c.p.unit.classId))||a.tie-c.tie);
   chosen.push(pool[0].p);
  }
  b.ids=chosen.map(p=>p.id);for(const id of b.ids)b.shown[id]=(b.shown[id]||0)+1;
@@ -132,9 +171,14 @@ function dungeonEvent(s,p){
  else note(p,`与其他冒险者挑战${reward.dungeon}，这次没有获得提升。`);
  return true;
 }
+const activeNpcIds=s=>new Set(s.dungeon||s.goldRaid?.active?s.party.filter(c=>c.npcPlayer).map(c=>c.id):[]);
+export function nextNpcWorldProgressAt(s){
+ const active=activeNpcIds(s);
+ return (s.npcWorld?.residents||[]).reduce((at,p)=>active.has(p.id)?at:Math.min(at,p.lastProgressWall+cadence),Infinity);
+}
 export function progressNpcWorld(s){
  const world=s.npcWorld;if(!world)return;
- const active=new Set(s.dungeon||s.goldRaid?.active?s.party.filter(c=>c.npcPlayer).map(c=>c.id):[]);
+ const active=activeNpcIds(s);
  for(const p of world.residents){
   const elapsed=Math.max(0,s.wallAt-p.lastProgressWall);
   if(active.has(p.id)){p.lastProgressWall=s.wallAt;continue;}
@@ -155,25 +199,35 @@ export function progressNpcWorld(s){
  }
 }
 export function syncNpcWorld(s){
+ if(s.sharedParty){
+  for(const owner of [s,...s.party].filter(c=>s.sharedParty.participantIds.includes(c.id))){
+   const own=new Set(owner.npcWorld?.residents.map(p=>p.id)||[]);
+   syncNpcWorld({...owner,sharedParty:null,clock:s.clock,wallAt:s.wallAt,dungeon:s.dungeon,party:s.party.filter(c=>own.has(c.id))});
+  }
+  return;
+ }
  if(!s.npcWorld)return;
  if(s.dungeon){s.npcWorld.defeatedBosses??={};s.npcWorld.defeatedBosses[s.dungeon.id]={...s.npcWorld.defeatedBosses[s.dungeon.id],...s.dungeon.defeatedBosses};}
  for(const c of s.party||[]){
   if(!c.npcPlayer)continue;
   const p=s.npcWorld.residents.find(p=>p.id===c.id);if(!p)continue;
   // Preserve durable character data, not the entire battle object graph.
-  for(const key of ['level','xp','equipment','bag',...trainingFields,'hunterPet','ammunition','raidCollection','raidPendingEquipment'])if(c[key]!==undefined)p.unit[key]=structuredClone(c[key]);
+  for(const key of ['level','xp','itemSequence','equipment','bag',...trainingFields,'hunterPet','ammunition','raidCollection','raidPendingEquipment'])if(c[key]!==undefined)p.unit[key]=structuredClone(c[key]);
   if(c.goldNpc)p.wallet=c.money;
   p.lastProgressWall=s.wallAt;
  }
 }
 export function selectedDungeonMembers(s){
- if(s.dungeon||!s.npcWorld?.selection)return s.party.filter(c=>!c.goldNpc);
+ if(s.sharedParty||s.dungeon||!s.npcWorld?.selection)return s.party.filter(c=>!c.goldNpc);
  return s.npcWorld.selection.map(id=>s.party.find(c=>c.id===id)||s.npcWorld.residents.find(p=>p.id===id)?.unit).filter(c=>c&&c.npcPlayer&&!c.goldNpc);
 }
 export function npcAction(s,a){
  if(s.combat||s.dungeon||s.goldRaid?.active||s.activity.type!=='idle')throw new Error('请结束当前活动并离开副本后再安排冒险者。');
- const world=ensureNpcWorld(s);progressNpcWorld(s);
- if(a.type==='npcRefresh'){
+ const world=ensureNpcWorld(s,a.type==='npcVisit'?names.length:0);progressNpcWorld(s);
+ if(a.type==='npcMatchSupply'){
+  ensureNpcMatchSupply(s,a.minimumLevel,a.maximumLevel,a.unavailableIds);
+ }else if(a.type==='npcRefresh'){
+  ensureNpcMatchSupply(s);
   if(s.wallAt<world.board.refreshAt)throw new Error(`旅店正在联络下一批冒险者，请在${Math.ceil((world.board.refreshAt-s.wallAt)/1000)}秒后再来。`);
   refreshBoard(s);
  }else if(a.type==='npcFriend'){
@@ -183,6 +237,7 @@ export function npcAction(s,a){
   if(!Array.isArray(a.memberIds)||a.memberIds.length>4||new Set(a.memberIds).size!==a.memberIds.length||a.memberIds.some(id=>!world.residents.some(p=>p.id===id)))throw new Error('请选择至多四名不同的同行成员。');
   world.selection=[...a.memberIds];
  }else if(a.type==='npcRecommend'){
+  ensureNpcMatchSupply(s);
   const selectedIds=new Set(selectedDungeonMembers(s).map(c=>c.id));
   const chosen=a.keep?[...selectedIds]:[],available=world.residents.filter(p=>p.friend||p.runs>0||world.board.ids.includes(p.id)||selectedIds.has(p.id)).sort((a,b)=>Number(b.friend)-Number(a.friend)||b.runs-a.runs||a.index-b.index);
   const group=role=>role==='tank'||role==='healer'?role:'dps';
@@ -195,19 +250,30 @@ export function npcAction(s,a){
   if(typeof a.auto!=='boolean')throw new Error('分装设置无效。');world.autoLoot=a.auto;
  }
 }
-export function npcRunStarted(s){
- for(const c of s.party.filter(c=>c.npcPlayer)){
-  const p=s.npcWorld.residents.find(p=>p.id===c.id);p.runs++;note(p,`与你第${p.runs}次组队，前往${dungeonJournal.find(d=>d.id===s.dungeon.id)?.name||s.dungeon.id}。`);
-  const training=buildUnit(s,p.index,c.level,false,{skill:p.raidProfile.skill,temperament:p.personality.id,spending:p.raidProfile.personality});
+/** @param {any} s @param {string[] | null} [memberIds] */
+export function npcRunStarted(s,memberIds=null){
+ for(const c of s.party.filter(c=>c.npcPlayer&&(!memberIds||memberIds.includes(c.id)))){
+  const owner=npcOwner(s,c.id),p=owner.npcWorld.residents.find(p=>p.id===c.id);p.runs++;note(p,`与你第${p.runs}次组队，前往${dungeonJournal.find(d=>d.id===s.dungeon.id)?.name||s.dungeon.id}。`);
+  const training=buildUnit(owner,p.index,c.level,false,{skill:p.raidProfile.skill,temperament:p.personality.id,spending:p.raidProfile.personality});
   Object.assign(c,npcTraining(training));
   if(c.classId===3)for(const id of [2512,2516]){const missing=Math.max(0,2000-(c.ammunition?.[id]||0)),cost=Math.ceil(missing/200)*10;if(p.wallet>=cost){p.wallet-=cost;c.ammunition??={};c.ammunition[id]=2000;}}
   c.location=s.location;c.time=s.clock;
  }
 }
+function npcOwner(s,id){
+ const owner=[s,...s.party].find(c=>c.npcWorld?.residents.some(p=>p.id===id));
+ if(!owner)throw new Error('冒险者缺少所属角色。');
+ return owner;
+}
+export function creditNpcMoney(s,c,amount){
+ const p=npcOwner(s,c.id).npcWorld.residents.find(p=>p.id===c.id);
+ if(c.goldNpc){c.money+=amount;p.wallet=c.money;}
+ else p.wallet+=amount;
+}
 export function npcAward(s,c,item,need){
- const p=s.npcWorld.residents.find(p=>p.id===c.id);
+ const p=npcOwner(s,c.id).npcWorld.residents.find(p=>p.id===c.id);
  if(need&&equipNpcItem(c,item)){note(p,`与你冒险获得${nameOf('items',item.id)}，已换装。`);}
- else{p.wallet+=Math.max(0,items[item.id].SellPrice||0);note(p,`贪婪获得${nameOf('items',item.id)}，出售用于旅途补给。`);}
+ else{p.wallet+=Math.max(0,items[item.id].SellPrice||0)*item.count;note(p,`贪婪获得${nameOf('items',item.id)}，出售用于旅途补给。`);}
  syncNpcWorld(s);
 }
 export function npcWorldView(s){

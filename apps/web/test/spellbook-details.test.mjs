@@ -43,3 +43,19 @@ test('all class skill projections contain finite readable detail values',()=>{
   }
  }
 });
+
+test('fade explains temporary threat reduction and reactive spells expose the matching rank effects',()=>{
+ assert.match(details(586).effects.join('；'),/暂时降低仇恨 \d+.*结束后恢复仇恨/);
+ const weakness=details(2652).effects.join('；');
+ assert.match(weakness,/受到非周期攻击时触发.*基础暗影伤害 8/);
+ assert.match(weakness,/物理造成伤害变化 -2/);
+ assert.match(weakness,/效果持续 120 秒.*可触发 1 次/);
+});
+
+test('shared aura and utility descriptions cover buffs, dispels and resource effects',()=>{
+ assert.match(details(6673).effects.join('；'),/近战攻击强度变化/);
+ assert.match(details(465).effects.join('；'),/护甲变化/);
+ assert.match(details(19742).effects.join('；'),/恢复法力/);
+ assert.match(details(527).effects.join('；'),/驱散.*魔法/);
+ assert.match(details(8129).effects.join('；'),/燃烧目标.*法力.*伤害/);
+});

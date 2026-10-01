@@ -1,3 +1,4 @@
+import {beginActorCast,beginEnemyCast,addCombatDot} from '../../../packages/game-domain/src/rules/simulation-events.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,stats} from '../../../packages/game-domain/src/rules/engine.js';
@@ -11,10 +12,10 @@ function encounter(ids=[299,622]){
  startCombat(s,ids);for(const e of s.combat.enemies){e.position=20;e.rootUntil=100000;e.nextAttack=100000;e.ai={nextCheck:100000};}return s;
 }
 function resolvePoly(s,index=0,seed=123456789){
- s.cast={spell:118,target:s.combat.enemies[index].id,startedAt:0,until:100};s.nextAction=s.nextSwing=100000;s.rngState=seed;s.clock=100;combatTick(s);
+ beginActorCast(s,s,{spell:118,target:s.combat.enemies[index].id,startedAt:0,until:100});s.nextAction=s.nextSwing=100000;s.rngState=seed;s.clock=100;combatTick(s);
 }
 test('polymorph controls an eligible elite, cancels its cast, and obeys spell resistance',()=>{
- const s=encounter([622]);s.combat.enemies[0].cast={spell:6660,target:s.id,until:10000};resolvePoly(s);
+ const s=encounter([622]);beginEnemyCast(s,s.combat.enemies[0],{spell:6660,target:s.id,until:10000});resolvePoly(s);
  assert.ok(s.combat.enemies[0].polyUntil>s.clock);assert.equal(s.combat.enemies[0].cast,null);
  const resisted=encounter([622]);resolvePoly(resisted,0,1);
  assert.ok(!(resisted.combat.enemies[0].polyUntil>resisted.clock));assert.ok(resisted.logs.some(l=>l.kind==='miss'&&l.spellId===118));
@@ -25,21 +26,21 @@ test('polymorph controls an eligible elite, cancels its cast, and obeys spell re
 });
 
 test('damaging a polymorphed target breaks control and stops its recovery',()=>{
- const s=encounter([622]);resolvePoly(s);const e=s.combat.enemies[0];e.hp=500;s.strategyPolicy={protectCC:false};
- s.cast={spell:133,target:e.id,startedAt:100,until:200};s.rngState=123456789;s.clock=200;combatTick(s);
- const impact=s.combat.projectiles[0].landsAt;s.clock=impact;combatTick(s);
+ const s=encounter([622]);resolvePoly(s);const e=s.combat.enemies[0];e.hp=e.maxHp=500;s.strategyPolicy={protectCC:false};
+ beginActorCast(s,s,{spell:133,target:e.id,startedAt:100,until:200});s.rngState=123456789;s.clock=200;combatTick(s);
+ const impact=s.simulationEvents.queue.events.find(e=>e.kind==='ProjectileImpact').atMs;s.clock=impact;combatTick(s);
  assert.ok(!(e.polyUntil>s.clock));const damaged=e.hp;assert.ok(damaged<500);
  s.clock=3000;combatTick(s);assert.ok(e.hp<=damaged);
 });
-test('an automatic polymorph rule controls a side target once, then resumes damage',()=>{
+test('an automatic polymorph rule keeps the side target controlled and resumes damage after positioning',()=>{
  const s=encounter();combatTick(s);assert.equal(s.cast?.spell,118);assert.equal(s.cast?.target,s.combat.enemies[1].id);
- s.rngState=123456789;for(let at=100;at<=2000;at+=100){s.clock=at;combatTick(s);}
+ s.rngState=123456789;for(let at=100;at<=3200;at+=100){s.clock=at;combatTick(s);}
  assert.ok(s.combat.enemies[1].polyUntil>s.clock);assert.equal(s.cast?.spell,133);assert.equal(s.cast?.target,s.combat.enemies[0].id);
 });
 
 test('polymorph searches side targets for the configured condition',()=>{
  const s=encounter([299,622,1731]);s.rules[0].condition='targetCasting';
- s.combat.enemies[2].cast={spell:6660,target:s.id,until:10000};combatTick(s);
+ beginEnemyCast(s,s.combat.enemies[2],{spell:6660,target:s.id,until:10000});combatTick(s);
  assert.equal(s.cast?.spell,118);assert.equal(s.cast?.target,s.combat.enemies[2].id);
 });
 
@@ -60,7 +61,7 @@ test('caster preference still obeys the selected rule and avoids targets with da
  const s=encounter([299,598,1729]);s.rules[0].condition='enemyNear';s.rules[0].value=10;
  s.combat.enemies[1].position=9;s.combat.enemies[1].positionY=0;s.combat.enemies[2].position=20;combatTick(s);
  assert.equal(s.cast?.target,s.combat.enemies[1].id);
- const dotted=encounter([299,598,1729]);dotted.combat.enemies[2].dots=[{remaining:3,next:100000}];combatTick(dotted);
+ const dotted=encounter([299,598,1729]);addCombatDot(dotted,dotted.combat.enemies[2],{caster:dotted.id,spell:133,remaining:3,next:100000,interval:2000});combatTick(dotted);
  assert.equal(dotted.cast?.target,dotted.combat.enemies[1].id);
 });
 
@@ -69,11 +70,11 @@ test('an active owned polymorph reserves that caster until it expires',()=>{
  assert.equal(s.cast?.spell,133);assert.equal(s.cast?.target,s.combat.enemies[0].id);
 });
 test('an active caster takes priority over an idle mana user',()=>{
- const s=encounter([299,1729,1732]);s.combat.enemies[2].cast={spell:2138,target:s.id,until:10000};combatTick(s);
+ const s=encounter([299,1729,1732]);beginEnemyCast(s,s.combat.enemies[2],{spell:2138,target:s.id,until:10000});combatTick(s);
  assert.equal(s.cast?.target,s.combat.enemies[2].id);
 });
 test('a pirate casting a pet buff does not displace an idle mana caster',()=>{
- const s=encounter([299,657,1732]),pirate=s.combat.enemies[1];pirate.cast={spell:7389,target:pirate.id,until:10000};combatTick(s);
+ const s=encounter([299,657,1732]),pirate=s.combat.enemies[1];beginEnemyCast(s,pirate,{spell:7389,target:pirate.id,until:10000});combatTick(s);
  assert.equal(s.cast?.target,s.combat.enemies[2].id);
 });
 test('another mage can control a second target while the first sheep is active',()=>{
@@ -88,7 +89,7 @@ test('polymorph excludes a mind-controlled ally even when it is the preferred ca
 test('one caster can maintain only one polymorph and it heals ten percent per second',()=>{
  const s=encounter([622,1731]);resolvePoly(s);const first=s.combat.enemies[0];first.hp=500;
  s.clock=1100;combatTick(s);assert.equal(first.hp,500+Math.floor(first.maxHp/10));
- s.cast={spell:118,target:s.combat.enemies[1].id,startedAt:1100,until:1200};s.rngState=123456789;s.clock=1200;combatTick(s);
+ beginActorCast(s,s,{spell:118,target:s.combat.enemies[1].id,startedAt:1100,until:1200});s.rngState=123456789;s.clock=1200;combatTick(s);
  assert.ok(!(first.polyUntil>s.clock));assert.ok(s.combat.enemies[1].polyUntil>s.clock);
 });
 

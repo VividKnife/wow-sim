@@ -58,7 +58,7 @@ test('undetected opponents and their retained visual effects never enter the cha
 });
 test('both teams retain unique projectile identities and a finished match freezes presentation time',()=>{
  const s=fixture(),a=s.arena;
- for(const [i,t]of a.teams.entries())t.projectiles=[{id:'same-sequence',actorId:t.members[0].id,targetId:a.teams[1-i].members[0].id,spellId:116,school:4,from:{x:i?10:-10,y:0},to:{x:i?-10:10,y:0},startedAt:4000,landsAt:5000}];
+ a.projectiles=a.teams.map((t,i)=>({id:`${a.id}:p${i+1}`,actorId:t.members[0].id,targetId:a.teams[1-i].members[0].id,spellId:116,school:4,from:{x:i?10:-10,y:0},to:{x:i?-10:10,y:0},startedAt:4000,landsAt:5000}));
  a.phase='finished';a.clock=4500;
  const match=arenaView(s).match,scene=arenaBattleScene(match);
  assert.equal(new Set(match.projectiles.map(p=>p.id)).size,2);

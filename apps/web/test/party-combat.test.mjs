@@ -1,3 +1,4 @@
+import {beginActorCast} from '../../../packages/game-domain/src/rules/simulation-events.js';
 import {companionRules} from '../../../packages/game-domain/src/rules/combat-strategy.js';
 import {resetTalentGrants} from '../../../packages/game-domain/src/rules/talent-acquisition.js';
 import {recruitForTest} from './support/party-fixture.mjs';
@@ -104,7 +105,7 @@ test('warrior follows a rescue taunt with an auto attack on that same enemy',()=
 
 test('priest cancels delayed Smite without spending mana and retains its original global cooldown',()=>{
  const s=group(),priest=member(s,'priest'),tank=member(s,'warrior');
- const timing=beginSpellTiming(priest,spellInfo(priest,598),0);priest.cast={timing,spell:598,target:s.combat.enemies[0].id,startedAt:0,until:6500,pushbacks:4};priest.nextAction=6500;
+ const timing=beginSpellTiming(priest,spellInfo(priest,598),0);beginActorCast(s,priest,{timing,spell:598,target:s.combat.enemies[0].id,startedAt:0,until:6500,pushbacks:4});priest.nextAction=6500;
  tank.hp=100;const mana=priest.mana;s.clock=700;combatTick(s);
  assert.equal(priest.cast,null);assert.equal(priest.mana,mana);assert.equal(priest.globalCooldowns[133],1500);
  assert.ok(s.logs.some(l=>l.kind==='cancel'&&l.actorId===priest.id&&l.spellId===598));
@@ -113,7 +114,7 @@ test('priest cancels delayed Smite without spending mana and retains its origina
 
 test('priest keeps casting damage when no affordable heal is available',()=>{
  const s=group(),priest=member(s,'priest'),tank=member(s,'warrior');tank.hp=100;priest.mana=0;
- priest.cast={spell:598,target:s.combat.enemies[0].id,startedAt:0,until:6500};priest.nextAction=6500;s.clock=700;combatTick(s);
+ beginActorCast(s,priest,{spell:598,target:s.combat.enemies[0].id,startedAt:0,until:6500});priest.nextAction=6500;s.clock=700;combatTick(s);
  assert.equal(priest.cast?.spell,598);assert.equal(priest.cast.until,6500);
 });
 
@@ -128,7 +129,7 @@ test('a threatened priest uses its learned shield with real mana cost and weaken
 
 test('a priest in danger can abandon a pushed-back ally heal for an instant self shield',()=>{
  const s=group(),priest=member(s,'priest'),tank=member(s,'warrior'),e=s.combat.enemies[0];
- priest.hp=100;tank.hp=1;e.target=priest.id;e.threat={[priest.id]:100};priest.cast={spell:2053,target:tank.id,startedAt:0,until:6500,friendly:true};priest.nextAction=6500;
+ priest.hp=100;tank.hp=1;e.target=priest.id;e.threat={[priest.id]:100};beginActorCast(s,priest,{spell:2053,target:tank.id,startedAt:0,until:6500,friendly:true});priest.nextAction=6500;
  s.clock=2000;combatTick(s);assert.equal(priest.cast,null);
  // Cancellation and the replacement spell use successive policy reactions.
  e.target=priest.id;priest.hp=100;s.clock=2200;combatTick(s);assert.equal(priest.absorb?.spell,600);
@@ -136,7 +137,7 @@ test('a priest in danger can abandon a pushed-back ally heal for an instant self
 
 test('an already completed priest heal resolves before emergency interruption is considered',()=>{
  const s=group(),priest=member(s,'priest'),e=s.combat.enemies[0];priest.hp=100;e.target=priest.id;e.threat={[priest.id]:100};
- priest.cast={spell:2053,target:priest.id,startedAt:0,until:2000,friendly:true};priest.nextAction=3000;const mana=priest.mana;
+ beginActorCast(s,priest,{spell:2053,target:priest.id,startedAt:0,until:2000,friendly:true});priest.nextAction=3000;const mana=priest.mana;
  s.clock=2000;combatTick(s);assert.ok(priest.hp>100);assert.equal(priest.mana,mana);assert.equal(priest.absorb,undefined);
  assert.ok(s.logs.some(l=>l.kind==='heal'&&l.actorId===priest.id));
 });
