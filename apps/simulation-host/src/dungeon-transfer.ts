@@ -18,7 +18,9 @@ export const dungeonEntryTransferId=(request:DungeonEntryRequest)=>'entry:'+crea
 /** Pure runtime composition and ordinary domain writes within the repository's
  * existing transfer transaction. No Worker calls or additional transaction. */
 export function dungeonTransferBoundary(request:DungeonEntryRequest,now:()=>number=Date.now,input?:SimulationInput):TransferBoundary<InstanceCheckpoint>{
-  return async(tx,{transferId,destination,sources})=>{
+  return async(tx,{transferId,destinations,sources})=>{
+    if(destinations.length!==1)throw new Error('Dungeon arrival requires one destination');
+    const [destination]=destinations;
     const group=await authorizeDungeonEntry(tx,request);
     if(transferId!==dungeonEntryTransferId(request))throw new Error('Transfer does not match dungeon entry consent');
     const existing=group.instanceId?sources.find(s=>s.owner.id===group.instanceId):undefined;
@@ -39,7 +41,7 @@ export function dungeonTransferBoundary(request:DungeonEntryRequest,now:()=>numb
     const admission:CharacterAdmission={instanceId:destination.id,state,controllers,presence:presence!};
     const residency:Residency={id:destination.id,characterId:state.id,accountId:controllers.find(c=>c.actorId===state.id)!.accountId,...runtimeVersion,
       participants:controllers.map(c=>({characterId:c.actorId,accountId:c.accountId})),encodedAdmission:JSON.stringify(admission)};
-    await transferResidentClaims(tx,transferId,sources.map(source=>source.owner),residency);
-    return checkpoint;
+    await transferResidentClaims(tx,transferId,sources.map(source=>source.owner),[residency]);
+    return [checkpoint];
   };
 }

@@ -2,12 +2,12 @@ import {createHash} from 'node:crypto';
 import type {Store, Transaction} from './store.ts';
 import {assertJson} from '../../sim-core/src/json.js';
 
-export type Ownership = {id: string; ownerId: string; epoch: number; expiresAt: number; commitSequence: number; handoff?: {id: string; sequence: number}; deleted?: {at: number; userId: string; saveId: string}; transferred?: {id: string; destinationId: string; at: number}};
+export type Ownership = {id: string; ownerId: string; epoch: number; expiresAt: number; commitSequence: number; handoff?: {id: string; sequence: number}; deleted?: {at: number; userId: string; saveId: string}; transferred?: {id: string; destinationIds: string[]; at: number}};
 export type DurableCheckpoint = {instanceId: string; ownerEpoch: number; rulesetVersion: string; contentHash: string};
 export type CommittedCheckpoint<T> = {id: string; sequence: number; checkpoint: T};
 export type TransferBoundary<T extends DurableCheckpoint> = (tx: Transaction, context: {
-  transferId: string; destination: Ownership; sources: {owner: Ownership; checkpoint: T}[];
-}) => Promise<T>;
+  transferId: string; destinations: Ownership[]; sources: {owner: Ownership; checkpoint: T}[];
+}) => Promise<T[]>;
 export type CheckpointBoundary = (tx: Transaction, context: {
   owner: Ownership; sequence: number; businessKey: string; checkpoint: DurableCheckpoint;
 }) => Promise<void>;
@@ -163,29 +163,33 @@ export class SimulationRepository {
       return current;
     });
   }
-  /** An entire sealed room moves, never a live subset of its state. The domain
-   * boundary composes a new recoverable checkpoint/admission and moves claims.
-   * Old owners become permanent tombstones in the SAME transaction. The target
-   * starts without an execution lease; normal acquire/restore owns its startup.
+  /** Sealed rooms are partitioned into one or more recoverable destinations.
+   * The domain boundary conserves all character claims across the partition.
+   * Old owners become permanent tombstones in the SAME transaction. Targets
+   * start without execution leases; normal acquire/restore owns their startup.
    * No Worker or network side effects are permitted in create. */
-  async transfer<T extends DurableCheckpoint>(transferId: string, sources: Ownership[], destinationId: string,
-    create: TransferBoundary<T>): Promise<{instanceId: string; duplicate: boolean}> {
-    identity(transferId); identity(destinationId);
+  async transfer<T extends DurableCheckpoint>(transferId: string, sources: Ownership[], destinationIds: string[],
+    create: TransferBoundary<T>): Promise<{instanceIds: string[]; duplicate: boolean}> {
+    identity(transferId);
+    if (!Array.isArray(destinationIds) || destinationIds.length < 1 || destinationIds.length > 40 ||
+      new Set(destinationIds).size !== destinationIds.length) throw new Error('Invalid transfer destinations');
+    destinationIds = [...destinationIds];
+    for (const id of destinationIds) identity(id);
     if (!Array.isArray(sources) || sources.length < 1 || sources.length > 40 ||
-      new Set(sources.map(o => o.id)).size !== sources.length || sources.some(o => o.id === destinationId)) throw new Error('Invalid transfer sources');
+      new Set(sources.map(o => o.id)).size !== sources.length || sources.some(o => destinationIds.includes(o.id))) throw new Error('Invalid transfer sources');
     const tokens = sources.map(o => {
       identity(o.id); identity(o.ownerId); integer(o.epoch, 1); integer(o.commitSequence, 1);
       return {id: o.id, ownerId: o.ownerId, epoch: o.epoch, commitSequence: o.commitSequence};
     });
-    const fingerprint = createHash('sha256').update(JSON.stringify({destinationId, sources: tokens})).digest('hex');
+    const fingerprint = createHash('sha256').update(JSON.stringify({destinationIds, sources: tokens})).digest('hex');
     const receiptId = `simulation-transfer:${transferId}`;
     return this.store.transaction(async tx => {
       const previous = await tx.get('receipts', receiptId);
       if (previous) {
         if (previous.fingerprint !== fingerprint) throw new Error('Transfer ID reused');
-        return {instanceId: destinationId, duplicate: true};
+        return {instanceIds: [...destinationIds], duplicate: true};
       }
-      for (const table of ['simulation_owners', 'simulation_checkpoints', 'simulation_residencies'] as const)
+      for (const destinationId of destinationIds) for (const table of ['simulation_owners', 'simulation_checkpoints', 'simulation_residencies'] as const)
         if (await tx.get(table, destinationId)) throw new Error('Transfer destination already exists');
       const prepared: {owner: Ownership; checkpoint: T}[] = [];
       const fencedSource = async (token: typeof tokens[number]) => {
@@ -205,33 +209,43 @@ export class SimulationRepository {
         prepared.push({owner, checkpoint});
       }
       const now = this.now(); integer(now);
-      const destination: Ownership = {id: destinationId, ownerId: 'transfer', epoch: 1, expiresAt: now, commitSequence: 0,
-        handoff: {id: transferId, sequence: 0}};
-      await tx.insert('simulation_owners', destination);
-      const checkpoint = await create(tx, {transferId, destination: {...destination}, sources: prepared});
-      if (checkpoint.instanceId !== destinationId || checkpoint.ownerEpoch !== destination.epoch ||
-        checkpoint.rulesetVersion !== prepared[0].checkpoint.rulesetVersion || checkpoint.contentHash !== prepared[0].checkpoint.contentHash)
-        throw new Error('Transfer destination checkpoint mismatch');
-      const encodedCheckpoint = JSON.stringify(checkpoint);
-      const canonical = JSON.parse(encodedCheckpoint) as T;
+      const destinations: Ownership[] = destinationIds.map(id => ({id, ownerId: 'transfer', epoch: 1, expiresAt: now, commitSequence: 0,
+        handoff: {id: transferId, sequence: 0}}));
+      for (const destination of destinations) await tx.insert('simulation_owners', destination);
+      const {rulesetVersion, contentHash} = prepared[0].checkpoint;
+      const checkpoints = await create(tx, {transferId, destinations: structuredClone(destinations), sources: prepared});
+      if (!Array.isArray(checkpoints) || checkpoints.length !== destinations.length ||
+        new Set(checkpoints.map(c => c?.instanceId)).size !== destinations.length) throw new Error('Transfer destination checkpoint coverage mismatch');
+      const encoded = new Map<string, {encodedCheckpoint: string; canonical: T}>();
+      for (const checkpoint of checkpoints) {
+        const destination = destinations.find(d => d.id === checkpoint?.instanceId);
+        if (!destination || checkpoint.ownerEpoch !== destination.epoch ||
+          checkpoint.rulesetVersion !== rulesetVersion || checkpoint.contentHash !== contentHash)
+          throw new Error('Transfer destination checkpoint mismatch');
+        const encodedCheckpoint = JSON.stringify(checkpoint);
+        encoded.set(destination.id, {encodedCheckpoint, canonical: JSON.parse(encodedCheckpoint) as T});
+      }
       // A slow domain boundary cannot commit after a source lease has expired.
       // Serializable conflict detection also rejects a concurrent takeover.
       for (const token of tokens) await fencedSource(token);
       const at = this.now(); integer(at);
       for (const token of tokens) {
         const epoch = token.epoch + 1; integer(epoch, 1);
-        await tx.put('simulation_owners', {...token, epoch, expiresAt: at, transferred: {id: transferId, destinationId, at}});
-        // The target now carries the state. Keep only the small retirement
+        await tx.put('simulation_owners', {...token, epoch, expiresAt: at, transferred: {id: transferId, destinationIds, at}});
+        // The targets now carry the state. Keep only the small retirement
         // marker, not another full character/NPC snapshot for every transition.
         await tx.delete('simulation_checkpoints', token.id);
       }
-      await tx.put('simulation_checkpoints', {id: destinationId, sequence: 1, encodedCheckpoint});
-      await tx.insert('simulation_commits', {id: `simulation:${destinationId}:1`, instanceId: destinationId, sequence: 1,
-        fingerprint: createHash('sha256').update(checkpointFingerprint({...canonical, ownerEpoch: 0, settlementKey: null, factsHash: null})).digest('hex')});
-      delete destination.handoff;
-      await tx.put('simulation_owners', {...destination, expiresAt: at, commitSequence: 1});
-      await tx.insert('receipts', {id: receiptId, fingerprint, destinationId, sourceIds: tokens.map(o => o.id), at});
-      return {instanceId: destinationId, duplicate: false};
+      for (const destination of destinations) {
+        const {encodedCheckpoint, canonical} = encoded.get(destination.id)!;
+        await tx.put('simulation_checkpoints', {id: destination.id, sequence: 1, encodedCheckpoint});
+        await tx.insert('simulation_commits', {id: `simulation:${destination.id}:1`, instanceId: destination.id, sequence: 1,
+          fingerprint: createHash('sha256').update(checkpointFingerprint({...canonical, ownerEpoch: 0, settlementKey: null, factsHash: null})).digest('hex')});
+        delete destination.handoff;
+        await tx.put('simulation_owners', {...destination, expiresAt: at, commitSequence: 1});
+      }
+      await tx.insert('receipts', {id: receiptId, fingerprint, destinationIds, sourceIds: tokens.map(o => o.id), at});
+      return {instanceIds: [...destinationIds], duplicate: false};
     });
   }
   async release(owner: Ownership) {
