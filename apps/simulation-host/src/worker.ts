@@ -52,7 +52,10 @@ function tick() {
     if (resident.quiesced || resident.fault || performance.now() >= resident.expiresAt) continue;
     try {
       const target = Math.max(resident.runtime.wallAt, wallTime(resident));
-      const result = resident.runtime.advance(target, 10);
+      // Check the shard budget after every rules tick. Ten ticks in one call
+      // can monopolize a slow raid worker for seconds before this loop yields,
+      // starving snapshots, lease renewals and other rooms during catch-up.
+      const result = resident.runtime.advance(target, 1);
       schedule(wake.instanceId, resident, !result.complete);
     } catch (error) { resident.fault = (error as Error).message; }
   }
@@ -96,7 +99,7 @@ port.on('message', ({id, operation: op}: WorkerRequest) => {
           // One bounded catch-up slice retains the immediate path for ordinary
           // online commands. Backlogs return a durable queued receipt instead
           // of occupying an RPC/IO mailbox until historical combat completes.
-          const incomplete = resident.realtime && !runtime.advance(target, 10).complete;
+          const incomplete = resident.realtime && !runtime.advance(target, 1).complete;
           result = runtime.input(op.accountId, op.input, target);
           schedule(op.instanceId, resident, incomplete); break;
         }

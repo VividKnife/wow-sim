@@ -1,3 +1,4 @@
+import {residentNpcProfiles,type AwayNpc} from './npc-residency.ts';
 import type {Store, Transaction, TableName, Row} from '../../persistence/src/store.ts';
 import type {Ownership} from '../../persistence/src/simulation.ts';
 import {DomainError} from './model.ts';
@@ -30,7 +31,10 @@ export function residentStore(store: Store): Store {
         let ids: string[] = [];
         switch (table) {
           case 'characters': case 'simulation_characters': ids = [row.id]; break;
-          case 'npc_characters': ids = [row.id, row.ownerCharacterId]; break;
+          case 'npc_characters': {
+            if(!claims.has(row.id))claims.set(row.id,await raw.get<CharacterClaim>('simulation_characters',row.id));
+            ids=claims.get(row.id)?[row.id]:[row.id,row.ownerCharacterId];break;
+          }
           case 'wallets': ids = [row.id, row.characterId]; break;
           case 'simulation_residencies':
             if (!Array.isArray(row.participants) || !row.participants.length) throw new DomainError('SIMULATION_STATE', '实例参与角色名册无效');
@@ -66,6 +70,11 @@ export function residentStore(store: Store): Store {
         }
       };
       const write = async (table: TableName, row: Row, insert: boolean) => {
+        if(table==='npc_characters'){
+          const before=await raw.get(table,row.id);
+          if(before&&(before.accountId!==row.accountId||before.ownerCharacterId!==row.ownerCharacterId))
+            throw new DomainError('NPC_OWNER','冒险者永久归属不可通过检查点改变');
+        }
         const transfer = transfers.get(tx);
         if (transfer && table === 'simulation_characters') {
           const before = transfer.claims.get(row.id);
@@ -192,14 +201,17 @@ export async function transferResidentClaims(tx: Transaction, transferId: string
       new Set(admission.controllers.map(c => c.actorId)).size !== destination.participants.length ||
       admission.controllers.some(c => assignments.get(c.actorId) !== destination.id || participants.get(c.actorId) !== c.accountId))
       throw new DomainError('SIMULATION_TRANSFER', '目标控制器名册无效');
-    for (const p of destination.participants) {
-      const actor = participantState(admission.state, p.characterId);
-      for (const npc of actor.npcWorld?.residents ?? []) {
-        if (expected.has(npc.id)) throw new DomainError('SIMULATION_TRANSFER', '目标 NPC 身份重复');
-        const row = await tx.get('npc_characters', npc.id);
-        if (!row || row.ownerCharacterId !== p.characterId || row.accountId !== p.accountId) throw new DomainError('SIMULATION_TRANSFER', '目标 NPC 所属角色无效');
-        expected.set(npc.id, p.accountId);assignments.set(npc.id, destination.id);
-      }
+    for(const {ownerCharacterId,profile:npc}of residentNpcProfiles(admission.state)){
+      if(expected.has(npc.id))throw new DomainError('SIMULATION_TRANSFER','目标 NPC 身份重复');
+      const row=await tx.get('npc_characters',npc.id);
+      if(!row||row.ownerCharacterId!==ownerCharacterId||npc.unit?.id!==npc.id||!npc.unit.npcPlayer)
+        throw new DomainError('SIMULATION_TRANSFER','目标 NPC 所属角色无效');
+      expected.set(npc.id,row.accountId);assignments.set(npc.id,destination.id);
+    }
+    for(const guest of admission.state.npcGuests??[]){
+      const origin=await tx.get('characters',guest.ownerCharacterId);
+      if(!origin||origin.rules.raceId!==guest.ownerRaceId||destination.participants.some(p=>p.characterId===origin.id))
+        throw new DomainError('SIMULATION_TRANSFER','客居 NPC 来源无效');
     }
     const occupants = [admission.state, ...admission.state.party];
     if (new Set(occupants.map(a => a.id)).size !== occupants.length || occupants.some(a =>
@@ -208,6 +220,20 @@ export async function transferResidentClaims(tx: Transaction, transferId: string
   }
   if (claims.size !== expected.size || [...expected].some(([id, accountId]) => claims.get(id)?.accountId !== accountId))
     throw new DomainError('SIMULATION_TRANSFER', '转移必须保留全部真人与 NPC 执行权');
+  for(const destination of destinations){
+    const admission=JSON.parse(destination.encodedAdmission) as CharacterAdmission;
+    for(const p of destination.participants){
+      const actor=participantState(admission.state,p.characterId),away=actor.npcWorld?.away??[];
+      if(!Array.isArray(away)||new Set(away.map((m:AwayNpc)=>m.id)).size!==away.length)
+        throw new DomainError('SIMULATION_TRANSFER','外出 NPC 引用重复');
+      for(const marker of away){
+        const row=await tx.get('npc_characters',marker.id),claim=claims.get(marker.id)??await tx.get<CharacterClaim>('simulation_characters',marker.id);
+        const assigned=assignments.get(marker.id)??claim?.instanceId;
+        if(!row||row.ownerCharacterId!==p.characterId||row.accountId!==p.accountId||row.profile.index!==marker.index||!assigned||assigned===destination.id)
+          throw new DomainError('SIMULATION_TRANSFER','外出 NPC 引用无效');
+      }
+    }
+  }
   transfers.set(tx, {destinationIds, sourceIds, claims, assignments});
   try {
     for (const destination of destinations) await tx.insert('simulation_residencies', destination);

@@ -37,18 +37,28 @@ function copy(value: unknown): any {
   for(const [key,nested] of Object.entries(value as Record<string,unknown>))if(nested!==undefined)result[key]=copy(nested);
   return result;
 }
-function pick(source:Record<string,unknown>,keys:readonly string[]){
+type Projectors = Record<string,(value:any)=>any>;
+function pick(source:Record<string,unknown>,keys:readonly string[],projectors?:Projectors){
  const target:Record<string,unknown>={};
- for(const key of keys)if(Object.hasOwn(source,key)&&source[key]!==undefined)target[key]=copy(source[key]);
+ for(const key of keys)if(Object.hasOwn(source,key)&&source[key]!==undefined)target[key]=projectors?.[key]?projectors[key](source[key]):copy(source[key]);
  return target;
 }
 const ruleView=(rule:any)=>({...pick(rule||{},['spell','condition','value','enabled','target','count','health','mana']),...(Array.isArray(rule?.and)?{and:rule.and.map((clause:any)=>pick(clause,['condition','value']))}:{})});
 const profileView=(profile:any)=>({...pick(profile,['name','totalRules','unavailableRules']),rules:(profile.rules||[]).map(ruleView),policy:pick(profile.policy||{},policyKeys),autoBuffs:pick(profile.autoBuffs||{},autoBuffKeys),potions:pick(profile.potions||{},['enabled','health','mana','healthItem','manaItem'])});
 const policyKeys=['role','target','healing','threat','protectCC','waitForTank','pullDelaySeconds'];
 const autoBuffKeys=['enabled','armor','int','sta','targets','refreshSeconds'];
-const actorView=(actor:any)=>{const result=pick(actor||{},actorKeys);if(Array.isArray(actor?.rules))result.rules=actor.rules.map(ruleView);if(actor?.strategyPolicy)result.strategyPolicy=pick(actor.strategyPolicy,policyKeys);if(actor?.autoBuffs)result.autoBuffs=pick(actor.autoBuffs,autoBuffKeys);if(actor?.potions)result.potions=pick(actor.potions,['enabled','health','mana','healthItem','manaItem']);return result;};
+// Project narrowed fields directly: copying whole characters/encounters before
+// replacing them duplicates work and traverses private runtime state needlessly.
+const actorProjectors:Projectors={
+ rules:rules=>Array.isArray(rules)?rules.map(ruleView):copy(rules),
+ strategyPolicy:value=>value?pick(value,policyKeys):copy(value),
+ autoBuffs:value=>value?pick(value,autoBuffKeys):copy(value),
+ potions:value=>value?pick(value,['enabled','health','mana','healthItem','manaItem']):copy(value)
+};
+const actorView=(actor:any)=>pick(actor||{},actorKeys,actorProjectors);
 const enemyView=(enemy:any)=>pick(enemy||{},enemyKeys);
-function combatView(combat:any,actorId:string){if(!combat)return combat;const result=pick(combat,combatKeys);if(combat.lootGoldByActor)result.lootGold=combat.lootGoldByActor[actorId]??0;result.enemies=Array.isArray(combat.enemies)?combat.enemies.map(enemyView):[];if(Array.isArray(combat.actorsSnapshot))result.actorsSnapshot=combat.actorsSnapshot.map(actorView);return result;}
+const combatProjectors:Projectors={actorsSnapshot:actors=>Array.isArray(actors)?actors.map(actorView):copy(actors)};
+function combatView(combat:any,actorId:string){if(!combat)return combat;const result=pick(combat,combatKeys,combatProjectors);if(combat.lootGoldByActor)result.lootGold=combat.lootGoldByActor[actorId]??0;result.enemies=Array.isArray(combat.enemies)?combat.enemies.map(enemyView):[];return result;}
 const dungeonView=(dungeon:any)=>dungeon?pick(dungeon,dungeonKeys):dungeon;
 const candidateView=(candidate:any)=>pick(candidate||{},['serverBuffs','id','name','classId','role','roles','level','gearCap','canRecruit']);
 const battleUnitKeys=['quickCasts','queuedSpellId','id','spellId','className','color','portrait','mode','resource','secondaryResource','hp','maxHp','level','combo','effects','cooldowns','totems','cast','globalCooldown','canCommand','petMode','happiness','loyalty','controlled','ownerName','controlUntil','shards','attack','offhand','movement'];
@@ -61,32 +71,43 @@ function battlePresentationView(battle:any){
  return result;
 }
 
+function activityView(activity:any){
+ const result=pick(activity||{},activityKeys);
+ if(activity?.type==='travel'&&Array.isArray(activity.path))result.path=activity.path.map((leg:any)=>pick(leg,['a','b','duration','distance','startProgress']));
+ return result;
+}
+function escortView(escort:any){
+ if(!escort)return copy(escort);
+ const result=pick(escort,['id','questId','startedAt','waypoint','failed','completed']);
+ if(escort.npc)result.npc=actorView(escort.npc);
+ return result;
+}
+const strategyMemberView=(member:any)=>({id:member.id,name:member.name,classId:member.classId,role:member.role,presets:copy(member.presets||[]),strategyProfiles:(member.strategyProfiles||[]).map(profileView),rules:Array.isArray(member.rules)?member.rules.map(ruleView):[],policy:pick(member.policy||{},policyKeys),autoBuffs:pick(member.autoBuffs||{},autoBuffKeys),potions:pick(member.potions||{},['enabled','health','mana','healthItem','manaItem']),skills:copy(member.skills||[])});
+const viewProjectors:Projectors={
+ // Filter before copying the world quest catalog, not after cloning every row.
+ quests:quests=>Array.isArray(quests)?quests.filter((q:any)=>q.active||q.canAccept||q.canTurnIn).map(copy):copy(quests),
+ battleView:battle=>battle?battlePresentationView(battle):copy(battle),
+ party:party=>Array.isArray(party)?party.map(actorView):copy(party),
+ escortNpc:actor=>actor?actorView(actor):copy(actor),
+ strategyMembers:members=>Array.isArray(members)?members.map(strategyMemberView):copy(members)
+};
 export function projectClientSnapshot(state:Record<string,unknown>,view:Record<string,unknown>,{instanceState=state}:{instanceState?:Record<string,unknown>}={}){
  if(!state||typeof state!=='object'||Array.isArray(state))throw new TypeError('state must be an object');
  if(!view||typeof view!=='object'||Array.isArray(view))throw new TypeError('view must be an object');
- const clientView=pick(view,viewKeys);
+ const clientView=pick(view,viewKeys,viewProjectors);
  clientView.instanceScene=instancePresentation(instanceState);
- // World content grows independently of a player's quest log. Send only the
- // active log and quests actionable here, including carried item starters.
- if(Array.isArray((view as any).quests))clientView.quests=(view as any).quests.filter((quest:any)=>quest.active||quest.canAccept||quest.canTurnIn).map(copy);
- if((view as any).battleView)clientView.battleView=battlePresentationView((view as any).battleView);
- if(Array.isArray((view as any).party))clientView.party=(view as any).party.map(actorView);
- if((view as any).escortNpc)clientView.escortNpc=actorView((view as any).escortNpc);
- if(Array.isArray((view as any).strategyMembers))clientView.strategyMembers=(view as any).strategyMembers.map((member:any)=>({id:member.id,name:member.name,classId:member.classId,role:member.role,presets:copy(member.presets||[]),strategyProfiles:(member.strategyProfiles||[]).map(profileView),rules:Array.isArray(member.rules)?member.rules.map(ruleView):[],policy:pick(member.policy||{},policyKeys),autoBuffs:pick(member.autoBuffs||{},autoBuffKeys),potions:pick(member.potions||{},['enabled','health','mana','healthItem','manaItem']),skills:copy(member.skills||[])}));
  if(clientView.battleView&&((state as any).combat||(state as any).lastCombat)){
   (clientView.battleView as Record<string,unknown>).actors=combatMembers(state as any,(state as any).combat||(state as any).lastCombat).map(actorView);
  }
  if(Array.isArray((view as any).candidates))clientView.candidates=(view as any).candidates.map(candidateView);
- const player=pick(state,playerKeys);
+ const player=pick(state,playerKeys,{
+  activity:activityView,party:party=>Array.isArray(party)?party.map(actorView):[],
+  pet:pet=>pet?actorView(pet):copy(pet),escort:escortView,
+  combat:combat=>combatView(combat,(state as any).id),lastCombat:combat=>combatView(combat,(state as any).id),dungeon:dungeonView
+ });
  player.battleHistory=((state as any).battleHistory||[]).map((entry:any)=>({battle:combatView(entry.battle,(state as any).id),location:copy(entry.location),view:battlePresentationView(entry.view),logs:copy(entry.logs)}));
- player.activity=pick((state as any).activity||{},activityKeys);
- if((state as any).activity?.type==='travel'&&Array.isArray((state as any).activity.path))(player.activity as Record<string,unknown>).path=(state as any).activity.path.map((leg:any)=>pick(leg,['a','b','duration','distance','startProgress']));
- player.party=Array.isArray((state as any).party)?(state as any).party.map(actorView):[];
- if((state as any).pet)player.pet=actorView((state as any).pet);
- if((state as any).escort){player.escort=pick((state as any).escort,['id','questId','startedAt','waypoint','failed','completed']);if((state as any).escort.npc)(player.escort as Record<string,unknown>).npc=actorView((state as any).escort.npc);}
- if((state as any).combat)player.combat=combatView((state as any).combat,(state as any).id);
- if((state as any).lastCombat)player.lastCombat=combatView((state as any).lastCombat,(state as any).id);
- if((state as any).dungeon)player.dungeon=dungeonView((state as any).dungeon);
+ if(!Object.hasOwn(player,'activity'))player.activity=activityView(state.activity);
+ if(!Object.hasOwn(player,'party'))player.party=[];
  return{player,view:clientView};
 }
 

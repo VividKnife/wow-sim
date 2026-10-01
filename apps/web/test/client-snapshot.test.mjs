@@ -69,3 +69,20 @@ test('local and HTTP snapshots agree on numeric zero',()=>{
  assert.equal(Object.is(snapshot.view.stats.spellPenetration[1],0),true);
  assert.deepEqual(JSON.parse(JSON.stringify(snapshot)),snapshot);
 });
+
+test('public projection never traverses discarded private fields or hidden quest details',()=>{
+ const state=createGame('直接投影',29,0),other=createGame('队员',31,0);
+ const trap=()=>{throw new Error('discarded private field was traversed');};
+ Object.defineProperty(other,'privateRuntime',{enumerable:true,get:trap});
+ state.party=[other];
+ state.activity={type:'idle',privateRuntime:Object.defineProperty({},'secret',{enumerable:true,get:trap})};
+ const hidden={id:999,active:false,canAccept:false,canTurnIn:false};
+ Object.defineProperty(hidden,'details',{enumerable:true,get:trap});
+ const projected=projectClientSnapshot(state,{party:[other],quests:[hidden,{id:1,active:true}],battleView:{units:{},privateRuntime:other}});
+ assert.deepEqual(projected.view.quests,[{id:1,active:true}]);
+ assert.equal('privateRuntime' in projected.player.party[0],false);
+ assert.equal('privateRuntime' in projected.view.party[0],false);
+ assert.equal('privateRuntime' in projected.player.activity,false);
+ projected.player.party[0].equipment={};
+ assert.ok(Object.keys(other.equipment).length>0);
+});

@@ -61,9 +61,9 @@ test('concurrent invitations, forged control, replay, rate limiting, and bounded
  for(let i=0;i<102;i++){advance(1001);await cmd('alice',{type:'chat',channel:'world',text:`message ${i}`});}
  const snapshot=await social.snapshot('alice','alice');assert.equal(snapshot.messages.world.length,100);assert.equal((await store.read(tx=>tx.get('social_people','alice')))!.receipts.length,64);
 });
-test('queue cancels when offline and rejects incompatible roles, levels and foreign NPCs',async()=>{
+test('queue cancels when offline, rejects invalid roles/levels, and allows available NPCs from another world',async()=>{
  const {social,cmd,advance}=await fixture();await assert.rejects(cmd('alice',{type:'role',role:'tank'}),/职业/);
- await assert.rejects(cmd('bob',{type:'npcInvite',targetId:'npc:alice:0'}),/找不到/);await assert.rejects(cmd('alice',{type:'npcInvite',targetId:'npc:alice:4'}),/等级差/);
+ await cmd('bob',{type:'npcInvite',targetId:'npc:alice:0'});await cmd('bob',{type:'leave'});await assert.rejects(cmd('alice',{type:'npcInvite',targetId:'npc:alice:4'}),/等级差/);
  await cmd('alice',{type:'role',role:'dps'});await cmd('alice',{type:'npcInvite',targetId:'npc:alice:0'});await cmd('alice',{type:'queue',dungeonId:'deadmines'});
  advance(46000);await social.snapshot('bob','bob');assert.equal((await social.snapshot('alice','alice')).group!.status,'forming');
 });

@@ -11,6 +11,24 @@ function setup(){const state=localScenarios().dungeon;return {instanceId:'queued
 function intent(a:ReturnType<typeof setup>,n:number,kind:'pause'|'resume'='pause'){return {instanceId:a.instanceId,actorId:a.state.id,controllerGeneration:1,clientSequence:n,requestId:'request-'+n,command:{kind,encounterId:a.state.combat.id}};}
 function finish(runtime:ResidentInstance,until:number){while(!runtime.advance(until,3).complete){}}
 
+test('one-tick raid catch-up preserves state, RNG and queued command boundaries across recovery',()=>{
+ const state=localScenarios().raid,a={...setup(),state};
+ a.controllers[0].actorId=state.id;
+ const sliced=new ResidentInstance(a),batched=new ResidentInstance(a);
+ for(const runtime of [sliced,batched]){
+  runtime.input('alice',intent(a,1),1550);
+  runtime.input('alice',intent(a,2,'resume'),2350);
+ }
+ while(!sliced.advance(3000,1).complete){}
+ while(!batched.advance(3000,10).complete){}
+ assert.deepEqual(sliced.checkpoint(),batched.checkpoint());
+ const restored=ResidentInstance.restore(JSON.parse(JSON.stringify(sliced.checkpoint())),2);
+ const reference=ResidentInstance.restore(batched.checkpoint(),2);
+ while(!restored.advance(5000,1).complete){}
+ while(!reference.advance(5000,10).complete){}
+ assert.deepEqual(restored.checkpoint(),reference.checkpoint());
+});
+
 test('queued inputs checkpoint and replay at their accepted time with the same state and RNG',()=>{
  const a=setup(),runtime=new ResidentInstance(a),reference=new ResidentInstance(a),pause=intent(a,1),resume=intent(a,2,'resume');
  const queued=runtime.input('alice',pause,5000);assert.equal(queued.status,'queued');assert.equal(queued.simTime,null);

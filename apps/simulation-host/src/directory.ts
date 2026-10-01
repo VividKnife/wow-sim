@@ -100,7 +100,7 @@ export class SimulationDirectory {
   if(this.closed||!this.characters||!this.dungeons)throw new Error('Dungeon admission is unavailable');
   const plan=await this.dungeons.plan(accountId,input);
   if(plan.receipt)return {...await this.openCharacter(accountId,input.actorId),receipt:{...plan.receipt,durable:true,confirmation:'durable' as const}};
-  const {request,group,existing}=plan,fingerprint=JSON.stringify([accountId,input]);
+  const {request,group,existing,npcSources}=plan,fingerprint=JSON.stringify([accountId,input]);
   const pending=this.dungeonEntries.get(group.id);
   if(pending){if(pending.fingerprint!==fingerprint)throw new Error('队伍正在交接实例，请稍后重试');return pending.work;}
   if(this.dungeonEntries.size>=16)throw new Error('Dungeon admission queue full');
@@ -115,15 +115,24 @@ export class SimulationDirectory {
    }
    if(sessions.some(s=>s.identity().instanceId===identity.instanceId))throw new Error('你已经在队伍副本中');
    sessions.push(await this.entries.get(identity.instanceId)!.session);
+   const visitors=sessions.length;
+   for(const source of npcSources){
+    const room=await this.openCharacter(source.accountId,source.characterId);
+    if(!sessions.some(s=>s.identity().instanceId===room.instanceId))sessions.push(await this.entries.get(room.instanceId)!.session);
+   }
    const transferId=dungeonEntryTransferId(request),destinationId='dungeon:'+transferId.slice(6);
    try{
     const prepared=sessions.length===1?[await sessions[0].prepareTransfer(transferId,async checkpoint=>Math.max(checkpoint.state.wallAt,...checkpoint.recentInputs.filter(row=>row.receipt.status==='queued').map(row=>row.receipt.effectiveWallAt)))]:
       await SimulationSession.prepareGroupTransfer(sessions,transferId);
-    await this.repository.transfer(transferId,prepared.map(p=>p.owner),[destinationId],dungeonTransferBoundary(request,Date.now,input));
+    await this.repository.transfer(transferId,prepared.map(p=>p.owner),[destinationId,...sessions.slice(visitors).map((_,i)=>'npc-home:'+transferId.slice(6)+':'+i)],dungeonTransferBoundary(request,Date.now,input));
     await Promise.all(sessions.map(s=>s.discard()));
     // Free source capacity before recovering the committed destination. No
     // in-memory state handoff is needed, including after a lost acknowledgement.
     for(const source of prepared)this.entries.delete(source.owner.id);
+    for(const source of prepared.slice(visitors)){
+     const controller=source.checkpoint.controllers.find(c=>c.actorId===source.checkpoint.state.id)!;
+     await this.openCharacter(controller.accountId,controller.actorId);
+    }
     const receipt=(await this.dungeons!.plan(accountId,input)).receipt;
     if(!receipt)throw new Error('Dungeon arrival receipt missing');
     return {...await this.openCharacter(accountId,input.actorId),receipt:{...receipt,durable:true,confirmation:'durable' as const}};

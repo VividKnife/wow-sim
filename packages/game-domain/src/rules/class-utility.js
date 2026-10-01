@@ -1,3 +1,4 @@
+import {healAmount} from './healing.js';
 import {removeGroundEffects} from './ground-events.js';
 import {beginSpellTiming,finishSpellTiming,spellReady,cooldownUntil,gcdUntil} from './spell-timing.js';
 import {petTrainingCost,petTrainingReason} from './pet-progression.js';
@@ -10,7 +11,7 @@ import {items,spells,nodes,nameOf,icon,monsterIdsAt,creatures} from './catalog.j
 import {stats,spellInfo,effectRange,roll,log,countItem,addItem,bagCapacity} from './character.js';
 import {usableCount,consume} from './inventory.js';
 import {classAbilityKind,classChannelTick,classChannelInterval} from './class-spell-effects.js';
-import {classEffect,healAmount} from './class-mechanics.js';
+import {classEffect} from './class-mechanics.js';
 import {combatMembers} from './combat-members.js';
 import {teleportDestinations,utilitySpellNames} from './class-utility-data.js';
 import {healingMultiplier,ranks} from './talent-effects.js';

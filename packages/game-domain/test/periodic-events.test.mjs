@@ -89,3 +89,46 @@ test('Lightwell registers its ally effect, spends one charge and preserves heali
  for(const x of [s,restored]){step(x,effect.until);const pulses=Math.floor(effect.until/effect.interval);assert.equal(x.party[0].hp,Math.min(stats(x.party[0]).maxHp,100+pulses*Math.round(effect.amount)));assert.deepEqual(x.party[0].hots,[]);assert.equal(x.lightwell.charges,4);}
  assert.deepEqual(s,restored);
 });
+
+test('applied healing continues while the caster is absent, without replaying old ticks when they return',()=>{
+ const s=fixture(),source=fixture();source.id='healer';source.name='离场治疗';source.money=12345;source.bank=[{id:1,uid:'private'}];s.party=[source];
+ const effect=add(s,{caster:source.id}),before=clone(source);
+ assert.deepEqual(effect.source,{id:source.id,name:source.name,classId:source.classId});
+ s.party=[];step(s,1000);assert.equal(s.hp,110);step(s,2000);assert.equal(s.hp,120);
+ assert.equal(s.logs.filter(l=>l.kind==='heal'&&l.actorId===source.id).length,2);
+ assert.deepEqual(source,before,'an absent caster must not receive mutable proc or asset writes');
+ s.party=[source];step(s,3000);step(s,3000);assert.equal(s.hp,130);
+ assert.equal(s.logs.filter(l=>l.kind==='heal'&&l.actorId===source.id).length,3);assert.deepEqual(timers(s),[]);
+});
+
+for(const [container,type]of [['hots',undefined],['periodicClass',8],['periodicClass',161],['periodicClass',24]])test(`${container}/${type}: source-free pulses survive JSON restoration and honor recipient caps`,()=>{
+ const s=fixture(),source=fixture();source.id='healer';s.party=[source];
+ s.mana=stats(s).maxMana-15;add(s,{caster:source.id,...(type===undefined?{}:{type})},container);s.party=[];
+ s.auras=[{type:118,amount:-50,until:4000}];
+ const restored=clone(s),rng=s.rngState;
+ for(const x of [s,restored]){
+  step(x,1000);step(x,2000);step(x,3000);
+  assert.equal(x.hp,type===24?100:115);assert.equal(x.mana,type===24?stats(x).maxMana:stats(x).maxMana-15);
+  assert.equal(x.rngState,rng,'attribution must not manufacture a caster or consume proc RNG');
+  assert.deepEqual(timers(x),[]);assert.deepEqual(x[container],[]);
+ }
+ assert.deepEqual(s,restored);
+});
+
+test('absent healing source receives combat attribution but cannot become a local enemy threat target',()=>{
+ const s=fixture(),source=fixture();source.id='healer';source.name='异地治疗';s.party=[source];
+ add(s,{caster:source.id});s.party=[];startCombat(s,[299]);
+ step(s,3000);
+ assert.equal(s.combat.metrics.actors.healer.healing,30);assert.equal(s.combat.metrics.actors.healer.name,'异地治疗');
+ assert.equal(s.combat.metrics.actors.healer.classId,5);
+ assert.ok(s.combat.enemies.every(e=>e.threat.healer===undefined));assert.deepEqual(s.party,[]);
+});
+
+test('periodic restoration rejects altered attribution identities and private fields',()=>{
+ const s=fixture();add(s);
+ for(const mutate of [x=>delete x.hots[0].source,x=>x.hots[0].source.id='other',x=>x.hots[0].source.money=100,x=>x.hots[0].source.classId=NaN]){
+  const bad=clone(s);mutate(bad);assert.throws(()=>simulationEventRuntime(bad),/Persistent periodic/);
+ }
+ const fresh=fixture();assert.throws(()=>add(fresh,{caster:'not-present'}),/local caster/);
+ assert.equal(fresh.hots,undefined,'a rejected application cannot install a partial effect');
+});

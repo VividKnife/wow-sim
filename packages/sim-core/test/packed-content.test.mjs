@@ -40,3 +40,13 @@ test('battle detail is bounded by UTF-8 bytes as well as count',()=>{
  assert.ok(history.length<20);
  history.push({id:30,text:'x'.repeat(BATTLE_HISTORY_BYTES+1)});trimBattleHistory(history);assert.equal(history.length,0);
 });
+
+test('hot and evicted content retain identity and every lookup remains observable',()=>{
+ const reads=[],store=openPackedContent(packContent({a:{id:1},b:{id:2}}),{cacheBudget:0,onRead:id=>reads.push(id)});
+ const a=store.root.a,afterFirst=reads.length;
+ assert.equal(store.root.a,a);assert.equal(reads.length,afterFirst+1);
+ const b=store.root.b;assert.equal(b.id,2); // evicts a from the strong hot cache
+ const decoded=store.stats().decoded;store.clear();
+ assert.equal(store.root.a,a);assert.equal(store.stats().decoded,decoded);
+ assert.equal(store.stats().retainedEstimate,0,'weak lookup does not enlarge the configured hot cache');
+});

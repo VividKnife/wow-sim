@@ -32,6 +32,10 @@ test('an expired personal runtime from an older release reopens from committed c
   try{
     await assert.rejects(directory.openCharacter('alice',state.id),/执行权/);
     await repository.release(owner);
+    await store.transaction(async tx=>{
+      const presence=(await tx.get<{id:string;lastSeenAt:number}>('account_presence','alice'))!;
+      await tx.put('account_presence',{...presence,lastSeenAt:Date.now()-3*60*60*1000});
+    });
     const next=await directory.openCharacter('alice',state.id);
     assert.notEqual(next.instanceId,admission.instanceId);
     const view=await directory.presentation(next.instanceId,'alice',state.id,'full');

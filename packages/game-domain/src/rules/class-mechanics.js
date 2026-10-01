@@ -1,3 +1,4 @@
+import {healAmount,healPeriodicAmount} from './healing.js';
 import {addPeriodicEffect,preparePeriodicEffects,duePeriodicEffects,continuePeriodicEffect,expirePeriodicEffect,addCombatDot,autoAttackReady,scheduleAutoAttack} from './simulation-events.js';
 import {beginActorCast} from './simulation-events.js';
 import {damagingInput} from './combat-input.js';
@@ -25,7 +26,6 @@ import {strategyAllows,ruleMatches,protectCombatTarget} from './combat-strategy.
 import {distance} from '../../../sim-core/src/geometry.js';
 import {moveToward,moveAway,inSpellRange,effectiveSpeed,behindTarget} from './combat-space.js';
 import {controlled,hasAura,addCombatAura,mechanicImmune} from '../../../sim-core/src/combat-auras.js';
-import {recordMetric} from './combat-metrics.js';
 import {ammoCount,consumeHunterAmmo,consumesHunterAmmo} from './ammunition.js';
 
 const heals=new Set(['Holy Light','Flash of Light','Healing Touch','Regrowth','Healing Wave','Lesser Healing Wave','Lesser Heal','Heal','Flash Heal']);
@@ -35,16 +35,6 @@ const buffs=new Set(['Battle Shout','Blessing of Might','Devotion Aura','Aspect 
 const specials=new Set([...heals,...hots,...summons,...buffs,'Seal of Righteousness','Judgement','Power Word: Shield','Life Tap','Bear Form','Cat Form','Maul','Claw','Rip','Growl','Searing Totem','Strength of Earth Totem','Stoneskin Totem','Healing Stream Totem','Hammer of Justice','Gouge','Kick','Evasion','Sprint','Bloodrage','Battle Stance','Defensive Stance','Fear','Concussive Shot','Cold Snap','Raptor Strike','Stealth','Backstab','Ambush']);
 const coreHandled=new Set(['Heroic Strike','Sunder Armor','Taunt','Cleave','Sinister Strike','Eviscerate','Smite','Auto Shot','Resurrection','Redemption','Ancestral Spirit']);
 
-export function healAmount(s,c,target,amount,spell,label){
- if(!target||target.hp<=0)return;
- for(const a of target.auras||[])if(a.until>s.clock&&a.type===118)amount*=1+a.amount/100;
- if(target.racialBuff?.kind==='bloodfury'&&target.racialBuff.until>s.clock)amount*=.5;
- const actual=Math.min(Math.max(0,stats(target).maxHp-target.hp),Math.max(0,Math.round(amount)));target.hp+=actual;
- if(!actual)return;onTalentEvent(s,c,{type:'heal',target,spell:spells[spell],amount:actual,periodic:true},{stats,rng,actors:[c,target]});const text=label||nameOf('spells',spell);
- recordMetric(s,c,target,actual,{kind:'healing',effective:true,spellId:spell,label:text});
- if(s.combat){const enemies=s.combat.enemies.filter(e=>e.hp>0&&!e.removed);for(const e of enemies)e.threat[c.id]=(e.threat[c.id]||0)+actual*.5/Math.max(1,enemies.length);const key=c.name+' · '+text;s.combat.healing[key]=(s.combat.healing[key]||0)+actual;}
- log(s,`${c.name} 的${text}为 ${target.name} 恢复 ${actual} 点生命`,'heal',{actorId:c.id,targetId:target.id,spellId:spell,amount:actual});
-}
 function applyHot(s,c,target,sp,effect=1){const interval=sp['EffectAmplitude'+effect]||3000;target.hots=(target.hots||[]).filter(h=>h.name!==sp.SpellName||h.caster!==c.id);addPeriodicEffect(s,target,'hots',{spell:sp.Id,name:sp.SpellName,caster:c.id,amount:(effectRange(c,sp,effect)[0]+spellPowerBonus(stats(c),sp,{healing:true,periodic:true,effect}))*healingMultiplier(c,sp),next:s.clock+interval,interval,until:s.clock+sp.durationMs});}
 function putBuff(s,target,sp,values){target.classBuffs=(target.classBuffs||[]).filter(b=>b.name!==sp.SpellName);target.classBuffs.push({spell:sp.Id,name:sp.SpellName,until:s.clock+(sp.durationMs||1800000),stats:values});}
 function buffValues(c,sp){const result={},r=ranks(c);for(let i=1;i<=3;i++){const aura=sp['EffectApplyAuraName'+i],misc=sp['EffectMiscValue'+i],amount=effectRange(c,sp,i)[0];if(aura===29){const key=['str','agi','sta','int','spi'][misc];if(key)result[key]=amount;else if(misc===-1)for(const key of ['str','agi','sta','int','spi'])result[key]=amount;}if(aura===22&&(misc&1))result.armor=amount;if(aura===99)result.attackPower=amount;if(aura===124)result.rangedAttackPower=amount;}
@@ -190,7 +180,7 @@ export function tickClassEffects(s,actors,api){
  preparePeriodicEffects(s);
  tickExtendedClassEffects(s,actors,{...api,healAmount});
  for(const c of actors.filter(a=>a.hp>0)){tickRacialEffects(s,c,{...api,actors,stats,healAmount});
-  for(const hot of duePeriodicEffects(s,c,'hots')){const source=actors.find(a=>a.id===hot.caster);while(source&&hot.next<=s.clock&&hot.next<=hot.until){healAmount(s,source,c,hot.amount,hot.spell);continuePeriodicEffect(s,c,hot);}expirePeriodicEffect(s,hot);}
+  for(const hot of duePeriodicEffects(s,c,'hots')){const source=actors.find(a=>a.id===hot.caster);while(hot.next<=s.clock&&hot.next<=hot.until){healPeriodicAmount(s,source,c,hot);continuePeriodicEffect(s,c,hot);}expirePeriodicEffect(s,hot);}
   if(c.bloodrage&&c.bloodrage.next<=s.clock&&c.bloodrage.next<=c.bloodrage.until){c.rage=Math.min(1000,(c.rage||0)+10);c.bloodrage.next+=1000;}
   for(const [element,t]of Object.entries(c.totems||{})){if(extendedSpellNames.has(t.name))continue;if(t.until<=s.clock){delete c.totems[element];continue;}if(t.next>s.clock)continue;t.next+=2000;const sp=spellInfo(c,t.spell),r=ranks(c);
    if(t.name==='Searing Totem'){const target=s.combat?.enemies.find(e=>e.hp>0&&!e.removed&&!protectCombatTarget(s,e)&&distance(t,e)<=20&&strategyAllows(s,c,e,{SpellName:'Totem Attack'}));if(target)api.damage(s,c,target,roll(s,...effectRange(c,spells[sp.Id===3599?3606:6350])),nameOf('spells',sp.Id),1,{spellId:sp.Id,school:2});}

@@ -235,7 +235,25 @@ export function addItem(s,id,count=1,pending=true){const data=items[id];if(!data
 }
 export function gainXp(s,c,amount){amount=scaledXp(c,amount);if(c.level>=LEVEL_CAP)return;if(!Number.isFinite(amount)||amount<0)throw new Error('经验值无效');const wasPartyUnlocked=partyUnlocked(s);c.xp+=amount;if(c.totals)c.totals.xp+=amount;if(c===s&&amount>0)log(s,`获得 ${amount} 点经验`,'xp',{amount});while(c.level<LEVEL_CAP&&c.xp>=xpTable[c.level].xp_for_next_level){c.xp-=xpTable[c.level].xp_for_next_level;c.level++;const st=stats(c);c.hp=st.maxHp;c.mana=st.maxMana;log(s,`${c.name} 升到了 ${c.level} 级！`,'level');}if(c.level===LEVEL_CAP)c.xp=0;if(!wasPartyUnlocked&&partyUnlocked(s)&&s.growthPolicy!=='companion')log(s,'冒险者大厅已开放！可结识 NPC 玩家并组建副本小队。','party');}
 export function killXp(playerLevel,mobLevel,elite=false,dungeon=false){const diff=mobLevel-playerLevel;const base=playerLevel*5+45;const trivial=playerLevel<10?4:playerLevel<20?5:playerLevel<30?6:playerLevel<40?7:playerLevel<45?8:playerLevel<50?9:playerLevel<55?10:playerLevel<60?11:12;const zd=playerLevel<8?5:playerLevel<10?6:playerLevel<12?7:playerLevel<16?8:playerLevel<20?9:playerLevel<30?11:playerLevel<40?12:playerLevel<45?13:playerLevel<50?14:playerLevel<55?15:playerLevel<60?16:17;let amount=diff>=0?base*(1+.05*Math.min(4,diff)):-diff<=trivial?base*(1+diff/zd):0;if(elite)amount*=dungeon?2.5:2;const integer=Math.floor(amount),fraction=amount-integer;return fraction===.5?integer+(integer%2):Math.round(amount);}
-export function knownRank(c,first){const original=spells[first];return c.learned.filter(id=>spells[id]&&((spellChain[id]?.first_spell||id)===first||spells[id].SpellName===original?.SpellName)).sort((a,b)=>spells[b].SpellLevel-spells[a].SpellLevel)[0]||null;}
+// AI asks for the same rank many times per tick. Index immutable spell metadata
+// once per learned-list contents; in-place learning/unlearning still invalidates
+// this runtime-only cache. Preserve learned order when levels are tied.
+const learnedRanks=memoizeDerived(['learned'],c=>{
+ const roots=new Map(),names=new Map();
+ c.learned.forEach((id,index)=>{
+  const sp=spells[id];if(!sp)return;
+  const row={id,index,level:sp.SpellLevel};
+  for(const [map,key]of [[roots,spellChain[id]?.first_spell||id],[names,sp.SpellName]]){
+   const previous=map.get(key);if(!previous||row.level>previous.level)map.set(key,row);
+  }
+ });
+ return {roots,names};
+});
+export function knownRank(c,first){
+ const {roots,names}=learnedRanks(c),root=roots.get(first),named=names.get(spells[first]?.SpellName);
+ const best=!root?named:!named?root:root.level>named.level||root.level===named.level&&root.index<named.index?root:named;
+ return best?.id||null;
+}
 // A public projection is a synchronous read of its live actors. Reuse spell
 // descriptions only within that read; scratch actors used by build previews
 // are excluded and gameplay calls outside this scope always recompute.
