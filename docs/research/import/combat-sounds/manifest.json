@@ -216,6 +216,34 @@
       "bytes": 19995,
       "durationSeconds": 3.0,
       "transformation": "none"
+    },
+    {
+      "id": "bow-release",
+      "fileDataId": 567674,
+      "title": "BowRelease",
+      "path": "sounds/bow-release.ogg",
+      "url": "https://wow.zamimg.com/sound-ids/classic/enus/122/567674/BowRelease.ogg",
+      "sourcePage": "https://www.wowhead.com/classic/sound=1146",
+      "sourcePageSha256": "e9e37b3ef8f628675da9e0be48a4772009d5fa5e7ec779e72c64624c4f591c86",
+      "vanillaPath": "Sound\\Item\\Weapons\\Bow\\BowRelease.wav",
+      "sha256": "4bca0b8185ac55c5246107fb5afdbbfd77e811497e21e144a0c6b0a1db71b358",
+      "bytes": 6318,
+      "durationSeconds": 0.4331,
+      "transformation": "none"
+    },
+    {
+      "id": "gun-fire",
+      "fileDataId": 567721,
+      "title": "GunFire01",
+      "path": "sounds/gun-fire.ogg",
+      "url": "https://wow.zamimg.com/sound-ids/classic/enus/169/567721/GunFire01.ogg",
+      "sourcePage": "https://www.wowhead.com/classic/sound=1148",
+      "sourcePageSha256": "30296f5874da87507ba31265fe1259abfb97165b5c7937e0508638b3e93d3ca1",
+      "vanillaPath": "Sound\\Item\\Weapons\\Gun\\GunFire01.wav",
+      "sha256": "21ef60961207167d1e04dc459d2d0265c8afd8a96a9a7fa14a4040eb3691f552",
+      "bytes": 13002,
+      "durationSeconds": 1.5877,
+      "transformation": "none"
     }
   ]
 }

@@ -4,7 +4,7 @@ import hashlib, json, pathlib, re, struct, urllib.request
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 EVIDENCE = ROOT / 'docs/research/import/combat-sounds'
 PUBLIC = ROOT / 'apps/web/public/sounds'
-LIST = pathlib.Path('C:/workspace/wow-sim-research/world-assets/vanilla-sound-paths.csv')
+LIST = EVIDENCE / 'vanilla-sound-paths.csv'
 SELECTION = {
     'melee-swing': (1752, 569828), 'heroic-impact': (78, 569098),
     'sinister-impact': (1752, 569227), 'heal-impact': (2050, 569570),
@@ -14,6 +14,7 @@ SELECTION = {
     'nature-cast': (5176, 569767), 'nature-impact': (5176, 568516),
     'arcane-cast': (5143, 568938), 'arcane-impact': (1449, 569631),
     'arcane-explosion': (1449, 568678),
+    'bow-release': ('sound=1146', 567674), 'gun-fire': ('sound=1148', 567721),
 }
 
 def fetch(url):
@@ -26,14 +27,16 @@ def main():
     evidence_list.write_bytes(LIST.read_bytes())
     entries = []
     for slug, (spell, file_id) in SELECTION.items():
-        page = EVIDENCE / f'spell-{spell}.html'
-        url = f'https://www.wowhead.com/classic/spell={spell}'
+        ref = f'spell={spell}' if isinstance(spell, int) else spell
+        page = EVIDENCE / (ref.replace('=', '-') + '.html')
+        url = f'https://www.wowhead.com/classic/{ref}'
         if not page.exists():
             page.write_bytes(fetch(url))
         candidates = [json.loads(m.group()) for m in re.finditer(r'\{"id":\d+,"title":"[^"]+","url":"[^"]+","type":"(?:\\.|[^"])*"\}', page.read_text(encoding='utf-8'))]
         source = next(s for s in candidates if s['id'] == file_id)
         original = next(p for p in paths if p.lower().endswith('\\' + source['title'].lower() + '.wav'))
-        data = fetch(source['url'])
+        target = PUBLIC / f'{slug}.ogg'
+        data = target.read_bytes() if target.exists() else fetch(source['url'])
         assert data[:4] == b'OggS'
         header = data.index(b'\x01vorbis')
         sample_rate = struct.unpack('<I', data[header + 12:header + 16])[0]

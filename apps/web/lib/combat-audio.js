@@ -1,8 +1,10 @@
+/* global Audio, setTimeout, clearTimeout */
 // Presentation only: these cues never advance or mutate the simulation.
 const schools={1:'holy',2:'fire',3:'nature',4:'frost',5:'shadow',6:'arcane'};
-export function combatSoundForEvent(event,skill={}){
+export function combatSoundForEvent(event,skill={},actor){
  const name=skill.nameEn,school=event.school??skill.school;
  if(event.periodic&&name!=='Arcane Missiles')return null;
+ if(event.kind==='launch'&&(event.visual==='hunter-shot'||event.spellId===75))return actor?.visual?.model?.rangedStyle==='rifle'?'gun-fire':'bow-release';
  if(event.kind==='cast'){
   if(name==='Renew')return 'renew';
   if(name==='Arcane Explosion')return null; // Its sourced burst is heard on impact.
@@ -20,6 +22,26 @@ export function combatSoundForEvent(event,skill={}){
  if(event.kind==='miss')return null;
  if(name==='Arcane Explosion')return 'arcane-explosion';
  return schools[school]?`${schools[school]}-impact`:null;
+}
+
+// One wake-up for the next due batch. Future impacts are not marked heard until
+// their presentation time; replacing a scene cancels the pending timer.
+export function scheduleCombatSounds(events,skills,units,heard,play,{now=()=>Date.now(),schedule=(fn,ms)=>setTimeout(fn,ms),cancel=id=>clearTimeout(id)}={}){
+ let timer;
+ const drain=()=>{
+  const time=now(),cues=new Set();let next=Infinity;
+  for(const event of events){
+   if(heard.has(event.id))continue;
+   if(event.shownAt>time){next=Math.min(next,event.shownAt);continue;}
+   heard.add(event.id);
+   if(time-event.shownAt>800)continue;
+   const cue=combatSoundForEvent(event,skills.find(s=>s.spellId===event.spellId),units.find(u=>u.id===event.actorId));
+   if(cue&&!cues.has(cue)){play(cue);cues.add(cue);}
+  }
+  if(heard.size>500){const retained=events.filter(e=>heard.has(e.id)).map(e=>e.id);heard.clear();for(const id of retained)heard.add(id);}
+  if(Number.isFinite(next))timer=schedule(drain,Math.max(1,next-time));
+ };
+ drain();return()=>{if(timer!==undefined)cancel(timer);};
 }
 
 export function createCombatAudio({createAudio=src=>new Audio(src),now=()=>Date.now(),maxVoices=4,schedule=(fn,ms)=>setTimeout(fn,ms),cancel=id=>clearTimeout(id)}={}){

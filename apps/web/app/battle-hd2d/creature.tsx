@@ -12,11 +12,12 @@ import {useBattleFrame} from './frame';
 export function Creature({unit:initialUnit,height,model}:{unit:BattleUnitData;height:number;model:CreatureModelData}){
  const asset=useGLTF(model.src),attachments=useGLTF((model.attachments||[]).map(a=>a.src)),frame=useBattleFrame(),root=useRef<Group>(null);
  const skins=useTexture(Object.values(model.textures||{}));
+ const animationPacks=useGLTF(model.animationSrc?[model.animationSrc]:[]);
  // Each actor owns its skeleton and mixer. Geometry and textures stay cached.
- const instance=useMemo(()=>createCreatureInstance(asset,model,attachments,skins),
+ const instance=useMemo(()=>createCreatureInstance(asset,model,attachments,skins,animationPacks.flatMap(pack=>pack.animations)),
  // The appearance key identifies immutable, manifest-backed texture/geometry choices.
  // eslint-disable-next-line react-hooks/exhaustive-deps
- [asset,model.appearanceKey]);
+ [asset,model.appearanceKey,model.rangedStyle,model.animationSrc]);
  const state=useRef<{name:string;key:unknown;action:AnimationAction|null;clock:number;until:number;previous:[number,number];lastMove:number}>
   ({name:'',key:null,action:null,clock:NaN,until:0,previous:[NaN,NaN],lastMove:-Infinity});
  useEffect(()=>{
@@ -29,9 +30,11 @@ export function Creature({unit:initialUnit,height,model}:{unit:BattleUnitData;he
   const moved=Math.hypot(p[0]-s.previous[0],p[2]-s.previous[1]);
   if(Number.isFinite(moved)&&moved>.001)s.lastMove=f.clock;
   s.previous=[p[0],p[2]];
-  let desired=creatureAction(unit,f.scene.effects,f.clock,f.wall,f.clock-s.lastMove<150);
+  let desired=creatureAction(unit,f.scene.effects,f.clock,f.wall,f.clock-s.lastMove<150,model.rangedStyle);
   // Let one-shot attacks finish when the short combat event expires.
-  if(desired.action==='idle'&&f.clock<s.until&&['attack','cast'].includes(s.name))desired={action:s.name,key:s.key};
+  if(desired.action==='idle'&&f.clock<s.until&&['attack','cast','shootBow','shootRifle'].includes(s.name))desired={action:s.name,key:s.key};
+  if(desired.action==='idle'&&['shootBow','readyBow','shootRifle','readyRifle'].includes(s.name))desired={action:s.name.endsWith('Bow')?'readyBow':'readyRifle',key:'loop'};
+  instance.setRanged(['shootBow','shootRifle','readyBow','readyRifle'].includes(desired.action));
   const clip=desired.action==='attack'&&model.twoHanded&&model.animations.includes(19)?'anim_19':creatureClip(model.animations,desired.action),next=instance.action(clip);
   if(next&&(desired.action!==s.name||desired.key!==s.key)){
    const previous=s.action;
