@@ -3,6 +3,8 @@ import {controlled} from '../../../sim-core/src/combat-auras.js';
 import {point} from '../../../sim-core/src/geometry.js';
 import {moveToward} from './combat-space.js';
 import {goldAvoidsFire} from './gold-raid-npcs.js';
+import {combatMembers} from './combat-members.js';
+import {placeCombatUnit} from './combat-area.js';
 
 /** @param {{label?:string,delay?:number,duration?:number,damage?:number,school?:number,spellId?:number,once?:boolean,terrain?:boolean,unavoidable?:boolean,followId?:string,interval?:number,damageRamp?:number,soakActorId?:string}} options */
 export function addRaidField(s,geometry,options={}){
@@ -18,7 +20,7 @@ export function initializeRaidBattlefield(s,boss){
  const options={label:'螺旋熔岩',delay:0,duration:r.attemptEndsAt-s.clock,damage:750,terrain:true};
  addRaidField(s,spiralField(point(boss)),options);
  addRaidField(s,{center:point(boss),radius:3},{...options,label:'炎魔熔池'});
- for(const c of [s,...s.party])if(r.fires.some(f=>fieldContains(f,c,1.5))){const p=fieldSafePoint(c,r.fires,s.combat.area);c.position=p.x;c.positionY=p.y;}
+ for(const c of combatMembers(s))if(r.fires.some(f=>fieldContains(f,c,1.5)))placeCombatUnit(s,c,fieldSafePoint(c,r.fires,s.combat.area));
 }
 export function raidFieldsTick(s,actors,boss,hurt){
  const r=s.combat.raidEncounter;

@@ -21,7 +21,7 @@ export default function AmmoControls({state:s,data:d,busy,send}:GameProps){
  if(!d.ammo?.length)return null;
  const disabled=busy||!!s.combat||!!s.dungeon||!['idle','hunt'].includes(s.activity.type);
  return <section className="panel" aria-label="猎人弹药补给"><h2>猎人弹药补给</h2>
-  <p>回城时已装填弹药不足 400 发，自动购买当前等级可用的最高级弹药，按整组补齐。保存设置不立即扣款。背包中购买、制造或转入的弹药需先装填，可分配给同行猎人。</p>
+  <p>游戏页面打开时，回城后已装填弹药不足 400 发，会从当地商人购买当前等级可用的最高级匹配弹药并装填，按整组补齐。保存设置不立即扣款。背包中购买、制造或转入的弹药需先装填，可分配给同行猎人。</p>
   {d.ammo.map((row:any)=><AmmoSettings key={`${row.id}:${row.enabled}:${row.target}`} row={row} disabled={disabled} send={send}/>)}
  </section>;
 }

@@ -1,5 +1,5 @@
 import {execFileSync} from 'node:child_process';
-import {writeFileSync} from 'node:fs';
+import {readFileSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 
@@ -18,7 +18,17 @@ export function stampGameVersion(root=process.cwd(),at=new Date()){
  return version;
 }
 
+export function syncGameVersionIndex(root=process.cwd()){
+ // `commit --only` uses a temporary index for pre-commit, then restores the
+ // original index. post-commit receives the final index: synchronize only the
+ // generated version if its working content still matches the new commit.
+ const committed=execFileSync('git',['show','HEAD:game-version.json'],{cwd:root,encoding:'utf8',stdio:'pipe'});
+ if(readFileSync(resolve(root,'game-version.json'),'utf8')!==committed)return;
+ execFileSync('git',['add','--','game-version.json'],{cwd:root,stdio:'pipe'});
+}
+
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
  const root=execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8'}).trim();
- console.log(`Game version: ${stampGameVersion(root).version} (Asia/Shanghai)`);
+ if(process.argv[2]==='--sync-index')syncGameVersionIndex(root);
+ else console.log(`Game version: ${stampGameVersion(root).version} (Asia/Shanghai)`);
 }

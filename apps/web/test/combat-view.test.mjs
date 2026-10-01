@@ -176,3 +176,10 @@ test('target arrows omit dead, removed, missing and self targets without guessin
  units[1].hp=0;
  assert.deepEqual(combatView.battleTargetLinks(units,layout,1000),[]);
 });
+
+
+test('a delayed packet does not burst two seconds of historical skill effects',()=>{
+ const logs=[0,400,800,1200,1600,2000].map((at,id)=>({id:id+1,at,kind:'cast'}));
+ assert.deepEqual(recentCombatEvents(logs,0,2000).map(event=>event.at),[1600,2000]);
+ assert.equal(logs.length,6,'presentation filtering cannot discard the combat log');
+});

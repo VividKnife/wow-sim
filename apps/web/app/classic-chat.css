@@ -1,0 +1,52 @@
+/* Classic chat: translucent tabs and colored text directly over the world. */
+.classic-game .cu-viewport .cu-chat-window{display:block;left:12px;right:auto;bottom:224px;width:clamp(340px,32vw,480px);z-index:6;border:0;border-radius:0;background:none;box-shadow:none;text-shadow:1px 1px 1px #000,-1px -1px 1px #000,0 1px 3px #000;overflow:visible}
+.classic-game .cu-is-travelling .cu-chat-window{bottom:282px;--chat-rest-bottom:282px}
+.cu-chat-toolbar{display:flex;align-items:center;gap:3px;min-width:0}
+.cu-chat-toolbar [role=tablist]{display:flex;gap:2px;min-width:0;flex:1}
+.cu-chat-toolbar [role=tab]{min-height:28px;padding:4px 10px;border:1px solid transparent;border-bottom:0;border-radius:3px 3px 0 0;background:#090d1040;color:#c1bba7;font-size:12px;white-space:nowrap;text-shadow:0 1px 2px #000}
+.cu-chat-toolbar [role=tab][data-state=active]{background:linear-gradient(#131914a6,#11170f4d);border-color:#aa956c59;color:#ffe4ab}
+.cu-chat-toolbar [role=tab]:hover{color:#fff0c9;background:#11181090}
+.cu-chat-tools{display:flex;flex:none;opacity:.45;transition:opacity .15s}.cu-chat-window:hover .cu-chat-tools,.cu-chat-window:focus-within .cu-chat-tools{opacity:1}
+.cu-chat-tools button{display:flex;align-items:center;justify-content:center;width:26px;height:28px;min-height:28px;margin:0;padding:0;border:0;border-radius:2px;background:none;color:#d2c49e}.cu-chat-tools button:hover{background:#11181080;color:#ffe4ab}.cu-chat-tools .cu-mobile-meter{display:none}
+.cu-chat-content{display:flex;flex-direction:column;height:clamp(150px,20dvh,210px);min-height:0;font-size:13px;line-height:1.45;overflow:hidden;background:linear-gradient(90deg,#08100b1a,transparent)}
+.cu-chat-content[hidden]{display:none}.cu-chat-content>.social-chat{height:100%}
+.cu-chat-window :is(button,[tabindex]):focus-visible{outline:1px solid #f0cf87;outline-offset:-2px}
+.cu-event-feed{position:relative;display:flex;flex-direction:column;flex:1;min-height:0}
+.cu-event-history{flex:1;min-height:0;padding:5px 4px;overflow:auto;overscroll-behavior:contain;scrollbar-width:none;scrollbar-color:#b3a58566 transparent}
+.cu-event-row{padding:1px 0;border:0;color:#ffe696;font-size:13px;line-height:1.5;font-weight:500;overflow-wrap:anywhere}
+.cu-event-row time{display:none}.cu-event-row p{color:inherit;display:inline;margin:0;white-space:pre-wrap}.cu-event-reward{color:#53f445}.cu-event-row[data-kind=xp]{color:#bca4ff}.cu-event-travel{color:#f5df97}.cu-event-quest{color:#ffe04c}.cu-event-combat{color:#f2d6b5}
+.cu-chat-empty{margin:4px 0;color:#c4bca5;font-size:12px}
+.cu-chat-scroll{display:block;overflow:auto;overscroll-behavior:contain;padding:5px 4px;scrollbar-width:none;scrollbar-color:#b3a58566 transparent;overflow-wrap:anywhere}
+.cu-chat-scroll>.panel{margin:0;padding:0;border:0;background:none;box-shadow:none}.cu-chat-scroll .section-heading{display:none}.cu-chat-scroll>.panel>p{font-size:11px;color:#c1baa6;margin:0 0 6px}.cu-chat-scroll .combat-log{max-height:none;overflow:visible;margin:0;font-size:13px}.cu-chat-scroll .combat-log>div{padding:2px 0;border:0;gap:4px;grid-template-columns:1fr}.cu-chat-scroll .combat-log time{font-size:10px;color:#aaa899;white-space:nowrap}.cu-chat-scroll .combat-log button{padding:2px 4px;height:auto;min-height:28px;font-size:12px;color:#e8c985;white-space:normal;text-align:left}
+.cu-chat-window .chat-new-messages{bottom:3px;min-height:26px;padding:2px 8px;border:1px solid #b7a06c50;border-radius:3px;background:#0b120cd9;box-shadow:none;font-size:11px;color:#ffe4a9}
+.cu-chat-bubble{display:none}.classic-game .cu-viewport .cu-chat-window.cu-chat-compact{width:44px;height:44px;border:0;background:none;box-shadow:none;overflow:visible}.cu-chat-compact .cu-chat-channels{display:none}.cu-chat-compact .cu-chat-bubble{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;border:1px solid #b8a57a55;color:#e4d3ae;background:#10191159;box-shadow:none;padding:0}
+
+/* Shared message behavior, stripped down for the in-world HUD. */
+.social-chat-minimal{--chat-gold:#ffc7b3;color:#ffc7b3;font-size:13px;font-weight:500;line-height:1.5}
+.social-chat-minimal[data-channel=party]{--chat-gold:#aaaaff;color:#aaaaff}
+.social-chat-minimal .social-chat-history{padding:5px 4px;scrollbar-width:none;scrollbar-color:#b3a58566 transparent}
+.social-chat-minimal .social-message{padding:1px 0;border:0;font-size:13px;line-height:1.5}
+.social-chat-minimal .social-message header,.social-chat-minimal .social-message p{color:inherit;display:inline;margin:0;line-height:inherit}
+.social-chat-minimal .social-message strong{font-size:inherit;font-weight:500;color:inherit}
+.social-chat-minimal .social-message :is(time,header>small,.social-recruitment-tag){display:none}
+.social-chat-minimal .social-message.is-recruitment{margin:0;padding:1px 0;border:0;border-radius:0;background:none}
+.social-chat-minimal .social-recruitment{margin:0;font-size:12px;color:inherit}
+.social-chat-minimal .social-recruitment>summary{display:block;width:fit-content;min-height:24px;cursor:pointer;color:#e7c98d;font-size:11px}.social-chat-minimal .social-recruitment>summary:before{content:'[+] '}.social-chat-minimal .social-recruitment[open]>summary:before{content:'[−] '}
+.social-chat-minimal .social-recruitment-roles{display:inline-flex;margin:0 6px;gap:6px}.social-chat-minimal .social-recruitment-roles span{padding:0;background:none}.social-chat-minimal .social-recruitment button{margin:2px 5px 2px 0;background:#11180f80;box-shadow:none;min-height:28px}
+.social-chat-minimal .social-chat-composer{padding:3px 0 0;border:0;background:none}
+.social-chat-minimal .social-chat-input-row{gap:5px;padding:0 3px 0 7px;border:1px solid #b9a57740;border-radius:2px;background:#090e0b38;box-shadow:none}.social-chat-minimal .social-chat-input-row:focus-within{background:#080e0bc4;border-color:#cfb9819c}
+.social-chat-minimal .social-chat-destination{border:0;padding:0;color:var(--chat-gold)}.social-chat-minimal .social-chat-destination:before{content:'['}.social-chat-minimal .social-chat-destination:after{content:']'}
+.social-chat-minimal .social-chat-input-row input{background:transparent;border:0;border-radius:0;box-shadow:none;height:28px;padding:3px 0;font-size:13px;color:inherit}.social-chat-minimal .social-chat-input-row input::placeholder{color:#ccc6b599}
+.social-chat-minimal .social-chat-input-row button{min-height:28px;padding:2px 5px;background:none;border:0;color:#d9cba8}.social-chat-minimal .social-chat-input-row button span{display:none}
+.social-chat-minimal .social-chat-hint{display:none}.social-chat-minimal .social-chat-empty{align-items:flex-start;justify-content:flex-end;text-align:left;gap:2px;padding:5px 0;min-height:100%}.social-chat-minimal .social-chat-empty>svg{display:none}.social-chat-minimal .social-chat-empty strong{color:#d2cbb9;font-size:12px}.social-chat-minimal .social-chat-empty p{color:#c1baa7;font-size:11px}.social-chat-inline-error{margin:3px 4px;font-size:11px;color:#ffac94}
+.cu-chat-window:hover :is(.social-chat-history,.cu-event-history,.cu-chat-scroll),.cu-chat-window:focus-within :is(.social-chat-history,.cu-event-history,.cu-chat-scroll){scrollbar-width:thin}
+@media(max-width:1000px){.cu-chat-tools .cu-mobile-meter{display:flex}}
+@media(max-width:800px), (max-width:1000px) and (max-height:500px){
+ .classic-game .cu-viewport .cu-chat-window{position:fixed;left:8px!important;right:8px!important;top:auto!important;bottom:var(--chat-keyboard-bottom,var(--chat-rest-bottom,224px))!important;width:auto;z-index:62;background:none;border:0;box-shadow:none}
+ .classic-game .cu-viewport .cu-chat-window.cu-chat-compact{position:absolute;left:8px!important;right:auto!important;bottom:104px!important}.classic-game .cu-is-travelling .cu-chat-window.cu-chat-compact{bottom:162px!important}
+ .cu-chat-toolbar{gap:0}.cu-chat-toolbar [role=tablist]{gap:1px}.cu-chat-toolbar [role=tab]{flex:1;min-height:40px;padding:5px 5px;font-size:12px}.cu-chat-tools{opacity:.8}.cu-chat-tools button{width:36px;height:40px}.cu-chat-tools .cu-hud-drag{display:none}
+ .cu-chat-content{height:min(220px,var(--chat-content-height,calc(var(--chat-vh,100dvh) - 180px)));min-height:0;background:linear-gradient(90deg,#07100938,#07100908)}
+ .cu-event-row,.social-chat-minimal .social-message{font-size:14px;line-height:1.5}.social-chat-minimal .social-chat-input-row input{font-size:16px;height:38px}.social-chat-minimal .social-chat-input-row button{min-height:40px;min-width:40px}.social-chat-minimal .social-recruitment>summary{min-height:36px;line-height:36px}.social-chat-minimal .social-recruitment button{min-height:40px}.cu-chat-window .chat-new-messages{min-height:36px}.cu-chat-scroll .combat-log button{min-height:40px}
+}
+@media(max-width:1000px) and (max-height:500px){.classic-game .cu-viewport:has(.cu-chat-window){min-height:100dvh}.classic-game .cu-viewport .cu-chat-window:not(.cu-chat-compact){bottom:var(--chat-keyboard-bottom,8px)!important}.cu-chat-content{height:min(210px,calc(var(--chat-vh,100dvh) - 64px))}}
+@media(prefers-reduced-motion:reduce){.cu-chat-tools{transition:none}}

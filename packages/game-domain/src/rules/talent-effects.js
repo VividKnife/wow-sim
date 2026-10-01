@@ -38,10 +38,36 @@ export function passiveTalentSpells(c){return [...compiledTalents(c).selected.fi
 export function talentSpellValue(c,sp,operation,value){
  return applyTalentSpellValue(c,sp,operation,value,passiveTalentSpells(c));
 }
+// Materialize immutable DBC spell-modifier rows once. Querying every packed
+// column for every operation/target dominated public raid projections. Active
+// passives are still chosen from the actor on each call; no actor result cache.
+const spellModifierPrograms=new WeakMap();
+function spellModifierProgram(aura){
+ let program=spellModifierPrograms.get(aura);if(program)return program;
+ program=new Map();
+ for(let i=1;i<=3;i++){
+  const type=aura['EffectApplyAuraName'+i];if(type!==107&&type!==108)continue;
+  modifierMetadata();
+  const bits=mask(affectRows.get(`${aura.Id}:${i}`)??affectRows.get(`${talentRoots.get(aura.Id)}:${i}`)??aura['EffectItemType'+i]);
+  if(bits===0n)continue;
+  const operation=aura['EffectMiscValue'+i],rows=program.get(operation)||[];
+  rows.push({type,bits,family:aura.SpellFamilyName,amount:aura['EffectBasePoints'+i]+1});program.set(operation,rows);
+ }
+ spellModifierPrograms.set(aura,program);return program;
+}
 function applyTalentSpellValue(c,sp,operation,value,passives){
  if(sp?.AttributesEx3&spellAttributesEx3.IGNORE_CASTER_MODIFIERS)return value;
  let flat=0,percent=0;
- for(const aura of passives)for(let i=1;i<=3;i++){const type=aura['EffectApplyAuraName'+i];if(![107,108].includes(type)||aura['EffectMiscValue'+i]!==operation||!talentAffectsSpell(aura,i,sp))continue;const amount=aura['EffectBasePoints'+i]+1;if(type===107)flat+=amount;else percent+=amount;}
+ let spellMask;
+ if(sp)for(const aura of passives){
+  const rows=spellModifierProgram(aura).get(operation);if(!rows)continue;
+  for(const row of rows){
+   if(row.family&&row.family!==sp.SpellFamilyName)continue;
+   spellMask??=mask(preciseSpellFamilyFlags[sp.Id]??sp.SpellFamilyFlags);
+   if((row.bits&spellMask)===0n)continue;
+   if(row.type===107)flat+=row.amount;else percent+=row.amount;
+  }
+ }
  let result=(value+flat)*(1+percent/100);
  if(c.talentProcs?.amplifyCurse?.until>(c.time||0)){if(operation===8&&['Curse of Agony','Curse of Weakness'].includes(sp?.SpellName))result*=1.5;if(operation===12&&sp?.SpellName==='Curse of Exhaustion')result-=20;}
  return result;

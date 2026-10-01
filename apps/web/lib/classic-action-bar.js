@@ -1,3 +1,4 @@
+import {targetSkillUses} from './skill-use-view.js';
 import {highestSpellRanks} from './spell-ranks.js';
 export const actionKeys=['1','2','3','4','5','6','7','8','9','0','-','='];
 export const actionBarStorageKey=(id,mode)=>`wow-sim:action-bar:${id}:${mode}`;
@@ -12,7 +13,7 @@ export function actionAfterElapsed(action,elapsedMs=0){
  return {...action,remaining,canUse:action.canUse||ready,reason:ready?'':action.reason};
 }
 export function quickActions(s,d,mode='peace'){
- const uses={...d.skillUses,...d.skillUsesByTarget?.[s.id]};
+ const uses=targetSkillUses(d,s.id,s.clock);
  const spells=(d.skills||[]).filter(sp=>sp.known&&uses[sp.spellId]).map(sp=>({key:`spell:${sp.spellId}`,name:sp.name,icon:sp.icon,...uses[sp.spellId],kind:'技能',command:{type:'cast',id:sp.spellId,target:s.id}}));
  const ids=[...new Set((s.bag||[]).filter(i=>d.itemUses?.[i.uid]).map(i=>i.id))];
  const items=ids.map(id=>{

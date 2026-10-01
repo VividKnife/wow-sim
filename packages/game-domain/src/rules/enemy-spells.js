@@ -2,7 +2,7 @@ import {addEnemyAura,prepareEnemyAuras,dueEnemyAuras,continueEnemyAura} from './
 import {addGroundEffect,dueGroundEffects,continueGroundEffect,expireGroundEffects} from './ground-events.js';
 import {beginEnemyCast,takeEnemyCastReady} from './simulation-events.js';
 import {combatSight} from './combat-space.js';
-import {setCombatPosition} from './combat-area.js';
+import {placeCombatUnit} from './combat-area.js';
 import {onTalentEvent} from './talent-runtime.js';
 import {talentControlResistance,talentCombatDefense} from './talent-effects.js';
 import {launchProjectile,takeImpacts} from './combat-projectiles.js';
@@ -59,7 +59,7 @@ function summon(s,e,sp,n){
  if(!creatures[summonProfileFallbacks[entry]||entry])throw new Error(`召唤目标 ${entry} 的怪物数据不存在（法术 ${sp.Id}）`);
  for(let i=0;i<count;i++){
   const sequence=s.combat.summonSequence=(s.combat.summonSequence||0)+1;
-  const child=enemy(s,summonProfileFallbacks[entry]||entry,`summon-${sequence}`);if(summonNames[entry])child.name=summonNames[entry];setCombatPosition(s,child,e);child.target=e.target;child.summonedBy=e.id;child.pet=sp['Effect'+n]===56;
+  const child=enemy(s,summonProfileFallbacks[entry]||entry,`summon-${sequence}`);if(summonNames[entry])child.name=summonNames[entry];placeCombatUnit(s,child,e);child.target=e.target;child.summonedBy=e.id;child.pet=sp['Effect'+n]===56;
   child.nextAttack=s.clock+child.swing;child.despawnAt=sp.durationMs<Number.MAX_SAFE_INTEGER?s.clock+sp.durationMs:null;
   // Summoned units are additional enemies, never a replacement for a static GUID.
   s.combat.enemies.push(child);log(s,`${e.name} 召唤了 ${child.name}`,'combat',{actorId:e.id,targetId:child.id,spellId:sp.Id});

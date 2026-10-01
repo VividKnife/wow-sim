@@ -8,7 +8,7 @@ export type CharacterClaim = {id: string; accountId: string; instanceId: string}
 const wrapped = new WeakMap<Store, Store>();
 const authority = new WeakMap<Transaction, Ownership>();
 const deletions = new WeakMap<Transaction, string>();
-const transfers = new WeakMap<Transaction, {destinationId: string; sourceIds: Set<string>; claims: Map<string, CharacterClaim>}>();
+const transfers = new WeakMap<Transaction, {destinationIds: Set<string>; sourceIds: Set<string>; claims: Map<string, CharacterClaim>; assignments: Map<string, string>}>();
 const protectedTables = new Set<TableName>(['characters', 'npc_characters', 'wallets', 'items', 'actor_leases', 'activities',
   'reservations', 'parties', 'companions', 'instances', 'simulation_characters', 'simulation_residencies']);
 
@@ -62,10 +62,10 @@ export function residentStore(store: Store): Store {
         const transfer = transfers.get(tx);
         if (transfer && table === 'simulation_characters') {
           const before = transfer.claims.get(row.id);
-          if (insert || !before || row.accountId !== before.accountId || row.instanceId !== transfer.destinationId)
+          if (insert || !before || row.accountId !== before.accountId || row.instanceId !== transfer.assignments.get(row.id))
             throw new DomainError('SIMULATION_TRANSFER', '转移不得增删身份或改变账号归属');
         } else if (transfer && table === 'simulation_residencies') {
-          if (!insert || row.id !== transfer.destinationId) throw new DomainError('SIMULATION_TRANSFER', '转移只能创建目标实例');
+          if (!insert || !transfer.destinationIds.has(row.id)) throw new DomainError('SIMULATION_TRANSFER', '转移只能创建目标实例');
         } else if (protectedTables.has(table)) {
           if (!insert) await check(table, await raw.get(table, row.id));
           await check(table, row);
@@ -122,21 +122,28 @@ export async function withResidentDeletion<T>(tx: Transaction, accountId: string
  * a general multi-owner asset-write capability. It can only move existing
  * claims unchanged and replace their residency records; assets remain exactly
  * as committed by the source checkpoints. */
-export async function transferResidentClaims(tx: Transaction, transferId: string, sources: Ownership[], destination: Residency): Promise<void> {
+export async function transferResidentClaims(tx: Transaction, transferId: string, sources: Ownership[], destinations: Residency[]): Promise<void> {
   if (transfers.has(tx) || authority.has(tx) || deletions.has(tx)) throw new Error('Nested resident transfer authority');
-  const target = await tx.get<Ownership>('simulation_owners', destination.id);
-  if (!target || target.ownerId !== 'transfer' || target.epoch !== 1 || target.commitSequence !== 0 ||
-    target.handoff?.id !== transferId || target.handoff.sequence !== 0 || target.deleted || target.transferred)
-    throw new DomainError('SIMULATION_TRANSFER', '目标实例未处于原子转移边界');
+  if (!Array.isArray(destinations) || !destinations.length || destinations.length > 40 || new Set(destinations.map(d => d.id)).size !== destinations.length)
+    throw new DomainError('SIMULATION_TRANSFER', '目标实例无效');
+  const destinationIds = new Set(destinations.map(d => d.id));
+  for (const destination of destinations) {
+    const target = await tx.get<Ownership>('simulation_owners', destination.id);
+    if (!target || target.ownerId !== 'transfer' || target.epoch !== 1 || target.commitSequence !== 0 ||
+      target.handoff?.id !== transferId || target.handoff.sequence !== 0 || target.deleted || target.transferred)
+      throw new DomainError('SIMULATION_TRANSFER', '目标实例未处于原子转移边界');
+    if (destination.rulesetVersion !== destinations[0].rulesetVersion || destination.contentHash !== destinations[0].contentHash)
+      throw new DomainError('SIMULATION_VERSION', '转移目标内容版本不一致');
+  }
   const sourceIds = new Set(sources.map(o => o.id));
-  if (!sourceIds.size || sourceIds.size !== sources.length || sourceIds.has(destination.id)) throw new DomainError('SIMULATION_TRANSFER', '来源实例无效');
+  if (!sourceIds.size || sourceIds.size !== sources.length || sources.length > 40 || sources.some(s => destinationIds.has(s.id))) throw new DomainError('SIMULATION_TRANSFER', '来源实例无效');
   const claims = new Map<string, CharacterClaim>(), participants = new Map<string, string>();
   for (const source of sources) {
     const owner = await tx.get<Ownership>('simulation_owners', source.id), residency = await tx.get<Residency>('simulation_residencies', source.id);
     if (!owner || owner.deleted || owner.transferred || owner.ownerId !== source.ownerId || owner.epoch !== source.epoch || owner.expiresAt <= Date.now() ||
       owner.commitSequence !== source.commitSequence || owner.handoff?.id !== transferId || owner.handoff.sequence !== source.commitSequence)
       throw new DomainError('SIMULATION_FENCED', '来源实例未封存在指定检查点');
-    if (!residency || residency.rulesetVersion !== destination.rulesetVersion || residency.contentHash !== destination.contentHash)
+    if (!residency || residency.rulesetVersion !== destinations[0].rulesetVersion || residency.contentHash !== destinations[0].contentHash)
       throw new DomainError('SIMULATION_VERSION', '转移来源内容版本不一致');
     validateParticipants(residency.participants, residency.characterId);
     for (const p of residency.participants) {
@@ -145,29 +152,45 @@ export async function transferResidentClaims(tx: Transaction, transferId: string
     }
     for (const claim of await tx.list<CharacterClaim>('simulation_characters', {instanceId: source.id})) claims.set(claim.id, claim);
   }
-  validateParticipants(destination.participants, destination.characterId);
-  if (participants.size !== destination.participants.length || destination.participants.some(p => participants.get(p.characterId) !== p.accountId) ||
-    participants.get(destination.characterId) !== destination.accountId) throw new DomainError('SIMULATION_TRANSFER', '转移必须保留所有真人角色及账号');
-  const admission = JSON.parse(destination.encodedAdmission) as CharacterAdmission;
-  if (admission.instanceId !== destination.id || admission.state.id !== destination.characterId || admission.controllers.length !== participants.size ||
-    new Set(admission.controllers.map(c => c.actorId)).size !== participants.size || admission.controllers.some(c => participants.get(c.actorId) !== c.accountId))
-    throw new DomainError('SIMULATION_TRANSFER', '目标控制器名册无效');
-  const expected = new Map(participants);
-  for (const p of destination.participants) {
-    const actor = participantState(admission.state, p.characterId);
-    for (const npc of actor.npcWorld?.residents ?? []) {
-      if (expected.has(npc.id)) throw new DomainError('SIMULATION_TRANSFER', '目标 NPC 身份重复');
-      const row = await tx.get('npc_characters', npc.id);
-      if (!row || row.ownerCharacterId !== p.characterId || row.accountId !== p.accountId) throw new DomainError('SIMULATION_TRANSFER', '目标 NPC 所属角色无效');
-      expected.set(npc.id, p.accountId);
+  const assignments = new Map<string, string>();
+  for (const destination of destinations) {
+    validateParticipants(destination.participants, destination.characterId);
+    for (const p of destination.participants) {
+      if (assignments.has(p.characterId) || participants.get(p.characterId) !== p.accountId)
+        throw new DomainError('SIMULATION_TRANSFER', '转移必须保留所有真人角色及账号');
+      assignments.set(p.characterId, destination.id);
     }
+    if (participants.get(destination.characterId) !== destination.accountId)
+      throw new DomainError('SIMULATION_TRANSFER', '目标账号归属无效');
+  }
+  if (assignments.size !== participants.size) throw new DomainError('SIMULATION_TRANSFER', '转移必须保留所有真人角色及账号');
+  const expected = new Map(participants);
+  for (const destination of destinations) {
+    const admission = JSON.parse(destination.encodedAdmission) as CharacterAdmission;
+    if (admission.instanceId !== destination.id || admission.state.id !== destination.characterId || admission.controllers.length !== destination.participants.length ||
+      new Set(admission.controllers.map(c => c.actorId)).size !== destination.participants.length ||
+      admission.controllers.some(c => assignments.get(c.actorId) !== destination.id || participants.get(c.actorId) !== c.accountId))
+      throw new DomainError('SIMULATION_TRANSFER', '目标控制器名册无效');
+    for (const p of destination.participants) {
+      const actor = participantState(admission.state, p.characterId);
+      for (const npc of actor.npcWorld?.residents ?? []) {
+        if (expected.has(npc.id)) throw new DomainError('SIMULATION_TRANSFER', '目标 NPC 身份重复');
+        const row = await tx.get('npc_characters', npc.id);
+        if (!row || row.ownerCharacterId !== p.characterId || row.accountId !== p.accountId) throw new DomainError('SIMULATION_TRANSFER', '目标 NPC 所属角色无效');
+        expected.set(npc.id, p.accountId);assignments.set(npc.id, destination.id);
+      }
+    }
+    const occupants = [admission.state, ...admission.state.party];
+    if (new Set(occupants.map(a => a.id)).size !== occupants.length || occupants.some(a =>
+      assignments.get(a.id) !== destination.id || (participants.has(a.id) ? a.npcPlayer === true : a.npcPlayer !== true)))
+      throw new DomainError('SIMULATION_TRANSFER', '目标实例包含未归属或重复的单位');
   }
   if (claims.size !== expected.size || [...expected].some(([id, accountId]) => claims.get(id)?.accountId !== accountId))
     throw new DomainError('SIMULATION_TRANSFER', '转移必须保留全部真人与 NPC 执行权');
-  transfers.set(tx, {destinationId: destination.id, sourceIds, claims});
+  transfers.set(tx, {destinationIds, sourceIds, claims, assignments});
   try {
-    await tx.insert('simulation_residencies', destination);
-    for (const claim of claims.values()) await tx.put('simulation_characters', {...claim, instanceId: destination.id});
+    for (const destination of destinations) await tx.insert('simulation_residencies', destination);
+    for (const claim of claims.values()) await tx.put('simulation_characters', {...claim, instanceId: assignments.get(claim.id)!});
     for (const id of sourceIds) await tx.delete('simulation_residencies', id);
   } finally { transfers.delete(tx); }
 }

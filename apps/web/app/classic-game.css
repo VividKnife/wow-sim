@@ -70,9 +70,9 @@
 .cu-nameplate{font-size:13px;color:#eef1ce}
 .cu-scene-caption>small{font-size:10px;color:#abc88a}
 .cu-lower-left{position:absolute;bottom:125px;left:27px;width:280px;z-index:2;text-shadow:0 2px 3px #000}
-.cu-chat{font-size:11px;line-height:1.7;color:#c2d2ec;padding:8px 10px;border-left:2px solid #a7976080;background:linear-gradient(90deg,#1021118f,transparent)}
-.cu-chat>span{color:#78b5e6}
-.cu-lower-left>small{color:#aeb8a1;font-size:9px;display:block;margin:9px 0 0 10px}
+
+
+
 .cu-actions{position:absolute;left:50%;bottom:117px;transform:translateX(-50%);display:flex;gap:4px;z-index:4;padding:5px;background:#11170fbd;border:1px solid #a08e67;border-radius:4px;box-shadow:0 3px 16px #0005}
 .cu-actions button{height:34px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 11px;background:linear-gradient(#434433,#252c20);border:1px solid #706f50;border-radius:2px;color:#d4ceb1;font-size:11px;white-space:nowrap}
 .cu-actions button img{width:20px;height:20px;object-fit:cover;border:1px solid #948666}
@@ -154,8 +154,8 @@
 .cu-world .world-avatar.is-mounted{width:520px;max-width:110%;height:64%}
 .cu-world .world-scene-combat{inset:180px 5px 54px;border:1px solid #918462}
 .cu-lower-left{left:16px;bottom:167px;width:60%}
-.cu-chat{font-size:10px;padding:6px 8px}
-.cu-lower-left>small{display:none}
+
+
 .cu-scene-caption{bottom:215px}
 .cu-actions{bottom:109px;left:50%;padding:4px;gap:4px}
 .cu-actions button{padding:0 10px;height:35px;font-size:10px}
@@ -184,7 +184,7 @@
 .cu-viewport:has(.character-model:not(.model-ready)) .cu-scene-caption{display:none}
 
 /* Live integration: retain V1 proportions without demo chrome or fabricated data. */
-.classic-game-root{width:100%;max-width:none;margin:0;padding:0}.classic-game-root .classic-game{font-family:'PingFang SC','Microsoft YaHei',sans-serif}.classic-game .cu-viewport{height:calc(100svh - 86px)}.classic-game .cu-vital{display:block}.classic-game .cu-vital.rage>i{background:linear-gradient(#c84b39,#772a25)}.classic-game .cu-vital.energy>i{background:linear-gradient(#ceaf39,#8e7729)}.cu-class-portrait>span{border-radius:50%!important}.classic-game .cu-player-bars{min-width:0}.classic-game .cu-player-bars strong>span{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.classic-game .cu-member-bars b>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.classic-game .cu-member-bars b>small{padding-left:5px}.classic-game .cu-zone-title h1{font-size:29px;letter-spacing:3px;overflow-wrap:anywhere}.classic-game .cu-menu{gap:23px}.classic-game .cu-quest-tracker{display:block;width:100%}.classic-game .cu-quest-objective{overflow-wrap:anywhere}.classic-game .cu-right-hud{top:225px;bottom:calc(32dvh + 190px);gap:12px;align-content:start;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}.classic-game .cu-quest-tracker+.cu-quest-tracker{border-top:1px solid #ac995c44;padding-top:10px}.classic-game .cu-quest-tracker>b{display:block;overflow-wrap:anywhere}.classic-game .cu-quest-objective{margin:5px 0 4px;font-size:10px}.cu-status-area{max-width:1380px;margin:auto;padding:0 20px}.cu-status-area:empty{display:none}.cu-status-area>.activity-strip{margin-top:12px}.cu-live-dialog{width:min(1180px,calc(100vw - 32px));max-height:calc(100dvh - 32px)}.cu-live-dialog.cu-panel-nearby,.cu-live-dialog.cu-panel-quests,.cu-live-dialog.cu-panel-account,.cu-live-dialog.cu-panel-activities{width:min(860px,calc(100vw - 32px))}.cu-live-dialog .cu-dialog-header{padding:12px 20px}.cu-live-dialog .cu-dialog-header h2{font-size:22px}.cu-live-dialog .cu-dialog-body{padding:18px;overscroll-behavior:contain}.cu-live-dialog .cu-close{min-width:36px;min-height:36px}.cu-live-dialog .panel,.cu-live-dialog .quest-entry{background:linear-gradient(135deg,#282d21,#1c2218);border-color:#756342;box-shadow:none}.cu-live-dialog h1{font-size:23px;letter-spacing:1px}.cu-live-dialog h2{font-size:19px}.cu-live-dialog .eyebrow,.cu-live-dialog .section-heading .eyebrow{display:none}.cu-live-dialog .world-layout{display:block}.cu-live-dialog .world-main{min-width:0}.cu-live-dialog .quest-panel{margin:0}.cu-live-dialog .quest-entry>summary{flex-wrap:wrap}.cu-live-dialog .quest-entry strong{overflow-wrap:anywhere}.cu-live-dialog .local-people{margin:0}.cu-live-dialog .world-layout>.world-main>.filterbar{margin-top:0}.cu-live-dialog .account-drawer{border:0;padding:0}.cu-live-dialog .account-drawer>summary{display:none}.cu-live-dialog .account-drawer:not([open])>*:not(summary){display:block}.cu-live-dialog .region-map-scroll{max-width:100%}.cu-live-dialog .site-footer{display:none}.cu-live-dialog [data-slot=button]{border-color:#81704c}.cu-live-dialog .npc-grid{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}.classic-game .damage-meter .dm-total{margin:0}.classic-game .cu-chat{max-height:65px;overflow:hidden}.classic-game .cu-world .world-battle-expand{display:none}.classic-game .cu-world .hd2d-scene-caption{display:none}.web-style-switch{display:flex;justify-content:flex-end;margin-bottom:12px}.web-style-switch button{min-height:36px}
+.classic-game-root{width:100%;max-width:none;margin:0;padding:0}.classic-game-root .classic-game{font-family:'PingFang SC','Microsoft YaHei',sans-serif}.classic-game .cu-viewport{height:calc(100svh - 86px)}.classic-game .cu-vital{display:block}.classic-game .cu-vital.rage>i{background:linear-gradient(#c84b39,#772a25)}.classic-game .cu-vital.energy>i{background:linear-gradient(#ceaf39,#8e7729)}.cu-class-portrait>span{border-radius:50%!important}.classic-game .cu-player-bars{min-width:0}.classic-game .cu-player-bars strong>span{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.classic-game .cu-member-bars b>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.classic-game .cu-member-bars b>small{padding-left:5px}.classic-game .cu-zone-title h1{font-size:29px;letter-spacing:3px;overflow-wrap:anywhere}.classic-game .cu-menu{gap:23px}.classic-game .cu-quest-tracker{display:block;width:100%}.classic-game .cu-quest-objective{overflow-wrap:anywhere}.classic-game .cu-right-hud{top:225px;bottom:calc(32dvh + 190px);gap:12px;align-content:start;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}.classic-game .cu-quest-tracker+.cu-quest-tracker{border-top:1px solid #ac995c44;padding-top:10px}.classic-game .cu-quest-tracker>b{display:block;overflow-wrap:anywhere}.classic-game .cu-quest-objective{margin:5px 0 4px;font-size:10px}.cu-status-area{max-width:1380px;margin:auto;padding:0 20px}.cu-status-area:empty{display:none}.cu-status-area>.activity-strip{margin-top:12px}.cu-live-dialog{width:min(1180px,calc(100vw - 32px));max-height:calc(100dvh - 32px)}.cu-live-dialog.cu-panel-nearby,.cu-live-dialog.cu-panel-quests,.cu-live-dialog.cu-panel-account,.cu-live-dialog.cu-panel-activities{width:min(860px,calc(100vw - 32px))}.cu-live-dialog .cu-dialog-header{padding:12px 20px}.cu-live-dialog .cu-dialog-header h2{font-size:22px}.cu-live-dialog .cu-dialog-body{padding:18px;overscroll-behavior:contain}.cu-live-dialog .cu-close{min-width:36px;min-height:36px}.cu-live-dialog .panel,.cu-live-dialog .quest-entry{background:linear-gradient(135deg,#282d21,#1c2218);border-color:#756342;box-shadow:none}.cu-live-dialog h1{font-size:23px;letter-spacing:1px}.cu-live-dialog h2{font-size:19px}.cu-live-dialog .eyebrow,.cu-live-dialog .section-heading .eyebrow{display:none}.cu-live-dialog .world-layout{display:block}.cu-live-dialog .world-main{min-width:0}.cu-live-dialog .quest-panel{margin:0}.cu-live-dialog .quest-entry>summary{flex-wrap:wrap}.cu-live-dialog .quest-entry strong{overflow-wrap:anywhere}.cu-live-dialog .local-people{margin:0}.cu-live-dialog .world-layout>.world-main>.filterbar{margin-top:0}.cu-live-dialog .account-drawer{border:0;padding:0}.cu-live-dialog .account-drawer>summary{display:none}.cu-live-dialog .account-drawer:not([open])>*:not(summary){display:block}.cu-live-dialog .region-map-scroll{max-width:100%}.cu-live-dialog .site-footer{display:none}.cu-live-dialog [data-slot=button]{border-color:#81704c}.cu-live-dialog .npc-grid{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}.classic-game .damage-meter .dm-total{margin:0}.classic-game .cu-world .world-battle-expand{display:none}.classic-game .cu-world .hd2d-scene-caption{display:none}.web-style-switch{display:flex;justify-content:flex-end;margin-bottom:12px}.web-style-switch button{min-height:36px}
 body:has(.classic-game-root) [data-slot=dialog-overlay]{z-index:110}body:has(.classic-game-root) [data-slot=dialog-content]{z-index:111;border:3px ridge #9a8a6c;background:#20251b}body:has(.classic-game-root) [data-radix-popper-content-wrapper]{z-index:130!important}body:has(.classic-game-root) .item-hover-content{z-index:140}body:has(.classic-game-root) .toast{z-index:150}
 @media(max-width:1100px){.classic-game .cu-menu{gap:16px}.classic-game .cu-zone-title h1{font-size:24px}}
 @media(max-width:800px){.classic-game .cu-menu{gap:0}.classic-game .cu-menu>button{width:11.1%}.classic-game .cu-viewport{min-height:620px;height:calc(100svh - 112px)}.classic-game .cu-icon-frame{width:34px;height:34px}.classic-game .cu-zone-title{top:132px}.classic-game .cu-actions button{height:40px;padding:0 9px}.cu-live-dialog .cu-dialog-body{padding:12px}.cu-live-dialog .cu-close{min-width:40px;min-height:40px}.cu-live-dialog .npc-grid{grid-template-columns:1fr}.classic-game .cu-player-bars strong>span{max-width:118px}.classic-game .cu-status-area{padding:0 12px}}
@@ -260,7 +260,7 @@ body:has(.classic-game-root) .battle-effects-control{display:none}
 .classic-game .cu-in-combat .cu-world{inset:0}
 .classic-game .cu-in-combat .world-scene-combat{inset:0;border:0;border-radius:0;background:#18221e}
 .classic-game .cu-in-combat .world-exploration{display:none}
-.classic-game .cu-in-combat .cu-right-hud,.classic-game .cu-in-combat .cu-zone-title,.classic-game .cu-in-combat .cu-lower-left{display:none}
+.classic-game .cu-in-combat .cu-right-hud,.classic-game .cu-in-combat .cu-zone-title{display:none}
 .classic-game .cu-in-combat .cu-member[aria-pressed=true]{border-color:#e8c77e;background:#4b432b;box-shadow:0 0 8px #dab76e55}
 .classic-game .cu-in-combat .battle-3d-controls{top:18px;right:180px}
 .classic-game .cu-in-combat .cu-corner-meter{bottom:252px;right:15px}
@@ -268,78 +268,25 @@ body:has(.classic-game-root) .battle-effects-control{display:none}
 @media(max-width:800px){.classic-game .cu-in-combat .battle-3d-controls{top:220px;right:10px}.classic-game .cu-in-combat .cu-left-hud{top:112px}.classic-game .cu-in-combat .cu-member{min-height:37px}}
 .classic-game .cu-in-combat .cu-minimap>span:last-of-type,.classic-game .cu-in-combat .cu-minimap>em{display:none}
 
-/* One viewport, with chat channels and the full combat meter docked to its edges. */
+/* Docked HUD windows share the scene viewport. */
 .classic-game .cu-viewport{height:100dvh;min-height:600px;max-height:none}
-.classic-game .cu-chat-window{display:block;width:clamp(290px,30vw,440px);z-index:4;text-shadow:0 1px 2px #000;border:1px solid #82734b80;border-radius:3px;background:linear-gradient(100deg,#0d1310eb,#111611b8);box-shadow:0 2px 10px #0005}
-.cu-chat-toolbar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #75623d;background:linear-gradient(#333326bd,#171b15d9)}
-.cu-chat-toolbar [role=tablist]{display:flex;gap:2px;padding:3px 4px 0}
-.cu-chat-toolbar [role=tab]{border:1px solid transparent;border-bottom:0;border-radius:4px 4px 0 0;background:none;color:#aaa489;font-size:12px;padding:6px 17px;min-height:32px}
-.cu-chat-toolbar [role=tab][data-state=active]{background:linear-gradient(#50452f,#27291d);border-color:#8b744b;color:#ffe0a1}
-.cu-chat-toolbar button:hover{color:#fff0ba}
-.cu-chat-scroll{height:clamp(110px,22dvh,210px);overflow:auto;overscroll-behavior:contain;padding:8px 10px;scrollbar-width:thin;scrollbar-color:#736448 #171b16;font-size:11px;line-height:1.7;overflow-wrap:anywhere}
-.classic-game .cu-chat{padding:0 0 6px;border:0;background:none;max-height:none;overflow:visible;color:#e0d8ba}
-.cu-channel-history p{display:flex;align-items:baseline;gap:8px;margin:4px 0;color:#bdd0a9}.cu-channel-history time{flex:none;font-size:10px;color:#969785}.cu-channel-history span{min-width:0}
-.cu-chat-scroll>.panel{margin:0;padding:0;border:0;background:none;box-shadow:none}
-.cu-chat-scroll .section-heading{display:none}.cu-chat-scroll>.panel>p{font-size:10px;color:#9da58f;margin:0 0 7px}
-.cu-chat-scroll .combat-log{max-height:none;overflow:visible;margin:0;font-size:11px}.cu-chat-scroll .combat-log>div{padding:5px 0;border-color:#5c634338;gap:7px}.cu-chat-scroll .combat-log time{font-size:10px;white-space:nowrap}.cu-chat-scroll .combat-log button{padding:2px 5px;height:auto;min-height:28px;font-size:11px;color:#e8c985;white-space:normal;text-align:left}
-.cu-chat-overview .activity-strip,.cu-chat-overview .combat-strip,.cu-chat-overview .activity-progress{padding:6px 0;margin:0;border:0;border-radius:0;background:none;box-shadow:none;font-size:11px}.cu-chat-overview .journey-activity-body{flex-wrap:wrap;gap:6px}.cu-chat-overview .journey-activity-heading,.cu-chat-overview .journey-activity-meta{font-size:10px}.cu-chat-overview .journey-activity strong{font-size:12px}.cu-chat-overview .journey-activity p{font-size:11px}.cu-chat-overview button{min-height:30px;font-size:11px}
 .classic-game .cu-corner-meter{display:block;right:16px;bottom:172px;width:clamp(330px,30vw,440px);z-index:4;max-height:32dvh;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;border-radius:3px;background:#131613df}
-.cu-corner-meter .damage-meter{background:#111113df}.cu-corner-meter .dm-list{min-height:0;max-height:calc(32dvh - 133px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}.cu-corner-meter .cu-meter-empty{padding:18px 12px;gap:9px}.cu-corner-meter .cu-meter-empty h3{font-size:13px}.cu-corner-meter .cu-gold-button{padding:6px 12px}
-.classic-game .cu-is-travelling .cu-corner-meter{bottom:230px}
-.classic-game .cu-in-combat .cu-chat-window{display:block}.classic-game .cu-in-combat .cu-corner-meter{bottom:252px}
-.cu-mobile-meter{display:none}
+.cu-corner-meter .damage-meter{display:flex;flex-direction:column;max-height:32dvh;background:#111113df}.cu-corner-meter .damage-meter>*{flex-shrink:0}.cu-corner-meter .damage-meter .dm-list{flex:1 1 auto;min-height:0;max-height:none;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.cu-corner-meter .cu-meter-empty{padding:18px 12px;gap:9px}.cu-corner-meter .cu-meter-empty h3{font-size:13px}.cu-corner-meter .cu-gold-button{padding:6px 12px}
+.classic-game .cu-is-travelling .cu-corner-meter{bottom:230px}.classic-game .cu-in-combat .cu-corner-meter{bottom:252px}
 .classic-game .cu-status-area{position:fixed;z-index:20;top:8px;left:50%;transform:translateX(-50%);width:min(550px,95vw);padding:0;pointer-events:none}.cu-status-area .activity-strip{margin:0;padding:6px 12px;font-size:11px}.cu-status-area a,.cu-status-area button{pointer-events:auto}
-
 .cu-live-dialog.cu-panel-meter{width:min(600px,calc(100vw - 24px))}
-@media(min-width:801px) and (max-height:750px){.classic-game .cu-corner-meter{max-height:24dvh}.classic-game .cu-right-hud{top:195px;bottom:calc(24dvh + 190px)}.classic-game .cu-quest-objective,.classic-game .cu-quest-tracker small{display:none}.classic-game .cu-left-hud{max-height:calc(100dvh - 470px);overflow:auto}.classic-game .cu-chat-scroll{height:100px}}
-@media(min-width:801px) and (max-width:1000px){.classic-game .cu-right-hud{bottom:150px}}
-@media(max-width:1000px){.classic-game .cu-corner-meter{display:none}.cu-mobile-meter{display:block;border:0;background:none;color:#e1c080;padding:6px 12px;min-height:36px;font-size:11px}}
-@media(max-width:800px){
- .classic-game .cu-viewport{height:100dvh;min-height:560px}
- .classic-game .cu-chat-window{width:auto}
- .classic-game .cu-chat-scroll{height:104px}
- .classic-game .cu-chat-toolbar [role=tab]{min-height:36px;padding:6px 15px}
-  .cu-live-dialog.cu-panel-meter{width:100%}
-}
-
-.cu-chat-toggle{display:none}
-@media(max-width:800px){
- .classic-game .cu-scene-caption{display:none}
- .cu-in-combat .cu-chat-toggle{display:block;margin-left:auto;border:0;background:none;color:#cdb077;font-size:11px;padding:6px;min-height:36px}
- .cu-in-combat .cu-chat-compact .cu-chat-scroll{display:none}
-}
-@media(min-width:801px){
- .classic-game .cu-left-hud{max-height:max(75px,calc(100dvh - 318px - clamp(110px,22dvh,210px)));overflow:auto;scrollbar-width:thin}
- .classic-game .cu-is-travelling .cu-left-hud{max-height:max(75px,calc(100dvh - 376px - clamp(110px,22dvh,210px)))}
- .classic-game .cu-in-combat:has(.command-hotbar) .cu-left-hud{max-height:max(75px,calc(100dvh - 318px - clamp(110px,22dvh,210px)))}
-}
-.cu-corner-meter .damage-meter{display:flex;flex-direction:column;max-height:32dvh}
-.cu-corner-meter .damage-meter>*{flex-shrink:0}
-.cu-corner-meter .damage-meter .dm-list{flex:1 1 auto;min-height:0;max-height:none}
-
-/* Transparent, movable addon windows; scene commands may cover the chat body. */
-.classic-game .cu-viewport .cu-chat-window{left:6px;right:auto;bottom:106px;z-index:2;background:linear-gradient(100deg,#09110d52,#11161118);border-color:#b6a47324;box-shadow:none;text-shadow:0 1px 2px #000,0 0 4px #000}
-.classic-game .cu-is-travelling .cu-chat-window{bottom:164px}
-.cu-chat-toolbar{background:linear-gradient(#252a2038,#171b151a);border-bottom-color:#b7a06c30;gap:2px}
-.cu-chat-toolbar [role=tab][data-state=active]{background:#8a734c24;border-color:#baa16a50;color:#ffe0a1}
-.cu-chat-toolbar [role=tab]{color:#d0c9b1}
-.cu-channel-history p{color:#d2ddbf}.cu-channel-history time{color:#b3b6a2}
 .cu-hud-drag{display:flex;align-items:center;justify-content:center;flex:0 0 28px;height:28px;margin-left:auto;padding:0;border:0;background:transparent;color:#c1b58d;cursor:grab!important;touch-action:none;user-select:none;opacity:.65}
 .cu-hud-drag:hover,.cu-hud-drag:focus-visible{opacity:1;background:#b7a06c18}.cu-hud-drag:active{cursor:grabbing!important}
 .cu-meter-drag{position:absolute;z-index:2;top:0;left:46%;margin:0;width:28px}
-.cu-chat-bubble{display:none}
-@media(max-width:800px){
- .classic-game .cu-viewport .cu-chat-window{width:min(380px,calc(100% - 12px));bottom:104px}
- .classic-game .cu-is-travelling .cu-chat-window{bottom:162px}
- .classic-game .cu-chat-window.cu-chat-compact{width:44px;height:44px;background:none;border:0;z-index:49}
- .cu-chat-compact .cu-chat-channels{display:none}
- .cu-chat-compact .cu-chat-bubble{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;border:1px solid #d2b87799;color:#ecd49e;background:#15201770;box-shadow:inset 0 0 0 2px #12191144,0 2px 8px #0004;padding:0}
- .cu-chat-window .cu-chat-toggle{display:flex;align-items:center;justify-content:center;flex:none;width:32px;min-height:36px;margin:0;border:0;background:none;color:#ddc797;padding:0}
- .cu-chat-toolbar [role=tab]{padding:6px 11px!important}
- .cu-chat-toolbar .cu-hud-drag{height:36px;flex-basis:28px}
- .cu-chat-window:not(.cu-chat-compact) .cu-chat-scroll{display:block}
- .cu-chat-toolbar .cu-mobile-meter{padding:6px;font-size:10px;white-space:nowrap}
+@media(min-width:801px){
+ .classic-game .cu-left-hud{max-height:max(75px,calc(100dvh - 510px));overflow:auto;scrollbar-width:thin}
+ .classic-game .cu-is-travelling .cu-left-hud{max-height:max(75px,calc(100dvh - 568px))}
 }
+@media(min-width:801px) and (max-height:750px){.classic-game .cu-corner-meter{max-height:24dvh}.classic-game .cu-right-hud{top:195px;bottom:calc(24dvh + 190px)}.classic-game .cu-quest-objective,.classic-game .cu-quest-tracker small{display:none}}
+@media(min-width:801px) and (max-width:1000px){.classic-game .cu-right-hud{bottom:150px}}
+@media(max-width:1000px){.classic-game .cu-corner-meter{display:none}}
+@media(max-width:800px){.classic-game .cu-viewport{height:100dvh;min-height:560px}.cu-live-dialog.cu-panel-meter{width:100%}.classic-game .cu-scene-caption{display:none}}
 
 /* Reuse the web battle frames without shrinking their names and resource bars. */
 .classic-game .cu-left-hud.cu-raid-hud{width:min(430px,42vw);max-width:calc(100vw - 54px)}

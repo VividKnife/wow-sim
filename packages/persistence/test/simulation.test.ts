@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {PGlite} from '@electric-sql/pglite';
 import {MemoryStore} from '../src/memory.ts';
 import {PostgresStore, type SqlPool} from '../src/postgres.ts';
-import {SimulationRepository} from '../src/simulation.ts';
+import {SimulationRepository, type DurableCheckpoint, type TransferBoundary} from '../src/simulation.ts';
 import type {Store} from '../src/store.ts';
 import {ResidentInstance} from '../../../apps/simulation-host/src/instance.ts';
 import type {InstanceCheckpoint} from '../../../apps/simulation-host/src/instance.ts';
@@ -174,25 +174,88 @@ test('atomic transfer rejects stale cursors, expired sources and reused destinat
    await repo.commit(owner,1,{instanceId:id,ownerEpoch:owner.epoch,rulesetVersion:'rules',contentHash:'content'});
    owner.commitSequence=1;sources.push(await repo.seal(owner,'join'));
   }
-  const create=async(tx:import('../src/store.ts').Transaction,{destination}:any)=>{
+  const create=async(tx:import('../src/store.ts').Transaction,{destinations:[destination]}:any)=>{
    calls++;await tx.put('wallets',{id:'test-asset',balance:100});
-   return {instanceId:destination.id,ownerEpoch:destination.epoch,rulesetVersion:'rules',contentHash:'content'};
+   return [{instanceId:destination.id,ownerEpoch:destination.epoch,rulesetVersion:'rules',contentHash:'content'}];
   };
-  await assert.rejects(repo.transfer('join',[{...sources[0],commitSequence:2},sources[1]],'target',create),/cursor/);
-  await assert.rejects(repo.transfer('different',sources,'target',create),/cursor/);
-  await assert.rejects(repo.transfer('join',sources,'one',create),/sources/);
+  await assert.rejects(repo.transfer('join',[{...sources[0],commitSequence:2},sources[1]],['target'],create),/cursor/);
+  await assert.rejects(repo.transfer('different',sources,['target'],create),/cursor/);
+  await assert.rejects(repo.transfer('join',sources,['one'],create),/sources/);
   assert.equal(calls,0);
-  await assert.rejects(repo.transfer('join',sources,'target',async(tx,c)=>{const result=await create(tx,c);now=2001;return result;}),/fenced/);
+  await assert.rejects(repo.transfer('join',sources,['target'],async(tx,c)=>{const result=await create(tx,c);now=2001;return result;}),/fenced/);
   assert.equal(await store.read(tx=>tx.get('wallets','test-asset')),null);
   assert.equal(await store.read(tx=>tx.get('simulation_owners','target')),null);
   assert.equal(await repo.load('target'),null);
   now=1500;
   await repo.acquire('occupied','another');
-  await assert.rejects(repo.transfer('join',sources,'occupied',create),/already exists/);
-  assert.equal((await repo.transfer('join',sources,'target',create)).duplicate,false);
-  now=5000;assert.equal((await repo.transfer('join',sources,'target',create)).duplicate,true,'lost response retries are safe even after original lease expiry');
+  await assert.rejects(repo.transfer('join',sources,['occupied'],create),/already exists/);
+  assert.equal((await repo.transfer('join',sources,['target'],create)).duplicate,false);
+  now=5000;assert.equal((await repo.transfer('join',sources,['target'],create)).duplicate,true,'lost response retries are safe even after original lease expiry');
   await assert.rejects(repo.acquire('one','resurrect'),/permanently transferred/);
   const target=await repo.acquire('target','recovered');assert.equal(target.commitSequence,1);
   assert.equal((await repo.commit(target,1,{instanceId:'target',ownerEpoch:target.epoch,rulesetVersion:'rules',contentHash:'content'})).duplicate,true);
+ }finally{await store.close();}
+});
+
+for(const backend of ['memory','sql'])test(`${backend}: one sealed room partitions atomically, survives a second-target write failure and recovers independently`,async()=>{
+ const raw:Store=backend==='memory'?new MemoryStore():new PostgresStore(embeddedPool(new PGlite()));
+ if(raw instanceof PostgresStore)await raw.initialize();
+ let fail=false,now=1000,calls=0;
+ const store:Store={read:work=>raw.read(work),close:()=>raw.close(),heartbeat:(...args)=>raw.heartbeat(...args),
+  transaction:(work,options)=>raw.transaction(tx=>work({...tx,put:async(table,row)=>{
+   await tx.put(table,row);
+   if(fail&&table==='simulation_checkpoints'&&row.id==='split:b')throw new Error('second target storage failure');
+  }}),options)};
+ const repo=new SimulationRepository(store,()=>now);
+ type Checkpoint=DurableCheckpoint&{units:string[];rngState:number};
+ try{
+  let source=await repo.acquire('shared','host',1000);
+  const original:Checkpoint={instanceId:source.id,ownerEpoch:source.epoch,rulesetVersion:'rules',contentHash:'content',units:['a','b'],rngState:283};
+  await repo.commit(source,1,original);source.commitSequence=1;source=await repo.seal(source,'split');
+  const create:TransferBoundary<Checkpoint>=async(tx,{destinations,sources})=>{
+   calls++;await tx.put('wallets',{id:'boundary-asset',balance:100});
+   return destinations.map((d,i)=>({...sources[0].checkpoint,instanceId:d.id,ownerEpoch:d.epoch,units:[sources[0].checkpoint.units[i]]}));
+  };
+  const ids=['split:a','split:b'];
+  for(const invalid of [[],['split:a','split:a'],['split:a',''],Array.from({length:41},(_,i)=>'room:'+i)])
+   await assert.rejects(repo.transfer('split',[source],invalid,create),/Invalid/);
+  const unchanged=async()=>{
+   assert.deepEqual((await repo.load<Checkpoint>('shared'))!.checkpoint,original);
+   assert.equal((await store.read(tx=>tx.get('simulation_owners','shared')))!.transferred,undefined);
+   for(const id of ids){assert.equal(await repo.load(id),null);assert.equal(await store.read(tx=>tx.get('simulation_owners',id)),null);}
+   assert.equal(await store.read(tx=>tx.get('wallets','boundary-asset')),null);
+   assert.equal(await store.read(tx=>tx.get('receipts','simulation-transfer:split')),null);
+  };
+  for(const corrupt of [
+   (rows:Checkpoint[])=>rows.slice(0,1),
+   (rows:Checkpoint[])=>[rows[0],rows[0]],
+   (rows:Checkpoint[])=>[rows[0],{...rows[1],instanceId:'foreign'}],
+   (rows:Checkpoint[])=>[rows[0],{...rows[1],ownerEpoch:2}],
+   (rows:Checkpoint[])=>[rows[0],{...rows[1],rulesetVersion:'foreign'}],
+  ]){
+   await assert.rejects(repo.transfer<Checkpoint>('split',[source],ids,async(tx,c)=>corrupt(await create(tx,c))),/checkpoint/);await unchanged();
+  }
+  await assert.rejects(repo.transfer<Checkpoint>('split',[source],ids,async(tx,c)=>{
+   c.sources[0].checkpoint.rulesetVersion='foreign';return create(tx,c);
+  }),/checkpoint/);await unchanged();
+  fail=true;await assert.rejects(repo.transfer('split',[source],ids,create),/second target storage failure/);await unchanged();
+  fail=false;
+  assert.deepEqual(await repo.transfer('split',[source],ids,create),{instanceIds:ids,duplicate:false});
+  const committedCalls=calls;now=5000;
+  assert.equal((await repo.transfer('split',[source],ids,create)).duplicate,true);assert.equal(calls,committedCalls);
+  await assert.rejects(repo.transfer('split',[source],['split:a','another'],create),/reused/);
+  await assert.rejects(repo.acquire('shared','stale'),/permanently transferred/);
+  await assert.rejects(repo.commit(source,2,original),/fenced/);
+  assert.equal(await repo.load('shared'),null);
+  assert.deepEqual((await store.read(tx=>tx.get('simulation_owners','shared')))!.transferred.destinationIds,ids);
+  for(const [i,id]of ids.entries()){
+   const checkpoint=(await repo.load<Checkpoint>(id))!.checkpoint,owner=await repo.acquire(id,'recovered:'+i);
+   assert.deepEqual(checkpoint.units,[i?'b':'a']);assert.equal(checkpoint.rngState,283);
+   assert.equal(owner.epoch,2);assert.equal(owner.commitSequence,1);
+   assert.equal((await repo.commit(owner,1,{...checkpoint,ownerEpoch:owner.epoch})).duplicate,true);
+   await repo.commit(owner,2,{...checkpoint,ownerEpoch:owner.epoch,rngState:284+i});
+  }
+  assert.equal((await repo.load<Checkpoint>(ids[0]))!.checkpoint.rngState,284);
+  assert.equal((await repo.load<Checkpoint>(ids[1]))!.checkpoint.rngState,285);
  }finally{await store.close();}
 });

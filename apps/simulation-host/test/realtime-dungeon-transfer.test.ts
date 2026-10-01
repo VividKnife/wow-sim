@@ -86,21 +86,21 @@ for(const backend of ['memory','sql'])for(const mode of ['together','separate'])
     const assets=await store.read(async tx=>({items:await tx.list('items'),wallets:await tx.list('wallets')}));
     let destinationId='dungeon:live-entry';
     const boundary=dungeonTransferBoundary(request),owners=prepared.map(p=>p.owner);
-    await assert.rejects(repository.transfer(transferId,owners,destinationId,boundary),/各自在副本入口/);
+    await assert.rejects(repository.transfer(transferId,owners,[destinationId],boundary),/各自在副本入口/);
     await store.transaction(tx=>requestDungeonEntry(tx,request));
     if(mode==='together'){
-      await assert.rejects(repository.transfer(transferId,owners,destinationId,boundary),/各自在副本入口/);
+      await assert.rejects(repository.transfer(transferId,owners,[destinationId],boundary),/各自在副本入口/);
       await store.transaction(tx=>requestDungeonEntry(tx,{...request,accountId:'alice',actorId:admissions[0].state.id}));
     }
-    await assert.rejects(repository.transfer<InstanceCheckpoint>(transferId,owners,destinationId,async(tx,context)=>{
+    await assert.rejects(repository.transfer<InstanceCheckpoint>(transferId,owners,[destinationId],async(tx,context)=>{
       await boundary(tx,context);throw new Error('Failure after group binding and claims');
     }),/Failure after group binding/);
     const rolledBack=(await social.snapshot('alice',admissions[0].state.id)).group!;
     assert.equal(rolledBack.instanceId,undefined);assert.equal(rolledBack.entry!.id,entry.id);
     assert.equal(await repository.load(destinationId),null);
     assert.equal((await characters.find('bob',admissions[1].state.id))!.instanceId,admissions[1].instanceId);
-    await repository.transfer(transferId,owners,destinationId,boundary);
-    assert.equal((await repository.transfer(transferId,owners,destinationId,boundary)).duplicate,true);
+    await repository.transfer(transferId,owners,[destinationId],boundary);
+    assert.equal((await repository.transfer(transferId,owners,[destinationId],boundary)).duplicate,true);
     const entered=(await social.snapshot('alice',admissions[0].state.id)).group!;
     assert.equal(entered.instanceId,destinationId);assert.equal(entered.entry!.id,entry.id);
     await assert.rejects(command(1,{type:'leave'}),/先离开副本/);
@@ -128,14 +128,14 @@ for(const backend of ['memory','sql'])for(const mode of ['together','separate'])
       await store.transaction(tx=>requestDungeonEntry(tx,nextRequest));
       const next=await SimulationSession.prepareGroupTransfer([target,sessions[0]],nextTransferId);
       const nextDestination='dungeon:later-arrival',nextBoundary=dungeonTransferBoundary(nextRequest);
-      await assert.rejects(repository.transfer(nextTransferId,[next[1].owner],nextDestination,nextBoundary),/Existing dungeon/);
-      await assert.rejects(repository.transfer<InstanceCheckpoint>(nextTransferId,next.map(p=>p.owner),nextDestination,async(tx,context)=>{
+      await assert.rejects(repository.transfer(nextTransferId,[next[1].owner],[nextDestination],nextBoundary),/Existing dungeon/);
+      await assert.rejects(repository.transfer<InstanceCheckpoint>(nextTransferId,next.map(p=>p.owner),[nextDestination],async(tx,context)=>{
         await nextBoundary(tx,context);throw new Error('Failed later arrival');
       }),/Failed later arrival/);
       assert.equal((await social.snapshot('bob',admissions[1].state.id)).group!.instanceId,destinationId);
       assert.equal((await characters.find('alice',admissions[0].state.id))!.instanceId,admissions[0].instanceId);
-      await repository.transfer(nextTransferId,next.map(p=>p.owner),nextDestination,nextBoundary);
-      assert.equal((await repository.transfer(nextTransferId,next.map(p=>p.owner),nextDestination,nextBoundary)).duplicate,true);
+      await repository.transfer(nextTransferId,next.map(p=>p.owner),[nextDestination],nextBoundary);
+      assert.equal((await repository.transfer(nextTransferId,next.map(p=>p.owner),[nextDestination],nextBoundary)).duplicate,true);
       await target.discard();target=undefined;await sessions[0].discard();
       for(const p of next){
         await assert.rejects(repository.unseal(p.owner,nextTransferId),/fenced/);

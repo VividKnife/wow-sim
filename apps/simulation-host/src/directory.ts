@@ -110,7 +110,7 @@ export class SimulationDirectory {
    try{
     const prepared=sessions.length===1?[await sessions[0].prepareTransfer(transferId,async checkpoint=>Math.max(checkpoint.state.wallAt,...checkpoint.recentInputs.filter(row=>row.receipt.status==='queued').map(row=>row.receipt.effectiveWallAt)))]:
       await SimulationSession.prepareGroupTransfer(sessions,transferId);
-    await this.repository.transfer(transferId,prepared.map(p=>p.owner),destinationId,dungeonTransferBoundary(request,Date.now,input));
+    await this.repository.transfer(transferId,prepared.map(p=>p.owner),[destinationId],dungeonTransferBoundary(request,Date.now,input));
     await Promise.all(sessions.map(s=>s.discard()));
     // Free source capacity before recovering the committed destination. No
     // in-memory state handoff is needed, including after a lost acknowledgement.

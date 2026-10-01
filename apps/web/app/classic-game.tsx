@@ -1,8 +1,8 @@
-import {SocialChat} from './social';
+import ClassicChat from './classic-chat';
 
 import {useEffect,useRef,useState,type CSSProperties,type ReactNode} from 'react';
-import {Dialog,Tabs} from 'radix-ui';
-import {Swords,X,Square,ArrowLeftRight,MessageCircle,GripHorizontal} from 'lucide-react';
+import {Dialog} from 'radix-ui';
+import {Swords,X,Square,ArrowLeftRight,GripHorizontal} from 'lucide-react';
 import {classicMenus,classicStopAction} from '@/lib/classic-interface.js';
 import {mapRegions,mapPoints,playerMapPoint,travelMapFrame} from '@/lib/world-map.js';
 import {scenePresentation,instanceActions} from '@/lib/scene-presentation.js';
@@ -14,9 +14,8 @@ import SceneUiToggle from './scene-ui-toggle';
 import LiveDamageMeter from './live-damage-meter';
 import LiveRaidFrames from './live-raid-frames';
 import JourneyLog from './journey-log';
-import {journeyTime} from '@/lib/journey-time.js';
-import {chatChannelLogs} from '@/lib/classic-chat-channels.js';
 import ClassIcon from './class-icon';
+import {classColors as colors} from '@/lib/class-colors';
 import {useHudDrag} from '@/lib/use-hud-drag';
 import type {GameProps} from './game-ui';
 import {useLivePlayerVitals} from '@/lib/use-live-player-vitals';
@@ -24,7 +23,6 @@ import './journey.css';
 import './classic-game.css';
 
 type Model=GameProps['data'];
-const colors:Record<number,string>={1:'#c69b6d',2:'#f48cba',3:'#aad372',4:'#fff468',5:'#eee9da',7:'#358bd1',8:'#69ccef',9:'#ad91e3',11:'#ff9b45'};
 const percent=(value:number,max:number)=>Math.min(100,Math.max(0,100*(value||0)/Math.max(1,max||0)));
 const fmt=(value:number)=>Math.round(value||0).toLocaleString('en-US');
 const extraMenus=[{id:'meter',name:'伤害统计',icon:'inv_sword_04'},{id:'settings',name:'设置',icon:'inv_misc_gear_01'},{id:'raid',name:'团队副本',icon:'inv_misc_head_dragon_01'},{id:'activities',name:'野外活动',icon:'ability_hunter_snipershot'},{id:'log',name:'战报',icon:'inv_sword_04'},{id:'account',name:'角色与后台活动',icon:'inv_misc_book_09'},{id:'mounts',name:'坐骑',icon:'ability_mount_ridinghorse'}];
@@ -37,11 +35,10 @@ function ClassicPlayerFrame({state,data,playback,contentVersion,onOpen}:{state:a
 }
 type Props=GameProps&{canLead:boolean;panel:string|null;onPanelChange:(panel:string|null)=>void;renderPanel:(panel:string)=>ReactNode;onStyleChange:()=>void;onObserve:()=>void;modalBattleOpen:boolean;overview:ReactNode;status:ReactNode;utilities:ReactNode;activityLabel:string};
 export default function ClassicGame(props:Props){
- const {state:s,data:d,busy,send,panel,onPanelChange,onStyleChange,onObserve,renderPanel,overview,status,utilities,activityLabel}=props;
+ const {state:s,data:d,busy,send,panel,onPanelChange,onStyleChange,onObserve,renderPanel,status,utilities,activityLabel}=props;
  const [commandMemberId,setCommandMemberId]=useState(s.id);
  const [uiHidden,setUiHidden]=useState(false);
- const [chatExpanded,setChatExpanded]=useState(false);
- const {ref:chatRef,style:chatStyle,handle:chatHandle,reset:resetChat}=useHudDrag();
+ const chatHud=useHudDrag();
  const {ref:meterRef,style:meterStyle,handle:meterHandle,reset:resetMeter}=useHudDrag();
  const focus=useRef<HTMLElement|null>(null),home=useRef<HTMLButtonElement|null>(null);
  const open=(id:string)=>{focus.current=document.activeElement instanceof HTMLElement?document.activeElement:null;onPanelChange(id);};
@@ -77,7 +74,6 @@ export default function ClassicGame(props:Props){
   return <button key={unit.id} className="cu-member" aria-pressed={battling&&!!d.combatCommand&&commandMemberId===unit.id} onClick={()=>battling&&d.combatCommand?setCommandMemberId(unit.id):open(members.length>5?'raid':'party')} style={{'--class-color':colors[unit.classId]||'#bdad8e'} as CSSProperties} title={`${unit.name} · 生命 ${fmt(hp)}/${fmt(maxHp)}`}><ClassIcon classId={unit.classId} size={compact?18:24}/><span className="cu-member-bars"><b><span>{unit.name}</span><small>{unit.level}</small></b><span className="cu-member-hp"><i style={{width:percent(hp,maxHp)+'%'}}/></span>{maxMana>0&&<span className="cu-member-mp"><i style={{width:percent(mana,maxMana)+'%'}}/></span>}</span><em>{Math.round(percent(hp,maxHp))}%</em></button>;
  })}</div>;
  const damageMeter=<LiveDamageMeter state={s} data={d} playback={props.playback} contentVersion={props.contentVersion} empty={<div className="cu-meter-empty"><Swords size={22}/><h3>伤害统计</h3><p>尚无战斗记录。战斗中可实时查看成员伤害、DPS 与技能明细。</p><button className="cu-gold-button" onClick={()=>open('activities')}>查看野外活动</button></div>}/>;
- const generalLogs=chatChannelLogs(s.logs,'general'),combatLogs=chatChannelLogs(s.logs,'combat');
  return <div className={`classic-game${uiHidden?' scene-ui-hidden':''}`}>
   <section className={`cu-viewport ${battling?'cu-in-combat':''} ${travelling?'cu-is-travelling':''}`} aria-label="经典游戏主界面">
    <div className="cu-world" inert={!!panel||props.modalBattleOpen}><WorldScene {...props} uiHidden={uiHidden} commandMemberId={commandMemberId} onCommandMemberChange={setCommandMemberId} animationPaused={!!panel||props.modalBattleOpen}/></div>
@@ -93,20 +89,7 @@ export default function ClassicGame(props:Props){
    <aside className={`cu-left-hud${members.length>5?' cu-raid-hud':''}`} aria-label="小队状态"><div className="cu-hud-heading"><span>{members.length>5?'团队':'冒险小队'} · {members.length} 人</span><button onClick={()=>open(members.length>5?'raid':'party')}>管理</button></div>{members.length>5?<LiveRaidFrames state={s} data={d} playback={props.playback} contentVersion={props.contentVersion} selectedId={commandMemberId} onSelect={setCommandMemberId}/>:groupFrames(true)}</aside>
    <aside className="cu-right-hud" aria-label="任务追踪"><h2 className="cu-quest-tracker-heading">任务追踪 <span>{quests.length}</span></h2>{quests.length?quests.map((quest:Model)=><button key={quest.id} className="cu-quest-tracker" onClick={()=>open('quests')}><b>{quest.complete?'?':'◇'} {quest.name}</b>{quest.objectives.map((objective:Model,i:number)=><span className="cu-quest-objective" key={i}>{objective.name} {objective.count}/{objective.required}</span>)}<small>{quest.complete?'返回委托人领取报酬':'点击查看任务与导航'}</small></button>):<button className="cu-quest-tracker" onClick={()=>open('nearby')}><b>{available?`! ${available} 个可接任务`:'暂无追踪任务'}</b><small>{available?'与附近人物交谈':'查看附近人物与服务'}</small></button>}</aside><div className="cu-corner-meter" ref={meterRef} style={meterStyle}><button className="cu-hud-drag cu-meter-drag" aria-label="移动伤害统计" title="拖动移动 · 方向键微调 · 双击或 Home 复位" {...meterHandle}><GripHorizontal size={16}/></button>{damageMeter}</div>
    {!battling&&!instance&&<div className="cu-scene-caption"><span className="cu-nameplate">{s.name}</span><small>{s.mounted?'骑乘中':`${d.raceName} · ${d.className}`}</small></div>}
-   <aside className={`cu-lower-left cu-chat-window ${!chatExpanded?'cu-chat-compact':''}`} aria-label="信息与战报频道" ref={chatRef} style={chatStyle}>
-    <button className="cu-chat-bubble" aria-label="打开聊天与战报" aria-expanded={chatExpanded} onClick={()=>setChatExpanded(true)}><MessageCircle size={21}/></button>
-    <Tabs.Root className="cu-chat-channels" defaultValue="social" onValueChange={()=>setChatExpanded(true)}>
-     <div className="cu-chat-toolbar"><Tabs.List aria-label="信息频道"><Tabs.Trigger value="social">聊天</Tabs.Trigger><Tabs.Trigger value="general">综合</Tabs.Trigger><Tabs.Trigger value="combat">战斗详情</Tabs.Trigger><Tabs.Trigger value="battle">战报</Tabs.Trigger></Tabs.List><button className="cu-hud-drag" aria-label="移动聊天框" title="拖动移动 · 方向键微调 · 双击或 Home 复位" {...chatHandle}><GripHorizontal size={16}/></button><button className="cu-chat-toggle" aria-label="收起信息频道" aria-expanded={chatExpanded} onClick={()=>setChatExpanded(false)}><X size={15}/></button><button className="cu-mobile-meter" onClick={()=>open('meter')}>伤害统计</button></div>
-     <Tabs.Content value="social" className="cu-chat-scroll"><SocialChat/></Tabs.Content>
-     <Tabs.Content value="general" className="cu-chat-scroll" tabIndex={0}>
-      <div className="cu-chat" role="status"><span>[{instance?'副本':'旅途'}]</span> {busy?'正在处理操作…':s.activity.reason||instanceStatus||generalLogs[0]?.text||'选择目的地，开始旅程。'}</div>
-      <div className="cu-chat-overview">{overview}</div>
-      <div className="cu-channel-history">{generalLogs.map((log:Model)=><p key={log.id}><time>{journeyTime(log.at,s).label}</time><span>{log.text}</span></p>)}</div>
-     </Tabs.Content>
-     <Tabs.Content value="combat" className="cu-chat-scroll" tabIndex={0}><div className="cu-channel-history">{combatLogs.map((log:Model)=><p key={log.id}><time>{journeyTime(log.at,s).label}</time><span>{log.text}</span></p>)}{!combatLogs.length&&<p>尚无战斗详情。</p>}</div></Tabs.Content>
-     <Tabs.Content value="battle" className="cu-chat-scroll" tabIndex={0}><JourneyLog {...props} onObserve={onObserve}/></Tabs.Content>
-    </Tabs.Root>
-   </aside>
+   <ClassicChat state={s} hud={chatHud} onMeter={()=>open('meter')} battle={<JourneyLog {...props} onObserve={onObserve}/>}/>
    {(!battling||!d.combatCommand)&&<div className="cu-actions" aria-label="场景操作">{s.activity.paused&&<button disabled={busy} onClick={()=>open('bag')}><span>整理背包 {s.bag.length}/{d.bagCapacity} · 待拾取 {s.pending.length} 组</span></button>}{s.dungeon&&!battling&&<label className="cu-command-toggle"><input type="checkbox" checked={!!s.settings.commandCombat} disabled={busy||!props.canLead} onChange={e=>void send({type:'combatCommand',order:'prepare',enabled:e.target.checked})}/>指挥战斗</label>}{showStop&&<button title={s.activity.stopQueued?stop.label:stop.disabled?(instance?'当前没有正在推进的副本路线。':'当前无需停止；地面旅行可在地图中改道。'):stop.label} disabled={busy||stop.disabled||!!instance&&!props.canLead} onClick={()=>void send(stop.command)}><Square size={14}/><span>{stop.label}</span></button>}{actions?<>{(['revive','recover'] as const).map(key=><button key={key} disabled={busy||!props.canLead||actions[key].disabled} title={actions[key].reason} onClick={()=>void send(actions[key].command)}><Icon name={key==='revive'?'spell_holy_resurrection':'inv_drink_07'}/><span>{actions[key].label}</span></button>)}<button className="cu-fight-button" disabled={!battling&&(busy||!props.canLead||actions.advance.disabled)} title={actions.advance.reason} onClick={()=>battling?onObserve():void send(actions.advance.command)}><Swords size={17}/><span>{battling?'战斗详情':actions.advance.label}</span></button></>:<><button className="cu-fight-button" onClick={()=>battling?onObserve():open('activities')}><Swords size={17}/><span>{battling?'战斗详情':'野外活动'}</span></button></>}<button ref={home} onClick={()=>open('nearby')} aria-haspopup="dialog" title="附近人物 (N)"><Icon name="spell_holy_magicalsentry"/><span>附近人物</span></button></div>}
    {['gather','professionGather'].includes(s.activity.type)&&<div className="cu-gather-progress"><ActivityProgress state={s} data={d}/></div>}
    <ClassicActionBar key={s.id} {...props} blocked={uiHidden||!!panel||props.modalBattleOpen}/>
@@ -114,6 +97,6 @@ export default function ClassicGame(props:Props){
   </section>
   <div className="cu-status-area">{status}</div>
   {utilities}
-  <Dialog.Root open={!!panel} onOpenChange={isOpen=>{if(!isOpen)onPanelChange(null);}}><Dialog.Portal><Dialog.Overlay className="cu-dialog-overlay"/><Dialog.Content className={`cu-dialog cu-live-dialog cu-panel-${panel}`} onCloseAutoFocus={event=>{event.preventDefault();requestAnimationFrame(()=>{if(document.querySelector('[role=dialog][data-state=open]'))return;(focus.current?.isConnected?focus.current:home.current)?.focus({preventScroll:true});});}}><header className="cu-dialog-header"><span className="cu-dialog-medallion"><Icon name={menu?.icon||'inv_misc_book_09'}/></span><div><Dialog.Title>{menu?.name||'游戏功能'}</Dialog.Title><Dialog.Description>{presentation.name} · {activityLabel}</Dialog.Description></div><Dialog.Close className="cu-close" aria-label="关闭窗口"><X size={20}/></Dialog.Close></header><div className="cu-dialog-body">{panel==='meter'?damageMeter:panel&&renderPanel(panel)}{panel==='settings'&&<div className="cu-settings-navigation"><button className="cu-gold-button" onClick={()=>{resetChat();resetMeter();}}>重置聊天与统计位置</button><button className="cu-gold-button" onClick={()=>open('account')}>角色与后台活动</button><button className="cu-gold-button" onClick={onStyleChange}><ArrowLeftRight size={14}/>切换为网页 UI</button></div>}</div></Dialog.Content></Dialog.Portal></Dialog.Root>
+  <Dialog.Root open={!!panel} onOpenChange={isOpen=>{if(!isOpen)onPanelChange(null);}}><Dialog.Portal><Dialog.Overlay className="cu-dialog-overlay"/><Dialog.Content className={`cu-dialog cu-live-dialog cu-panel-${panel}`} onCloseAutoFocus={event=>{event.preventDefault();requestAnimationFrame(()=>{if(document.querySelector('[role=dialog][data-state=open]'))return;(focus.current?.isConnected?focus.current:home.current)?.focus({preventScroll:true});});}}><header className="cu-dialog-header"><span className="cu-dialog-medallion"><Icon name={menu?.icon||'inv_misc_book_09'}/></span><div><Dialog.Title>{menu?.name||'游戏功能'}</Dialog.Title><Dialog.Description>{presentation.name} · {activityLabel}</Dialog.Description></div><Dialog.Close className="cu-close" aria-label="关闭窗口"><X size={20}/></Dialog.Close></header><div className="cu-dialog-body">{panel==='meter'?damageMeter:panel&&renderPanel(panel)}{panel==='settings'&&<div className="cu-settings-navigation"><button className="cu-gold-button" onClick={()=>{chatHud.reset();resetMeter();}}>重置聊天与统计位置</button><button className="cu-gold-button" onClick={()=>open('account')}>角色与后台活动</button><button className="cu-gold-button" onClick={onStyleChange}><ArrowLeftRight size={14}/>切换为网页 UI</button></div>}</div></Dialog.Content></Dialog.Portal></Dialog.Root>
  </div>;
 }

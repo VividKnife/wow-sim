@@ -2,23 +2,38 @@ import {enterGoldRaid,goldRaidAction} from '../../../../packages/game-domain/src
 import {createGame,act,advanceOwned,stats,view} from '../../../../packages/game-domain/src/rules/engine.js';
 import {startCombat} from '../../../../packages/game-domain/src/rules/combat.js';
 import {createNpcMember,companionSkills} from '../../../../packages/game-domain/src/rules/party.js';
-import {createMoltenCoreDemo,startMoltenCoreBoss} from '../../../../packages/game-domain/src/molten-core-demo';
+import {createMoltenCoreDemo} from '../../../../packages/game-domain/src/molten-core-demo';
 import {beginMoltenCoreBattle} from '../../../../packages/game-domain/src/rules/molten-core-battle.js';
 import {defaultRaidTactics,moltenCoreTick} from '../../../../packages/game-domain/src/rules/molten-core-encounter.js';
+import {moltenCoreBosses} from '../../../../packages/game-domain/src/rules/molten-core-content.js';
+import {onyxiaBoss} from '../../../../packages/game-domain/src/rules/onyxia-content.js';
 import {arenaView} from '../../../../packages/game-domain/src/rules/arena.js';
 import {clientContent} from '../../../../packages/game-domain/src/rules/client-content.js';
 import {projectClientSnapshot} from '../../../../packages/game-domain/src/rules/client-snapshot';
 
-function fixture(mode:string):any{
- if(['ragnaros','onyxia'].includes(mode)){
+const raidBosses=[...moltenCoreBosses,onyxiaBoss];
+// A prepared roster is expensive to recruit. Clone its real production snapshot
+// when switching rooms so the preview stays responsive and every case starts fresh.
+const preparedRaids=new Map<string,any>();
+function preparedRaid(raidId:string){
+ if(!preparedRaids.has(raidId)){
   const s:any=createMoltenCoreDemo().state;
-  s.party=s.party.slice(0,4);s.growthPolicy='player';enterGoldRaid(s,mode==='onyxia'?'onyxias-lair':'molten-core');for(const type of ['goldPublish','goldRecommend','goldLaunch'])goldRaidAction(s,{type});
+  s.party=s.party.slice(0,4);s.growthPolicy='player';enterGoldRaid(s,raidId);for(const type of ['goldPublish','goldRecommend','goldLaunch'])goldRaidAction(s,{type});
+  preparedRaids.set(raidId,s);
+ }
+ return structuredClone(preparedRaids.get(raidId));
+}
+function fixture(mode:string,stage='battle'):any{
+ if(mode==='mc')mode='lucifron';
+ if(raidBosses.some(b=>b.id===mode)){
+  const s=preparedRaid(mode==='onyxia'?'onyxias-lair':'molten-core');
+  s.goldRaid.locationId=mode;
+  if(stage==='preparation')return s;
   beginMoltenCoreBattle(s,mode,{...defaultRaidTactics});
-  if(mode==='onyxia'){s.combat.enemies[0].hp*=.6;moltenCoreTick(s,[s,...s.party],()=>{});s.combat.raidEncounter.nextBreath=s.clock;moltenCoreTick(s,[s,...s.party],()=>{});}
+  if(mode==='onyxia'&&stage==='mechanic'){s.combat.enemies[0].hp*=.6;moltenCoreTick(s,[s,...s.party],()=>{});s.combat.raidEncounter.nextBreath=s.clock;moltenCoreTick(s,[s,...s.party],()=>{});}
   return s;
  }
 
- if(mode==='mc'){const s=startMoltenCoreBoss(createMoltenCoreDemo(),'lucifron').state;s.combat.ground='molten';return s;}
  let s:any=createGame('艾琳 · 霜语',283,0,{classId:8,raceId:1,gender:'female'});
  s.level=20;s.learned=companionSkills(s);s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
  if(mode!=='world')for(const [id,role] of [['warrior','tank'],['priest','healer'],['rogue','melee'],['warlock','ranged']])createNpcMember(s,id,{role});
@@ -48,7 +63,7 @@ onmessage=({data})=>{
  try{
   if(data.type==='fixture'){
    clearTimeout(timer);generation=data.generation;mode=data.mode;paused=data.paused;
-   state=fixture(mode);postMessage({type:'content',content:clientContent()});publish();schedule();return;
+   state=fixture(mode,data.stage);postMessage({type:'content',content:clientContent(),raidBosses:raidBosses.map(({id,name,subtitle})=>({id,name,subtitle}))});publish();schedule();return;
   }
   if(data.type==='visibility'){visible=data.visible;schedule();return;}
   if(data.generation!==generation||!state)return;

@@ -31,7 +31,7 @@ for(const backend of ['memory','sql'])test(`${backend}: invite, role check, NPC 
  await cmd('alice',{type:'proposal',proposalId:matched.proposal!.id,accept:true});assert.equal((await social.snapshot('bob','bob')).group!.status,'proposal');
  await cmd('bob',{type:'proposal',proposalId:matched.proposal!.id,accept:true});const done=await new SocialService(store,f.now).snapshot('alice','alice');assert.equal(done.group!.status,'matched');assert.equal(done.policy.autoTeleport,false);assert.equal(done.group!.entry!.id,matched.proposal!.id);
  assert.equal((await store.read(tx=>tx.get('characters','alice')))!.rules.location,'home');
- await cmd('alice',{type:'chat',channel:'party',text:'队伍秘密'});assert.equal((await social.snapshot('bob','bob')).messages.party[0].text,'队伍秘密');assert.equal((await social.snapshot('carol','carol')).messages.party.length,0);
+ await cmd('alice',{type:'chat',channel:'party',text:'队伍秘密'});assert.equal((await social.snapshot('bob','bob')).messages.party[0].text,'队伍秘密');assert.equal((await social.snapshot('bob','bob')).messages.party[0].classId,8);assert.equal((await social.snapshot('carol','carol')).messages.party.length,0);
  await assert.rejects(cmd('carol',{type:'chat',channel:'party',text:'冒充队友'}),/加入队伍/);
  await cmd('bob',{type:'leave'});assert.equal((await social.snapshot('bob','bob')).messages.party.length,0);
  }finally{await store.close();}
@@ -55,8 +55,8 @@ test('concurrent invitations, forged control, replay, rate limiting, and bounded
  const invites=await Promise.allSettled([cmd('alice',{type:'partyInvite',targetId:'bob'}),cmd('carol',{type:'partyInvite',targetId:'bob'})]);assert.equal(invites.filter(r=>r.status==='fulfilled').length,1);
  const invite=(await social.snapshot('bob','bob')).incoming[0];await assert.rejects(cmd('dave',{type:'respond',inviteId:invite.id,accept:true}),/失效/);
  await cmd('bob',{type:'respond',inviteId:invite.id,accept:true});await assert.rejects(cmd('bob',{type:'kick',targetId:'alice'}),/队长/);
- const command={type:'chat',channel:'world',text:'<img src=x onerror=alert(1)>',requestId:'duplicate-message'};
- await cmd('alice',command);await cmd('alice',command);assert.equal((await social.snapshot('bob','bob')).messages.world.length,1);
+ const command={type:'chat',channel:'world',text:'<img src=x onerror=alert(1)>',requestId:'duplicate-message',classId:1};
+ await cmd('alice',command);await cmd('alice',command);assert.equal((await social.snapshot('bob','bob')).messages.world.length,1);assert.equal((await social.snapshot('bob','bob')).messages.world[0].classId,8);
  await assert.rejects(cmd('alice',{...command,text:'changed'}),/另一操作/);await assert.rejects(cmd('alice',{type:'chat',channel:'world',text:'spam'}),/太快/);
  for(let i=0;i<102;i++){advance(1001);await cmd('alice',{type:'chat',channel:'world',text:`message ${i}`});}
  const snapshot=await social.snapshot('alice','alice');assert.equal(snapshot.messages.world.length,100);assert.equal((await store.read(tx=>tx.get('social_people','alice')))!.receipts.length,64);
@@ -70,7 +70,7 @@ test('queue cancels when offline and rejects incompatible roles, levels and fore
 test('world recruitment is emitted once and supports direct role joining with stale/full/level checks',async()=>{
  const {social,cmd,store,advance}=await fixture();await cmd('alice',{type:'role',role:'dps'});
  const command={type:'queue',dungeonId:'deadmines',requestId:'queue-announcement'};await cmd('alice',command);await cmd('alice',command);
- const post=(await social.snapshot('bob','bob')).messages.world[0];assert.equal(post.kind,'recruitment');assert.equal(post.open,true);assert.equal(post.needed.healer,1);assert.equal((await social.snapshot('alice','alice')).messages.world.length,1);
+ const post=(await social.snapshot('bob','bob')).messages.world[0];assert.equal(post.kind,'recruitment');assert.equal(post.classId,8);assert.equal(post.open,true);assert.equal(post.needed.healer,1);assert.equal((await social.snapshot('alice','alice')).messages.world.length,1);
  await cmd('bob',{type:'recruitJoin',groupId:post.groupId,recruitmentId:post.recruitmentId,role:'healer'});
  assert.equal((await social.snapshot('bob','bob')).group!.leaderId,'alice');assert.equal((await social.snapshot('bob','bob')).messages.world[0].needed.healer,0);
  await assert.rejects(cmd('carol',{type:'recruitJoin',groupId:post.groupId,recruitmentId:post.recruitmentId,role:'healer'}),/职业/);

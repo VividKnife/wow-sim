@@ -4,6 +4,7 @@ import {createServer, type IncomingMessage, type ServerResponse} from 'node:http
 import {createHash} from 'node:crypto';
 import {WebSocketServer, type WebSocket} from 'ws';
 import {accountFrom,sessionToken,sessionCookie,sameOrigin,type Accounts} from './session-auth.ts';
+import {createPublicationLoop} from './publication-loop.ts';
 import {clientAddress} from './client-address.ts';
 import {characterPreview} from './character-preview.js';
 import {handleModelRequest} from './wowhead-model-assets.js';
@@ -394,12 +395,10 @@ export function createGameServer(options: GameServerOptions) {
   });
 
   webSocketServer.on('connection', (socket: WebSocket, _request: IncomingMessage, accountId: string) => {
-    let timer: NodeJS.Timeout | undefined;
-    let running = false;
     let selectedCharacter: string | undefined;
     let lastKey = '';
     let deliveryMode: 'snapshot' | 'delta' = 'snapshot';
-    let realtime=false,lastReadAt=0,lastFullAt=0,lastAuthAt=0,lastPingAt=0,lastHeartbeatAt=0,backloggedAt=0;
+    let realtime=false,lastFullAt=0,lastAuthAt=0,lastPingAt=0,lastHeartbeatAt=0,backloggedAt=0;
     let baseline: GameSnapshotEvent | null = null;
     let subscriptionId = 0;
     let lastPongAt = Date.now();
@@ -416,7 +415,7 @@ export function createGameServer(options: GameServerOptions) {
     };
 
     const sendSnapshot = async (force = false) => {
-      if (running || socket.readyState !== socket.OPEN) return;
+      if (socket.readyState !== socket.OPEN) return;
       if (Date.now() - lastPongAt > 30_000) { socket.terminate(); return; }
       const now=Date.now();
       // One full baseline may exceed the watermark. Let it drain instead of
@@ -430,18 +429,14 @@ export function createGameServer(options: GameServerOptions) {
       backloggedAt=0;
       if(now-lastPingAt>=10000){socket.ping();lastPingAt=now;}
       const fighting=!!baseline?.snapshot?.player?.combat;
-      const interval=realtime&&fighting?100:pollIntervalMs;
-      if(!force&&now-lastReadAt<interval)return;
-      lastReadAt=now;
       const scope=realtime&&fighting&&!force&&now-lastFullAt<1000?'combat':'full';
-      running = true;
       const activeSubscription = subscriptionId;
       const activeCharacter = selectedCharacter;
       try {
         if(now-lastAuthAt>=1000){await accountFrom(_request,options.accounts);lastAuthAt=now;}
         const snapshot = await options.service.snapshot(accountId, activeCharacter, true,scope);
+        if (activeSubscription !== subscriptionId || socket.readyState !== socket.OPEN) return;
         if(scope==='full')lastFullAt=now;
-        if (activeSubscription !== subscriptionId) return;
         const sequence = snapshot.response?.execution?.streamSequence??snapshot.instance?.sequence ?? 0;
         const key = `${snapshot.response?.execution?.ownerEpoch??0}:${snapshot.revision}:${sequence}:${activeCharacter || ''}:${JSON.stringify(snapshot.state?.serverBuffs||[])}`;
         if (force || key !== lastKey) {
@@ -466,13 +461,15 @@ export function createGameServer(options: GameServerOptions) {
         }
         if(realtime&&now-lastHeartbeatAt>=1000){sendEvent({type:'heartbeat'});lastHeartbeatAt=now;}
       } catch (error) {
+        if(activeSubscription!==subscriptionId||socket.readyState!==socket.OPEN)return;
         const details = errorDetails(error);
         sendEvent({type: 'error', ...details.body});
         if (details.status === 401 || details.status === 403 || details.status === 404) socket.close(1008, 'Subscription denied');
-      } finally {
-        running = false;
       }
     };
+    const publication=createPublicationLoop({publish:sendSnapshot,
+      interval:()=>realtime&&baseline?.snapshot?.player?.combat?100:pollIntervalMs,
+      onError:()=>socket.close(1011,'Publication failed')});
 
     socket.on('message', (raw) => {
       try {
@@ -487,19 +484,17 @@ export function createGameServer(options: GameServerOptions) {
         }
         selectedCharacter = message.characterId;
         deliveryMode = message.mode ?? 'snapshot';
-        realtime=message.realtime===true;lastFullAt=0;lastReadAt=0;
+        realtime=message.realtime===true;lastFullAt=0;
         subscriptionId++;
         lastKey = '';
         baseline = null;
-        if (timer) clearInterval(timer);
-        void sendSnapshot(true);
-        timer = setInterval(() => void sendSnapshot(), realtime?Math.min(100,pollIntervalMs):pollIntervalMs);
+        publication.request();
       } catch {
         sendEvent({type: 'error', error: '订阅请求无效', code: 'INVALID_SUBSCRIPTION'});
         socket.close(1008, 'Invalid subscription');
       }
     });
-    socket.once('close', () => { if (timer) clearInterval(timer); });
+    socket.once('close', () => publication.close());
   });
 
   return {

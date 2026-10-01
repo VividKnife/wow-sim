@@ -1,3 +1,4 @@
+import {memoizeDerived} from './derived-cache.js';
 import {conservingRaidMana} from './raid-healing.js';
 import {commandOrder,commandProtected,commandDamageMode,commandDamageSpell} from './combat-command.js';
 import {classResource} from '../../../sim-core/src/class-combat.js';
@@ -39,7 +40,7 @@ export function protectCombatTarget(s,e){
  return commandProtected(s,e)||protectedTarget(e,s.clock);
 }
 const preparationSpells=new Set(['Frost Armor','Arcane Intellect','Power Word: Fortitude','Resurrection','Redemption','Ancestral Spirit']);
-export function strategySpellIds(c){
+const cachedStrategySpellIds=memoizeDerived(['learned'],c=>{
  const highest=new Map();
  for(const id of c.learned||[]){
   const sp=spells[id],name=sp?.SpellName;
@@ -48,7 +49,8 @@ export function strategySpellIds(c){
   if(!previous||sp.SpellLevel>previous.SpellLevel||sp.SpellLevel===previous.SpellLevel&&(spellChain[id]?.rank||0)>(spellChain[previous.Id]?.rank||0))highest.set(name,id);
  }
  return [...highest.values()];
-}
+});
+export function strategySpellIds(c){return [...cachedStrategySpellIds(c)];}
 export function currentStrategyRules(c,rules){
  const highest=new Map(strategySpellIds(c).map(id=>[spells[id].SpellName,id]));
  return (rules||[]).filter(r=>highest.has(spells[r.spell]?.SpellName)).map(r=>({...r,spell:highest.get(spells[r.spell].SpellName)}));

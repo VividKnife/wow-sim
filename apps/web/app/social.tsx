@@ -1,9 +1,12 @@
-import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from 'react';
+import {createContext,useContext,useEffect,useId,useRef,useState,type ReactNode} from 'react';
+import {ArrowDown,Globe,Users,Send,MessageCircle} from 'lucide-react';
+import {useChatScroll} from '@/lib/use-chat-scroll';
 import {Button} from '@/components/ui/button';
 import {GameSelect,GameSelectOption} from '@/components/ui/game-select';
 import {saveFetch} from '../lib/save-fetch';
 import type {GameProps} from './game-ui';
 import ClassIcon from './class-icon';
+import {classColors} from '@/lib/class-colors';
 import './social.css';
 
 type Model=Record<string,any>;
@@ -13,26 +16,57 @@ export const useSocial=()=>useContext(Context);
 const roleNames:Record<string,string>={tank:'坦克',healer:'治疗',dps:'输出'};
 async function response(response:Response){const data=await response.json();if(!response.ok)throw new Error(data.error||'社交服务暂时不可用');return data;}
 export function SocialProvider({actorId,children}:{actorId:string;children:ReactNode}){
- const [data,setData]=useState<Model|null>(null),[error,setError]=useState(''),[connectionError,setConnectionError]=useState(''),[busy,setBusy]=useState(false);
- const pending=useRef(false),revision=useRef(0),alive=useRef(true),retry=useRef<Model|null>(null);
+ const [data,setData]=useState<Model|null>(null),[error,setError]=useState(''),[connectionError,setConnectionError]=useState(''),[busy,setBusy]=useState(false),[retry,setRetry]=useState<Model|null>(null);
+ const pending=useRef(false),revision=useRef(0),alive=useRef(true);
  const url=`/api/game/social?characterId=${encodeURIComponent(actorId)}`;
  useEffect(()=>{alive.current=true;let stopped=false,timer:ReturnType<typeof setTimeout>;const abort=new AbortController();
   const poll=async()=>{const cursor=revision.current;try{if(!pending.current){const next=await response(await saveFetch(url,{signal:AbortSignal.any([abort.signal,AbortSignal.timeout(10000)])}));if(!stopped&&cursor===revision.current){setData(next);setConnectionError('');}}}catch(e){if(!stopped)setConnectionError((e as Error).message);}finally{if(!stopped)timer=setTimeout(poll,document.hidden?10000:2000);}};
   void poll();return()=>{stopped=true;alive.current=false;abort.abort();clearTimeout(timer);};
  },[url]);
  const run=async(body:Model)=>{if(pending.current)return false;pending.current=true;revision.current++;setBusy(true);setError('');
-  const command={...body,requestId:body.requestId??crypto.randomUUID()};retry.current=command;
-  try{const next=await response(await saveFetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(command),signal:AbortSignal.timeout(15000)}));if(alive.current){setData(next);retry.current=null;}return true;}
+  const command={...body,requestId:body.requestId??crypto.randomUUID()};setRetry(command);
+  try{const next=await response(await saveFetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(command),signal:AbortSignal.timeout(15000)}));if(alive.current){setData(next);setRetry(null);}return true;}
   catch(e){if(alive.current)setError((e as Error).message);return false;}finally{pending.current=false;revision.current++;if(alive.current)setBusy(false);}
  };
  const search=async(q:string)=>{try{return (await response(await saveFetch(`${url}&q=${encodeURIComponent(q)}`,{signal:AbortSignal.timeout(10000)}))).players;}catch(e){if(alive.current)setError((e as Error).message);return [];}};
- return <Context.Provider value={{data,error:error||connectionError,busy,run,search}}>{children}{(data?.incoming.length>0||data?.proposal)&&<aside className="social-notifications" aria-label="社交通知">{data!.incoming.map((i:Model)=><div key={i.id}><strong>{i.name}</strong><p>{i.kind==='friend'?'请求添加好友':'邀请你加入队伍'}</p><Button disabled={busy} onClick={()=>void run({type:'respond',inviteId:i.id,accept:true})}>接受</Button><Button variant="outline" disabled={busy} onClick={()=>void run({type:'respond',inviteId:i.id,accept:false})}>拒绝</Button></div>)}{data!.proposal&&<Proposal/>}</aside>}{(error||connectionError)&&<div className="social-error" role="alert">{error||connectionError}{retry.current&&<button disabled={busy} onClick={()=>void run(retry.current!)}>重试上次操作</button>}<button onClick={()=>{setError('');retry.current=null;}}>关闭</button></div>}</Context.Provider>;
+ return <Context.Provider value={{data,error:error||connectionError,busy,run,search}}>{children}{(data?.incoming.length>0||data?.proposal)&&<aside className="social-notifications" aria-label="社交通知">{data!.incoming.map((i:Model)=><div key={i.id}><strong>{i.name}</strong><p>{i.kind==='friend'?'请求添加好友':'邀请你加入队伍'}</p><Button disabled={busy} onClick={()=>void run({type:'respond',inviteId:i.id,accept:true})}>接受</Button><Button variant="outline" disabled={busy} onClick={()=>void run({type:'respond',inviteId:i.id,accept:false})}>拒绝</Button></div>)}{data!.proposal&&<Proposal/>}</aside>}{(error||connectionError)&&<div className="social-error" role="alert">{error||connectionError}{retry&&<button disabled={busy} onClick={()=>void run(retry!)}>重试上次操作</button>}<button onClick={()=>{setError('');setRetry(null);}}>关闭</button></div>}</Context.Provider>;
 }
-function Proposal(){const {data,busy,run}=useSocial();const p=data?.proposal;if(!p)return null;const accepted=p.accepted.includes(data!.self.id);return <section aria-label="匹配确认"><h3>找到地下城队伍</h3><p>{data!.dungeons.find((d:Model)=>d.id===p.dungeonId)?.name} · 等待玩家确认</p><p>剩余 {Math.max(0,Math.ceil((p.expiresAt-Date.now())/1000))} 秒。全部同意后组成队伍，不自动进入副本。</p><p>{p.accepted.length} / {p.members.filter((m:Model)=>!m.npc).length} 位玩家已确认</p><Button disabled={busy||accepted} onClick={()=>void run({type:'proposal',proposalId:p.id,accept:true})}>{accepted?'已确认，等待队友':'准备好了'}</Button><Button variant="outline" disabled={busy} onClick={()=>void run({type:'proposal',proposalId:p.id,accept:false})}>拒绝匹配</Button></section>;}
-export function SocialChat(){
- const {data,busy,run}=useSocial(),[channel,setChannel]=useState('world'),[text,setText]=useState('');const list=useRef<HTMLDivElement>(null);
- const messages=data?.messages[channel]??[];useEffect(()=>{list.current?.scrollTo({top:list.current.scrollHeight});},[messages.at(-1)?.id,channel]);
- return <section className="social-chat" aria-label="玩家聊天"><div className="filterbar"><button aria-pressed={channel==='world'} onClick={()=>setChannel('world')}>世界</button><button aria-pressed={channel==='party'} onClick={()=>setChannel('party')}>队伍</button></div><div ref={list} className="social-chat-history" role="log" aria-label={channel==='world'?'世界聊天记录':'队伍聊天记录'}>{messages.map((m:Model)=><div className="social-message" key={m.id}><p><strong>[{m.name}]</strong> {m.text}</p>{m.kind==='recruitment'&&<div className="social-recruitment"><small>{m.minimumLevel}–{m.maximumLevel} 级 · {m.open?'招募中':'招募已结束'}{m.open?` · 缺坦克 ${m.needed.tank} / 治疗 ${m.needed.healer} / 输出 ${m.needed.dps}`:''}</small>{m.open&&data?.self.id!==m.actorId&&data?.group?.id!==m.groupId&&data?.self.roles.filter((r:string)=>m.needed[r]>0).map((role:string)=><Button key={role} size="sm" variant="outline" disabled={busy} onClick={()=>void run({type:'recruitJoin',groupId:m.groupId,recruitmentId:m.recruitmentId,role})}>以{roleNames[role]}加入</Button>)}</div>}</div>)}{!messages.length&&<p>{channel==='party'&&!data?.group?'加入队伍后可在此聊天。':'暂无消息。'}</p>}</div><form onSubmit={async e=>{e.preventDefault();if(await run({type:'chat',channel,text}))setText('');}}><input aria-label="聊天消息" maxLength={300} value={text} onChange={e=>setText(e.target.value)} placeholder={channel==='world'?'向世界发送消息…':'向队伍发送消息…'}/><Button type="submit" size="sm" disabled={busy||!data||!text.trim()||channel==='party'&&!data.group}>发送</Button></form></section>;
+function Proposal(){const {data,busy,run}=useSocial();const [now,setNow]=useState(()=>Date.now());useEffect(()=>{const timer=setInterval(()=>setNow(Date.now()),1000);return()=>clearInterval(timer);},[]);const p=data?.proposal;if(!p)return null;const accepted=p.accepted.includes(data!.self.id);return <section aria-label="匹配确认"><h3>找到地下城队伍</h3><p>{data!.dungeons.find((d:Model)=>d.id===p.dungeonId)?.name} · 等待玩家确认</p><p>剩余 {Math.max(0,Math.ceil((p.expiresAt-now)/1000))} 秒。全部同意后组成队伍，不自动进入副本。</p><p>{p.accepted.length} / {p.members.filter((m:Model)=>!m.npc).length} 位玩家已确认</p><Button disabled={busy||accepted} onClick={()=>void run({type:'proposal',proposalId:p.id,accept:true})}>{accepted?'已确认，等待队友':'准备好了'}</Button><Button variant="outline" disabled={busy} onClick={()=>void run({type:'proposal',proposalId:p.id,accept:false})}>拒绝匹配</Button></section>;}
+export function SocialChat({active=true,compact=false,channel:fixedChannel}:{active?:boolean;compact?:boolean;channel?:string}){
+ const {data,error,busy,run}=useSocial();
+ const [selectedChannel,setChannel]=useState('world'),[drafts,setDrafts]=useState<Record<string,string>>({});
+ const channel=fixedChannel??selectedChannel;
+ const draftKey=channel==='party'?`party:${data?.group?.id??'none'}`:'world',text=drafts[draftKey]??'';
+ const messages:Model[]=data?.messages[channel]??[],blocked=!data||channel==='party'&&!data.group;
+ const inputId=useId(),composing=useRef(false);
+ const setText=(value:string)=>setDrafts(drafts=>({...drafts,[draftKey]:value}));
+ return <section className={`social-chat${compact?' social-chat-minimal':''}`} aria-label="玩家聊天" data-channel={channel}>
+  {!compact&&<div className="social-chat-channels" role="group" aria-label="发送频道">
+   <button aria-pressed={channel==='world'} onClick={()=>setChannel('world')}><Globe size={14}/>世界</button>
+   <button aria-pressed={channel==='party'} onClick={()=>setChannel('party')}><Users size={14}/>队伍{data?.group&&<small>{data.group.members.length}</small>}</button>
+   <span className={`social-chat-connection${error?' is-error':''}`} role="status">{error?'暂不可用':data?'已连接':'连接中…'}</span>
+  </div>}
+  {compact&&error&&<p className="social-chat-inline-error" role="status">聊天暂不可用，请稍后重试。</p>}
+  <ChatMessages compact={compact} key={draftKey} messages={messages} active={active} channel={channel} blocked={blocked} loading={!data} failed={!!error} data={data} busy={busy} run={run}/>
+  <form className="social-chat-composer" onSubmit={async e=>{
+   e.preventDefault();if(composing.current||blocked||busy||!text.trim())return;
+   const sent=text,key=draftKey;
+   if(await run({type:'chat',channel,text:sent.trim()}))setDrafts(current=>current[key]===sent?{...current,[key]:''}:current);
+  }}>
+   <div className="social-chat-input-row"><label className="social-chat-destination" htmlFor={inputId}>{channel==='world'?'世界':'队伍'}</label><input id={inputId} aria-label="聊天消息" autoComplete="off" maxLength={300} value={text} disabled={blocked} onChange={e=>setText(e.target.value)} onCompositionStart={()=>{composing.current=true;}} onCompositionEnd={()=>{composing.current=false;}} onKeyDown={e=>{if(e.key==='Enter'&&(e.nativeEvent.isComposing||composing.current||e.keyCode===229))e.preventDefault();}} placeholder={blocked?(data?'加入队伍后即可发言':'正在连接聊天…'):compact?'输入消息…':'说点什么，与冒险者同行…'}/><button type="submit" aria-label="发送消息" disabled={busy||blocked||!text.trim()}><Send size={15}/><span>{busy?'发送中':'发送'}</span></button></div>
+   <div className="social-chat-hint"><span>{channel==='world'?'所有冒险者可见':'仅当前队伍可见'}<span className="social-chat-enter"> · Enter 发送</span></span><span className={text.length>=280?'is-near-limit':''}>{text.length} / 300</span></div>
+  </form>
+ </section>;
+}
+function ChatMessages({messages,compact,active,channel,blocked,loading,failed,data,busy,run}:{messages:Model[];compact:boolean;active:boolean;channel:string;blocked:boolean;loading:boolean;failed:boolean;data:Model|null;busy:boolean;run:Social['run']}){
+ const {ref:feedRef,onScroll,unread,latest}=useChatScroll(messages.map(m=>m.id),active);
+ return <div className="social-chat-feed"><div ref={feedRef} onScroll={onScroll} className="social-chat-history" role="log" aria-live={active?'polite':'off'} aria-relevant="additions" aria-label={channel==='world'?'世界聊天记录':'队伍聊天记录'} tabIndex={0}>
+  {messages.map(m=>{const own=data?.self.id===m.actorId,date=new Date(m.at),valid=Number.isFinite(date.getTime());return <article className={`social-message${own?' is-own':''}${m.kind==='recruitment'?' is-recruitment':''}`} key={m.id} title={valid?date.toLocaleString('zh-CN'):undefined}>
+   <header>{compact?<><span>[{channel==='world'?'世界':'队伍'}] </span><strong style={{color:classColors[m.classId]??'#ddd6c5'}}>[{m.name}]</strong><span>：</span></>:<strong style={{color:classColors[m.classId]??'#ddd6c5'}}>{m.name}</strong>}{own&&<small>你</small>}{m.kind==='recruitment'&&<span className="social-recruitment-tag">队伍招募</span>}<time dateTime={valid?date.toISOString():undefined} title={valid?date.toLocaleString('zh-CN'):undefined}>{valid?date.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hourCycle:'h23'}):'—'}</time></header><p>{m.text}</p>
+   {m.kind==='recruitment'&&<details className="social-recruitment" open={compact?undefined:true}><summary>招募详情</summary><span>{m.minimumLevel}–{m.maximumLevel} 级 · {m.open?'招募中':'招募已结束'}</span>{m.open&&<div className="social-recruitment-roles">{Object.entries(roleNames).map(([role,name])=><span key={role} className={m.needed[role]?'':'is-filled'}>{name} {m.needed[role]||'已满'}</span>)}</div>}{m.open&&!own&&data?.group?.id!==m.groupId&&data?.self.level>=m.minimumLevel&&data?.self.level<=m.maximumLevel&&data?.self.roles.filter((r:string)=>m.needed[r]>0).map((role:string)=><Button key={role} size="sm" variant="outline" disabled={busy} onClick={()=>void run({type:'recruitJoin',groupId:m.groupId,recruitmentId:m.recruitmentId,role})}>以{roleNames[role]}加入</Button>)}</details>}
+  </article>;})}
+  {!messages.length&&<div className="social-chat-empty"><MessageCircle size={25}/><strong>{loading?(failed?'暂时无法连接':'正在连接冒险者…'):blocked?'还没有加入队伍':'这里还很安静'}</strong><p>{loading?(failed?'连接恢复后将自动更新，请稍后重试。':'聊天记录即将显示在这里。'):blocked?'在社交与组队中寻找队友，开启队伍聊天。':channel==='world'?'打个招呼，或在这里寻找同行的伙伴。':'向队友打个招呼，一起准备下一场冒险。'}</p></div>}
+ </div>{unread>0&&<button className="chat-new-messages" onClick={latest}><ArrowDown size={13}/>{unread} 条新消息</button>}</div>;
 }
 export default function SocialPanel(props:GameProps){
  const {data,busy,run,search}=useSocial();const [tab,setTab]=useState('finder'),[query,setQuery]=useState(''),[players,setPlayers]=useState<Model[]>([]),[dungeonId,setDungeonId]=useState('deadmines');

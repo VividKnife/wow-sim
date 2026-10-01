@@ -6,7 +6,7 @@ import {contentPack} from '../../../packages/game-domain/src/rules/content-packs
 import {createGame,view} from '../../../packages/game-domain/src/rules/engine.js';
 import {projectClientSnapshot} from '../../../packages/game-domain/src/rules/client-snapshot.ts';
 import {workshopView} from '../../../packages/game-domain/src/rules/workshop.js';
-import {createContentLoader,referencedItemIds} from '../lib/content-loader.js';
+import {createContentLoader,referencedItemIds,createItemReferenceReader} from '../lib/content-loader.js';
 
 const catalog=clientContent();
 const query=pack=>new URLSearchParams({pack});
@@ -108,4 +108,28 @@ test('failed and incomplete responses can retry; stale versions are rejected',as
   await assert.rejects(loader.ensureItems(catalog.contentVersion,[118]));
   assert.ok((await loader.ensureItems(catalog.contentVersion,[118]))[118]);
  }
+});
+
+test('immutable stream references reuse unchanged branches and distinguish collection context',()=>{
+ const read=createItemReferenceReader();let visits=0;
+ const equipment={mainHand:{id:25,uid:'weapon'}};
+ const player={get equipment(){visits++;return equipment;},bag:[{id:118}]};
+ const first={player,view:{quests:[{id:6948}]}};
+ assert.deepEqual(read(first),[25,118]);assert.equal(visits,1);
+ const second={...first,view:{...first.view,hp:50}};
+ assert.deepEqual(read(second),[25,118]);assert.equal(visits,1,'unchanged inventory is not visited on health updates');
+ const third={...second,player:{equipment,bag:[{id:159}]}};
+ assert.deepEqual(read(third),[25,159]);assert.deepEqual(read(first),[25,118]);
+ const shared={id:6948};assert.deepEqual(read({quests:[shared],rewards:[shared]}),[6948]);
+ assert.deepEqual(read({rewards:[shared],quests:[shared]}),[6948]);
+ const mutable={bag:[{id:118}]};assert.deepEqual(referencedItemIds(mutable),[118]);
+ mutable.bag[0].id=159;assert.deepEqual(referencedItemIds(mutable),[159]);
+});
+test('unchanged item catalogs retain identity and new packs preserve older snapshots',async()=>{
+ const loader=createContentLoader(async url=>Response.json(contentPack(catalog,new URL(url,'http://local').searchParams)));
+ const first=await loader.ensureItems(catalog.contentVersion,[118]);
+ assert.equal(await loader.ensureItems(catalog.contentVersion,[118]),first);
+ const next=await loader.ensureItems(catalog.contentVersion,[118,159]);
+ assert.notEqual(next,first);assert.ok(next[159]);assert.equal(first[159],undefined);
+ assert.equal(await loader.ensureItems(catalog.contentVersion,[118,159]),next);
 });

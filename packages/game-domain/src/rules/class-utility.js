@@ -108,4 +108,17 @@ export function finishClassUtility(s){
  log(s,'施放了 '+nameOf('spells',a.spell),'cast',{actorId:s.id,targetId:target.id,spellId:a.spell});
 }
 export function useClassPortal(s,id){if(s.combat||s.hp<=0||!['idle','hunt'].includes(s.activity.type))throw new Error('请先结束当前活动');const portal=(s.portals||[]).find(p=>p.spell===id&&p.from===s.location&&p.until>s.clock);if(!portal)throw new Error('传送门已消失或不在此地');relocate(s,portal.to);}
-export function classUtilityView(s){const targets=[...combatMembers(s,null).map(c=>c.id),...(s.combat?.enemies||[]).map(c=>c.id),...monsterIdsAt(s.location).map(id=>'npc:'+id),...s.bag.filter(i=>items[i.id]?.lockid).map(i=>i.uid),...(s.groundEffects||[]).filter(e=>e.trap).map(e=>e.id)];const skillUsesByTarget=Object.fromEntries([...new Set(targets)].map(target=>[target,Object.fromEntries(s.learned.map(id=>[id,classUtilityUse(s,id,target)]).filter(([,use])=>use))]));return{skillUsesByTarget,...environmentView(s),...observationView(s),petControls:s.pet?{food:s.bag.filter(i=>!i.locked&&items[i.id]?.FoodType).map(i=>({id:i.id,name:nameOf('items',i.id),count:i.count})),skills:(s.pet.availableSkills||[]).map(id=>({id,name:nameOf('spells',id),level:spells[id]?.SpellLevel||0,learned:s.pet.learned?.includes(id),cost:Math.max(0,petTrainingCost(s.pet,id)),reason:petTrainingReason(s,s.pet,id)}))}:null,classPortals:(s.portals||[]).filter(p=>p.until>s.clock&&p.from===s.location).map(p=>({...p,name:nodes[p.to].name,icon:icon('spells',p.spell)}))};}
+export function classUtilityView(s){const targets=[...combatMembers(s,null).map(c=>c.id),...(s.combat?.enemies||[]).map(c=>c.id),...monsterIdsAt(s.location).map(id=>'npc:'+id),...s.bag.filter(i=>items[i.id]?.lockid).map(i=>i.uid),...(s.groundEffects||[]).filter(e=>e.trap).map(e=>e.id)];// Cooldown time is shared by every target of this caster's spell. Keep one
+ // absolute deadline instead of repeating a ticking remaining value per target.
+ const skillUseReadyAt={},skillUsesByTarget={};
+ for(const target of new Set(targets)){
+  const uses={};
+  for(const id of s.learned){
+   const use=classUtilityUse(s,id,target);if(!use)continue;
+   const {remaining,...details}=use;
+   if(remaining!==undefined)skillUseReadyAt[id]=remaining>0?s.clock+remaining:0;
+   uses[id]=details;
+  }
+  skillUsesByTarget[target]=uses;
+ }
+ return{skillUsesByTarget,skillUseReadyAt,...environmentView(s),...observationView(s),petControls:s.pet?{food:s.bag.filter(i=>!i.locked&&items[i.id]?.FoodType).map(i=>({id:i.id,name:nameOf('items',i.id),count:i.count})),skills:(s.pet.availableSkills||[]).map(id=>({id,name:nameOf('spells',id),level:spells[id]?.SpellLevel||0,learned:s.pet.learned?.includes(id),cost:Math.max(0,petTrainingCost(s.pet,id)),reason:petTrainingReason(s,s.pet,id)}))}:null,classPortals:(s.portals||[]).filter(p=>p.until>s.clock&&p.from===s.location).map(p=>({...p,name:nodes[p.to].name,icon:icon('spells',p.spell)}))};}

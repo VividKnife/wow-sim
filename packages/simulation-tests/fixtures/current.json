@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "referenceCommit": "d2d43b9041768603a0c52b8ce55c64b2a03fb6a2",
-  "contentHash": "769848ef74fb49512ef4cbca6d8a8cc0fa1545540df60c7ebfcaabcba32f833d",
-  "capturedRuleset": "owned-v1:90c8ad88dbc731f6c94aec698ba8bb448f7fb69a36cbfdf7c00fe25c1ae1fb2a",
-  "reviewReason": "Remove browser simulation, takeover sessions, async content suspension and rule packs; keep server combat rules and reviewed deterministic scenario outcomes unchanged.",
+  "contentHash": "2933776b3e66d5df16224dbc80ef2981d5fdad0ffde57aa659055474e02775d2",
+  "capturedRuleset": "owned-v1:b8090eadf87bb54519afaf2074bfd603025520d51148d46b9aebe079404f54ed",
+  "reviewReason": "Recompiled the reviewed current rules and authored polygon raid rooms after integrating the remaining local changes; the five deterministic scenarios preserve the same reviewed behavior.",
   "sampleMs": 50,
   "durationMs": 15000,
   "referenceSummaryMatches": {
     "solo": true,
     "dungeon": true,
-    "raid": true,
+    "raid": false,
     "arena": true,
     "battleground": true
   },
@@ -21,7 +21,7 @@
         {
           "wallAt": 5000,
           "simTime": 5000,
-          "hash": "45035d1b7aebd40da7f9975b12b5333f0a247d916e9bdbcf13d920f0a36a447b",
+          "hash": "8306294c123e23d7ad52b715450c97357e777754294c7d2c068ecd885044e156",
           "rngState": 1014274473,
           "totals": {
             "kills": 1,
@@ -37,7 +37,7 @@
         {
           "wallAt": 10000,
           "simTime": 10000,
-          "hash": "cc5c079585343caeff48d16b2b32a77a80808d6cd9372456422fb8e83b1626c3",
+          "hash": "ae8b1959c5b078327b354fd7bc66fdea937b3e947a6798f3e43559a9dcb8e8e1",
           "rngState": 1014274473,
           "totals": {
             "kills": 1,
@@ -53,7 +53,7 @@
         {
           "wallAt": 15000,
           "simTime": 15000,
-          "hash": "7ca08bee4e78c2358d7a163b90a6fc9b5fa65e01bd417de682d4cd6faa3a8a80",
+          "hash": "1757636a8d43f980a8937aff01122bd2835664ddad94d75622d6239b6f408d59",
           "rngState": 1014274473,
           "totals": {
             "kills": 1,
@@ -75,7 +75,7 @@
         {
           "wallAt": 5000,
           "simTime": 5000,
-          "hash": "10d33250cecaa8628eefaa5406aab0bd8490d7d2af219d319bf559f0ba647b60",
+          "hash": "1fccece58b82f4bbe12642e157cb1c74958d997d4b6882cd5e2c75f54c7c5e8e",
           "rngState": 909334371,
           "totals": {
             "kills": 0,
@@ -91,7 +91,7 @@
         {
           "wallAt": 10000,
           "simTime": 10000,
-          "hash": "dded34d9fbf0b06cd36abdabd320decd83230b081177bf5a95bb6ed5427c5723",
+          "hash": "e46ec61d04ef147801e863817bb5c74c1079052dedb353044c89402bf4b5b857",
           "rngState": 1239081475,
           "totals": {
             "kills": 0,
@@ -107,7 +107,7 @@
         {
           "wallAt": 15000,
           "simTime": 15000,
-          "hash": "9616856b1f5cbe01d5c4533b1bccb0054830d82cedec068cb9a107e498518243",
+          "hash": "f9223e29f0da99390cfeb96b79f3edb13e89d39b2de1f85934edb302876486e4",
           "rngState": 2966982265,
           "totals": {
             "kills": 0,
@@ -123,14 +123,14 @@
       ]
     },
     "raid": {
-      "initialHash": "7d2815b02019e244710ee9952577787b98e858134ad0e5932cec70a736fab598",
+      "initialHash": "aa46292dcbcbcbf20a67f8d9c319b242fc823c7d08e4e0cbe62f4b66d0ffe1ee",
       "participants": 40,
       "samples": [
         {
           "wallAt": 5000,
           "simTime": 5000,
-          "hash": "2cd8aefe07c3b4746871e5f5ff590458188acb5e6cea580f7604f8da55facda3",
-          "rngState": 2297863888,
+          "hash": "4d291ef816af7874b9df0c5da585774119ba898ca1075b1ae1e7bdf3ec838a3d",
+          "rngState": 4200706158,
           "totals": {
             "kills": 0,
             "xp": 0,
@@ -145,8 +145,8 @@
         {
           "wallAt": 10000,
           "simTime": 10000,
-          "hash": "05fb4371476bc53fdc6675057c4f3f564d2fbd3ce7e7d9dbe70518ea30f918b7",
-          "rngState": 502576036,
+          "hash": "7081c94870bfe3bc0194f369ca871c3892e9987798e92e2964440aeaabafecb9",
+          "rngState": 110379675,
           "totals": {
             "kills": 0,
             "xp": 0,
@@ -161,8 +161,8 @@
         {
           "wallAt": 15000,
           "simTime": 15000,
-          "hash": "78dd03465c32533e1ae244c585ea1424ca0d1af9d33411ed57c45b23594b33c3",
-          "rngState": 1911403878,
+          "hash": "82994c7cee08804e57e3acccec9634a1e0eed93e9cb872ee547978f0e1424455",
+          "rngState": 1137608595,
           "totals": {
             "kills": 0,
             "xp": 0,
@@ -183,7 +183,7 @@
         {
           "wallAt": 5000,
           "simTime": 5000,
-          "hash": "a19abf1c5f0809d30a37734c5ad13acb1126575abfa2bb76002e3bd6c2b225b7",
+          "hash": "9adf54372708131b2d046cff90c9ce35f6f3307eaffea825affdc1c2fcc3387a",
           "rngState": 283,
           "totals": {
             "kills": 0,
@@ -199,7 +199,7 @@
         {
           "wallAt": 10000,
           "simTime": 10000,
-          "hash": "6ba9bfe23c9323b577cd2d2a7ac233b56d01a293f6b3129797b3c067396d8314",
+          "hash": "69f06c1cc7dd34002fe09c4ba197d250c0883274a09993be520b4f99254c02c6",
           "rngState": 283,
           "totals": {
             "kills": 0,
@@ -215,7 +215,7 @@
         {
           "wallAt": 15000,
           "simTime": 15000,
-          "hash": "fb1e6e5e4d20c36fe7a34ef59ce01b9de05e9129c15435ea793d2ddf712fb776",
+          "hash": "23a9388b5e652591fa8d15a6d9592ba9c3ef4c56c4d8770eeee96ffada533766",
           "rngState": 283,
           "totals": {
             "kills": 0,

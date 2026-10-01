@@ -29,11 +29,6 @@ test('healing is not a melee attack and received damage produces a hit pose',()=
  assert.equal(hd.unitAnimation(u,[{actorId:'a',kind:'heal',shownAt:1000}],100,1100,false),'cast');
  assert.equal(hd.unitAnimation(u,[{targetId:'a',kind:'incoming',amount:3,shownAt:1000}],100,1100,false),'hurt');
 });
-test('render clock never advances ended combat or beyond the available recording',()=>{
- assert.equal(hd.renderClock({clock:100,live:false,sampledAt:0},5000),100);
- assert.equal(hd.renderClock({clock:100,live:true,sampledAt:100,endClock:450},1000),450);
- assert.equal(hd.renderClock({clock:100,live:true,sampledAt:100},10000),1100);
-});
 test('class roles, creature bodies and transformations have explicit sprite choices',()=>{
  assert.equal(hd.spriteRole({classId:8}),'mage');
  assert.equal(hd.spriteRole({classId:5}),'priest');

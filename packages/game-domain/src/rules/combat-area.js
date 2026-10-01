@@ -2,7 +2,7 @@ import definitions from '../../../game-data/data/combat-areas.json' with {type:'
 import bossRooms from '../../../game-data/data/boss-rooms.json' with {type:'json'};
 import {bakeRoomNavigation} from '../../../sim-core/src/room-geometry.js';
 import {point} from '../../../sim-core/src/geometry.js';
-import {clipSceneMove} from '../../../sim-core/src/scene-space.js';
+import {clipSceneMove,scenePointAllowed} from '../../../sim-core/src/scene-space.js';
 
 export function validateCombatArea(area){
  if(!area||!['rectangle','polygon'].includes(area.shape)||!['minX','maxX','minY','maxY'].every(key=>Number.isFinite(area[key]))||area.minX>=area.maxX||area.minY>=area.maxY)throw new Error('战斗区域必须是有效的范围。');
@@ -25,6 +25,23 @@ export function sceneCombatArea({dungeon=false,routeId,location}={}){
 export function boundedCombatPoint(area,value){
  const p=point(value);
  return area?{x:Math.max(area.minX,Math.min(area.maxX,p.x)),y:Math.max(area.minY,Math.min(area.maxY,p.y))}:p;
+}
+// Placement checks the destination floor, not the segment from the old position.
+// Teleports and fresh summons may cross walls; ordinary movement must still clip.
+export function nearestCombatPoint(area,value,padding=.45){
+ const p=point(value);if(!area)return p;
+ const candidate={x:Math.max(area.minX+padding,Math.min(area.maxX-padding,p.x)),y:Math.max(area.minY+padding,Math.min(area.maxY-padding,p.y))};
+ if(scenePointAllowed(area,candidate,padding))return candidate;
+ const limit=Math.hypot(area.maxX-area.minX,area.maxY-area.minY);
+ for(let radius=.5;radius<=limit;radius+=.5)for(let i=0;i<64;i++){
+  const angle=i*Math.PI/32,q={x:candidate.x+Math.cos(angle)*radius,y:candidate.y+Math.sin(angle)*radius};
+  if(scenePointAllowed(area,q,padding))return q;
+ }
+ throw new Error('战斗区域没有可用的安全落点。');
+}
+export function placeCombatUnit(s,unit,value){
+ const p=nearestCombatPoint(s?.combat?.area,value);unit.position=p.x;unit.positionY=p.y;if(unit.scenePath)unit.scenePath=null;
+ return p;
 }
 export function setCombatPosition(s,unit,value){
  const before=point(unit),area=s?.combat?.area,p=area?.boundary||area?.obstacles?clipSceneMove(area,unit,value):boundedCombatPoint(area,value);
