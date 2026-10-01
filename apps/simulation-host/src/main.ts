@@ -9,6 +9,9 @@ import {DungeonAdmissions} from '../../../packages/game-domain/src/dungeon-admis
 import {residentStore} from '../../../packages/game-domain/src/resident-store.ts';
 import {runtimeVersion} from './version.ts';
 import {experienceMultiplier} from '../../../packages/game-domain/src/rules/experience.js';
+import {GameService} from '../../../packages/game-domain/src/service.ts';
+import {unstuck} from '../../../packages/game-domain/src/unstuck.ts';
+import {CONTENT_VERSION} from '../../../packages/game-domain/src/rules/client-content.js';
 
 export async function startSimulationHost(environment:NodeJS.ProcessEnv=process.env){
  const token=environment.SIMULATION_TOKEN;
@@ -21,7 +24,10 @@ export async function startSimulationHost(environment:NodeJS.ProcessEnv=process.
  let directory:SimulationDirectory|undefined;
  try{
   await store.initialize();
-  const guarded=residentStore(store),characters=new ResidentCharacters(guarded,{version:runtimeVersion,xpMultiplier:experienceMultiplier(environment.GAME_XP_MULTIPLIER),offlineLimitMs:environment.GAME_OFFLINE_LIMIT_MS===undefined?undefined:Number(environment.GAME_OFFLINE_LIMIT_MS)});
+  const guarded=residentStore(store),domain=new GameService(guarded,{contentVersion:CONTENT_VERSION,
+    xpMultiplier:experienceMultiplier(environment.GAME_XP_MULTIPLIER)});
+  const characters=new ResidentCharacters(guarded,{version:runtimeVersion,xpMultiplier:experienceMultiplier(environment.GAME_XP_MULTIPLIER),offlineLimitMs:environment.GAME_OFFLINE_LIMIT_MS===undefined?undefined:Number(environment.GAME_OFFLINE_LIMIT_MS),
+    retireState:(tx,character,now)=>unstuck.call(domain,tx,character,now,`runtime-retire:${character.id}:${now}`,true)});
   directory=new SimulationDirectory(new SimulationRepository(guarded,Date.now,characters.commit),{
    characters,dungeons:new DungeonAdmissions(guarded),checkpointMs:Number(environment.SIMULATION_CHECKPOINT_MS??5000),idleRetireMs:Number(environment.SIMULATION_IDLE_RETIRE_MS??60000),
    workers:Number(environment.SIMULATION_WORKERS??1),maxInstances:Number(environment.SIMULATION_MAX_INSTANCES??128),

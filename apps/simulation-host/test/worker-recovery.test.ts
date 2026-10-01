@@ -6,12 +6,45 @@ import {MemoryStore} from '../../../packages/persistence/src/memory.ts';
 import {SimulationRepository, type Ownership} from '../../../packages/persistence/src/simulation.ts';
 import {GameService} from '../../../packages/game-domain/src/service.ts';
 import {ResidentCharacters} from '../../../packages/game-domain/src/resident-characters.ts';
-import {residentStore} from '../../../packages/game-domain/src/resident-store.ts';
+import {residentStore,withResidentAuthority} from '../../../packages/game-domain/src/resident-store.ts';
+import {unstuck} from '../../../packages/game-domain/src/unstuck.ts';
+import type {Character} from '../../../packages/game-domain/src/model.ts';
 import {SimulationDirectory} from '../src/directory.ts';
 import {SimulationHost} from '../src/host.ts';
 import {localScenarios} from '../../../packages/simulation-tests/support/baseline.ts';
 import type {InstanceCheckpoint} from '../src/instance.ts';
 import {runtimeVersion} from '../src/version.ts';
+
+test('an expired personal runtime from an older release reopens from committed character data',async()=>{
+  const store=residentStore(new MemoryStore()),game=new GameService(store,{contentVersion:'recovery'});
+  const state=(await game.createAccount('alice',{name:'保留进度',classId:8,raceId:1},'create')).state;
+  const old=new ResidentCharacters(store,{version:{...runtimeVersion,contentHash:'previous-release'}});
+  const admission=await old.admission('alice',state.id);
+  const repository=new SimulationRepository(store),owner=await repository.acquire(admission.instanceId,'old-host');
+  await store.transaction(tx=>withResidentAuthority(tx,owner,async()=>{
+    const character=(await tx.get<Character>('characters',state.id))!;
+    character.rules.combat={oldRelease:true};
+    await tx.put('characters',character);
+  }));
+  const characters=new ResidentCharacters(store,{version:runtimeVersion,
+    retireState:(tx,character,now)=>unstuck.call(game,tx,character,now,'release-update',true)});
+  const directory=new SimulationDirectory(new SimulationRepository(store,Date.now,characters.commit),{characters});
+  try{
+    await assert.rejects(directory.openCharacter('alice',state.id),/执行权/);
+    await repository.release(owner);
+    const next=await directory.openCharacter('alice',state.id);
+    assert.notEqual(next.instanceId,admission.instanceId);
+    const view=await directory.presentation(next.instanceId,'alice',state.id,'full');
+    assert.ok(view.snapshot);
+    assert.equal(view.snapshot.player.name,state.name);
+    assert.equal(view.snapshot.player.level,state.level);
+    assert.equal(view.snapshot.player.combat,null);
+    const retired=await store.read(tx=>tx.get<any>('simulation_owners',admission.instanceId));
+    assert.ok(retired?.transferred?.id.startsWith('runtime-retire:'));
+    assert.equal(await store.read(tx=>tx.get('simulation_residencies',admission.instanceId)),null);
+    assert.ok(await store.read(tx=>tx.get('characters',state.id)));
+  }finally{await directory.close();await store.close();}
+});
 
 async function until(check: () => boolean) {
   const end = Date.now() + 6000;
