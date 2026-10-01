@@ -8,6 +8,7 @@ import type {Admission} from './instance.ts';
 import type {SimulationRepository} from '../../../packages/persistence/src/simulation.ts';
 import type {SimulationInput} from '../../../packages/protocol/src/simulation.ts';
 import type {ResidentCharacters} from '../../../packages/game-domain/src/resident-characters.ts';
+import {DomainError} from '../../../packages/game-domain/src/model.ts';
 import type {DungeonAdmissions} from '../../../packages/game-domain/src/dungeon-admissions.ts';
 import {dungeonEntryTransferId,dungeonTransferBoundary} from './dungeon-transfer.ts';
 import type {PublishedInputReceipt} from '../../../packages/protocol/src/simulation.ts';
@@ -49,7 +50,13 @@ export class SimulationDirectory {
   const key=JSON.stringify([accountId,characterId]),previous=this.characterOpens.get(key);
   if(previous)return previous;
   const work=(async()=>{
-   const existing=await characters.find(accountId,characterId);
+   let existing;
+   try{existing=await characters.find(accountId,characterId);}
+   catch(error){
+    if(!(error instanceof DomainError)||error.code!=='SIMULATION_VERSION')throw error;
+    await characters.retireIncompatiblePersonal(accountId,characterId);
+    existing=await characters.find(accountId,characterId);
+   }
    if(existing&&this.entries.has(existing.instanceId))return this.open(existing);
    // Reserve capacity before creating a durable character claim. Account for
    // other in-flight character opens while their SQL admission is pending.

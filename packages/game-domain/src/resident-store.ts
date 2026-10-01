@@ -1,6 +1,7 @@
 import type {Store, Transaction, TableName, Row} from '../../persistence/src/store.ts';
 import type {Ownership} from '../../persistence/src/simulation.ts';
 import {DomainError} from './model.ts';
+import {randomUUID} from 'node:crypto';
 import type {Residency, CharacterAdmission} from './resident-characters.ts';
 import {participantState, validateParticipants} from './resident-participants.ts';
 
@@ -8,6 +9,7 @@ export type CharacterClaim = {id: string; accountId: string; instanceId: string}
 const wrapped = new WeakMap<Store, Store>();
 const authority = new WeakMap<Transaction, Ownership>();
 const deletions = new WeakMap<Transaction, string>();
+const retirements = new WeakMap<Transaction, string>();
 const transfers = new WeakMap<Transaction, {destinationIds: Set<string>; sourceIds: Set<string>; claims: Map<string, CharacterClaim>; assignments: Map<string, string>}>();
 const protectedTables = new Set<TableName>(['characters', 'npc_characters', 'wallets', 'items', 'actor_leases', 'activities',
   'reservations', 'parties', 'companions', 'instances', 'simulation_characters', 'simulation_residencies']);
@@ -51,6 +53,11 @@ export function residentStore(store: Store): Store {
             if (revoked?.deleted?.saveId === claim.accountId) continue;
             throw new DomainError('SIMULATION_FENCED', '删除前必须撤销实例执行权');
           }
+          if (removing && retirements.get(tx) === claim.instanceId) {
+            const revoked = await raw.get<Ownership>('simulation_owners', claim.instanceId);
+            if (revoked?.transferred?.id.startsWith('runtime-retire:')) continue;
+            throw new DomainError('SIMULATION_FENCED', '旧实例未被撤销');
+          }
           const allowed = authority.get(tx);
           if (!allowed || allowed.id !== claim.instanceId)
             throw new DomainError('SIMULATION_OWNED', '角色由模拟实例管理，请通过实例执行操作');
@@ -86,7 +93,7 @@ export function residentStore(store: Store): Store {
           await raw.delete(table, id);
         },
       };
-      try { return await work(tx); } finally { authority.delete(tx); deletions.delete(tx); transfers.delete(tx); }
+      try { return await work(tx); } finally { authority.delete(tx); deletions.delete(tx); retirements.delete(tx); transfers.delete(tx); }
     }, options),
   };
   wrapped.set(store, result); wrapped.set(result, result); return result;
@@ -116,6 +123,20 @@ export async function withResidentDeletion<T>(tx: Transaction, accountId: string
   }
   deletions.set(tx, accountId);
   try { return await work(); } finally { deletions.delete(tx); }
+}
+
+/** Retire an expired personal runtime after a rules/content update. Its durable
+ * character and assets remain untouched; the old owner is permanently fenced. */
+export async function withResidentRetirement<T>(tx: Transaction, instanceId: string, work: () => Promise<T>): Promise<T> {
+  if (retirements.has(tx) || deletions.has(tx) || authority.has(tx) || transfers.has(tx)) throw new Error('Nested resident retirement authority');
+  const now=Date.now(),owner=await tx.get<Ownership>('simulation_owners',instanceId);
+  if(owner&&(owner.expiresAt>now||owner.deleted||owner.transferred||owner.handoff))
+    throw new DomainError('SIMULATION_FENCED','旧实例仍持有执行权或正在交接',503);
+  await tx.put('simulation_owners',{id:instanceId,ownerId:owner?.ownerId??'runtime-retire',epoch:owner?.epoch??1,
+    expiresAt:now,commitSequence:owner?.commitSequence??0,
+    transferred:{id:`runtime-retire:${randomUUID()}`,destinationIds:[],at:now}} satisfies Ownership);
+  retirements.set(tx,instanceId);
+  try{return await work();}finally{retirements.delete(tx);}
 }
 
 /** Called only inside SimulationRepository.transfer. This is deliberately NOT

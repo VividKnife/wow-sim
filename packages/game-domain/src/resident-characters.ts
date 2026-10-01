@@ -3,11 +3,11 @@ import {DEFAULT_OFFLINE_LIMIT_MS, offlineLimit} from './presence.ts';
 import {removeInvalidSave} from './account-reset.ts';
 import type {Ownership} from '../../persistence/src/simulation.ts';
 import {randomUUID} from 'node:crypto';
-import type {Store} from '../../persistence/src/store.ts';
+import type {Store,Transaction} from '../../persistence/src/store.ts';
 import type {CheckpointBoundary} from '../../persistence/src/simulation.ts';
 import {context, owned, persistCharacter, bump} from './context.ts';
 import {requireThat, type Character, type Rules} from './model.ts';
-import {residentStore, withResidentAuthority, withResidentDeletion, type CharacterClaim} from './resident-store.ts';
+import {residentStore, withResidentAuthority, withResidentDeletion, withResidentRetirement, type CharacterClaim} from './resident-store.ts';
 import {applyExperienceBuff, experienceMultiplier} from './rules/experience.js';
 
 export type CharacterAdmission = {
@@ -26,10 +26,13 @@ export class ResidentCharacters {
   private readonly xpMultiplier: number;
   private readonly version: Version;
   private readonly offlineLimitMs: number;
-  constructor(store: Store, options: {version: Version; xpMultiplier?: number; offlineLimitMs?: number}) {
+  private readonly retireState?: (tx:Transaction,character:Character,now:number)=>Promise<void>;
+  constructor(store: Store, options: {version: Version; xpMultiplier?: number; offlineLimitMs?: number;
+    retireState?: (tx:Transaction,character:Character,now:number)=>Promise<void>}) {
     this.store = residentStore(store); this.xpMultiplier = experienceMultiplier(options.xpMultiplier);
     this.version = {...options.version};
     this.offlineLimitMs = offlineLimit(options.offlineLimitMs ?? DEFAULT_OFFLINE_LIMIT_MS);
+    this.retireState=options.retireState;
   }
   private decode(residency: Residency): CharacterAdmission {
     requireThat(residency.rulesetVersion === this.version.rulesetVersion && residency.contentHash === this.version.contentHash,
@@ -53,6 +56,38 @@ export class ResidentCharacters {
       requireThat(residency.participants.some(p => p.characterId === characterId && p.accountId === accountId),
         'SIMULATION_STATE', '角色执行权记录不完整');
       return admission;
+    });
+  }
+  /** Start a new runtime from committed character/assets when an expired
+   * personal runtime belongs to a different rules/content release. */
+  async retireIncompatiblePersonal(accountId:string,characterId:string):Promise<void>{
+    await this.store.transaction(async tx=>{
+      const character=await owned(tx,accountId,characterId);
+      const claim=await tx.get<CharacterClaim>('simulation_characters',characterId);
+      if(!claim)return;
+      const residency=await tx.get<Residency>('simulation_residencies',claim.instanceId);
+      requireThat(residency&&claim.accountId===accountId,'SIMULATION_STATE','角色执行权记录不完整');
+      if(residency.rulesetVersion===this.version.rulesetVersion&&residency.contentHash===this.version.contentHash)return;
+      requireThat(claim.instanceId.startsWith('personal:')&&residency.accountId===accountId&&
+        residency.characterId===characterId&&residency.participants.length===1&&
+        residency.participants[0].characterId===characterId&&residency.participants[0].accountId===accountId,
+        'SIMULATION_VERSION','共享实例需要先结束当前活动',503);
+      requireThat((this.retireState||!character.rules.combat&&!character.rules.dungeon)&&!await tx.get('actor_leases',characterId),
+        'SIMULATION_VERSION','旧活动需要先结束才能更新运行规则',503);
+      const claims=await tx.list<CharacterClaim>('simulation_characters',{instanceId:claim.instanceId});
+      requireThat(claims.some(row=>row.id===characterId)&&claims.every(row=>row.accountId===accountId),
+        'SIMULATION_STATE','实例角色归属无效');
+      const saved=await tx.get<{encodedCheckpoint:string}>('simulation_checkpoints',claim.instanceId);
+      if(saved){
+        const checkpoint=JSON.parse(saved.encodedCheckpoint);
+        requireThat(checkpoint.state?.id===characterId&&checkpoint.state?.level===character.rules.level,
+          'SIMULATION_STATE','旧实例与已保存的角色状态不一致');
+      }
+      await withResidentRetirement(tx,claim.instanceId,async()=>{
+        for(const row of claims)await tx.delete('simulation_characters',row.id);
+        await tx.delete('simulation_residencies',claim.instanceId);
+        await this.retireState?.(tx,character,Date.now());
+      });
     });
   }
   async admission(accountId: string, characterId: string): Promise<CharacterAdmission> {

@@ -15,12 +15,36 @@ import {companionSkills} from '../src/rules/party.js';
 import {stats} from '../src/rules/character.js';
 import type {Character} from '../src/model.ts';
 import {removeInvalidSave} from '../src/account-reset.ts';
+import {unstuck} from '../src/unstuck.ts';
 
 function embeddedPool(db: PGlite): SqlPool {
   let tail=Promise.resolve();
   return {async connect(){const previous=tail;let release!:()=>void;tail=new Promise(resolve=>{release=resolve;});await previous;
     return {query:async(sql,values)=>sql.includes('CREATE TABLE')?(await db.exec(sql),{rows:[]}):db.query(sql,values),release};},end:()=>db.close()};
 }
+for(const backend of ['memory','sql'] as const)test(`${backend}: retired personal runtime keeps committed progress and fences its old owner`,async()=>{
+  const raw:Store=backend==='memory'?new MemoryStore():new PostgresStore(embeddedPool(new PGlite()));
+  if(raw instanceof PostgresStore)await raw.initialize();
+  const store=residentStore(raw),game=new GameService(store,{contentVersion:'retirement-test'});
+  try{
+    const state=(await game.createAccount('alice',{name:'旧版本角色',classId:8,raceId:1},'create')).state;
+    const previous=new ResidentCharacters(store,{version:{...runtimeVersion,contentHash:'previous-release'}});
+    const admission=await previous.admission('alice',state.id);
+    const repo=new SimulationRepository(store),owner=await repo.acquire(admission.instanceId,'old-host');
+    await assert.rejects(new ResidentCharacters(store,{version:runtimeVersion}).retireIncompatiblePersonal('alice',state.id),/执行权/);
+    await repo.release(owner);
+    const current=new ResidentCharacters(store,{version:runtimeVersion,
+      retireState:(tx,character,now)=>unstuck.call(game,tx,character,now,'release-update',true)});
+    await current.retireIncompatiblePersonal('alice',state.id);
+    assert.equal(await current.find('alice',state.id),null);
+    assert.equal(await store.read(tx=>tx.get('simulation_residencies',admission.instanceId)),null);
+    assert.equal((await store.read(tx=>tx.get<Character>('characters',state.id)))?.rules.level,state.level);
+    await assert.rejects(repo.acquire(admission.instanceId,'old-host'),/permanently transferred/);
+    const next=await current.admission('alice',state.id);
+    assert.notEqual(next.instanceId,admission.instanceId);
+    assert.equal(next.state.level,state.level);
+  }finally{await store.close();}
+});
 for(const backend of ['memory','sql'] as const)test(`${backend}: resident character fencing and fault rollback cover the real asset materializer`,async()=>{
   const raw:Store=backend==='memory'?new MemoryStore():new PostgresStore(embeddedPool(new PGlite()));
   if(raw instanceof PostgresStore)await raw.initialize();
