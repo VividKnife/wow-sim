@@ -60,6 +60,8 @@ export function playerMapPoint(journey,map){
  if(!from||!to)return null;
  const a=mapPoints[from.id],b=mapPoints[to.id];if(!a||!b)return null;
  const region=mapRegion(from.region),crossing=region!==mapRegion(to.region);
- if(crossing){const arrived=journey.progress>=.5,p=arrived?b:a;return {region:arrived?mapRegion(to.region):region,x:p[0],y:p[1],crossing};}
+ // A route's display clock cannot confirm entry into another region.
+ // The next authoritative location/leg switches maps when the server arrives.
+ if(crossing)return {region,x:a[0],y:a[1],crossing};
  return {region,x:a[0]+(b[0]-a[0])*journey.progress,y:a[1]+(b[1]-a[1])*journey.progress,crossing};
 }
