@@ -1891,3 +1891,33 @@ HTTP 入场的两个启动失败用例也分别复测通过，未降低版本检
 
 按最新产品决策，后续以流畅度和操作响应为第一优先级。保留已有单写者、基础资产事务与必要的版本校验，
 不继续扩大故障一致性工程。优先测量和削减画面长帧、重复 UI 工作、网络投影与模拟热循环开销。
+
+## 流畅度优先：物品资料复用与发布构建实测（2026-10-01）
+
+浏览器跟踪发现，每次战斗推送的 `loadContent` 都会递归遍历完整投影以查找物品，
+并复制已加载的物品目录。现在根据差量协议的不可变分支引用，用 WeakMap 复用查找结果；
+物品资料只在新资料包到达时创建新对象，旧目录不会被后续加载改写。
+普通可变数据的一次性查找仍从头扫描，不使用跨调用缓存。物品集合上下文分别缓存，
+不会将同一个对象的任务 ID 误判为物品 ID。
+
+`node apps/web/scripts/benchmark-item-references.mjs` 对比固定提交 c69a0ee2 的查找实现；
+使用真实团本初态的公开投影，构造 100 次仅血量变化的共享分支快照，预热后交替运行七轮。
+该微基准只说明不变分支复用的收益，不能代表实际每帧变化量或整场战斗加速。
+原始结果见 [item-reference-cache-2026-10-01.json](./measurements/item-reference-cache-2026-10-01.json)。
+
+实测工具新增 `PREVIEW_BUILD=1`，构建正式 React/Three 代码后提供同一真实 HTTP/WS 测试页面，
+隔离输出到 `.cache/qa/live-combat-production`，本地素材链接到已有 public 目录，避免复制数 GB 素材。
+用以下命令启动，然后点击「继续战斗」及「重新采样」：
+
+```sh
+PREVIEW_SCENE=raid PREVIEW_BUILD=1 node apps/web/scripts/serve-live-combat.mjs
+```
+
+本机 Edge 的活跃团本窗口约 39.7 秒，帧间隔 P50 16.7ms、P99 33.4ms，0 个超过 50ms 的主线程长任务，
+0 个控制台错误，124 条差量合计 14,225,039 字节。帧分位数取最近 1,800 帧，网络/长任务计数取整个窗口。
+网络输出依然偏大，是后续优化项。该场景使用内存实例、不含 PostgreSQL/Worker 池，且机器有其他开发任务，
+不能作为 2 vCPU 容量或稳定 60FPS 验收，也不能拿开发模式的较差结果计算本改动的帧率提升。
+详情见 [smoothness-browser-2026-10-01.json](./measurements/smoothness-browser-2026-10-01.json)。
+
+资料加载与推送回归共 14 项通过，根目录类型检查通过；浏览器实测截图保存在
+`.cache/qa/smoothness-production-raid.png`。本轮改动尚未部署。

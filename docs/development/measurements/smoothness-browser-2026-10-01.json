@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-01",
+  "scene": "40-person Lucifron raid, active combat with guards and casualties",
+  "browser": "Edge / macOS arm64",
+  "node": "v24.15.0",
+  "command": "PREVIEW_SCENE=raid PREVIEW_BUILD=1 node apps/web/scripts/serve-live-combat.mjs",
+  "backend": "Production HTTP/WebSocket routing and ResidentInstance, isolated memory fixture; no PostgreSQL or worker pool",
+  "metrics": {
+    "frames": 1800,
+    "p50": 16.7,
+    "p99": 33.4,
+    "messages": 124,
+    "bytes": 14225039,
+    "longTasks": 0,
+    "snapshots": 0,
+    "deltas": 124,
+    "disconnects": 0,
+    "seconds": 39.7
+  },
+  "consoleErrors": 0,
+  "notes": [
+    "Frame percentiles cover the most recent 1800 requestAnimationFrame intervals; counters cover the entire 39.7-second sample.",
+    "Other development and a CPU item-reference benchmark were running on this machine.",
+    "This is a post-change production-build smoke measurement, not a controlled before/after frame-rate comparison.",
+    "Development trace separately showed React update, layout and repeated item discovery costs; development and production metrics cannot establish the optimization speedup.",
+    "No target-server capacity, low-end/mobile, long-duration memory or boss-clear claim."
+  ]
+}

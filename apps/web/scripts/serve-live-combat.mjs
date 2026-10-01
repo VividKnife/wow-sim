@@ -1,8 +1,9 @@
 // Production Game UI + production HTTP/WS server; isolated in-memory simulation.
-import {createServer} from 'vite';
+import {createServer,build,preview} from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwind from '@tailwindcss/postcss';
 import {fileURLToPath} from 'node:url';
+import {readdir,symlink} from 'node:fs/promises';
 import {createGameServer} from '../../game-server/src/server.ts';
 import {makeItem} from '../../../packages/game-domain/src/rules/character.js';
 import {ResidentInstance} from '../../simulation-host/src/instance.ts';
@@ -22,6 +23,17 @@ const service={snapshot,socialSnapshot:async()=>({self:{id:state.id,name:state.n
  const result=await snapshot();result.response={...result.response,commandReceipt:{...receipt,confirmation:'durable',durable:true}};return result;
 }};
 const api=createGameServer({service,accounts,appOrigin:origin});await new Promise(resolve=>api.server.listen(5222,'127.0.0.1',resolve));
-const web=await createServer({configFile:false,root:app+'test/browser',publicDir:app+'public',plugins:[react()],resolve:{alias:{'@':app}},optimizeDeps:{entries:['live-combat.html']},css:{postcss:{plugins:[tailwind()]}},server:{host:'127.0.0.1',port:5221,strictPort:true,fs:{allow:[fileURLToPath(new URL('../../../',import.meta.url))]},proxy:{'/api':{target:'http://127.0.0.1:5222',ws:true,headers:{cookie:'wow_session='+token}}}}});
-await web.listen();console.log(origin+'/live-combat.html');
+const proxy={'/api':{target:'http://127.0.0.1:5222',ws:true,headers:{cookie:'wow_session='+token}}};
+const config={configFile:false,root:app+'test/browser',publicDir:app+'public',plugins:[react()],resolve:{alias:{'@':app}},optimizeDeps:{entries:['live-combat.html']},css:{postcss:{plugins:[tailwind()]}},server:{host:'127.0.0.1',port:5221,strictPort:true,fs:{allow:[fileURLToPath(new URL('../../../',import.meta.url))]},proxy}};
+let web;
+if(process.env.PREVIEW_BUILD==='1'){
+ // Measure production React/Three code without HMR or development prop tracing.
+ // Output is isolated from the app's real build and can be regenerated freely.
+ const production={...config,build:{outDir:app+'../../.cache/qa/live-combat-production',emptyOutDir:true,copyPublicDir:false,sourcemap:true,rollupOptions:{input:app+'test/browser/live-combat.html'}},preview:{host:'127.0.0.1',port:5221,strictPort:true,proxy}};
+ await build(production);
+ for(const name of await readdir(app+'public'))await symlink(app+'public/'+name,production.build.outDir+'/'+name);
+ const server=await preview(production);
+ web={close:()=>new Promise(resolve=>server.httpServer.close(resolve))};
+}else{web=await createServer(config);await web.listen();}
+console.log(origin+'/live-combat.html');
 for(const signal of ['SIGINT','SIGTERM'])process.once(signal,async()=>{clearInterval(tick);await web.close();await api.close();process.exit(0);});

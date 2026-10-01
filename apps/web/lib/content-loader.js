@@ -6,7 +6,7 @@ import {auctionContentError} from './auction-content.js';
 export function createContentLoader(fetchImpl=(...args)=>fetch(...args)) {
  const requests=new Map(),versions=new Map();
  function state(version){
-  if(!versions.has(version))versions.set(version,{items:{},known:new Set(),pending:new Map()});
+  if(!versions.has(version))versions.set(version,{items:Object.freeze({}),known:new Set(),pending:new Map()});
   const value=versions.get(version);
   versions.delete(version);versions.set(version,value);
   while(versions.size>2)versions.delete(versions.keys().next().value);
@@ -37,12 +37,12 @@ export function createContentLoader(fetchImpl=(...args)=>fetch(...args)) {
   for(let at=0;at<fresh.length;at+=200){
    const batch=fresh.slice(at,at+200).sort((a,b)=>a-b);
    const pending=pack(version,'items',batch).then(data=>{
-    Object.assign(cache.items,data.items);for(const id of batch)cache.known.add(id);
+    cache.items=Object.freeze({...cache.items,...data.items});for(const id of batch)cache.known.add(id);
    }).finally(()=>{for(const id of batch)cache.pending.delete(id);});
    for(const id of batch)cache.pending.set(id,pending);
   }
   await Promise.all([...new Set(needed.map(id=>cache.pending.get(id)).filter(Boolean))]);
-  return {...cache.items};
+  return cache.items;
  }
  return {pack,ensureItems};
 }
@@ -51,22 +51,36 @@ export function createContentLoader(fetchImpl=(...args)=>fetch(...args)) {
 // Only inventory/display item collections give the generic `id` field meaning.
 const itemCollections=new Set(['equipment','bag','bags','bank','pending','rewards','choices','materials','tools','shop','loot','market','disenchantable','reagents','drops']);
 const itemFields=new Set(['item','itemId','healthItem','manaItem']);
-export function referencedItemIds(value){
- const ids=new Set();
- const add=id=>{if(Number.isSafeInteger(id)&&id>0)ids.add(id);};
- function walk(value,itemCollection=false){
-  if(Array.isArray(value)){for(const entry of value)walk(entry,itemCollection);return;}
-  if(!value||typeof value!=='object')return;
-  if(itemCollection||typeof value.uid==='string')add(value.id);
-  for(const [field,entry] of Object.entries(value)){
-   if(itemFields.has(field))add(entry);
-   walk(entry,itemFields.has(field)||itemCollections.has(field)||(itemCollection&&!Object.hasOwn(value,'id')));
+// Stream snapshots use copy-on-write patches. Unchanged branches can reuse their
+// item references; weak keys let retired snapshots and their caches be collected.
+// Collection context matters: the same object can be both a quest and a reward.
+export function createItemReferenceReader(){
+ const caches=[new WeakMap(),new WeakMap()];
+ function read(value,itemCollection=false){
+  if(!value||typeof value!=='object')return [];
+  const cache=caches[Number(itemCollection)],cached=cache.get(value);
+  if(cached)return cached;
+  const ids=new Set(),add=id=>{if(Number.isSafeInteger(id)&&id>0)ids.add(id);};
+  if(Array.isArray(value)){for(const entry of value)for(const id of read(entry,itemCollection))add(id);}
+  else{
+   if(itemCollection||typeof value.uid==='string')add(value.id);
+   const container=itemCollection&&!Object.hasOwn(value,'id');
+   for(const [field,entry] of Object.entries(value)){
+    if(itemFields.has(field))add(entry);
+    for(const id of read(entry,itemFields.has(field)||itemCollections.has(field)||container))add(id);
+   }
   }
+  const result=[...ids];cache.set(value,result);return result;
  }
- walk(value);return [...ids];
+ return value=>read(value);
 }
+// One-off callers may pass mutable data; only stream readers retain a cache.
+export function referencedItemIds(value){return createItemReferenceReader()(value);}
+const streamItemIds=createItemReferenceReader();
+let lastCore,lastItems,lastContent;
 export const contentLoader=createContentLoader();
 export async function loadContent(version,snapshot){
- const [core,items]=await Promise.all([contentLoader.pack(version),contentLoader.ensureItems(version,referencedItemIds(snapshot))]);
- return {...core,items};
+ const [core,items]=await Promise.all([contentLoader.pack(version),contentLoader.ensureItems(version,streamItemIds(snapshot))]);
+ if(core!==lastCore||items!==lastItems){lastCore=core;lastItems=items;lastContent={...core,items};}
+ return lastContent;
 }
