@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-01",
+  "browser": "Edge / macOS arm64",
+  "node": "v24.15.0",
+  "scenario": "40-person Lucifron raid, live combat and open/sort/close inventory",
+  "command": "PREVIEW_SCENE=raid PREVIEW_BUILD=1 node apps/web/scripts/serve-live-combat.mjs",
+  "metrics": {
+    "frames": 1800,
+    "p50": 16.7,
+    "p99": 18.7,
+    "messages": 245,
+    "bytes": 5595975,
+    "longTasks": 0,
+    "snapshots": 0,
+    "deltas": 245,
+    "disconnects": 0,
+    "seconds": 51.7
+  },
+  "consoleErrors": 0,
+  "notes": [
+    "Last 1800 frame intervals; message/long-task counters cover the entire 51.7-second sample.",
+    "Actual Game UI and HTTP/WebSocket routes, isolated in-memory ResidentInstance; no PostgreSQL or worker pool.",
+    "Inventory contained one item; sorting was accepted while combat and mana/ammunition updates continued. Not a multi-item reorder validation.",
+    "Other development work runs on this machine. Short desktop smoke measurement, not mobile/low-end/long-run/capacity acceptance.",
+    "Publication cadence remains below 10Hz; byte reduction is established separately by the controlled wire benchmark."
+  ]
+}

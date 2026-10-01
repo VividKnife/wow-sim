@@ -79,3 +79,16 @@ test('rolling log deltas only trim expired records and append new ones',()=>{
  assert.equal(logs[20].text,'combat log '.repeat(10));
  for(const op of [{index:-1,deleteCount:0,values:[]},{index:0,deleteCount:501,values:[]},{index:0,deleteCount:0,values:null}])assert.throws(()=>applyProjectedState(previous,[{op:'splice',path:['logs'],...op} as any]));
 });
+
+test('array insertion retains stable spell and unit ends but still patches their changed fields',()=>{
+ const skills=Array.from({length:80},(_,i)=>({spellId:i+1,name:'Spell '+i,description:'metadata '.repeat(40),range:30}));
+ const previous={skills},next={skills:[{...skills[0],range:40},...skills.slice(1,40),{spellId:100,name:'New'},...skills.slice(40,79),{...skills[79],range:10}]};
+ const patch=diffProjectedState(previous,next);
+ assert.ok(JSON.stringify(patch).length<700);assert.equal(patch.filter(op=>op.op==='splice').length,1);
+ assert.deepEqual(applyProjectedState(previous,patch),next);assert.equal(skills[0].range,30);
+ for(const rows of [[],[{id:'a',hp:1}],[{id:'a',hp:1},{id:'b',hp:2}],[{id:'b',hp:5},{id:'c',hp:3},{id:'a',hp:4}],[{id:'a',hp:1},{id:'a',hp:2}],['a','b','c']]){
+  for(const target of [[],rows.slice(1),[null,...rows],[...rows,1],[...rows].reverse(),[{id:'a',hp:10},...rows]]){
+   const before={rows},after={rows:target};assert.deepEqual(applyProjectedState(before,diffProjectedState(before,after)),after);
+  }
+ }
+});

@@ -1,0 +1,25 @@
+{
+  "node": "v24.15.0",
+  "scenario": "40-person raid, 10 simulated seconds, 100ms combat and 1s full projections",
+  "baselineRef": "0f7884aa",
+  "roundTrips": 300,
+  "results": [
+    {
+      "name": "baseline",
+      "bytes": 4357737,
+      "operations": 35792
+    },
+    {
+      "name": "sharedDeadline",
+      "bytes": 1919027,
+      "operations": 12740
+    },
+    {
+      "name": "sharedDeadlineAndArraySplice",
+      "bytes": 1562362,
+      "operations": 13328
+    }
+  ],
+  "byteReduction": 0.6414740035940674,
+  "notes": "Same rule states and publication times. No PostgreSQL, worker transport, websocket framing or compression; not server capacity."
+}

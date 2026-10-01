@@ -91,7 +91,22 @@ export function diffProjectedState(previous:unknown,next:unknown):ProjectedState
      return;
     }
    }
-   if(left.length!==right.length){operations.push({op:'set',path,value:cloneJson(right)});return;}
+   if(left.length!==right.length){
+    // Inserting one spell/projectile must not resend every unchanged entry.
+    // Align the unchanged ends by identity, then diff their fields as usual:
+    // an equal ID alone does not imply that health or other data is unchanged.
+    const aligned=(a:any,b:any)=>Object.is(a,b)||!!(a&&b&&typeof a==='object'&&typeof b==='object'&&
+      (typeof a.id==='string'||typeof a.id==='number')&&a.id===b.id)||!!(a&&b&&typeof a==='object'&&typeof b==='object'&&
+      (typeof a.spellId==='string'||typeof a.spellId==='number')&&a.spellId===b.spellId);
+    let prefix=0,suffix=0;
+    while(prefix<Math.min(left.length,right.length)&&aligned(left[prefix],right[prefix]))prefix++;
+    while(suffix<Math.min(left.length,right.length)-prefix&&aligned(left[left.length-1-suffix],right[right.length-1-suffix]))suffix++;
+    if(!prefix&&!suffix){operations.push({op:'set',path,value:cloneJson(right)});return;}
+    operations.push({op:'splice',path,index:prefix,deleteCount:left.length-prefix-suffix,values:cloneJson(right.slice(prefix,right.length-suffix))});
+    for(let index=0;index<prefix;index++)walk(left[index],right[index],[...path,index]);
+    for(let offset=suffix;offset>0;offset--)walk(left[left.length-offset],right[right.length-offset],[...path,right.length-offset]);
+    return;
+   }
    for(let index=0;index<right.length;index++)walk(left[index],right[index],[...path,index]);
    return;
   }
