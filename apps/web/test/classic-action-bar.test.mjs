@@ -23,6 +23,12 @@ test('quickbar exposes real hearthstone, portal and cannibalize commands',()=>{
  assert.equal(act(s,portal.command,s.wallAt).activity.type,'classSpell');
  assert.ok(actions.find(a=>a.key==='spell:20577'));
 });
+test('peace quickbar Revive Pet casts without a target',()=>{
+ const s=createGame('猎人',37,0,{raceId:3,classId:3});s.level=20;s.learned.push(982);s.mana=stats(s).maxMana;
+ s.pet={id:'player-pet',ownerId:s.id,kind:'beast',petUnit:true,hp:0,maxHp:100};
+ const revive=quickActions(s,view(s),'peace').find(a=>a.spellId===982);
+ assert.equal(revive.canUse,true);assert.deepEqual(revive.command,{type:'cast',id:982});
+});
 test('item bindings select usable stacks and survive stack replacement',()=>{
  const s={id:'player',bag:[{id:118,uid:'locked',count:2,locked:true},{id:118,uid:'ready',count:1}]};
  const d={items:{118:{name:'药水'}},itemUses:{locked:{canUse:false,reason:'锁定'},ready:{canUse:true}}};

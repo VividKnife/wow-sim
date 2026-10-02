@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "referenceCommit": "d2d43b9041768603a0c52b8ce55c64b2a03fb6a2",
-  "contentHash": "e1a06cf812b7496f3d03bb2fee4c989c434af3941cd2209e4aefdbd10f961e90",
-  "capturedRuleset": "owned-v1:7a2fe3a6e49ff9ebc2476f668897fb8e87e9a39844ca87c86e8013a2322fbaf7",
-  "reviewReason": "Reviewed city, mount, flight-point, boost-pool, and world presentation updates; refreshed deterministic current scenarios against the generated content manifest.",
+  "contentHash": "965e90f6f1d1cf8552da02d6b2e4d1a22c5418300b7e81259b2fb3d38518408b",
+  "capturedRuleset": "owned-v1:fae713c59214d2596dd538ed6bf25b4e7bf81b1fab0c9ba76a4feaabcda9afda",
+  "reviewReason": "Reviewed class utility action-bar and audio preference updates; refreshed deterministic current scenarios against the generated rules manifest.",
   "sampleMs": 50,
   "durationMs": 15000,
   "referenceSummaryMatches": {

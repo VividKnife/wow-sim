@@ -1,5 +1,5 @@
 const keys={musicEnabled:'wow-sim:music-enabled',musicVolume:'wow-sim:music-volume',effectsEnabled:'wow-sim:effects-enabled',effectsVolume:'battle-volume'};
-export const audioDefaults={musicEnabled:true,musicVolume:.25,effectsEnabled:false,effectsVolume:.7};
+export const audioDefaults={musicEnabled:true,musicVolume:.25,effectsEnabled:true,effectsVolume:.7};
 const eventName='wow-sim:audio-preferences';
 export function readAudioPreference(name){
  try{const value=localStorage.getItem(keys[name]);if(value!==null&&value.trim()!==''){if(typeof audioDefaults[name]==='boolean')return value==='true';const number=Number(value);if(Number.isFinite(number))return Math.max(0,Math.min(1,number));}}catch{}

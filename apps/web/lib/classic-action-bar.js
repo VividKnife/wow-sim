@@ -14,7 +14,7 @@ export function actionAfterElapsed(action,elapsedMs=0){
 }
 export function quickActions(s,d,mode='peace'){
  const uses=targetSkillUses(d,s.id,s.clock);
-  const spells=(d.skills||[]).filter(sp=>sp.known&&uses[sp.spellId]).map(sp=>({key:`spell:${sp.spellId}`,spellId:sp.spellId,name:sp.name,nameEn:sp.nameEn,icon:sp.icon,...uses[sp.spellId],kind:'技能',command:{type:'cast',id:sp.spellId,target:uses[sp.spellId].targetId||s.id}}));
+  const spells=(d.skills||[]).filter(sp=>sp.known&&uses[sp.spellId]).map(sp=>({key:`spell:${sp.spellId}`,spellId:sp.spellId,name:sp.name,nameEn:sp.nameEn,icon:sp.icon,...uses[sp.spellId],kind:'技能',command:sp.nameEn==='Revive Pet'?{type:'cast',id:sp.spellId}:{type:'cast',id:sp.spellId,target:uses[sp.spellId].targetId||s.id}}));
  const ids=[...new Set((s.bag||[]).filter(i=>d.itemUses?.[i.uid]).map(i=>i.id))];
  const items=ids.map(id=>{
   const stacks=s.bag.filter(i=>i.id===id),stack=stacks.find(i=>d.itemUses?.[i.uid]?.canUse)||stacks.find(i=>!i.locked&&d.itemUses?.[i.uid])||stacks[0];

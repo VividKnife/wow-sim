@@ -7,7 +7,8 @@ test('audio preferences notify mounted players, persist, clamp volume and unsubs
  globalThis.window=target;
  try{
   let updates=0;const unsubscribe=subscribeAudioPreferences(()=>updates++);
-  assert.equal(readAudioPreference('effectsEnabled'),false);
+  assert.equal(readAudioPreference('musicEnabled'),true);
+  assert.equal(readAudioPreference('effectsEnabled'),true);
   writeAudioPreference('effectsEnabled',true);assert.equal(readAudioPreference('effectsEnabled'),true);
   writeAudioPreference('effectsVolume',.4);assert.equal(readAudioPreference('effectsVolume'),.4);
   assert.equal(store.get('battle-volume'),'0.4');
