@@ -56,7 +56,7 @@ function effect6(ctx){const {s,c,t,sp,actors,api,periodic,coefficient,depth,n,ef
    else if(type===15){t.thorns={spell:sp.Id,amount:v,until:s.clock+(sp.durationMs||1800000)};}
    else if(type===69){t.absorb={spell:sp.Id,caster:c.id,dispel:sp.Dispel,positive:true,amount:talentSpellValue(c,sp,8,effectRange(c,sp,n)[0]+spellPowerBonus(stats(c),sp,{effect:n}))*coefficient,schoolMask:sp['EffectMiscValue'+n],until:s.clock+sp.durationMs};}
    else if(type===97)t.manaShield={spell:sp.Id,amount:v+spellPowerBonus(stats(c),sp),multiplier:talentSpellValue(c,sp,27,sp['EffectMultipleValue'+n]||2),until:s.clock+sp.durationMs};
-   else if(type===42&&sp['EffectTriggerSpell'+n])t.reactiveClass={spell:sp.Id,trigger:sp['EffectTriggerSpell'+n],charges:sp.ProcCharges>0?sp.ProcCharges:2147483647,until:s.clock+sp.durationMs,next:0};
+   else if(type===42&&sp['EffectTriggerSpell'+n])t.reactiveClass={spell:sp.Id,caster:c.id,trigger:sp['EffectTriggerSpell'+n],charges:sp.ProcCharges>0?sp.ProcCharges:2147483647,until:s.clock+sp.durationMs,next:0};
    else if(type===33)aura(s,c,t,sp,n,talentSpellValue(c,sp,12,v));
    else if(![29,22,99,124].includes(type)||type===22&&!(sp['EffectMiscValue'+n]&1)||!(t.classBuffs||[]).some(b=>b.spell===sp.Id&&b.until>s.clock))aura(s,c,t,sp,n,v);
   

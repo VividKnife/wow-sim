@@ -2,7 +2,7 @@
  * rewards have no fields in this protocol. Domain rules validate applicability. */
 export type RuleAction = {type: string; [key: string]: unknown};
 const fields: Record<string, string> = {
-  hunt:'id quest',stop:'',rest:'',loot:'uids',travel:'to hunt quest',accept:'id',turnin:'id choice',abandon:'id',
+  hunt:'id quest',stop:'',rest:'',loot:'uids',travel:'to hunt quest',accept:'id',turnin:'id choice',abandon:'id',abandonLowLevelQuests:'ids',
   navigateQuest:'id',useQuestItem:'id',questScene:'id key',gather:'id',
   settings:'autoLoot autoLootIgnoreGray health mana',
   ammoSettings:'memberId enabled target',loadAmmo:'memberId uid',

@@ -1,3 +1,4 @@
+import {isLowLevelQuest} from '../../../sim-core/src/quest-level.js';
 import {runtime} from './runtime-content.js';
 import {groupRows} from '../../../sim-core/src/collections.js';
 import {grantHunterTrainingLinks} from './pet-knowledge.js';
@@ -6,8 +7,8 @@ import {rewardCharacters} from './combat-members.js';
 import {racialModifiers} from './racial-effects.js';
 import {quests,questLinks,questXp,classContentManifest,classDefinitions,raceDefinitions,endpointNodes,creatureLocations,creatures,items,objectLocations,objectSpawnsByNode,objectTemplates,objectLoot,creatureLoot,referenceLoot,table,localize,nameOf,nearestNode,nodes,monsterIdsAt,attackableCreature} from './catalog.js';
 import {countItem,takeItem,addItem,gainXp,rng,roll,log} from './character.js';
-import {evaluateCondition,professionIds} from './quest-conditions.js';
-import {questScopeReason,questItemActions,questFishingSources} from '../../../game-data/world-quest-content.js';
+import {conditionQuestRequirements,evaluateCondition,professionIds} from './quest-conditions.js';
+import {dungeonQuestZones,questScopeReason,questItemActions,questFishingSources} from '../../../game-data/world-quest-content.js';
 import {dungeonDefinitions,dungeonRoute} from './dungeon-registry.js';
 import {recipes} from './profession-data.js';
 import {marketIds} from './market.js';
@@ -37,7 +38,35 @@ export function questAvailable(s,q,seen=new Set()){if(questContentReason(q))retu
  if(q.ExclusiveGroup>0&&(exclusiveQuests[q.ExclusiveGroup]||[]).some(p=>p.entry!==q.entry&&(s.completed[p.entry]||s.quests[p.entry])))return false;
  return !q.RequiredCondition||meetsCondition(s,q.RequiredCondition,seen);
 }
-export function atEndpoint(s,q,kind){return(questLinks[q.entry]?.[kind]||[]).some(e=>e.type==='item'?kind==='starts'&&countItem(s,e.id)>0:endpointNodes(e).includes(s.location));}
+const instanceLocation=s=>s.dungeon?dungeonDefinitions[s.dungeon.id]?.entrance:s.goldRaid?.active?s.goldRaid.raidId:null;
+let instanceQuestIndex;
+// Derive associations from quest targets and sources, including item-started
+// quests and NPCs/objects inside an instance. Never move their world placements.
+function instanceQuests(location){
+ if(!location)return new Set();
+ if(!instanceQuestIndex){
+  instanceQuestIndex=new Map([...Object.values(dungeonDefinitions).map(d=>d.entrance),'molten-core','onyxias-lair'].map(id=>[id,new Set()]));
+  for(const q of Object.values(quests)){
+   const links=questLinks[q.entry],locations=new Set(Object.keys(dungeonQuestZones).filter(id=>dungeonQuestZones[id]===q.ZoneOrSort));
+   for(const endpoint of [...(links?.starts||[]),...(links?.ends||[])])for(const node of endpoint.type==='item'?itemSources(endpoint.id):endpointNodes(endpoint))locations.add(node);
+   for(let n=1;n<=4;n++){
+    if(items[q['ReqItemId'+n]]?.class===12||[62,81].includes(q.Type))for(const node of itemSources(q['ReqItemId'+n]))locations.add(node);
+    for(const node of itemSources(q['ReqSourceId'+n]))locations.add(node);
+    if(q['ReqCreatureOrGOId'+n]||q['ReqSpellCast'+n])for(const node of questTargetAction(q,n).locations)locations.add(node);
+   }
+   if(q.SpecialFlags&2)for(const node of eventNodes(q.entry))locations.add(node);
+   for(const node of locations)instanceQuestIndex.get(node)?.add(q.entry);
+  }
+ }
+ return instanceQuestIndex.get(location)||new Set();
+}
+export function dungeonQuestIds(id){return [...instanceQuests(dungeonDefinitions[id]?.entrance||id)];}
+export function questPrerequisiteGroups(q){return [...(q.PrevQuestId?[[q.PrevQuestId]]:[]),...(previousQuests[q.entry]?.length?[previousQuests[q.entry].map(p=>p.entry)]:[]),...conditionQuestRequirements(q.RequiredCondition)];}
+export function questEndpointHere(s,questId,kind,endpoint){
+ if(endpoint.type==='item')return kind==='starts'&&countItem(s,endpoint.id)>0;
+ return endpointNodes(endpoint).includes(s.location)||endpoint.type==='creature'&&instanceQuests(instanceLocation(s)).has(questId);
+}
+export function atEndpoint(s,q,kind){return(questLinks[q.entry]?.[kind]||[]).some(e=>questEndpointHere(s,q.entry,kind,e));}
 // Immutable content indices shared by all instances in this worker. Runtime
 // availability still uses the current actor (level, race/class, prerequisites,
 // reputation, professions, repeatable deadlines and carried item counts).
@@ -51,6 +80,7 @@ for(const q of Object.values(quests))for(const endpoint of questLinks[q.entry]?.
 export function visibleQuestIds(s){
  const ids=new Set(Object.keys(s.quests).filter(id=>s.quests[id]).map(Number));
  for(const id of startsByLocation.get(s.location)||[])ids.add(id);
+ if(instanceLocation(s))for(const id of instanceQuests(instanceLocation(s)))ids.add(id);
  for(const item of s.bag)for(const id of startsByItem.get(item.id)||[])ids.add(id);
  return [...ids].filter(id=>quests[id]&&(s.quests[id]||questAvailable(s,quests[id])&&atEndpoint(s,quests[id],'starts'))).sort((a,b)=>a-b);
 }
@@ -89,7 +119,7 @@ export function questProgress(s,id){const q=quests[id],progress=s.quests[id];if(
  const className=classDefinitions.find(c=>c.id===(s.classId||8))?.name||'法师',raceName=raceDefinitions.find(r=>r.id===(s.raceId||1))?.name||'人类';
  const locale=localize('quests',id),name=nameOf('quests',id),description=hasChinese(locale?.objectiveSummaryZhCN)?locale.objectiveSummaryZhCN:questObjectiveFallback(name,objectives);
  const details=hasChinese(locale?.detailsZhCN)?locale.detailsZhCN:description;
- return{scenes:questScenes(s,id),id:q.entry,name,level:q.QuestLevel,minLevel:q.MinLevel,description:questText(description,s,className,raceName),details:questText(details,s,className,raceName),objectives,complete:!!progress&&objectives.every(o=>o.count>=o.required)&&s.money>=Math.max(0,-q.RewOrReqMoney),xp:questXp[id]?.[s.level-1]||0,money:q.RewOrReqMoney,available:questAvailable(s,q),active:!!progress,completed:!!s.completed[id],canAccept:questAvailable(s,q)&&atEndpoint(s,q,'starts'),canTurnIn:!!progress&&atEndpoint(s,q,'ends'),startLocations:[...new Set((questLinks[id]?.starts||[]).flatMap(endpointNodes))],endLocations:[...new Set((questLinks[id]?.ends||[]).flatMap(endpointNodes))],giver:(questLinks[id]?.starts||[]).map(e=>e.type==='creature'?nameOf('npcs',e.id):e.type==='item'?nameOf('items',e.id):objectTemplates[e.id]?.name).filter(Boolean).join(' / '),choices:[1,2,3,4,5,6].filter(n=>q['RewChoiceItemId'+n]).map(n=>({id:q['RewChoiceItemId'+n],count:q['RewChoiceItemCount'+n]})),rewards:[1,2,3,4].filter(n=>q['RewItemId'+n]).map(n=>({id:q['RewItemId'+n],count:q['RewItemCount'+n]})),repeatable:!!(q.SpecialFlags&1),expiresAt:progress?.expiresAt||0,waitUntil:s.questWaits?.[id]||0};
+ return{scenes:questScenes(s,id),id:q.entry,name,level:q.QuestLevel,minLevel:q.MinLevel,description:questText(description,s,className,raceName),details:questText(details,s,className,raceName),objectives,complete:!!progress&&objectives.every(o=>o.count>=o.required)&&s.money>=Math.max(0,-q.RewOrReqMoney),xp:questXp[id]?.[s.level-1]||0,money:q.RewOrReqMoney,available:questAvailable(s,q),active:!!progress,completed:!!s.completed[id],canAccept:questAvailable(s,q)&&atEndpoint(s,q,'starts'),canTurnIn:!!progress&&atEndpoint(s,q,'ends'),startLocations:[...new Set((questLinks[id]?.starts||[]).flatMap(endpointNodes))],endLocations:[...new Set([...(questLinks[id]?.ends||[]).flatMap(endpointNodes),...(progress&&atEndpoint(s,q,'ends')?[s.location]:[])])],giver:(questLinks[id]?.starts||[]).map(e=>e.type==='creature'?nameOf('npcs',e.id):e.type==='item'?nameOf('items',e.id):objectTemplates[e.id]?.name).filter(Boolean).join(' / '),choices:[1,2,3,4,5,6].filter(n=>q['RewChoiceItemId'+n]).map(n=>({id:q['RewChoiceItemId'+n],count:q['RewChoiceItemCount'+n]})),rewards:[1,2,3,4].filter(n=>q['RewItemId'+n]).map(n=>({id:q['RewItemId'+n],count:q['RewItemCount'+n]})),repeatable:!!(q.SpecialFlags&1),expiresAt:progress?.expiresAt||0,waitUntil:s.questWaits?.[id]||0};
 }
 export function itemSources(id){return [...(runtime.itemSourceIndex[id]||[])];}
 const dedicatedEvents={62:['fargodeep'],76:['jasper'],155:['sentinel','moonbrook'],1861:['mirror'],1920:['magetower'],434:['keep']};
@@ -154,6 +184,10 @@ export function acceptQuest(s,id){
  if(q.SrcItemId&&!countItem(s,q.SrcItemId)&&!addItem(s,q.SrcItemId,q.SrcItemCount||1,false))throw new Error('背包空间不足，无法领取任务物品。');
  if(starter&&starter.id!==q.SrcItemId&&![1,2,3,4].some(n=>q['ReqItemId'+n]===starter.id))takeItem(s,starter.id,1);
  s.quests[id]={kills:{},event:false,acceptedAt:s.clock,expiresAt:q.LimitTime?s.clock+q.LimitTime*1000:0};log(s,'接受任务：'+nameOf('quests',id),'quest');
+}
+export function abandonLowLevelQuests(s,ids){
+ if(!Array.isArray(ids)||!ids.length||ids.length>20||new Set(ids).size!==ids.length||ids.some(id=>!Number.isInteger(id)||!s.quests[id]||!quests[id]||!isLowLevelQuest(s.level,quests[id].QuestLevel)))throw new Error('任务列表已变化，请重新确认要放弃的绿色任务。');
+ for(const id of ids)abandonQuest(s,id);
 }
 export function abandonQuest(s,id){
  const q=quests[id];if(!q||!s.quests[id])throw new Error('没有这个任务。');delete s.quests[id];

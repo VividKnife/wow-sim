@@ -1,3 +1,4 @@
+import {replaceExclusiveBuff,clearExclusiveBuffs,replaceBlessing} from './exclusive-buffs.js';
 import {healPeriodicAmount} from './healing.js';
 import {dueGroundEffects,continueGroundEffect} from './ground-events.js';
 import {duePeriodicEffects,continuePeriodicEffect,expirePeriodicEffect} from './simulation-events.js';
@@ -100,7 +101,7 @@ export function prepareClassAbility(s,c,e,sp,actors,readStats=stats,input=null){
  if(name==='Mind Control'&&target.level>amount(c,sp))return null;
  return {target,channel:extendedChannels.has(name)};
 }
-function applyStatsBuff(s,c,t,sp){if((t.classBuffs||[]).some(b=>b.until>s.clock&&b.name===sp.SpellName&&(spells[b.spell]?.SpellLevel||0)>sp.SpellLevel))return false;const values={};for(let n=1;n<=3;n++){const type=sp['EffectApplyAuraName'+n],misc=sp['EffectMiscValue'+n],v=amount(c,sp,n);if(type===29){if(misc===-1)for(const k of ['str','agi','sta','int','spi'])values[k]=v;else if(['str','agi','sta','int','spi'][misc])values[['str','agi','sta','int','spi'][misc]]=v;}if(type===22&&misc&1)values.armor=v;if(type===99)values.attackPower=v;if(type===124)values.rangedAttackPower=v;}
+function applyStatsBuff(s,c,t,sp){replaceBlessing(c,t,sp);if((t.classBuffs||[]).some(b=>b.until>s.clock&&b.name===sp.SpellName&&(spells[b.spell]?.SpellLevel||0)>sp.SpellLevel))return false;const values={};for(let n=1;n<=3;n++){const type=sp['EffectApplyAuraName'+n],misc=sp['EffectMiscValue'+n],v=amount(c,sp,n);if(type===29){if(misc===-1)for(const k of ['str','agi','sta','int','spi'])values[k]=v;else if(['str','agi','sta','int','spi'][misc])values[['str','agi','sta','int','spi'][misc]]=v;}if(type===22&&misc&1)values.armor=v;if(type===99)values.attackPower=v;if(type===124)values.rangedAttackPower=v;}
  t.classBuffs=(t.classBuffs||[]).filter(b=>b.name!==sp.SpellName);t.classBuffs.push({spell:sp.Id,name:sp.SpellName,caster:c.id,charges:sp.ProcCharges||null,until:s.clock+(sp.durationMs||1800000),stats:values});}
 export function genericEffects(s,c,t,sp,actors,api,options={}){
  if((t.classBuffs||[]).some(b=>b.until>s.clock&&b.name===sp.SpellName&&(spells[b.spell]?.SpellLevel||0)>sp.SpellLevel))return {executed:[],unsupported:[],rejected:'stronger-rank-active'};
@@ -109,10 +110,11 @@ export function genericEffects(s,c,t,sp,actors,api,options={}){
 export function executeExtendedClassEffect(s,c,target,sp,actors=[c],api={}){
  const name=sp.SpellName;if(!extendedSpellNames.has(name))return false;const r=ranks(c);target??=c;
  if(name==='Thorns')return false;
+ replaceExclusiveBuff(s,c,target,sp,actors);
  if(name.startsWith('Polymorph:')){if(canPolymorph(target,sp)&&(!api.lands||api.lands(s,c,target,sp)))applyPolymorph(s,c,target,sp);return true;}
  if(name==='Flare'){s.flares??=[];s.flares.push({caster:c.id,position:target.position,positionY:target.positionY||0,radius:sp.radius||10,until:s.clock+sp.durationMs});return true;}
  if(name==='Divine Intervention'){if(target===c)return true;genericEffects(s,c,target,spellInfo(c,19753),actors,api);c.hp=0;c.cast=null;for(const e of allLiving(s))delete e.threat[target.id];return true;}
- if(name==='Blessing of Sacrifice'){if(target!==c)target.sacrifice={caster:c.id,amount:amount(c,sp),until:s.clock+sp.durationMs};return true;}
+ if(name==='Blessing of Sacrifice'){if(target!==c)target.sacrifice={spell:sp.Id,caster:c.id,amount:amount(c,sp),until:s.clock+sp.durationMs};return true;}
  if(name==='Shoot'||name==='Throw'){const weapon=items[c.equipment[18]?.id];if(!weapon)return true;const raw=roll(s,weapon.dmg_min1||0,weapon.dmg_max1||0)+(name==='Throw'?stats(c).rangedAttackPower/14*(weapon.delay||2000)/1000:0),school=name==='Shoot'?(weapon.dmg_type1||0):0;c.nextAction=Math.max(c.nextAction,s.clock+(weapon.delay||1500));damage(s,c,target,raw*(school===0?1-armorReduction(target.armor,c.level):1),{...sp,School:school},api);if(name==='Throw'&&c.equipment[18].count>0)c.equipment[18].count--;return true;}
 
  if(extendedEnchants.has(name)){const row=classEnchantments[sp.EffectMiscValue1];if(name==='Rockbiter Weapon'){const effect=spells[row?.effects?.find(e=>e.type===3)?.spellId];if(effect){applyStatsBuff(s,c,c,{...spellInfo(c,effect.Id),SpellName:name,Id:sp.Id,durationMs:1800000});}return true;}c.weaponEnchant={spell:sp.Id,name,until:s.clock+1800000,charges:name.includes('Poison')?120:null,bonus:talentSpellValue(c,sp,3,1),chance:talentSpellValue(c,sp,18,row?.effects?.[0]?.amount||20)/100,enchant:sp.EffectMiscValue1,trigger:row?.effects?.[0]?.spellId||0};return true;}
@@ -209,7 +211,7 @@ export function classMeleeProc(s,c,target,api,slot=16){const totem=c.totemWeapon
 }
 
 export function classJudgement(s,c,target,sp,actors,api){
- const seal=spells[c.seal?.spell];if(!seal||seal.SpellName==='Seal of Righteousness')return false;c.seal=null;
+ const seal=spells[c.seal?.spell];if(!seal||seal.SpellName==='Seal of Righteousness')return false;clearExclusiveBuffs(c,'seal');c.seal=null;
  if(api.lands&&!api.lands(s,c,target,sp))return true;const slot=[1,2,3].find(n=>seal['EffectApplyAuraName'+n]===4&&seal['EffectBasePoints'+n]>0),id=slot?seal['EffectBasePoints'+slot]+1:0,judgement=spells[id];if(!judgement)return true;
  if(seal.SpellName==='Seal of Command'){const hit=Object.values(spells).find(p=>p.SpellName==='Judgement of Command'&&p.Rank1===seal.Rank1&&p.Effect1===2);if(hit){const proc=spellInfo(c,hit.Id),stunned=target.stunUntil>s.clock||activeAuras(target,s.clock).some(a=>a.type===12);damage(s,c,target,roll(s,...effectRange(c,proc))*(stunned?1:.5),proc,api);}}
  else if(seal.SpellName==='Seal of Light'||seal.SpellName==='Seal of Wisdom'){const trigger=Object.values(spells).find(p=>p.SpellName===judgement.SpellName&&p.Rank1===judgement.Rank1&&p.Effect1===(seal.SpellName==='Seal of Light'?10:30));target.judgement={name:seal.SpellName,spell:id,caster:c.id,amount:trigger?amount(c,trigger):amount(c,sealTrigger(c,seal)),until:s.clock+10000};}

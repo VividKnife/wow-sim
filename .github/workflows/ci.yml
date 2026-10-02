@@ -25,28 +25,16 @@ jobs:
           cache-dependency-path: |
             package-lock.json
             apps/web/package-lock.json
-      - name: Validate asset deployment mode
-        run: node -e "if (!['r2', 'bundled'].includes(process.env.WEB_ASSET_MODE)) throw new Error('WEB_ASSET_MODE must be r2 or bundled')"
       - run: npm ci
       - run: npm --prefix apps/web ci
-      - run: npm run data:check
-      - name: Verify deployment contracts and reviewed simulation baseline
-        run: node --test scripts/game-version.test.mjs scripts/publish-zeabur.test.mjs scripts/publish-r2-assets.test.mjs scripts/verify-deployment.test.mjs apps/web/test/static-web.test.mjs packages/simulation-tests/baseline.test.ts
-      - run: npm run typecheck
-      - run: npm --prefix apps/web run typecheck
-      - run: npm --prefix apps/web run build
+      - run: npm run ci:validate
         env:
           WEB_BUILD_ID: ${{ github.sha }}
-      - run: node scripts/verify-web-build.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: web-build
           path: apps/web/dist
           include-hidden-files: true
-      - run: docker build -f Dockerfile.runtime -t wow-sim-runtime:ci .
-      - run: node scripts/verify-production.mjs
-        env:
-          RUNTIME_IMAGE: wow-sim-runtime:ci
   publish-r2-assets:
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' && vars.WEB_ASSET_MODE != 'bundled'
     needs: validate

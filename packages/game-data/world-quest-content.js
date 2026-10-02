@@ -1,3 +1,19 @@
+// Classic quest journal categories. Wings share a category, including delivery
+// and follow-up quests whose immediate objectives are outside the instance.
+export const dungeonQuestZones={
+ 'deadmines':1581,'stockades':717,'ragefire-chasm':2437,'wailing-caverns':718,
+ 'shadowfang-keep':209,'blackfathom-deeps':719,'gnomeregan':133,'razorfen-kraul':1717,
+ 'scarlet-monastery-graveyard':796,'scarlet-monastery-library':796,
+ 'scarlet-monastery-armory':796,'scarlet-monastery-cathedral':796,
+ 'razorfen-downs':722,'uldaman':1337,'zul-farrak':978,
+ 'maraudon-purple':2100,'maraudon-orange':2100,'maraudon-inner':2100,
+ 'sunken-temple':1477,'blackrock-depths':1584,
+ 'lower-blackrock-spire':1583,'upper-blackrock-spire':1583,
+ 'dire-maul-east':2557,'dire-maul-west':2557,'dire-maul-north':2557,
+ 'scholomance':2057,'stratholme-live':2017,'stratholme-undead':2017,
+ 'molten-core':2717,'onyxias-lair':2159,
+};
+
 // Node adaptations for source script summons. These are not static spawn claims.
 export const questCreaturePlacements={
  3694:['astranaar'],7750:['serpents-coil'],7729:['serpents-coil'],7918:['gadgetzan'],

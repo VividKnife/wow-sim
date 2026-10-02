@@ -1,3 +1,6 @@
+import QuestNavigationButton from './quest-navigation-button';
+import AbandonLowLevelQuests from './abandon-low-level-quests';
+import {isLowLevelQuest} from '../../../packages/sim-core/src/quest-level.js';
 import QuestScenes from './quest-scenes';
 import {useState,type ReactNode} from 'react';
 import {Button} from '@/components/ui/button';
@@ -13,17 +16,16 @@ import WorldScene from './world-scene';
 import CreaturePortrait from './creature-portrait';
 import {MapPin,Map as MapIcon,ScrollText} from 'lucide-react';
 import './journey.css';
-type WorldProps=GameProps&{overview?:ReactNode;onOpenDungeon?:()=>void;onObserve?:()=>void;surface?:'full'|'nearby'|'quests'|'map'|'activities';onNavigate?:()=>void;sceneActive?:boolean};
+type WorldProps=GameProps&{overview?:ReactNode;onOpenDungeon?:()=>void;onObserve?:()=>void;surface?:'full'|'nearby'|'quests'|'map'|'activities';onNavigate?:(panel:'map'|'quests')=>void;sceneActive?:boolean};
 export default function World({state:s,data:d,busy,revision,send,overview,onOpenDungeon,onObserve,playback,contentVersion,surface='full',onNavigate,sceneActive=true}:WorldProps){
  const [filter,setFilter]=useState('全部'),[mapOpen,setMapOpen]=useState(false);
  const questList=d.quests.filter((q:any)=>q.active);
  const completedQuests=questList.filter((q:any)=>q.complete).length;
- const navigationLocked=busy||!!s.combat||s.hp<=0||!['idle','hunt'].includes(s.activity.type);
- const navigate=async(id:number)=>{if(await send({type:'navigateQuest',id})){setMapOpen(true);onNavigate?.();}};
- const navigationButton=(q:any)=>q.navigation?<Button variant="outline" disabled={navigationLocked||q.navigation.here} onClick={()=>navigate(q.id)}>{q.navigation.here?(q.navigation.kind==='turnin'?'已到交付地点':'已在任务区域'):(q.navigation.kind==='turnin'?'前往交付':'前往任务区域')} ↗</Button>:<span className="quest-navigation-note">暂无可导航地点，请查看任务说明</span>;
- const questPanel=(<section id="quest-list" tabIndex={-1} className="panel quest-panel"><div className="section-heading"><div><h2>任务日志 <small>{Object.keys(s.quests).length} / 20</small></h2></div><small>接受与交付任务，请与对应人物交谈</small></div>
+ const navigate=async(id:number)=>{const npc=d.quests.find((q:any)=>q.id===id)?.navigation?.npcKey;if(await send({type:'navigateQuest',id})){if(!npc)setMapOpen(true);onNavigate?.(npc?'quests':'map');}};
+ const navigationButton=(q:any)=>q.navigation?<QuestNavigationButton state={s} data={d} busy={busy} send={send} navigation={q.navigation} onNavigate={()=>navigate(q.id)}/>:<span className="quest-navigation-note">暂无可导航地点，请查看任务说明</span>;
+ const questPanel=(<section id="quest-list" tabIndex={-1} className="panel quest-panel"><div className="section-heading"><div><h2>任务日志 <small>{Object.keys(s.quests).length} / 20</small></h2></div><AbandonLowLevelQuests key={s.id} state={s} data={d} busy={busy} send={send}/></div><p className="footnote">接受与交付任务，请与对应人物交谈</p>
  {!questList.length&&<p className="empty">暂无任务。与附近带有 ! 标记的人物交谈可接取任务。</p>}
- {questList.map((q:any)=><details className="quest-entry" key={q.id}><summary><span className={'quest-mark '+(q.complete?'complete':'')}>{q.complete?'✓':'◇'}</span><strong>{q.name}</strong><small>Lv.{q.level} · {q.complete?'等待交付':'进行中'}</small></summary><p>{q.description}</p><div className="objective-list">{q.objectives.map((o:any,i:number)=><div key={i}><span className={o.count>=o.required?'done':''}>{o.name} <b>{o.count}/{o.required}</b></span><small>{o.locations.map((id:string)=>d.map.find((n:any)=>n.id===id)?.name).filter(Boolean).join('、')}</small></div>)}</div>{q.scenes?.map((scene:any)=><div className="action-row" key={scene.key}><Button variant="outline" disabled={busy||!scene.available} onClick={()=>send({type:'questScene',id:q.id,key:scene.key})}>{scene.name}</Button><small>{scene.adaptation} · {scene.duration/1000} 秒</small></div>)}<div className="action-row">{navigationButton(q)}<Button variant="ghost" disabled={busy} onClick={()=>send({type:'abandon',id:q.id})}>放弃任务</Button></div></details>)}
+ {questList.map((q:any)=><details className="quest-entry" key={q.id}><summary><span className={'quest-mark '+(q.complete?'complete':'')}>{q.complete?'✓':'◇'}</span><strong className={isLowLevelQuest(s.level,q.level)?'quest-low-level-title':undefined}>{q.name}</strong><small>Lv.{q.level} · {q.complete?'等待交付':'进行中'}</small></summary><p>{q.description}</p><div className="objective-list">{q.objectives.map((o:any,i:number)=><div key={i}><span className={o.count>=o.required?'done':''}>{o.name} <b>{o.count}/{o.required}</b></span><small>{o.locations.map((id:string)=>d.map.find((n:any)=>n.id===id)?.name).filter(Boolean).join('、')}</small></div>)}</div>{q.scenes?.map((scene:any)=><div className="action-row" key={scene.key}><Button variant="outline" disabled={busy||!scene.available} onClick={()=>send({type:'questScene',id:q.id,key:scene.key})}>{scene.name}</Button><small>{scene.adaptation} · {scene.duration/1000} 秒</small></div>)}<div className="action-row">{navigationButton(q)}<Button variant="ghost" disabled={busy} onClick={()=>send({type:'abandon',id:q.id})}>放弃任务</Button></div></details>)}
  </section>);
  if(surface==='quests')return questPanel;
  if(surface==='map')return <WorldMap state={s} data={d} busy={busy} send={send}/>;

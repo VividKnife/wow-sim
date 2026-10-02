@@ -1,5 +1,15 @@
-import {nodes,baseTravelSpeed,flightNodes} from './catalog.js';
+import {questEndpointHere} from './quests.js';
+import {nodes,baseTravelSpeed,flightNodes,questLinks,endpointNodes,nameOf} from './catalog.js';
 import {travelRoute} from './mounts.js';
+
+// Keep the selected endpoint with its route so arrival can open that exact NPC.
+export function questNpcNavigation(s,id,kind='ends'){
+ const options=(questLinks[id]?.[kind]||[]).filter(e=>e.type==='creature').flatMap(endpoint=>{
+  const locations=[...new Set([...endpointNodes(endpoint),...(questEndpointHere(s,id,kind,endpoint)?[s.location]:[])])];
+  return locations.filter(to=>nodes[to]).flatMap(to=>{try{return [{to,name:nodes[to].name,region:nodes[to].region,duration:travelRoute(s,to).duration,kind:kind==='starts'?'accept':'turnin',here:to===s.location&&s.activity.type!=='travel',npcKey:'creature:'+endpoint.id,npcName:nameOf('npcs',endpoint.id),questId:id}];}catch{return [];}});
+ });
+ return options.sort((a,b)=>a.duration-b.duration||a.npcKey.localeCompare(b.npcKey))[0]||null;
+}
 
 // Use the same road costs as travel, and never navigate to already credited objectives.
 export function questNavigation(s,q){
@@ -8,8 +18,9 @@ export function questNavigation(s,q){
  const concrete=unfinished.filter(o=>o.kind!=='event');
  const objectives=concrete.length?concrete:unfinished;
  const turnIn=q.complete||!unfinished.length;
+ if(turnIn){const npc=questNpcNavigation(s,q.id);if(npc)return npc;}
  const destinations=[...new Set(turnIn?q.endLocations:objectives.flatMap(o=>o.locations))].filter(id=>nodes[id]);
- const options=destinations.flatMap(to=>{try{return[{to,name:nodes[to].name,region:nodes[to].region,duration:travelRoute(s,to).duration,kind:turnIn?'turnin':'objective',here:to===s.location}];}catch(error){return[];}});
+ const options=destinations.flatMap(to=>{try{return[{to,name:nodes[to].name,region:nodes[to].region,duration:travelRoute(s,to).duration,kind:turnIn?'turnin':'objective',here:to===s.location&&s.activity.type!=='travel'}];}catch(error){return[];}});
  return options.sort((a,b)=>a.duration-b.duration)[0]||null;
 }
 

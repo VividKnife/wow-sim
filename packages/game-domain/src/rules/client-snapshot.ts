@@ -18,7 +18,7 @@ const viewKeys = [
   'trackedTargets','scouting','lockTargets','petControls','classPortals','skillUses','itemUses','itemBuffs','professions','professionRecipeCount','canTrainProfession',
   'resources','disenchantable','className','raceName','faction','resource','raceTraits','talentTrees','talentResetCost','canResetTalents',
   'talentResetBlockedReason','buildChangeBlockedReason','bankCapacity','bankHere','bankUpgradeCost','inventoryActions','escort','escortNpc','hearthstone','mounts',
-  'strategyMembers','journey','dungeon','dungeons','stockadesQuestEvent','recovery','combatSkills','party','nextXp','stats','characterAttributes','location','map','monsters','quests',
+  'strategyMembers','journey','dungeon','dungeons','dungeonQuests','stockadesQuestEvent','recovery','combatSkills','party','nextXp','stats','characterAttributes','location','map','monsters','quests',
   'questTools','shop','gatherables','bagCapacity','skills','talents','canTrain','hasFlight','city','flight','interactions','ammo','ammoPrompt'
 ] as const;
 

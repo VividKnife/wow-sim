@@ -319,3 +319,6 @@ body:has(.classic-game-root) .battle-effects-control{display:none}
 .classic-game .cu-corpse-run img{width:30px;height:30px;border:1px solid #d4ba81;object-fit:cover}
 .classic-game .cu-corpse-run:hover:not(:disabled){border-color:#f3d58c;background:linear-gradient(#75603b,#39301e)}
 @media(max-width:800px){.classic-game .cu-corpse-run{min-height:50px;padding:7px 16px;font-size:14px}}
+
+body:has(.classic-game-root) [data-slot=alert-dialog-overlay]{z-index:120}
+body:has(.classic-game-root) [data-slot=alert-dialog-content]{z-index:121;border:3px ridge #9a8a6c;background:#20251b;color:#e1d5b5}

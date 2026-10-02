@@ -8,6 +8,7 @@
   "scripts": {
     "test": "node scripts/test.mjs",
     "check": "node scripts/check.mjs",
+    "ci:validate": "node scripts/validate-ci.mjs",
     "typecheck": "tsc --noEmit",
     "data:compile": "node scripts/compile-boss-rooms.mjs && node scripts/compile-runtime-content.mjs && node scripts/compile-game-data.mjs",
     "data:check": "node scripts/compile-boss-rooms.mjs --check && node scripts/compile-runtime-content.mjs --check && node scripts/compile-game-data.mjs --check",

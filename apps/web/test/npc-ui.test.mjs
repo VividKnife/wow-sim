@@ -124,3 +124,26 @@ test('quest conversation shows full localized narrative, objectives and reward q
   assert.match(html,/class="quest-reward-count">×5</);
  }
 });
+
+test('quest log exposes the confirmed green-quest batch action and marks matching titles',()=>{
+ const s=createGame('绿色任务',42,0);s.level=27;
+ s.quests[166]={kills:{},event:false};s.quests[168]={kills:{},event:false};
+ const p={...props(s),surface:'quests'};
+ const html=render(components.World,p);
+ assert.match(html,/一键放弃绿色任务（2）/);
+ assert.equal((html.match(/quest-low-level-title/g)||[]).length,2);
+ s.level=22;
+ const lower=render(components.World,{...props(s),surface:'quests'});
+ assert.match(lower,/<button[^>]*disabled[^>]*>一键放弃绿色任务（0）/);
+});
+
+test('quest navigation becomes an enabled NPC conversation at the receiver',()=>{
+ const s=createGame('直接交谈',42,0);s.level=30;s.location='sentinel';s.completed[155]=1;
+ s.quests[166]={kills:{},event:false};s.bag.push({uid:'head',id:3637,count:1});
+ const html=render(components.World,{...props(s),surface:'quests'});
+ const button=html.match(/<button[^>]*>与 治安官格里安·斯托曼 交谈<\/button>/)?.[0];
+ assert.ok(button);assert.doesNotMatch(button,/ disabled(?:=|\s|>)/);
+ s.activity={type:'travel'};
+ const traveling=render(components.World,{...props(s),surface:'quests'});
+ assert.doesNotMatch(traveling,/>与 治安官格里安·斯托曼 交谈</);
+});

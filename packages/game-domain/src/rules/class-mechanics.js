@@ -1,3 +1,4 @@
+import {replaceExclusiveBuff,clearExclusiveBuffs,replaceBlessing} from './exclusive-buffs.js';
 import {healAmount,healPeriodicAmount} from './healing.js';
 import {addPeriodicEffect,preparePeriodicEffects,duePeriodicEffects,continuePeriodicEffect,expirePeriodicEffect,addCombatDot,autoAttackReady,scheduleAutoAttack} from './simulation-events.js';
 import {beginActorCast} from './simulation-events.js';
@@ -36,7 +37,7 @@ const specials=new Set([...heals,...hots,...summons,...buffs,'Seal of Righteousn
 const coreHandled=new Set(['Heroic Strike','Sunder Armor','Taunt','Cleave','Sinister Strike','Eviscerate','Smite','Auto Shot','Resurrection','Redemption','Ancestral Spirit']);
 
 function applyHot(s,c,target,sp,effect=1){const interval=sp['EffectAmplitude'+effect]||3000;target.hots=(target.hots||[]).filter(h=>h.name!==sp.SpellName||h.caster!==c.id);addPeriodicEffect(s,target,'hots',{spell:sp.Id,name:sp.SpellName,caster:c.id,amount:(effectRange(c,sp,effect)[0]+spellPowerBonus(stats(c),sp,{healing:true,periodic:true,effect}))*healingMultiplier(c,sp),next:s.clock+interval,interval,until:s.clock+sp.durationMs});}
-function putBuff(s,target,sp,values){target.classBuffs=(target.classBuffs||[]).filter(b=>b.name!==sp.SpellName);target.classBuffs.push({spell:sp.Id,name:sp.SpellName,until:s.clock+(sp.durationMs||1800000),stats:values});}
+function putBuff(s,c,target,sp,values){replaceBlessing(c,target,sp);target.classBuffs=(target.classBuffs||[]).filter(b=>b.name!==sp.SpellName);target.classBuffs.push({spell:sp.Id,name:sp.SpellName,caster:c.id,until:s.clock+(sp.durationMs||1800000),stats:values});}
 function buffValues(c,sp){const result={},r=ranks(c);for(let i=1;i<=3;i++){const aura=sp['EffectApplyAuraName'+i],misc=sp['EffectMiscValue'+i],amount=effectRange(c,sp,i)[0];if(aura===29){const key=['str','agi','sta','int','spi'][misc];if(key)result[key]=amount;else if(misc===-1)for(const key of ['str','agi','sta','int','spi'])result[key]=amount;}if(aura===22&&(misc&1))result.armor=amount;if(aura===99)result.attackPower=amount;if(aura===124)result.rangedAttackPower=amount;}
  if(sp.SpellName==='Battle Shout'||sp.SpellName==='Blessing of Might')result.attackPower=effectRange(c,sp)[0]*(1+(sp.SpellName==='Battle Shout'?.05*(r['Improved Battle Shout']||0):.04*(r['Improved Blessing of Might']||0)));
  if(sp.SpellName==='Rockbiter Weapon')result.attackPower=effectRange(c,spells[{8017:10400,8018:15567,8019:15568}[sp.Id]])[0];
@@ -53,12 +54,13 @@ function applyClassEffect(s,c,target,sp,actors,api){
  if(racialActiveNames.has(name)){activateRacial(s,c,sp,{...api,actors,enemies:s.combat?.enemies||[],stats,healAmount});return;}
  if(executeTalentActive(s,c,target,sp,{...api,rng,stats,actors,healAmount}))return;
  if(executeExtendedClassEffect(s,c,target,sp,actors,{...api,healAmount}))return;
+ replaceExclusiveBuff(s,c,target,sp,actors);
  if(heals.has(name)){api.heal(s,c,target,sp);if(name==='Regrowth')applyHot(s,c,target,sp,2);return;}
  if(hots.has(name)){applyHot(s,c,target,sp);return;}
  if(name==='Tame Beast'){tameClassPet(s,c,target,sp);return;}
  if(name==='Revive Pet'){if(c.pet&&c.pet.hp<=0){c.pet.hp=Math.max(1,Math.round(c.pet.maxHp*(sp.EffectBasePoints1+1)/100));placeCombatUnit(s,c.pet,c);c.pet.nextSwing=s.clock+1000;}return;}
  if(summons.has(name)){if(c.classId!==3||!c.pet)petProfile(s,c,sp);return;}
- if(buffs.has(name)){const recipients=['Devotion Aura','Battle Shout'].includes(name)?actors.filter(a=>a.hp>0&&distance(c,a)<=30*(name==='Battle Shout'?1+.1*(r['Booming Voice']||0):1)):[target];for(const a of recipients){putBuff(s,a,sp,buffValues(c,sp));for(let n=1;n<=3;n++)if(sp['EffectApplyAuraName'+n]===143)addCombatAura(a,{spell:sp.Id,effect:n,type:143,positive:true,misc:sp['EffectMiscValue'+n],amount:talentSpellValue(c,sp,8,effectRange(c,sp,n)[0]),until:s.clock+sp.durationMs,caster:c.id},s.clock);}if(name==='Thorns')target.thorns={spell:sp.Id,amount:effectRange(c,sp)[0],until:s.clock+sp.durationMs};return;}
+ if(buffs.has(name)){const recipients=['Devotion Aura','Battle Shout'].includes(name)?actors.filter(a=>a.hp>0&&distance(c,a)<=30*(name==='Battle Shout'?1+.1*(r['Booming Voice']||0):1)):[target];for(const a of recipients){putBuff(s,c,a,sp,buffValues(c,sp));for(let n=1;n<=3;n++)if(sp['EffectApplyAuraName'+n]===143)addCombatAura(a,{spell:sp.Id,effect:n,type:143,positive:true,misc:sp['EffectMiscValue'+n],amount:talentSpellValue(c,sp,8,effectRange(c,sp,n)[0]),until:s.clock+sp.durationMs,caster:c.id},s.clock);}if(name==='Thorns')target.thorns={spell:sp.Id,amount:effectRange(c,sp)[0],until:s.clock+sp.durationMs};return;}
  if(name==='Power Word: Shield'){target.absorb={spell:sp.Id,amount:Math.round((effectRange(c,sp)[0]+spellPowerBonus(stats(c),sp,{healing:true}))*(1+.05*(r['Improved Power Word: Shield']||0))),until:s.clock+sp.durationMs};target.weakenedSoulUntil=s.clock+15000;return;}
  if(name==='Life Tap'){const hp=Math.min(c.hp-1,effectRange(c,sp)[0]);c.hp-=hp;c.mana=Math.min(stats(c).maxMana,c.mana+Math.round(hp*(1+.1*(r['Improved Life Tap']||0))));return;}
  if(name==='Seal of Righteousness'){c.seal={spell:sp.Id,until:s.clock+sp.durationMs};return;}
@@ -164,7 +166,7 @@ export function executeClassAbility(s,c,target,sp,actors,api,input=null){
    const mask={cat:1,bear:16,shadow:134217728,moonkin:1073741824}[c.form]||0;
    // DBC-compatible caster spells keep Shadowform/Moonkin Form. Cancelling
    // every mana spell made these AI templates spend every other GCD reshifting.
-   if((sp.StancesNot&mask)||!['shadow','moonkin'].includes(c.form)&&(!mask||!(sp.Stances&mask)))c.form=null;
+   if((sp.StancesNot&mask)||!['shadow','moonkin'].includes(c.form)&&(!mask||!(sp.Stances&mask))){clearExclusiveBuffs(c,'form');c.form=null;}
   }
   if(!input&&conservingRaidMana(s,c)&&sp.mana>0&&(damagingInput(sp)||['Searing Totem','Fire Nova Totem','Magma Totem'].includes(name)))return false;
   if(consumesHunterAmmo(c,name))consumeHunterAmmo(c);
@@ -184,7 +186,7 @@ export function tickClassEffects(s,actors,api){
   if(c.bloodrage&&c.bloodrage.next<=s.clock&&c.bloodrage.next<=c.bloodrage.until){c.rage=Math.min(1000,(c.rage||0)+10);c.bloodrage.next+=1000;}
   for(const [element,t]of Object.entries(c.totems||{})){if(extendedSpellNames.has(t.name))continue;if(t.until<=s.clock){delete c.totems[element];continue;}if(t.next>s.clock)continue;t.next+=2000;const sp=spellInfo(c,t.spell),r=ranks(c);
    if(t.name==='Searing Totem'){const target=s.combat?.enemies.find(e=>e.hp>0&&!e.removed&&!protectCombatTarget(s,e)&&distance(t,e)<=20&&strategyAllows(s,c,e,{SpellName:'Totem Attack'}));if(target)api.damage(s,c,target,roll(s,...effectRange(c,spells[sp.Id===3599?3606:6350])),nameOf('spells',sp.Id),1,{spellId:sp.Id,school:2});}
-   else for(const a of actors.filter(a=>a.hp>0&&distance(t,a)<=20)){if(t.name==='Healing Stream Totem')healAmount(s,c,a,effectRange(c,spells[5672])[0],sp.Id);else if(t.name==='Strength of Earth Totem')putBuff(s,a,{...sp,durationMs:2500},{str:effectRange(c,spells[sp.Id===8160?8162:8076])[0]});else a.stoneskin={amount:Math.abs(effectRange(c,spells[sp.Id===8071?8072:8156])[0]),until:s.clock+2500};}
+   else for(const a of actors.filter(a=>a.hp>0&&distance(t,a)<=20)){if(t.name==='Healing Stream Totem')healAmount(s,c,a,effectRange(c,spells[5672])[0],sp.Id);else if(t.name==='Strength of Earth Totem')putBuff(s,c,a,{...sp,durationMs:2500},{str:effectRange(c,spells[sp.Id===8160?8162:8076])[0]});else a.stoneskin={amount:Math.abs(effectRange(c,spells[sp.Id===8071?8072:8156])[0]),until:s.clock+2500};}
   }
  }
 }

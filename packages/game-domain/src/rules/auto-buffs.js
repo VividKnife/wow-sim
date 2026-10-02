@@ -1,3 +1,4 @@
+import {replaceExclusiveBuff} from './exclusive-buffs.js';
 import {beginSpellTiming,spellReady,gcdUntil} from './spell-timing.js';
 import {knownRank,spellInfo,stats,log} from './character.js';
 import {startRecovery,recoveryMembers} from './recovery.js';
@@ -9,6 +10,7 @@ export function validateAutoBuffs(value){
 }
 export const autoBuffsEnabled=s=>recoveryMembers(s).some(c=>c.autoBuffs?.enabled);
 export function applyLongBuff(s,c,target,sp,kind){
+ replaceExclusiveBuff(s,c,target,sp);
  target.buffs??={};target.buffs[kind]={kind,amount:sp.EffectBasePoints1+1,spell:sp.Id,until:s.clock+sp.durationMs,caster:c.id};
  log(s,`${c.name} 为 ${target.name} 施放 ${sp.SpellName==='Power Word: Fortitude'?'真言术：韧':sp.SpellName==='Arcane Intellect'?'奥术智慧':'霜甲术'}`,'buff',{actorId:c.id,targetId:target.id,spellId:sp.Id});
 }

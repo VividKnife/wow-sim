@@ -12,7 +12,7 @@ function checkout(t){
  const node=file=>execFileSync(process.execPath,[file],{cwd:root,encoding:'utf8',stdio:'pipe'});
  mkdirSync(join(root,'scripts'));mkdirSync(join(root,'.githooks'));
  for(const name of ['game-version.mjs','install-git-hooks.mjs'])copyFileSync(new URL(name,import.meta.url),join(root,'scripts',name));
- for(const hook of ['pre-commit','post-commit']){
+ for(const hook of ['pre-commit','post-commit','pre-push']){
   copyFileSync(new URL('../.githooks/'+hook,import.meta.url),join(root,'.githooks',hook));chmodSync(join(root,'.githooks',hook),0o755);
  }
  git('init');git('config','user.name','Version Test');git('config','user.email','version@example.test');git('config','commit.gpgSign','false');

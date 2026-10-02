@@ -39,3 +39,16 @@ export function evaluateCondition(s,id,context={},seen=new Set()){
  }
  return result===null?null:c.flags&1?!result:result;
 }
+
+// Positive quest requirements only; NOT and non-quest conditions remain normal
+// eligibility gates. Return AND groups of OR alternatives for navigation.
+export function conditionQuestRequirements(id,seen=new Set()){
+ const c=conditions.get(id);if(!c||c.flags||seen.has(id)||seen.size>=32)return [];
+ const next=new Set(seen);next.add(id);
+ if(c.type===8)return [[c.value1]];
+ if(c.type===9)return [[-c.value1]];
+ const left=conditionQuestRequirements(c.value1,next),right=conditionQuestRequirements(c.value2,next);
+ if(c.type===-1)return [...left,...right];
+ if(c.type===-2)return left.flatMap(a=>right.map(b=>[...new Set([...a,...b])]));
+ return [];
+}
