@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "referenceCommit": "d2d43b9041768603a0c52b8ce55c64b2a03fb6a2",
-  "contentHash": "58c9e657a56fde50ab6d5840617487f12811399b68069245934fa7705f3ca828",
-  "capturedRuleset": "owned-v1:d4e5dc7700989c513f9b7c3e4b403e1c1ce4ab7981ad1cc139a6512c042349f5",
-  "reviewReason": "Reviewed exclusive buff state integration and quest-flow additions; deterministic scenario RNG, survival, and reward summaries remain aligned with the historical reference.",
+  "contentHash": "09910c772ba29cbbc60e5f072c4de97b39620856b3073717dae166083022c30c",
+  "capturedRuleset": "owned-v1:4ec392b08074d6205cec04a5f7bf94fddeff72f764af6d52fd4404b96ffc5545",
+  "reviewReason": "Reviewed public NPC ownership and persistent progression refactor; personal worlds no longer schedule private NPC growth, while public activity is transactionally accounted outside deterministic combat simulation.",
   "sampleMs": 50,
   "durationMs": 15000,
   "referenceSummaryMatches": {
