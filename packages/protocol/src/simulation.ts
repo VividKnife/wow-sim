@@ -3,6 +3,8 @@ import {validateRuleAction,type RuleAction} from './rule-action.ts';
  * rewards, RNG or client-selected effective time is accepted here. */
 export type SimulationCommand =
   | {kind: 'action'; action: RuleAction}
+  | {kind: 'mailClaim'; id: string; mail: {copper:number; attachments: {kind:'catalog'|'instance';id:number;count:number;name:string;icon:string|null;item?:Record<string,unknown>}[]}}
+  | {kind: 'mailSend'; recipientId:string; recipientAccountId:string; recipientName:string; subject:string; body:string; copper:number; items:{uid:string;count:number}[]}
   | {kind: 'cast'; encounterId: string; spellId: number; targetId: string}
   | {kind: 'pause' | 'resume'; encounterId: string}
   | {kind: 'hunt'; monsterId: number}
@@ -29,6 +31,17 @@ export function validateSimulationInput(value: SimulationInput) {
   counter(value.controllerGeneration); counter(value.clientSequence);
   const command = value.command;
   if(command?.kind==='action'){fields(command,['kind','action']);validateRuleAction(command.action);}
+  else if(command?.kind==='mailClaim'){
+    fields(command,['kind','id','mail']);id(command.id,300);
+    if(!command.mail||!Number.isSafeInteger(command.mail.copper)||command.mail.copper<0||!Array.isArray(command.mail.attachments)||command.mail.attachments.length>20)throw new Error('Invalid mail');
+    for(const attachment of command.mail.attachments){id(attachment.kind);counter(attachment.id);counter(attachment.count);}
+  }
+  else if(command?.kind==='mailSend'){
+    fields(command,['kind','recipientId','recipientAccountId','recipientName','subject','body','copper','items']);
+    id(command.recipientId,200);id(command.recipientAccountId,200);id(command.recipientName,40);id(command.subject,80);
+    if(typeof command.body!=='string'||command.body.length>1000||!Number.isSafeInteger(command.copper)||command.copper<0||!Array.isArray(command.items)||command.items.length>12)throw new Error('Invalid mail');
+    for(const item of command.items){fields(item,['uid','count']);id(item.uid,700);counter(item.count);}
+  }
   else if (command?.kind === 'cast') {
     fields(command, ['kind', 'encounterId', 'spellId', 'targetId']); counter(command.spellId); id(command.targetId); id(command.encounterId);
   } else if (command?.kind === 'pause' || command?.kind === 'resume') { fields(command, ['kind', 'encounterId']); id(command.encounterId); }

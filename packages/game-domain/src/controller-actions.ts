@@ -5,7 +5,7 @@ import {personalBuildActions} from './rules/character-action-state.js';
 import {personalInventoryActions} from './rules/inventory.js';
 import {dungeonControlActions} from './rules/party-control.js';
 
-const personalActions = new Set([...personalInventoryActions, ...personalBuildActions, 'accept', 'turnin', 'abandon', 'abandonLowLevelQuests', 'cast', 'petCommand', 'strategy', 'settings', 'groupLoot', 'loot', 'rest', 'resurrect', 'revive']);
+const personalActions = new Set([...personalInventoryActions, ...personalBuildActions, 'accept', 'turnin', 'abandon', 'abandonLowLevelQuests', 'cast', 'petCommand', 'petStable', 'strategy', 'settings', 'groupLoot', 'loot', 'rest', 'resurrect', 'revive', 'claimMail', 'sendMail']);
 const memberOrders = new Set(['cast', 'stopCast', 'mode', 'control', 'kite']);
 const clockOrders = new Set(['prepare', 'takeover', 'pause', 'resume']);
 
@@ -16,6 +16,8 @@ export function controllerAction(state: Rules, controllers: readonly Controller[
   let action: RuleAction;
   switch (command.kind) {
     case 'action': action = {...command.action}; break;
+    case 'mailClaim': action = {type:'claimMail',id:command.id,mail:command.mail}; break;
+    case 'mailSend': action = {type:'sendMail',items:command.items,copper:command.copper}; break;
     case 'cast': action = {type: 'combatCommand', order: 'cast', encounterId: command.encounterId,
       memberId: controller.actorId, spellId: command.spellId, targetId: command.targetId}; break;
     case 'pause': case 'resume': action = {type: 'combatCommand', order: command.kind, encounterId: command.encounterId}; break;

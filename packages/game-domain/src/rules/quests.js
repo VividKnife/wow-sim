@@ -123,6 +123,7 @@ export function questProgress(s,id){const q=quests[id],progress=s.quests[id];if(
 }
 export function itemSources(id){return [...(runtime.itemSourceIndex[id]||[])];}
 const dedicatedEvents={62:['fargodeep'],76:['jasper'],155:['sentinel','moonbrook'],1861:['mirror'],1920:['magetower'],434:['keep']};
+const QUEST_SCENE_DURATION=10000;
 const sceneLocation=q=>q.PointX||q.PointY?[nearestNode(q.PointX,q.PointY,q.PointMapId)].filter(Boolean):[...new Set((questLinks[q.entry]?.ends||[]).flatMap(endpointNodes))];
 export const eventNodes=id=>dedicatedEvents[id]||(quests[id]?sceneLocation(quests[id]):[]);
 // Scripts outside the bespoke Northshire/Defias story use explicit timed node
@@ -130,24 +131,24 @@ export const eventNodes=id=>dedicatedEvents[id]||(quests[id]?sceneLocation(quest
 export function questScenes(s,id){
  const q=quests[id],p=s.quests[id];if(!q||!p)return [];
  const scenes=[];
- if(q.SpecialFlags&2&&!dedicatedEvents[id]&&!p.event)scenes.push({key:'event',name:hasChinese(q.EndText)?q.EndText:'推进剧情事件',locations:eventNodes(id),duration:30000});
+ if(q.SpecialFlags&2&&!dedicatedEvents[id]&&!p.event)scenes.push({key:'event',name:hasChinese(q.EndText)?q.EndText:'推进剧情事件',locations:eventNodes(id)});
  for(let n=1;n<=4;n++){
   const target=q['ReqCreatureOrGOId'+n],spell=q['ReqSpellCast'+n],item=q['ReqItemId'+n];
   const special=questItemActions[item];
   if(special&&countItem(s,item)<q['ReqItemCount'+n]){
    const ready=(!special.classId||s.classId===special.classId)&&(special.inputs||[]).every(([id,count])=>countItem(s,id)>=count);
-   scenes.push({key:'special:'+n,name:special.name,locations:special.locations,duration:special.duration,ready,requirements:(special.inputs||[]).map(([id,count])=>nameOf('items',id)+' ×'+count).join('、')});
-   for(const [source,count]of special.inputs||[])if([1,2,3,4].some(i=>q['ReqSourceId'+i]===source)&&countItem(s,source)<count)scenes.push({key:'source:'+source,name:'寻找 '+nameOf('items',source),locations:itemSources(source).length?itemSources(source):sceneLocation(q),duration:15000});
+   scenes.push({key:'special:'+n,name:special.name,locations:special.locations,ready,requirements:(special.inputs||[]).map(([id,count])=>nameOf('items',id)+' ×'+count).join('、')});
+   for(const [source,count]of special.inputs||[])if([1,2,3,4].some(i=>q['ReqSourceId'+i]===source)&&countItem(s,source)<count)scenes.push({key:'source:'+source,name:'寻找 '+nameOf('items',source),locations:itemSources(source).length?itemSources(source):sceneLocation(q)});
   }
   const targetLocations=target>0?creatureLocations[target]||[]:target<0?objectLocations[-target]||[]:[];
   if(target&&!spell&&['encounter','interact'].includes(questTargetAction(q,n).kind)&&id!==434&&(p.kills[target]||0)<q['ReqCreatureOrGOCount'+n]){
    const combat=questTargetAction(q,n).kind==='encounter';
-   scenes.push({key:(combat?'encounter:':'objective:')+n,name:(combat?'召唤并挑战 ':q.SrcItemId?'使用 '+nameOf('items',q.SrcItemId)+'：':'交谈 / 调查：')+(target>0?questNpcName(target):questObjectName(-target)),locations:questTargetAction(q,n).locations,duration:combat?5000:15000});
+   scenes.push({key:(combat?'encounter:':'objective:')+n,name:(combat?'召唤并挑战 ':q.SrcItemId?'使用 '+nameOf('items',q.SrcItemId)+'：':'交谈 / 调查：')+(target>0?questNpcName(target):questObjectName(-target)),locations:questTargetAction(q,n).locations});
   }
-  if(spell&&(p.kills[target||'spell:'+n]||0)<q['ReqCreatureOrGOCount'+n])scenes.push({key:'spell:'+n,name:'使用任务法术：'+nameOf('spells',spell),locations:targetLocations.length?targetLocations:sceneLocation(q),duration:10000});
-  if(item&&items[item]?.class===12&&item!==q.SrcItemId&&!itemSources(item).length&&countItem(s,item)<q['ReqItemCount'+n])scenes.push({key:'item:'+n,name:'调查并取得 '+nameOf('items',item),locations:sceneLocation(q),duration:20000});
+  if(spell&&(p.kills[target||'spell:'+n]||0)<q['ReqCreatureOrGOCount'+n])scenes.push({key:'spell:'+n,name:'使用任务法术：'+nameOf('spells',spell),locations:targetLocations.length?targetLocations:sceneLocation(q)});
+  if(item&&items[item]?.class===12&&item!==q.SrcItemId&&!itemSources(item).length&&countItem(s,item)<q['ReqItemCount'+n])scenes.push({key:'item:'+n,name:'调查并取得 '+nameOf('items',item),locations:sceneLocation(q)});
  }
- return scenes.map(scene=>({...scene,name:scene.name+(scene.requirements?'（需要 '+scene.requirements+'）':''),adaptation:'节点式任务场景改编',available:scene.ready!==false&&scene.locations.includes(s.location)&&s.hp>0&&!s.combat&&['idle','hunt'].includes(s.activity.type)&&(!q.SrcItemId||countItem(s,q.SrcItemId)>0)&&(!s.dungeon||Object.keys(s.dungeon.defeatedBosses).length>0)}));
+ return scenes.map(scene=>({...scene,duration:QUEST_SCENE_DURATION,name:scene.name+(scene.requirements?'（需要 '+scene.requirements+'）':''),adaptation:'节点式任务场景改编',available:scene.ready!==false&&scene.locations.includes(s.location)&&s.hp>0&&!s.combat&&['idle','hunt'].includes(s.activity.type)&&(!q.SrcItemId||countItem(s,q.SrcItemId)>0)&&(!s.dungeon||Object.keys(s.dungeon.defeatedBosses).length>0)}));
 }
 export function beginQuestScene(s,id,key){
  const scene=questScenes(s,id).find(e=>e.key===key);if(!scene?.available)throw new Error('请携带任务物品，前往场景地点并结束当前活动。');

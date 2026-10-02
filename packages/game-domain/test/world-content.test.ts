@@ -106,13 +106,14 @@ test('adapted task scenes require their active quest and location, take time, an
  const q=Object.values(quests).find((q:any)=>q.SpecialFlags&2&&![62,76,155,1861,1920,434].includes(q.entry)&&questLinks[q.entry]?.ends.some((e:Rules)=>endpointNodes(e).length)) as any;
  s.quests[q.entry]={kills:{},event:false};if(q.SrcItemId)addItem(s,q.SrcItemId,q.SrcItemCount||1);
  const scene=questScenes(s,q.entry).find(e=>e.key==='event');assert.ok(scene);
+ assert.equal(scene.duration,10000);
  s.location=scene.locations[0];s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;
  assert.throws(()=>act(s,{type:'questScene',id:q.entry,key:'unknown'},0));
  s=act(s,{type:'questScene',id:q.entry,key:'event'},0);assert.equal(s.quests[q.entry].event,false);
- const half=advance(s,15000).state;assert.equal(half.quests[q.entry].event,false);
- const resumed=advance(JSON.parse(JSON.stringify(half)),30000).state,whole=advance(s,30000).state;
+ const half=advance(s,5000).state;assert.equal(half.quests[q.entry].event,false);
+ const resumed=advance(JSON.parse(JSON.stringify(half)),10000).state,whole=advance(s,10000).state;
  assert.deepEqual(resumed,whole);assert.equal(resumed.quests[q.entry].event,true);
- const cancelled=act(half,{type:'stop'},15000);assert.equal(advance(cancelled,30000).state.quests[q.entry].event,false);
+ const cancelled=act(half,{type:'stop'},5000);assert.equal(advance(cancelled,10000).state.quests[q.entry].event,false);
 });
 
 test('task spells are never credited by ordinary kills',()=>{

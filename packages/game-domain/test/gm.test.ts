@@ -22,16 +22,16 @@ test('gift templates validate catalog/count/money and dispatch immutable snapsho
  const dispatch=command('sendGift',{templateId:template.id,scope:'all'});
  const results=await Promise.all([gm.execute('admin',dispatch),gm.execute('admin',dispatch)]);
  assert.deepEqual(results[0],results[1]);assert.equal(results[0].recipients,2);
- const inbox=await service.gmInbox(save);assert.equal(inbox.length,1);assert.equal((await service.gmInbox(other)).length,1);
+ const inbox=await service.mailInbox(save);assert.equal(inbox.length,1);assert.equal((await service.mailInbox(other)).length,1);
  await gm.execute('admin',command('saveGift',{templateId:template.id,name:'改版',description:'不覆盖已发放',copper:20000,items:[]}));
- assert.equal((await service.gmInbox(save))[0].gift.copper,10000);
- await assert.rejects(service.command(other,{type:'claimGmGift',id:inbox[0].id,requestId:'foreign'}),{code:'NOT_FOUND'});
+ assert.equal((await service.mailInbox(save))[0].copper,10000);
+ await assert.rejects(service.command(other,{type:'claimMail',id:inbox[0].id,requestId:'foreign'}),{code:'NOT_FOUND'});
  const before=(await service.snapshot(save)).state;
- await Promise.all([service.command(save,{type:'claimGmGift',id:inbox[0].id,requestId:'claim-a'}),service.command(save,{type:'claimGmGift',id:inbox[0].id,requestId:'claim-b'})]);
+ await Promise.all([service.command(save,{type:'claimMail',id:inbox[0].id,requestId:'claim-a'}),service.command(save,{type:'claimMail',id:inbox[0].id,requestId:'claim-b'})]);
  const after=(await service.snapshot(save)).state;
  assert.equal(after.money,before.money+10000);assert.equal(after.bag.filter((item:any)=>item.id===2589).reduce((n:number,item:any)=>n+item.count,0),3);
- assert.equal((await service.gmInbox(save)).length,0);
- assert.equal((await store.read(tx=>tx.list('gm_deliveries',{status:'claimed'}))).length,1);
+ assert.equal((await service.mailInbox(save)).length,0);
+ assert.equal((await store.read(tx=>tx.list('mail',{status:'claimed'}))).length,1);
  await assert.rejects(gm.execute('admin',{...dispatch,scope:'player',userId:'player-a'}),{code:'REQUEST_REUSED'});
  const targeted=await gm.execute('admin',command('sendGift',{templateId:template.id,scope:'player',userId:'player-a'}));assert.equal(targeted.recipients,1);
 });
@@ -40,14 +40,14 @@ test('full bags reject the whole gift, preserve money and let the player retry a
  const {service,store,gm,save}=await setup();
  const original=(await service.snapshot(save)).state;
  await store.transaction(async tx=>{const character=await tx.get<any>('characters',original.id);const s=await context(tx,character,1000000);s.bag=[];for(let i=0;i<bagCapacity(s)-1;i++)s.bag.push(makeItem(s,25,1));await persistAssets(tx,character,s,'fill');});
- const template=await gm.execute('admin',command('saveGift',{name:'满包测试',description:'需要两格',copper:10000,items:[{id:2589,count:21}]}));await gm.execute('admin',command('sendGift',{templateId:template.id,scope:'player',userId:'player-a'}));const gift=(await service.gmInbox(save))[0];
+ const template=await gm.execute('admin',command('saveGift',{name:'满包测试',description:'需要两格',copper:10000,items:[{id:2589,count:21}]}));await gm.execute('admin',command('sendGift',{templateId:template.id,scope:'player',userId:'player-a'}));const gift=(await service.mailInbox(save))[0];
  const before=(await service.snapshot(save)).state;
- await assert.rejects(service.command(save,{type:'claimGmGift',id:gift.id,requestId:'full-bag'}),/先清理背包/);
- assert.equal((await service.snapshot(save)).state.money,before.money);assert.equal((await service.gmInbox(save)).length,1);
+ await assert.rejects(service.command(save,{type:'claimMail',id:gift.id,requestId:'full-bag'}),/先清理背包/);
+ assert.equal((await service.snapshot(save)).state.money,before.money);assert.equal((await service.mailInbox(save)).length,1);
  await store.transaction(async tx=>{const c=await tx.get<any>('characters',original.id);const s=await context(tx,c,1000000);s.bag.splice(0,1);await persistAssets(tx,c,s,'clear');});
- const claimed=await service.command(save,{type:'claimGmGift',id:gift.id,requestId:'full-bag'});
+ const claimed=await service.command(save,{type:'claimMail',id:gift.id,requestId:'full-bag'});
  assert.equal(claimed.state.money,before.money+10000);assert.equal(claimed.state.bag.length,bagCapacity(claimed.state));
- assert.equal((await service.gmInbox(save)).length,0);
+ assert.equal((await service.mailInbox(save)).length,0);
 });
 
 test('global and targeted buffs affect actual stats, experience and movement, expire and revoke',async()=>{
@@ -88,8 +88,8 @@ test('a guest player claims into their own bag and wallet inside a shared instan
  await service.command(save,{type:'startInstance',instanceId:formed.instanceId,requestId:'start-shared'});
  const template=await gm.execute('admin',command('saveGift',{name:'访客礼包',description:'访客自己的奖励',copper:30000,items:[{id:2589,count:2}]}));
  await gm.execute('admin',command('sendGift',{scope:'player',userId:'player-b',templateId:template.id}));
- const gift=(await service.gmInbox(other))[0];
- const result=await service.command(other,{type:'claimGmGift',id:gift.id,requestId:'guest-claim'});
+ const gift=(await service.mailInbox(other))[0];
+ const result=await service.command(other,{type:'claimMail',id:gift.id,requestId:'guest-claim'});
  assert.equal(result.state.money,30000);assert.ok(result.state.bag.some((item:any)=>item.id===2589&&item.count===2));
- assert.equal((await service.snapshot(save)).state.money,0);assert.equal((await service.gmInbox(other)).length,0);
+ assert.equal((await service.snapshot(save)).state.money,0);assert.equal((await service.mailInbox(other)).length,0);
 });

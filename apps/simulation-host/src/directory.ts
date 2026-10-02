@@ -96,7 +96,26 @@ export class SimulationDirectory {
   this.entries.set(admission.instanceId,entry);
   return (await entry.session).identity();
  }
- async input(accountId:string,input:SimulationInput){return this.withActorSession(input.instanceId,accountId,input.actorId,session=>session.input(accountId,input));}
+ async input(accountId:string,input:SimulationInput){
+  if(input.command.kind==='mailClaim'||input.command.kind==='mailSend')throw new Error('Mail commands must be resolved by the server');
+  if(input.command.kind==='action'&&input.command.action.type==='claimMail'){
+    if(!this.characters)throw new Error('Character residency is unavailable');
+    const id=input.command.action.id;
+    if(typeof id!=='string'||!id||id.length>300)throw new Error('邮件编号无效');
+    const mail=await this.characters.mail(accountId,input.actorId,id,input.requestId);
+    input={...input,command:{kind:'mailClaim',id,mail}};
+  }else if(input.command.kind==='action'&&input.command.action.type==='sendMail'){
+    if(!this.characters)throw new Error('Character residency is unavailable');
+    const action=input.command.action;
+    if(typeof action.recipient!=='string'||typeof action.subject!=='string'||!action.subject.trim()||action.subject.length>80||typeof action.body!=='string'||action.body.length>1000||
+      !Number.isSafeInteger(action.copper)||Number(action.copper)<0||!Array.isArray(action.items)||action.items.length>12||
+      action.items.some(item=>!item||typeof item!=='object'||typeof item.uid!=='string'||!Number.isSafeInteger(item.count)||item.count<1))throw new Error('邮件内容无效');
+    const recipient=await this.characters.mailRecipient(action.recipient,input.actorId);
+    input={...input,command:{kind:'mailSend',recipientId:recipient.id,recipientAccountId:recipient.accountId,recipientName:recipient.name,
+      subject:action.subject.trim(),body:action.body,copper:action.copper as number,items:action.items as {uid:string;count:number}[]}};
+  }
+  return this.withActorSession(input.instanceId,accountId,input.actorId,session=>session.input(accountId,input));
+ }
  async enterDungeon(accountId:string,input:SimulationInput){
   if(input.command.kind==='action'&&(input.command.action.type==='goldLeave'||Object.hasOwn(goldRaidContents,input.command.action.contentId as string)))return this.publicRaid(accountId,input);
   if(input.command.kind!=='action'||input.command.action.type!=='enterDungeon')throw new Error('Invalid arrival command');

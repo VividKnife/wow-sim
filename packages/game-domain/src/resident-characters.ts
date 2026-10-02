@@ -12,6 +12,7 @@ import {context, owned, persistCharacter, bump, validAccountPresence} from './co
 import {DomainError, requireThat, type AccountPresence, type Character, type Rules} from './model.ts';
 import {residentStore, withResidentAuthority, withResidentDeletion, withResidentRetirement, type CharacterClaim} from './resident-store.ts';
 import {applyExperienceBuff, experienceMultiplier} from './rules/experience.js';
+import {mailForClaim,resolveMailRecipient,commitMailSend,type MailRow} from './mail.ts';
 
 export type CharacterAdmission = {
   instanceId: string; state: Rules;
@@ -61,6 +62,8 @@ export class ResidentCharacters {
       return admission;
     });
   }
+  mail(accountId:string,actorId:string,id:string,requestId:string){return mailForClaim(this.store,accountId,actorId,id,requestId);}
+  mailRecipient(name:string,senderId:string){return resolveMailRecipient(this.store,name,senderId);}
   /** Start a new runtime from committed character/assets when an expired
    * personal runtime belongs to a different rules/content release. */
   async retireIncompatiblePersonal(accountId:string,characterId:string):Promise<void>{
@@ -178,7 +181,7 @@ export class ResidentCharacters {
     requireThat(residency.rulesetVersion === checkpoint.rulesetVersion && residency.contentHash === checkpoint.contentHash,
       'SIMULATION_VERSION', '运行规则或内容版本不一致');
     validateParticipants(residency.participants, residency.characterId);
-    const boundary = checkpoint as typeof checkpoint & {state: Rules; controllers: CharacterAdmission['controllers']; presence: CharacterAdmission['presence']};
+    const boundary = checkpoint as typeof checkpoint & {state: Rules; controllers: CharacterAdmission['controllers']; presence: CharacterAdmission['presence']; recentInputs:{accountId:string;input:{actorId:string;requestId:string;command:Rules};receipt:{status:string;inputSequence:number}}[];appliedInputSequence:number};
     const state = boundary.state;
     requireThat(state?.id === residency.characterId && Array.isArray(state.party), 'SIMULATION_STATE', '实例队伍结构无效');
     const members = residency.participants;
@@ -202,6 +205,19 @@ export class ResidentCharacters {
       state.party.every((c: Rules) => humanIds.has(c.id) || c.npcPlayer === true && npcIds.has(c.id)),
       'SIMULATION_STATE', '实例包含未归属的参战成员');
     await withResidentAuthority(tx, owner, async () => {
+      for(const row of boundary.recentInputs.filter(row=>row.receipt.status==='applied'&&row.receipt.inputSequence<=boundary.appliedInputSequence&&['mailClaim','mailSend'].includes(row.input.command.kind))){
+        if(row.input.command.kind==='mailSend'){
+          const sender=await tx.get<Character>('characters',row.input.actorId);
+          requireThat(sender?.accountId===row.accountId,'MAIL_SENDER','发件人不存在',400);
+          await commitMailSend(tx,row,sender,state.wallAt);
+          continue;
+        }
+        const mail=await tx.get<MailRow>('mail',row.input.command.id);
+        requireThat(mail?.accountId===row.accountId&&(!mail.recipientId||mail.recipientId===row.input.actorId),'MAIL_NOT_FOUND','邮件不存在',404);
+        requireThat(JSON.stringify(row.input.command.mail)===JSON.stringify({copper:mail.copper,attachments:mail.attachments}),'MAIL_CONTENT','邮件附件已变化',409);
+        if(mail.status==='claimed')requireThat(mail.claimRequestId===row.input.requestId&&mail.claimedBy===row.input.actorId,'MAIL_CLAIMED','邮件已领取',409);
+        else await tx.put('mail',{...mail,status:'claimed',claimedAt:state.wallAt,claimedBy:row.input.actorId,claimRequestId:row.input.requestId});
+      }
       for (const participant of members) {
         const claim = await tx.get<CharacterClaim>('simulation_characters', participant.characterId);
         requireThat(claim?.instanceId === owner.id && claim.accountId === participant.accountId,

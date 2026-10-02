@@ -7,6 +7,8 @@ import {useEffect,useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {GameProps,Icon,money} from './game-ui';
 import ClassCompanion from './class-companion';
+import HunterPets from './hunter-pets';
+import Mailbox from './mailbox';
 import CharacterEquipment from './character-equipment';
 import AmmoControls from './ammo-controls';
 import Professions from './professions';
@@ -37,7 +39,7 @@ function Spellbook({state:s,data:d,busy,send}:GameProps){
  const activeTab=tabs.some(tab=>tab.id===bookSection)?bookSection:tabs[0]?.id;
  const visible=(tabs.find(tab=>tab.id===activeTab)?.skills||[])
   .filter((a:any)=>!skillSearch||(a.name+' '+a.nameEn).toLowerCase().includes(skillSearch.toLowerCase()));
- return <><ClassCompanion state={s} data={d} busy={busy} send={send}/><section className="spellbook-shell" aria-label={`${d.className}法术书`}>
+ return <><ClassCompanion state={s} data={d} busy={busy} send={send} showPet={s.classId!==3}/><section className="spellbook-shell" aria-label={`${d.className}法术书`}>
   <nav className="spellbook-tabs" aria-label="法术书技能系">{tabs.map(tab=>{const sample=tab.skills[0];return <button type="button" key={tab.id} className={activeTab===tab.id?'active':''} aria-pressed={activeTab===tab.id} onClick={()=>setBookSection(tab.id)} title={`${tab.label} · ${tab.skills.length}`}><span className="spellbook-tab-icon">{sample?.icon?<Icon src={sample.icon} name={tab.label} size={34}/>:<ClassIcon classId={s.classId} size={34}/>}</span><span>{tab.label}<small>{tab.skills.length}</small></span></button>;})}</nav>
   <div className="spellbook-frame">
    <header className="spellbook-title"><div><span>法术书与技能</span><h2>{tabs.find(tab=>tab.id===activeTab)?.label||d.className}</h2></div><small>{visible.length} 项</small></header>
@@ -61,7 +63,9 @@ export default function Character({state:s,data:d,busy,send,roster,section:contr
  const [localSection,setLocalSection]=useState('装备与背包');
  const section=controlledSection??localSection,setSection=onSectionChange??setLocalSection;
  const used=Object.values(s.talents||{}).reduce((n:any,v:any)=>n+Number(v||0),0) as number;
- return <section className="armory-page"><div className="section-heading armory-page-heading"><div><h1>{s.name}</h1><small>{s.level} 级 {d.raceName} · {d.className}</small></div><nav className="filterbar character-sections" aria-label="角色功能">{['装备与背包','法术书','天赋','策略','坐骑','生活职业','银行','拍卖行'].map(t=><button type="button" aria-pressed={section===t} className={section===t?'active':''} onClick={()=>setSection(t)} key={t}>{t}{t==='天赋'&&Math.max(0,Math.min(60,s.level)-9-used)>0&&<span className="section-count" aria-label={`${Math.max(0,Math.min(60,s.level)-9-used)} 点可用天赋`}>{Math.max(0,Math.min(60,s.level)-9-used)}</span>}</button>)}</nav></div>
+ return <section className="armory-page"><div className="section-heading armory-page-heading"><div><h1>{s.name}</h1><small>{s.level} 级 {d.raceName} · {d.className}</small></div><nav className="filterbar character-sections" aria-label="角色功能">{['装备与背包','邮箱','法术书',...(s.classId===3?['宠物']:[]),'天赋','策略','坐骑','生活职业','银行','拍卖行'].map(t=><button type="button" aria-pressed={section===t} className={section===t?'active':''} onClick={()=>setSection(t)} key={t}>{t}{t==='天赋'&&Math.max(0,Math.min(60,s.level)-9-used)>0&&<span className="section-count" aria-label={`${Math.max(0,Math.min(60,s.level)-9-used)} 点可用天赋`}>{Math.max(0,Math.min(60,s.level)-9-used)}</span>}</button>)}</nav></div>
+ {section==='邮箱'&&<Mailbox state={s} data={d} busy={busy} send={send}/>}
+ {section==='宠物'&&s.classId===3&&<HunterPets state={s} data={d} busy={busy} send={send}/>}
  {section==='策略'&&<Strategy state={s} data={d} busy={busy} send={send} currentCharacterOnly/>}
  {section==='坐骑'&&<Mounts state={s} data={d} busy={busy} send={send}/>}
  {section==='装备与背包'&&<><CharacterEquipment roster={roster} state={s} data={d} busy={busy} send={send}/><AmmoControls state={s} data={d} busy={busy} send={send}/></>}

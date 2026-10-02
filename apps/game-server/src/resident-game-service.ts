@@ -28,7 +28,7 @@ export class ResidentGameService {
     this.metadata.delete(saveId);
     for(const key of this.routes.keys())if(JSON.parse(key)[0]===saveId)this.routes.delete(key);
   }
-  gmInbox=(accountId:string)=>this.accounts.gmInbox(accountId);
+  mailInbox=async(accountId:string,actorId?:string)=>this.accounts.mailInbox(accountId,(await this.identity(accountId,actorId)).actorId);
   async createAccount(accountId:string,input:Parameters<GameService['createAccount']>[1],requestId:string){
     await this.accounts.createAccount(accountId,input,requestId);this.metadata.delete(accountId);return this.snapshot(accountId);
   }

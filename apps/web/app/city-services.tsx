@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';
+import {Tabs,TabsContent,TabsList,TabsTrigger} from '@/components/ui/tabs';
 import {GameProps,Icon,ItemDisplay,money,duration} from './game-ui';
 import {Bank,Auction} from './storage-market';
 import Professions from './professions';
@@ -9,18 +10,20 @@ export type CityService={id:string;name:string;npc:string;description:string;gre
 
 export default function CityServicePanel({service,...props}:GameProps&{service:CityService}){
  const {state:s,data:d,busy,send}=props;
- const [search,setSearch]=useState(''),[count,setCount]=useState(1),[shopMode,setShopMode]=useState('购买');
+ const [search,setSearch]=useState(''),[count,setCount]=useState(1),[shopMode,setShopMode]=useState('购买'),[trainerTab,setTrainerTab]=useState('class');
  const locked=busy||!d.city?.canInteract;
  const nested={...props,busy:locked};
  if(service.id==='bank')return <Bank {...nested}/>;
  if(service.id==='auction')return <Auction {...nested}/>;
  if(service.id==='professions')return <Professions {...nested}/>;
  if(service.id==='trainer'){
-  const skills=d.skills.filter((a:any)=>!a.known&&(a.name+' '+a.nameEn).toLowerCase().includes(search.toLowerCase()));
-  return <section className="city-service-body"><div className="city-service-toolbar"><div><h3>{d.className}训练</h3><p>可学习 {d.skills.filter((a:any)=>a.canTrain).length} 项 · 当前等级 {s.level}</p></div><input aria-label="搜索主城训练技能" placeholder="搜索技能…" value={search} onChange={e=>setSearch(e.target.value)}/></div>
+  const weapon=trainerTab==='weapon';
+  const tabSkills=d.skills.filter((a:any)=>(a.acquisition==='weapon')===weapon);
+  const skills=tabSkills.filter((a:any)=>!a.known&&(a.name+' '+a.nameEn).toLowerCase().includes(search.toLowerCase()));
+  return <Tabs value={trainerTab} onValueChange={value=>{setTrainerTab(value);setSearch('');}} className="city-service-body trainer-tabs"><TabsList aria-label="训练技能分类" className="trainer-tabs-list"><TabsTrigger value="class">学习职业技能</TabsTrigger><TabsTrigger value="weapon">学习武器技能</TabsTrigger></TabsList><TabsContent value={trainerTab}><div className="city-service-toolbar"><div><h3>{weapon?'武器技能':d.className+'训练'}</h3><p>可学习 {tabSkills.filter((a:any)=>a.canTrain).length} 项 · 当前等级 {s.level}</p></div><input aria-label={weapon?'搜索武器技能':'搜索职业技能'} placeholder="搜索技能…" value={search} onChange={e=>setSearch(e.target.value)}/></div>
    <div className="city-stock">{skills.map((a:any)=><div className="city-stock-row" key={a.spellId}><Icon src={a.icon} name={a.name}/><div className="grow"><strong>{a.name} <small>{a.rank?.replace('Rank','等级')}</small></strong><small>需要等级 {a.requiredLevel} · {a.canTrain?'可以学习':a.blockedReason}</small></div><Button variant="outline" disabled={locked||!a.canTrain} onClick={()=>send({type:'train',id:a.spellId})}>{money(a.costCopper||0)} · 学习</Button></div>)}{!skills.length&&<p className="empty">没有符合条件的未学技能。</p>}</div>
-   <div className="city-service-toolbar"><div><h3>重新分配天赋</h3><p>{d.canResetTalents?'清空已投入的天赋点，重新规划成长方向。':d.talentResetBlockedReason}</p></div><Button variant="outline" disabled={locked||!d.canResetTalents} onClick={()=>send({type:'resetTalents'})}>重置天赋 · {money(d.talentResetCost)}</Button></div>
-  </section>;
+   {!weapon&&<div className="city-service-toolbar"><div><h3>重新分配天赋</h3><p>{d.canResetTalents?'清空已投入的天赋点，重新规划成长方向。':d.talentResetBlockedReason}</p></div><Button variant="outline" disabled={locked||!d.canResetTalents} onClick={()=>send({type:'resetTalents'})}>重置天赋 · {money(d.talentResetCost)}</Button></div>}</TabsContent>
+  </Tabs>;
  }
  if(service.id==='shop'){
   const tabs=<div className="filterbar" aria-label="商人交易">{['购买','出售'].map(mode=><button key={mode} className={shopMode===mode?'active':''} aria-pressed={shopMode===mode} onClick={()=>setShopMode(mode)}>{mode}</button>)}</div>;

@@ -33,16 +33,16 @@ test('real SQL and HTTP: GM-only dispatch, owner-only claim, audit rollback and 
  const dispatch={action:'sendGift',templateId:template.id,scope:'player',userId:user.user.id,reason:'发放测试',requestId:'dispatch-001'};
  assert.equal((await post('/api/admin/gm',{...dispatch,userId:'not-a-user'})).status,400);
  const [first,retry]=await Promise.all([post('/api/admin/gm',dispatch),post('/api/admin/gm',dispatch)]);assert.equal(first.status,200);assert.deepEqual(await first.json(),await retry.json());
- const inbox=await (await fetch(base+'/api/game/gm-inbox'+query,{headers:userHeaders})).json();assert.equal(inbox.gifts.length,1);
- assert.equal((await fetch(base+'/api/game/gm-inbox'+query,{headers:{cookie:`wow_session=${other.token}`}})).status,404);
- const claimed=await post('/api/game'+query,{type:'claimGmGift',id:inbox.gifts[0].id,requestId:'claim-gift-001'},userHeaders);assert.equal(claimed.status,200);assert.equal((await claimed.json()).snapshot.player.money,20000);
- assert.equal((await service.gmInbox(save.id)).length,0);
+ const inbox=await (await fetch(base+'/api/game/mail'+query,{headers:userHeaders})).json();assert.equal(inbox.mail.length,1);
+ assert.equal((await fetch(base+'/api/game/mail'+query,{headers:{cookie:`wow_session=${other.token}`}})).status,404);
+ const claimed=await post('/api/game'+query,{type:'claimMail',id:inbox.mail[0].id,requestId:'claim-gift-001'},userHeaders);assert.equal(claimed.status,200);assert.equal((await claimed.json()).snapshot.player.money,20000);
+ assert.equal((await service.mailInbox(save.id)).length,0);
  // Inject an audit failure: no delivery or account revision may escape the transaction.
  const revision=(await service.snapshot(save.id)).revision;
  await sql.query(`CREATE FUNCTION reject_gm_operation() RETURNS trigger AS $$ BEGIN RAISE EXCEPTION 'audit unavailable'; END; $$ LANGUAGE plpgsql`);
  await sql.query('CREATE TRIGGER reject_gm_operation BEFORE INSERT ON gm_operations FOR EACH ROW EXECUTE FUNCTION reject_gm_operation()');
  assert.equal((await post('/api/admin/gm',{...dispatch,requestId:'dispatch-failed'})).status,503);
- assert.equal((await service.gmInbox(save.id)).length,0);assert.equal((await service.snapshot(save.id)).revision,revision);
+ assert.equal((await service.mailInbox(save.id)).length,0);assert.equal((await service.snapshot(save.id)).revision,revision);
  await sql.query('DROP TRIGGER reject_gm_operation ON gm_operations');
  assert.equal((await post('/api/admin/gm',{action:'issueBuff',scope:'all',name:'到期测试',description:'真实时间到期',durationMinutes:1,effects:{maxHp:100},reason:'过期测试',requestId:'buff-expiration'})).status,200);
  const before=await fetch(base+'/api/game'+query,{headers:userHeaders}),etag=before.headers.get('etag')!;assert.ok((await before.json()).snapshot.player.serverBuffs.some((buff:any)=>buff.gm));

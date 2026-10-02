@@ -79,7 +79,10 @@ test('completed quest choices are directly selectable from their item rows',()=>
 test('trainer and merchant conversation render their scoped services',()=>{
  const p=props(createGame('勇士',42,0));
  const trainer=p.data.interactions.find(n=>n.roles[0]==='trainer');
- assert.match(render(components.NpcConversation,{...p,npc:trainer}),/学习/);
+ const trainerHtml=render(components.NpcConversation,{...p,npc:trainer});
+ assert.match(trainerHtml,/学习职业技能/);assert.match(trainerHtml,/学习武器技能/);
+ assert.match(trainerHtml,/data-state="active"[^>]*>学习职业技能/);
+ assert.match(trainerHtml,/奥术智慧/);assert.doesNotMatch(trainerHtml,/单手剑/);
  const merchant=p.data.interactions.find(n=>n.roles[0]==='shop');
  const html=render(components.NpcConversation,{...p,npc:merchant});assert.match(html,/购买/);
  const stock=p.data.shop.filter(i=>merchant.stockIds.includes(i.id));assert.ok(stock.length);assert.ok(html.includes(stock[0].name));

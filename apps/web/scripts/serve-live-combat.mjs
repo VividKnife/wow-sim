@@ -22,7 +22,7 @@ const jitterMs=Number(process.env.PREVIEW_JITTER_MS||0);
 const snapshot=async(_account,_actor,_online,scope='full')=>{
  if(jitterMs>0&&performance.now()>=nextDelayAt){nextDelayAt=performance.now()+8000;await new Promise(resolve=>setTimeout(resolve,jitterMs));}
  return {response:runtime.presentation('preview',state.id,scope),state:null,revision:0,account:null,roster:[],activities:[],instanceId:'live-preview'};};
-const service={snapshot,socialSnapshot:async()=>({self:{id:state.id,name:state.name,roles:['dps']},incoming:[],outgoing:[],proposal:null,group:null,messages:{world:[],party:[]},friends:[],players:[],npcs:[],dungeons:[]}),socialCommand:async()=>{throw Error('Fixture social commands disabled');},createAccount:async()=>{throw Error('Fixture only');},work:async()=>({}),gmInbox:async()=>[],command:async(_account,body)=>{
+const service={snapshot,socialSnapshot:async()=>({self:{id:state.id,name:state.name,roles:['dps']},incoming:[],outgoing:[],proposal:null,group:null,messages:{world:[],party:[]},friends:[],players:[],npcs:[],dungeons:[]}),socialCommand:async()=>{throw Error('Fixture social commands disabled');},createAccount:async()=>{throw Error('Fixture only');},work:async()=>({}),mailInbox:async()=>[],command:async(_account,body)=>{
  const {execution,requestId,characterId,...action}=body;
  const receipt=runtime.input('preview',{instanceId:'live-preview',actorId:state.id,controllerGeneration:execution.controllerGeneration,clientSequence:execution.clientSequence,requestId,command:{kind:'action',action}});
  if(receipt.status==='rejected')throw Error(receipt.reason);const checkpoint=runtime.checkpoint();runtime.confirmCheckpoint(checkpoint.inputSequence,checkpoint.appliedInputSequence);

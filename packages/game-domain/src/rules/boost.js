@@ -60,7 +60,7 @@ export function applyLevel20Boost(s){
  if(s.classId===3){
   const ammo=ammoOptions(s)[0];
   s.ammunition=ammo?{[ammo.entry]:DEFAULT_AMMO_TARGET}:{};
-  s.hunterPet={entry:299,name:'森林狼',level:s.level,loyalty:6,happiness:166500,learned:[2649]};
+  s.hunterPet={entry:299,name:'森林狼',level:s.level,loyalty:6,happiness:1000000,learned:[2649]};
  }
  s.bags=Array.from({length:4},()=>makeItem(s,14046));
  s.mounts=[boostMount.id];s.riding.horse=true;

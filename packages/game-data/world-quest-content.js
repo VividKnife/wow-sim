@@ -39,16 +39,16 @@ export function questScopeReason(q){
 
 // Script rewards with no static loot row. Inputs and encounters remain required.
 export const questItemActions={
- 8072:{locations:['sludge-fen'],name:'潜入高塔并取得钥匙',duration:15000,classId:4},
- 11522:{locations:['steamwheedle'],name:'召唤并挑战亚奎门塔斯',duration:5000,enemy:9453},
- 11413:{locations:['terror-run'],name:'前往葛拉卡温泉装满娜玛拉之瓶',duration:10000},
- 11952:{locations:['irontree'],name:'净化夜龙草并采集',duration:15000,inputs:[[11516,4]]},
- 11951:{locations:['irontree'],name:'净化鞭根草并采集',duration:15000,inputs:[[11516,3]]},
- 12885:{locations:['darrowshire'],name:'拼合帕米拉的洋娃娃',duration:5000,inputs:[[12886,1],[12887,1],[12888,1]]},
- 13155:{locations:['darrowshire'],name:'用神秘水晶净化徽记',duration:10000,inputs:[[13157,1]]},
- 3935:{locations:['booty-bay'],name:'用食物引出奈古拉什',duration:5000,enemy:1494,inputs:[[3409,10],[4595,5]]},
- 20513:{locations:['twilight-base'],name:'召唤并挑战深渊圣殿骑士',duration:5000,enemy:15209,inputs:[[20406,1],[20407,1],[20408,1]]},
- 20514:{locations:['twilight-base'],name:'召唤并挑战深渊公爵',duration:5000,enemy:15206,inputs:[[20406,1],[20407,1],[20408,1],[20422,1]]},
- 20515:{locations:['twilight-base'],name:'召唤并挑战深渊领主',duration:5000,enemy:15203,inputs:[[20406,1],[20407,1],[20408,1],[20451,1]]},
+ 8072:{locations:['sludge-fen'],name:'潜入高塔并取得钥匙',classId:4},
+ 11522:{locations:['steamwheedle'],name:'召唤并挑战亚奎门塔斯',enemy:9453},
+ 11413:{locations:['terror-run'],name:'前往葛拉卡温泉装满娜玛拉之瓶'},
+ 11952:{locations:['irontree'],name:'净化夜龙草并采集',inputs:[[11516,4]]},
+ 11951:{locations:['irontree'],name:'净化鞭根草并采集',inputs:[[11516,3]]},
+ 12885:{locations:['darrowshire'],name:'拼合帕米拉的洋娃娃',inputs:[[12886,1],[12887,1],[12888,1]]},
+ 13155:{locations:['darrowshire'],name:'用神秘水晶净化徽记',inputs:[[13157,1]]},
+ 3935:{locations:['booty-bay'],name:'用食物引出奈古拉什',enemy:1494,inputs:[[3409,10],[4595,5]]},
+ 20513:{locations:['twilight-base'],name:'召唤并挑战深渊圣殿骑士',enemy:15209,inputs:[[20406,1],[20407,1],[20408,1]]},
+ 20514:{locations:['twilight-base'],name:'召唤并挑战深渊公爵',enemy:15206,inputs:[[20406,1],[20407,1],[20408,1],[20422,1]]},
+ 20515:{locations:['twilight-base'],name:'召唤并挑战深渊领主',enemy:15203,inputs:[[20406,1],[20407,1],[20408,1],[20451,1]]},
 };
 export const questFishingSources={12238:{locations:['auberdine'],required:1},13890:{locations:['caer-darrow'],required:250},13757:{locations:['caer-darrow'],required:250}};

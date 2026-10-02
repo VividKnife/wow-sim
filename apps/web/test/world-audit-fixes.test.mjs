@@ -31,7 +31,8 @@ test('marking all four towers uses the beacon and completes after timed actions,
  for(let n=1;n<=4;n++){
   const scene=questScenes(s,5097).find(x=>x.key==='objective:'+n);assert.ok(scene);
   s.location=scene.locations[0];s=act(s,{type:'questScene',id:5097,key:scene.key},s.wallAt);
-  s=advance(JSON.parse(JSON.stringify(s)),s.wallAt+15000).state;
+  assert.equal(scene.duration,10000);
+  s=advance(JSON.parse(JSON.stringify(s)),s.wallAt+10000).state;
  }
  assert.equal(questProgress(s,5097).complete,true);assert.equal(s.combat,null);
 });
@@ -40,14 +41,14 @@ test('Pamela doll requires all three parts, consumes them, and cannot be repeate
  let s=player();s.location='darrowshire';s.quests[5149]={kills:{},event:false};
  assert.throws(()=>act(s,{type:'questScene',id:5149,key:'special:4'},0));
  for(const id of [12886,12887,12888])addItem(s,id,1);
- s=act(s,{type:'questScene',id:5149,key:'special:4'},0);s=advance(s,5000).state;
+ s=act(s,{type:'questScene',id:5149,key:'special:4'},0);assert.equal(s.activity.endsAt-s.activity.startedAt,10000);s=advance(s,10000).state;
  assert.equal(countItem(s,12885),1);for(const id of [12886,12887,12888])assert.equal(countItem(s,id),0);
- assert.equal(questProgress(s,5149).complete,true);assert.throws(()=>act(s,{type:'questScene',id:5149,key:'special:4'},5000));
+ assert.equal(questProgress(s,5149).complete,true);assert.throws(()=>act(s,{type:'questScene',id:5149,key:'special:4'},10000));
 });
 
 test('summoned item reward requires winning the quest encounter and is awarded once',()=>{
  let s=player();s.location='steamwheedle';s.quests[4005]={kills:{},event:false};addItem(s,11617,1);
- s=act(s,{type:'questScene',id:4005,key:'special:1'},0);s=advance(s,5000).state;
+ s=act(s,{type:'questScene',id:4005,key:'special:1'},0);s=advance(s,10000).state;
  assert.equal(s.combat.enemies[0].entry,9453);assert.equal(countItem(s,11522),0);
  creditKill(s,9453);assert.equal(countItem(s,11522),1);creditKill(s,9453);assert.equal(countItem(s,11522),1);
 });
