@@ -49,7 +49,7 @@ test('arrival removes the flying model and progress is clamped to the route',()=
 });
 test('unsupported mounts are not silently replaced by a different horse',()=>{
  assert.equal(worldSceneState({...player,mounted:999999},data).mountDisplayId,0);
- assert.equal(Object.keys(worldMountDisplays).length,11);
+ assert.equal(Object.keys(worldMountDisplays).length,13);
 });
 test('numeric NPC metadata is allowed without opening arbitrary relay hosts or paths',()=>{
  assert.equal(assetUrl('meta/npc/2404.json'),'https://wow.zamimg.com/modelviewer/classic/meta/npc/2404.json');
@@ -84,4 +84,10 @@ test('corpse recovery animates the dead leader as an unmounted spirit, then rest
  }
  const leader=worldSceneState({...player,id:'leader',activity:{type:'revive',targets:['companion']}},data);
  assert.equal(leader.ghost,false);assert.equal(leader.moving,false);assert.equal(leader.animation,'Stand');
+});
+
+test('Spectral Tiger uses its actual model while standing and traveling',()=>{
+ for(const activity of [{type:'idle'},{type:'travel'}])assert.equal(worldSceneState({...player,mounted:49283,activity},data).mountDisplayId,21973);
+ assert.equal(assetUrl('meta/npc/21973.json'),'https://wow.zamimg.com/modelviewer/live/meta/npc/21973.json');
+ assert.equal(assetUrl('m2/125988.m2'),'https://wow.zamimg.com/modelviewer/live/m2/125988.m2');
 });

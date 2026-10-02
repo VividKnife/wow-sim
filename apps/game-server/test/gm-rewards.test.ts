@@ -27,7 +27,7 @@ test('real SQL and HTTP: GM-only dispatch, owner-only claim, audit rollback and 
  const query=`?saveId=${encodeURIComponent(save.id)}`;
  assert.equal((await fetch(base+'/api/admin/gm',{headers:userHeaders})).status,401);
  assert.equal((await fetch(base+'/api/admin/gm-items?search=2589',{headers:userHeaders})).status,401);
- const definition={action:'saveGift',name:'测试礼包',description:'事务奖励',copper:20000,items:[{id:2589,count:4}],reason:'API 测试',requestId:'template-create'};
+ const definition={action:'saveGift',name:'测试礼包',description:'事务奖励',copper:20000,items:[{id:2589,count:4},{id:49283,count:1}],reason:'API 测试',requestId:'template-create'};
  assert.equal((await post('/api/admin/gm',definition,{...adminHeaders,origin:'http://foreign.test'})).status,403);
  const template=await (await post('/api/admin/gm',definition)).json();assert.ok(template.id);
  const dispatch={action:'sendGift',templateId:template.id,scope:'player',userId:user.user.id,reason:'发放测试',requestId:'dispatch-001'};
@@ -35,7 +35,8 @@ test('real SQL and HTTP: GM-only dispatch, owner-only claim, audit rollback and 
  const [first,retry]=await Promise.all([post('/api/admin/gm',dispatch),post('/api/admin/gm',dispatch)]);assert.equal(first.status,200);assert.deepEqual(await first.json(),await retry.json());
  const inbox=await (await fetch(base+'/api/game/mail'+query,{headers:userHeaders})).json();assert.equal(inbox.mail.length,1);
  assert.equal((await fetch(base+'/api/game/mail'+query,{headers:{cookie:`wow_session=${other.token}`}})).status,404);
- const claimed=await post('/api/game'+query,{type:'claimMail',id:inbox.mail[0].id,requestId:'claim-gift-001'},userHeaders);assert.equal(claimed.status,200);assert.equal((await claimed.json()).snapshot.player.money,20000);
+ const claimed=await post('/api/game'+query,{type:'claimMail',id:inbox.mail[0].id,requestId:'claim-gift-001'},userHeaders);assert.equal(claimed.status,200);const player=(await claimed.json()).snapshot.player;assert.equal(player.money,20000);assert.ok(player.bag.some((item:any)=>item.id===49283));assert.deepEqual(player.mounts,[]);
+ const learn=await post('/api/game'+query,{type:'useItem',uid:player.bag.find((item:any)=>item.id===49283).uid,requestId:'learn-tiger-001'},userHeaders);assert.equal(learn.status,200);assert.deepEqual((await learn.json()).snapshot.player.mounts,[49283]);
  assert.equal((await service.mailInbox(save.id)).length,0);
  // Inject an audit failure: no delivery or account revision may escape the transaction.
  const revision=(await service.snapshot(save.id)).revision;

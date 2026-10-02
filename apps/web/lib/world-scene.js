@@ -1,5 +1,6 @@
+import {bossMounts} from '../../../packages/game-data/mounts.js';
 // Mount spell -> creature -> ModelId1 from the current Classic catalog.
-export const worldMountDisplays={2414:2409,5655:2405,5656:2404,18776:14582,18777:14583,18778:14338,900020:2404,13819:8469,23214:14584,5784:2346,23161:14554};
+export const worldMountDisplays={...Object.fromEntries(bossMounts.map(m=>[m.id,m.displayId])),49283:21973,2414:2409,5655:2405,5656:2404,18776:14582,18777:14583,18778:14338,900020:2404,13819:8469,23214:14584,5784:2346,23161:14554};
 // Choose the local flight service, never restrict access by the rider's race.
 export function worldFlightMount(state,data){
  const origin=data.map?.find(node=>node.id===(state.activity?.from||state.location))||data.location;

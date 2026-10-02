@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "8bc4eb1dfe3b0aee26876c005328158f18cd6cd7f32b2741946a4b712fb1aab5",
+  "contentVersion": "03b0aef76f7ef5328afd94817fa34630ec1c0afba09a452acba5aa2d419e2b0a",
   "bundles": {
     "boss-rooms.json": {
       "sha256": "a0879292bd1f5a35ec45618d75a23f0472df8576eaf9db205f7de9609a8dad61",
@@ -231,11 +231,11 @@
       "bytes": 316513
     },
     "runtime/catalog.json": {
-      "sha256": "23c37d7dd05660aa029766bf57b1eddb7151ed27f1b77037a9a2fcfbb44fbcef",
-      "bytes": 49771773
+      "sha256": "12868ff5f1cd5cc57b24842a3766062af686038a433cbb146954509929866692",
+      "bytes": 49796404
     },
     "runtime/version.json": {
-      "sha256": "b5dae2bec56ff3846f087f795609b4f6e090802a14bc454744747f04d5f92ddc",
+      "sha256": "b906b2320df116831dd9d2798409b33b04859bea4c2fbde604f8edc4f77a9f70",
       "bytes": 79
     }
   },
@@ -281,8 +281,8 @@
       "bytes": 17979
     },
     "../game-domain/src/rules/boost.js": {
-      "sha256": "8ae34e4bc0415b50b43bb9f3026442355f77790a2ad7959e5af29eae73636e22",
-      "bytes": 4231
+      "sha256": "c1cb7314ba95df58507713fc3298401e2f1dfa9fde2c5b04c127c519d66c58fb",
+      "bytes": 4283
     },
     "../game-domain/src/rules/bot-context.js": {
       "sha256": "e044c3e1d19838c31c791dae156e1d5f8cef7783dcc8410a33151a2db6e27adf",
@@ -317,8 +317,8 @@
       "bytes": 4726
     },
     "../game-domain/src/rules/city.js": {
-      "sha256": "2c9afc162f50e6b1a6fbba95f3497df73f76d13544b1f3baeb9cd9088b1bc25e",
-      "bytes": 3212
+      "sha256": "9cd3202931e50441d4d8b0a8fcc9389edddf151373922b4dec0b084da609aa2a",
+      "bytes": 3230
     },
     "../game-domain/src/rules/class-acquisition.js": {
       "sha256": "e30d786f08803cc5d38564242f7d585456e720441a956a4c288999782b960512",
@@ -345,8 +345,8 @@
       "bytes": 1369
     },
     "../game-domain/src/rules/class-spell-effects.js": {
-      "sha256": "78b4fc28abaa1e9f8415534f33d95ed9bc2d8576e27ef33e1a28ad58a96388c5",
-      "bytes": 48788
+      "sha256": "5a7c465f0cd7b2fc0d7e6a683f7e0e78bb7898e6fb3d1501ff28f1eee2f83f5d",
+      "bytes": 50276
     },
     "../game-domain/src/rules/class-spell-registry.js": {
       "sha256": "8cd0d30e82574afd4f3e3411516e927fdc939633ba311f0f30bf04b3b5d14626",
@@ -361,16 +361,16 @@
       "bytes": 3462
     },
     "../game-domain/src/rules/class-utility.js": {
-      "sha256": "0b6d4de61e69282f221820da6ec4ff157bc9fd0321dadc0ab0880dbef10c0bbc",
-      "bytes": 14066
+      "sha256": "af987819397fc9495a2cba438648aa8aad23a498cbc94c07242ae3e1582a1b5d",
+      "bytes": 13948
     },
     "../game-domain/src/rules/client-content.js": {
       "sha256": "0a23cc2b70495746d3cbe799514074e4162fefd476dbf39557123e6ff5c062c7",
       "bytes": 1686
     },
     "../game-domain/src/rules/client-snapshot.ts": {
-      "sha256": "faa1ced06ec68c6b6d611d1ffb79d01bfc03925c5b719a7effe1136ff868a5a2",
-      "bytes": 13000
+      "sha256": "41cc43e507999284e46f6b4b590a03a945426feeefbe304a48bdedf300bce567",
+      "bytes": 13019
     },
     "../game-domain/src/rules/combat-area.js": {
       "sha256": "d44b0614d558c15c6b2533799ee7a5b623c9a0673d5df3ff6f94340a63d431a2",
@@ -393,8 +393,8 @@
       "bytes": 858
     },
     "../game-domain/src/rules/combat-metrics.js": {
-      "sha256": "1ee3fee5f0997b77a78e8dd9d5b857944441efb983e69088bb3d653524a5e86b",
-      "bytes": 6202
+      "sha256": "7e555be305943a0991121fd0ed4e6a9090ddab16219ba55ac8d575bd5090b80b",
+      "bytes": 6221
     },
     "../game-domain/src/rules/combat-observation.js": {
       "sha256": "4a2f3cea903fb5edab82587e7c5b2c68231d8de10e15f6fc9eee8e2edc3d4a52",
@@ -429,8 +429,8 @@
       "bytes": 9291
     },
     "../game-domain/src/rules/combat.js": {
-      "sha256": "4f72214e33c726c6ceab7c39e2fd42b47a8d0ee508773ec4fd85947106e53de6",
-      "bytes": 60705
+      "sha256": "861945bcc7b2d0690ce6e1bc76a1f277cfdfa169c0240120f5eece5975beb812",
+      "bytes": 60885
     },
     "../game-domain/src/rules/companion-combat.js": {
       "sha256": "93c8e86a533d9c557bd4df06220a4ec83376c563cc1c53e5f8bc06d5633a1828",
@@ -517,8 +517,8 @@
       "bytes": 13702
     },
     "../game-domain/src/rules/engine.js": {
-      "sha256": "60419bf60215cf7c9bf7826885593c6b3a98dec8195ee00806639bb4c6e4b7a5",
-      "bytes": 47858
+      "sha256": "a3b893725528eec1c68096bfb8d3097992ff997d917fd3a8fcd0407addde1508",
+      "bytes": 48373
     },
     "../game-domain/src/rules/escort.js": {
       "sha256": "9ca668febef11d49b5233ad0dc0204114bb164aa9e02458e0159a466d5252dcb",
@@ -553,8 +553,8 @@
       "bytes": 2713
     },
     "../game-domain/src/rules/group-loot.js": {
-      "sha256": "c00941234df23909360da1358d502f83e11459f39f7861a029784564adb7d178",
-      "bytes": 5490
+      "sha256": "d268937462854dc6b7a04dc693fc7b55d927f2a6d04b8e364ce14ce20c6867f7",
+      "bytes": 5800
     },
     "../game-domain/src/rules/healing.js": {
       "sha256": "62444332e8219fa339915c0ef7b71b2fd1ef481a8bc80ebe103a9755167c21b4",
@@ -633,12 +633,12 @@
       "bytes": 2496
     },
     "../game-domain/src/rules/mounts.js": {
-      "sha256": "dbf098b5540685abdc24a0d6880c9a56c5c32929a3f65062bd9d5b855452e2e7",
-      "bytes": 7658
+      "sha256": "49cffbd23a9440b09f9802b735ae6faea6d017c721a441f07a5063d9e7cb7b31",
+      "bytes": 9947
     },
     "../game-domain/src/rules/navigation.js": {
-      "sha256": "3a17710aa888ccfdb8a4f16c0333b32d510db84110fa9f7ec07b326f4ba950ee",
-      "bytes": 4859
+      "sha256": "a5aabc1f7a7c89d2a40996a6c923fcc23938734863b1bb2bd407a142c2684843",
+      "bytes": 5741
     },
     "../game-domain/src/rules/npc-builds.js": {
       "sha256": "9f477bf85ef5b02e2c6e0c6efc1d2c8ef7e026d44199137f323b2590c0fe525f",
@@ -696,13 +696,17 @@
       "sha256": "462a0c743246b378a7f63726294d2ce3da6d25a8cea6f48774ca32b8f62d0fab",
       "bytes": 4154
     },
+    "../game-domain/src/rules/pet-presentation.js": {
+      "sha256": "4af8e3a61748cf0ea39f793853e81e383d68d20554ef74450474452c2df70c18",
+      "bytes": 1777
+    },
     "../game-domain/src/rules/pet-progression.js": {
-      "sha256": "949f50f06e679e528022feb6d49779ecc26b2f205373b26cb9c463f0c89dff3f",
-      "bytes": 4235
+      "sha256": "6dd9e1815ae539fc7fbc613523eb929596e9f3b59c114bd131452124541726fe",
+      "bytes": 4339
     },
     "../game-domain/src/rules/pet-stable.js": {
-      "sha256": "c8684df2a4b1d9239b9772c2d84335f3d88827d0c70fe8851e346279e1dab6a2",
-      "bytes": 2717
+      "sha256": "ef26b843fc375a88315dd51df8085fc1f5ac1ac03e03b38fbc1d196cc9694a67",
+      "bytes": 2788
     },
     "../game-domain/src/rules/polymorph.js": {
       "sha256": "dbaafb8eda16f723223336c7c2d97f36486b722817e131563abcd25b6ec75d81",
@@ -737,8 +741,8 @@
       "bytes": 2821
     },
     "../game-domain/src/rules/quests.js": {
-      "sha256": "5070ab7674aafe8848348ab5e589bc8d87ee391a963594ee4cbc91ef845437f3",
-      "bytes": 27913
+      "sha256": "2f94c0da3ab78d9af6fa518e12d161d0373d8452df5327734f4bfdcef549b16c",
+      "bytes": 27789
     },
     "../game-domain/src/rules/racial-effects.js": {
       "sha256": "bcd4404728cffc9ee693055f2e0800b01916bc27d3ddda6c7bc4a640dbf9a694",
@@ -893,8 +897,8 @@
       "bytes": 5032
     },
     "../game-domain/src/rules/utility-actions.js": {
-      "sha256": "3f43f20d3eba655ae56775dac08a4b150d7c2f7e4bc627b84c46a9ac57cfc86b",
-      "bytes": 11341
+      "sha256": "58a2c68462f5dfef41f3bbd50fe395a47888dbde28faeeaa57b7eeb4830dbe9e",
+      "bytes": 11469
     },
     "../game-domain/src/rules/utility-data.js": {
       "sha256": "65f7ca698178329fd9851ef9db9301d2b58486c89bd9b24d1717a32f87fcfc8f",
@@ -1019,6 +1023,10 @@
     "market-reference.js": {
       "sha256": "d1f631d629aba2e19a4e65d4a89d52a1654bb590f5aa071c03adce604e0f597a",
       "bytes": 3530
+    },
+    "mounts.js": {
+      "sha256": "3ecf76977b50f7df991f0b93b118d45917fb3ab152f701f296c32166228ea0de",
+      "bytes": 1240
     },
     "world-content.js": {
       "sha256": "00f304835ce3b0af2d932a5dd78fce61cbf9bd45a94cc4afe190f44656aa69ab",

@@ -1,0 +1,19 @@
+.quest-panel .quest-entry>summary{flex-wrap:nowrap;gap:10px}
+.quest-panel .quest-entry>summary>strong{flex:1;min-width:0;overflow-wrap:anywhere}
+.quest-panel .quest-summary-status{display:grid;gap:3px;max-width:45%;white-space:normal;font-variant-numeric:tabular-nums}
+.quest-summary-status>span:last-child{color:var(--gold)}
+.quest-summary-status>span.done{color:var(--green)}
+.quest-expand-indicator{flex-shrink:0;color:var(--muted);transition:transform .15s}
+.quest-entry[open]>summary .quest-expand-indicator{transform:rotate(180deg)}
+.quest-entry>summary:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.quest-log-rewards{margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:3px;background:#13171055}
+.quest-log-rewards h3{margin:0 0 10px;font-size:13px;color:var(--gold)}
+.quest-log-reward-values{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:12px}
+.quest-log-rewards p{margin:12px 0 8px;font-size:12px}
+.quest-log-rewards p small{margin-left:8px;color:var(--muted)}
+.quest-log-reward-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:8px 16px}
+.quest-log-reward-item{display:flex;align-items:center;gap:8px;min-width:0}
+.quest-log-reward-item .item-display{flex:1;min-width:0}
+.quest-log-reward-item .item-display-name{white-space:normal;overflow-wrap:anywhere}
+.quest-log-reward-item>span{flex-shrink:0;color:var(--muted);font-size:12px}
+@media(prefers-reduced-motion:reduce){.quest-expand-indicator{transition:none}}

@@ -2,7 +2,13 @@
 const ROOT='https://wow.zamimg.com/modelviewer/classic/';
 const assetPattern=/^(?:deployment\/viewer\/c3f890f\/viewer\.min\.js|meta\/(?:npc|character|charactercustomization|item|itemvisual)\/[1-9]\d{0,8}\.json|meta\/armor\/(?:1|3|4|5|6|7|8|9|10|16|19|20)\/[1-9]\d{0,8}\.json|(?:m2\/[1-9]\d{0,9}\.m2|skin\/[1-9]\d{0,9}\.skin|skel\/[1-9]\d{0,9}\.skel|anim\/[1-9]\d{0,9}\.anim|bone\/[1-9]\d{0,9}\.bone)|textures\/[1-9]\d{0,9}\.(?:webp|png))$/;
 // Version used by the official Classic Dressing Room on 2026-09-16.
-export const assetUrl=path=>assetPattern.test(path)?ROOT+path:null;
+// Spectral Tiger is absent from the Classic metadata/model archive. Its pinned
+// resource set uses the live archive; all other models keep Classic assets.
+const spectralTigerAssets=new Set(['meta/npc/21973.json','m2/125988.m2',
+ ...[479834,479848].map(id=>`skin/${id}.skin`),
+ ...[479838,479837,479829,479831,479826,479854,479846,479839,479825].map(id=>`anim/${id}.anim`),
+ ...[125986,124037,125987,130725,124041,125011,125010,145314].flatMap(id=>[`textures/${id}.webp`,`textures/${id}.png`])]);
+export const assetUrl=path=>assetPattern.test(path)?(spectralTigerAssets.has(path)?'https://wow.zamimg.com/modelviewer/live/':ROOT)+path:null;
 export function parseItemIds(value){
  if(typeof value!=='string'||!/^\d+(?:,\d+){0,18}$/.test(value))throw new Error('Invalid item list');
  const ids=[...new Set(value.split(',').map(Number))];

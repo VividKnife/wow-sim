@@ -9,7 +9,7 @@ import {mountView} from '../../../packages/game-domain/src/rules/mounts.js';
 const command=(s,a)=>act(s,a,s.wallAt);
 const finish=s=>advance(s,s.wallAt+s.activity.endsAt-s.clock).state;
 function buyer(level=20){const s=createGame('骑乘测试',37,0);s.level=level;s.location='logging';s.money=20000000;return s;}
-function owner(level=20,id=5656){let s=command(buyer(level),{type:'trainRiding'});return command(s,{type:'buyMount',id});}
+function owner(level=20,id=5656){let s=command(buyer(level),{type:'trainRiding'});s=command(s,{type:'buyMount',id});return command(s,{type:'useItem',uid:s.bag.find(i=>i.id===id).uid});}
 function rider(level=20,id=5656){return finish(command(owner(level,id),{type:'mount',id}));}
 
 test('a mounted traveler can turn around mid-road without remounting or losing its speed',()=>{
@@ -35,18 +35,15 @@ test('training and purchasing require local service, eligibility, funds and no d
  s.location='logging';s.money=199999;assert.throws(()=>command(s,{type:'trainRiding'}),/不足/);
  s.money=1000000;s=command(s,{type:'trainRiding'});assert.equal(s.money,800000);
  assert.throws(()=>command(s,{type:'trainRiding'}),/已经/);
- s=command(s,{type:'buyMount',id:5656});assert.equal(s.money,0);assert.ok(s.mounts.includes(5656));
+ s=command(s,{type:'buyMount',id:5656});assert.equal(s.money,0);assert.ok(s.bag.some(i=>i.id===5656));s=command(s,{type:'useItem',uid:s.bag.find(i=>i.id===5656).uid});assert.ok(s.mounts.includes(5656));
  assert.throws(()=>command(s,{type:'buyMount',id:5656}),/已经/);
  assert.throws(()=>command(s,{type:'buyMount',id:999999}),/坐骑/);
  assert.throws(()=>command(s,{type:'buyMount',id:2414}),/不足/);
  assert.throws(()=>command(s,{type:'mount',id:2414}),/拥有/);
 });
 
-test('other Alliance races need exalted reputation; Horde cannot learn horse riding',()=>{
- const s=buyer();s.raceId=3;assert.throws(()=>command(s,{type:'trainRiding'}),/崇拜/);
- s.reputation[72]=42000;const trained=command(s,{type:'trainRiding'});assert.equal(trained.money,19820000);
- const purchased=command(trained,{type:'buyMount',id:5656});assert.equal(purchased.money,19100000);
- s.raceId=2;assert.throws(()=>command(s,{type:'trainRiding'}),/联盟/);
+test('all races can train and buy mounts without a reputation gate',()=>{
+ for(const raceId of [1,2,3,4,5,6,7,8]){const s=buyer();s.raceId=raceId;const trained=command(s,{type:'trainRiding'});assert.ok(command(trained,{type:'buyMount',id:5656}).bag.some(i=>i.id===5656));}
 });
 
 test('summon takes three seconds and can be cancelled or restored without duplicate mounts',()=>{
@@ -62,7 +59,7 @@ test('summon takes three seconds and can be cancelled or restored without duplic
 
 test('epic mounts require level sixty and reuse horse riding training',()=>{
  assert.throws(()=>command(owner(),{type:'buyMount',id:18777}),/60/);
- let s=owner(60);const gold=s.money;s=command(s,{type:'buyMount',id:18777});assert.equal(s.money,gold-10000000);
+ let s=owner(60);const gold=s.money;s=command(s,{type:'buyMount',id:18777});assert.equal(s.money,gold-10000000);s=command(s,{type:'useItem',uid:s.bag.find(i=>i.id===18777).uid});
  s=finish(command(s,{type:'mount',id:18777}));assert.equal(view(s).mounts.speedBonus,100);
  s.location='northshire';const trip=command(s,{type:'travel',to:'goldshire'});assert.equal(trip.activity.endsAt-trip.clock,Math.ceil(route('northshire','goldshire').path[0].distance/(baseTravelSpeed*2)*1000));
 });

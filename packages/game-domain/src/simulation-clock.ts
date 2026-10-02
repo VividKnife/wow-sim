@@ -3,7 +3,7 @@ import type {Rules} from './model.ts';
 // Boundary-only clock translation. These are simulation timestamps, never
 // durations, counters, asset identities or wall-clock deadlines.
 const deadlineMaps = new Set(['cooldowns', 'globalCooldowns', 'itemCooldowns', 'professionCooldowns',
-  'resourceCooldowns', 'objectRespawns', 'questWaits', 'schoolLockouts', 'controlCooldowns', 'timers']);
+  'resourceCooldowns', 'questWaits', 'schoolLockouts', 'controlCooldowns', 'timers']);
 const times = new Set(['clock', 'time', 'at', 'next', 'until', 'lastTick', 'lastManaUse', 'lastControlEnd',
   'lastRetaliation', 'globalCooldown', 'nextTick', 'nextRegen', 'nextPull', 'nextFood', 'nextAction',
   'nextSwing', 'nextAttack', 'nextSpell', 'nextRanged', 'nextOffhand', 'nextPowerRegen', 'nextInfernalFire',

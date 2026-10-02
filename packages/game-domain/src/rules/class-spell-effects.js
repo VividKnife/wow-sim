@@ -1,3 +1,5 @@
+import {invalidatePolicyIntents} from './combat-policy.js';
+import {executeCombatIntent} from './combat.js';
 import {replaceExclusiveBuff,clearExclusiveBuffs,replaceBlessing} from './exclusive-buffs.js';
 import {healPeriodicAmount} from './healing.js';
 import {dueGroundEffects,continueGroundEffect} from './ground-events.js';
@@ -16,7 +18,7 @@ import {strategyAllows} from './combat-strategy.js';
 import {spellPowerBonus} from './spell-scaling.js';
 import {beginSpellTiming,finishSpellTiming,spellReady,resetSpellCooldowns} from './spell-timing.js';
 import {initializeHunterPetSkills,observeHunterPetSkill} from './pet-knowledge.js';
-import {initializePetProgression,saveHunterPet,tickPetProgression,petTrainingReason,petTrainingCost,petFoodBenefit,MAX_PET_LOYALTY,MAX_PET_HAPPINESS} from './pet-progression.js';
+import {petSkillRoot,initializePetProgression,saveHunterPet,tickPetProgression,petTrainingReason,petTrainingCost,petFoodBenefit,MAX_PET_LOYALTY,MAX_PET_HAPPINESS} from './pet-progression.js';
 import {canPolymorph,applyPolymorph} from './polymorph.js';
 import {enemySpellInfo} from './enemy-spells.js';
 import {consume} from './inventory.js';
@@ -229,7 +231,23 @@ export function applyClassWeaponEnchant(s,c,sp,slot=16){
 
 export function petCommand(s,a,owner=s){
  const pet=owner.pet;if(!pet)throw new Error('Summon a pet first');
- if(owner!==s&&!['passive','defensive','aggressive','follow','stay','attack'].includes(a.command))throw new Error('共享实例中宠物仅支持姿态、跟随、停留与攻击命令');
+ if(owner!==s&&!['passive','defensive','aggressive','follow','stay','attack','autocast','cast'].includes(a.command))throw new Error('共享实例中宠物仅支持姿态、移动、攻击与技能控制');
+ if(['autocast','cast'].includes(a.command)){
+  const sp=spells[a.spellId];
+  if(pet.hp<=0||owner.hp<=0)throw new Error('需要存活的猎人与宠物');
+  if(!sp||!pet.learned?.includes(a.spellId)||(sp.Attributes&64)||(sp.Attributes&128))throw new Error('宠物尚未掌握这个主动技能');
+  if(a.command==='autocast'){
+   if(typeof a.enabled!=='boolean')throw new Error('自动施法状态无效');
+   const root=petSkillRoot(a.spellId),disabled=new Set(pet.autocastDisabled||[]);
+   if(a.enabled)disabled.delete(root);else disabled.add(root);
+   pet.autocastDisabled=[...disabled];saveHunterPet(s,owner);if(s.combat)invalidatePolicyIntents(s,[pet.id]);return;
+  }
+  const self=[1,2,3].some(n=>sp['EffectImplicitTargetA'+n]===1)&&![1,2,3].some(n=>sp['EffectImplicitTargetA'+n]===6);
+  const targetId=self?pet.id:a.targetId;
+  if(!self&&!s.combat?.enemies.some(enemy=>enemy.id===targetId&&aliveEnemy(enemy)&&!enemy.controlledBy))throw new Error('当前无法施放：请选择存活的敌对目标');
+  if(!executeCombatIntent(s,pet,{kind:'petCast',spellId:a.spellId,targetId},{manual:true}).accepted)throw new Error('当前无法施放：请检查战斗目标、距离、集中值与冷却');
+  return;
+ }
  if(['passive','defensive','aggressive','follow','stay'].includes(a.command)){pet.mode=a.command;pet.targetId=null;return;}
  if(a.command==='attack'){const target=s.combat?.enemies.find(e=>e.id===a.targetId&&aliveEnemy(e));if(!target)throw new Error('Choose a living enemy');pet.targetId=target.id;pet.mode='attack';return;}
  if(a.command==='abandon'){if(s.combat||s.classId!==3)throw new Error('Leave combat before abandoning a hunter pet');s.pet=null;s.hunterPet=null;return;}
@@ -259,7 +277,7 @@ export function selectPetSpell(s,pet,owner,target,actors,requestedId=null){
  if(pet.cast)return null;
  if(pet.nextAction>s.clock)return false;
  const best=new Map();for(const id of pet.learned||[]){const sp=spells[id];if(sp&&(!best.has(sp.SpellName)||best.get(sp.SpellName).SpellLevel<sp.SpellLevel))best.set(sp.SpellName,sp);}
- for(const raw of best.values()){if(requestedId!=null&&raw.Id!==requestedId)continue;const sp=spellInfo(pet,raw.Id);if(!spellReady(pet,sp,s.clock))continue;const pool=sp.PowerType===2?'focus':'mana';if((pet[pool]??(pool==='focus'?100:0))<sp.mana)continue;
+ for(const raw of best.values()){if(raw.Attributes&64||raw.Attributes&128)continue;if(requestedId==null&&pet.autocastDisabled?.includes(petSkillRoot(raw.Id)))continue;if(requestedId!=null&&raw.Id!==requestedId)continue;const sp=spellInfo(pet,raw.Id);if(!spellReady(pet,sp,s.clock))continue;const pool=sp.PowerType===2?'focus':'mana';if((pet[pool]??(pool==='focus'?100:0))<sp.mana)continue;
   const self=[1,2,3].some(n=>sp['EffectImplicitTargetA'+n]===1)&&![1,2,3].some(n=>sp['EffectImplicitTargetA'+n]===6),recipient=self?pet:target;
   if(!self&&distance(pet,target)>(sp.range||5))continue;
   if(requestedId==null&&['Spell Lock','Pummel'].includes(sp.SpellName)&&!target.cast)continue;

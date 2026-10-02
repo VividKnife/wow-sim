@@ -1,3 +1,4 @@
+import {petIdentity} from './pet-presentation.js';
 import {creatures,creatureLocations} from './catalog.js';
 import {saveHunterPet,MAX_PET_LOYALTY} from './pet-progression.js';
 import {summonClassPet} from './class-spell-effects.js';
@@ -6,7 +7,7 @@ import {log,spellInfo} from './character.js';
 const stablePrices=[10000,50000];
 const stableLocations=new Set(Object.values(creatures).filter(npc=>npc.NpcFlags&8192).flatMap(npc=>creatureLocations[npc.Entry]||[]));
 export const stableHere=s=>!s.dungeon&&stableLocations.has(s.location);
-const petSummary=pet=>pet?{entry:pet.entry,name:pet.name,level:pet.level,loyalty:MAX_PET_LOYALTY,trainingPoints:(pet.trainingPoints??pet.level*((pet.loyalty??MAX_PET_LOYALTY)-1))+(MAX_PET_LOYALTY-(pet.loyalty??MAX_PET_LOYALTY))*pet.level}:null;
+const petSummary=pet=>pet?{...petIdentity(pet),entry:pet.entry,name:pet.name,level:pet.level,loyalty:MAX_PET_LOYALTY,trainingPoints:(pet.trainingPoints??pet.level*((pet.loyalty??MAX_PET_LOYALTY)-1))+(MAX_PET_LOYALTY-(pet.loyalty??MAX_PET_LOYALTY))*pet.level}:null;
 
 export function petStableView(s){
  if(s.classId!==3)return null;

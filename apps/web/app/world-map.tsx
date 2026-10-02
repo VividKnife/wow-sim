@@ -59,6 +59,6 @@ export default function WorldMap({state:s,data:d,busy,send}:GameProps){
   </div></div>
   <div className="map-legend"><span>角色：玩家位置与出行方式</span><span>数字 / ⚔ 地点</span><span>↗ 鸟点（标注解锁状态）</span><span>虚线：待行进 · 蓝线：已走过</span></div>
   <details className="map-location-list"><summary>地点列表 · {points.length} 个地点</summary><div className="location-grid">{points.map((n:any,i:number)=><button key={n.id} disabled={locked||(moving?n.id===s.activity.to:n.id===s.location)||n.travel===null} className={'location-node '+(n.id===s.location?'current':'')} onClick={()=>travel(n.id)}><strong>{i+1}. {n.name}</strong><small>{!moving&&n.id===s.location?'当前位置':`Lv.${n.min}—${n.max} · ${n.travel===null?'需传送抵达':duration(n.travel)}`}</small>{n.hasFlight&&<small>↗ {n.flightUnlocked?'鸟点已解锁':'鸟点未发现'}</small>}</button>)}</div></details>
-  <p className="footnote">{moving?(s.activity.flight?'飞行期间不可改道。':'点击其他地点可随时改道或折返，按当前位置计算路程。'):''}地点按区域地图近似标注；移动沿现有道路计时。鸟点需到飞行管理员处发现。{region==='信使路线'?'信使路线为驿站示意，不代表地理比例。':''}</p></>}
+  <p className="footnote">{moving?(s.activity.flight?'飞行期间不可改道。':'点击其他地点可随时改道或折返，按当前位置计算路程。'):''}地点按区域地图近似标注；沿途已激活的鸟点之间会自动飞行，费用不足时走地面路线；到达或路过鸟点即可激活。{region==='信使路线'?'信使路线为驿站示意，不代表地理比例。':''}</p></>}
  </section>;
 }
