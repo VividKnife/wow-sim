@@ -76,6 +76,8 @@
 .cu-actions{position:absolute;left:50%;bottom:117px;transform:translateX(-50%);display:flex;gap:4px;z-index:4;padding:5px;background:#11170fbd;border:1px solid #a08e67;border-radius:4px;box-shadow:0 3px 16px #0005}
 .cu-actions button{height:34px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 11px;background:linear-gradient(#434433,#252c20);border:1px solid #706f50;border-radius:2px;color:#d4ceb1;font-size:11px;white-space:nowrap}
 .cu-actions button img{width:20px;height:20px;object-fit:cover;border:1px solid #948666}
+.cu-action-icon{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.cu-action-icon>i{position:absolute;top:-5px;right:-5px;width:9px;height:9px;border:1px solid #ffe9a2;border-radius:50%;background:#e5b953;box-shadow:0 0 7px #d9a933}
 .cu-actions button.active,.cu-actions button:hover:not(:disabled){color:#ffe3a1;border-color:#d5b773;background:linear-gradient(#696043,#353726)}
 .cu-actions button.cu-fight-button{background:linear-gradient(#60372c,#38251d);border-color:#9e7655;color:#efd5a7}
 .cu-bottom-ui{position:absolute;bottom:0;left:0;right:0;z-index:5;background:repeating-linear-gradient(130deg,#0000 0 3px,#ffffff02 3px 4px),linear-gradient(#4b483d 0%,#20211c 8%,#272923 70%,#121510 100%);border-top:3px ridge #95866b;box-shadow:0 -4px 16px #0008}

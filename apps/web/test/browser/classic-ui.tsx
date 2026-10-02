@@ -18,7 +18,7 @@ import './classic-ui.css';
 const content = clientContent();
 const icons = '/icons/assets/';
 const menuItems = [
- {id:'nearby', name:'附近人物', icon:'spell_holy_magicalsentry', key:'N'},
+ {id:'nearby', name:'附近人物', icon:'inv_misc_head_human_01', key:'N'},
  {id:'quests', name:'任务日志', icon:'inv_misc_book_09', key:'L'},
  {id:'character', name:'角色', icon:'inv_helmet_03', key:'C'},
  {id:'bag', name:'背包', icon:'inv_misc_bag_08', key:'B'},

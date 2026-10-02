@@ -5,11 +5,25 @@ import {createGame,act,advance,view,stats} from '../../../../packages/game-domai
 import {addItem} from '../../../../packages/game-domain/src/rules/character.js';
 import Character from '../../app/character';
 import Strategy from '../../app/strategy';
-import {Gathering} from '../../app/professions';
+import Professions,{Gathering} from '../../app/professions';
+import {clientContent} from '../../../../packages/game-domain/src/rules/client-content.js';
+import {contentPack} from '../../../../packages/game-domain/src/rules/content-packs.js';
+import {workshopView} from '../../../../packages/game-domain/src/rules/workshop.js';
 import '../../app/globals.css';
-function fixture(){let s:ReturnType<typeof createGame>=createGame('旅行工匠',192,0);s.level=20;s.money=50000;s.location='stormwind';for(const id of ['alchemy','enchanting','herbalism','mining','skinning','fishing'])s=act(s,{type:'learnProfession',id},0);addItem(s,2447,5);addItem(s,765,5);addItem(s,5207,2);addItem(s,907420,2);addItem(s,2589,10);const st=stats(s) as ReturnType<typeof stats>&{maxHp:number;maxMana:number};s.hp=st.maxHp;s.mana=st.maxMana;return s;}
-function Harness(){const [s,setState]=useState(fixture),[screen,setScreen]=useState('角色'),[error,setError]=useState('');const current=useRef(s);useEffect(()=>{current.current=s;},[s]);
- useEffect(()=>{const timer=setInterval(()=>setState((s:ReturnType<typeof createGame>)=>advance(s,s.wallAt+1000).state),1000);return()=>clearInterval(timer);},[]);
- const send=async(a:{type:string;[key:string]:unknown})=>{try{const next=act(current.current,a,current.current.wallAt);setState(next);current.current=next;setError('');return true;}catch(e:unknown){setError(e instanceof Error?e.message:String(e));return false;}};
- const props={state:s,data:view(s),busy:false,send};return <main className="game-shell"><section className="panel"><h1>生活职业与经济 · 独立验证</h1><p>本页面仅使用内存测试角色，不连接用户存档。</p><div className="action-row">{['角色','策略','采集'].map(t=><button key={t} onClick={()=>setScreen(t)}>{t}</button>)}<button onClick={()=>setState((s:ReturnType<typeof createGame>)=>({...s,location:'northwood',activity:{type:'idle'}}))}>测试地点：林地</button><button onClick={()=>setState((s:ReturnType<typeof createGame>)=>({...s,location:'stormwind',activity:{type:'idle'}}))}>测试地点：银行</button></div><p>余额 {s.money} 铜 · 背包 {s.bag.length} 格 · {s.activity.type}</p></section>{screen==='角色'?<Character {...props}/>:screen==='策略'?<Strategy {...props}/>:<Gathering {...props}/>} {error&&<p role="alert">{error}</p>}</main>;}
+type PreviewState=ReturnType<typeof createGame>&{professions:Record<string,{skill:number;cap:number}>};
+function fixture(){let s:PreviewState=Object.assign(createGame('旅行工匠',192,0),{professions:{}});s.level=20;s.money=50000;s.location='stormwind';for(const id of ['enchanting','herbalism','fishing'])s=act(s,{type:'learnProfession',id},0);addItem(s,2447,5);addItem(s,765,5);addItem(s,5207,2);addItem(s,907420,2);addItem(s,2589,10);const st=stats(s) as ReturnType<typeof stats>&{maxHp:number;maxMana:number};s.hp=st.maxHp;s.mana=st.maxMana;return s;}
+function Harness(){const [s,setState]=useState(fixture),[screen,setScreen]=useState('工坊'),[error,setError]=useState(''),[revision,setRevision]=useState(0);const current=useRef(s);useEffect(()=>{current.current=s;},[s]);
+ useEffect(()=>{const timer=setInterval(()=>setState((s:PreviewState)=>advance(s,s.wallAt+1000).state),1000);return()=>clearInterval(timer);},[]);
+ const installed=useRef(false);
+ if(!installed.current){
+  const originalFetch=window.fetch.bind(window);
+  window.fetch=async(input,init)=>{
+   const url=new URL(typeof input==='string'?input:input instanceof URL?input.href:input.url,window.location.href);
+   if(url.pathname==='/api/game/workshop')return Response.json({...workshopView(current.current,Object.fromEntries(url.searchParams)),revision:0});
+   if(url.pathname==='/api/game/content')return Response.json(contentPack(clientContent(),url.searchParams));
+   return originalFetch(input,init);
+  };installed.current=true;
+ }
+ const send=async(a:{type:string;[key:string]:unknown})=>{try{const next=act(current.current,a,current.current.wallAt);setState(next);current.current=next;setRevision(n=>n+1);setError('');return true;}catch(e:unknown){setError(e instanceof Error?e.message:String(e));return false;}};
+ const props={state:s,data:{...clientContent(),...view(s)},revision,busy:false,send};return <main className="game-shell"><section className="panel"><h1>生活职业与经济 · 独立验证</h1><p>本页面仅使用内存测试角色，不连接用户存档。</p><div className="action-row">{['工坊','角色','策略','采集'].map(t=><button key={t} onClick={()=>setScreen(t)}>{t}</button>)}<button onClick={()=>{const next={...current.current,professions:{...current.current.professions,enchanting:{skill:75,cap:75}}};current.current=next;setState(next);setRevision(n=>n+1);}}>测试：附魔初级封顶</button><button onClick={()=>setState((s:PreviewState)=>({...s,location:'northwood',activity:{type:'idle'}}))}>测试地点：林地</button><button onClick={()=>setState((s:PreviewState)=>({...s,location:'stormwind',activity:{type:'idle'}}))}>测试地点：银行</button></div><p>余额 {s.money} 铜 · 背包 {s.bag.length} 格 · {s.activity.type}</p></section>{screen==='工坊'?<Professions {...props}/>:screen==='角色'?<Character {...props}/>:screen==='策略'?<Strategy {...props}/>:<Gathering {...props}/>} {error&&<p role="alert">{error}</p>}</main>;}
 const root=import.meta.hot?.data.root||createRoot(document.getElementById('root')!);if(import.meta.hot)import.meta.hot.data.root=root;root.render(<Harness/>);

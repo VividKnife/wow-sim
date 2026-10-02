@@ -11,6 +11,7 @@ const fields: Record<string, string> = {
   auctionBuy:'id count',auctionSell:'uid',auctionSellBatch:'uids',auctionSellAll:'',auctionCancel:'id',
   sortBank:'',expandBank:'',bankDepositMaterials:'',bankDeposit:'uid count',bankWithdraw:'uid count',
   learnProfession:'id',upgradeProfession:'id',specializeProfession:'id',buyMaterials:'id count',
+  craft:'id count buyMissing',gatherResource:'id',gatherAll:'',
   disenchant:'uid',disenchantAll:'',applyEnchant:'id uid',useBandage:'id',
   bindHearth:'',useHearth:'',useItem:'uid slot',unlockFlight:'',fly:'to',trainRiding:'',buyMount:'id',mount:'id',dismount:'',
   conjure:'water',cast:'id target',petCommand:'command targetId itemId spellId',usePortal:'id',revive:'',resurrect:'target',reincarnate:'',soulstoneRevive:'',

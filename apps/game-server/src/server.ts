@@ -359,8 +359,14 @@ export function createGameServer(options: GameServerOptions) {
           json(response, 409, {error: '内容版本不匹配，请刷新后重试。', code: 'CONTENT_VERSION'});
           return;
         }
-        const snapshot = await options.service.snapshot(accountId, characterId(url), true);
-        const body = getWorkshop(snapshot.state, {
+        // Resident services publish the authoritative player projection and do
+        // not expose a raw engine state. Quotes only need the projected fields.
+        const snapshot = gameResponse(await options.service.snapshot(accountId, characterId(url), true, 'full'));
+        if (!snapshot.snapshot) {
+          json(response, 404, {error: '请先创建角色。', code: 'NOT_FOUND'});
+          return;
+        }
+        const body = getWorkshop(snapshot.snapshot.player, {
           profession: url.searchParams.get('profession') || '',
           search: url.searchParams.get('search') || '',
           filter: url.searchParams.get('filter') || 'all',

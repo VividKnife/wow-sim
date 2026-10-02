@@ -10,7 +10,16 @@ import {quantity,usableCount,consume,receive,marketPrice,protectedItem} from './
 
 export const canTrainProfession=s=>['town','city','outpost'].includes(nodes[s.location]?.kind);
 const skill=(s,id)=>s.professions?.[id]?(s.professions[id].skill||0)+(racialModifiers(s).professionSkill[({herbalism:182,engineering:202})[id]]||0):0;
-function skillUp(s,id,count=1,required=1,yellow=required+25,gray=required+75){const p=s.professions[id];if(!p)return;for(let n=0;n<count&&p.skill<p.cap&&p.skill<gray;n++){const chance=p.skill<yellow?1:p.skill<Math.floor((yellow+gray)/2)?.75:.25;if(rng(s)<chance)p.skill++;}}
+// Racial bonuses unlock recipes/resources; progression uses trained (base) skill.
+function skillUpChance(p,yellow,gray){return !p||p.skill>=p.cap||p.skill>=gray?0:p.skill<yellow?1:p.skill<Math.floor((yellow+gray)/2)?.75:.25;}
+function skillUp(s,id,count=1,required=1,yellow=required+25,gray=required+75){const p=s.professions[id];for(let n=0;n<count;n++){const chance=skillUpChance(p,yellow,gray);if(!chance)break;if(rng(s)<chance)p.skill++;}}
+export function professionLearningBlockedReason(s,id){
+ if(s.professions?.[id])return '已经学会这个职业';
+ const learned=professions.filter(p=>s.professions?.[p.id]);
+ if(s.growthPolicy==='companion'&&learned.length>=2)return '每名队友最多学习两项生活职业';
+ if(professions.some(p=>p.id===id&&p.kind!=='副职业')&&learned.filter(p=>p.kind!=='副职业').length>=2)return '每个角色最多学习两个主要专业';
+ return '';
+}
 const rods=[6218,6339,11130,11145,16207];
 const hasTool=(s,id)=>countItem(s,id)>0||(rods.includes(id)&&rods.slice(rods.indexOf(id)+1).some(x=>countItem(s,x)>0));
 export function recipeQuote(s,r,count=1){
@@ -19,11 +28,11 @@ export function recipeQuote(s,r,count=1){
  return{...r,...recipeAvailability(s,r),materials,tools,readyAt:s.professionCooldowns?.[r.cooldownGroup]||0,facilityReady:!r.focus||canTrainProfession(s),missingCost:materials.reduce((n,m)=>n+m.missing*m.price,0)+tools.filter(t=>!t.have).reduce((n,t)=>n+t.price,0)};
 }
 export function recipeAvailability(s,r){
- const level=skill(s,r.profession),known=level>=r.skill&&specializationKnown(s.professions?.[r.profession],r.specialization);
- const color=level<r.skill?'red':level<r.yellow?'orange':level<Math.floor((r.yellow+r.gray)/2)?'yellow':level<r.gray?'green':'gray';
- return{known,color};
+ const p=s.professions?.[r.profession],level=p?.skill||0,known=!!p&&skill(s,r.profession)>=r.skill&&specializationKnown(p,r.specialization);
+ const color=!known?'red':level<r.yellow?'orange':level<Math.floor((r.yellow+r.gray)/2)?'yellow':level<r.gray?'green':'gray';
+ return{known,color,skillUpChance:known?skillUpChance(p,r.yellow,r.gray):0};
 }
-export function professionView(s){return{professions:professions.map(p=>({...p,...s.professions?.[p.id],learned:!!s.professions?.[p.id],effectiveSkill:skill(s,p.id),racialBonus:skill(s,p.id)-(s.professions?.[p.id]?.skill||0),nextRank:professionRanks[p.id].find(r=>r.cap>(s.professions?.[p.id]?.cap||0)),specializations:specializations.filter(x=>x.profession===p.id),recipeCount:professionReference.counts[p.id]||0})),professionRecipeCount:recipes.length,canTrainProfession:canTrainProfession(s),resources:resourceView(s),disenchantable:s.bag.filter(i=>canDisenchant(s,i)&&items[i.id].Quality<=3).map(i=>i.uid)};}
+export function professionView(s){return{professions:professions.map(p=>({...p,...s.professions?.[p.id],learned:!!s.professions?.[p.id],learningBlockedReason:professionLearningBlockedReason(s,p.id),effectiveSkill:skill(s,p.id),racialBonus:skill(s,p.id)-(s.professions?.[p.id]?.skill||0),nextRank:professionRanks[p.id].find(r=>r.cap>(s.professions?.[p.id]?.cap||0)),specializations:specializations.filter(x=>x.profession===p.id),recipeCount:professionReference.counts[p.id]||0})),professionRecipeCount:recipes.length,canTrainProfession:canTrainProfession(s),resources:resourceView(s),disenchantable:s.bag.filter(i=>canDisenchant(s,i)&&items[i.id].Quality<=3).map(i=>i.uid)};}
 
 // Authored early-region terrain resources plus original herb/mineral objects.
 // Object locations and skill gates come from ClassicDB and Lock.dbc.
@@ -74,9 +83,8 @@ export function skinBeast(s,enemy){if(!s.professions?.skinning||enemy.skinned||c
 export function canDisenchant(s,i){const data=items[i.id];return skill(s,'enchanting')>0&&!protectedItem(i)&&[2,4].includes(data?.class)&&[2,3,4].includes(data?.Quality)&&!!disenchantLoot[data.DisenchantID];}
 export function professionAction(s,a){
  if(['learnProfession','upgradeProfession'].includes(a.type)){
-  if(a.type==='learnProfession'&&s.growthPolicy==='companion'&&Object.keys(s.professions).length>=2)throw new Error('每名队友最多学习两项生活职业');
   const def=professions.find(p=>p.id===a.id);if(!def||!canTrainProfession(s))throw new Error('请在城镇学习生活职业');
-  const p=s.professions[a.id];if(a.type==='learnProfession'&&p)throw new Error('已经学会这个职业');if(a.type==='upgradeProfession'&&!p)throw new Error('请先学习职业');
+  const p=s.professions[a.id];if(a.type==='learnProfession'){const reason=professionLearningBlockedReason(s,a.id);if(reason)throw new Error(reason);}if(a.type==='upgradeProfession'&&!p)throw new Error('请先学习职业');
   const rank=professionRanks[a.id].find(r=>r.cap>(p?.cap||0));if(!rank)throw new Error('已达到大师级 300 上限');
   if(s.level<rank.level||(p?.skill||0)<rank.skill)throw new Error(`进阶需要等级 ${rank.level}、熟练度 ${rank.skill}`);
   if(s.money<rank.cost)throw new Error('训练费用不足');s.money-=rank.cost;if(p)p.cap=rank.cap;else s.professions[a.id]={skill:1,cap:rank.cap};log(s,'学会 '+rank.name+def.name,'learn');return;

@@ -6,7 +6,7 @@ import {CONTENT_VERSION} from './client-content.js';
 const filters={
  all:()=>true,'全部':()=>true,
  known:r=>r.known,'已解锁':r=>r.known,
- skillup:r=>r.known&&r.color!=='gray','可提升':r=>r.known&&r.color!=='gray',
+ skillup:r=>r.skillUpChance>0,'可提升':r=>r.skillUpChance>0,
  specialization:r=>!!r.specialization,'专精配方':r=>!!r.specialization,
  cooldown:r=>!!r.cooldown,'冷却配方':r=>!!r.cooldown,
 };
