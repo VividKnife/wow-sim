@@ -1,20 +1,15 @@
 import {applyGmBuffs} from './gm-buffs.ts';
 import { createGame } from './rules/engine.js';
 import {syncNpcWorld} from './rules/npc-world.js';
-import {loadNpcWorld, persistNpcWorld} from './npc-characters.ts';
 import type { ReadView, Transaction } from '../../persistence/src/store.ts';
 import { DomainError, requireThat } from './model.ts';
 import type { Account, AccountPresence, Character, Item, Wallet, Rules, Activity } from './model.ts';
-const separated = ['serverBuffs', 'id', 'money', 'bag', 'bags', 'bank', 'equipment', 'pending', 'auctions', 'party', 'activity', 'dungeon', 'receipts', 'npcGuests'];
+const separated = ['serverBuffs', 'id', 'money', 'bag', 'bags', 'bank', 'equipment', 'pending', 'auctions', 'party', 'activity', 'dungeon', 'receipts', 'npcGuests', 'npcWorld', 'npcFriendIds'];
 export const clone = <T>(value: T): T => structuredClone(value);
 import {rebaseSimulation} from './simulation-clock.ts';
 export {rebaseSimulation} from './simulation-clock.ts';
 export function characterRules(state: Rules): Rules { syncNpcWorld(state); const rules = clone(state); for (const key of separated)
     delete rules[key];
-    if (rules.npcWorld) {
-        rules.npcWorld.residentIds = [...rules.npcWorld.residents,...(rules.npcWorld.away??[])].map((p: Rules) => p.id);
-        delete rules.npcWorld.residents;
-    }
     return rules; }
 export async function owned(tx: ReadView, accountId: string, id: string): Promise<Character> { const c = await tx.get<Character>('characters', id); requireThat(c && c.accountId === accountId, 'FORBIDDEN', '角色不属于此账号', 403); return c; }
 export function validAccountPresence(row: AccountPresence | null): boolean {
@@ -55,7 +50,6 @@ export async function context(tx: ReadView, character: Character, now: number, w
     }
     s.professionCooldowns = Object.fromEntries(Object.entries(character.professionReadyAt).map(([key, value]) => [key, s.clock + Math.max(0, value - s.wallAt)]));
     s.resourceCooldowns = Object.fromEntries(Object.entries(character.resourceReadyAt).map(([key, value]) => [key, s.clock + Math.max(0, value - s.wallAt)]));
-    await loadNpcWorld(tx, character, s);
     if (withActivity) {
         const activities = await tx.list<Activity>('activities', { actorId: character.id });
         const active = activities.find(a => a.status === 'running' || a.status === 'returning');
@@ -67,7 +61,7 @@ export async function context(tx: ReadView, character: Character, now: number, w
     await applyGmBuffs(tx,s,character.accountId);
     return s;
 }
-export async function persistAssets(tx: Transaction, character: Pick<Character, 'id' | 'accountId' | 'rules'>, s: Rules, key: string,
+export async function persistAssets(tx: Transaction, character: {id:string; accountId:string|null; rules:Rules}, s: Rules, key: string,
     recordTable: 'characters' | 'npc_characters' = 'characters') {
     requireThat(s.id === character.id, 'ASSET_OWNER', '资产状态与角色身份不一致');
     const previous = await tx.list<Item>('items', { ownerCharacterId: character.id });
@@ -128,7 +122,6 @@ export async function persistAssets(tx: Transaction, character: Pick<Character, 
     if (!wallet || delta) await tx.put('wallets', { id: character.id, characterId: character.id, accountId: character.accountId, balance: s.money });
     if (delta)
         await tx.insert('ledger', { id: `${key}:money:${character.id}`, businessKey: key, accountId: character.accountId, characterId: character.id, amount: delta, balance: s.money });
-    if (recordTable === 'characters') await persistNpcWorld(tx, character, s, key);
 }
 export async function persistCharacter(tx: Transaction, c: Character, s: Rules, now: number, key: string, saveAssets = true) {
     c.rules = characterRules(s);
@@ -137,7 +130,6 @@ export async function persistCharacter(tx: Transaction, c: Character, s: Rules, 
     await tx.put('characters', c);
     if (saveAssets)
         await persistAssets(tx, c, s, key);
-    else await persistNpcWorld(tx, c, s, key);
 }
 export async function economicEvent(tx: Transaction, key: string, accountId: string, kind: string, payload: Rules = {}) { if (await tx.get('settlements', key))
     return false; await tx.insert('settlements', { id: key, businessKey: key, accountId, kind, ...payload }); await tx.insert('outbox', { id: key, businessKey: key, accountId, type: kind, payload, delivered: false }); return true; }

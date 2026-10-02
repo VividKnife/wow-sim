@@ -1,3 +1,4 @@
+import {npcRaidEligible} from './npc-progression.js';
 import {characterBis,CURRENT_BIS_PHASE} from './item-bis.js';
 import {drinkPotion} from './consumables.js';
 import {marketPrice} from './inventory.js';
@@ -19,10 +20,10 @@ export const personalities={
 // Applicants are snapshots of existing residents, never newly minted characters.
 export function createGoldApplicants(s){
  const world=ensureNpcWorld(s);
- return world.residents.filter(p=>p.unit.level===60).map(p=>{
+ return world.residents.filter(p=>npcRaidEligible(p,s.goldRaid?.raidId??'molten-core',s.wallAt)).map(p=>{
   const c=structuredClone(p.unit),profile=p.raidProfile;
   c.npcPlayer=true;c.goldNpc=true;c.raidMainTank=false;c.money=p.wallet;
-  c.goldProfile={skill:profile.skill,quality:Object.values(c.equipment).some(e=>items[e.id]?.Quality>=3)?'精良':'混搭',personality:profile.personality,friend:p.friend,runs:p.runs,initialWallet:p.wallet,consumableSpent:0,potionsUsed:0,elixirsUsed:0,damage:0,healing:0,seconds:0,participations:0,fireHits:0,deaths:0};
+  c.goldProfile={skill:profile.skill,quality:Object.values(c.equipment).some(e=>items[e.id]?.Quality>=3)?'精良':'混搭',personality:profile.personality,friend:(s.npcFriendIds??[]).includes(p.id),runs:p.runs,initialWallet:p.wallet,consumableSpent:0,potionsUsed:0,elixirsUsed:0,damage:0,healing:0,seconds:0,participations:0,fireHits:0,deaths:0};
   c.hp=stats(c).maxHp;c.mana=stats(c).maxMana;return c;
  });
 }
@@ -97,7 +98,7 @@ export function npcPriceLimit(c,item,rare,s,options={}){
 }
 export function goldNpcView(c){
  const p=c.goldProfile,st=stats(c);
- return {id:c.id,name:c.name,classId:c.classId,role:combatRole(c),hp:c.hp,maxHp:st.maxHp,mana:c.mana,maxMana:st.maxMana,skill:p.skill,quality:p.quality,personality:p.personality,personalityName:personalities[p.personality].name,quote:personalities[p.personality].line,wallet:c.money,friend:p.friend,runs:p.runs,damage:p.damage,healing:p.healing,dps:p.seconds?p.damage/p.seconds:0,consumableSpent:p.consumableSpent,potionsUsed:p.potionsUsed,elixirsUsed:p.elixirsUsed,fireHits:p.fireHits,deaths:p.deaths,
+ return {id:c.id,name:c.name,classId:c.classId,role:combatRole(c),hp:c.hp,maxHp:st.maxHp,mana:c.mana,maxMana:st.maxMana,skill:p.skill,quality:p.quality,personality:p.personality,personalityName:personalities[p.personality].name,quote:personalities[p.personality].line,wallet:c.money,friend:(s.npcFriendIds??[]).includes(p.id),runs:p.runs,damage:p.damage,healing:p.healing,dps:p.seconds?p.damage/p.seconds:0,consumableSpent:p.consumableSpent,potionsUsed:p.potionsUsed,elixirsUsed:p.elixirsUsed,fireHits:p.fireHits,deaths:p.deaths,
  build:{name:c.npcBuild?.name,temperament:{steady:'稳健派',keen:'热心派',collector:'装备控'}[c.npcBuild?.temperament],skills:(c.rules||[]).map(r=>nameOf('spells',r.spell))},
  equipment:Object.entries(c.equipment).map(([slot,e])=>({slot,id:e.id,name:nameOf('items',e.id),quality:items[e.id]?.Quality,level:items[e.id]?.ItemLevel,stats:Array.from({length:10},(_,i)=>({type:items[e.id]?.['stat_type'+(i+1)],value:items[e.id]?.['stat_value'+(i+1)]})).filter(x=>x.value)})),
  trees:classTalentTrees.filter(t=>t.classId===c.classId).map(t=>({name:({41:'火焰',61:'冰霜',81:'奥术'}[t.id]||t.nameZhCN||t.name),points:t.talents.reduce((n,x)=>n+(c.talents[x.id]||0),0)})),talents:Object.entries(c.talents).map(([id,rank])=>({id,name:talents[id].nameZhCN||talents[id].name,rank,maxRank:talents[id].maxRank}))};

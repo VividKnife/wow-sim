@@ -78,7 +78,7 @@ export class ResidentCharacters {
       requireThat((this.retireState||!character.rules.combat&&!character.rules.dungeon)&&!await tx.get('actor_leases',characterId),
         'SIMULATION_VERSION','旧活动需要先结束才能更新运行规则',503);
       const claims=await tx.list<CharacterClaim>('simulation_characters',{instanceId:claim.instanceId});
-      requireThat(claims.some(row=>row.id===characterId)&&claims.every(row=>row.accountId===accountId),
+      requireThat(claims.some(row=>row.id===characterId)&&claims.every(row=>(row.accountId===accountId||row.accountId===null)),
         'SIMULATION_STATE','实例角色归属无效');
       const saved=await tx.get<{encodedCheckpoint:string}>('simulation_checkpoints',claim.instanceId);
       if(saved){
@@ -126,10 +126,6 @@ export class ResidentCharacters {
         controllers: [{actorId: characterId, accountId, generation: 1, canPause: true}]};
       await tx.insert('simulation_residencies', {id: instanceId, characterId, accountId, participants: [{characterId, accountId}], ...this.version, encodedAdmission: JSON.stringify(admission)});
       await tx.insert('simulation_characters', {id: characterId, accountId, instanceId});
-      for (const npc of state.npcWorld?.residents ?? []) {
-        requireThat(!await tx.get('simulation_characters', npc.id), 'ACTOR_BUSY', '冒险者已由另一实例管理');
-        await tx.insert('simulation_characters', {id: npc.id, accountId, instanceId});
-      }
       return admission;
     });
   }
@@ -152,13 +148,16 @@ export class ResidentCharacters {
       const now = Date.now();
       for (const id of instanceIds) {
         const members = await tx.list<CharacterClaim>('simulation_characters', {instanceId: id});
-        requireThat(members.every(member => member.accountId === saveId), 'SHARED_INSTANCE', '共享实例必须先移出待删除角色');
+        requireThat(members.every(member => member.accountId === saveId || member.accountId === null), 'SHARED_INSTANCE', '共享实例必须先移出待删除角色');
         const previous = await tx.get<Ownership>('simulation_owners', id), epoch = (previous?.epoch ?? 0) + 1;
         requireThat(Number.isSafeInteger(epoch), 'SIMULATION_STATE', '执行权序号已耗尽');
         await tx.put('simulation_owners', {id, ownerId: 'deleted-save', epoch, expiresAt: now,
           commitSequence: previous?.commitSequence ?? 0, deleted: {at: now, userId, saveId}} satisfies Ownership);
       }
-      await withResidentDeletion(tx, saveId, () => removeInvalidSave(tx, saveId));
+      await withResidentDeletion(tx, saveId, async () => {
+        for(const id of instanceIds)for(const claim of await tx.list<CharacterClaim>('simulation_characters',{instanceId:id}))if(claim.accountId===null)await tx.delete('simulation_characters',claim.id);
+        await removeInvalidSave(tx, saveId);
+      });
       // These rows are keyed by instance, not account. Keep only the owner
       // tombstone and user-scoped receipts needed to reject stale resurrection.
       for (const id of instanceIds) {
@@ -196,6 +195,8 @@ export class ResidentCharacters {
     const profiles=residentNpcProfiles(state);
     const npcIds=new Set(profiles.map(p=>p.profile.id));
     requireThat(npcIds.size===profiles.length,'SIMULATION_STATE','NPC 运行身份重复');
+    const publicClaims=(await tx.list<CharacterClaim>('simulation_characters',{instanceId:owner.id})).filter(c=>c.accountId===null);
+    requireThat(publicClaims.length===npcIds.size&&publicClaims.every(c=>npcIds.has(c.id)),'SIMULATION_STATE','NPC 执行权名册不完整');
     const humanIds = new Set(members.map(p => p.characterId));
     requireThat(new Set([state.id, ...state.party.map((c: Rules) => c.id)]).size === state.party.length + 1 &&
       state.party.every((c: Rules) => humanIds.has(c.id) || c.npcPlayer === true && npcIds.has(c.id)),
@@ -212,16 +213,7 @@ export class ResidentCharacters {
           type: 'simulation-commit', payload: {instanceId: owner.id, ownerEpoch: owner.epoch, characterId: character.id}, delivered: false});
       }
       syncNpcWorld(state);
-      const guestAccounts=new Set<string>();
-      for(const guest of state.npcGuests??[]){
-        const origin=await tx.get<Character>('characters',guest.ownerCharacterId);
-        const claim=await tx.get<CharacterClaim>('simulation_characters',guest.profile.id);
-        requireThat(origin&&origin.rules.raceId===guest.ownerRaceId&&!members.some(p=>p.characterId===origin.id)&&
-          claim?.instanceId===owner.id&&claim.accountId===origin.accountId,'SIMULATION_STATE','客居冒险者身份或执行权无效');
-        await persistNpcResident(tx,origin,guest.profile,businessKey,owner.id);
-        guestAccounts.add(origin.accountId);
-      }
-      for(const accountId of guestAccounts)if(!accountIds.has(accountId))await bump(tx,accountId);
+      for(const {profile} of residentNpcProfiles(state))await persistNpcResident(tx,profile,businessKey,owner.id);
       for (const [accountId, at] of presence.accounts) {
         const previous = await tx.get('account_presence', accountId);
         if (at > Number(previous?.lastSeenAt ?? -1))

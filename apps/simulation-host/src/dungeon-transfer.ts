@@ -1,4 +1,5 @@
-import {detachStandbyNpcs} from './npc-transfer.ts';
+import {loadNpcResident,type NpcCharacter} from '../../../packages/game-domain/src/npc-characters.ts';
+import {simulationEventRuntime} from '../../../packages/game-domain/src/rules/simulation-events.js';
 import {residentNpcProfiles,type NpcArrival} from '../../../packages/game-domain/src/npc-residency.ts';
 import type {TransferBoundary} from '../../../packages/persistence/src/simulation.ts';
 import {authorizeDungeonEntry,bindDungeonEntry,requestDungeonEntry,type DungeonEntryRequest} from '../../../packages/game-domain/src/dungeon-entry.ts';
@@ -31,25 +32,22 @@ export function dungeonTransferBoundary(request:DungeonEntryRequest,now:()=>numb
     // Direct multi-human compositions remain useful at the sealed boundary;
     // public input admits only its own human. Other sources lend NPCs and retain
     // every human, activity and event in a separate successor instance.
-    const joining=input?sources.filter(s=>s===existing||s.checkpoint.state.id===request.actorId):sources;
-    const lending=sources.filter(s=>!joining.includes(s));
-    if(destinations.length!==1+lending.length)throw new Error('Dungeon arrival destination coverage mismatch');
+    const joining=sources;
+    if(destinations.length!==1)throw new Error('Dungeon arrival destination coverage mismatch');
     const npcArrivals:NpcArrival[]=[],retained:InstanceCheckpoint[]=[],arrivals=joining.map(s=>structuredClone(s.checkpoint));
-    for(const [index,source]of lending.entries()){
-      if(request.actorId!==group.leaderId)throw new Error('NPCs enter with the party leader');
-      const ids=residentNpcProfiles(source.checkpoint.state).map(p=>p.profile.id).filter(id=>group.members.some(m=>m.npc&&m.id===id));
-      const target=destinations[index+1],detached=detachStandbyNpcs(source.checkpoint,ids,{instanceId:target.id,ownerEpoch:target.epoch});
-      retained.push(detached.checkpoint);
-      npcArrivals.push(detached.arrival);
-      const otherId=source.checkpoint.state.dungeonRoster?.groupId;
-      if(otherId){
-        const other=await tx.get('social_groups',otherId);
-        if(!other||other.instanceId!==source.owner.id||otherId===group.id)throw new Error('NPC source group changed');
-        await tx.put('social_groups',{...other,instanceId:target.id});
+    if(arrivals.some(cp=>cp.state.id===group.leaderId)){
+      const present=new Set(arrivals.flatMap(cp=>residentNpcProfiles(cp.state).map(p=>p.profile.id)));
+      const state=arrivals[0].state,guests=[];
+      for(const member of group.members.filter(m=>m.npc&&!present.has(m.id))){
+        const row=await tx.get<NpcCharacter>('npc_characters',member.id);
+        if(!row||await tx.get('simulation_characters',member.id))throw new Error('NPC 已被其他活动占用');
+        const profile=await loadNpcResident(tx,row);profile.unit.time=state.clock;profile.unit.location=state.location;
+        guests.push({profile});
       }
+      if(guests.length){const empty:any={clock:state.clock};simulationEventRuntime(empty);npcArrivals.push({clock:state.clock,wallAt:state.wallAt,nextTick:state.nextTick,guests,simulationEvents:empty.simulationEvents});}
     }
     const checkpoint=composeDungeonCheckpoint(arrivals,{
-      instanceId:destination.id,ownerEpoch:destination.epoch,primaryActorId:existing?.checkpoint.state.id??request.actorId,selectMatchedNpcs:!!input,
+      instanceId:destination.id,ownerEpoch:destination.epoch,primaryActorId:existing?.checkpoint.state.id??request.actorId,selectMatchedNpcs:true,
       parked:group.entry!.parked,npcArrivals,
       roster:{groupId:group.id,leaderId:group.leaderId,dungeonId:group.entry!.dungeonId,members:group.members.map(m=>({id:m.id,npc:m.npc}))}});
     if(input){

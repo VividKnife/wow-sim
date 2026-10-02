@@ -1,3 +1,5 @@
+import {updateNpcPopulation} from '../src/npc-population.ts';
+import {loadNpcResident} from '../src/npc-characters.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PGlite} from '@electric-sql/pglite';
@@ -37,17 +39,12 @@ for (const backend of ['memory', 'sql'] as const) test(`${backend}: independent 
   try {
     const save = await game.createSave('npc-owner', {name: '独立资产', classId: 8, raceId: 1, raidReady: true}, 'create');
     const character = (await store.read(tx => tx.list<Character>('characters', {accountId: save.id})))[0];
-    assert.equal(character.rules.npcWorld.residents, undefined);
-    assert.equal(character.rules.npcWorld.residentIds.length, 72);
-    const records = await store.read(tx => tx.list('npc_characters', {ownerCharacterId: character.id}));
-    assert.equal(records.length, 72);
-    for (const row of records) {
-      assert.equal(row.profile.wallet, undefined); assert.equal(row.profile.unit, undefined);
-      assert.equal(row.rules.equipment, undefined); assert.equal(row.rules.raidCollection, undefined);
-    }
+    assert.equal(character.rules.npcWorld,undefined);
+    const residents=await store.transaction(tx=>updateNpcPopulation(tx,Date.now(),{level:60,minimumLevel:60,raidId:'molten-core'}));
     const characters = new ResidentCharacters(store, {version: runtimeVersion});
     const admission = await characters.admission(save.id, character.id);
-    assert.equal((await store.read(tx => tx.list('simulation_characters', {instanceId: admission.instanceId}))).length, 73);
+    admission.state.npcWorld={publicPool:true,residents,selection:[],autoLoot:false,board:{ids:[],shown:{},sequence:0,refreshAt:0}};
+    await store.transaction(async tx=>{for(const p of residents)await tx.insert('simulation_characters',{id:p.id,accountId:null,instanceId:admission.instanceId});});
     let fail = false;
     const repository = new SimulationRepository(store, Date.now, async (tx, boundary) => {
       await characters.commit(tx, boundary); if (fail) throw new Error('after NPC assets');
@@ -97,10 +94,8 @@ for (const backend of ['memory', 'sql'] as const) test(`${backend}: independent 
       (tx: any) => tx.delete('npc_characters', npc.id),
       (tx: any) => tx.delete('simulation_characters', npc.id),
     ]) await assert.rejects(store.transaction(mutation), /模拟实例/);
-    const reload = await store.read(async tx => context(tx, (await tx.get<Character>('characters', character.id))!, state.wallAt, false));
-    const returned = reload.npcWorld.residents.find((p: Rules) => p.id === npc.id);
-    assert.equal(returned.wallet, npc.money); assert.equal(returned.unit.equipment[8].uid, won.uid);
-    assert.equal(returned.raidRuns, 1); assert.equal(reload.npcWorld.residentIds, undefined);
+    const returned=await store.read(async tx=>loadNpcResident(tx,(await tx.get<any>('npc_characters',npc.id))!));
+    assert.equal(returned.wallet,npc.money);assert.equal(returned.unit.equipment[8].uid,won.uid);assert.equal(returned.raidRuns,1);
     await repository.release(owner); const replacement = await repository.acquire(owner.id, 'replacement', 60_000);
     await assert.rejects(repository.commit(owner, 3, saved), /fenced/);
     countWrites = true; const started = performance.now();
@@ -110,33 +105,9 @@ for (const backend of ['memory', 'sql'] as const) test(`${backend}: independent 
     const recovered = await snapshot(); assert.deepEqual(recovered.wallets, after.wallets); assert.deepEqual(recovered.items, after.items);
     assert.deepEqual(recovered.ledger, after.ledger, 'epoch change cannot duplicate the NPC dividend or loot');
     await characters.deleteSave('npc-owner', save.id);
+    assert.equal((await store.read(tx=>tx.list('npc_characters'))).length,72,'public NPCs survive deleting their last human host');
+    assert.equal((await store.read(tx=>tx.get('wallets',npc.id)))!.balance,npc.money);
     for (const table of ['npc_characters', 'wallets', 'items', 'simulation_characters'] as const)
       assert.equal((await store.read(tx => tx.list(table, {accountId: save.id}))).length, 0);
-  } finally { await store.close(); }
-});
-
-for(const [action,count] of [['npcVisit',72],['npcMatchSupply',10]] as const)test(action+': NPCs introduced by an owner acquire permanent records and claims atomically', async () => {
-  const store = residentStore(new MemoryStore()), game = new GameService(store, {contentVersion: 'npc-create', seed: () => 283});
-  try {
-    const {state} = await game.createAccount('new-npcs', {name: '新冒险者', classId: 8, raceId: 1}, 'create');
-    await store.transaction(async tx => {
-      const c = (await tx.get<Character>('characters', state.id))!, s = await context(tx, c, state.wallAt, false);
-      s.level = 10; s.hp = stats(s).maxHp; s.mana = stats(s).maxMana;
-      await persistCharacter(tx, c, s, s.wallAt, 'fixture-level');
-    });
-    const characters = new ResidentCharacters(store, {version: runtimeVersion});
-    const admission = await characters.admission('new-npcs', state.id);
-    const repository = new SimulationRepository(store, Date.now, characters.commit), owner = await repository.acquire(admission.instanceId, 'new-host');
-    const runtime = new ResidentInstance({...admission, ownerEpoch: owner.epoch});
-    assert.equal(runtime.input('new-npcs', {instanceId: owner.id, actorId: state.id, controllerGeneration: 1,
-      clientSequence: 1, requestId: 'visit', command: {kind: 'action', action: {type: action}}}).status, 'applied');
-    await repository.commit(owner, 1, runtime.checkpoint());
-    assert.equal((await store.read(tx => tx.list('npc_characters'))).length, count);
-    assert.equal((await store.read(tx => tx.list('simulation_characters'))).length, count+1);
-    assert.equal((await store.read(tx => tx.list('wallets'))).length, count+1);
-    const missing = runtime.checkpoint(); missing.state.npcWorld.residents.pop();
-    await assert.rejects(repository.commit(owner, 2, missing), /删除永久冒险者/);
-    assert.equal((await store.read(tx => tx.list('npc_characters'))).length, count);
-    assert.equal((await repository.load(owner.id))!.sequence, 1);
   } finally { await store.close(); }
 });

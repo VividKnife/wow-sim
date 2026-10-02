@@ -1,3 +1,5 @@
+import {recordNpcFiveMan} from './npc-progression.js';
+import {npcProfile} from './npc-world.js';
 import {partyLeader} from './party-control.js';
 import {removeGroundEffects} from './ground-events.js';
 import {hasBlockingLoot} from './loot.js';
@@ -47,7 +49,7 @@ export function enterDungeon(s,id=dungeonIdFor(s)){
  s.dungeonSaves??={};
  if(s.dungeonSaves[id]){s.dungeon=s.dungeonSaves[id];delete s.dungeonSaves[id];npcRunStarted(s);return;}
  s.dungeonEntries=[...recentEntries(s),s.wallAt];
- const d={id,runId:id+'-'+(s.dungeonSequence=(s.dungeonSequence||0)+1),cursor:0,locationId:'entrance',destination:'full',path:[],autoAdvance:false,advanceReason:'',spawns:{},phases:{},defeated:{},defeatedBosses:{},cleared:{},skipped:{},interactions:{},position:clone(reference.entrance),startedAt:s.clock};
+ const d={id,runId:id+'-'+(s.dungeonSequence=(s.dungeonSequence||0)+1),cursor:0,locationId:'entrance',destination:'full',path:[],autoAdvance:false,advanceReason:'',spawns:{},phases:{},defeated:{},defeatedBosses:{},cleared:{},skipped:{},interactions:{},position:clone(reference.entrance),startedAt:s.clock,runKey:`${s.id}:${s.wallAt}:${s.dungeonSequence}`};
  const rare=Object.fromEntries(Object.entries(definition.rareEntries).map(([entry,chance])=>[entry,rng(s)<chance]));
  for(const encounter of reference.encounters)for(const row of encounter.sourceSpawns){
   if(encounter.faction&&encounter.faction!==(s.teamId===67?'Horde':'Alliance')){d.spawns[row.guid]=null;continue;}
@@ -187,6 +189,7 @@ export function finishDungeonCannon(s){const e=current(s),a=s.activity,d=s.dunge
 export function recordDungeonProgress(s){const d=s.dungeon;if(!d?.spawns)return;
  if(d.secondAlarmAt&&s.clock>=d.secondAlarmAt){delete d.secondAlarmAt;log(s,'铁门后再次响起了迪菲亚守卫的警报。','dungeon');}
  const b=s.combat||s.lastCombat,e=current(s);if(!e||b?.runId!==d.runId||b.routeId!==e.id)return;
+ if(b.enemies.some(m=>m.hp<=0&&m.rank))for(const c of s.party.filter(c=>c.npcPlayer&&c.level===60)){const p=npcProfile(s,c.id);recordNpcFiveMan(p,d.runKey,s.wallAt);}
  for(const mob of b.enemies)if(mob.hp<=0&&mob.sourceGuid){d.defeated[mob.sourceGuid]=true;if(mob.rank)d.defeatedBosses[mob.entry]=true;}
  if(s.combat||[s,...s.party].every(c=>c.hp<=0)||remaining(s,e).length)return;
  if(e.waves&&!d.interactions[e.id]){const wave=(d.interactions[e.id+':wave']||0)+1;d.interactions[e.id+':wave']=wave;if(wave<e.waves.length){log(s,'下一波挑战即将开始。','dungeon');return;}d.interactions[e.id]=true;}

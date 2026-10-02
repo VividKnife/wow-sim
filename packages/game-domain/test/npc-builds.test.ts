@@ -1,3 +1,5 @@
+import {progressPublicNpc} from '../src/rules/npc-progression.js';
+import {xpTable} from '../src/rules/catalog.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame} from '../src/rules/engine.js';
@@ -8,7 +10,7 @@ import {classAbilities,spells,talents,items} from '../src/rules/catalog.js';
 import {validateRules,strategySpellIds} from '../src/rules/combat-strategy.js';
 import {stats} from '../src/rules/character.js';
 import {startCombat,combatTick} from '../src/rules/combat.js';
-import {ensureNpcWorld,progressNpcWorld,recordNpcRaid,npcRunStarted} from '../src/rules/npc-world.js';
+import {ensureNpcWorld,recordNpcRaid,npcRunStarted} from '../src/rules/npc-world.js';
 import {npcEquipmentValue} from '../src/rules/npc-equipment.js';
 import {prepareClassAbility} from '../src/rules/class-spell-effects.js';
 import {selectStrategyPotion,executeStrategyPotion} from '../src/rules/consumables.js';
@@ -118,8 +120,8 @@ test('healing priority retains planned emergency cooldowns before the heal',()=>
 test('growth and experience promotion update builds while preserving gear, personality and wallets',()=>{
  const s:Rules=createGame('成长测试',7301,0);s.level=29;ensureNpcWorld(s);
  const resident=s.npcWorld.residents.find((p:Rules)=>p.unit.classId===3),gear=structuredClone(resident.unit.equipment),wallet=resident.wallet;
- s.level=30;s.wallAt=40*60*1000;progressNpcWorld(s);
- assert.equal(resident.unit.npcBuild.levelBand,30);assert.deepEqual(resident.unit.equipment,gear);assert.ok(resident.wallet>=wallet);
+ s.level=30;s.wallAt=40*60*1000;resident.unit.xp=xpTable[29].xp_for_next_level-1;progressPublicNpc(resident,20*60*1000,s.wallAt,33);
+ assert.equal(resident.unit.npcBuild.levelBand,30);assert.equal(resident.unit.id,resident.id);assert.ok(resident.wallet>=wallet);
  // Promotion retrains the active actor and persistent resident; dungeon entry
  // must not put that resident back on the original novice profile.
  const p=s.npcWorld.residents.find((p:Rules)=>p.raidProfile.skill==='novice');p.raidRuns=2;

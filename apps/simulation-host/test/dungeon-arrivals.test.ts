@@ -1,9 +1,9 @@
+import {npcFixture} from '../../../packages/game-domain/test/support/npc-fixture.ts';
 import {splitDungeonCheckpoint} from '../src/dungeon-departure.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../../packages/persistence/src/memory.ts';
 import {residentPartyFixture} from '../../../packages/game-domain/test/support/resident-party.ts';
-import {ensureNpcMatchSupply} from '../../../packages/game-domain/src/rules/npc-world.js';
 import {rebaseSimulation} from '../../../packages/game-domain/src/simulation-clock.ts';
 import {addPeriodicEffect} from '../../../packages/game-domain/src/rules/simulation-events.js';
 import {controllerAction} from '../../../packages/game-domain/src/controller-actions.ts';
@@ -31,7 +31,7 @@ async function fixture(humans=2){
   for(const [index,state]of states.entries()){
     state.party=[];state.level=20;state.location=index?'deadmines':'goldshire';
     state.hp=stats(state).maxHp-100;state.mana=stats(state).maxMana;
-    ensureNpcMatchSupply(state);
+    npcFixture(state,index*100);
     state.party=state.npcWorld.residents.slice(0,index===0?5-humans:0).map((p:Rules)=>structuredClone(p.unit));
     state.npcWorld.selection=state.party.map((p:Rules)=>p.id);
     rebaseSimulation(state,10000+index*10000);
@@ -181,6 +181,6 @@ test('three human room keeps both remaining private projections after leader dep
  for(const controller of remaining.controllers){
   const projected=runtime.presentation(controller.accountId,controller.actorId,'full');
   assert.ok(projected.snapshot);
-  assert.equal((projected.snapshot.view.instanceScene as Rules).memberCount,2);
+  assert.equal((projected.snapshot.view.instanceScene as Rules).memberCount,4);
  }
 });

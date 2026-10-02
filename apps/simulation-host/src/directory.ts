@@ -1,3 +1,5 @@
+import {publicRaidBoundary,publicRaidTransferId} from './public-raid-transfer.ts';
+import {goldRaidContents} from '../../../packages/game-domain/src/rules/gold-raid.js';
 import {dungeonDepartureTransferId,dungeonDepartureBoundary} from './dungeon-departure-transfer.ts';
 import {DEFAULT_IDLE_RETIRE_MS,idleRetireDelay} from './retirement-policy.ts';
 import {runtimeVersion} from './version.ts';
@@ -96,6 +98,7 @@ export class SimulationDirectory {
  }
  async input(accountId:string,input:SimulationInput){return this.withActorSession(input.instanceId,accountId,input.actorId,session=>session.input(accountId,input));}
  async enterDungeon(accountId:string,input:SimulationInput){
+  if(input.command.kind==='action'&&(input.command.action.type==='goldLeave'||Object.hasOwn(goldRaidContents,input.command.action.contentId as string)))return this.publicRaid(accountId,input);
   if(input.command.kind!=='action'||input.command.action.type!=='enterDungeon')throw new Error('Invalid arrival command');
   if(this.closed||!this.characters||!this.dungeons)throw new Error('Dungeon admission is unavailable');
   const plan=await this.dungeons.plan(accountId,input);
@@ -145,6 +148,25 @@ export class SimulationDirectory {
   })();
   this.dungeonEntries.set(group.id,{fingerprint,work});
   try{return await work;}finally{if(this.dungeonEntries.get(group.id)?.work===work)this.dungeonEntries.delete(group.id);}
+ }
+ private async publicRaid(accountId:string,input:SimulationInput){
+  if(this.closed||!this.characters||!this.dungeons)throw new Error('Raid admission unavailable');
+  const previous=await this.dungeons.raidReceipt(accountId,input);
+  if(previous)return {...await this.openCharacter(accountId,input.actorId),receipt:{...previous,durable:true,confirmation:'durable' as const}};
+  const key='raid:'+input.actorId,fingerprint=JSON.stringify([accountId,input]),pending=this.dungeonEntries.get(key);
+  if(pending){if(pending.fingerprint!==fingerprint)throw new Error('角色正在交接实例');return pending.work;}
+  const work=(async()=>{
+   const identity=await this.openCharacter(accountId,input.actorId);if(identity.instanceId!==input.instanceId)throw new Error('Controller fenced');
+   const session=await this.entries.get(identity.instanceId)!.session,transferId=publicRaidTransferId(accountId,input);
+   try{
+    const prepared=await session.prepareTransfer(transferId,async cp=>Math.max(cp.state.wallAt,...cp.recentInputs.filter(r=>r.receipt.status==='queued').map(r=>r.receipt.effectiveWallAt)));
+    await this.repository.transfer(transferId,[prepared.owner],['personal:'+transferId],publicRaidBoundary(accountId,input));
+    await session.discard();this.entries.delete(prepared.owner.id);
+    const receipt=await this.dungeons!.raidReceipt(accountId,input);if(!receipt)throw new Error('Raid receipt missing');
+    return {...await this.openCharacter(accountId,input.actorId),receipt:{...receipt,durable:true,confirmation:'durable' as const}};
+   }catch(error){await session.abortTransfer(transferId);throw error;}
+  })();
+  this.dungeonEntries.set(key,{fingerprint,work});try{return await work;}finally{this.dungeonEntries.delete(key);}
  }
  async leaveDungeon(accountId:string,input:SimulationInput){
   if(input.command.kind!=='action'||input.command.action.type!=='leaveDungeon')throw new Error('Invalid departure command');

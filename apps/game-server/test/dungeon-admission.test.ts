@@ -1,3 +1,4 @@
+import {updateNpcPopulation} from '../../../packages/game-domain/src/npc-population.ts';
 import {ResidentInstance} from '../../simulation-host/src/instance.ts';
 import {addPeriodicEffect} from '../../../packages/game-domain/src/rules/simulation-events.js';
 import test from 'node:test';
@@ -11,7 +12,6 @@ import {ResidentCharacters} from '../../../packages/game-domain/src/resident-cha
 import {DungeonAdmissions} from '../../../packages/game-domain/src/dungeon-admissions.ts';
 import {GameService} from '../../../packages/game-domain/src/service.ts';
 import {context,persistCharacter} from '../../../packages/game-domain/src/context.ts';
-import {ensureNpcMatchSupply} from '../../../packages/game-domain/src/rules/npc-world.js';
 import {combatRole} from '../../../packages/game-domain/src/rules/combat-roles.js';
 import type {Character,Rules} from '../../../packages/game-domain/src/model.ts';
 import {runtimeVersion} from '../../simulation-host/src/version.ts';
@@ -22,32 +22,23 @@ import {ResidentGameService} from '../src/resident-game-service.ts';
 import {createGameServer} from '../src/server.ts';
 import {accounts,issueSession,appOrigin} from './session-fixture.ts';
 
-for(const order of ['leader-first','leader-later','outside','cross-owner'])test(`authenticated finder entry: ${order}`,{timeout:60000},async()=>{
+for(const order of ['leader-first','leader-later','outside','public-requester'])test(`authenticated finder entry: ${order}`,{timeout:60000},async()=>{
  const store=residentStore(new MemoryStore()),domain=new GameService(store,{contentVersion:'test',seed:()=>283});
- const ids:string[]=[],npcIds:string[]=[],npcOwnerAccount=order==='cross-owner'?'bob':'alice';
+ const ids:string[]=[],npcIds:string[]=[],npcOwnerAccount=order==='public-requester'?'bob':'alice';
  for(const accountId of ['alice','bob']){
   const made=await domain.createAccount(accountId,{name:accountId,classId:8,raceId:1},'create');ids.push(made.state.id);
   await store.transaction(async tx=>{
    const row=(await tx.get<Character>('characters',made.state.id))!,state=await context(tx,row,Date.now(),false);
    state.level=20;state.location=order==='outside'?'goldshire':'deadmines';
    if(accountId===npcOwnerAccount){
-    ensureNpcMatchSupply(state);
-    npcIds.push(...['tank','healer','dps'].map(role=>state.npcWorld.residents.find((p:Rules)=>{const r=combatRole(p.unit);return (r==='tank'||r==='healer'?r:'dps')===role;}).id));
+    const profiles=await updateNpcPopulation(tx,state.wallAt,{level:20});
+    npcIds.push(...['tank','healer','dps'].map(role=>profiles.find((p:Rules)=>{const r=combatRole(p.unit);return (r==='tank'||r==='healer'?r:'dps')===role;})!.id));
    }
    assert.equal(state.party.length,0);
    await persistCharacter(tx,row,state,state.wallAt,'fixture:'+accountId);
   });
  }
  const characters=new ResidentCharacters(store,{version:runtimeVersion}),repository=new SimulationRepository(store,Date.now,characters.commit);
- if(order==='cross-owner'){
-  // Live companions belong to the admission, not the permanent character row.
-  const admission=await characters.admission('bob',ids[1]);
-  admission.state.party=admission.state.npcWorld.residents.filter((p:Rules)=>npcIds.includes(p.id)).map((p:Rules)=>structuredClone(p.unit));
-  for(const npc of admission.state.party)addPeriodicEffect(admission.state,npc,'hots',{spell:139,name:'Renew',caster:admission.state.id,amount:10,next:admission.state.clock+1000,interval:1000,until:admission.state.clock+30000});
-  const owner=await repository.acquire(admission.instanceId,'fixture');
-  await repository.commit(owner,1,new ResidentInstance({...admission,ownerEpoch:owner.epoch}).checkpoint());
-  owner.commitSequence=1;await repository.release(owner);
- }
  const directory=new SimulationDirectory(repository,{characters,dungeons:new DungeonAdmissions(store)}),token=randomBytes(32).toString('base64url');
  const originalEnter=directory.enterDungeon.bind(directory);
  directory.enterDungeon=async(...args)=>{try{return await originalEnter(...args);}catch(error){if(error instanceof AggregateError)console.error('Transfer causes:',error.errors);throw error;}};
@@ -92,7 +83,7 @@ for(const order of ['leader-first','leader-later','outside','cross-owner'])test(
    assert.equal((await read('alice')).execution.clientSequence,original.alice.execution.clientSequence);
    return;
   }
-  const first=order==='leader-first'||order==='cross-owner'?'alice':'bob',last=first==='alice'?'bob':'alice';
+  const first=order==='leader-first'||order==='public-requester'?'alice':'bob',last=first==='alice'?'bob':'alice';
   const input=enterBody(original[first]);
   const forged={...input,requestId:crypto.randomUUID(),execution:{...input.execution,controllerGeneration:999}};
   assert.equal((await request(first,'',forged)).status,409);
@@ -106,21 +97,6 @@ for(const order of ['leader-first','leader-later','outside','cross-owner'])test(
   const firstInstance=entered.body.execution.instanceId;
   const duplicate=await request(first,'',input);assert.equal(duplicate.status,200,JSON.stringify(duplicate.body));assert.equal(duplicate.body.execution.instanceId,firstInstance);
   const changed={...input,contentId:'wailingCaverns'};assert.equal((await request(first,'',changed)).status,409);
-  if(order==='cross-owner'){
-   await client.checkpoint(firstInstance);
-   const enteredState=(await repository.load<any>(firstInstance))!.checkpoint.state;
-   assert.ok(enteredState.party.filter((a:Rules)=>a.npcPlayer).every((a:Rules)=>a.hots?.length===1),'live NPC effects must travel through the public entry route');
-   assert.equal(Object.values(enteredState.simulationEvents.periodics).length,3);
-   const outside=await read('bob');
-   assert.equal(outside.snapshot.player.dungeon,undefined);
-   assert.equal(outside.snapshot.player.location,'deadmines');
-   assert.equal(outside.snapshot.view.npcWorld.away.length,3);
-   assert.notEqual(outside.execution.instanceId,original.bob.execution.instanceId);
-   const personalBefore=await read('alice'),leave={...enterBody(personalBefore),type:'leaveDungeon',contentId:undefined};
-   const result=await request('alice','',leave);assert.equal(result.status,200,JSON.stringify(result.body));
-   const back=await request('alice','',enterBody(await read('alice')));assert.equal(back.status,200,JSON.stringify(back.body));
-   assert.equal(back.body.snapshot.view.instanceScene.memberCount,4);
-  }
   const arrived=await request(last,'',enterBody(await read(last)));assert.equal(arrived.status,200,JSON.stringify(arrived.body));
   const destination=arrived.body.execution.instanceId;
   assert.notEqual(destination,firstInstance);assert.equal(arrived.body.snapshot.view.instanceScene.memberCount,5);
@@ -129,7 +105,7 @@ for(const order of ['leader-first','leader-later','outside','cross-owner'])test(
   await client.checkpoint(destination);
   const saved=(await repository.load<any>(destination))!.checkpoint;
   assert.equal(saved.state.dungeon.runId,entered.body.snapshot.player.dungeon.runId);
-  assert.equal(saved.recentInputs.filter((r:Rules)=>r.input.command.action.type==='enterDungeon').length,order==='cross-owner'?3:2);
+  assert.equal(saved.recentInputs.filter((r:Rules)=>r.input.command.action.type==='enterDungeon').length,2);
   for(const npc of await store.read(tx=>tx.list('npc_characters')))assert.equal(npc.profile.runs,npcIds.includes(npc.id)?1:0);
   assert.equal((await client.inspect()).instances,1);
   await directory.remove(destination);
@@ -149,7 +125,7 @@ for(const order of ['leader-first','leader-later','outside','cross-owner'])test(
   assert.notEqual(exited.body.execution.instanceId,destination);
   const stillInside=await read(stayed);
   assert.equal(stillInside.snapshot.player.dungeon.runId,saved.state.dungeon.runId);
-  assert.equal(stillInside.snapshot.view.instanceScene.memberCount,left===npcOwnerAccount?1:4);
+  assert.equal(stillInside.snapshot.view.instanceScene.memberCount,4);
   assert.notEqual(stillInside.execution.instanceId,exited.body.execution.instanceId);
   const exitRetry=await request(left,'',exitInput);
   assert.equal(exitRetry.status,200,JSON.stringify(exitRetry.body));

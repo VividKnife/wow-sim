@@ -1,4 +1,4 @@
-import {reuniteNpcProfiles,type NpcArrival} from './npc-residency.ts';
+import {type NpcArrival} from './npc-residency.ts';
 import {mergeRoomEffects,suspendNpcEffects,resumeNpcEffects} from './room-effects.ts';
 import type {Rules} from './model.ts';
 import {rebaseSimulation} from './simulation-clock.ts';
@@ -52,11 +52,7 @@ export function composeRoomBoundary(sources: readonly Rules[], primaryActorId: s
   // Persistent profiles are snapshots, not aliases to live units: JSON restore
   // must have the same object ownership as the newly composed runtime.
   let members=[...rooms.flatMap(room=>[room,...room.party]),...arrivals.flatMap(a=>a.guests.map(g=>structuredClone(g.profile.unit)))];
-  if(guests.length){
-    const joined={...destination,party:members.filter(a=>a!==destination),npcGuests:guests};
-    reuniteNpcProfiles(joined);
-    if(joined.npcGuests?.length)destination.npcGuests=joined.npcGuests;
-  }
+  if(guests.length)destination.npcGuests=guests;
   if(selectMatchedNpcs){
     // Bench only at this saved idle boundary. Preserve permanent equipment and
     // growth before choosing the matched cohort; existing active units retain

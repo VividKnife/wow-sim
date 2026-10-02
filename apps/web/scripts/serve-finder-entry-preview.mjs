@@ -10,7 +10,7 @@ import {SocialService} from '../../../packages/game-domain/src/social.ts';
 import {ResidentCharacters} from '../../../packages/game-domain/src/resident-characters.ts';
 import {DungeonAdmissions} from '../../../packages/game-domain/src/dungeon-admissions.ts';
 import {context,persistCharacter} from '../../../packages/game-domain/src/context.ts';
-import {ensureNpcMatchSupply} from '../../../packages/game-domain/src/rules/npc-world.js';
+import {updateNpcPopulation} from '../../../packages/game-domain/src/npc-population.ts';
 import {combatRole} from '../../../packages/game-domain/src/rules/combat-roles.js';
 import {SimulationRepository} from '../../../packages/persistence/src/simulation.ts';
 import {SimulationDirectory} from '../../simulation-host/src/directory.ts';
@@ -25,7 +25,7 @@ const sql=new PostgresStore({async connect(){const previous=tail;let release;tai
 await sql.initialize();const store=residentStore(sql),domain=new GameService(store,{contentVersion:'finder-entry-qa',seed:()=>283});
 const userId='entry-qa',created=await domain.createSave(userId,{name:'进本验证法师',classId:8,raceId:1,boost:true},'fixture-create'),accountId=created.id;
 const actorId=(await store.read(tx=>tx.get('accounts',accountId))).primaryCharacterId;
-await store.transaction(async tx=>{const row=await tx.get('characters',actorId),state=await context(tx,row,Date.now(),false);state.level=20;state.location='deadmines';ensureNpcMatchSupply(state);await persistCharacter(tx,row,state,state.wallAt,'fixture-level');});
+await store.transaction(async tx=>{const row=await tx.get('characters',actorId),state=await context(tx,row,Date.now(),false);state.level=20;state.location='deadmines';const profiles=await updateNpcPopulation(tx,state.wallAt,{level:20});await persistCharacter(tx,row,state,state.wallAt,'fixture-level');});
 const social=new SocialService(store),command=body=>social.command(accountId,actorId,{...body,requestId:randomUUID()});
 await command({type:'role',role:'dps'});
 const npcs=await store.read(tx=>tx.list('npc_characters',{ownerCharacterId:actorId})),selected=new Set();
