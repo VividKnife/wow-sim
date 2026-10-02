@@ -132,7 +132,14 @@ for(const [profession,path,id,item] of [
   await f.cmd({type:'gatherResource',id});f.restart();await f.settle();
   const s=await f.state();assert.ok(countItem(s,item)>0);assert.equal(s.professions[profession].skill,2);
   await f.settle();assert.equal(countItem(await f.state(),item),countItem(s,item));
-  await assert.rejects(f.cmd({type:'gatherResource',id}),/资源/);
+  const total=s.resourceStocks[id].total;
+  for(let remaining=total-1;remaining>0;remaining--){
+   await f.cmd({type:'gatherResource',id});await f.settle();
+   assert.equal((await f.state()).resourceStocks[id].remaining,remaining-1);
+  }
+  f.restart();await assert.rejects(f.cmd({type:'gatherResource',id}),/资源/);
+  await f.settle(300000);await f.cmd({type:'gatherResource',id});await f.settle();
+  assert.ok((await f.state()).resourceStocks[id].remaining>=1);
  });
 }
 
@@ -142,7 +149,7 @@ test('fishing then cooking consumes the gathered fish through durable orders, wi
  for(const to of ['goldshire','mirror']){const moved=await f.cmd({type:'travel',to});await f.settle(moved.state.activity.endsAt-moved.state.clock);}
  await f.cmd({type:'gatherResource',id:'mirror:fish'});f.restart();await f.settle();
  const caught=await f.state(),fish=countItem(caught,6291);assert.ok(fish>=1);assert.equal(caught.professions.fishing.skill,2);
- await assert.rejects(f.cmd({type:'gatherResource',id:'mirror:fish'}),/资源/);
+ assert.equal(caught.resourceStocks['mirror:fish'].remaining,caught.resourceStocks['mirror:fish'].total-1);
  const moved=await f.cmd({type:'travel',to:'goldshire'});await f.settle(moved.state.activity.endsAt-moved.state.clock);
  await f.cmd({type:'craft',id:'spell-7751',count:fish});await f.settle();
  const cooked=await f.state();assert.equal(countItem(cooked,6291),0);assert.equal(countItem(cooked,6290),fish);assert.equal(cooked.professions.cooking.skill,1+fish);
@@ -178,4 +185,14 @@ test('crafted first-aid bandages heal, consume inventory and persist their use c
  await f.store.transaction(async tx=>{const c=(await tx.get<Character>('characters',f.hero))!;c.rules.hp=1;await tx.put('characters',c);});
  const healed=await f.cmd({type:'useBandage',id:1251});assert.ok(healed.state.hp>1);assert.equal(countItem(healed.state,1251),1);
  f.restart();await assert.rejects(f.cmd({type:'useBandage',id:1251}),/冷却/);assert.equal(countItem(await f.state(),1251),1);
+});
+
+
+test('startActivity craft rejects zero count without reserving or spending assets',async()=>{
+ const f=await fixture();await f.cmd({type:'learnProfession',id:'firstaid'});
+ const before=await f.state();
+ await assert.rejects(f.cmd({type:'startActivity',activityType:'craft',id:'spell-3275',count:0,buyMissing:true}));
+ const after=await f.state();assert.equal(after.money,before.money);assert.deepEqual(after.bag,before.bag);
+ assert.equal((await f.store.transaction(tx=>tx.list('reservations'))).length,0);
+ assert.equal((await f.store.transaction(tx=>tx.list('activities'))).length,0);
 });

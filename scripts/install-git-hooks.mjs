@@ -8,5 +8,5 @@ if(existsSync(new URL('../.git',import.meta.url))){
  try{current=execFileSync('git',['config','--get','core.hooksPath'],{cwd:root,encoding:'utf8',stdio:'pipe'}).trim();}catch(error){if(error.status!==1)throw error;}
  if(current&&current!=='.githooks')throw new Error(`Existing core.hooksPath=${current}; integrate the game-version hook before replacing it.`);
  execFileSync('git',['config','--local','core.hooksPath','.githooks'],{cwd:root,stdio:'pipe'});
- console.log('Git hooks installed: game version updates before every commit.');
+ console.log('Git hooks installed: game version updates on commit and CI validation runs before push.');
 }

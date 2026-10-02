@@ -1,3 +1,4 @@
+import DungeonQuests from './dungeon-quests';
 import QuestScenes from './quest-scenes';
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';
@@ -11,7 +12,7 @@ import './dungeon-page.css';
 export default function DungeonPage(props:GameProps&{onOpenParty:()=>void;onConfigure:()=>void;onObserve:()=>void}){
  const {state:s,data:d}=props;
  const [query,setQuery]=useState(''),[selectedId,setSelectedId]=useState<string|null>(null),[bossId,setBossId]=useState<string|null>(null);
- const [view,setView]=useState<'bosses'|'map'>('bosses');
+ const [view,setView]=useState<'bosses'|'map'|'quests'>('bosses');
  const [levelOnly,setLevelOnly]=useState(false);
  const journal=d.dungeonJournal||[],matches=filterJournal(journal,query).filter((dungeon:any)=>!levelOnly||journalLevelStatus(dungeon,s.level).eligible);
  const {selected,boss,entry,expedition}=journalSelection(d,selectedId,bossId);
@@ -23,8 +24,8 @@ export default function DungeonPage(props:GameProps&{onOpenParty:()=>void;onConf
     <div className="journal-breadcrumb"><Button variant="outline" size="sm" onClick={()=>{setSelectedId(null);setBossId(null);}}>← 所有地下城</Button><span>经典旧世 / {selected.name}</span></div>
     <header className={'journal-detail-header '+(selected.playable?'is-playable':'')} style={{backgroundImage:`linear-gradient(90deg,rgba(17,15,12,.96),rgba(17,15,12,.48)),url(${selected.background})`}}><div className="journal-emblem" aria-hidden="true">⚔</div><div><div className="eyebrow">{selected.zone} · {selected.groupSize||5} 人地下城</div><h2>{selected.name}</h2><p>{selected.description}</p><div className="journal-tags"><span>最低等级 {selected.minimumLevel}</span><span>建议等级 {selected.recommendedLevel}</span><span className={journalLevelStatus(selected,s.level).eligible?'journal-playable':'journal-info'}>{journalLevelStatus(selected,s.level).label}</span></div></div></header>
     {entry&&<Dungeon {...props} data={{...d,dungeon:entry}}/>}
-    <div className="journal-view-tabs" aria-label="手册内容"><Button variant={view==='bosses'?'default':'outline'} aria-pressed={view==='bosses'} onClick={()=>setView('bosses')}>首领与战利品</Button><Button variant={view==='map'?'default':'outline'} aria-pressed={view==='map'} onClick={()=>setView('map')} disabled={!selected.atlas&&!selected.atlasPack}>副本地图</Button></div>
-    {view==='map'?<JournalAtlas key={selected.id} dungeon={selected} onSelectBoss={id=>{setBossId(id);setView('bosses');}}/>:<div className="journal-detail-body"><nav className="journal-bosses" aria-label="选择首领"><div className="eyebrow">首领 · {selected.bosses.length}</div>{selected.bosses.map((b:any,index:number)=><button type="button" key={b.id} aria-pressed={boss?.id===b.id} onClick={()=>setBossId(b.id)}>{b.portrait&&<img className="journal-boss-thumb" src={b.portrait} alt="" loading="lazy"/>}<span className="journal-boss-number">{String(index+1).padStart(2,'0')}</span><span>{b.name}{b.rare&&<small>稀有首领</small>}</span><span aria-hidden="true">›</span></button>)}</nav>
+    <div className="journal-view-tabs" aria-label="手册内容"><Button variant={view==='bosses'?'default':'outline'} aria-pressed={view==='bosses'} onClick={()=>setView('bosses')}>首领与战利品</Button><Button variant={view==='map'?'default':'outline'} aria-pressed={view==='map'} onClick={()=>setView('map')} disabled={!selected.atlas&&!selected.atlasPack}>副本地图</Button><Button variant={view==='quests'?'default':'outline'} aria-pressed={view==='quests'} onClick={()=>setView('quests')}>地下城任务</Button></div>
+    {view==='quests'?<DungeonQuests key={selected.id} {...props} dungeonId={selected.id}/>:view==='map'?<JournalAtlas key={selected.id} dungeon={selected} onSelectBoss={id=>{setBossId(id);setView('bosses');}}/>:<div className="journal-detail-body"><nav className="journal-bosses" aria-label="选择首领"><div className="eyebrow">首领 · {selected.bosses.length}</div>{selected.bosses.map((b:any,index:number)=><button type="button" key={b.id} aria-pressed={boss?.id===b.id} onClick={()=>setBossId(b.id)}>{b.portrait&&<img className="journal-boss-thumb" src={b.portrait} alt="" loading="lazy"/>}<span className="journal-boss-number">{String(index+1).padStart(2,'0')}</span><span>{b.name}{b.rare&&<small>稀有首领</small>}</span><span aria-hidden="true">›</span></button>)}</nav>
      <div className="journal-loot" aria-live="polite">{boss?<BossLoot key={`${selected.id}:${boss.id}`} boss={boss}/>:<p className="journal-empty">暂无收录的首领资料。</p>}</div>
     </div>}
     {expedition&&selected.playable&&<p className="footnote">当前冒险显示在手册上方。离开当前副本后，可前往此地下城入口。</p>}

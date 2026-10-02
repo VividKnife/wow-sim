@@ -23,7 +23,7 @@ type Npc={key:string;entry:number;name:string;roles:string[];accepts:number[];tu
 const content=clientContent();
 const names:Record<number,string>={1:'战士',4:'盗贼',5:'牧师',8:'法师',9:'术士'};
 const colors:Record<number,string>={1:'#c69b6d',4:'#e2ce72',5:'#ddd8c9',8:'#67b8d0',9:'#aa95d0'};
-const menus=[['nearby','附近人物','spell_holy_magicalsentry'],['quests','任务日志','inv_misc_book_09'],['map','区域地图','inv_misc_map_01'],['character','角色背包','inv_helmet_03'],['party','小队','spell_holy_prayerofhealing'],['report','战报','inv_sword_04']];
+const menus=[['nearby','附近人物','inv_misc_head_human_01'],['quests','任务日志','inv_misc_book_09'],['map','区域地图','inv_misc_map_01'],['character','角色背包','inv_helmet_03'],['party','小队','spell_holy_prayerofhealing'],['report','战报','inv_sword_04']];
 const percent=(n:number,max:number)=>Math.max(0,Math.min(100,100*n/Math.max(1,max)));
 const number=(n:number)=>Math.round(n).toLocaleString('en-US');
 const seconds=(ms:number)=>`${Math.max(0,Math.ceil(ms/1000))} 秒`;

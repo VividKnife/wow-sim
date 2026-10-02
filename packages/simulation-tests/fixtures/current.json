@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "referenceCommit": "d2d43b9041768603a0c52b8ce55c64b2a03fb6a2",
-  "contentHash": "afe2e7165cc7ec3bb1b093c8ac44825f87bf38b0e4497cef1a943456f359d9d5",
-  "capturedRuleset": "owned-v1:1ecd097c3ea437ce0a798f6eccb27fdacd5b380cdb6de8cea45145eff393fc00",
-  "reviewReason": "Added tested independent NPC custody across resident instances; the five deterministic scenarios preserve the same reviewed behavior. Refreshed stale dungeon/arena hashes against pre-optimization HEAD; learned-spell indexing matches all five HEAD scenarios exactly, including RNG and rewards.",
+  "contentHash": "58c9e657a56fde50ab6d5840617487f12811399b68069245934fa7705f3ca828",
+  "capturedRuleset": "owned-v1:d4e5dc7700989c513f9b7c3e4b403e1c1ce4ab7981ad1cc139a6512c042349f5",
+  "reviewReason": "Reviewed exclusive buff state integration and quest-flow additions; deterministic scenario RNG, survival, and reward summaries remain aligned with the historical reference.",
   "sampleMs": 50,
   "durationMs": 15000,
   "referenceSummaryMatches": {
@@ -75,7 +75,7 @@
         {
           "wallAt": 5000,
           "simTime": 5000,
-          "hash": "bb5cb1e58578e04981ead05533ca76e6bf745eb4c3bf171edab1d3c76e0628f9",
+          "hash": "1139d9c8f0a4d9ca2f95200bc10b3ce3a360a96898a4dcc26b4e31bbdc032a79",
           "rngState": 909334371,
           "totals": {
             "kills": 0,
@@ -91,7 +91,7 @@
         {
           "wallAt": 10000,
           "simTime": 10000,
-          "hash": "1b6d559172495c1c0580cd66324a368e990fb54ed296507e351d61420dff371b",
+          "hash": "1bb56fa0f0666d4805ec5379d150577b18dcc349a8e6bed427f737baa91fa8e2",
           "rngState": 1239081475,
           "totals": {
             "kills": 0,
@@ -107,7 +107,7 @@
         {
           "wallAt": 15000,
           "simTime": 15000,
-          "hash": "06c0778a81e7b3a26010913854d63eeddeed1b9a0a3e340aa539daa17a74752a",
+          "hash": "b699e979581cd0396c6d361a27ceb7ea9180a5c0e398df26e4b13d2a2cfc340d",
           "rngState": 2966982265,
           "totals": {
             "kills": 0,
@@ -183,7 +183,7 @@
         {
           "wallAt": 5000,
           "simTime": 5000,
-          "hash": "9adf54372708131b2d046cff90c9ce35f6f3307eaffea825affdc1c2fcc3387a",
+          "hash": "88f367902133d5e7729c02ecd9e716d4ba4e93882acd9e32e6b7c8aa4564e377",
           "rngState": 283,
           "totals": {
             "kills": 0,
@@ -199,7 +199,7 @@
         {
           "wallAt": 10000,
           "simTime": 10000,
-          "hash": "65ac56a363007599794a3f3709c5357985554a255db422252f4525b5b2682870",
+          "hash": "7afd36e2301feb2f408d75135b7b8ea5ec0284f73cc260e51a8659bc68721f3d",
           "rngState": 283,
           "totals": {
             "kills": 0,
@@ -215,7 +215,7 @@
         {
           "wallAt": 15000,
           "simTime": 15000,
-          "hash": "0f8f5406de4064fbeb77e6ef0391dbc851864a9b62eac22d7b377c95c39a3cc1",
+          "hash": "d2010af1887d8d7c674f9cce543aaa829426be72b8f12dc4d82d5754c6bcff9d",
           "rngState": 283,
           "totals": {
             "kills": 0,

@@ -2,7 +2,7 @@ import {useEffect,useId,useMemo,useRef,useState} from 'react';
 import {Dialog,Tooltip} from 'radix-ui';
 import ClassicActionTooltip from './classic-action-tooltip';
 import {Settings2,Swords,X} from 'lucide-react';
-import {actionAfterElapsed,actionKeys,actionBarStorageKey,normalizeActionSlots,upgradeActionSlots,quickActions,quickActionChoices,defaultActionSlots,quickActionKey} from '@/lib/classic-action-bar.js';
+import {actionAfterElapsed,actionKeys,actionBarStorageKey,normalizeActionSlots,upgradeActionSlots,quickActions,quickActionChoices,defaultActionSlots,quickActionKey,insertNewActions} from '@/lib/classic-action-bar.js';
 import {Icon,type GameProps} from './game-ui';
 import {useCombatPlayback} from '@/lib/use-combat-playback';
 import LiveCastBar from './live-cast-bar';
@@ -29,6 +29,7 @@ export default function ClassicActionBar({state,data,playback,contentVersion,bus
  const elapsed=ticking&&cooldownTime.key===clockKey?cooldownTime.elapsed:0;
  const actions=elapsed>0?baseActions.map(action=>actionAfterElapsed(action,elapsed)):baseActions;
  const [profiles,setProfiles]=useState<Record<'peace'|'combat',(string|null)[]>>(()=>({peace:defaultActionSlots(quickActionChoices(s,d,'peace')),combat:defaultActionSlots(quickActionChoices(s,d,'combat').filter(action=>'combatSkill' in action&&action.combatSkill))}));
+ const seenFamilies=useRef<Record<'peace'|'combat',Set<string>>|null>(null);
  const resolvedProfiles:Record<'peace'|'combat',(string|null)[]>={peace:upgradeActionSlots(profiles.peace,s,d),combat:upgradeActionSlots(profiles.combat,s,d)};
  const slots=resolvedProfiles[mode];
  const [loadedId,setLoadedId]=useState<string|null>(null),[editing,setEditing]=useState<number|null>(null),[search,setSearch]=useState('');
@@ -46,6 +47,13 @@ export default function ClassicActionBar({state,data,playback,contentVersion,bus
   setProfiles(previous=>({...previous,...saved}));
   setLoadedId(s.id);
  },[s.id]);
+ const candidateActions={peace:quickActionChoices(s,d,'peace').filter(action=>action.kind==='技能'),combat:quickActionChoices(s,d,'combat').filter(action=>'combatSkill' in action&&action.combatSkill)};
+ useEffect(()=>{
+  if(!ready)return;
+  const result=insertNewActions(profiles,seenFamilies.current,candidateActions);
+  seenFamilies.current=result.seenFamilies;
+  if(result.changed)setProfiles(result.profiles);
+ },[ready,profiles,s.id,d.skills,d.strategyMembers]);
  // Persist the effective bindings after hydration and whenever a learned rank changes.
  const peaceBindings=JSON.stringify(resolvedProfiles.peace),combatBindings=JSON.stringify(resolvedProfiles.combat);
  useEffect(()=>{

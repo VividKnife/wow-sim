@@ -65,7 +65,7 @@ export async function startActivity(this: GameService, tx: Transaction, c: Chara
     s = advance(s, now).state;
     s.party = [];
     s.rngState = this.seed();
-    const action = cmd.type === 'startActivity' ? { type: type === 'craft' ? 'craft' : 'gatherResource', id: cmd.id, count: cmd.count || 1, buyMissing: cmd.buyMissing === true } : { ...cmd };
+    const action = cmd.type === 'startActivity' ? { type: type === 'craft' ? 'craft' : 'gatherResource', id: cmd.id, count: cmd.count ?? 1, buyMissing: cmd.buyMissing === true } : { ...cmd };
     const a: Activity = { id: this.id(), accountId: c.accountId, actorId: c.id, type, status: 'running', location: s.location, startedAt: now, settledUntil: now, nextEventAt: now + 3000, contentVersion: this.contentVersion, rngState: s.rngState, engineActivity: { type: 'idle' }, command: action, payerId: cmd.payerId || c.id, recipientId: cmd.recipientId || c.id };
     const payer = await owned(tx, c.accountId, a.payerId!), recipient = await owned(tx, c.accountId, a.recipientId!);
     if (payer.id !== c.id)

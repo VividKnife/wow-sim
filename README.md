@@ -47,9 +47,11 @@ npm run data:check
 docker compose up -d postgres
 ```
 
-根目录的 `npm ci` 会安装 `.githooks/pre-commit`，也可运行 `npm run hooks:install`。每次提交自动生成并暂存 `game-version.json`，版本格式为北京时间 `YYYY.MM.DD-HHmm`。设置窗口底部显示当前构建的版本号和短提交号，同一分钟的多次更新可用提交号区分。版本随构建固定，刷新页面后才会切换到新版本；它不改变战斗规则／检查点版本。钩子只暂存版本文件，不创建额外提交或执行 push；不要使用 `--no-verify` 绕过自动编号。
+根目录的 `npm ci` 会安装 `.githooks`，也可运行 `npm run hooks:install`。每次提交自动生成并暂存 `game-version.json`，版本格式为北京时间 `YYYY.MM.DD-HHmm`。设置窗口底部显示当前构建的版本号和短提交号，同一分钟的多次更新可用提交号区分。版本随构建固定，刷新页面后才会切换到新版本；它不改变战斗规则／检查点版本。提交钩子只暂存版本文件，不创建额外提交或执行 push；不要使用 `--no-verify` 绕过自动编号。
 
 `post-commit` 同步自动版本文件的暂存区，避免 `git commit --only` 留下旧版本的反向差异；其他文件的暂存和工作区内容保持原样。如果版本文件在提交后又被改动，钩子不会暂存该改动。
+
+`pre-push` 会把实际待推送提交检出到临时 detached worktree，从两份 lockfile 重新安装依赖，并运行与 CI 共用的验证入口（CI 命令为 `npm run ci:validate`）：数据生成一致性、部署契约与模拟基线、根目录和 Web 类型检查、Web 构建及产物检查、Runtime Docker 镜像构建和生产集成验证。它不会借用当前工作区的未提交文件掩盖提交缺失；任一步失败都会阻止推送，因此本机需要可用的 Docker。
 
 复制 `.env.example` 为 `.env`，配置数据库 URL 和 `APP_ORIGIN=http://127.0.0.1:5173`。Web 使用 React + Vite，只代理 `/api` 到 game-api；认证、会话和限流由 game-api 管理。需要覆盖 API 地址时，在 Web 的 `.env.local` 设置 `GAME_SERVER_URL`。分别启动三个进程：
 

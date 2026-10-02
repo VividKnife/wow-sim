@@ -1,0 +1,36 @@
+#!/bin/sh
+set -eu
+
+root="$(git rev-parse --show-toplevel)"
+snapshot_root="$(mktemp -d "${TMPDIR:-/tmp}/wow-sim-pre-push.XXXXXX")"
+snapshot=''
+cleanup() {
+  if [ -n "$snapshot" ]; then
+    git -C "$root" worktree remove --force "$snapshot" >/dev/null 2>&1 || true
+  fi
+  rmdir "$snapshot_root" >/dev/null 2>&1 || true
+}
+trap cleanup EXIT HUP INT TERM
+validated=''
+
+while read -r local_ref local_oid remote_ref remote_oid; do
+  case "$local_oid" in
+    0000000000000000000000000000000000000000) continue ;;
+  esac
+  commit="$(git -C "$root" rev-parse "$local_oid^{commit}")"
+  case " $validated " in
+    *" $commit "*) continue ;;
+  esac
+  validated="$validated $commit"
+  snapshot="$snapshot_root/$commit"
+  git -C "$root" worktree add --quiet --detach "$snapshot" "$commit"
+  echo "Validating pushed commit $commit from a clean worktree..."
+  (
+    cd "$snapshot"
+    npm ci </dev/null
+    npm --prefix apps/web ci </dev/null
+    WEB_BUILD_ID="$commit" node "$root/scripts/validate-ci.mjs" </dev/null
+  )
+  git -C "$root" worktree remove --force "$snapshot"
+  snapshot=''
+done

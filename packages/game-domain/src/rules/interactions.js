@@ -1,4 +1,5 @@
-import {creatures,creatureLocations,questLinks,endpointNodes,objectTemplates,nameOf,table,classDefinitions,flightNodes} from './catalog.js';
+import {questEndpointHere} from './quests.js';
+import {creatures,creatureLocations,questLinks,objectTemplates,nameOf,table,classDefinitions,flightNodes} from './catalog.js';
 import {canTrainAt} from './city.js';
 import {classSupplyShop} from './class-acquisition.js';
 import {runtime} from './runtime-content.js';
@@ -17,7 +18,7 @@ export function localInteractions(s,quests){
  for(const q of quests)for(const [kind,eligible,field]of [['starts',q.canAccept,'accepts'],['ends',q.canTurnIn,'turnIns']]){
   if(!eligible)continue;
   for(const endpoint of questLinks[q.id]?.[kind]||[]){
-   if(endpoint.type==='item'?!s.bag.some(item=>item.id===endpoint.id):!endpointNodes(endpoint).includes(s.location))continue;
+   if(!questEndpointHere(s,q.id,kind,endpoint))continue;
    const npc=get(endpoint.type,endpoint.id);role(npc,'quests');npc[field].push(q.id);
   }
  }

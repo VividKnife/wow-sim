@@ -61,3 +61,5 @@
 .reward-options{display:grid;gap:6px}.reward-option{position:relative;display:flex;align-items:center;padding:0 14px 0 10px;border:1px solid transparent;border-radius:4px;cursor:pointer;transition:background .15s,border-color .15s,box-shadow .15s}.reward-option:hover{background:#222d2b;border-color:#766b4f}.reward-option.selected{background:#302f24;border-color:var(--gold);box-shadow:inset 0 0 0 1px #d9b57545}.reward-option .item-row{flex:1;min-width:0;border-bottom:0}.reward-option-control{position:absolute;width:1px;height:1px;margin:0;opacity:0;pointer-events:none}.reward-option:focus-within{outline:2px solid var(--gold);outline-offset:2px}.reward-option-state{flex-shrink:0;margin-left:12px;color:var(--muted);font-size:11px}.reward-option.selected .reward-option-state{color:var(--gold)}.reward-option:has(.reward-option-control:disabled){cursor:not-allowed;opacity:.5}
 
 .main-nav [data-slot=tabs-trigger]:disabled{color:#858585;opacity:.45;filter:grayscale(1);cursor:not-allowed;}
+
+.quest-entry summary strong.quest-low-level-title{color:var(--green)}

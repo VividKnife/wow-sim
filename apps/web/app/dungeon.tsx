@@ -56,7 +56,7 @@ export default function Dungeon(props:GameProps){
      {current.interaction&&!current.enemies.length&&<><div className="dungeon-object"><Icon src={dm.interactionIcon} name="迪菲亚火药"/><div><h3>{dm.interactionLabel}</h3><p>{current.id==='dm-cannon'?'使用一份迪菲亚火药轰开铁门。':'守卫已清除，从火药箱中取出火药。'}</p></div></div>{!dm.autoAdvance&&<><Button disabled={busy||!dm.canInteract} onClick={()=>send({type:'dungeonInteract'})}>{dm.interactionLabel}</Button>{!dm.canInteract&&<p className="footnote">{dm.interactionReason}</p>}</>}</>}
      {!dm.autoAdvance&&dm.canSkip&&<Button variant="ghost" disabled={busy} onClick={()=>send({type:'dungeonSkip'})}>绕过这段可选路线</Button>}
     </>}
-   </>:<><div className="eyebrow">地下城旅程</div><h2>路线已完成</h2><p>整理战利品，离开副本后回到任务人物处交付任务。</p></>}
+   </>:<><div className="eyebrow">地下城旅程</div><h2>路线已完成</h2><p>整理战利品，并在附近人物中交付已完成的副本任务。</p></>}
    {s.activity.reason&&<p className="dungeon-notice" role="status">{s.activity.reason}</p>}
    {(s.pending.length>0||s.bag.length>=d.bagCapacity)&&<p className="dungeon-notice">背包需要整理。到「角色」装备新物品或拾取待领取战利品；也可离开副本后找商人出售。</p>}
    <RecoveryControls {...props}/>

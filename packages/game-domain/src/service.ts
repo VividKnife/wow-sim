@@ -16,7 +16,6 @@ import {prepareCombatPlan, combatRecording, invalidateCombatPlan, combatExecutio
 import type { Account } from './model.ts';
 import { act, advance, quietIdle } from './rules/engine.js';
 import { refreshPresence, offlineLimit, recordPresence, activityDeadline, instanceDeadline } from './presence.ts';
-import { professions } from './rules/profession-data.js';
 import { receive } from './rules/inventory.js';
 import { canEquip, takeItem, bagCapacity } from './rules/character.js';
 import { transferItems } from './item-transfer.ts';
@@ -317,11 +316,6 @@ export class GameService {
                 await owned(tx, c.accountId, target.id);
             else
                 requireThat(action.target === c.id, 'FORBIDDEN', '不能控制其他账号的角色', 403);
-        }
-        if (action.type === 'learnProfession') {
-            requireThat(c.kind !== 'companion' || Object.keys(s.professions).length < 2, 'PROFESSION_LIMIT', '每名队友最多学习两项生活职业');
-            const main = professions.filter((p: Rules) => p.kind !== '副职业').map((p: Rules) => p.id);
-            requireThat(!main.includes(action.id) || Object.keys(s.professions).filter(id => main.includes(id)).length < 2, 'PROFESSION_LIMIT', '每个角色最多学习两个主要专业');
         }
         let rewardKey: string | undefined, rewardPlan: Rules | undefined;
         if (action.type === 'turnin' || action.type === 'claimQuestReward') {

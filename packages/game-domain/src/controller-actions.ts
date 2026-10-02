@@ -5,7 +5,7 @@ import {personalBuildActions} from './rules/character-action-state.js';
 import {personalInventoryActions} from './rules/inventory.js';
 import {dungeonControlActions} from './rules/party-control.js';
 
-const personalActions = new Set([...personalInventoryActions, ...personalBuildActions, 'cast', 'petCommand', 'strategy', 'settings', 'groupLoot', 'loot', 'rest', 'resurrect', 'revive']);
+const personalActions = new Set([...personalInventoryActions, ...personalBuildActions, 'accept', 'turnin', 'abandon', 'abandonLowLevelQuests', 'cast', 'petCommand', 'strategy', 'settings', 'groupLoot', 'loot', 'rest', 'resurrect', 'revive']);
 const memberOrders = new Set(['cast', 'stopCast', 'mode', 'control', 'kite']);
 const clockOrders = new Set(['prepare', 'takeover', 'pause', 'resume']);
 

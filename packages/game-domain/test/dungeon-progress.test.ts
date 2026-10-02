@@ -215,3 +215,25 @@ test('destination commands persist through service restart and stop at an encoun
  for(let i=0;i<180&&!next.state.combat;i++){await game.work(1000);next=await game.snapshot();}
  assert.equal(next.state.dungeon.destination,'stockades-33');assert.equal(next.state.combat.routeId,'stockades-02');
 });
+
+test('instance service accepts and rewards dungeon quests without leaving',async()=>{
+ const {quests}=await import('../src/rules/catalog.js');
+ const {addItem}=await import('../src/rules/character.js');
+ const t=await setup();await t.send({type:'enterDungeon'});
+ await t.send({type:'accept',id:168});
+ await t.store.transaction(async tx=>{
+  const [instance]=await tx.list<Instance>('instances',{});
+  assert.ok(instance.simulation!.quests[168]);
+  for(let n=1;n<=4;n++)if(quests[168]['ReqItemId'+n])addItem(instance.simulation,quests[168]['ReqItemId'+n],quests[168]['ReqItemCount'+n]);
+  await tx.put('instances',instance);
+ });
+ await t.send({type:'turnin',id:168,choice:quests[168].RewChoiceItemId1});
+ t.restart();
+ await t.store.read(async tx=>{
+  const [instance]=await tx.list<Instance>('instances',{});
+  assert.equal(instance.simulation!.completed[168],1);
+  assert.ok(instance.simulation!.dungeon);
+  const actor=await tx.get<Character>('characters',instance.leaderId);
+  assert.equal(actor!.rules.completed[168],1);
+ });
+});

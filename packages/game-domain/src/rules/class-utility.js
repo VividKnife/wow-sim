@@ -35,7 +35,13 @@ const petChannels=new Set(['Mend Pet','Health Funnel']);
 const pool=sp=>[4294967294,-2].includes(sp.PowerType)?'hp':sp.PowerType===1?'rage':sp.PowerType===3?'energy':'mana';
 export function classUtilityUse(s,id,targetId){
  const sp=spellInfo(s,id);if(!sp)return null;targetId??=petChannels.has(sp.SpellName)?s.pet?.id:s.id;
- if(sp.SpellName==='Tame Beast'){const e=s.combat?.enemies.find(e=>e.id===targetId),entry=e?.entry||(String(targetId).startsWith('npc:')?Number(String(targetId).slice(4)):0),raw=creatures[entry];const reason=!s.learned.includes(id)?'尚未学习驯服野兽':s.hp<=0?'角色已死亡':s.escort?'请先结束当前活动':!spellReady(s,sp,s.clock)?'技能尚未冷却':s.pet||s.hunterPet?'请先放弃当前宠物':!e&&!monsterIdsAt(s.location).includes(entry)?'请选择当前位置的野兽':raw?.CreatureType!==1?'目标不是野兽':(e?.level||raw?.MinLevel)>s.level?'目标等级过高':s.mana<sp.mana?'法力不足':!['idle','hunt'].includes(s.activity.type)?'请先结束当前活动':'';return{canUse:!reason,reason,label:'驯服',description:'选择野兽目标，引导驯服并保留其种类',targetId};}
+ if(sp.SpellName==='Tame Beast'){
+  const fallback=targetId===s.id&&!s.combat?monsterIdsAt(s.location).find(id=>creatures[id]?.CreatureType===1):null;
+  const resolvedTargetId=fallback?`npc:${fallback}`:targetId;
+  const e=s.combat?.enemies.find(e=>e.id===resolvedTargetId),entry=e?.entry||(String(resolvedTargetId).startsWith('npc:')?Number(String(resolvedTargetId).slice(4)):0),raw=creatures[entry];
+  const reason=!s.learned.includes(id)?'尚未学习驯服野兽':s.hp<=0?'角色已死亡':s.escort?'请先结束当前活动':!spellReady(s,sp,s.clock)?'技能尚未冷却':s.pet||s.hunterPet?'请先放弃当前宠物':!e&&!monsterIdsAt(s.location).includes(entry)?'请选择当前位置的野兽':raw?.CreatureType!==1?'目标不是野兽':(e?.level||raw?.MinLevel)>s.level?'目标等级过高':s.mana<sp.mana?'法力不足':!['idle','hunt'].includes(s.activity.type)?'请先结束当前活动':'';
+  return{canUse:!reason,reason,label:'驯服',description:'选择野兽目标，引导驯服并保留其种类',targetId:resolvedTargetId};
+ }
 
  // Original food/water, first two teleports and long mage buffs retain their
  // established UI/API path; every other direct class action uses this path.
