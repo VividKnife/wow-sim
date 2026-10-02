@@ -9,10 +9,10 @@ import {combatSight} from './combat-space.js';
 // An executable input contract, not an inference from the presence of a DBC row.
 // Add families only with target/legality/settlement tests. Ranks remain explicit.
 const families={
- enemy:'Fireball|Frostbolt|Fire Blast|Arcane Missiles|Arcane Explosion|Flamestrike|Blizzard|Scorch|Pyroblast|Counterspell|Sunder Armor|Taunt|Growl|Pummel|Shield Bash|Sinister Strike|Eviscerate|Kick|Smite|Shadow Word: Pain|Mind Blast|Hammer of Justice|Arcane Shot|Serpent Sting|Aimed Shot|Multi-Shot|Volley|Tranquilizing Shot|Lightning Bolt|Chain Lightning|Earth Shock|Flame Shock|Frost Shock|Purge|Shadow Bolt|Immolate|Corruption|Curse of Agony|Searing Pain|Drain Life|Fear|Wrath|Moonfire|Starfire',
+ enemy:'Fireball|Frostbolt|Fire Blast|Arcane Missiles|Arcane Explosion|Flamestrike|Blizzard|Scorch|Pyroblast|Counterspell|Sunder Armor|Taunt|Growl|Pummel|Shield Bash|Sinister Strike|Eviscerate|Kick|Smite|Shadow Word: Pain|Mind Blast|Hammer of Justice|Arcane Shot|Serpent Sting|Aimed Shot|Multi-Shot|Volley|Tranquilizing Shot|Lightning Bolt|Chain Lightning|Earth Shock|Flame Shock|Frost Shock|Purge|Shadow Bolt|Immolate|Corruption|Curse of Agony|Searing Pain|Drain Life|Fear|Wrath|Moonfire|Starfire|Tame Beast',
  friendly:'Lesser Heal|Heal|Flash Heal|Greater Heal|Renew|Power Word: Shield|Fear Ward|Power Infusion|Holy Light|Flash of Light|Lay on Hands|Cleanse|Purify|Healing Wave|Lesser Healing Wave|Chain Heal|Healing Touch|Regrowth|Rejuvenation|Innervate|Remove Curse|Remove Lesser Curse',
  either:'Dispel Magic',
- self:'Ice Block|Cold Snap|Shield Wall|Shield Block|Last Stand|Bloodrage|Evasion|Sprint|Divine Shield|Rapid Fire|Barkskin',
+ self:'Ice Block|Cold Snap|Shield Wall|Shield Block|Last Stand|Bloodrage|Evasion|Sprint|Divine Shield|Rapid Fire|Barkskin|Berserking|Blood Fury|Stoneform|Will of the Forsaken|War Stomp|Escape Artist|Perception|Cannibalize|Find Treasure|Bestial Wrath|Intimidation|Preparation|Cold Blood|Adrenaline Rush|Blade Flurry|Power Infusion|Demonic Sacrifice|Soul Link|Dark Pact|Nature\'s Swiftness|Elemental Mastery|Inner Focus|Combustion|Presence of Mind|Trueshot Aura',
 };
 const targets=new Map(Object.entries(families).flatMap(([kind,names])=>names.split('|').map(name=>[name,kind])));
 export const combatInputTarget=sp=>targets.get(sp?.SpellName)||null;

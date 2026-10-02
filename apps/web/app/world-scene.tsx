@@ -32,6 +32,7 @@ export default function WorldScene(props:GameProps&{uiHidden?:boolean;onObserve?
     <div className="world-avatar-shadow"/>
     {scene.ghost&&<div className="world-spirit-aura" aria-hidden="true"><i/><i/><i/></div>}
     <CharacterModel ghost={scene.ghost} equipment={s.equipment} items={d.items} raceId={s.raceId||1} classId={s.classId||8} gender={s.gender||'male'} view={scene.flying?'flight':'world'} animation={scene.animation as 'Stand'|'Run'|'Fly'|'Death'} mountDisplayId={scene.mountDisplayId} paused={animationPaused} fallback={<span className="world-model-placeholder">✦</span>} title={scene.ghost?'灵魂形态 · 返回尸体':'第三人称角色与当前装备'}/>
+    {scene.pet&&<div className="world-companion" aria-label={`当前宠物 ${scene.pet.name}`}><span className="world-companion-icon">🐾</span><span><strong>{scene.pet.name}</strong><small>{scene.pet.kind==='beast'?'猎人宠物':'恶魔伙伴'} · {Math.round(scene.pet.hp/Math.max(1,scene.pet.maxHp)*100)}%</small></span></div>}
    </div>
    <div className="world-scene-vignette"/>
    <header className="world-scene-heading"><span>艾泽拉斯 · {presentation.instance?'副本':scene.flying?'天空航线':'旅途'}</span><h2>{presentation.name}{scene.flying?'上空':''}</h2><p>{presentation.region} · {presentation.instance?'副本内部':scene.flying?'飞行途中':d.city?'城镇':'野外'}</p></header>

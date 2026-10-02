@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {quickActions,normalizeActionSlots,defaultActionSlots,quickActionKey,actionBarStorageKey} from '../lib/classic-action-bar.js';
+import {quickActions,normalizeActionSlots,defaultActionSlots,quickActionKey,actionBarStorageKey,insertNewActions} from '../lib/classic-action-bar.js';
 import {createGame,view,act} from '../../../packages/game-domain/src/rules/engine.js';
 import {addItem,stats} from '../../../packages/game-domain/src/rules/character.js';
 test('slots preserve empty choices, reject invalid bindings and isolate characters',()=>{
@@ -8,6 +8,11 @@ test('slots preserve empty choices, reject invalid bindings and isolate characte
  assert.deepEqual(normalizeActionSlots(['spell:20577','item:6948','bad',null]).slice(0,4),['spell:20577','item:6948',null,null]);
  assert.equal(normalizeActionSlots([]).length,12);
  assert.notEqual(actionBarStorageKey('one'),actionBarStorageKey('two'));
+});
+test('new learned skills fill only empty slots in their matching mode',()=>{
+ const profiles={peace:['item:6948',null,null],combat:['spell:133',null,null]},seen={peace:new Set(['Arcane Intellect']),combat:new Set(['Fireball'])};
+ const result=insertNewActions(profiles,seen,{peace:[{key:'spell:1459',name:'奥术智慧',nameEn:'Arcane Intellect'},{key:'spell:21562',name:'真言术：韧',nameEn:'Power Word: Fortitude'}],combat:[{key:'spell:133',name:'火球术',nameEn:'Fireball'},{key:'spell:116',name:'寒冰箭',nameEn:'Frostbolt'}]});
+ assert.equal(result.changed,true);assert.equal(result.profiles.peace[1],'spell:21562');assert.equal(result.profiles.combat[1],'spell:116');assert.equal(result.profiles.peace[2],null);assert.equal(result.profiles.combat[2],null);
 });
 test('quickbar exposes real hearthstone, portal and cannibalize commands',()=>{
  const s=createGame('快捷',37,0,{raceId:5,classId:8});s.location='goldshire';s.level=40;s.learned.push(11418);s.mana=stats(s).maxMana;addItem(s,17032,2);
