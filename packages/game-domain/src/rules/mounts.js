@@ -50,7 +50,7 @@ function trainReason(s){
  return eligibility(s)||busyReason(s)||(trained(s)?'已经学会马匹骑术。':'')||(!serviceHere(s,4732)?'请前往东谷伐木场的骑术训练师。':'')||(s.money<price(s,trainingPrice)?'骑术训练费用不足。':'');
 }
 function buyReason(s,m){
- if(m.testGift)return '仅由20级测试直升礼包赠送。';
+ if(m.testGift)return '仅由测试直升礼包赠送。';
  return eligibility(s,m.level)||busyReason(s)||(owns(s,m.id)?'已经拥有这匹坐骑。':'')||(!trained(s)?'请先学习马匹骑术。':'')||(!serviceHere(s,384)?'请前往东谷伐木场的马匹商人。':'')||(s.money<price(s,m.price)?'购买坐骑的金币不足。':'');
 }
 function summonReason(s,m){

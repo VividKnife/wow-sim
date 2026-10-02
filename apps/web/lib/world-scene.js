@@ -16,7 +16,8 @@ export function worldSceneState(state,data){
  const flightMount=flying?worldFlightMount(state,data):null;
  const mountDisplayId=!combat&&!dead?(flightMount?.displayId||worldMountDisplays[state.mounted]||0):0;
  const flightProgress=flying?Math.min(1,Math.max(0,(state.clock-activity.startedAt)/Math.max(1,activity.endsAt-activity.startedAt))):0;
- return {combat,ghost,moving,flying,mountDisplayId,flightProgress,pet:!combat&&state.pet?.hp>0?{name:state.pet.name,kind:state.pet.kind,hp:state.pet.hp,maxHp:state.pet.maxHp}:null,animation:ghost?'Run':dead?'Death':flying?'Fly':moving?'Run':'Stand',label:combat?'战斗中':ghost?'灵魂形态 · 跑尸中':dead?'已倒下':flying?flightMount.name+'飞行':moving?(mountDisplayId?'骑乘赶路':'奔跑赶路'):mountDisplayId?'骑乘待命':activity.type==='mount'?'召唤坐骑':state.rest?'休息恢复':'驻足休息',destination:activity.to?data.map?.find(node=>node.id===activity.to)?.name:null};
+ const activePet=!combat&&state.pet?.hp>0?state.pet:!combat&&state.hunterPet?{...state.hunterPet,hp:state.hunterPet.hp||1,maxHp:state.hunterPet.maxHp||1,kind:'beast'}:null;
+ return {combat,ghost,moving,flying,mountDisplayId,flightProgress,pet:activePet?{entry:activePet.entry,name:activePet.name,kind:activePet.kind,hp:activePet.hp,maxHp:activePet.maxHp}:null,animation:ghost?'Run':dead?'Death':flying?'Fly':moving?'Run':'Stand',label:combat?'战斗中':ghost?'灵魂形态 · 跑尸中':dead?'已倒下':flying?flightMount.name+'飞行':moving?(mountDisplayId?'骑乘赶路':'奔跑赶路'):mountDisplayId?'骑乘待命':activity.type==='mount'?'召唤坐骑':state.rest?'休息恢复':'驻足休息',destination:activity.to?data.map?.find(node=>node.id===activity.to)?.name:null};
 }
 export function worldScenery(location){
  const region=location?.region||'';

@@ -23,7 +23,7 @@ export function localInteractions(s,quests){
   }
  }
  if(!s.dungeon)for(const id of locals.get(s.location)||[]){
-  if(flightNodes.includes(s.location)&&/Gryphon Master|Wind Rider Master|Bat Handler|Hippogryph Master/.test(creatures[id]?.SubName||''))role(get('creature',id),'flight');
+  if(flightNodes.includes(s.location)&&(creatures[id]?.NpcFlags&8))role(get('creature',id),'flight');
   if(vendors.has(id)){const npc=get('creature',id);role(npc,'shop');npc.stockIds=vendors.get(id);}
   if((creatures[id]?.NpcFlags&128))role(get('creature',id),'inn');
   if(canTrainAt(s)&&creatures[id]?.TrainerClass===s.classId&&/Trainer/.test(creatures[id]?.SubName||''))role(get('creature',id),'trainer');

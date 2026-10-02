@@ -34,6 +34,12 @@ function ClassicPlayerFrame({state,data,playback,contentVersion,onOpen}:{state:a
  const resource=d.resource||{name:'法力',value:s.mana,max:d.stats.maxMana};
  return <button className="cu-player" onClick={onOpen} aria-label="查看角色"><span className="cu-portrait cu-class-portrait"><ClassIcon classId={s.classId} size="100%"/><b>{s.level}</b></span><span className="cu-player-bars"><strong><span>{s.name}</span><small>{d.raceName} · {d.className}</small></strong><Vital label="生命" value={s.hp} max={d.stats.maxHp}/>{resource.max>0&&<Vital label={resource.name} value={resource.value} max={resource.max} tone={resource.name==='怒气'?'rage':resource.name==='能量'?'energy':'mana'}/>}</span></button>;
 }
+function ClassicPetFrame({state,data,playback,contentVersion}:{state:any;data:any;playback:any;contentVersion?:string}){
+ const {state:s}=useLivePlayerVitals(state,data,playback,contentVersion),pet=s.pet||s.hunterPet;
+ if(!pet)return null;
+ const hp=pet.hp??pet.maxHp??1,maxHp=pet.maxHp||1;
+ return <div className="cu-pet-frame" aria-label={`宠物 ${pet.name||'宠物'}，生命 ${Math.round(hp)} / ${Math.round(maxHp)}`}><span className="cu-pet-portrait">🐾</span><span className="cu-pet-bars"><strong>{pet.name||'宠物'}</strong><Vital label="生命" value={hp} max={maxHp}/></span></div>;
+}
 type Props=GameProps&{canLead:boolean;panel:string|null;onPanelChange:(panel:string|null)=>void;renderPanel:(panel:string)=>ReactNode;onStyleChange:()=>void;onObserve:()=>void;modalBattleOpen:boolean;overview:ReactNode;status:ReactNode;utilities:ReactNode;activityLabel:string};
 export default function ClassicGame(props:Props){
  const {state:s,data:d,busy,send,panel,onPanelChange,onStyleChange,onObserve,renderPanel,status,utilities,activityLabel}=props;
@@ -85,6 +91,7 @@ export default function ClassicGame(props:Props){
    <div className="cu-player-hud">
    <ClassicPlayerFrame state={s} data={d} playback={props.playback} contentVersion={props.contentVersion} onOpen={()=>open('character')}/>
    <BuffBar state={s} data={d} playback={props.playback} contentVersion={props.contentVersion} classic/>
+   <ClassicPetFrame state={s} data={d} playback={props.playback} contentVersion={props.contentVersion}/>
    </div>
    <div className="cu-zone-title"><small>{battling?'战斗中':travelling?`${presentation.region} · 旅途中`:presentation.region}</small><h1>{presentation.name}{travelling?'附近':''}</h1><p>{destination?`前往 ${destination}`:s.activity.reason||instanceStatus||activityLabel}</p></div>
    {s.hp<=0&&!battling&&<button className="cu-corpse-run" disabled={busy||s.activity.type==='revive'||!!instance&&(!props.canLead||!!actions?.revive.disabled)} onClick={()=>void send(actions?.revive.command||{type:'revive'})}><Icon name="spell_holy_resurrection"/><span>{s.activity.type==='revive'?'跑尸中…':actions?.revive.label==='全团复活'?'全团复活':'释放灵魂 · 跑尸'}</span></button>}

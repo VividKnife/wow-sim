@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "referenceCommit": "d2d43b9041768603a0c52b8ce55c64b2a03fb6a2",
-  "contentHash": "09910c772ba29cbbc60e5f072c4de97b39620856b3073717dae166083022c30c",
-  "capturedRuleset": "owned-v1:4ec392b08074d6205cec04a5f7bf94fddeff72f764af6d52fd4404b96ffc5545",
-  "reviewReason": "Reviewed public NPC ownership and persistent progression refactor; personal worlds no longer schedule private NPC growth, while public activity is transactionally accounted outside deterministic combat simulation.",
+  "contentHash": "e1a06cf812b7496f3d03bb2fee4c989c434af3941cd2209e4aefdbd10f961e90",
+  "capturedRuleset": "owned-v1:7a2fe3a6e49ff9ebc2476f668897fb8e87e9a39844ca87c86e8013a2322fbaf7",
+  "reviewReason": "Reviewed city, mount, flight-point, boost-pool, and world presentation updates; refreshed deterministic current scenarios against the generated content manifest.",
   "sampleMs": 50,
   "durationMs": 15000,
   "referenceSummaryMatches": {

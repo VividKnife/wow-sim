@@ -247,7 +247,7 @@ export const monsterIdsAt=node=>[...(monstersByNode.get(node)||[])];
 export const trainerNodes=['northshire','goldshire','magetower',...Object.keys(classTravelNodes),...worldNodes.filter(n=>n.kind==='town'||n.kind==='city').map(n=>n.id)];
 export const flightNodes=['stormwind','sentinel',...worldFlightNodes];
 export const flights=[{a:'stormwind',b:'sentinel',duration:fasterTravelDuration(78000),cost:110,status:'estimated flight time; reference base cost'}];
-for(const capital of capitals)for(const id of flightNodes){const n=nodes[id];if(id===capital.id||n.map!==capital.map||n.faction!==capital.faction&&n.faction!=='Contested'||flights.some(f=>f.a===capital.id&&f.b===id))continue;flights.push({a:capital.id,b:id,duration:Math.max(30000,Math.ceil(Math.hypot(n.x-capital.x,n.y-capital.y)/32*1000)),cost:Math.max(10,n.min*10),faction:capital.faction,status:'adapted flight route'});}
+for(const capital of capitals)for(const id of flightNodes){const origin={darnassus:'ruttheran',orgrimmar:'orgrimmar-district-1'}[capital.id]||capital.id,n=nodes[id];if(id===origin||n.map!==capital.map||n.faction!==capital.faction&&n.faction!=='Contested'||flights.some(f=>f.a===origin&&f.b===id))continue;flights.push({a:origin,b:id,duration:Math.max(30000,Math.ceil(Math.hypot(n.x-capital.x,n.y-capital.y)/32*1000)),cost:Math.max(10,n.min*10),faction:capital.faction,status:'adapted flight route'});}
 const routeCache=new Map();
 const adjacent=groupRows(edges.flatMap(e=>[{node:e.a,edge:e},{node:e.b,edge:e}]),e=>e.node);
 export function route(from,to,speed=baseTravelSpeed){

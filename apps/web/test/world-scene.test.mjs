@@ -22,6 +22,14 @@ test('combat and death override stale travel and mounted state',()=>{
  assert.equal(dead.animation,'Death');assert.equal(dead.moving,false);assert.equal(dead.mountDisplayId,0);
  assert.equal(worldSceneState({...stale,combat:null,activity:{type:'idle'}},data).animation,'Stand');
 });
+test('active pets remain visible outside combat and expose model data plus a health fallback',()=>{
+ const hunter={...player,hunterPet:{entry:299,name:'森林狼',level:10}};
+ const scene=worldSceneState(hunter,data);
+ assert.deepEqual(scene.pet,{entry:299,name:'森林狼',kind:'beast',hp:1,maxHp:1});
+ assert.equal(worldSceneState({...hunter,combat:{id:'fight'}},data).pet,null);
+ const warlock=worldSceneState({...player,pet:{entry:416,kind:'voidwalker',name:'虚空行者',hp:40,maxHp:80}},data);
+ assert.deepEqual(warlock.pet,{entry:416,name:'虚空行者',kind:'voidwalker',hp:40,maxHp:80});
+});
 test('flight never plays a ground-running horse animation',()=>{
  const scene=worldSceneState({...player,mounted:900020,activity:{type:'travel',flight:true}},data);
  assert.equal(scene.flying,true);assert.equal(scene.animation,'Fly');assert.equal(scene.mountDisplayId,1149);

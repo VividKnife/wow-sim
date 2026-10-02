@@ -44,7 +44,7 @@ const regions=[
  ['hillsbrad','希尔斯布莱德丘陵',0,20,30,'Contested',[
   ['southshore','南海镇',-840,-530,'town'],['tarren-mill','塔伦米尔',0,-940,'town'],['hillsbrad-fields','希尔斯布莱德农场',-490,0],['azurelode','碧玉矿洞',-870,120],['durnholde','敦霍尔德城堡',-520,-1400],['eastern-strand','东部海岸',-1100,-1100]]],
  ['thousand-needles','千针石林',1,25,35,'Contested',[
-  ['freewind','乱风岗',-5480,-2430,'town'],['great-lift','升降梯',-4650,-1840],['darkcloud','黑云峰',-5000,-1700],['highperch','风巢',-5050,-950],['shimmering-flats','闪光平原',-6200,-3900],['mirage-raceway','沙漠赛道',-6200,-4500,'town']]],
+  ['freewind','乱风岗',-5480,-2430,'town'],['great-lift','升降梯',-4650,-1840],['darkcloud','黑云峰',-5000,-1700],['highperch','风巢',-5050,-950],['thalanaar','塔兰纳尔',-4490,-780,'town'],['shimmering-flats','闪光平原',-6200,-3900],['mirage-raceway','沙漠赛道',-6200,-4500,'town']]],
  ['arathi','阿拉希高地',0,30,40,'Contested',[
   ['refuge-pointe','避难谷地',-1260,-2520,'town'],['hammerfall','落锤镇',-930,-3530,'town'],['stromgarde','激流堡',-1680,-1800],['boulderfist','石拳大厅',-1950,-2800],['circle-binding','禁锢法阵',-850,-2200],['faldirs','法迪尔海湾',-2130,-2000]]],
  ['desolace','凄凉之地',1,30,40,'Contested',[
@@ -85,7 +85,7 @@ const districtNames={ironforge:['平民区','大锻炉','探险者大厅'],darna
 const districtPoints={ironforge:[[29,63],[48,44],[70,23]],darnassus:[[62,70],[60,18],[35,16]],orgrimmar:[[51,68],[76,25],[37,38]],thunderbluff:[[47,46],[56,82],[76,30]],undercity:[[66,43],[47,27],[81,26]]};
 for(const c of capitals.filter(c=>c.id!=='stormwind'))for(let i=0;i<3;i++){
  const id=i?`${c.id}-district-${i}`:c.id;
- capitalDistricts.push({id,city:c.id,name:districtNames[c.id][i],subtitle:c.name,description:`${c.name}的${districtNames[c.id][i]}，在这里整顿装备、学习技艺并准备下一段旅程。`,point:districtPoints[c.id][i],services:i===0?['bank','auction','shop','inn','flight','quests']:['trainer','professions','shop','quests'],classes:i===0?[]:[1,2,3,4,5,7,8,9,11]});
+ capitalDistricts.push({id,city:c.id,name:districtNames[c.id][i],subtitle:c.name,description:`${c.name}的${districtNames[c.id][i]}，在这里整顿装备、学习技艺并准备下一段旅程。`,point:districtPoints[c.id][i],services:i===0?['bank','auction','shop','inn',...(['darnassus','orgrimmar'].includes(c.id)?[]:['flight']),'quests']:['trainer','professions','shop',...(c.id==='orgrimmar'&&i===1?['flight']:[]),'quests'],classes:i===0?[]:[1,2,3,4,5,7,8,9,11]});
  if(i)worldNodes.push({...c,id,name:districtNames[c.id][i],region:c.name,kind:'city',min:1,max:60,x:c.x+i*90,y:c.y+i*100});
 }
 worldNodes.push({id:'moonglade',name:'月光林地',region:'月光林地',map:1,x:7965,y:-2490,min:10,max:60,kind:'town',faction:'Contested'});
@@ -94,7 +94,7 @@ worldNodes.push({id:'molten-core',name:'熔火之心',region:'灼热峡谷',map:
 const allianceTowns=['astranaar','stonetalon-peak','nijels','southshore','refuge-pointe','theramore','feathermoon','aerie-peak','rebel-camp'];
 const hordeTowns=['sun-rock','splintertree','zoram','tarren-mill','hammerfall','shadowprey','gromgol','kargath','stonard','brackenwall','freewind','camp-mojache','revantusk'];
 for(const n of worldNodes){if(allianceTowns.includes(n.id))n.faction='Alliance';if(hordeTowns.includes(n.id))n.faction='Horde';if(n.id==='ratchet')n.faction='Contested';}
-export const worldFlightNodes=['ironforge','thelsamar','lakeshire','darkshire','menethil','southshore','refuge-pointe','aerie-peak','booty-bay','tarren-mill','sepulcher','undercity','hammerfall','kargath','gromgol','stonard','darnassus','auberdine','astranaar','stonetalon-peak','nijels','feathermoon','theramore','orgrimmar','crossroads','ratchet','camp-taurajo','thunderbluff','sun-rock','splintertree','zoram','shadowprey','freewind','brackenwall','camp-mojache','gadgetzan','revantusk'];
+export const worldFlightNodes=['ironforge','thelsamar','lakeshire','darkshire','menethil','southshore','refuge-pointe','aerie-peak','booty-bay','tarren-mill','sepulcher','undercity','hammerfall','kargath','gromgol','stonard','ruttheran','auberdine','astranaar','stonetalon-peak','nijels','feathermoon','theramore','orgrimmar-district-1','crossroads','ratchet','camp-taurajo','thunderbluff','sun-rock','splintertree','zoram','shadowprey','freewind','thalanaar','brackenwall','camp-mojache','gadgetzan','revantusk','moonglade'];
 export const worldRoads=regions.flatMap(([, , , , , ,places])=>places.slice(1).map((p,i)=>[places[i][0],p[0]]));
 // Region lists describe content, not a walkable itinerary. Connect each place
 // to nearby places so a short local trip does not loop through distant entries.
