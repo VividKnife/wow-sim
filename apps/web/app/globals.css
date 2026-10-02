@@ -63,3 +63,5 @@
 .main-nav [data-slot=tabs-trigger]:disabled{color:#858585;opacity:.45;filter:grayscale(1);cursor:not-allowed;}
 
 .quest-entry summary strong.quest-low-level-title{color:var(--green)}
+
+.hud-pet-vital{display:grid;gap:3px;margin-top:3px;padding-top:3px;border-top:1px solid #52604a;color:#aeca8b;font-size:10px}.hud-pet-vital .resource{height:18px}.hud-pet-vital .resource>span{font-size:10px;padding:1px 6px}.hud-pet-vital .resource>div{background:linear-gradient(#8fae55,#456c2b)}

@@ -23,7 +23,7 @@ export const endgameRegions=[
   ['cenarion-hold','塞纳里奥要塞',-6810,840,'town'],['valor-rest','勇士之墓',-6370,-290],['hive-ashi','亚什虫巢',-6550,780],['hive-zora','佐拉虫巢',-7200,1450],['hive-regal','雷戈虫巢',-7900,700],['twilight-base','暮光营地',-7000,1150],['crystal-vale','水晶谷',-6280,1700]]],
 ];
 export const endgameRoads=[['kargath','thorium-point'],['thorium-point','blackrock-mountain'],['blackrock-mountain','flame-crest'],['lakeshire','morgans-vigil'],['stonard','nethergarde'],['chillwind','chillwind-camp'],['brill','bulwark'],['gahrrons','thondroril'],['razor-hill','talrendis'],['astranaar','emerald-sanctuary'],['timbermaw-hold','moonglade'],['timbermaw-hold','hot-springs'],['gadgetzan','ungoro-east'],['marshals-refuge','valor-rest']];
-export const endgameFlights=['thorium-point','morgans-vigil','flame-crest','nethergarde','chillwind-camp','bulwark','lights-hope','talrendis','valormok','emerald-sanctuary','bloodvenom-post','talonbranch','everlook','marshals-refuge','cenarion-hold'];
+export const endgameFlights=['thorium-point','morgans-vigil','flame-crest','nethergarde','chillwind-camp','lights-hope','talrendis','valormok','bloodvenom-post','talonbranch','everlook','marshals-refuge','cenarion-hold'];
 export const endgameDungeons=[
  ['zul-farrak',209,'gadgetzan',35,44,54,'祖尔法拉克'],
  ['maraudon-purple',349,'gelkis',30,45,52,'玛拉顿·紫色水晶'],['maraudon-orange',349,'gelkis',30,45,52,'玛拉顿·橙色水晶'],['maraudon-inner',349,'gelkis',30,48,55,'玛拉顿·内殿'],

@@ -30,6 +30,7 @@
 .cu-vital.mana{height:14px;margin-top:2px}
 .cu-vital.mana>i{background:linear-gradient(#519ddd,#245a9b 48%,#173b73 52%,#2762aa)}
 .cu-vital.mana>span{line-height:12px;font-size:9px}
+.cu-pet-vital{display:block;margin-top:3px;border-top:1px solid #5d674d;padding-top:2px}.cu-pet-name{display:block;color:#b9d78d;font-size:9px;line-height:12px}.cu-pet-vital .cu-vital{height:12px}.cu-pet-vital .cu-vital>span{line-height:10px;font-size:8px}.cu-pet-vital .cu-vital>i{background:linear-gradient(#a7c866,#587c32 48%,#36521f 52%,#648e38)}
 .cu-zone-title{position:absolute;top:49px;left:50%;transform:translateX(-50%);text-align:center;z-index:2;width:40%;text-shadow:0 2px 10px #172011,1px 2px 3px #172011}
 .cu-zone-title>small{font:10px Georgia,serif;letter-spacing:5px;color:#decfa4}
 .cu-zone-title h1{font:normal 32px Georgia,'Songti SC','SimSun',serif;letter-spacing:7px;margin:7px 0 8px;color:#f4dc9a}
@@ -306,12 +307,15 @@ body:has(.classic-game-root) .battle-effects-control{display:none}
 
 /* Keep mobile auras attached to the player frame as its height changes. */
 .cu-player-hud{display:contents}
+.cu-pet-frame{display:flex;align-items:center;gap:6px;width:190px;margin-top:5px;padding:4px 6px 4px 4px;border:2px ridge #766f5b;border-radius:0 4px 4px 0;background:#151915e8;color:#e6d7b0;filter:drop-shadow(0 3px 3px #0009)}.cu-pet-portrait{display:grid;place-items:center;flex:0 0 28px;height:28px;border:1px solid #a89468;border-radius:50%;background:#20281c;font-size:16px}.cu-pet-bars{min-width:0;flex:1}.cu-pet-bars strong{display:block;font-size:10px;font-weight:400;color:#b9d78d;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cu-pet-bars .cu-vital{height:12px}.cu-pet-bars .cu-vital>span{line-height:10px;font-size:8px}.cu-pet-bars .cu-vital>i{background:linear-gradient(#a7c866,#587c32 48%,#36521f 52%,#648e38)}
 @media(max-width:800px){
  .cu-player-hud{display:block;position:absolute;top:40px;left:13px;width:220px;z-index:4}
  .classic-game .cu-player-hud .cu-player{position:static;width:100%}
+ .classic-game .cu-player-hud .cu-pet-frame{width:175px;margin-left:39px}
  .classic-game .cu-viewport:has(.cu-buffs) .cu-zone-title{top:192px}
+ .classic-game .cu-viewport:has(.cu-pet-frame) .cu-zone-title{top:226px}
 }
-@media(max-width:380px){.cu-player-hud{width:195px}}
+@media(max-width:380px){.cu-player-hud{width:195px}.classic-game .cu-player-hud .cu-pet-frame{width:158px;margin-left:34px}}
 
 /* Recovery controls remain reachable on narrow screens. */
 .cu-actions{max-width:calc(100% - 24px);flex-wrap:wrap;justify-content:center;width:max-content}

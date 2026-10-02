@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "09910c772ba29cbbc60e5f072c4de97b39620856b3073717dae166083022c30c",
+  "contentVersion": "e1a06cf812b7496f3d03bb2fee4c989c434af3941cd2209e4aefdbd10f961e90",
   "bundles": {
     "boss-rooms.json": {
       "sha256": "a0879292bd1f5a35ec45618d75a23f0472df8576eaf9db205f7de9609a8dad61",
@@ -231,11 +231,11 @@
       "bytes": 316513
     },
     "runtime/catalog.json": {
-      "sha256": "08f1fe1db0be9cd61f23b4467da3d1ecf0bdab5915226d22dd692df32a8043a3",
-      "bytes": 49766233
+      "sha256": "23c37d7dd05660aa029766bf57b1eddb7151ed27f1b77037a9a2fcfbb44fbcef",
+      "bytes": 49771773
     },
     "runtime/version.json": {
-      "sha256": "673678b4d7d33572857a30ee39335b478fe086556194f67771aee0e5c42cb1e9",
+      "sha256": "58a01e6146a9cba0c43287f50dc8692d1a1fe06d0a3ca6177792bf6d480392ad",
       "bytes": 79
     }
   },
@@ -281,8 +281,8 @@
       "bytes": 17979
     },
     "../game-domain/src/rules/boost.js": {
-      "sha256": "1322de2afcf38ea58a96ac1405ed90bc3f88e75ad30e805ce9879ef29a5cce77",
-      "bytes": 4233
+      "sha256": "b1f841fe9d403b2e176be87cc6b7ebde33af22a773361ff7789efb8445545a33",
+      "bytes": 4230
     },
     "../game-domain/src/rules/bot-context.js": {
       "sha256": "e044c3e1d19838c31c791dae156e1d5f8cef7783dcc8410a33151a2db6e27adf",
@@ -317,8 +317,8 @@
       "bytes": 4726
     },
     "../game-domain/src/rules/city.js": {
-      "sha256": "9d58da796a93844d21e02ccaf730f259c1b179905822143f910fb92bd564331a",
-      "bytes": 2952
+      "sha256": "2c9afc162f50e6b1a6fbba95f3497df73f76d13544b1f3baeb9cd9088b1bc25e",
+      "bytes": 3212
     },
     "../game-domain/src/rules/class-acquisition.js": {
       "sha256": "e30d786f08803cc5d38564242f7d585456e720441a956a4c288999782b960512",
@@ -533,8 +533,8 @@
       "bytes": 1804
     },
     "../game-domain/src/rules/gold-raid-npcs.js": {
-      "sha256": "41e5e4b0ac15752835f1ce0aa7ee2f7e147f5a2a5d14559d392c7c9080918625",
-      "bytes": 7805
+      "sha256": "13774580270564f67219376bb200272cebf83dc4d129e01757228e49c2158521",
+      "bytes": 7780
     },
     "../game-domain/src/rules/gold-raid-reagents.js": {
       "sha256": "8dc4daba1ed8ee95961384a55dcb3ede34061c56761e685e34eadc8fa1f9c4b7",
@@ -569,8 +569,8 @@
       "bytes": 3828
     },
     "../game-domain/src/rules/interactions.js": {
-      "sha256": "8563a180337beb885c9632c306afdfd2b4b136a8b471b1922c993827f728854d",
-      "bytes": 2939
+      "sha256": "22fe27908e63a0dd00ea4fb017acc591cc2c3769e8c94e8560c183b7be4ef105",
+      "bytes": 2869
     },
     "../game-domain/src/rules/inventory.js": {
       "sha256": "94ad0aa8f2268cfd8b29638fdfd01df753b43143cf797fad701a6aa36763ac8f",
@@ -633,8 +633,8 @@
       "bytes": 2496
     },
     "../game-domain/src/rules/mounts.js": {
-      "sha256": "ee7d81f8b19c2a9f1b8dc76c983587a64d8b9df2e74d4123a1280040206ccb64",
-      "bytes": 7663
+      "sha256": "dbf098b5540685abdc24a0d6880c9a56c5c32929a3f65062bd9d5b855452e2e7",
+      "bytes": 7658
     },
     "../game-domain/src/rules/navigation.js": {
       "sha256": "3a17710aa888ccfdb8a4f16c0333b32d510db84110fa9f7ec07b326f4ba950ee",
@@ -1017,12 +1017,12 @@
       "bytes": 3530
     },
     "world-content.js": {
-      "sha256": "1e7d6404965fdd59bd838c31d0caee42bcba7b6e626916d948bb9e1431b2c03c",
-      "bytes": 16217
+      "sha256": "00f304835ce3b0af2d932a5dd78fce61cbf9bd45a94cc4afe190f44656aa69ab",
+      "bytes": 16395
     },
     "world-endgame.js": {
-      "sha256": "f1fba307dcc6560330a966d2447520e6b78c4836296e80da8cf57bb7c313ec07",
-      "bytes": 5778
+      "sha256": "26579ef54f37a5b69228261ce41080946e68df7c709bfaba177d50a19d1f9e43",
+      "bytes": 5748
     },
     "world-quest-content.js": {
       "sha256": "845ce0909c9879b76f34031e8a5ab59715472920fac7519ea0bd6dcad3227d2e",

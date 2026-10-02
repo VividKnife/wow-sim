@@ -8,7 +8,7 @@ import {enterGoldRaid,goldRaidAction,goldAuctionStep,finishGoldRun,leaveGoldRaid
 import {strategyAllows} from '../src/rules/combat-strategy.js';
 import {combatRole} from '../src/rules/combat-roles.js';
 import {ensureNpcWorld} from '../src/rules/npc-world.js';
-import {GOLD,npcPriceLimit} from '../src/rules/gold-raid-npcs.js';
+import {GOLD,npcPriceLimit,goldNpcView,createGoldApplicants} from '../src/rules/gold-raid-npcs.js';
 import {items} from '../src/rules/catalog.js';
 import {MemoryStore} from '../../persistence/src/memory.ts';
 import {GameService} from '../src/service.ts';
@@ -30,6 +30,14 @@ test('raid-ready creates a single hero, while the finder supplies independent pu
  await new SocialService(service.store,()=>100000).supply(save.id,snapshot.state.id);
  const npcs=await service.store.read(tx=>tx.list('npc_characters'));assert.equal(npcs.length,10);assert.ok(npcs.every(n=>n.accountId===null&&n.realm==='public'));
  assert.equal((await service.snapshot(save.id)).state.npcWorld,undefined);
+});
+
+test('gold recruitment presentation uses the inviting player friendship snapshot',()=>{
+ const s=fixture(false),friendId=s.goldRaid.applicants[0].id;
+ s.npcFriendIds=[friendId];
+ const applicants=createGoldApplicants(s);
+ assert.equal(goldNpcView(applicants.find((c:Rules)=>c.id===friendId)).friend,true);
+ assert.equal(goldNpcView(applicants.find((c:Rules)=>c.id!==friendId)).friend,false);
 });
 
 test('all recruitment preferences select unique persistent residents with complete roles and mechanism coverage',()=>{

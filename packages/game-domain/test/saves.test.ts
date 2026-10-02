@@ -106,6 +106,10 @@ test('invalid boost and race/class combinations do not leave partial saves',asyn
  const service=setup();
  await assert.rejects(service.createSave('alice',{...input,boost:'yes' as any},'bad-boost'));
  await assert.rejects(service.createSave('alice',{...input,classId:2,raceId:2},'bad-race'));
+ await assert.rejects(service.createSave('alice',{...input,raidReady:'yes' as any},'bad-raid-option'));
+ await assert.rejects(service.createSave('alice',{...input,raidReady:true,boost:true},'both-boosts'),/不能同时/);
+ await assert.rejects(service.createSave('alice',{...input,raidReady:true,classId:1},'wrong-raid-class'),/人类法师/);
+ await assert.rejects(service.createSave('alice',{...input,raidReady:true,raceId:7},'wrong-raid-race'),/人类法师/);
  assert.deepEqual(await service.listSaves('alice'),[]);
 });
 test('character gender is validated, persisted and returned in save summaries',async()=>{
