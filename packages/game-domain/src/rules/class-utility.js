@@ -34,7 +34,9 @@ const friendlyChannels=new Set(['Mend Pet','Health Funnel','Tranquility','Evocat
 const petChannels=new Set(['Mend Pet','Health Funnel']);
 const pool=sp=>[4294967294,-2].includes(sp.PowerType)?'hp':sp.PowerType===1?'rage':sp.PowerType===3?'energy':'mana';
 export function classUtilityUse(s,id,targetId){
- const sp=spellInfo(s,id);if(!sp)return null;targetId??=petChannels.has(sp.SpellName)?s.pet?.id:s.id;
+ const sp=spellInfo(s,id);if(!sp)return null;
+ // Revive Pet acts on the hunter's owned pet, regardless of the selected UI target.
+ targetId=sp.SpellName==='Revive Pet'?s.id:targetId??(petChannels.has(sp.SpellName)?s.pet?.id:s.id);
  if(sp.SpellName==='Tame Beast'){
   const fallback=targetId===s.id&&!s.combat?monsterIdsAt(s.location).find(id=>creatures[id]?.CreatureType===1):null;
   const resolvedTargetId=fallback?`npc:${fallback}`:targetId;

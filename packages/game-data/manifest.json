@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "e1a06cf812b7496f3d03bb2fee4c989c434af3941cd2209e4aefdbd10f961e90",
+  "contentVersion": "965e90f6f1d1cf8552da02d6b2e4d1a22c5418300b7e81259b2fb3d38518408b",
   "bundles": {
     "boss-rooms.json": {
       "sha256": "a0879292bd1f5a35ec45618d75a23f0472df8576eaf9db205f7de9609a8dad61",
@@ -235,7 +235,7 @@
       "bytes": 49771773
     },
     "runtime/version.json": {
-      "sha256": "58a01e6146a9cba0c43287f50dc8692d1a1fe06d0a3ca6177792bf6d480392ad",
+      "sha256": "344b4d0af925c1002146134408ab3ae977ed38720678fe3c08db5cf258a237e8",
       "bytes": 79
     }
   },
@@ -361,8 +361,8 @@
       "bytes": 3462
     },
     "../game-domain/src/rules/class-utility.js": {
-      "sha256": "18672751a8970a2d15db7a4f86baaa00d4953ea5475cc16236f2f96a2c7c07e7",
-      "bytes": 13655
+      "sha256": "e3e337e314927f8e1ec3be772b32fbd1ae50564127c38a0e3922cc5e4fe73ba9",
+      "bytes": 13785
     },
     "../game-domain/src/rules/client-content.js": {
       "sha256": "f318d6e77dd8bb88358ea4ec1ea2ef4893e98a910067713540905428c6086ba1",
