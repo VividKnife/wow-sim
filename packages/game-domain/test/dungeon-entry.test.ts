@@ -63,7 +63,7 @@ test('the binding transaction checks live roster, roles, private controller acco
     (c:typeof f.checkpoint)=>{c.state.party[0].id='outsider';},
     (c:typeof f.checkpoint)=>{c.controllers[1].accountId='alice';},
     (c:typeof f.checkpoint)=>{c.state.dungeon.id='wailingCaverns';},
-    (c:typeof f.checkpoint)=>{c.state.party[0].level=40;},
+    (c:typeof f.checkpoint)=>{c.state.party[0].level=1;},
     (c:typeof f.checkpoint)=>{c.state.classId=8;},
   ];
   for(const mutate of mutations){
@@ -84,4 +84,12 @@ test('a timed-out matching proposal cannot be turned into an entry authorization
   await assert.rejects(f.command('alice',{type:'proposal',proposalId:f.proposal.id,accept:true}),/失效/);
   await f.social.snapshot('alice','alice');
   await assert.rejects(f.store.transaction(tx=>authorizeDungeonEntry(tx,f.request)),/匹配队伍已改变/);
+});
+
+test('human level differences do not block durable authorization or live entry',async()=>{
+ const f=await fixture();await f.accept();
+ await f.store.transaction(async tx=>{const row=(await tx.get('characters','bob'))!;row.rules.level=60;await tx.put('characters',row);});
+ f.checkpoint.state.party[0].level=60;
+ for(const actorId of ['alice','bob','carol','dave','eve'])await f.store.transaction(tx=>requestDungeonEntry(tx,{...f.request,accountId:actorId,actorId}));
+ await f.store.transaction(tx=>bindDungeonEntry(tx,f.request,f.checkpoint,100000,null));
 });

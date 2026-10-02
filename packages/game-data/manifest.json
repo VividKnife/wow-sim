@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "contentVersion": "58c9e657a56fde50ab6d5840617487f12811399b68069245934fa7705f3ca828",
+  "contentVersion": "09910c772ba29cbbc60e5f072c4de97b39620856b3073717dae166083022c30c",
   "bundles": {
     "boss-rooms.json": {
       "sha256": "a0879292bd1f5a35ec45618d75a23f0472df8576eaf9db205f7de9609a8dad61",
@@ -235,7 +235,7 @@
       "bytes": 49766233
     },
     "runtime/version.json": {
-      "sha256": "8e5a9d296e28bd0ea6373d807e6794e3f205241c96d98c95a99cd045ed9605e1",
+      "sha256": "673678b4d7d33572857a30ee39335b478fe086556194f67771aee0e5c42cb1e9",
       "bytes": 79
     }
   },
@@ -309,8 +309,8 @@
       "bytes": 3809
     },
     "../game-domain/src/rules/character.js": {
-      "sha256": "55019db1863878752f51ebbf3f4c5eb52843550b643797bd2c2b02845300b9c6",
-      "bytes": 27836
+      "sha256": "9b2646ebbb8a354f17f34fba6cd41c660cd41be376690645d355c76fdc8103ab",
+      "bytes": 28110
     },
     "../game-domain/src/rules/city-data.js": {
       "sha256": "cfb2ef767f0c5accf3e94099b33984cada4ab90d37e940e149cf6ef084ca9932",
@@ -489,8 +489,8 @@
       "bytes": 8462
     },
     "../game-domain/src/rules/dungeon.js": {
-      "sha256": "cf1606a57b15ddbc5ab07248d820b09ecb760516707638fc324a11a0666b4da7",
-      "bytes": 16385
+      "sha256": "2c6ebe49a6b2c0862cbfa3c60bd5c4bb5435db62addb6309f27d295db05b2c4c",
+      "bytes": 16700
     },
     "../game-domain/src/rules/effect-source.js": {
       "sha256": "d2b96437bb7ae5323a19d6d25a8f5add7c271622f490a805c3d2ef0929f365e9",
@@ -517,8 +517,8 @@
       "bytes": 13702
     },
     "../game-domain/src/rules/engine.js": {
-      "sha256": "a13d339d2bed36b7be588bc1ed451a090f4887d585ea4876ba0c1b8a830c0577",
-      "bytes": 47462
+      "sha256": "42841d0957a24762c26dc1a1daa15a5306882637d8f7d23144a9483b756940bc",
+      "bytes": 47366
     },
     "../game-domain/src/rules/escort.js": {
       "sha256": "9ca668febef11d49b5233ad0dc0204114bb164aa9e02458e0159a466d5252dcb",
@@ -533,16 +533,16 @@
       "bytes": 1804
     },
     "../game-domain/src/rules/gold-raid-npcs.js": {
-      "sha256": "c06cc14903f41596b59e341f96f5ec6c5d379dd6e17764d1fb364c6c1ed55ce3",
-      "bytes": 7653
+      "sha256": "41e5e4b0ac15752835f1ce0aa7ee2f7e147f5a2a5d14559d392c7c9080918625",
+      "bytes": 7805
     },
     "../game-domain/src/rules/gold-raid-reagents.js": {
       "sha256": "8dc4daba1ed8ee95961384a55dcb3ede34061c56761e685e34eadc8fa1f9c4b7",
       "bytes": 2101
     },
     "../game-domain/src/rules/gold-raid.js": {
-      "sha256": "4ab55d7d479ab4c8120ce0298a3e5ee2b671be008b0cdc84f63594b7e2b0904c",
-      "bytes": 19895
+      "sha256": "7cf7add9730400d1ce38e19e801a958494f1e1972f34cb4ed3574e98715771c2",
+      "bytes": 20058
     },
     "../game-domain/src/rules/ground-events.js": {
       "sha256": "35183e099e06e32601ec87f7a610a0203cd3146e59595e542813dfafbf981359",
@@ -644,17 +644,29 @@
       "sha256": "9f477bf85ef5b02e2c6e0c6efc1d2c8ef7e026d44199137f323b2590c0fe525f",
       "bytes": 9388
     },
+    "../game-domain/src/rules/npc-economy.js": {
+      "sha256": "0c38520537c4e1f4966bbab21c3e7efbf9727a60e5ee6f26f9621b9b6f4f723a",
+      "bytes": 3484
+    },
     "../game-domain/src/rules/npc-equipment.js": {
       "sha256": "cf2e7239507aa7778ee8351fb0e7b758d609842d2c3a0fddbe905e891224cbc8",
       "bytes": 5937
+    },
+    "../game-domain/src/rules/npc-match-policy.js": {
+      "sha256": "1d1f04cfc67a0bce1ebf09242f6fb34b197e244256cf5b5cd227565db1c3a0d9",
+      "bytes": 520
+    },
+    "../game-domain/src/rules/npc-progression.js": {
+      "sha256": "53e23917ffdaa3612399393654bf820a100449d9a93dc2f5589bf1c73bbe9f40",
+      "bytes": 10668
     },
     "../game-domain/src/rules/npc-strategies.js": {
       "sha256": "047020a0529acc25f3052a533e14d6fdf8ea34e9db722499c914602260ba7804",
       "bytes": 10148
     },
     "../game-domain/src/rules/npc-world.js": {
-      "sha256": "56f6462820bf773c4f162a0d5bc3d10c50bb26babcd1b0988d499312957a80f3",
-      "bytes": 23392
+      "sha256": "312257fddde21d44ed8683c155fc9d7fdebbf31b33ad0336f9acf25e9a3ad21c",
+      "bytes": 13755
     },
     "../game-domain/src/rules/onyxia-content.js": {
       "sha256": "28ace5e0f73e376296cb281d47d18d703db6a529ec90c43eea2743c821fd85f8",
@@ -745,8 +757,8 @@
       "bytes": 2666
     },
     "../game-domain/src/rules/raid-consumables.js": {
-      "sha256": "77d95ae3872f07295e3bb47e58db3d7f72d42d9b207a4c031a40718cd9a7b819",
-      "bytes": 5035
+      "sha256": "cfb3d374d6e35c234579012c22981b7f4aa617ed5699543fe27ce01a974b4afd",
+      "bytes": 5111
     },
     "../game-domain/src/rules/raid-healing-policy.js": {
       "sha256": "7f00942f952b1f09c5f2c70f9c1f8990897bf3e421600d8797bc9c2ca263c994",

@@ -1,3 +1,5 @@
+import {loadNpcResident,persistNpcResident} from '../src/npc-characters.ts';
+import {SocialService} from '../src/social.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createMoltenCoreDemo} from '../src/molten-core-demo.ts';
@@ -20,17 +22,14 @@ function fixture(launch=true){
 }
 function eligible(s:Rules){for(const seat of s.goldRaid.seats)s.goldRaid.contributions[seat.id]={damage:100,healing:100,seconds:10,kills:1};}
 
-test('only NPC grouping and gold raids remain exposed; raid-ready owns a single hero',async()=>{
+test('raid-ready creates a single hero, while the finder supplies independent public assets',async()=>{
  const service=new GameService(new MemoryStore(),{contentVersion:'test',now:()=>100000,seed:()=>42});
  const save=await service.createSave('unified',{name:'团长',classId:8,raceId:1,raidReady:true},'save');
- const snapshot=await service.snapshot(save.id);assert.equal(snapshot.roster.length,1);assert.equal(snapshot.state!.npcWorld.residents.length,72);
- assert.ok(!('candidates' in view(snapshot.state)));assert.ok(!('guildRaid' in view(snapshot.state)));
- for(const type of ['recruit','createCompanion','hireMercenary','raidStart'])await assert.rejects(service.command(save.id,{type,id:'mage',classId:8,requestId:type}),/尚未支持/);
- await service.command(save.id,{type:'enterDungeon',contentId:'molten-core-gold',requestId:'enter'});
- for(const type of ['goldPublish','goldRecommend','goldLaunch'])await service.command(save.id,{type,requestId:type});
- const launched=await service.snapshot(save.id);assert.equal(launched.instance!.roster.length,40);assert.equal(launched.instance!.roster.filter(r=>r.controller==='npc').length,39);
- await service.command(save.id,{type:'goldSettle',requestId:'settle'});await service.command(save.id,{type:'leaveInstance',requestId:'leave'});
- for(const contentId of ['molten-core','onyxias-lair'])await assert.rejects(service.command(save.id,{type:'enterDungeon',contentId,requestId:contentId}),/未知的副本/);
+ const snapshot=await service.snapshot(save.id);assert.equal(snapshot.roster.length,1);assert.equal(snapshot.state.npcWorld,undefined);
+ assert.equal((await service.store.read(tx=>tx.list('npc_characters'))).length,0);
+ await new SocialService(service.store,()=>100000).supply(save.id,snapshot.state.id);
+ const npcs=await service.store.read(tx=>tx.list('npc_characters'));assert.equal(npcs.length,10);assert.ok(npcs.every(n=>n.accountId===null&&n.realm==='public'));
+ assert.equal((await service.snapshot(save.id)).state.npcWorld,undefined);
 });
 
 test('all recruitment preferences select unique persistent residents with complete roles and mechanism coverage',()=>{
@@ -94,28 +93,18 @@ test('raid damage waits for a living assigned tank, including the off-tank',()=>
 });
 
 
-test('service emergency exit settles committed NPC escrow, dividends and purchases after restart',async()=>{
- const store=new MemoryStore(),options={contentVersion:'test',now:()=>100000,seed:()=>42};let service=new GameService(store,options);
- const save=await service.createSave('escape',{name:'撤离团长',classId:8,raceId:1,raidReady:true},'save');
- await service.command(save.id,{type:'enterDungeon',contentId:'molten-core-gold',requestId:'enter'});
- for(const type of ['goldPublish','goldRecommend','goldLaunch'])await service.command(save.id,{type,requestId:type});
- const started=await service.snapshot(save.id);let npcId='',wallet=0;
- await store.transaction(async tx=>{
-  const instance:any=await tx.get('instances',started.instanceId!),s=instance.simulation;eligible(s);
-  const npc=s.party[0];npcId=npc.id;wallet=npc.money;npc.money-=10*GOLD;
-  npc.raidPendingEquipment=[{id:19147,uid:'paid-npc-ring',count:1,durability:0}];
-  s.goldRaid.auctions=[{leader:npc.id,price:10*GOLD}];s.goldRaid.pot=100*GOLD;
-  await service.persistInstance(tx,instance,100000,'committed-escape');
- });
- service=new GameService(store,options);
- const escaped=await service.command(save.id,{type:'unstuck',requestId:'escape'}),s=escaped.state;
- const resident=s.npcWorld.residents.find((p:Rules)=>p.id===npcId),payout=s.goldRaid.settlement.rows.find((r:Rules)=>r.id===npcId).total;
- assert.equal(resident.wallet,wallet+payout);
- assert.ok([...Object.values(resident.unit.equipment),...(resident.unit.raidCollection||[])].some((item:any)=>item.uid==='paid-npc-ring'));
- assert.equal(s.party.length,0);assert.equal(escaped.instanceId,null);
- const repeat=await service.command(save.id,{type:'unstuck',requestId:'escape'});assert.deepEqual(repeat.state.npcWorld,s.npcWorld);
+test('emergency settlement preserves public NPC escrow, dividends and equipment across asset reloads',async()=>{
+ const store=new MemoryStore(),s=fixture();eligible(s);const npc=s.party[0],id=npc.id,wallet=npc.money;
+ npc.money-=10*GOLD;npc.raidPendingEquipment=[{id:19147,uid:'paid-npc-ring',count:1,durability:0}];
+ s.goldRaid.auctions=[{leader:id,price:10*GOLD}];s.goldRaid.pot=100*GOLD;
+ emergencyGoldExit(s);const profile=s.npcWorld.residents.find((p:Rules)=>p.id===id);
+ await store.transaction(tx=>persistNpcResident(tx,profile,'emergency-settlement'));
+ const restored=await store.read(async tx=>loadNpcResident(tx,(await tx.get<any>('npc_characters',id))!));
+ const payout=s.goldRaid.settlement.rows.find((r:Rules)=>r.id===id).total;
+ assert.equal(restored.wallet,wallet+payout);assert.ok([...Object.values(restored.unit.equipment),...restored.unit.raidCollection].some((item:any)=>item.uid==='paid-npc-ring'));
+ const ledger=await store.read(tx=>tx.list('ledger'));emergencyGoldExit(s);
+ await store.transaction(tx=>persistNpcResident(tx,profile,'emergency-retry'));assert.deepEqual(await store.read(tx=>tx.list('ledger')),ledger);
 });
-
 
 test('NPC bids honor unique ownership including collections and pending combat purchases',()=>{
  const s=fixture(),npc=s.party.find((c:Rules)=>c.classId===8),item=items[18820];

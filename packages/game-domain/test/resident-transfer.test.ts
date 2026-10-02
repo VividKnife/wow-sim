@@ -1,3 +1,5 @@
+import {newResident} from '../src/rules/npc-world.js';
+import {persistNpcResident} from '../src/npc-characters.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PGlite} from '@electric-sql/pglite';
@@ -10,7 +12,6 @@ import {ResidentCharacters, type CharacterAdmission, type Residency} from '../sr
 import {GameService} from '../src/service.ts';
 import {context, persistCharacter} from '../src/context.ts';
 import type {Character,Rules} from '../src/model.ts';
-import {ensureNpcMatchSupply} from '../src/rules/npc-world.js';
 import {ResidentInstance, type InstanceCheckpoint} from '../../../apps/simulation-host/src/instance.ts';
 import {composeDungeonCheckpoint} from '../../../apps/simulation-host/src/dungeon-composition.ts';
 import {rebaseSimulation} from '../src/simulation-clock.ts';
@@ -36,9 +37,13 @@ for (const backend of ['memory','sql'] as const) test(`${backend}: sealed reside
       const created=await game.createAccount(accountId,{name:accountId,classId:8,raceId:1},'create');
       await store.transaction(async tx=>{
         const row=(await tx.get<Character>('characters',created.state.id))!,state=await context(tx,row,Date.now(),false);
-        state.level=20;ensureNpcMatchSupply(state);await persistCharacter(tx,row,state,state.wallAt,'supply:'+accountId);
+        state.level=20;await persistCharacter(tx,row,state,state.wallAt,'supply:'+accountId);
       });
       const admission=await characters.admission(accountId,created.state.id);
+      const index=admissions.length;
+      const profiles=[0,4,3].slice(0,index?1:2).map((n)=>newResident({id:'realm',level:20,raceId:1,clock:0,wallAt:Date.now(),location:'deadmines'},index*100+n,20));
+      admission.state.npcWorld={publicPool:true,residents:profiles,selection:[],autoLoot:false,board:{ids:[],shown:{},refreshAt:0,sequence:0}};
+      await store.transaction(async tx=>{for(const profile of profiles){await persistNpcResident(tx,profile,'seed:'+profile.id);await tx.insert('simulation_characters',{id:profile.id,accountId:null,instanceId:admission.instanceId});}});
       admissions.push(admission);
     }
     const owners=[],boundaryWall=Date.now();
@@ -53,7 +58,7 @@ for (const backend of ['memory','sql'] as const) test(`${backend}: sealed reside
       await repository.commit(owner,1,runtime.checkpoint());owner.commitSequence=1;owners.push(await repository.seal(owner,'join-party'));
     }
     const before=await store.read(async tx=>({claims:await tx.list('simulation_characters'),items:await tx.list('items'),wallets:await tx.list('wallets'),npcs:await tx.list('npc_characters')}));
-    assert.equal(before.claims.length,22);
+    assert.equal(before.claims.length,5);
     let fail=true,calls=0,omitNpc=false;
     const create:TransferBoundary<InstanceCheckpoint>=async(tx,{transferId,destinations:[destination],sources})=>{
       calls++;
@@ -74,7 +79,7 @@ for (const backend of ['memory','sql'] as const) test(`${backend}: sealed reside
     assert.equal(await store.read(tx=>tx.get('simulation_owners','shared:joined')),null);
     assert.equal((await characters.find('bob',admissions[1].state.id))!.instanceId,owners[1].id);
     fail=false;omitNpc=true;
-    await assert.rejects(repository.transfer('join-party',owners,['shared:joined'],create),/全部真人与 NPC/);
+    await assert.rejects(repository.transfer('join-party',owners,['shared:joined'],create),/未归属|全部真人与 NPC/);
     omitNpc=false;
     assert.deepEqual(await repository.transfer('join-party',owners,['shared:joined'],create),{instanceIds:['shared:joined'],duplicate:false});
     const callsAfterCommit=calls;
@@ -82,7 +87,7 @@ for (const backend of ['memory','sql'] as const) test(`${backend}: sealed reside
     await assert.rejects(repository.transfer('join-party',owners,['shared:different'],create),/reused/);
     const after=await store.read(async tx=>({claims:await tx.list('simulation_characters'),items:await tx.list('items'),wallets:await tx.list('wallets'),npcs:await tx.list('npc_characters')}));
     assert.deepEqual(after.items,before.items);assert.deepEqual(after.wallets,before.wallets);assert.deepEqual(after.npcs,before.npcs);
-    assert.equal(after.claims.length,22);assert.ok(after.claims.every(c=>c.instanceId==='shared:joined'));
+    assert.equal(after.claims.length,5);assert.ok(after.claims.every(c=>c.instanceId==='shared:joined'));
     for(const [i,owner]of owners.entries()){
       assert.equal(await store.read(tx=>tx.get('simulation_residencies',owner.id)),null);
       assert.equal((await characters.find(i?'bob':'alice',admissions[i].state.id))!.instanceId,'shared:joined');
@@ -103,7 +108,7 @@ for (const backend of ['memory','sql'] as const) test(`${backend}: sealed reside
     const restored=ResidentInstance.restore(loaded,recovered.epoch);
     await repository.commit(recovered,2,restored.checkpoint());
     assert.equal((await repository.load<InstanceCheckpoint>('shared:joined'))!.checkpoint.controllers.length,2);
-    assert.equal((await store.read(tx=>tx.list('simulation_characters',{instanceId:'shared:joined'}))).length,22);
+    assert.equal((await store.read(tx=>tx.list('simulation_characters',{instanceId:'shared:joined'}))).length,5);
     const activeNpcIds=new Set(loaded.state.party.filter((c:Rules)=>c.npcPlayer).map((c:Rules)=>c.id));
     const persistedNpcs=await store.read(tx=>tx.list('npc_characters'));
     assert.equal(activeNpcIds.size,3);
@@ -113,12 +118,12 @@ for (const backend of ['memory','sql'] as const) test(`${backend}: sealed reside
   } finally {await store.close();}
 });
 
-for(const backend of ['memory','sql'] as const)test(`${backend}: a shared residency partitions humans and their NPC identities exactly once without moving assets`,async()=>{
+for(const backend of ['memory','sql'] as const)test(`${backend}: a shared residency partitions human participants exactly once without moving assets`,async()=>{
  const raw:Store=backend==='memory'?new MemoryStore():new PostgresStore(pool(new PGlite()));
  if(raw instanceof PostgresStore)await raw.initialize();
  try{
   const {admission,participants}=await residentPartyFixture(raw,Date.now(),room=>{
-   for(const actor of [room,...room.party]){actor.level=20;ensureNpcMatchSupply(actor);}
+   for(const actor of [room,...room.party])actor.level=20;
   });
   const store=residentStore(raw),characters=new ResidentCharacters(store,{version:runtimeVersion});
   const repo=new SimulationRepository(store,Date.now,characters.commit);
@@ -127,7 +132,7 @@ for(const backend of ['memory','sql'] as const)test(`${backend}: a shared reside
   await repo.commit(owner,1,sourceRuntime.checkpoint());owner.commitSequence=1;owner=await repo.seal(owner,'split-residents');
   const source=owner;
   const before=await store.read(async tx=>({claims:await tx.list('simulation_characters'),items:await tx.list('items'),wallets:await tx.list('wallets'),npcs:await tx.list('npc_characters')}));
-  assert.equal(before.claims.length,22);
+  assert.equal(before.claims.length,2);
   const ids=['personal:alice-split','personal:bob-split'];
   let fault='';
   const create:TransferBoundary<InstanceCheckpoint>=async(tx,{destinations,sources,transferId})=>{
@@ -149,11 +154,9 @@ for(const backend of ['memory','sql'] as const)test(`${backend}: a shared reside
    if(fault==='foreign-controller'){
     const state=JSON.parse(rows[1].encodedAdmission);state.controllers[0].actorId=participants[0].characterId;rows[1].encodedAdmission=JSON.stringify(state);
    }
-   if(fault==='missing-npc'||fault==='duplicate-npc'||fault==='foreign-occupant'){
+   if(fault==='foreign-occupant'){
     const state=JSON.parse(rows[1].encodedAdmission);
-    if(fault==='missing-npc')state.state.npcWorld.residents.pop();
-    else if(fault==='duplicate-npc')state.state.npcWorld.residents.push(structuredClone(state.state.npcWorld.residents[0]));
-    else state.state.party=[structuredClone(checkpoints[0].state)];
+    state.state.party=[structuredClone(checkpoints[0].state)];
     rows[1].encodedAdmission=JSON.stringify(state);
    }
    await transferResidentClaims(tx,transferId,sources.map(s=>s.owner),rows);
@@ -161,7 +164,7 @@ for(const backend of ['memory','sql'] as const)test(`${backend}: a shared reside
    if(fault==='after-claims')throw new Error('failure after partitioned claims');
    return checkpoints;
   };
-  for(fault of ['duplicate-human','missing-human','foreign-account','foreign-controller','missing-npc','duplicate-npc','foreign-occupant','after-claims']){
+  for(fault of ['duplicate-human','missing-human','foreign-account','foreign-controller','foreign-occupant','after-claims']){
    await assert.rejects(repo.transfer('split-residents',[source],ids,create));
    assert.deepEqual(await store.read(tx=>tx.list('simulation_characters')),before.claims,fault);
    for(const id of ids){assert.equal(await repo.load(id),null);assert.equal(await store.read(tx=>tx.get('simulation_residencies',id)),null);}
@@ -174,7 +177,7 @@ for(const backend of ['memory','sql'] as const)test(`${backend}: a shared reside
   assert.deepEqual(after.items,before.items);assert.deepEqual(after.wallets,before.wallets);assert.deepEqual(after.npcs,before.npcs);
   for(const [i,p]of participants.entries()){
    const admission=await characters.find(p.accountId,p.characterId);assert.equal(admission!.instanceId,ids[i]);
-   const owned=after.claims.filter(c=>c.accountId===p.accountId);assert.equal(owned.length,11);assert.ok(owned.every(c=>c.instanceId===ids[i]));
+   const owned=after.claims.filter(c=>c.accountId===p.accountId);assert.equal(owned.length,1);assert.ok(owned.every(c=>c.instanceId===ids[i]));
    const loaded=(await repo.load<InstanceCheckpoint>(ids[i]))!,recovered=await repo.acquire(ids[i],'recovery:'+i,60000);
    const runtime=ResidentInstance.restore(loaded.checkpoint,recovered.epoch);
    assert.equal(runtime.checkpoint().state.money,(i+1)*1111);assert.equal(runtime.checkpoint().controllers.length,1);

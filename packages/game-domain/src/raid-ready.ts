@@ -1,4 +1,3 @@
-import {ensureNpcWorld} from './rules/npc-world.js';
 import {createRoster} from './molten-core-roster.ts';
 import {grantRaidReadyAttunements} from './rules/raid-attunement.js';
 import {newState,characterRules,persistAssets,rebaseSimulation} from './context.ts';
@@ -20,8 +19,7 @@ export async function provisionRaidHero(service:GameService,tx:Transaction,accou
  // The roster is a template; each provisioned character owns newly issued items.
  for(const [slot,item] of Object.entries(state.equipment) as [string,Rules][])state.equipment[slot]={...item,...makeItem(state,item.id,item.count),ownerId:id};
  const attributes=stats(state);state.hp=attributes.maxHp;state.mana=attributes.maxMana;
- log(state,'60级金团已整备：蓝装、职业技能与冒险者大厅就绪。队长已完成熔火之心门任务并持有龙火护符。','raid');
- ensureNpcWorld(state);
+ log(state,'60级金团已整备：蓝装、职业技能就绪，可通过公共池招募队友。队长已完成熔火之心门任务并持有龙火护符。','raid');
  const row:Character={id,accountId,kind:'hero',rules:characterRules(state),professionReadyAt:{},resourceReadyAt:{}};
  await tx.put('characters',row);await persistAssets(tx,row,state,`raid-ready:${accountId}:${id}`);
  await tx.put('parties',{id:partyId,accountId,characterIds:[id]});

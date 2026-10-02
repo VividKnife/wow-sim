@@ -27,7 +27,7 @@ export interface Party {
 }
 export interface Item {
     id: string;
-    accountId: string;
+    accountId: string | null;
     ownerCharacterId: string;
     container: string;
     slot?: string;
@@ -39,7 +39,7 @@ export interface Item {
 export interface Wallet {
     id: string;
     characterId: string;
-    accountId: string;
+    accountId: string | null;
     balance: number;
 }
 export interface Activity {

@@ -46,7 +46,7 @@ test('multiple saves are isolated, owner checked and creation retries do not dup
   for(const table of tables)assert.equal((await tx.list(table,{accountId:a.id})).length,0,table);
  });
 });
-test('boost grants 50 gold, legal quest equipment, four runecloth bags, full resources and opens the adventure hall for every race/class',async()=>{
+test('boost grants 50 gold, legal quest equipment, four runecloth bags, full resources and unlocks public grouping for every race/class',async()=>{
  const service=setup();
  for(const c of classDefinitions)for(const raceId of c.races){
   const {id}=await service.createSave(`user-${c.id}-${raceId}`,{...input,classId:c.id,raceId,boost:true},'boost-save');
@@ -78,7 +78,7 @@ test('boost grants 50 gold, legal quest equipment, four runecloth bags, full res
   }
   assert.ok(boostEquipmentCandidates(s).length);
   if(items[s.equipment[16].id].InventoryType===17)assert.equal(s.equipment[17],undefined);
-  await service.command(id,{type:'npcVisit',requestId:'visit'});const grouped=await service.command(id,{type:'npcRecommend',requestId:'group'});assert.equal(grouped.state.npcWorld.selection.length,4);assert.equal(grouped.state.party.length,0);
+  assert.equal((await service.snapshot(id)).state.npcWorld,undefined);
  }
 });
 test('gift mount survives service reload and respects normal riding restrictions without being purchasable',async()=>{

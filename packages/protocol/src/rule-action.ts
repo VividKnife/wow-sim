@@ -15,7 +15,7 @@ const fields: Record<string, string> = {
   disenchant:'uid',disenchantAll:'',applyEnchant:'id uid',useBandage:'id',
   bindHearth:'',useHearth:'',useItem:'uid slot',unlockFlight:'',fly:'to',trainRiding:'',buyMount:'id',mount:'id',dismount:'',
   conjure:'water',cast:'id target',petCommand:'command targetId itemId spellId',usePortal:'id',revive:'',resurrect:'target',reincarnate:'',soulstoneRevive:'',
-  npcMatchSupply:'dungeonId minimumLevel maximumLevel unavailableIds',npcVisit:'',npcRefresh:'',npcFriend:'id friend',npcGroup:'memberIds',npcRecommend:'keep',npcLootPolicy:'auto',
+  npcMatchSupply:'dungeonId minimumLevel maximumLevel unavailableIds',
   enterDungeon:'contentId',resetDungeon:'contentId',leaveDungeon:'',dungeonNext:'',dungeonNavigate:'destination',dungeonPause:'',dungeonInteract:'',dungeonSkip:'',
   partyBuffs:'',groupLoot:'id choice',abandonCombat:'encounterId',stockadesQuestStart:'questId',stockadesQuestCancel:'',escortStart:'',escortCancel:'',
   goldRules:'rules',goldPublish:'',goldInvite:'id',goldRecommend:'priority composition',goldLaunch:'',goldTactics:'patch',

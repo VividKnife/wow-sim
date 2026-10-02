@@ -13,7 +13,7 @@ import {GameService} from '../../../packages/game-domain/src/service.ts';
 import {ResidentCharacters} from '../../../packages/game-domain/src/resident-characters.ts';
 import {DungeonAdmissions} from '../../../packages/game-domain/src/dungeon-admissions.ts';
 import {context,persistCharacter} from '../../../packages/game-domain/src/context.ts';
-import {ensureNpcMatchSupply} from '../../../packages/game-domain/src/rules/npc-world.js';
+import {updateNpcPopulation} from '../../../packages/game-domain/src/npc-population.ts';
 import {combatRole} from '../../../packages/game-domain/src/rules/combat-roles.js';
 import {SimulationRepository} from '../../../packages/persistence/src/simulation.ts';
 import {SimulationDirectory} from '../../simulation-host/src/directory.ts';
@@ -30,21 +30,13 @@ for(const accountId of ['alice','bob']){
   const row=await tx.get('characters',made.state.id),state=await context(tx,row,Date.now(),false);
   state.level=20;state.location='deadmines';
   if(accountId===(process.env.PREVIEW_NPC_OWNER??'alice')){
-   ensureNpcMatchSupply(state);
-   npcIds.push(...['tank','healer','dps'].map(role=>state.npcWorld.residents.find(p=>{const r=combatRole(p.unit);return (r==='tank'||r==='healer'?r:'dps')===role;}).id));
+   const profiles=await updateNpcPopulation(tx,state.wallAt,{level:20});
+   npcIds.push(...['tank','healer','dps'].map(role=>profiles.find(p=>{const r=combatRole(p.unit);return (r==='tank'||r==='healer'?r:'dps')===role;}).id));
   }
   await persistCharacter(tx,row,state,state.wallAt,'fixture:'+accountId);
  });
 }
 const characters=new ResidentCharacters(store,{version:runtimeVersion}),repository=new SimulationRepository(store,Date.now,characters.commit);
-if(process.env.PREVIEW_NPC_EFFECTS==='1'){
- const accountId=process.env.PREVIEW_NPC_OWNER??'alice',admission=await characters.admission(accountId,ids[accountId==='bob'?1:0]);
- admission.state.party=admission.state.npcWorld.residents.filter(p=>npcIds.includes(p.id)).map(p=>structuredClone(p.unit));
- for(const npc of admission.state.party)addPeriodicEffect(admission.state,npc,'hots',{spell:139,name:'Renew',caster:process.env.PREVIEW_CROSS_HEAL==='1'?admission.state.id:npc.id,amount:10,next:admission.state.clock+1000,interval:1000,until:admission.state.clock+600000});
- const owner=await repository.acquire(admission.instanceId,'fixture');
-  await repository.commit(owner,1,new ResidentInstance({...admission,ownerEpoch:owner.epoch}).checkpoint());
-  owner.commitSequence=1;await repository.release(owner);
-}
 const directory=new SimulationDirectory(repository,{characters,dungeons:new DungeonAdmissions(store)}),token=crypto.randomUUID();
 const host=createSimulationServer(directory,{token});host.server.listen(0,'127.0.0.1');await once(host.server,'listening');
 const client=new SimulationClient({url:`http://127.0.0.1:${host.server.address().port}`,token}),service=new ResidentGameService(domain,client);

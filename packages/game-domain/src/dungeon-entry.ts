@@ -1,3 +1,4 @@
+import {dungeonLevelsFit} from './rules/npc-match-policy.js';
 import type {Transaction,ReadView} from '../../persistence/src/store.ts';
 import {owned} from './context.ts';
 import {requireThat,type Rules} from './model.ts';
@@ -13,17 +14,17 @@ async function validateRoster(tx:ReadView,group:Group,dungeonId:string){
   requireThat(definition,'DUNGEON','请选择已开放的地下城');
   requireThat(group.members.length===5&&new Set(group.members.map(m=>m.id)).size===5&&fits(group.members),
     'PARTY_ROLE','进本需要完整的 1 坦克、1 治疗、3 输出队伍');
-  const levels:number[]=[];
+  const members=[];
   for(const member of group.members){
     requireThat((await tx.get('social_members',member.id))?.groupId===group.id,'PARTY_CHANGED','队伍成员已改变');
     const row=await tx.get(member.npc?'npc_characters':'characters',member.id);
-    requireThat(row&&(!member.npc?row.kind==='hero':row.ownerCharacterId===member.ownerCharacterId),'PARTY_CHANGED','队伍角色身份已改变');
+    requireThat(row&&(!member.npc?row.kind==='hero':row.realm==='public'&&row.accountId===null),'PARTY_CHANGED','队伍角色身份已改变');
     requireThat(member.role&&supportedRoles(row!.rules.classId).includes(member.role),'PARTY_ROLE','成员职责已失效');
     if(member.npc){const role=combatRole(row!.rules);requireThat((role==='tank'||role==='healer'?role:'dps')===member.role,'PARTY_ROLE','NPC 职责已改变');}
-    levels.push(row!.rules.level);
+    members.push({...member,level:row!.rules.level});
   }
-  requireThat(levels.every(level=>Number.isSafeInteger(level)&&level>=definition.minimumLevel&&level<=60)&&Math.max(...levels)-Math.min(...levels)<=5,
-    'PARTY_LEVEL','成员需满足副本最低等级，彼此等级差不超过 5 级');
+  requireThat(dungeonLevelsFit(members,group.leaderId,definition.minimumLevel),
+    'PARTY_LEVEL','成员需满足副本最低等级，NPC 与队长等级差需在 -1～+3 级范围内');
 }
 
 /** Called in the SAME transaction as checkpoint/claim transfer. The game
@@ -65,9 +66,8 @@ export async function bindDungeonEntry(tx:Transaction,request:DungeonEntryReques
     const row=(await tx.get('characters',member.id))!;
     requireThat(controllers.some(c=>c.actorId===member.id&&c.accountId===row.accountId),'ENTRY_ROSTER','运行控制器账号不一致');
   }
-  const levels=actors.map(a=>a.level);
-  requireThat(levels.every(level=>Number.isSafeInteger(level)&&level>=dungeonDefinitions[group.entry!.dungeonId].minimumLevel&&level<=60)&&
-    Math.max(...levels)-Math.min(...levels)<=5,'PARTY_LEVEL','运行角色等级不符合副本要求');
+  const liveMembers=await Promise.all(group.members.map(async m=>({...m,level:actors.find(a=>a.id===m.id)?.level??(await tx.get(m.npc?'npc_characters':'characters',m.id))!.rules.level})));
+  requireThat(dungeonLevelsFit(liveMembers,group.leaderId,dungeonDefinitions[group.entry!.dungeonId].minimumLevel),'PARTY_LEVEL','运行角色等级不符合副本要求');
   for(const actor of actors)requireThat(supportedRoles(actor.classId).includes(group.members.find(m=>m.id===actor.id)!.role!),
     'PARTY_ROLE','运行角色职责已失效');
   for(const member of group.members.filter(m=>m.npc&&actors.some(a=>a.id===m.id))){

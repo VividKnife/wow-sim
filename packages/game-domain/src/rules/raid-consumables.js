@@ -13,7 +13,7 @@ function chooseItem(s,c,economy,premium){
  if(stock(c,premium))return premium;
  if(stock(c,economy))return economy;
  if(!c.npcPlayer)return premium;
- const personality=c.goldProfile?.personality||s.npcWorld?.residents?.find(r=>r.id===c.id)?.raidProfile.personality||'value';
+ const personality=c.goldProfile?.personality||s.npcWorld?.residents?.find(r=>r.id===c.id)?.raidProfile.personality||s.npcGuests?.find(g=>g.profile.id===c.id)?.profile.raidProfile.personality||'value';
  const budget=(premiumBudget[personality]??premiumBudget.value)*c.money;
  return marketPrice(premium).buy<=budget?premium:economy;
 }

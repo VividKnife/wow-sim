@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {setTimeout as delay} from 'node:timers/promises';
 import {createGame, nextAdvanceWallAt, advanceOwned} from '../../../packages/game-domain/src/rules/engine.js';
-import {ensureNpcWorld, nextNpcWorldProgressAt} from '../../../packages/game-domain/src/rules/npc-world.js';
+import {ensureNpcWorld} from '../../../packages/game-domain/src/rules/npc-world.js';
 import {stats} from '../../../packages/game-domain/src/rules/character.js';
 import {monsterIdsAt} from '../../../packages/game-domain/src/rules/catalog.js';
 import type {Rules} from '../../../packages/game-domain/src/model.ts';
@@ -15,7 +15,7 @@ const admission = (state: Rules = createGame('休眠', 123, 1000), instanceId = 
 });
 const listing = (endsAt: number) => ({id: 'auction-1', item: {id: 117, uid: 'item-1', count: 1}, gross: 50, net: 47, createdAt: 0, endsAt});
 
-test('quiet deadlines cover auction and independent NPC growth without polling empty rooms', () => {
+test('personal rooms schedule auctions but never grow the public NPC population', () => {
   const state: Rules = createGame('期限', 123, 1000);
   assert.equal(nextAdvanceWallAt(state), Infinity);
   state.auctions.push(listing(333));
@@ -26,13 +26,8 @@ test('quiet deadlines cover auction and independent NPC growth without polling e
   state.level = 10; state.hp = stats(state).maxHp; state.mana = stats(state).maxMana;
   ensureNpcWorld(state);
   const before = structuredClone(state.npcWorld.residents);
-  const next = nextNpcWorldProgressAt(state);
-  assert.equal(next, 1333 + 20 * 60 * 1000);
-  assert.equal(nextAdvanceWallAt(state), next);
-  advanceOwned(state, next - 1); assert.deepEqual(state.npcWorld.residents, before);
-  advanceOwned(state, next);
-  assert.ok(state.npcWorld.residents.every((p: any) => p.steps === 1 && p.wallet > before.find((q: any) => q.id === p.id).wallet));
-  assert.equal(nextAdvanceWallAt(state), next + 20 * 60 * 1000);
+  assert.equal(nextAdvanceWallAt(state),Infinity);
+  advanceOwned(state,state.wallAt+3600000);assert.deepEqual(state.npcWorld.residents,before);
 });
 
 test('active rules retain exact boundaries; paused rooms wake for accepted inputs and offline cutoff', () => {

@@ -1,7 +1,8 @@
+import {recordNpcRaidAttendance,raidWeek as weekAt,RAID_WEEK_MS as WEEK} from './npc-progression.js';
 import {raidCompositionPresets,recommendRaidMembers,validateRaidComposition,raidCompositionWarnings} from './raid-composition.js';
 import {CURRENT_BIS_PHASE} from './item-bis.js';
 import {stockGoldReagents} from './gold-raid-reagents.js';
-import {ensureNpcWorld,progressNpcWorld,syncNpcWorld,recordNpcRaid} from './npc-world.js';
+import {ensureNpcWorld,syncNpcWorld,recordNpcRaid} from './npc-world.js';
 import {equipNpcItem} from './npc-equipment.js';
 import {raidAttemptReview} from './raid-command.js';
 import {raidAttunementReason} from './raid-attunement.js';
@@ -25,12 +26,12 @@ const need=(ok,text)=>{if(!ok)throw new Error(text);};
 const active=s=>{need(s.goldRaid?.active,'请先创建金团。');return s.goldRaid;};
 const announce=(s,text)=>{const g=s.goldRaid;g.chat.push({at:s.clock,text});g.chat=g.chat.slice(-50);};
 const gold=amount=>`${(amount/GOLD).toFixed(1)}金`;
-const WEEK=604800000,weekAt=at=>Math.floor((at-345600000)/WEEK);
+
 export function enterGoldRaid(s,raidId='molten-core'){
  need(['molten-core','onyxias-lair'].includes(raidId),'未知团队副本。');
  need(s.level===60&&!s.npcPlayer&&s.hp>0&&!s.combat&&!s.dungeon&&!s.goldRaid?.active&&s.activity.type==='idle','需要空闲且存活的60级团长。');
  need(!raidAttunementReason(s,raidId),raidAttunementReason(s,raidId));
- ensureNpcWorld(s);syncNpcWorld(s);progressNpcWorld(s);
+ ensureNpcWorld(s);syncNpcWorld(s);
  const serial=(s.goldRaid?.serial||0)+1,week=weekAt(s.wallAt);
  s.goldRaidSaves??={};const saved=s.goldRaidSaves[raidId];
  const progress=saved?.week===week?saved:{week,cleared:[],...raidRouteState()};
@@ -170,7 +171,7 @@ export function settleGoldRaid(s){
  const isTrash=b.raidEncounter.kind==='trash',encounterId=b.raidEncounter.id;
  if(won&&!(isTrash?g.clearedPacks:g.cleared).includes(encounterId)){
   const loot=rollRaidLoot(s,encounterId);
-  if(!isTrash)g.cleared.push(encounterId);
+  if(!isTrash){g.cleared.push(encounterId);for(const c of s.party.filter(c=>c.npcPlayer)){const p=s.npcWorld.residents.find(p=>p.id===c.id);if(p)recordNpcRaidAttendance(p,g.raidId,s.wallAt,encounterId);}}
   announce(s,`${isTrash?'怪物群':raidBossesFor(g.raidId).find(b=>b.id===encounterId).name} 已击败。掉落 ${loot.length} 组战利品。`);
   const lots=[];
   for(const [i,drop]of loot.entries()){

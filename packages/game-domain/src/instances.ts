@@ -1,6 +1,5 @@
 import {claimGmGift} from './gm.ts';
 import {applyExperienceBuff} from './rules/experience.js';
-import {progressNpcWorld} from './rules/npc-world.js';
 import {leaveGoldRaid,goldCommands} from './rules/gold-raid.js';
 import {dungeonIdFor,dungeonDefinitions} from './rules/dungeon-registry.js';
 import { act, advance } from './rules/engine.js';
@@ -27,20 +26,11 @@ export async function createInstance(this: GameService, tx: Transaction, c: Char
     if(['molten-core-gold','onyxias-lair-gold'].includes(contentId))requireThat(capacity===40&&c.kind==='hero','RAID_ENTRY','团队副本需要主角发起40人金团');
     requireThat([5, 10, 20, 25, 40].includes(capacity), 'CAPACITY', '副本席位必须为 5、10、20、25 或 40', 400);
     const a = await account(tx, c.accountId), party = await tx.get<Party>('parties', a.partyId);
-    const npcDraft = c.kind === 'hero' && Object.hasOwn(dungeonDefinitions,contentId) ? c.rules.npcWorld?.selection : null;
-    const ids = contentId.endsWith('-gold') ? [c.id] : cmd.characterIds === undefined ? (npcDraft ? [c.id,...npcDraft] : cmd.type === 'enterDungeon' ? party!.characterIds : [c.id]) : cmd.characterIds;
+    const ids = contentId.endsWith('-gold') ? [c.id] : cmd.characterIds === undefined ? (cmd.type === 'enterDungeon' ? party!.characterIds : [c.id]) : cmd.characterIds;
     rosterIds(ids);
     requireThat(ids.includes(c.id) && ids.length <= capacity, 'ROSTER', '副本名册必须包含发起角色且不超过席位上限', 400);
     const instance: Instance = { id: this.id(), creatorAccountId: c.accountId, leaderId: c.id, contentId, contentVersion: this.contentVersion, capacity, status: 'forming', roster: [], simulation: null, rngState: this.seed(), sequence: 0, epoch: 0, nextEventAt: now + 1000, createdAt: now };
     for (const id of ids) {
-        const npc = c.kind === 'hero' && Object.hasOwn(dungeonDefinitions,contentId) &&
-            c.rules.npcWorld?.residentIds.includes(id) && await tx.get('npc_characters', id);
-        if (npc) {
-            requireThat(npc.ownerCharacterId === c.id && npc.accountId === c.accountId, 'NPC_OWNER', '冒险者不属于当前队伍');
-            // The world's hero lease below owns all NPC state for this instance.
-            instance.roster.push({characterId:id,accountId:c.accountId,controller:'npc'});
-            continue;
-        }
         const character = await owned(tx, c.accountId, id);
         await this.lock(tx, character, 'instance', instance.id);
         instance.roster.push({ characterId: id, accountId: c.accountId, controller: character.kind === 'hero' ? 'player' : 'companion' });
@@ -65,28 +55,17 @@ export async function startInstance(this: GameService, tx: Transaction, c: Chara
     let s = await context(tx, c, now, false);
     applyExperienceBuff(s, this.xpMultiplier);
     s = advance(s, now).state;
-    progressNpcWorld(s);
     s.party = [];
     s.rngState = instance.rngState;
     for (const row of instance.roster) {
         if (row.characterId === c.id)
             continue;
-        if (row.controller === 'npc') {
-            const resident=s.npcWorld?.residents.find((p:Rules)=>p.id===row.characterId);
-            requireThat(resident,'NPC_MISSING','冒险者档案不存在');
-            const unit=clone(resident.unit),st=stats(unit);
-            unit.hp=st.maxHp;unit.mana=st.maxMana;unit.time=s.clock;unit.location=s.location;
-            s.party.push(unit);
-        }
-        else {
-            const other = await owned(tx, row.accountId, row.characterId);
-            const state = advance(await context(tx, other, now, false), now).state;
-            s.party.push(this.member(rebaseSimulation(state, s.clock)));
-        }
+        const other = await owned(tx, row.accountId, row.characterId);
+        const state = advance(await context(tx, other, now, false), now).state;
+        s.party.push(this.member(rebaseSimulation(state, s.clock)));
     }
+
     const content = instanceContents[instance.contentId as keyof typeof instanceContents];
-    // The authoritative roster has already resolved the saved lobby draft.
-    if(s.npcWorld && Object.hasOwn(dungeonDefinitions,instance.contentId))s.npcWorld.selection=s.party.map((p:Rules)=>p.id);
     requireThat([s, ...s.party].every((p: Rules) => p.level >= content.minimumLevel && p.hp > 0), 'ENTRY', '角色等级或生命值不满足副本要求');
     const savedRunId = s.dungeonSaves?.[instance.contentId]?.runId;
     content.start(s);

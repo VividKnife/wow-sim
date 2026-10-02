@@ -1,62 +1,33 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createGame} from '../src/rules/engine.js';
-import {ensureNpcMatchSupply,NPC_MATCH_SUPPLY} from '../src/rules/npc-world.js';
+import {MemoryStore} from '../../persistence/src/memory.ts';
+import {updateNpcPopulation,PUBLIC_NPC_LIMIT} from '../src/npc-population.ts';
 import {combatRole} from '../src/rules/combat-roles.js';
 const role=c=>['tank','healer'].includes(combatRole(c))?combatRole(c):'dps';
-function assertSupply(s){assert.ok(Array.from({length:6},(_,i)=>s.level-5+i).some(lower=>Object.entries(NPC_MATCH_SUPPLY.target).every(([r,count])=>s.npcWorld.residents.filter(p=>p.unit.level>=lower&&p.unit.level<=lower+5&&role(p.unit)===r).length>=count)),`level ${s.level} has a complete compatible standby pool`);}
-test('every dungeon level 10–60 retains role supply without rerolling existing identities or combat RNG',()=>{
- const s=createGame('供给覆盖',791,0);s.level=10;ensureNpcMatchSupply(s);assert.equal(s.npcWorld.residents.length,10);const original=s.npcWorld.residents.map(p=>({id:p.id,unit:structuredClone(p.unit),wallet:p.wallet}));const rng=s.rngState;
- for(let level=10;level<=60;level++){s.level=level;ensureNpcMatchSupply(s);assertSupply(s);const count=s.npcWorld.residents.length;ensureNpcMatchSupply(s);assert.equal(s.npcWorld.residents.length,count,'retries do not create more NPCs');}
- assert.equal(s.rngState,rng);assert.ok(s.npcWorld.residents.length<=192);
- for(const before of original){const after=s.npcWorld.residents.find(p=>p.id===before.id);assert.deepEqual(after.unit,before.unit);assert.equal(after.wallet,before.wallet);}
- assert.equal(new Set(s.npcWorld.residents.map(p=>p.id)).size,s.npcWorld.residents.length);
- const restored=structuredClone(s);ensureNpcMatchSupply(restored);assert.deepEqual(restored,s);
-});
-test('fresh demand at 10, 20, 30, 40, 50 and 60 has real class builds and per-item identities',()=>{
- for(const level of [10,20,30,40,50,60]){const s=createGame('等级'+level,level,0);s.level=level;ensureNpcMatchSupply(s);assertSupply(s);
-  const items=s.npcWorld.residents.flatMap(p=>Object.values(p.unit.equipment).map(i=>i.uid));assert.equal(new Set(items).size,items.length);
-  for(const p of s.npcWorld.residents)assert.equal(p.unit.npcBuild.role,combatRole(p.unit));
+const wall=2000000000000;
+function assertSupply(profiles,level){for(const [r,count]of Object.entries({tank:2,healer:2,dps:6}))assert.ok(profiles.filter(p=>p.unit.level>=Math.max(10,level-1)&&p.unit.level<=Math.min(60,level+3)&&role(p.unit)===r).length>=count);}
+test('leveling demand redistributes public identities across 10–59, without replacing permanent max-level characters',async()=>{
+ const store=new MemoryStore();let first;
+ for(const [i,level] of [10,20,30,40,50,59].entries()){
+  const profiles=await store.transaction(tx=>updateNpcPopulation(tx,wall+i*3600000,{level}));assertSupply(profiles,level);
+  first??=profiles.map(p=>p.id);assert.deepEqual(profiles.map(p=>p.id),first);
+  const copies=await store.transaction(tx=>updateNpcPopulation(tx,wall+i*3600000,{level}));assert.deepEqual(copies,profiles);
  }
+ const max=await store.transaction(tx=>updateNpcPopulation(tx,wall+7*3600000,{level:60,minimumLevel:60}));assertSupply(max,60);const veterans=structuredClone(max.filter(p=>p.unit.level===60));
+ const low=await store.transaction(tx=>updateNpcPopulation(tx,wall+8*3600000,{level:10}));assertSupply(low,10);
+ for(const veteran of veterans)assert.deepEqual(low.find(p=>p.id===veteran.id),veteran);
+ const items=await store.read(tx=>tx.list('items'));assert.equal(new Set(items.map(i=>i.id)).size,items.length);
 });
-test('finder supply grows into a raid roster without replacing candidates or colliding item identities',async()=>{
- const {ensureNpcWorld,npcAction,NPC_REFRESH_MS}=await import('../src/rules/npc-world.js');
- const s=createGame('名册扩容',613,0);s.level=60;ensureNpcMatchSupply(s);const before=structuredClone(s.npcWorld.residents);
- s.wallAt+=NPC_REFRESH_MS;npcAction(s,{type:'npcRefresh'});assert.equal(s.npcWorld.board.ids.length,6);
- ensureNpcWorld(s);assert.ok(s.npcWorld.residents.length>=72);assert.ok(s.npcWorld.residents.length<=192);
- for(const member of before)assert.ok(s.npcWorld.residents.some(p=>p.id===member.id));
- assert.equal(new Set(s.npcWorld.residents.map(p=>p.id)).size,s.npcWorld.residents.length);
+test('reserved public NPCs do not count towards supply, including reservations by a different player',async()=>{
+ const store=new MemoryStore();const initial=await store.transaction(tx=>updateNpcPopulation(tx,wall,{level:20}));
+ const tanks=initial.filter(p=>role(p.unit)==='tank');await store.transaction(async tx=>{for(const p of tanks)await tx.put('social_members',{id:p.id,groupId:'other-team'});});
+ const supplied=await store.transaction(tx=>updateNpcPopulation(tx,wall,{level:20}));assertSupply(supplied,20);assert.ok(tanks.every(p=>!supplied.some(s=>s.id===p.id)));
 });
-test('mixed-level party requests replenish the common interval rather than counting unusable lower-level NPCs',()=>{
- const s=createGame('混级队伍',901,0);s.level=10;ensureNpcMatchSupply(s);const ids=s.npcWorld.residents.map(p=>p.id);s.level=15;
- ensureNpcMatchSupply(s,15,20);
- for(const [r,count] of Object.entries(NPC_MATCH_SUPPLY.target))assert.ok(s.npcWorld.residents.filter(p=>p.unit.level>=15&&p.unit.level<=20&&role(p.unit)===r).length>=count);
- assert.ok(ids.every(id=>s.npcWorld.residents.some(p=>p.id===id&&p.unit.level===10)));
- assert.throws(()=>ensureNpcMatchSupply(s,30,60),/范围/);
-});
-test('NPCs reserved by another social party do not count towards standby supply',()=>{
- const s=createGame('预留补位',207,0);s.level=20;ensureNpcMatchSupply(s);const unavailable=s.npcWorld.residents.filter(p=>role(p.unit)==='tank').map(p=>p.id);
- ensureNpcMatchSupply(s,15,25,unavailable);assert.equal(s.npcWorld.residents.filter(p=>role(p.unit)==='tank'&&!unavailable.includes(p.id)).length,2);
- assert.ok(unavailable.every(id=>s.npcWorld.residents.some(p=>p.id===id)));
-});
-test('role totals split across incompatible levels replenish only the cheapest complete standby window',()=>{
- const s=createGame('跨级缺口',302,0);s.level=20;ensureNpcMatchSupply(s);
- for(const p of s.npcWorld.residents)p.unit.level=role(p.unit)==='tank'?15:25;
- const before=structuredClone(s.npcWorld.residents);ensureNpcMatchSupply(s);
- assertSupply(s);assert.equal(s.npcWorld.residents.length,12,'two tanks complete the upper window; no unnecessary healer or DPS generation');
- assert.deepEqual(s.npcWorld.residents.slice(0,10),before);assert.ok(s.npcWorld.residents.slice(10).every(p=>p.unit.level===20&&role(p.unit)==='tank'));
-});
-test('dungeon minimum excludes otherwise nearby candidates',()=>{
- const s=createGame('副本门槛',402,0);s.level=15;ensureNpcMatchSupply(s);s.level=20;
- ensureNpcMatchSupply(s,20,25);assertSupply(s);
- for(const [r,count] of Object.entries(NPC_MATCH_SUPPLY.target))assert.equal(s.npcWorld.residents.filter(p=>p.unit.level>=20&&role(p.unit)===r).length,count);
-});
-test('capacity exhaustion cannot create a partial batch, reroll identities, or remove earned assets',()=>{
- const s=createGame('供给上限',502,0);s.level=20;ensureNpcMatchSupply(s);
- // Fill the remaining cold roster budget with unavailable identities, leaving
- // one slot although restoring the two missing tanks requires two.
- const template=s.npcWorld.residents[0];
- while(s.npcWorld.residents.length<119){const p=structuredClone(template);p.index=10000+s.npcWorld.residents.length;p.id=`cold:${p.index}`;p.unit.id=p.id;p.unit.hp=0;s.npcWorld.residents.push(p);}
- const busy=s.npcWorld.residents.filter(p=>p.unit.hp>0&&role(p.unit)==='tank').map(p=>p.id),before=structuredClone(s);
- assert.throws(()=>ensureNpcMatchSupply(s,15,25,busy),/候选池已满/);assert.deepEqual(s,before);
+test('a full public population fails atomically instead of issuing a partial role batch',async()=>{
+ const store=new MemoryStore();await store.transaction(async tx=>{for(let i=0;i<PUBLIC_NPC_LIMIT;i++){
+  const id=`npc:realm:${i+1}`;await tx.put('npc_characters',{id,accountId:null,realm:'public',profile:{index:i},rules:{}});await tx.put('simulation_characters',{id,accountId:null,instanceId:'busy'});
+ }});
+ await assert.rejects(store.transaction(tx=>updateNpcPopulation(tx,wall,{level:20})),/繁忙/);
+ assert.equal(await store.read(tx=>tx.get('npc_population','public')),null);
+ assert.equal((await store.read(tx=>tx.list('npc_characters'))).length,PUBLIC_NPC_LIMIT);
 });

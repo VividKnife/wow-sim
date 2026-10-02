@@ -17,7 +17,7 @@ import {partyUnlocked} from './party-unlock.js';
 import {characterAttributes} from './character-attributes.js';
 import {spellbookDetails} from './spellbook-details.js';
 import {collectLoot,collectAutoLoot,hasBlockingLoot} from './loot.js';
-import {npcCommands,npcAction,npcWorldView,progressNpcWorld,nextNpcWorldProgressAt} from './npc-world.js';
+import {npcCommands,npcAction,npcWorldView} from './npc-world.js';
 import {resolveGroupLoot,tickGroupLoot,groupLootView} from './group-loot.js';
 import {strategyPresets} from './strategy-presets.js';
 import {strategyAction,strategyProfiles} from './strategy-profiles.js';
@@ -170,7 +170,7 @@ export function nextAdvanceWallAt(s){
  if(s.combat?.command?.paused||s.arena?.phase==='preparing'||s.battleground?.phase==='preparing')return Infinity;
  const wall=at=>s.wallAt+Math.max(0,at-s.clock);
  const personalAuction=Math.min(Infinity,...s.auctions.map(a=>a.endsAt));
- if(quietIdle(s))return Math.min(wall(personalAuction),nextNpcWorldProgressAt(s));
+ if(quietIdle(s))return wall(personalAuction);
  const d=ruleDeadlines(s);
  return wall(Math.min(s.nextTick,personalAuction,d.auction,d.end,d.capture,d.dismount));
 }
@@ -209,7 +209,7 @@ export function advanceOwned(s,now,options={}){
   if(onStep)onStep(s,s.wallAt+s.clock-origin);
   if(stopWhen?.(s)){s.wallAt+=s.clock-origin;settleAuctions(s);return{state:s,complete:s.clock>=target};}
  }
- settleAuctions(s);s.wallAt=now;progressNpcWorld(s);return{state:s,complete:true};
+ settleAuctions(s);s.wallAt=now;return{state:s,complete:true};
 }
 function ensureIdle(s){if(s.combat||!['idle','hunt'].includes(s.activity.type))throw new Error('请先结束当前活动。');}
 function reachableTravelTime(s,to){try{return s.activity.type==='travel'&&!s.activity.flight?(s.activity.to===to?Math.max(0,s.activity.endsAt-s.clock):redirectedTravel(s,to).duration):travelRoute(s,to).duration;}catch(error){return null;}}

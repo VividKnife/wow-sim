@@ -1,3 +1,4 @@
+import {updateNpcPopulation} from '../../../packages/game-domain/src/npc-population.ts';
 import {dungeonDepartureBoundary,dungeonDepartureTransferId} from '../src/dungeon-departure-transfer.ts';
 import type {SimulationInput} from '../../../packages/protocol/src/simulation.ts';
 import test from 'node:test';
@@ -20,7 +21,6 @@ import {combatRole} from '../../../packages/game-domain/src/rules/combat-roles.j
 import {GameService} from '../../../packages/game-domain/src/service.ts';
 import {context,persistCharacter} from '../../../packages/game-domain/src/context.ts';
 import type {Character,Rules} from '../../../packages/game-domain/src/model.ts';
-import {ensureNpcMatchSupply} from '../../../packages/game-domain/src/rules/npc-world.js';
 import {addPeriodicEffect} from '../../../packages/game-domain/src/rules/simulation-events.js';
 import {rebaseSimulation} from '../../../packages/game-domain/src/simulation-clock.ts';
 
@@ -46,17 +46,11 @@ for(const backend of ['memory','sql'])for(const mode of ['together','separate'])
       await store.transaction(async tx=>{
         const row=(await tx.get<Character>('characters',created.state.id))!;
         const state=await context(tx,row,Date.now(),false);
-        state.level=20;state.location='deadmines';ensureNpcMatchSupply(state);
+        state.level=20;state.location='deadmines';await updateNpcPopulation(tx,state.wallAt,{level:20});
         await persistCharacter(tx,row,state,state.wallAt,'supply:'+accountId);
       });
       const admission=await characters.admission(accountId,created.state.id),state=admission.state;
       rebaseSimulation(state,10000+index*12345);
-      const profiles=index?[]:[...['tank','healer'].map(role=>state.npcWorld.residents.find((p:Rules)=>combatRole(p.unit)===role)),
-        state.npcWorld.residents.find((p:Rules)=>!['tank','healer'].includes(combatRole(p.unit)))];
-      state.party=profiles.map((p:Rules)=>structuredClone(p.unit));
-      // NPCs do not need to travel to the entrance or issue a manual request.
-      for(const npc of state.party)npc.location='stormwind';
-      state.npcWorld.selection=state.party.map((c:Rules)=>c.id);
       addPeriodicEffect(state,state,'hots',{spell:139,name:'Renew',caster:state.id,amount:10,next:state.clock+1000,interval:1000,until:state.clock+30000});
       admissions.push(admission);
       sessions.push(await SimulationSession.open(host,repository,'host',admission,{checkpointMs:10000}));
@@ -66,7 +60,8 @@ for(const backend of ['memory','sql'])for(const mode of ['together','separate'])
     await command(0,{type:'partyInvite',targetId:admissions[1].state.id});
     const invitation=(await social.snapshot('bob',admissions[1].state.id)).incoming[0];
     await command(1,{type:'respond',inviteId:invitation.id,accept:true});await command(1,{type:'role',role:'dps'});
-    for(const npc of admissions[0].state.party)await command(0,{type:'npcInvite',targetId:npc.id});
+    const candidates=await store.read(tx=>tx.list('npc_characters'));
+    for(const role of ['tank','healer','dps']){const npc=candidates.find(p=>(['tank','healer'].includes(combatRole(p.rules))?combatRole(p.rules):'dps')===role)!;await command(0,{type:'npcInvite',targetId:npc.id});}
     const matching=await command(0,{type:'queue',dungeonId:'deadmines'}),proposal=matching.proposal!;
     const incomplete=await command(0,{type:'proposal',proposalId:proposal.id,accept:true});
     assert.equal(incomplete.group!.entry,undefined);
@@ -158,7 +153,7 @@ for(const backend of ['memory','sql'])for(const mode of ['together','separate'])
     assert.ok(checkpoint.controllers.every(c=>c.generation===(mode==='separate'&&c.accountId==='bob'?3:2)&&!c.canPause));
     assert.equal(checkpoint.state.party.filter((c:Rules)=>c.npcPlayer).length,3);
     assert.ok(checkpoint.state.party.filter((c:Rules)=>c.npcPlayer).every((c:Rules)=>c.location==='deadmines'));
-    assert.equal((await store.read(tx=>tx.list('simulation_characters',{instanceId:destinationId}))).length,22);
+    assert.equal((await store.read(tx=>tx.list('simulation_characters',{instanceId:destinationId}))).length,5);
     const npcs=await store.read(tx=>tx.list('npc_characters'));
     const activeIds=new Set(checkpoint.state.party.filter((c:Rules)=>c.npcPlayer).map((c:Rules)=>c.id));
     for(const npc of npcs)assert.equal(npc.profile.runs,activeIds.has(npc.id)?1:0);
@@ -192,7 +187,7 @@ for(const backend of ['memory','sql'])for(const mode of ['together','separate'])
       assert.ok(view.snapshot);assert.equal(!!view.snapshot.player.dungeon,index===1);
       const persisted=await host.checkpoint(recovered.instanceId);
       assert.equal(persisted.controllers.length,1);
-      assert.equal(persisted.state.party.length,index===0?3:0);
+      assert.equal(persisted.state.party.length,index===0?0:3);
       if(index===1)assert.equal(persisted.state.dungeon.runId,checkpoint.state.dungeon.runId);
     }
   }finally{

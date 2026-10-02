@@ -1,3 +1,5 @@
+import {newResident} from '../src/rules/npc-world.js';
+import {persistNpcResident} from '../src/npc-characters.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
@@ -10,7 +12,11 @@ function pool(db:PGlite):SqlPool{let tail=Promise.resolve();return {async connec
 async function fixture(store:Store=new MemoryStore()){
  let now=100000;const social=new SocialService(store,()=>now);
  await store.transaction(async tx=>{for(const [id,classId] of [['alice',8],['bob',5],['carol',1],['dave',4],['eve',9]] as const)await tx.insert('characters',{id,accountId:id,kind:'hero',rules:{name:id,level:20,classId,teamId:id==='alice'?469:67,money:99999,location:'home',bank:['secret']}});
- for(const [i,classId,role] of [[0,1,'tank'],[1,5,'healer'],[2,4,'melee'],[3,8,'ranged'],[4,1,'tank']] as const)await tx.insert('npc_characters',{id:`npc:alice:${i}`,ownerCharacterId:'alice',accountId:'alice',rules:{name:`NPC${i}`,level:i===4?40:20,classId,combatRole:role},profile:{}});
+ for(const [i,index]of [0,4,3,6,18].entries()){
+  const p:any=newResident({id:'realm',raceId:1,level:20,clock:0,wallAt:now,location:'goldshire'},index,i===4?40:20);
+  await persistNpcResident(tx,p,'fixture:'+i);
+ }
+
  });
  const cmd=(actor:string,body:Record<string,any>)=>social.command(actor,actor,{requestId:crypto.randomUUID(),...body});
  return {store,social,cmd,advance:(ms:number)=>{now+=ms;},now:()=>now};
@@ -61,10 +67,10 @@ test('concurrent invitations, forged control, replay, rate limiting, and bounded
  for(let i=0;i<102;i++){advance(1001);await cmd('alice',{type:'chat',channel:'world',text:`message ${i}`});}
  const snapshot=await social.snapshot('alice','alice');assert.equal(snapshot.messages.world.length,100);assert.equal((await store.read(tx=>tx.get('social_people','alice')))!.receipts.length,64);
 });
-test('queue cancels when offline, rejects invalid roles/levels, and allows available NPCs from another world',async()=>{
+test('queue cancels when offline, rejects invalid roles/levels, and allows available public NPCs',async()=>{
  const {social,cmd,advance}=await fixture();await assert.rejects(cmd('alice',{type:'role',role:'tank'}),/职业/);
- await cmd('bob',{type:'npcInvite',targetId:'npc:alice:0'});await cmd('bob',{type:'leave'});await assert.rejects(cmd('alice',{type:'npcInvite',targetId:'npc:alice:4'}),/等级差/);
- await cmd('alice',{type:'role',role:'dps'});await cmd('alice',{type:'npcInvite',targetId:'npc:alice:0'});await cmd('alice',{type:'queue',dungeonId:'deadmines'});
+ await cmd('bob',{type:'npcInvite',targetId:'npc:realm:1'});await cmd('bob',{type:'leave'});await assert.rejects(cmd('alice',{type:'npcInvite',targetId:'npc:realm:19'}),/等级差/);
+ await cmd('alice',{type:'role',role:'dps'});await cmd('alice',{type:'npcInvite',targetId:'npc:realm:1'});await cmd('alice',{type:'queue',dungeonId:'deadmines'});
  advance(46000);await social.snapshot('bob','bob');assert.equal((await social.snapshot('alice','alice')).group!.status,'forming');
 });
 test('world recruitment is emitted once and supports direct role joining with stale/full/level checks',async()=>{
@@ -74,7 +80,7 @@ test('world recruitment is emitted once and supports direct role joining with st
  await cmd('bob',{type:'recruitJoin',groupId:post.groupId,recruitmentId:post.recruitmentId,role:'healer'});
  assert.equal((await social.snapshot('bob','bob')).group!.leaderId,'alice');assert.equal((await social.snapshot('bob','bob')).messages.world[0].needed.healer,0);
  await assert.rejects(cmd('carol',{type:'recruitJoin',groupId:post.groupId,recruitmentId:post.recruitmentId,role:'healer'}),/职业/);
- await store.transaction(async tx=>{const c=(await tx.get('characters','carol'))!;c.rules.level=40;await tx.put('characters',c);});
+ await store.transaction(async tx=>{const c=(await tx.get('characters','carol'))!;c.rules.level=1;await tx.put('characters',c);});
  await assert.rejects(cmd('carol',{type:'recruitJoin',groupId:post.groupId,recruitmentId:post.recruitmentId,role:'tank'}),/等级/);
  await cmd('alice',{type:'cancel'});assert.equal((await social.snapshot('bob','bob')).messages.world[0].open,false);
  await assert.rejects(cmd('dave',{type:'recruitJoin',groupId:post.groupId,recruitmentId:post.recruitmentId,role:'dps'}),/结束/);
@@ -83,26 +89,26 @@ test('world recruitment is emitted once and supports direct role joining with st
 });
 test('NPCs in an active dungeon are not auto-matched or manually invited',async()=>{
  const {social,cmd,store,advance}=await fixture();
- await store.transaction(async tx=>{await tx.insert('simulation_characters',{id:'npc:alice:0',instanceId:'busy-room'});await tx.insert('simulation_checkpoints',{id:'busy-room',encodedCheckpoint:JSON.stringify({state:{dungeon:{id:'deadmines'},party:[{id:'npc:alice:0'}]}})});});
- await assert.rejects(cmd('alice',{type:'npcInvite',targetId:'npc:alice:0'}),/副本/);
+ await store.transaction(async tx=>{await tx.insert('simulation_characters',{id:'npc:realm:1',instanceId:'busy-room'});await tx.insert('simulation_checkpoints',{id:'busy-room',encodedCheckpoint:JSON.stringify({state:{dungeon:{id:'deadmines'},party:[{id:'npc:realm:1'}]}})});});
+ await assert.rejects(cmd('alice',{type:'npcInvite',targetId:'npc:realm:1'}),/副本/);
  await cmd('alice',{type:'role',role:'dps'});await cmd('alice',{type:'queue',dungeonId:'deadmines'});advance(8000);assert.equal((await social.snapshot('alice','alice')).proposal,null);
 });
 test('explicit save deletion releases social claims and transfers leadership without deleting another player',async()=>{
  const {removeSocialCharacters}=await import('../src/social-cleanup.ts');const {social,cmd,store}=await fixture();
  await cmd('alice',{type:'partyInvite',targetId:'bob'});const invite=(await social.snapshot('bob','bob')).incoming[0];await cmd('bob',{type:'respond',inviteId:invite.id,accept:true});
- await cmd('alice',{type:'npcInvite',targetId:'npc:alice:0'});
- await store.transaction(tx=>removeSocialCharacters(tx,new Set(['alice','npc:alice:0'])));
+ await cmd('alice',{type:'npcInvite',targetId:'npc:realm:1'});
+ await store.transaction(tx=>removeSocialCharacters(tx,new Set(['alice','npc:realm:1'])));
  const survivor=await social.snapshot('bob','bob');assert.equal(survivor.group!.leaderId,'bob');assert.equal(survivor.group!.members.length,1);assert.equal(await store.read(tx=>tx.get('social_members','alice')),null);
 });
-test('matching finds a complete level window instead of letting the first tank block eligible teammates',async()=>{
+test('matching skips NPCs below -1 and accepts NPCs at +3 relative to the leader',async()=>{
  const {social,cmd,store,advance}=await fixture();
  await store.transaction(async tx=>{
-  for(const npc of await tx.list('npc_characters')){npc.rules.level=npc.id==='npc:alice:0'?15:25;await tx.put('npc_characters',npc);}
+  for(const npc of await tx.list('npc_characters')){npc.rules.level=npc.id==='npc:realm:1'?18:23;await tx.put('npc_characters',npc);}
  });
  await cmd('alice',{type:'role',role:'dps'});await cmd('alice',{type:'queue',dungeonId:'deadmines'});advance(8000);
  const result=await social.snapshot('alice','alice');assert.equal(result.proposal!.members.length,5);
- assert.ok(result.proposal!.members.every((m:any)=>m.level>=20));assert.ok(result.proposal!.members.some((m:any)=>m.id==='npc:alice:4'));
- assert.equal(await store.read(tx=>tx.get('social_members','npc:alice:0')),null,'incompatible candidates are not reserved');
+ assert.ok(result.proposal!.members.every((m:any)=>m.level>=20));assert.ok(result.proposal!.members.some((m:any)=>m.id==='npc:realm:19'));
+ assert.equal(await store.read(tx=>tx.get('social_members','npc:realm:1')),null,'incompatible candidates are not reserved');
 });
 test('supply derives dungeon minimum and premade interval from authoritative records',async()=>{
  const {social,cmd,store}=await fixture();const dungeon=Object.values(dungeonDefinitions).find(d=>d.minimumLevel>=20)!;
@@ -113,5 +119,32 @@ test('supply derives dungeon minimum and premade interval from authoritative rec
  await assert.rejects(social.supply('alice','alice',dungeon.id),/最低等级/);
  await cmd('alice',{type:'partyInvite',targetId:'bob'});const invite=(await social.snapshot('bob','bob')).incoming[0];await cmd('bob',{type:'respond',inviteId:invite.id,accept:true});
  await store.transaction(async tx=>{const row=(await tx.get('characters','bob'))!;row.rules.level=60;await tx.put('characters',row);});
- await assert.rejects(social.supply('alice','alice'),/等级差/);
+ const mixed=await social.supply('alice','alice');assert.equal(mixed.minimumLevel,Math.max(10,dungeon.minimumLevel-2));assert.equal(mixed.maximumLevel,dungeon.minimumLevel+2);
+ const memberSupply=await social.supply('bob','bob');assert.deepEqual(memberSupply,mixed,'non-leader supply uses the authoritative leader level');
+ const memberView=await social.snapshot('bob','bob');assert.ok(memberView.npcs.length>0);assert.ok(memberView.npcs.every(n=>n.level>=mixed.minimumLevel&&n.level<=mixed.maximumLevel));
+});
+
+test('humans spanning 20–60 match under dungeon limits while NPCs use the leader range',async()=>{
+ const {social,cmd,store,advance}=await fixture();
+ await store.transaction(async tx=>{const row=(await tx.get('characters','bob'))!;row.rules.level=60;await tx.put('characters',row);});
+ await cmd('alice',{type:'role',role:'dps'});await cmd('alice',{type:'queue',dungeonId:'deadmines'});
+ await cmd('bob',{type:'role',role:'healer'});await cmd('bob',{type:'queue',dungeonId:'deadmines'});
+ advance(8000);const result=await social.snapshot('alice','alice');
+ assert.ok(result.proposal!.members.some((m:any)=>m.id==='bob'&&m.level===60));
+ assert.ok(result.proposal!.members.filter((m:any)=>m.npc).every((m:any)=>m.level>=19&&m.level<=23));
+});
+test('manual NPC invitations accept -1/+3 and reject -2/+4',async()=>{
+ for(const level of [18,19,23,24]){
+  const {cmd,store}=await fixture();await store.transaction(async tx=>{const row=(await tx.get('npc_characters','npc:realm:1'))!;row.rules.level=level;await tx.put('npc_characters',row);});
+  if(level===18||level===24)await assert.rejects(cmd('alice',{type:'npcInvite',targetId:'npc:realm:1'}),/等级差/);
+  else await cmd('alice',{type:'npcInvite',targetId:'npc:realm:1'});
+ }
+});
+
+test('NPC growth outside the leader range invalidates a pending match',async()=>{
+ const {social,cmd,store,advance}=await fixture();await cmd('alice',{type:'role',role:'dps'});await cmd('alice',{type:'queue',dungeonId:'deadmines'});advance(8000);
+ const result=await social.snapshot('alice','alice');assert.ok(result.proposal);
+ await store.transaction(async tx=>{const row=(await tx.get('npc_characters','npc:realm:1'))!;row.rules.level=24;await tx.put('npc_characters',row);});
+ const invalid=await social.snapshot('alice','alice');assert.equal(invalid.proposal,null);assert.equal(invalid.group!.status,'forming');
+ assert.equal(await store.read(tx=>tx.get('social_members','npc:realm:1')),null);
 });

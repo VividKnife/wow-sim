@@ -1,8 +1,8 @@
+import {npcFixture} from '../../../packages/game-domain/test/support/npc-fixture.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../../packages/persistence/src/memory.ts';
 import {residentPartyFixture} from '../../../packages/game-domain/test/support/resident-party.ts';
-import {ensureNpcMatchSupply} from '../../../packages/game-domain/src/rules/npc-world.js';
 import {addPeriodicEffect} from '../../../packages/game-domain/src/rules/simulation-events.js';
 import {addEnemyAura} from '../../../packages/game-domain/src/rules/enemy-aura-events.js';
 import {advanceOwned} from '../../../packages/game-domain/src/rules/engine.js';
@@ -16,7 +16,7 @@ async function fixture(){
  const states=[admission.state,admission.state.party[0]],sources=[];
  for(const [i,state]of states.entries()){
   state.party=[];state.level=20;state.location='deadmines';state.hp=stats(state).maxHp-100;
-  ensureNpcMatchSupply(state);state.party=state.npcWorld.residents.slice(0,i?1:2).map((p:Rules)=>structuredClone(p.unit));
+  npcFixture(state,i*100);state.party=state.npcWorld.residents.slice(0,i?1:2).map((p:Rules)=>structuredClone(p.unit));
   state.npcWorld.selection=state.party.map((a:Rules)=>a.id);
   addPeriodicEffect(state,state,'hots',{spell:139,caster:state.id,name:'Renew',amount:10,next:state.clock+1000,interval:1000,until:state.clock+3000});
   addEnemyAura(state,state,{spell:16403,type:3,amount:1,interval:1000,next:state.clock+1000,until:state.clock+3000,caster:state.id,positive:false});
@@ -28,7 +28,7 @@ async function fixture(){
  const source=composeDungeonCheckpoint(sources,{instanceId:'dungeon:first',ownerEpoch:1,primaryActorId:ids[0],roster});
  source.state.dungeon.cleared={test:true};return {source,ids};
 }
-for(const index of [0,1])test(`${index?'member':'leader'} departure preserves the other human, their NPCs, periodic effects and dungeon progress`,async()=>{
+for(const index of [0,1])test(`${index?'member':'leader'} departure preserves the other human, the public NPCs, periodic effects and dungeon progress`,async()=>{
  const {source,ids}=await fixture(),before=structuredClone(source);
  const [personal,remaining]=splitDungeonCheckpoint(source,ids[index],{instanceId:'personal:left',ownerEpoch:1},{instanceId:'dungeon:remaining',ownerEpoch:1});
  assert.deepEqual(source,before,'composition cannot mutate a live source');
@@ -42,7 +42,7 @@ for(const index of [0,1])test(`${index?'member':'leader'} departure preserves th
  for(const cp of [personal,remaining]){
   const original=[source.state,...source.state.party].find(a=>a.id===cp.state.id)!;
   for(const key of ['bag','bank','money','itemSequence','quests','completed','strategyProfiles'])assert.deepEqual(cp.state[key],original[key],key);
-  assert.deepEqual(cp.state.party.map((a:Rules)=>a.id).sort(),source.state.party.filter((a:Rules)=>a.npcPlayer&&original.npcWorld.residents.some((p:Rules)=>p.id===a.id)).map((a:Rules)=>a.id).sort());
+  assert.deepEqual(cp.state.party.map((a:Rules)=>a.id).sort(),cp===personal?[]:source.state.party.filter((a:Rules)=>a.npcPlayer).map((a:Rules)=>a.id).sort());
   assert.equal(cp.controllers.length,1);assert.equal(cp.controllers[0].generation,3);
   assert.equal(cp.presence!.accounts.length,1);assert.equal(cp.presence!.accounts[0][0],cp.controllers[0].accountId);
   assert.ok(Object.values(cp.state.simulationEvents.periodics).every((t:any)=>t.targetId===cp.state.id));
@@ -53,7 +53,7 @@ for(const index of [0,1])test(`${index?'member':'leader'} departure preserves th
   assert.equal(cp.state.logs.filter((l:Rules)=>l.kind==='heal'&&l.actorId===cp.state.id).length,3);
  }
 });
-test('the last human leaves with their NPC cohort without duplicating shared progress',async()=>{
+test('the last human releases the public NPC cohort without duplicating shared progress',async()=>{
  const {source,ids}=await fixture();const [,remaining]=splitDungeonCheckpoint(source,ids[1],{instanceId:'personal:bob',ownerEpoch:1},{instanceId:'dungeon:alice',ownerEpoch:1});
  const [personal]=splitDungeonCheckpoint(remaining,ids[0],{instanceId:'personal:alice',ownerEpoch:1});
  assert.equal(personal.state.dungeon,undefined);assert.equal(personal.state.dungeonSaves.deadmines,undefined);

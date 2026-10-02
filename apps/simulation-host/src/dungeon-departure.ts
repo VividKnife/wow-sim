@@ -1,3 +1,4 @@
+import {residentNpcProfiles} from '../../../packages/game-domain/src/npc-residency.ts';
 import {ResidentInstance,type InstanceCheckpoint} from './instance.ts';
 import type {Rules} from '../../../packages/game-domain/src/model.ts';
 import {participantPresentationState} from '../../../packages/game-domain/src/resident-participants.ts';
@@ -24,11 +25,10 @@ export function splitDungeonCheckpoint(source:InstanceCheckpoint,actorId:string,
  if(['casts','resources','attacks','dots','grounds'].some(key=>Object.keys(storage[key]).length)||storage.ready.friendly.length||storage.ready.enemy.length||
   storage.queue.events.some((event:Rules)=>event.kind!=='AuraPeriodic'||![33,35].includes(event.phase)))throw new Error('Non-portable events remain in dungeon');
  const members=[room,...room.party],humans=members.filter(a=>!a.npcPlayer);
- const ownerOf=new Map<string,string>();
- for(const human of humans)for(const npc of human.npcWorld?.residents??[]){if(ownerOf.has(npc.id))throw new Error('Duplicate NPC identity');ownerOf.set(npc.id,human.id);}
- for(const guest of room.npcGuests??[])ownerOf.set(guest.profile.id,guest.ownerCharacterId);
- for(const actor of members.filter(a=>a.npcPlayer))if(!ownerOf.has(actor.id))throw new Error('NPC owner missing');
- const leavingIds=new Set([actorId,...members.filter(a=>a.npcPlayer&&ownerOf.get(a.id)===actorId).map(a=>a.id)]);
+ syncNpcWorld(room);
+ room.npcGuests=residentNpcProfiles(room);
+ for(const human of humans)delete human.npcWorld;
+ const leavingIds=new Set([actorId]);
  const outputs:InstanceCheckpoint[]=[];
  for(const destination of [personal,...(remaining?[remaining]:[])]){
   const outside=destination===personal;
@@ -42,14 +42,10 @@ export function splitDungeonCheckpoint(source:InstanceCheckpoint,actorId:string,
    nextPull:room.nextPull,dungeonSequence:room.dungeonSequence,dungeonRoster:room.dungeonRoster,
    npcGuests:(room.npcGuests??[]).filter((g:Rules)=>selected.some(a=>a.id===g.profile.id)),
    sharedParty:{leaderId:room.sharedParty.leaderId,participantIds:selected.filter(a=>!a.npcPlayer).map(a=>a.id)}});
-  // Each retained human keeps only their own permanent cohort in npcWorld.
-  for(const human of [state,...state.party].filter(a=>!a.npcPlayer)){
-   const own=state.party.filter((a:Rules)=>a.npcPlayer&&ownerOf.get(a.id)===human.id);
-   syncNpcWorld({...human,party:own,clock:room.clock,wallAt:room.wallAt});
-  }
   state.dungeonPresentNpcIds=selected.filter(a=>a.npcPlayer).map(a=>a.id);
   if(outside){
    leaveDungeon(state);
+   state.party=state.party.filter((a:Rules)=>!a.npcPlayer);delete state.npcWorld;delete state.npcGuests;
    // The shared run stays in the remaining room or is parked on the group
    // by the transfer transaction. Never duplicate it into a personal save.
    delete state.dungeonSaves[room.dungeon.id];

@@ -129,13 +129,9 @@ test('protection directs a configured CC to the attacker threatening the assigne
 test('service persists the player PvP profile while persistent NPCs prepare their own builds',async()=>{
  const store=new MemoryStore(),service=new GameService(store,{contentVersion:'pvp-test',now:()=>1000,seed:()=>123});
  const save=await service.createSave('pvp',{name:'leader',classId:8,raceId:1,raidReady:true},'profiles');
- const original=await service.command(save.id,{type:'npcRecommend',requestId:'group'});
+ const original=await service.snapshot(save.id);
  await service.command(save.id,{type:'pvpConfigure',target:original.state.id,revision:0,profile:recommendedPvpProfile(original.state),requestId:'config'});
  const restarted=new GameService(store,{contentVersion:'pvp-test',now:()=>1000}),restored=await restarted.snapshot(save.id);
  assert.equal(restored.state.pvpProfile.revision,1);assert.deepEqual(restored.state.talents,original.state.talents);
- assert.deepEqual(restored.state.npcWorld.residents,original.state.npcWorld.residents);
- const p=await restarted.command(save.id,{type:'arenaPrepare',size:5,mapId:'four-pillars',opponentId:'rmp',memberIds:[restored.state.id,...restored.state.npcWorld.selection],requestId:'prepare'});
- assert.equal(p.state.arena.teams[0].members.length,5);
- assert.equal(p.state.arena.teams[0].members.find((c:Rules)=>c.sourceId===restored.state.id).pvpProfileRevision,1);
- const after=await restarted.snapshot(save.id);assert.deepEqual(after.state.npcWorld.residents,original.state.npcWorld.residents);
+ assert.equal(restored.state.npcWorld,undefined,'the player save owns no public NPC roster');
 });

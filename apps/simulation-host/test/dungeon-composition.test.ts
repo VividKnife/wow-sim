@@ -1,8 +1,9 @@
+import {npcFixture} from '../../../packages/game-domain/test/support/npc-fixture.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../../packages/persistence/src/memory.ts';
 import {residentPartyFixture} from '../../../packages/game-domain/test/support/resident-party.ts';
-import {ensureNpcMatchSupply,npcAward} from '../../../packages/game-domain/src/rules/npc-world.js';
+import {npcAward} from '../../../packages/game-domain/src/rules/npc-world.js';
 import {rebaseSimulation} from '../../../packages/game-domain/src/simulation-clock.ts';
 import {addPeriodicEffect,simulationEventRuntime,preparePeriodicEffects} from '../../../packages/game-domain/src/rules/simulation-events.js';
 import {addEnemyAura} from '../../../packages/game-domain/src/rules/enemy-aura-events.js';
@@ -18,7 +19,7 @@ async function fixture(){
   const states=[admission.state,admission.state.party[0]];
   for(const [i,s]of states.entries()){
     s.party=[];s.level=20;s.location='deadmines';s.hp=stats(s).maxHp-100;s.mana=stats(s).maxMana;
-    ensureNpcMatchSupply(s);
+    npcFixture(s,i*100);
     s.party=s.npcWorld.residents.slice(0,i?1:2).map((p:Rules)=>structuredClone(p.unit));
     s.npcWorld.selection=s.party.map((p:Rules)=>p.id);
     rebaseSimulation(s,10000+i*12345);

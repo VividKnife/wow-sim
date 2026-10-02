@@ -11,7 +11,7 @@ const digest=(value:unknown)=>createHash('sha256').update(JSON.stringify(value))
 const receiptId=(accountId:string,input:SimulationInput)=>'dungeon-input:'+digest([accountId,input.requestId]);
 export function validateDungeonInput(input:SimulationInput){
  validateSimulationInput(input);
- requireThat(input.command.kind==='action'&&(input.command.action.type==='leaveDungeon'||input.command.action.type==='enterDungeon'&&typeof input.command.action.contentId==='string'),
+ requireThat(input.command.kind==='action'&&(input.command.action.type==='goldLeave'||input.command.action.type==='leaveDungeon'||input.command.action.type==='enterDungeon'&&typeof input.command.action.contentId==='string'),
   'DUNGEON_INPUT','请选择要进入的副本');
 }
 /** One durable arrival receipt, in the same transaction as group binding and
@@ -22,6 +22,10 @@ export async function saveDungeonInput(tx:Transaction,accountId:string,input:Sim
 export class DungeonAdmissions{
  private readonly store:Store;
  constructor(store:Store){this.store=store;}
+ async raidReceipt(accountId:string,input:SimulationInput){
+  validateDungeonInput(input);
+  return this.store.read(async tx=>{await owned(tx,accountId,input.actorId);const previous=await tx.get('receipts',receiptId(accountId,input));if(previous)requireThat(previous.fingerprint===digest(input),'DUNGEON_INPUT','请求标识已被另一操作使用');return previous?.receipt as InputReceipt|undefined;});
+ }
  async plan(accountId:string,input:SimulationInput){
   validateDungeonInput(input);
   return this.store.read(async tx=>{
@@ -45,10 +49,7 @@ export class DungeonAdmissions{
     for(const member of group!.members.filter(m=>m.npc)){
      const claim=await tx.get('simulation_characters',member.id);
      const holder=claim?await tx.get('simulation_residencies',claim.instanceId):null;
-     const origin=await tx.get('characters',member.ownerCharacterId!);
-     requireThat(origin&&(!claim||holder),'NPC_STATE','NPC 执行权记录不完整');
-     const host={accountId:(holder?.accountId??origin!.accountId) as string,characterId:(holder?.characterId??origin!.id) as string};
-     if(!known.has(host.characterId)){known.add(host.characterId);npcSources.push(host);}
+     requireThat(!claim||holder&&claim.instanceId===group!.instanceId,'NPC_BUSY','NPC 已被其他队伍占用');
     }
    }
    return {request,group:group!,npcSources,existing:residency?{accountId:residency.accountId as string,characterId:residency.characterId as string}:null};

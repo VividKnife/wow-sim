@@ -1,93 +1,73 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {PGlite} from '@electric-sql/pglite';
 import {MemoryStore} from '../../../packages/persistence/src/memory.ts';
-import {PostgresStore,type SqlPool} from '../../../packages/persistence/src/postgres.ts';
-import {SimulationRepository,type TransferBoundary} from '../../../packages/persistence/src/simulation.ts';
-import {residentStore,transferResidentClaims} from '../../../packages/game-domain/src/resident-store.ts';
-import {ResidentCharacters,type CharacterAdmission,type Residency} from '../../../packages/game-domain/src/resident-characters.ts';
+import {residentStore} from '../../../packages/game-domain/src/resident-store.ts';
+import {SimulationRepository} from '../../../packages/persistence/src/simulation.ts';
+import {ResidentCharacters} from '../../../packages/game-domain/src/resident-characters.ts';
+import {DungeonAdmissions} from '../../../packages/game-domain/src/dungeon-admissions.ts';
+import {SocialService} from '../../../packages/game-domain/src/social.ts';
 import {GameService} from '../../../packages/game-domain/src/service.ts';
 import {context,persistCharacter} from '../../../packages/game-domain/src/context.ts';
-import {ensureNpcMatchSupply,ensureNpcWorld,progressNpcWorld,creditNpcMoney} from '../../../packages/game-domain/src/rules/npc-world.js';
 import type {Character,Rules} from '../../../packages/game-domain/src/model.ts';
-import {ResidentInstance,type InstanceCheckpoint} from '../src/instance.ts';
-import {detachStandbyNpcs} from '../src/npc-transfer.ts';
-import {composeDungeonCheckpoint} from '../src/dungeon-composition.ts';
+import {SimulationDirectory} from '../src/directory.ts';
 import {runtimeVersion} from '../src/version.ts';
+import {combatRole} from '../../../packages/game-domain/src/rules/combat-roles.js';
+import {loadNpcResident,persistNpcResident,type NpcCharacter} from '../../../packages/game-domain/src/npc-characters.ts';
+import {newResident} from '../../../packages/game-domain/src/rules/npc-world.js';
 
-function pool(db:PGlite):SqlPool{
- let tail=Promise.resolve();return {async connect(){const previous=tail;let release!:()=>void;tail=new Promise(r=>release=r);await previous;
- return {query:async(sql,values)=>sql.includes('CREATE TABLE')?(await db.exec(sql),{rows:[]}):db.query(sql,values),release};},end:()=>db.close()};
+async function fixture(level=20){
+ const store=residentStore(new MemoryStore()),game=new GameService(store,{contentVersion:'public-pool',seed:()=>283});
+ const ids:string[]=[];
+ for(const account of ['alice','bob']){
+  const save=await game.createAccount(account,{name:account,classId:8,raceId:1},'create');ids.push(save.state.id);
+  await store.transaction(async tx=>{const row=(await tx.get<Character>('characters',save.state.id))!,s=await context(tx,row,Date.now(),false);s.level=level;s.completed[7848]=1;s.location='deadmines';await persistCharacter(tx,row,s,s.wallAt,'fixture:'+account);});
+ }
+ const characters=new ResidentCharacters(store,{version:runtimeVersion}),repository=new SimulationRepository(store,Date.now,characters.commit),directory=new SimulationDirectory(repository,{characters,dungeons:new DungeonAdmissions(store)});
+ const checkpoint=async(instanceId:string):Promise<any>=>{await directory.checkpoint(instanceId);return store.read(async tx=>JSON.parse((await tx.get('simulation_checkpoints',instanceId))!.encodedCheckpoint));};
+ let wall=Date.now();const social=new SocialService(store,()=>wall);
+ const input=async(account:string,action:Rules,sequence:number)=>{
+  const id=ids[account==='alice'?0:1],route=await directory.openCharacter(account,id),cp=await checkpoint(route.instanceId);
+  return {instanceId:route.instanceId,actorId:id,controllerGeneration:cp.controllers.find((c:Rules)=>c.actorId===id)!.generation,clientSequence:sequence,requestId:crypto.randomUUID(),command:{kind:'action' as const,action:action as {type:string}}};
+ };
+ return {store,game,ids,directory,social,input,checkpoint,advance:()=>{wall+=9000;}};
 }
-const residency=(cp:InstanceCheckpoint):Residency=>({id:cp.instanceId,characterId:cp.state.id,accountId:cp.controllers.find(c=>c.actorId===cp.state.id)!.accountId,...runtimeVersion,
- participants:cp.controllers.map(c=>({characterId:c.actorId,accountId:c.accountId})),encodedAdmission:JSON.stringify({instanceId:cp.instanceId,state:cp.state,controllers:cp.controllers,presence:cp.presence})});
-
-for(const backend of ['memory','sql'])test(`${backend}: standby NPC custody moves without its human, earns privately, and reunites without replacing assets`,async()=>{
- const raw=backend==='memory'?new MemoryStore():new PostgresStore(pool(new PGlite()));if(raw instanceof PostgresStore)await raw.initialize();
- const store=residentStore(raw),game=new GameService(store,{contentVersion:'npc-custody',seed:()=>283});
- const characters=new ResidentCharacters(store,{version:runtimeVersion}),repository=new SimulationRepository(store,Date.now,characters.commit);
+test('cold public NPCs enter a human dungeon exclusively, return on last departure, and can serve another player', {timeout:60000},async()=>{
+ const f=await fixture(),{store,ids,directory,social,input,checkpoint}=f;
  try{
-  const admissions:CharacterAdmission[]=[],owners=[];
-  for(const accountId of ['alice','bob']){
-   const made=await game.createAccount(accountId,{name:accountId,classId:8,raceId:1},'create');
-   await store.transaction(async tx=>{const row=(await tx.get<Character>('characters',made.state.id))!,state=await context(tx,row,Date.now(),false);
-    state.level=20;state.location=accountId==='alice'?'deadmines':'goldshire';ensureNpcMatchSupply(state);await persistCharacter(tx,row,state,state.wallAt,'seed:'+accountId);
-   });
-   admissions.push(await characters.admission(accountId,made.state.id));
-  }
-  const wall=Date.now();for(const admission of admissions)admission.state.wallAt=wall;
-  const remote=admissions[1],ids=remote.state.npcWorld.residents.slice(0,3).map((p:Rules)=>p.id);
-  // The owner's position and activity are unrelated to the NPC's destination.
-  const remoteRuntime=new ResidentInstance({...remote,ownerEpoch:1});
-  const travel=remoteRuntime.input('bob',{instanceId:remote.instanceId,actorId:remote.state.id,controllerGeneration:1,clientSequence:1,requestId:'walk',command:{kind:'action',action:{type:'travel',to:'stormwind'}}});
-  assert.equal(travel.status,'applied');remote.state=remoteRuntime.checkpoint().state;
-  const originalActivity=structuredClone(remote.state.activity);
-  for(const admission of admissions){const owner=await repository.acquire(admission.instanceId,'before',60000);const cp=admission===remote?remoteRuntime.checkpoint():new ResidentInstance({...admission,ownerEpoch:owner.epoch}).checkpoint();await repository.commit(owner,1,cp);owner.commitSequence=1;owners.push(await repository.seal(owner,'borrow'));}
-  const roster={groupId:'custody:party',leaderId:admissions[0].state.id,dungeonId:'deadmines',members:[...admissions.map(a=>({id:a.state.id,npc:false})),...ids.map((id:string)=>({id,npc:true}))]};
-  const before=await store.read(async tx=>({items:await tx.list('items'),wallets:await tx.list('wallets'),claims:await tx.list('simulation_characters')}));
-  const boundary:TransferBoundary<InstanceCheckpoint>=async(tx,{transferId,destinations,sources})=>{
-   const detached=detachStandbyNpcs(sources[1].checkpoint,ids,{instanceId:destinations[1].id,ownerEpoch:destinations[1].epoch});
-   const arrival=structuredClone(sources[0].checkpoint);
-   const room=composeDungeonCheckpoint([arrival],{instanceId:destinations[0].id,ownerEpoch:destinations[0].epoch,primaryActorId:arrival.state.id,roster,selectMatchedNpcs:true,npcArrivals:[detached.arrival]});
-   const result=[room,detached.checkpoint];await transferResidentClaims(tx,transferId,sources.map(s=>s.owner),result.map(residency));return result;
-  };
-  await assert.rejects(repository.transfer<InstanceCheckpoint>('borrow',owners,['dungeon:borrowed','personal:outside'],async(tx,transfer)=>{await boundary(tx,transfer);throw Error('Rollback borrowed NPC');}),/Rollback borrowed/);
-  assert.deepEqual(await store.read(tx=>tx.list('simulation_characters')),before.claims);
-  await repository.transfer('borrow',owners,['dungeon:borrowed','personal:outside'],boundary);
-  assert.equal((await repository.transfer('borrow',owners,['dungeon:borrowed','personal:outside'],boundary)).duplicate,true);
-  const insideOwner=await repository.acquire('dungeon:borrowed','after',60000),outsideOwner=await repository.acquire('personal:outside','after',60000);
-  const inside=ResidentInstance.restore((await repository.load<InstanceCheckpoint>(insideOwner.id))!.checkpoint,insideOwner.epoch),outside=ResidentInstance.restore((await repository.load<InstanceCheckpoint>(outsideOwner.id))!.checkpoint,outsideOwner.epoch);
-  const room=inside.checkpoint(),personal=outside.checkpoint();
-  assert.equal(room.controllers.length,1);assert.equal(room.state.party.length,3);
-  assert.equal(personal.recentInputs[0].input.requestId,'walk');assert.equal(personal.recentInputs[0].input.instanceId,personal.instanceId);
-  assert.deepEqual(personal.state.activity,originalActivity);assert.equal(personal.state.location,'goldshire');
-  assert.deepEqual(personal.state.npcWorld.away.map((p:Rules)=>p.id),ids);
-  assert.ok(ids.every((id:string)=>!personal.state.npcWorld.residents.some((p:Rules)=>p.id===id)));
-  const own=structuredClone(personal.state);ensureNpcWorld(own,0);progressNpcWorld(own);
-  assert.ok(ids.every((id:string)=>!own.npcWorld.residents.some((p:Rules)=>p.id===id)));
-  const view=inside.presentation('alice',room.state.id,'full').snapshot!;
-  assert.equal(view.player.npcGuests,undefined);assert.ok(!(view.view.npcWorld as Rules).residents.some((p:Rules)=>ids.includes(p.id)));
-  creditNpcMoney(room.state,room.state.party[0],321);
-  const earned=room.state.npcGuests[0].profile.wallet;
-  await repository.commit(insideOwner,2,room);insideOwner.commitSequence=2;
-  await repository.commit(outsideOwner,2,personal);outsideOwner.commitSequence=2;
-  assert.equal((await store.read(tx=>tx.get('wallets',ids[0])))!.balance,earned);
-  assert.equal((await store.read(tx=>tx.get('wallets',remote.state.id)))!.balance,before.wallets.find(w=>w.id===remote.state.id)!.balance);
-  // Reconstructing the outside owner's DB view also keeps foreign-owned state
-  // absent instead of silently loading a second writable profile.
-  const loaded=await store.read(async tx=>context(tx,(await tx.get<Character>('characters',remote.state.id))!,wall,false));
-  assert.deepEqual(loaded.npcWorld.away.map((p:Rules)=>p.id),ids);
-  assert.ok(ids.every((id:string)=>!loaded.npcWorld.residents.some((p:Rules)=>p.id===id)));
-  const illicit=structuredClone(personal),profile=structuredClone(room.state.npcGuests[0].profile);
-  illicit.state.npcWorld.residents.push(profile);illicit.state.npcWorld.away=illicit.state.npcWorld.away.filter((p:Rules)=>p.id!==profile.id);
-  await assert.rejects(repository.commit(outsideOwner,3,illicit),/另一实例|模拟实例/);
-  // A later human arrival consumes the away reference and uses the real guest
-  // profile, including earned money. No database state is copied over it.
-  personal.state.activity={type:'idle'};personal.state.location='deadmines';personal.state.wallAt=room.state.wallAt;
-  const joined=composeDungeonCheckpoint([room,personal],{instanceId:'dungeon:reunited',ownerEpoch:1,primaryActorId:room.state.id,roster,selectMatchedNpcs:true});
-  assert.equal(joined.state.npcGuests,undefined);
-  const reunited=joined.state.party.find((a:Rules)=>a.id===remote.state.id)!;
-  assert.equal(reunited.npcWorld.away.length,0);assert.equal(reunited.npcWorld.residents.find((p:Rules)=>p.id===ids[0]).wallet,earned);
-  assert.equal(joined.controllers.length,2);assert.equal(joined.state.party.length,4);
- }finally{await store.close();}
+  await social.supply('alice',ids[0]);const publicRows=await store.read(tx=>tx.list<NpcCharacter>('npc_characters'));
+  const members=['tank','healer','dps','dps'].map(role=>{const row=publicRows.find(r=>(['tank','healer'].includes(combatRole(r.rules))?combatRole(r.rules):'dps')===role)!;publicRows.splice(publicRows.indexOf(row),1);return row.id;});
+  const cmd=(a:string,body:Rules)=>social.command(a,ids[a==='alice'?0:1],{requestId:crypto.randomUUID(),...body});
+  await cmd('alice',{type:'role',role:'dps'});
+  for(const id of members)await cmd('alice',{type:'npcInvite',targetId:id});
+  await cmd('alice',{type:'queue',dungeonId:'deadmines'});f.advance();const proposal=(await social.snapshot('alice',ids[0])).proposal!;
+  await cmd('alice',{type:'proposal',proposalId:proposal.id,accept:true});
+  const request=await input('alice',{type:'enterDungeon',contentId:'deadmines'},1),entered=await directory.enterDungeon('alice',request);
+  const cp=await checkpoint(entered.instanceId);assert.equal(cp.state.party.length,4);assert.equal(cp.state.npcGuests.length,4);assert.equal(cp.state.npcWorld,undefined);
+  for(const id of members){const claim=await store.read(tx=>tx.get('simulation_characters',id));assert.equal(claim!.instanceId,entered.instanceId);assert.equal(claim!.accountId,null);}
+  await assert.rejects(cmd('bob',{type:'npcInvite',targetId:members[0]}),/队伍|副本|战斗/);
+  const repeat=await directory.enterDungeon('alice',request);assert.equal(repeat.instanceId,entered.instanceId);
+  const before=await store.read(async tx=>loadNpcResident(tx,(await tx.get<NpcCharacter>('npc_characters',members[0]))!));
+  const left=await directory.leaveDungeon('alice',await input('alice',{type:'leaveDungeon'},2));
+  assert.equal((await checkpoint(left.instanceId)).state.party.length,0);
+  for(const id of members)assert.equal(await store.read(tx=>tx.get('simulation_characters',id)),null);
+  await cmd('alice',{type:'leave'});await cmd('bob',{type:'npcInvite',targetId:members[0]});
+  const after=await store.read(async tx=>loadNpcResident(tx,(await tx.get<NpcCharacter>('npc_characters',members[0]))!));assert.deepEqual(after.unit.equipment,before.unit.equipment);assert.equal(after.wallet,before.wallet);
+ }finally{await directory.close();await store.close();}
+});
+test('gold raid reserves public max-level assets, settles and releases them without changing identity', {timeout:60000},async()=>{
+ const f=await fixture(60),{store,ids,directory,input,checkpoint}=f;
+ try{
+  // An older DPS-heavy public population must not crowd tanks/healers out of recruitment.
+  await store.transaction(async tx=>{for(let i=0;i<75;i++){const p=newResident({id:'realm',raceId:1,level:60,clock:0,wallAt:Date.now(),location:'stormwind'},6+9*i);await persistNpcResident(tx,p,`old-mage:${i}`);}});
+  const arrived=await directory.enterDungeon('alice',await input('alice',{type:'enterDungeon',contentId:'molten-core-gold'},1));
+  const cp=await checkpoint(arrived.instanceId);assert.equal(cp.state.npcWorld.publicPool,true);assert.equal(cp.state.npcWorld.residents.length,72);
+  assert.equal(cp.state.npcWorld.residents.filter((p:Rules)=>combatRole(p.unit)==='tank').length,8);
+  assert.equal(cp.state.npcWorld.residents.filter((p:Rules)=>combatRole(p.unit)==='healer').length,16);
+  const idsNpc=cp.state.npcWorld.residents.map((p:Rules)=>p.id);assert.equal((await store.read(tx=>tx.list('simulation_characters',{instanceId:arrived.instanceId}))).length,73);
+  await directory.input('alice',await input('alice',{type:'goldSettle'},2));
+  const left=await directory.enterDungeon('alice',await input('alice',{type:'goldLeave'},3));
+  const after=await checkpoint(left.instanceId);assert.equal(after.state.npcWorld,undefined);
+  for(const id of idsNpc)assert.equal(await store.read(tx=>tx.get('simulation_characters',id)),null);
+  assert.equal((await store.read(tx=>tx.list('npc_characters'))).length,99);
+ }finally{await directory.close();await store.close();}
 });
