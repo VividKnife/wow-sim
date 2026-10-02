@@ -1,6 +1,6 @@
 import {residentStore} from './resident-store.ts';
 import {applyGmBuffs} from './gm-buffs.ts';
-import {claimGmGift,giftInbox} from './gm.ts';
+import {claimMail,mailInbox,resolveMailRecipientInView,validateMailDraft,commitMailSend} from './mail.ts';
 import {experienceMultiplier, applyExperienceBuff} from './rules/experience.js';
 import {advancePersonal, advanceInstance} from './background-simulation.ts';
 import {talentSummary} from './rules/talent-summary.js';
@@ -35,7 +35,10 @@ type Options = {
     xpMultiplier?: number;
 };
 export class GameService {
-    gmInbox(accountId:string){return giftInbox(this.store,accountId);}
+    async mailInbox(accountId:string,actorId?:string){
+        if(!actorId)actorId=await this.store.read(async tx=>(await account(tx,accountId)).primaryCharacterId);
+        return mailInbox(this.store,accountId,actorId);
+    }
     listSaves = listSaves;
     resolveSave = resolveSave;
     createSave = createSave;
@@ -283,11 +286,11 @@ export class GameService {
         const lease = await tx.get<ActorLease>('actor_leases', c.id);
         const existing = lease?.kind === 'activity' ? await tx.get<Activity>('activities', lease.ownerId) : null;
         requireThat(!lease || existing?.type === 'personal', 'ACTOR_BUSY', '角色正在执行后台订单');
-        if (existing && existing.actorId !== c.id && ['talent', 'resetTalents', 'claimGmGift'].includes(cmd.type)) {
+        if (existing && existing.actorId !== c.id && ['talent', 'resetTalents', 'claimMail', 'sendMail'].includes(cmd.type)) {
             await this.settleActivity(tx, existing, now);
             const leader = await owned(tx, c.accountId, existing.actorId);
             const shared = await this.personalContext(tx, leader, now);
-            requireThat(cmd.type==='claimGmGift'||(!shared.combat && ['idle', 'hunt'].includes(shared.activity.type) && !shared.escort),
+            requireThat(['claimMail','sendMail'].includes(cmd.type)||(!shared.combat && ['idle', 'hunt'].includes(shared.activity.type) && !shared.escort),
                 'ACTOR_BUSY', '请先结束队伍当前战斗或活动，再调整天赋');
             c = await owned(tx, c.accountId, c.id);
             const selected = await context(tx, c, now, false);
@@ -295,8 +298,15 @@ export class GameService {
             selected.wallAt = shared.wallAt;
             // Apply at the settled party time. A follower must not advance a second
             // simulation or replace/release the leader's activity and leases.
-            const result = cmd.type==='claimGmGift'?await claimGmGift(tx,c,selected,cmd.id,now):act(selected, cmd, selected.wallAt);
+            const action={...cmd};
+            if(action.type==='sendMail'){
+                validateMailDraft(action);
+                const recipient=await resolveMailRecipientInView(tx,action.recipient,c.id);
+                Object.assign(action,{recipientId:recipient.id,recipientAccountId:recipient.accountId,recipientName:recipient.name});
+            }
+            const result = action.type==='claimMail'?await claimMail(tx,c,selected,action.id,now):act(selected, action, selected.wallAt);
             const key = `command:${c.accountId}:${cmd.requestId}`;
+            if(action.type==='sendMail')await commitMailSend(tx,{accountId:c.accountId,input:{actorId:c.id,requestId:cmd.requestId,command:action}},c,now);
             await persistCharacter(tx, c, result, result.wallAt, key);
             await invalidateCombatPlan(tx, existing);
             await tx.put('activities', existing);
@@ -310,6 +320,11 @@ export class GameService {
         }
         let s = await this.personalContext(tx, c, now, true);
         const action = { ...cmd };
+        if(action.type==='sendMail'){
+            validateMailDraft(action);
+            const recipient=await resolveMailRecipientInView(tx,action.recipient,c.id);
+            Object.assign(action,{recipientId:recipient.id,recipientAccountId:recipient.accountId,recipientName:recipient.name});
+        }
         if (action.target && ['strategy', 'pvpConfigure', 'equip', 'equipBag'].includes(action.type)) {
             const target = s.party.find((p: Rules) => p.id === action.target);
             if (target)
@@ -327,12 +342,13 @@ export class GameService {
             requireThat(!await tx.get('reward_claims', rewardKey), 'ALREADY_CLAIMED', '已领取任务奖励');
             rewardPlan = questProgress(s, action.id)!;
         }
-        s = action.type==='claimGmGift'?await claimGmGift(tx,c,s,action.id,now):act(s, action, now, {equipmentTargetId: action.type==='equip'?action.target:null});
+        s = action.type==='claimMail'?await claimMail(tx,c,s,action.id,now):act(s, action, now, {equipmentTargetId: action.type==='equip'?action.target:null});
         const key = rewardKey || `command:${c.accountId}:${cmd.requestId}`;
         if (rewardPlan)
             await this.claimEquipmentRewards(tx, c, s, action, rewardPlan, now, key);
         if (action.type === 'equip')
             await this.transferEquipment(tx, c, s);
+        if(action.type==='sendMail')await commitMailSend(tx,{accountId:c.accountId,input:{actorId:c.id,requestId:cmd.requestId,command:action}},c,now);
         for (const member of s.party) await this.persistMember(tx, member, now, key, s);
         await persistCharacter(tx, c, s, now, key);
         await this.trackPersonal(tx, c, s, now, existing?.id);

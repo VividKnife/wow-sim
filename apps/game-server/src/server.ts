@@ -34,7 +34,7 @@ export type GameSnapshot = {
 export interface GameServiceLike {
   socialSnapshot?(accountId:string,actorId:string,query?:string):Promise<unknown>;
   socialCommand?(accountId:string,actorId:string,body:Record<string,any>):Promise<unknown>;
-  gmInbox?(accountId:string):Promise<unknown>;
+  mailInbox?(accountId:string,actorId?:string):Promise<unknown>;
   listSaves?: (userId:string)=>Promise<unknown>;
   createSave?: (userId:string,input:{name:string;classId:number;raceId:number;gender?:'male'|'female';boost?:boolean;raidReady?:boolean},requestId:string)=>Promise<unknown>;
   deleteSave?: (userId:string,saveId:string)=>Promise<void>;
@@ -338,8 +338,8 @@ export function createGameServer(options: GameServerOptions) {
         json(response, 200, gameResponse(snapshot, scope), {etag: acceptsGzip(request.headers['accept-encoding'])?'W/'+etag:etag, vary:'Accept-Encoding', 'cache-control': 'private, no-cache'});
         return;
       }
-      if(url.pathname==='/api/game/gm-inbox'&&request.method==='GET'&&options.service.gmInbox){
-        json(response,200,{gifts:await options.service.gmInbox(await selectedAccount(request,url))});return;
+      if(url.pathname==='/api/game/mail'&&request.method==='GET'&&options.service.mailInbox){
+        json(response,200,{mail:await options.service.mailInbox(await selectedAccount(request,url),characterId(url)??undefined)});return;
       }
       if (url.pathname === '/api/game' && request.method === 'POST') {
         const accountId = await selectedAccount(request, url);

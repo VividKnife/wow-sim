@@ -26,6 +26,7 @@ export function localInteractions(s,quests){
   if(flightNodes.includes(s.location)&&(creatures[id]?.NpcFlags&8))role(get('creature',id),'flight');
   if(vendors.has(id)){const npc=get('creature',id);role(npc,'shop');npc.stockIds=vendors.get(id);}
   if((creatures[id]?.NpcFlags&128))role(get('creature',id),'inn');
+  if((creatures[id]?.NpcFlags&8192))role(get('creature',id),'stable');
   if(canTrainAt(s)&&creatures[id]?.TrainerClass===s.classId&&/Trainer/.test(creatures[id]?.SubName||''))role(get('creature',id),'trainer');
  }
  if(!s.dungeon&&canTrainAt(s)&&![...result.values()].some(n=>n.roles.includes('trainer'))){

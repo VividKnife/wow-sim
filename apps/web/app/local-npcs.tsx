@@ -1,20 +1,21 @@
 import {isLowLevelQuest} from '../../../packages/sim-core/src/quest-level.js';
 import {useState} from 'react';
-import {BookOpen,Store,BedDouble,ScrollText,UserRound,X} from 'lucide-react';
+import {BookOpen,Store,BedDouble,ScrollText,UserRound,X,PawPrint} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Dialog,DialogClose,DialogContent,DialogHeader,DialogTitle,DialogDescription} from '@/components/ui/dialog';
 import {GameProps,Item,money} from './game-ui';
 import CityServicePanel from './city-services';
+import HunterPets from './hunter-pets';
 import CreaturePortrait from './creature-portrait';
 import './npc-conversation.css';
 import {serviceModels} from '../../../packages/game-data/creature-visuals.js';
 
-const names:Record<string,string>={quests:'任务',trainer:'职业训练',shop:'交易',inn:'旅店',flight:'飞行管理员'};
+const names:Record<string,string>={quests:'任务',trainer:'职业训练',shop:'交易',inn:'旅店',flight:'飞行管理员',stable:'兽栏管理员'};
 const npcLabels=(npc:any)=>[...new Set(npc.roles.map((role:string)=>role==='shop'?(npc.merchantType||'商人'):role==='inn'?'旅店老板':names[role]))];
-const categories=[{label:'全部',role:null},{label:'任务',role:'quests'},{label:'训练师',role:'trainer'},{label:'商人',role:'shop'},{label:'旅店',role:'inn'}] as const;
+const categories=[{label:'全部',role:null},{label:'任务',role:'quests'},{label:'训练师',role:'trainer'},{label:'商人',role:'shop'},{label:'旅店',role:'inn'},{label:'兽栏',role:'stable'}] as const;
 export function NpcPortrait({npc}: {npc:any}){
  if(npc.entry||npc.key==='class-trainer')return <CreaturePortrait unit={{entry:npc.entry||serviceModels.trainer}} className="npc-portrait"/>;
- const Glyph=npc.roles.includes('quests')?ScrollText:npc.roles.includes('trainer')?BookOpen:npc.roles.includes('inn')?BedDouble:npc.roles.includes('shop')?Store:UserRound;
+ const Glyph=npc.roles.includes('quests')?ScrollText:npc.roles.includes('trainer')?BookOpen:npc.roles.includes('stable')?PawPrint:npc.roles.includes('inn')?BedDouble:npc.roles.includes('shop')?Store:UserRound;
  return <span className="npc-portrait" aria-hidden="true"><Glyph size={30}/></span>;
 }
 export function QuestConversation({quest:q,...props}:GameProps&{quest:any}){
@@ -46,7 +47,7 @@ export function NpcConversation({npc,...props}:GameProps&{npc:any}){
  // The existing service panels share the same authoritative command handlers in towns and cities.
  const canInteract=!s.combat&&!s.escort&&s.hp>0&&['idle','hunt'].includes(s.activity.type);
  const serviceData={...d,shop:current==='shop'?d.shop.filter((i:any)=>npc.stockIds.includes(i.id)):d.shop,city:{...d.city,canInteract,junkCount:s.bag.filter((i:any)=>d.items[i.id]?.quality===0&&!i.locked).length}};
- return <>{npc.roles.length>1&&<div className="filterbar npc-service-tabs" aria-label="交谈内容">{npc.roles.map((role:string)=><button key={role} aria-pressed={current===role} className={current===role?'active':''} onClick={()=>setSection(role)}>{names[role]}</button>)}</div>}{!canInteract&&<p role="status">抵达并脱离战斗后，即可与这里的人物交互。</p>}{current==='quests'?<div>{quests.length?quests.map((q:any)=><QuestConversation key={q.id} {...props} busy={busy||!canInteract} quest={q}/>):<p className="empty">暂时没有新的委托。祝你旅途平安。</p>}</div>:<CityServicePanel {...props} data={serviceData} service={{id:current,name:names[current],npc:npc.name,description:'',greeting:''}}/>}</>;
+ return <>{npc.roles.length>1&&<div className="filterbar npc-service-tabs" aria-label="交谈内容">{npc.roles.map((role:string)=><button key={role} aria-pressed={current===role} className={current===role?'active':''} onClick={()=>setSection(role)}>{names[role]}</button>)}</div>}{!canInteract&&<p role="status">抵达并脱离战斗后，即可与这里的人物交互。</p>}{current==='quests'?<div>{quests.length?quests.map((q:any)=><QuestConversation key={q.id} {...props} busy={busy||!canInteract} quest={q}/>):<p className="empty">暂时没有新的委托。祝你旅途平安。</p>}</div>:current==='stable'?<HunterPets {...props} data={serviceData} busy={busy||!canInteract} stableService/>:<CityServicePanel {...props} data={serviceData} service={{id:current,name:names[current],npc:npc.name,description:'',greeting:''}}/>}</>;
 }
 export function NpcDialog({npc,onClose,...props}:GameProps&{npc:any;onClose:()=>void}){
  const {state:s,data:d}=props;

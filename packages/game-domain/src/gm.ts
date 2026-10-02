@@ -1,10 +1,10 @@
 import {residentStore} from './resident-store.ts';
 import {randomUUID} from 'node:crypto';
 import type {Store,Transaction} from '../../persistence/src/store.ts';
-import {requireThat,type Rules,type Character,type Instance,type Activity} from './model.ts';
+import {requireThat,type Rules,type Instance,type Activity} from './model.ts';
 import {bump} from './context.ts';
 import {items,nameOf,icon} from './rules/catalog.js';
-import {receive} from './rules/inventory.js';
+import type {MailRow} from './mail.ts';
 import {applyGmBuffs,invalidateGmBuffCache} from './gm-buffs.ts';
 import {invalidateCombatPlan} from './combat-execution.ts';
 const text=(value:unknown,max:number,label:string)=>{requireThat(typeof value==='string'&&value.trim().length>0&&value.trim().length<=max,'GM_INPUT',`${label}需为 1–${max} 字`,400);return value.trim();};
@@ -60,7 +60,8 @@ export class GmService {
     if(input.action==='sendGift'){
      const gift=await tx.get('gm_templates',text(input.templateId,150,'礼包标识'));requireThat(gift,'NOT_FOUND','礼包不存在',404);
      requireThat(accounts.length>0,'GM_RECIPIENTS','没有可接收礼包的存档',400);
-     for(const a of accounts){await tx.insert('gm_deliveries',{id:randomUUID(),accountId:a.id,status:'pending',gift:{name:gift.name,description:gift.description,copper:gift.copper,items:gift.items},createdAt:now,operationId:id});await bump(tx,a.id);}
+     for(const a of accounts){await tx.insert('mail',{id:randomUUID(),accountId:a.id,recipientId:null,senderId:null,senderName:'系统',subject:gift.name,body:gift.description,copper:gift.copper,
+       attachments:gift.items.map((item:Rules)=>({kind:'catalog',id:item.id,count:item.count,name:item.name,icon:item.icon})),status:'pending',createdAt:now} satisfies MailRow);await bump(tx,a.id);}
      result={recipients:accounts.length,name:gift.name};
     }else{
      const definition=buffDefinition(input),buffId=randomUUID();
@@ -96,24 +97,4 @@ export class GmService {
    await invalidateCombatPlan(tx,instance);instance.sequence++;await tx.put('instances',instance);
   }
  }
-}
-export async function giftInbox(store:Store,accountId:string){return store.read(async tx=>{
- requireThat(await tx.get('accounts',accountId),'NOT_FOUND','存档不存在',404);
- return (await tx.list('gm_deliveries',{accountId,status:'pending'})).sort((a,b)=>b.createdAt-a.createdAt).map(({id,gift,createdAt})=>({id,gift,createdAt}));
-});}
-export async function claimGmGift(tx:Transaction,c:Character,state:Rules,id:unknown,now:number){
- requireThat(typeof id==='string'&&id.length<=300,'GM_GIFT','礼包编号无效',400);
- const delivery=await tx.get('gm_deliveries',id);
- requireThat(delivery?.accountId===c.accountId,'NOT_FOUND','礼包不存在',404);
- if(delivery.status==='claimed')return state;
- requireThat(delivery.status==='pending','GM_GIFT','礼包不可领取');
- // receive checks stacking, bag capacity and unique-item limits. Work on a clone
- // and persist the claim in the caller's asset transaction, never partially grant.
- const next=structuredClone(state);
- try{for(const item of delivery.gift.items)receive(next,item.id,item.count);}
- catch(error){const message=(error as Error).message;requireThat(false,'GM_BAG',message.includes('空间不足')?'背包空间不足，请先清理背包再领取，礼包已为你保留。':message,400);}
- requireThat(Number.isSafeInteger(next.money+delivery.gift.copper),'GM_BALANCE','金币已达上限，礼包暂未领取',400);
- next.money+=delivery.gift.copper;
- await tx.put('gm_deliveries',{...delivery,status:'claimed',claimedAt:now,characterId:c.id});
- return next;
 }

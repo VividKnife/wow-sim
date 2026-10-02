@@ -2,6 +2,7 @@ import QuestNavigationButton from './quest-navigation-button';
 import AbandonLowLevelQuests from './abandon-low-level-quests';
 import {isLowLevelQuest} from '../../../packages/sim-core/src/quest-level.js';
 import QuestScenes from './quest-scenes';
+import ActivityProgress from './activity-progress';
 import {useState,type ReactNode} from 'react';
 import {Button} from '@/components/ui/button';
 import {GameProps,ItemDisplay} from './game-ui';
@@ -25,7 +26,7 @@ export default function World({state:s,data:d,busy,revision,send,overview,onOpen
  const navigationButton=(q:any)=>q.navigation?<QuestNavigationButton state={s} data={d} busy={busy} send={send} navigation={q.navigation} onNavigate={()=>navigate(q.id)}/>:<span className="quest-navigation-note">暂无可导航地点，请查看任务说明</span>;
  const questPanel=(<section id="quest-list" tabIndex={-1} className="panel quest-panel"><div className="section-heading"><div><h2>任务日志 <small>{Object.keys(s.quests).length} / 20</small></h2></div><AbandonLowLevelQuests key={s.id} state={s} data={d} busy={busy} send={send}/></div><p className="footnote">接受与交付任务，请与对应人物交谈</p>
  {!questList.length&&<p className="empty">暂无任务。与附近带有 ! 标记的人物交谈可接取任务。</p>}
- {questList.map((q:any)=><details className="quest-entry" key={q.id}><summary><span className={'quest-mark '+(q.complete?'complete':'')}>{q.complete?'✓':'◇'}</span><strong className={isLowLevelQuest(s.level,q.level)?'quest-low-level-title':undefined}>{q.name}</strong><small>Lv.{q.level} · {q.complete?'等待交付':'进行中'}</small></summary><p>{q.description}</p><div className="objective-list">{q.objectives.map((o:any,i:number)=><div key={i}><span className={o.count>=o.required?'done':''}>{o.name} <b>{o.count}/{o.required}</b></span><small>{o.locations.map((id:string)=>d.map.find((n:any)=>n.id===id)?.name).filter(Boolean).join('、')}</small></div>)}</div>{q.scenes?.map((scene:any)=><div className="action-row" key={scene.key}><Button variant="outline" disabled={busy||!scene.available} onClick={()=>send({type:'questScene',id:q.id,key:scene.key})}>{scene.name}</Button><small>{scene.adaptation} · {scene.duration/1000} 秒</small></div>)}<div className="action-row">{navigationButton(q)}<Button variant="ghost" disabled={busy} onClick={()=>send({type:'abandon',id:q.id})}>放弃任务</Button></div></details>)}
+ {questList.map((q:any)=><details className="quest-entry" key={q.id}><summary><span className={'quest-mark '+(q.complete?'complete':'')}>{q.complete?'✓':'◇'}</span><strong className={isLowLevelQuest(s.level,q.level)?'quest-low-level-title':undefined}>{q.name}</strong><small>Lv.{q.level} · {q.complete?'等待交付':'进行中'}</small></summary><p>{q.description}</p><div className="objective-list">{q.objectives.map((o:any,i:number)=><div key={i}><span className={o.count>=o.required?'done':''}>{o.name} <b>{o.count}/{o.required}</b></span><small>{o.locations.map((id:string)=>d.map.find((n:any)=>n.id===id)?.name).filter(Boolean).join('、')}</small></div>)}</div>{q.scenes?.map((scene:any)=><div key={scene.key}><div className="action-row"><Button variant="outline" disabled={busy||!scene.available} onClick={()=>send({type:'questScene',id:q.id,key:scene.key})}>{scene.name}</Button><small>{scene.adaptation} · {scene.duration/1000} 秒</small></div>{surface==='quests'&&s.activity.type==='questScene'&&s.activity.quest===q.id&&s.activity.target===scene.key&&<ActivityProgress state={s} data={d} quartz/>}</div>)}<div className="action-row">{navigationButton(q)}<Button variant="ghost" disabled={busy} onClick={()=>send({type:'abandon',id:q.id})}>放弃任务</Button></div></details>)}
  </section>);
  if(surface==='quests')return questPanel;
  if(surface==='map')return <WorldMap state={s} data={d} busy={busy} send={send}/>;
@@ -39,6 +40,7 @@ export default function World({state:s,data:d,busy,revision,send,overview,onOpen
   <div className="location-actions"><a href="#quest-list" className="quest-shortcut"><ScrollText size={16}/><span>任务 {questList.length}{completedQuests>0&&<b> · {completedQuests} 可交付</b>}</span></a><Button variant="outline" aria-expanded={mapOpen} aria-controls="region-map" onClick={()=>setMapOpen(!mapOpen)}><MapIcon size={16}/>{mapOpen?'收起地图':'区域地图'}</Button></div>
  </header></>}
  {overview}
+ {surface==='activities'&&['gather','professionGather','questItem'].includes(s.activity.type)&&<ActivityProgress state={s} data={d}/>}
  {mapOpen&&<div id="region-map"><WorldMap state={s} data={d} busy={busy} send={send}/></div>}
  {!d.city&&<nav className="filterbar local-filters" aria-label="附近活动">{(surface==='activities'?['全部','怪物','任务物件']:['全部','人物与服务','怪物','任务物件']).map(f=><button type="button" key={f} aria-pressed={filter===f} className={filter===f?'active':''} onClick={()=>setFilter(f)}>{f}</button>)}</nav>}
  {surface==='full'&&(d.city||['全部','人物与服务'].includes(filter))&&<LocalNpcs key={'npcs:'+s.id+':'+s.location} state={s} data={d} busy={busy} send={send}/>}

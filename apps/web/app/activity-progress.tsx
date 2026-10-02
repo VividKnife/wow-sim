@@ -5,8 +5,8 @@ import './activity-progress.css';
 import {createBattleClock} from '@/lib/battle-clock.js';
 
 type Skill={spellId:number;name:string;cast?:number;icon?:string};
-type ProgressState={clock:number;activity:{type:string;startedAt?:number;endsAt?:number;spell?:number;mount?:number;from?:string;to?:string;flight?:boolean;target?:string|number|null;auto?:boolean};cast?:{startedAt:number;until:number;spell:number}|null;combat?:unknown;rest?:{startedAt?:number;until:number;foodUntil:number;waterUntil:number}|null;presence?:{paused?:boolean}};
-type ProgressData={map?:{id:string;name:string}[];skills?:Skill[];combatSkills?:Skill[];hearthstone?:{destinationName:string|number};mounts?:{collection:{id:number;name:string}[]};itemBuffs?:{spell:number;name:string;icon?:string;until:number}[]};
+type ProgressState={clock:number;activity:{type:string;startedAt?:number;endsAt?:number;spell?:number;mount?:number;quest?:number;from?:string;to?:string;flight?:boolean;target?:string|number|null;auto?:boolean};cast?:{startedAt:number;until:number;spell:number}|null;combat?:unknown;rest?:{startedAt?:number;until:number;foodUntil:number;waterUntil:number}|null;presence?:{paused?:boolean}};
+type ProgressData={map?:{id:string;name:string}[];quests?:{id:number;scenes?:{key:string;name:string}[]}[];skills?:Skill[];combatSkills?:Skill[];hearthstone?:{destinationName:string|number};mounts?:{collection:{id:number;name:string}[]};itemBuffs?:{spell:number;name:string;icon?:string;until:number}[]};
 
 function Progress({label,start,end,clock,running,journey,quartz,icon,channel}:{label:string;start:number;end:number;clock:number;running:boolean;quartz?:boolean;icon?:string;channel?:boolean;journey?:{from:string;to:string;flight:boolean}}){
  const timerClock=useRef(createBattleClock(clock,performance.now()));
@@ -56,14 +56,15 @@ export default function ActivityProgress({state:s,data:d,running=true,hideTravel
  else if(['classSpell','classChannel'].includes(a.type))label=label||'职业技能';
  else if(a.type==='teleport')label=label||'传送术';
  else if(a.type==='mount')label=`召唤${d.mounts?.collection.find(m=>m.id===a.mount)?.name||'坐骑'}`;
+ else if(a.type==='questScene')label=d.quests?.find(q=>q.id===a.quest)?.scenes?.find(scene=>scene.key===a.target)?.name||'任务场景';
  else if(a.type==='gather')label=a.target==null?'等待采集目标刷新':'采集中';
  else if(a.type==='professionGather')label=a.auto?'自动采集中':'采集中';
  else if(s.combat&&cast){start=cast.startedAt;end=cast.until;label=d.combatSkills?.find(skill=>skill.spellId===cast.spell)?.name||'施法';}
  else if(!s.combat&&s.rest){start=s.rest.startedAt;end=s.rest.until;label=s.rest.foodUntil>s.clock&&s.rest.waterUntil>s.clock?'进食与饮水':s.rest.foodUntil>s.clock?'进食':'饮水';}
- else if(!['resurrect','questItem'].includes(a.type))end=undefined;
+ else if(!['resurrect','questItem','questScene'].includes(a.type))end=undefined;
  const spellId=s.combat&&cast?cast.spell:a.spell;
  const spellIcon=[...(d.skills||[]),...(d.combatSkills||[])].find(skill=>skill.spellId===spellId)?.icon;
- const castIcon=a.type==='hearth'?'/icons/assets/inv_misc_rune_01.png':spellIcon||(a.type==='mount'?'/icons/assets/ability_mount_ridinghorse.png':undefined);
+ const castIcon=a.type==='hearth'?'/icons/assets/inv_misc_rune_01.png':spellIcon||(a.type==='mount'?'/icons/assets/ability_mount_ridinghorse.png':a.type==='questScene'?'/icons/assets/spell_holy_magicalsentry.png':undefined);
  const journey=a.type==='travel'?{from:d.map?.find(n=>n.id===a.from)?.name||a.from||'出发地',to:d.map?.find(n=>n.id===a.to)?.name||a.to||'目的地',flight:!!a.flight}:undefined;
  return <>{!(hideTravel&&a.type==='travel')&&start!==undefined&&end!==undefined&&Number.isFinite(start)&&Number.isFinite(end)&&end>start&&<Progress key={`${start}:${end}:${running&&!s.presence?.paused}`} label={label||'施法'} start={start} end={end} clock={s.clock} running={running&&!s.presence?.paused} journey={journey} quartz={quartz} icon={castIcon} channel={a.type==='classChannel'}/>}</>;
 }

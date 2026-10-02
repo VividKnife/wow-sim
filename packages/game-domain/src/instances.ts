@@ -1,4 +1,4 @@
-import {claimGmGift} from './gm.ts';
+import {claimMail,resolveMailRecipientInView,validateMailDraft,commitMailSend} from './mail.ts';
 import {applyExperienceBuff} from './rules/experience.js';
 import {leaveGoldRaid,goldCommands} from './rules/gold-raid.js';
 import {dungeonIdFor,dungeonDefinitions} from './rules/dungeon-registry.js';
@@ -16,8 +16,8 @@ import { PAUSED_EVENT_AT } from './presence.ts';
 import {simulationInterval} from './simulation-cadence.ts';
 import {invalidateCombatPlan, combatExecutionMode} from './combat-execution.ts';
 import {OFFLINE_BATCH_INTERVAL_MS} from './combat-playback.ts';
-const instanceCommands = new Set(['accept','turnin','abandon','abandonLowLevelQuests','claimGmGift','partyBuffs','combatCommand','raidPlan','raidOrder','groupLoot',...goldCommands,'strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'abandonCombat', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext','dungeonNavigate','dungeonPause', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'discardJunk', 'discardItem', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
-export const visitorCommands = Object.freeze(['accept','turnin','abandon','abandonLowLevelQuests','claimGmGift','strategy', 'settings', 'cast', 'petCommand']);
+const instanceCommands = new Set(['accept','turnin','abandon','abandonLowLevelQuests','claimMail','sendMail','partyBuffs','combatCommand','raidPlan','raidOrder','groupLoot',...goldCommands,'strategy', 'settings', 'petCommand', 'cast', 'useItem', 'rest', 'stop', 'abandonCombat', 'revive', 'resurrect', 'reincarnate', 'soulstoneRevive', 'dungeonNext','dungeonNavigate','dungeonPause', 'dungeonInteract', 'dungeonSkip', 'equip', 'equipBag', 'sortBag', 'discardJunk', 'discardItem', 'lockItem', 'applyEnchant', 'useBandage', 'disenchant', 'disenchantAll', 'loot', 'conjure', 'talent']);
+export const visitorCommands = Object.freeze(['accept','turnin','abandon','abandonLowLevelQuests','claimMail','sendMail','strategy', 'settings', 'cast', 'petCommand']);
 function rosterIds(value: unknown): asserts value is string[] { requireThat(Array.isArray(value) && value.length > 0 && value.every(id => typeof id === 'string' && id.length > 0) && new Set(value).size === value.length, 'ROSTER', '副本名册必须是非空且不重复的角色 ID 数组', 400); }
 export async function createInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) {
     const contentId = cmd.contentId ?? (cmd.type === 'enterDungeon' ? dungeonIdFor(c.rules) : 'northshire-skirmish');
@@ -90,12 +90,17 @@ export async function instanceCommand(this: GameService, tx: Transaction, c: Cha
     requireThat(['running', 'completed'].includes(instance.status) && instance.simulation, 'INSTANCE_NOT_RUNNING', '副本尚未开始');
     requireThat(instanceCommands.has(cmd.type), 'INSTANCE_COMMAND', '请先离开实例再进行这项操作');
     if(instance.simulation?.goldRaid?.active){
-        requireThat(goldCommands.includes(cmd.type)||['accept','turnin','abandon','abandonLowLevelQuests','claimGmGift','combatCommand','partyBuffs','stop','raidPlan','raidOrder','abandonCombat','cast','loot','equip','strategy','settings'].includes(cmd.type),'GOLD_PHASE','请使用金团营地的操作');
+        requireThat(goldCommands.includes(cmd.type)||['accept','turnin','abandon','abandonLowLevelQuests','claimMail','sendMail','combatCommand','partyBuffs','stop','raidPlan','raidOrder','abandonCombat','cast','loot','equip','strategy','settings'].includes(cmd.type),'GOLD_PHASE','请使用金团营地的操作');
         if(['strategy','equip'].includes(cmd.type)&&cmd.target)requireThat(!instance.simulation.party.some((p:Rules)=>p.goldNpc&&p.id===cmd.target),'GOLD_NPC','NPC自行管理装备和打法，团长只能发布团队战术');
     }
     if(cmd.type==='combatCommand'&&cmd.memberId){const member=instance.roster.find(r=>r.characterId===cmd.memberId);requireThat(member && (member.accountId===c.accountId||member.controller==='npc'), 'FORBIDDEN', '不能指挥其他账号的角色',403);}
     if(cmd.type==='combatCommand'&&['prepare','takeover','pause','resume'].includes(cmd.order))requireThat(new Set(instance.roster.filter(r=>r.controller!=='npc').map(r=>r.accountId)).size<=1,'SHARED_CLOCK','多人共享战斗不能暂停模拟时钟');
     const action = { ...cmd }, visitor = c.id !== instance.leaderId;
+    if(action.type==='sendMail'){
+        validateMailDraft(action);
+        const recipient=await resolveMailRecipientInView(tx,action.recipient,c.id);
+        Object.assign(action,{recipientId:recipient.id,recipientAccountId:recipient.accountId,recipientName:recipient.name});
+    }
     if(instance.roster.some(r=>r.controller==='npc') && action.target && instance.roster.some(r=>r.controller==='npc'&&r.characterId===action.target))requireThat(!['equip','strategy','talent'].includes(action.type),'NPC_CONTROL','NPC 玩家自行管理装备、天赋和策略');
     requireThat((!action.actorId || action.actorId === c.id) && (!action.casterId || action.casterId === c.id), 'FORBIDDEN', '只能控制自己的角色', 403);
     if (visitor) {
@@ -114,13 +119,12 @@ export async function instanceCommand(this: GameService, tx: Transaction, c: Cha
     const s = advance(instance.simulation, now, {}).state;
     const actor = visitor ? s.party.find((unit: Rules) => unit.id === c.id) : s;
     requireThat(actor, 'INSTANCE_ACTOR', '实例中找不到该角色');
-    if(action.type==='claimGmGift'){
+    if(action.type==='claimMail'){
         if(visitor){
-            const inventory=await context(tx,c,now,false);
-            const granted=await claimGmGift(tx,c,inventory,action.id,now);
-            await persistAssets(tx,c,granted,`instance:${id}:gift:${cmd.requestId}`);
+            const granted=await claimMail(tx,c,actor,action.id,now);
+            Object.assign(actor,granted);
             instance.simulation=s;
-        }else instance.simulation=await claimGmGift(tx,c,s,action.id,now);
+        }else instance.simulation=await claimMail(tx,c,s,action.id,now);
     }
     else if (visitor && action.type === 'cast') {
         commandCombatCast(s, actor, action.id, action.target);
@@ -140,6 +144,7 @@ export async function instanceCommand(this: GameService, tx: Transaction, c: Cha
     if(action.type==='goldLaunch')instance.roster.push(...instance.simulation!.party.map((unit:Rules)=>({characterId:unit.id,accountId:c.accountId,controller:'npc' as const,joinedAt:now})));
     if (action.type === 'equip')
         await this.transferEquipment(tx, c, instance.simulation!);
+    if(action.type==='sendMail')await commitMailSend(tx,{accountId:c.accountId,input:{actorId:c.id,requestId:cmd.requestId,command:action}},c,now);
     instance.sequence++;
     instance.rngState = instance.simulation!.rngState;
     await this.persistInstance(tx, instance, now, `instance:${id}:command:${cmd.requestId}`, observedPresence);
