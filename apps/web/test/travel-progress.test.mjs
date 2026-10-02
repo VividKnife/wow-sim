@@ -71,3 +71,20 @@ test('corpse recovery exposes its actual duration and clears progress after resu
   assert.doesNotMatch(render(alive),/跑尸中/);
  }
 });
+
+test('a public mixed journey keeps ground waypoints while displaying its current flight leg',async()=>{
+ const {advance}=await import('../../../packages/game-domain/src/rules/engine.js');
+ const {travelMapFrame}=await import('../lib/world-map.js');
+ const s=createGame('混合路线',11,0);
+ Object.assign(s,{location:'magetower',flightPoints:['stormwind','sentinel'],money:1000});
+ let moving=act(s,{type:'travel',to:'moonbrook'},0);
+ moving=advance(moving,Math.ceil(moving.activity.path[0].duration)+1000).state;
+ const snapshot=projectClientSnapshot(moving,view(moving));
+ const frame=travelMapFrame(snapshot.player);
+ assert.equal(frame.legs.length,3);
+ assert.equal(frame.journey.from,'stormwind');
+ assert.equal(frame.journey.to,'sentinel');
+ const html=renderToStaticMarkup(createElement(WorldMap,{state:snapshot.player,data:snapshot.view,busy:false,send:async()=>true}));
+ assert.match(html,/data-travel-mode="flying"/);
+ assert.match(html,/月溪镇/);
+});

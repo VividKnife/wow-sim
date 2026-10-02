@@ -236,13 +236,13 @@ export function lootRows(s,rows,depth=0,combatLoot=false,recipients=combatLoot?r
  }
 }
 
-function availableObjects(s,id){return (objectSpawnsByNode[s.location+':'+id]||[]).filter(o=>(s.objectRespawns?.[o.guid]||0)<=s.clock);}
 export function gatherables(s){
  const result=[];
  for(const[id,locations]of Object.entries(objectLocations)){
-  if(!locations.includes(s.location)||!availableObjects(s,id).length)continue;const o=objectTemplates[id];if(!o)continue;
+  if(!locations.includes(s.location))continue;const o=objectTemplates[id];if(!o)continue;
   const rows=objectLoot[o.data1]||[],needed=rows.some(r=>needsQuestItem(s,r.item));
   const target=Object.keys(s.quests||{}).some(qid=>[1,2,3,4].some(n=>quests[qid]['ReqCreatureOrGOId'+n]===-(+id)&&(s.quests[qid].kills[-id]||0)<quests[qid]['ReqCreatureOrGOCount'+n]));
+  const spawns=objectSpawnsByNode[s.location+':'+id]||[];if(!spawns.length)continue;
   if(needed||target)result.push({id:+id,name:o.name,items:rows.filter(r=>needsQuestItem(s,r.item)).map(r=>({id:r.item,name:nameOf('items',r.item)}))});
  }
  for(const o of s.questObjects||[])if(o.location===s.location&&o.availableAt<=s.clock&&s.quests[o.quest]&&!result.some(r=>r.id===o.id))result.push({id:o.id,name:objectTemplates[o.id].name,items:[{id:7292,name:nameOf('items',7292)}]});
@@ -251,9 +251,12 @@ export function gatherables(s){
 function objectAdvancesQuest(s,questId,objectId){
  const q=quests[questId],p=s.quests[questId],object=objectTemplates[objectId];if(!q||!p||!object)return false;
  for(let n=1;n<=4;n++){
-  const required=q['ReqCreatureOrGOCount'+n],target=q['ReqCreatureOrGOId'+n],item=q['ReqItemId'+n];
+  const required=q['ReqCreatureOrGOCount'+n],target=q['ReqCreatureOrGOId'+n];
   if(target===-objectId&&(p.kills[target]||0)<required)return true;
-  if(item&&countItem(s,item)<q['ReqItemCount'+n]&&(objectLoot[object.data1]||[]).some(r=>r.item===item))return true;
+  for(const kind of ['Item','Source']){
+   const item=q['Req'+kind+'Id'+n],count=countItem(s,item)+(s.pending||[]).filter(i=>i.id===item).reduce((sum,i)=>sum+i.count,0);
+   if(item&&count<q['Req'+kind+'Count'+n]&&(objectLoot[object.data1]||[]).some(r=>r.item===item))return true;
+  }
  }
  return false;
 }
@@ -262,13 +265,12 @@ export function questGathering(s,questId,objectId){
  const ids=Object.keys(objectLocations).map(Number).filter(id=>id===+objectId&&(objectLocations[id]||[]).includes(s.location)&&objectAdvancesQuest(s,+questId,id));
  for(const o of s.questObjects||[])if(o.id===+objectId&&o.location===s.location&&o.quest===+questId&&objectAdvancesQuest(s,+questId,o.id)&&!ids.includes(o.id))ids.push(o.id);
  const available=gatherables(s).find(o=>ids.includes(o.id));
- return{pending:ids.length>0,available};
+ return{pending:!!available,available};
 }
 export function gather(s,id){
  const match=gatherables(s).find(o=>o.id===id);if(!match)throw new Error('这个目标不在当前位置或不属于当前任务。');
  const object=objectTemplates[id],generated=(s.questObjects||[]).findIndex(o=>o.id===id&&o.location===s.location&&o.availableAt<=s.clock);
  if(generated>=0)s.questObjects.splice(generated,1);
- else{const spawn=availableObjects(s,id)[0];s.objectRespawns??={};s.objectRespawns[spawn.guid]=s.clock+roll(s,Math.abs(spawn.spawntimesecsmin),Math.abs(spawn.spawntimesecsmax))*1000;}
  lootRows(s,objectLoot[object.data1]);
  for(const[qid,p]of Object.entries(s.quests)){const q=quests[qid];for(let n=1;n<=4;n++)if(q['ReqCreatureOrGOId'+n]===-id)p.kills[-id]=Math.min(q['ReqCreatureOrGOCount'+n],(p.kills[-id]||0)+1);}
  log(s,'调查了 '+match.name,'quest');

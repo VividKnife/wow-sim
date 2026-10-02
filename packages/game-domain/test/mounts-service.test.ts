@@ -30,22 +30,16 @@ test('service gates level 19, charges exact wallet fees at 20, deduplicates requ
  await f.command({type:'trainRiding',requestId:'training'});await assert.rejects(f.command({type:'trainRiding'}),/已经/);
  const bought=await f.command({type:'buyMount',id:5656,requestId:'purchase'});assert.equal(bought.state.money,0);
  await f.command({type:'buyMount',id:5656,requestId:'purchase'});await assert.rejects(f.command({type:'buyMount',id:5656}),/已经/);
+ await f.command({type:'useItem',uid:bought.state.bag.find((i:Rules)=>i.id===5656).uid});
  f.restart();const restored=await f.snapshot();assert.deepEqual(restored.state.mounts,[5656]);assert.equal(restored.state.riding.horse,true);assert.equal(restored.state.money,0);
 });
 
-test('service covers all playable race eligibility and exact exalted discount',async()=>{
- for(const raceId of [1,2,3,4,5,6,7,8]){
-  const f=await fixture(raceId);
-  if(raceId===1){await f.command({type:'trainRiding'});continue;}
-  if([3,4,7].includes(raceId)){
-   await assert.rejects(f.command({type:'trainRiding'}),/崇拜/);await f.patch({reputation:{72:41999}});await assert.rejects(f.command({type:'trainRiding'}),/崇拜/);
-   await f.patch({reputation:{72:42000}});await f.command({type:'trainRiding'});const bought=await f.command({type:'buyMount',id:5656});assert.equal(bought.state.money,100000);
-  }else {await f.patch({reputation:{72:42000}});await assert.rejects(f.command({type:'trainRiding'}),/联盟/);}
- }
+test('all races can access riding training and mount vendors',async()=>{
+ for(const raceId of [1,2,3,4,5,6,7,8]){const f=await fixture(raceId);await f.command({type:'trainRiding'});assert.ok((await f.command({type:'buyMount',id:5656})).state.bag.some((i:Rules)=>i.id===5656));}
 });
 
 test('worker resumes three-second summon after restart; cancellation and outdoor restrictions preserve ownership',async()=>{
- const f=await fixture();await f.command({type:'trainRiding'});await f.command({type:'buyMount',id:5656});
+ const f=await fixture();await f.command({type:'trainRiding'});await f.command({type:'buyMount',id:5656});await f.command({type:'useItem',uid:(await f.snapshot()).state.bag.find((i:Rules)=>i.id===5656).uid});
  for(const patch of [{location:'fargodeep'},{location:'bluerecluse'},{form:'bear'},{swimming:true}]){
   await f.patch(patch);await assert.rejects(f.command({type:'mount',id:5656}));
   assert.equal(mountView((await f.snapshot()).state).collection.find(m=>m.id===5656)!.canMount,false);
@@ -75,7 +69,7 @@ test('automatic travel mount prefers the fastest usable mount and keeps walking 
 });
 
 test('travel automatically summons the fastest owned mount, then settles the riding route; flight and hearth dismount',async()=>{
- const f=await fixture();await f.command({type:'trainRiding'});await f.command({type:'buyMount',id:5656});
+ const f=await fixture();await f.command({type:'trainRiding'});await f.command({type:'buyMount',id:5656});await f.command({type:'useItem',uid:(await f.snapshot()).state.bag.find((i:Rules)=>i.id===5656).uid});
  await f.patch({location:'northshire'});let trip=await f.command({type:'travel',to:'goldshire'});
  assert.equal(trip.state.activity.type,'mount');assert.equal(trip.state.activity.mount,5656);assert.deepEqual(trip.state.activity.travel,{to:'goldshire',hunt:null,quest:null});
  f.restart();await f.work(3000);trip=await f.work(0);assert.equal(trip.state.mounted,5656);assert.equal(trip.state.activity.type,'travel');

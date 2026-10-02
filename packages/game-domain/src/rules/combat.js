@@ -1,3 +1,4 @@
+import {petSkillRoot} from './pet-progression.js';
 import {healAmount} from './healing.js';
 import {addGroundEffect,removeGroundEffects,dueGroundEffects,continueGroundEffect,expireGroundEffects} from './ground-events.js';
 import {flatSpellThreat} from './spell-threat.js';
@@ -198,6 +199,7 @@ export function executeCombatIntent(s,c,intent,{manual=false}={}){
   c.target=target.id;return {accepted:true};
  }
  if(intent?.kind==='petCast'){
+  if(!manual&&c.autocastDisabled?.includes(petSkillRoot(intent.spellId)))return {accepted:false,reason:'pet-autocast-disabled'};
   const owner=actors.find(a=>a.id===c.ownerId),sp=spellInfo(c,intent.spellId);
   if(!c.petUnit||!owner||!target||target.hp<=0||!sp||c.silenceUntil>s.clock||hasAura(c,27,s.clock)||(c.schoolLockouts?.[sp.School]||0)>s.clock)return {accepted:false,reason:'pet'};
   const selected=selectPetSpell(s,c,owner,target,actors,intent.spellId);

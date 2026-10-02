@@ -9,7 +9,7 @@ import {partyUnlocked} from '../src/rules/party-unlock.js';
 import {boostEquipmentCandidates,LEVEL_20_BOOST_MONEY} from '../src/rules/boost.js';
 import {ammoCount,ammoOptions,selectedAmmo,DEFAULT_AMMO_TARGET} from '../src/rules/ammunition.js';
 import {tables} from '../../persistence/src/store.ts';
-import {boostMount,mountView,beginMount,finishMount,travelRoute,buyMount} from '../src/rules/mounts.js';
+import {boostMount,learnMountItem,mountView,beginMount,finishMount,travelRoute,buyMount} from '../src/rules/mounts.js';
 
 const input={name:'旅人',classId:8,raceId:1};
 const setup=()=>new GameService(new MemoryStore(),{contentVersion:'test',now:()=>1000,seed:()=>123});
@@ -53,7 +53,7 @@ test('boost grants 50 gold, legal quest equipment, four runecloth bags, full res
   const snapshot=await service.snapshot(id),s=snapshot.state;
   assert.equal(s.level,20);assert.equal(s.xp,0);assert.equal(s.money,LEVEL_20_BOOST_MONEY);assert.equal(s.location,racialHomes[raceId as keyof typeof racialHomes].capital);
   assert.equal(s.bags.length,4);assert.ok(s.bags.every((i:any)=>i.id===14046));assert.equal(bagCapacity(s),72);
-  assert.deepEqual(s.mounts,[boostMount.id]);assert.equal(s.riding.horse,true);
+  assert.deepEqual(s.mounts,[]);learnMountItem(s,s.bag.find((i:any)=>i.id===boostMount.id));assert.deepEqual(s.mounts,[boostMount.id]);assert.equal(s.riding.horse,true);
   assert.equal(mountView(s).collection.find(m=>m.id===boostMount.id)!.canMount,true);
   const destination=racialHomes[raceId as keyof typeof racialHomes].start;const walking=travelRoute(s,destination);
   beginMount(s,boostMount.id);s.clock=s.activity.endsAt;finishMount(s);
@@ -87,6 +87,8 @@ test('gift mount survives service reload and respects normal riding restrictions
  assert.deepEqual((await service.snapshot(normal.id)).state.mounts,[]);
  const {id}=await service.createSave('orc',{...input,classId:1,raceId:2,boost:true},'gift-save');
  const restored=new GameService(service.store,{contentVersion:'test',now:()=>1000});
+ const before=(await restored.snapshot(id)).state;assert.deepEqual(before.mounts,[]);
+ await restored.command(id,{type:'useItem',uid:before.bag.find((i:any)=>i.id===boostMount.id).uid,requestId:'learn-gift'});
  const s=(await restored.snapshot(id)).state;
  assert.deepEqual(s.mounts,[boostMount.id]);assert.equal(s.riding.horse,true);
  for(const patch of [{level:19},{hp:0},{combat:{}},{swimming:true},{dungeon:{}},{location:'fargodeep'},{form:'bear'}]){

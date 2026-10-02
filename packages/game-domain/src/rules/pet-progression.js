@@ -27,6 +27,7 @@ export function keepHunterPetContent(pet){
 
 export function initializePetProgression(_s,_owner,pet,saved={}){
  if(pet.kind!=='beast')return;
+ pet.autocastDisabled=[...(saved.autocastDisabled||[])];
  pet.loyalty=saved.loyalty??pet.loyalty??MAX_PET_LOYALTY;
  pet.trainingPoints=saved.trainingPoints??pet.level*(pet.loyalty-1);
  pet.happiness=saved.happiness??pet.happiness??MAX_PET_HAPPINESS;
@@ -36,7 +37,7 @@ export function initializePetProgression(_s,_owner,pet,saved={}){
 export function saveHunterPet(_s,owner){
  const p=owner.pet;if(p?.kind!=='beast')return;
  keepHunterPetContent(p);
- owner.hunterPet={entry:p.entry,name:p.name,level:p.level,xp:p.xp||0,learned:[...(p.learned||[])],teachSpells:{...(p.teachSpells||{})},availableSkills:[...(p.availableSkills||[])],loyalty:p.loyalty,loyaltyPoints:p.loyaltyPoints,loyaltyXpRemaining:0,trainingPoints:p.trainingPoints,happiness:p.happiness};
+ owner.hunterPet={entry:p.entry,name:p.name,level:p.level,xp:p.xp||0,autocastDisabled:[...(p.autocastDisabled||[])],learned:[...(p.learned||[])],teachSpells:{...(p.teachSpells||{})},availableSkills:[...(p.availableSkills||[])],loyalty:p.loyalty,loyaltyPoints:p.loyaltyPoints,loyaltyXpRemaining:0,trainingPoints:p.trainingPoints,happiness:p.happiness};
 }
 
 export function tickPetProgression(s,owner){

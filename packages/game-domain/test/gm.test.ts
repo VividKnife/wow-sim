@@ -40,7 +40,7 @@ test('full bags reject the whole gift, preserve money and let the player retry a
  const {service,store,gm,save}=await setup();
  const original=(await service.snapshot(save)).state;
  await store.transaction(async tx=>{const character=await tx.get<any>('characters',original.id);const s=await context(tx,character,1000000);s.bag=[];for(let i=0;i<bagCapacity(s)-1;i++)s.bag.push(makeItem(s,25,1));await persistAssets(tx,character,s,'fill');});
- const template=await gm.execute('admin',command('saveGift',{name:'满包测试',description:'需要两格',copper:10000,items:[{id:2589,count:21}]}));await gm.execute('admin',command('sendGift',{templateId:template.id,scope:'player',userId:'player-a'}));const gift=(await service.mailInbox(save))[0];
+ const template=await gm.execute('admin',command('saveGift',{name:'满包测试',description:'需要两格',copper:10000,items:[{id:49283,count:2}]}));await gm.execute('admin',command('sendGift',{templateId:template.id,scope:'player',userId:'player-a'}));const gift=(await service.mailInbox(save))[0];
  const before=(await service.snapshot(save)).state;
  await assert.rejects(service.command(save,{type:'claimMail',id:gift.id,requestId:'full-bag'}),/先清理背包/);
  assert.equal((await service.snapshot(save)).state.money,before.money);assert.equal((await service.mailInbox(save)).length,1);
@@ -92,4 +92,29 @@ test('a guest player claims into their own bag and wallet inside a shared instan
  const result=await service.command(other,{type:'claimMail',id:gift.id,requestId:'guest-claim'});
  assert.equal(result.state.money,30000);assert.ok(result.state.bag.some((item:any)=>item.id===2589&&item.count===2));
  assert.equal((await service.snapshot(save)).state.money,0);assert.equal((await service.mailInbox(other)).length,0);
+});
+
+test('GM mount items are mailed to bags, learned once, persisted, and rideable only from level 20',async()=>{
+ const {service,store,gm,save}=await setup();
+ const mounts=(await gm.list()).mounts;assert.ok(mounts.some(m=>m.id===49283&&m.name==='幽灵虎'));
+ assert.ok(gm.searchItems('幽灵虎').some(m=>m.id===49283));
+ const template=await gm.execute('admin',command('saveGift',{name:'幽灵虎奖励',description:'使用后收藏',copper:0,items:[{id:49283,count:2}]}));
+ await gm.execute('admin',command('sendGift',{templateId:template.id,scope:'player',userId:'player-a'}));
+ const mail=(await service.mailInbox(save))[0];assert.equal(mail.attachments[0].kind,'catalog');
+ const received=await service.command(save,{type:'claimMail',id:mail.id,requestId:'tiger-mail'});
+ assert.deepEqual(received.state.mounts,[]);assert.equal(received.state.bag.filter((i:any)=>i.id===49283).length,2);
+ const item=received.state.bag.find((i:any)=>i.id===49283);
+ await service.command(save,{type:'lockItem',uid:item.uid,requestId:'tiger-lock'});
+ await assert.rejects(service.command(save,{type:'useItem',uid:item.uid,requestId:'tiger-locked-use'}),/锁定/);
+ await service.command(save,{type:'lockItem',uid:item.uid,requestId:'tiger-unlock'});
+ const learned=await service.command(save,{type:'useItem',uid:item.uid,requestId:'tiger-learn'});
+ assert.deepEqual(learned.state.mounts,[49283]);assert.equal(learned.state.bag.filter((i:any)=>i.id===49283).length,1);
+ await service.command(save,{type:'useItem',uid:item.uid,requestId:'tiger-learn'});
+ await assert.rejects(service.command(save,{type:'useItem',uid:learned.state.bag.find((i:any)=>i.id===49283).uid,requestId:'tiger-duplicate'}),/已经收藏/);
+ assert.equal((await service.snapshot(save)).state.bag.filter((i:any)=>i.id===49283).length,1);
+ await store.transaction(async tx=>{const c=await tx.get<any>('characters',learned.state.id);c.rules.level=19;await tx.put('characters',c);});
+ await assert.rejects(service.command(save,{type:'mount',id:49283,requestId:'tiger-too-young'}),/20/);
+ await store.transaction(async tx=>{const c=await tx.get<any>('characters',learned.state.id);c.rules.level=20;c.rules.raceId=2;await tx.put('characters',c);});
+ const mounted=await service.command(save,{type:'mount',id:49283,requestId:'tiger-summon'});assert.equal(mounted.state.activity.mount,49283);
+ const restored=new GameService(store,{contentVersion:CONTENT_VERSION,now:()=>1000000});assert.deepEqual((await restored.snapshot(save)).state.mounts,[49283]);
 });

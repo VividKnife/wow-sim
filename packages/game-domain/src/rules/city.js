@@ -2,7 +2,7 @@ import {cityDistricts,cityServices} from './city-data.js';
 import {nodes,trainerNodes,items,flights} from './catalog.js';
 import {capitals} from '../../../game-data/world-content.js';
 import atlas from '../../../game-data/data/world-map-atlas.json' with {type:'json'};
-import {travelRoute} from './mounts.js';
+import {automaticTravelRoute} from './mounts.js';
 import {movementMultiplier} from './experience.js';
 import {protectedItem} from './inventory.js';
 import {materialIds} from './profession-data.js';
@@ -15,7 +15,7 @@ export function cityView(s){
  const current=cityDistricts.find(d=>d.id===s.location),city=capitals.find(c=>c.id===(current.city||'stormwind'));
  const flightNode=city.id==='orgrimmar'?'orgrimmar-district-1':city.id;
  const blockedReason=s.hp<=0?'角色已死亡，请先复活。':s.combat?'战斗中无法办理主城服务。':s.escort?'请先完成或停止护送。':!['idle','hunt'].includes(s.activity.type)?'正在旅行或进行其他活动，请等待结束。':'';
- const travel=to=>{try{return travelRoute(s,to).duration;}catch(error){return null;}};
+ const travel=to=>{try{return automaticTravelRoute(s,to).duration;}catch(error){return null;}};
  const districts=cityDistricts.filter(d=>(d.city||'stormwind')===city.id).map(d=>({...d,travel:travel(d.id),visited:s.visited.includes(d.id)||s.location===d.id,services:d.services.filter(id=>id!=='trainer'||canTrainAt({...s,location:d.id})).map(id=>({...cityServices[id],...(city.id==='stormwind'?{}:{npc:{bank:'银行职员',auction:'拍卖师',inn:'旅店老板',flight:'飞行管理员',quests:'城市守卫'}[id]||cityServices[id].npc,name:id==='flight'?'飞行航线':cityServices[id].name,description:id==='flight'?'发现当地飞行点，前往已解锁的目的地。':cityServices[id].description})}))}));
  const trainer=districts.find(d=>d.classes?.includes(s.classId))?.id||city.id;
  return{

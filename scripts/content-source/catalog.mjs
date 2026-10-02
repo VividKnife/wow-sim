@@ -1,3 +1,4 @@
+import {collectibleMounts} from '../../packages/game-data/mounts.js';
 import {groupRows} from '../../packages/sim-core/src/collections.js';
 import spellCoefficients from '../../packages/game-data/data/classic-spell-coefficients.json' with {type:'json'};
 import spellThreat from '../../packages/game-data/data/spell-threat-reference.json' with {type:'json'};
@@ -74,6 +75,7 @@ export function table(name) {
 const index=(name,key)=>Object.fromEntries(table(name).map(row=>[row[key],row]));
 export const creatures=index('creature_template','Entry');
 export const items=index('item_template','entry');
+for(const mount of collectibleMounts)items[mount.id]={...items[mount.id],entry:mount.id,name:mount.name,class:15,subclass:5,Quality:mount.reward?4:mount.bonus===100?4:3,InventoryType:0,RequiredLevel:1,RequiredSkill:0,RequiredSkillRank:0,requiredspell:0,AllowableRace:-1,AllowableClass:-1,spellid_1:0,spellid_2:0,spellid_3:0,spellid_4:0,spellid_5:0,stackable:1,maxcount:0,BuyPrice:mount.price,SellPrice:0,bonding:1,mountId:mount.id,description:`使用：收藏${mount.name}。${mount.level} 级可骑乘，移动速度提高 ${mount.bonus}%。`};
 for(const item of companionKitItems()){const appearance=Object.values(items).find(i=>!i.companionKit&&i.InventoryType===item.InventoryType&&i.subclass===item.subclass&&i.Quality===2&&icons.items?.[i.entry]);items[item.entry]={...item,appearanceItemId:appearance?.entry};}
 for(const item of moltenCoreLoot.tables.item_template)if(item.Quality>=4)items[item.entry].raidReward=true;
 for(const item of supplementalItems)items[item.entry]??=item;
@@ -127,7 +129,7 @@ export const classTalentTrees=classReference.classTalentTrees.map(tree=>({...tre
 export const talentTrees=classTalentTrees.filter(tree=>tree.classId===8);
 export const talents=Object.fromEntries(classTalentTrees.flatMap(tree=>tree.talents.map(t=>[t.id,{...t,tree:tree.id,classId:tree.classId,rankEffects:t.rankEffects.map(effect=>({...effect,descriptionZhCN:talentDescriptionsZhCN.descriptions[effect.spellId]}))}])));
 const talentsBySpell=Object.fromEntries(Object.values(talents).flatMap(t=>t.ranks.map(id=>[id,t])));
-export const icon=(kind,id)=>kind==='items'&&moltenCoreLoot.assets[id]?.icon?'/icons/assets/'+moltenCoreLoot.assets[id].icon+'.png':kind==='items'&&items[id]?.appearanceItemId?icon('items',items[id].appearanceItemId):icons[kind]?.[id]?'/icons/'+icons[kind][id]:classIcons[kind]?.[id]?'/icons/'+classIcons[kind][id]:kind==='items'&&stockadesAssets.items[id]?.icon?'/icons/'+stockadesAssets.items[id].icon:kind==='items'&&journeyAssets.items[id]?.icon?'/icons/'+journeyAssets.items[id].icon:kind==='items'&&worldItemAssets.items[id]?.icon?'/icons/'+worldItemAssets.items[id].icon:kind==='spells'&&dungeonSpellAssets.spells[id]?.icon?'/icons/'+dungeonSpellAssets.spells[id].icon:kind==='spells'?((talentsBySpell[id]?icon('talents',talentsBySpell[id].id):null)||(spellIcons.icons[spells[id]?.SpellIconID]?'/icons/'+spellIcons.icons[spells[id].SpellIconID]:null)):null;
+export const icon=(kind,id)=>kind==='items'&&items[id]?.mountId?(collectibleMounts.find(m=>m.id===Number(id))?.icon||'/icons/assets/ability_mount_ridinghorse.png'):kind==='items'&&moltenCoreLoot.assets[id]?.icon?'/icons/assets/'+moltenCoreLoot.assets[id].icon+'.png':kind==='items'&&items[id]?.appearanceItemId?icon('items',items[id].appearanceItemId):icons[kind]?.[id]?'/icons/'+icons[kind][id]:classIcons[kind]?.[id]?'/icons/'+classIcons[kind][id]:kind==='items'&&stockadesAssets.items[id]?.icon?'/icons/'+stockadesAssets.items[id].icon:kind==='items'&&journeyAssets.items[id]?.icon?'/icons/'+journeyAssets.items[id].icon:kind==='items'&&worldItemAssets.items[id]?.icon?'/icons/'+worldItemAssets.items[id].icon:kind==='spells'&&dungeonSpellAssets.spells[id]?.icon?'/icons/'+dungeonSpellAssets.spells[id].icon:kind==='spells'?((talentsBySpell[id]?icon('talents',talentsBySpell[id].id):null)||(spellIcons.icons[spells[id]?.SpellIconID]?'/icons/'+spellIcons.icons[spells[id].SpellIconID]:null)):null;
 export const provenance={database:source.meta,core:helpers.core,talents:talentSource.source,classes:classReference.meta};
 export const spellChain=index('spell_chain','spell_id');
 export const abilities=classAbilities[8];

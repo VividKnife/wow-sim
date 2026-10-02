@@ -1,0 +1,307 @@
+{
+  "state": {
+    "classId": 3,
+    "hp": 86,
+    "clock": 0,
+    "money": 100000,
+    "learned": [
+      75,
+      81,
+      196,
+      203,
+      204,
+      266,
+      2481,
+      2973,
+      9077,
+      9078,
+      20594,
+      20595,
+      20596,
+      883,
+      5149,
+      6991,
+      982
+    ],
+    "pet": {
+      "id": "player-pet",
+      "name": "霜牙",
+      "classId": 0,
+      "level": 20,
+      "hp": 487,
+      "mana": 0,
+      "position": 0,
+      "positionY": 2,
+      "maxHp": 487,
+      "maxMana": 0,
+      "spell": 883,
+      "kind": "beast",
+      "autocastDisabled": [],
+      "mode": "defensive",
+      "petUnit": true,
+      "ownerId": "player",
+      "happiness": 1000000,
+      "loyalty": 6,
+      "trainingPoints": 35,
+      "availableSkills": [
+        17255,
+        2649,
+        24604,
+        4187,
+        17256
+      ],
+      "nextSwing": 1000,
+      "swing": 2000,
+      "cooldowns": {},
+      "equipment": {},
+      "learned": [
+        17255,
+        2649,
+        24604,
+        4187
+      ],
+      "buffs": {},
+      "entry": 299,
+      "armor": 861
+    },
+    "combat": null
+  },
+  "data": {
+    "petControls": {
+      "feedingUntil": 0,
+      "food": [],
+      "family": "狼",
+      "xp": 0,
+      "nextXp": 5800,
+      "focus": 100,
+      "skills": [
+        {
+          "id": 17255,
+          "name": "撕咬",
+          "icon": "/icons/class-assets/ability_racial_cannibalize.jpg",
+          "rank": "等级 2",
+          "level": 8,
+          "passive": false,
+          "learned": true,
+          "currentRank": true,
+          "autocast": true,
+          "focusCost": 35,
+          "cooldownUntil": 0,
+          "selfTarget": false,
+          "details": {
+            "facts": [
+              "物理系",
+              "施法距离 5 码",
+              "冷却 10 秒",
+              "公共冷却 1.5 秒"
+            ],
+            "effects": [
+              "基础物理伤害 16—18"
+            ],
+            "restrictions": []
+          },
+          "cost": 0,
+          "reason": ""
+        },
+        {
+          "id": 2649,
+          "name": "低吼",
+          "icon": "/icons/class-assets/ability_physical_taunt.jpg",
+          "rank": "等级 1",
+          "level": 1,
+          "passive": false,
+          "learned": true,
+          "currentRank": true,
+          "autocast": true,
+          "focusCost": 15,
+          "cooldownUntil": 0,
+          "selfTarget": false,
+          "details": {
+            "facts": [
+              "物理系",
+              "施法距离 5 码",
+              "冷却 5 秒"
+            ],
+            "effects": [
+              "目标对你的仇恨变化 68"
+            ],
+            "restrictions": []
+          },
+          "cost": 0,
+          "reason": ""
+        },
+        {
+          "id": 24604,
+          "name": "狂怒之嚎",
+          "icon": "/icons/class-assets/ability_hunter_pet_wolf.jpg",
+          "rank": "等级 1",
+          "level": 10,
+          "passive": false,
+          "learned": true,
+          "currentRank": true,
+          "autocast": true,
+          "focusCost": 60,
+          "cooldownUntil": 0,
+          "selfTarget": false,
+          "details": {
+            "facts": [
+              "物理系",
+              "施法距离：自身 / 近身",
+              "冷却 10 秒",
+              "公共冷却 1.5 秒",
+              "持续 10 秒",
+              "作用半径 15 码"
+            ],
+            "effects": [
+              "物理造成伤害变化 9—11"
+            ],
+            "restrictions": []
+          },
+          "cost": 0,
+          "reason": ""
+        },
+        {
+          "id": 4187,
+          "name": "持久耐力",
+          "icon": "/icons/class-assets/spell_nature_unyeildingstamina.jpg",
+          "rank": "等级 1",
+          "level": 1,
+          "passive": true,
+          "learned": true,
+          "currentRank": true,
+          "autocast": false,
+          "focusCost": 0,
+          "cooldownUntil": 0,
+          "selfTarget": true,
+          "details": {
+            "facts": [
+              "物理系",
+              "施法距离：自身 / 近身",
+              "无独立冷却"
+            ],
+            "effects": [
+              "耐力变化 3"
+            ],
+            "restrictions": []
+          },
+          "cost": 0,
+          "reason": ""
+        },
+        {
+          "id": 17256,
+          "name": "撕咬",
+          "icon": "/icons/class-assets/ability_racial_cannibalize.jpg",
+          "rank": "等级 3",
+          "level": 16,
+          "passive": false,
+          "learned": false,
+          "currentRank": false,
+          "autocast": true,
+          "focusCost": 35,
+          "cooldownUntil": 0,
+          "selfTarget": false,
+          "details": {
+            "facts": [
+              "物理系",
+              "施法距离 5 码",
+              "冷却 10 秒",
+              "公共冷却 1.5 秒"
+            ],
+            "effects": [
+              "基础物理伤害 24—28"
+            ],
+            "restrictions": []
+          },
+          "cost": 3,
+          "reason": ""
+        }
+      ]
+    },
+    "petStable": {
+      "here": true,
+      "capacity": 2,
+      "prices": [
+        10000,
+        50000
+      ],
+      "slots": [
+        {
+          "family": "野猪",
+          "xp": 0,
+          "nextXp": 4850,
+          "entry": 113,
+          "name": "灰爪",
+          "level": 18,
+          "loyalty": 6,
+          "trainingPoints": 75
+        },
+        null
+      ],
+      "current": {
+        "family": "狼",
+        "xp": 0,
+        "nextXp": 5800,
+        "entry": 299,
+        "name": "霜牙",
+        "level": 20,
+        "loyalty": 6,
+        "trainingPoints": 35
+      }
+    },
+    "city": null,
+    "skillUses": {
+      "883": {
+        "canUse": true,
+        "canUseAfterCooldown": true,
+        "reason": "",
+        "remaining": 0,
+        "castMs": 0,
+        "label": "施放",
+        "description": "对自己或指定队友施放",
+        "item": null,
+        "portal": false,
+        "targetId": "player",
+        "kind": "summon"
+      },
+      "982": {
+        "canUse": false,
+        "canUseAfterCooldown": false,
+        "reason": "资源不足",
+        "remaining": 0,
+        "castMs": 10000,
+        "label": "施放",
+        "description": "对自己或指定队友施放",
+        "item": null,
+        "portal": false,
+        "targetId": "player",
+        "kind": "summon"
+      },
+      "2481": {
+        "canUse": true,
+        "canUseAfterCooldown": true,
+        "reason": "",
+        "remaining": 0,
+        "castMs": 0,
+        "label": "施放",
+        "description": "对自己或指定队友施放",
+        "item": null,
+        "portal": false,
+        "targetId": "player",
+        "kind": null
+      },
+      "20594": {
+        "canUse": true,
+        "canUseAfterCooldown": true,
+        "reason": "",
+        "remaining": 0,
+        "castMs": 0,
+        "label": "施放",
+        "description": "对自己或指定队友施放",
+        "item": null,
+        "portal": false,
+        "targetId": "player",
+        "kind": null
+      }
+    }
+  }
+}

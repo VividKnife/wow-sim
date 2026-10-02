@@ -27,13 +27,13 @@ function Preview(){
   },500);return()=>clearInterval(timer);
  },[selected,mode,paused]);
  const location={id:'preview',name:scene.name,region:scene.instance?'艾尔文':scene.name,kind:'wild'};
- const state={name:'林间旅人',level:20,hp:100,raceId:1,classId:8,gender:'female',equipment:{5:{id:56}},clock:5000,location:'preview',activity:mode==='idle'?{type:'idle'}:{type:'travel',from:'preview',to:'destination',startedAt:0,endsAt:60000,flight:mode==='flight'},mounted:mode==='ride'?900020:0,dungeon:scene.instance?{id:scene.id}:null};
+ const state={name:'林间旅人',level:mode==='deathcharger'?60:20,hp:100,raceId:1,classId:8,gender:'female',equipment:{5:{id:56}},clock:5000,location:'preview',activity:mode==='idle'?{type:'idle'}:{type:'travel',from:'preview',to:'destination',startedAt:0,endsAt:60000,flight:mode==='flight'},mounted:mode==='deathcharger'?13335:mode==='spectral'?49283:mode==='ride'?900020:0,dungeon:scene.instance?{id:scene.id}:null};
  const data={items:{56:{slot:20}},location,map:[location,{...location,id:'destination'}],dungeon:scene.instance?{id:scene.id,name:scene.name,route:[]}:null};
  return <main style={{maxWidth:1280,margin:'auto',padding:20}}>
   <h1>区域与副本背景巡检</h1><p>正式 WorldScene 组件 · 45 个区域 / 30 个副本 · 展示用动作，不读写存档</p>
   <div className="action-row" style={{flexWrap:'wrap',margin:'16px 0'}}>
    <GameSelect aria-label="场景" value={selected} onValueChange={value=>setSelected(String(value))}>{choices.map(c=><GameSelectOption key={c.id} value={c.id}>{c.instance?'副本 · ':'区域 · '}{c.name}</GameSelectOption>)}</GameSelect>
-   {[['idle','待机'],['foot','步行'],['ride','骑乘'],['flight','飞行']].map(([id,label])=><button key={id} onClick={()=>setMode(id)} aria-pressed={mode===id}>{label}</button>)}
+   {[['idle','待机'],['foot','步行'],['ride','骑乘'],['spectral','幽灵虎'],['deathcharger','死亡军马'],['flight','飞行']].map(([id,label])=><button key={id} onClick={()=>setMode(id)} aria-pressed={mode===id}>{label}</button>)}
    <button onClick={()=>setPaused(p=>!p)} aria-pressed={paused}>{paused?'继续演出':'暂停演出'}</button>
    <button onClick={()=>setMobile(m=>!m)} aria-pressed={mobile}>{mobile?'桌面宽度':'390px 手机宽度'}</button>
   </div>

@@ -58,7 +58,7 @@ try {
  const packed=packContent(data);packed.nodes=packed.nodes.map(row=>JSON.stringify(row));
  const bytes=JSON.stringify(packed)+'\n';
  const versionHash=createHash('sha256').update(bytes);
- const versionInputs=['scripts/compile-runtime-content.mjs','scripts/content-source/pack.mjs','packages/sim-core/src/packed-content.js',
+ const versionInputs=['packages/game-data/mounts.js','scripts/compile-runtime-content.mjs','scripts/content-source/pack.mjs','packages/sim-core/src/packed-content.js',
   ...(await fs.readdir(path.join(root,'packages/game-domain/src/rules'))).filter(name=>name.endsWith('.js')).sort().map(name=>'packages/game-domain/src/rules/'+name)];
  for(const name of versionInputs)versionHash.update(name).update(await fs.readFile(path.join(root,name)));
  const versionFile=path.join(root,'packages/game-data/runtime/version.json');

@@ -38,6 +38,7 @@ export class GmService {
   templates:(await tx.list('gm_templates')).sort((a,b)=>b.updatedAt-a.updatedAt).slice(0,100),
   buffs:(await tx.list('gm_buffs')).sort((a,b)=>b.createdAt-a.createdAt).slice(0,100),
   operations:(await tx.list('gm_operations')).sort((a,b)=>b.createdAt-a.createdAt).slice(0,100),
+  mounts:Object.values(items).filter(item=>item.mountId).map(item=>({id:item.entry,name:nameOf('items',item.entry),icon:icon('items',item.entry),count:1})),
   serverNow:this.now(),
  }));}
  searchItems(search:string){const query=search.trim().toLowerCase();if(!query)return [];return Object.entries(items).filter(([id])=>id===query||nameOf('items',Number(id)).toLowerCase().includes(query)).slice(0,30).map(([id,item])=>({id:Number(id),name:nameOf('items',Number(id)),icon:icon('items',Number(id)),quality:item.Quality,stack:item.stackable}));}

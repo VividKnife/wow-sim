@@ -63,9 +63,9 @@ export function applyLevel20Boost(s){
   s.hunterPet={entry:299,name:'森林狼',level:s.level,loyalty:6,happiness:1000000,learned:[2649]};
  }
  s.bags=Array.from({length:4},()=>makeItem(s,14046));
- s.mounts=[boostMount.id];s.riding.horse=true;
+ s.bag.push(makeItem(s,boostMount.id));s.riding.horse=true;
  s.location=racialHomes[s.raceId].capital;s.hearth=s.location;s.visited=[racialHomes[s.raceId].start,s.location];
  const st=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;
- log(s,'测试直升：已到达20级，获得50金币，并配发本职业可用的任务装备、四个符文布背包及旅行棕马，同时学会骑术及当前等级的职业解锁技能。可通过社交与地下城查找器邀请公共 NPC 玩家组队。');
+ log(s,'测试直升：已到达20级，获得50金币，并配发本职业可用的任务装备、四个符文布背包及旅行棕马物品（在背包中使用后收藏），同时学会骑术及当前等级的职业解锁技能。可通过社交与地下城查找器邀请公共 NPC 玩家组队。');
  return s;
 }

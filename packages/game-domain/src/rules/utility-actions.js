@@ -4,7 +4,7 @@ import {drinkPotion} from './consumables.js';
 import {beginSpellTiming,finishSpellTiming,cooldownUntil,gcdUntil} from './spell-timing.js';
 import {beginHunterTaming} from './combat.js';
 import {classBookUse,useClassBook} from './class-acquisition.js';
-import {beginMount,mountView} from './mounts.js';
+import {beginMount,mountView,mountItemUse,learnMountItem} from './mounts.js';
 import {items,nodes,nameOf,icon} from './catalog.js';
 import {spellInfo,stats,roll,log,bagCapacity,addItem} from './character.js';
 import {usableCount,consume} from './inventory.js';
@@ -97,6 +97,7 @@ function itemEffect(s,id){
 }
 
 export function itemUseView(s,instance){
+ const mount=mountItemUse(s,instance);if(mount)return mount;
  const book=classBookUse(s,instance);if(book)return book;
  const classUse=classItemUse(s,instance);if(classUse)return classUse;
  const effect=itemEffect(s,instance.id);if(!effect)return null;
@@ -115,6 +116,7 @@ export function itemUseView(s,instance){
 
 export function useBagItem(s,uid,slot){
  const instance=s.bag.find(i=>i.uid===uid);if(!instance)throw new Error('背包中没有这件物品');
+ if(learnMountItem(s,instance))return;
  if(useClassBook(s,instance)||useClassItem(s,instance,slot))return;
  const use=itemUseView(s,instance);if(!use)throw new Error('这件物品暂不支持直接使用');if(!use.canUse)throw new Error(use.reason);
  const effect=itemEffect(s,instance.id);

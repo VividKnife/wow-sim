@@ -18,7 +18,7 @@ export function travelMapFrame(state,elapsed=0){
  const a=state.activity;
  if(a.type!=='travel')return{journey:{from:state.location,to:state.location,progress:0},legs:[],remaining:0};
  const total=Math.max(1,a.endsAt-a.startedAt),current=Math.max(0,Math.min(total,state.clock-a.startedAt+Math.max(0,elapsed)));
- const path=a.flight||!a.path?.length?[{a:a.from,b:a.to,duration:total}]:a.path;
+ const path=!a.path?.length?[{a:a.from,b:a.to,duration:total}]:a.path;
  const costs=path.map(e=>Math.max(0,e.duration??e.distance/7*1000));
  let remainingCost=current,from=a.from,journey=null;
  const legs=path.map((e,index)=>{

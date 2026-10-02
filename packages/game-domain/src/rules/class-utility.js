@@ -1,7 +1,8 @@
+import {petIdentity,petSkillsView} from './pet-presentation.js';
 import {healAmount} from './healing.js';
 import {removeGroundEffects} from './ground-events.js';
 import {beginSpellTiming,finishSpellTiming,spellReady,cooldownUntil,gcdUntil} from './spell-timing.js';
-import {petTrainingCost,petTrainingReason,petFoodBenefit} from './pet-progression.js';
+import {petFoodBenefit} from './pet-progression.js';
 import {ritualUse,finishRitual} from './class-ritual.js';
 import {doomRitualUse,beginDoomRitual,summonInfernal} from './combat.js';
 import {environmentSpellUse,executeEnvironmentSpell,environmentView} from './class-environment.js';
@@ -138,4 +139,4 @@ export function classUtilityView(s){const targets=[...combatMembers(s,null).map(
   }
   skillUsesByTarget[target]=uses;
  }
- return{skillUsesByTarget,skillUseReadyAt,...environmentView(s),...observationView(s),petControls:s.pet?{feedingUntil:s.pet.feeding?.until||0,food:petFoodOptions(s),skills:(s.pet.availableSkills||[]).map(id=>({id,name:nameOf('spells',id),level:spells[id]?.SpellLevel||0,learned:s.pet.learned?.includes(id),cost:Math.max(0,petTrainingCost(s.pet,id)),reason:petTrainingReason(s,s.pet,id)}))}:null,classPortals:(s.portals||[]).filter(p=>p.until>s.clock&&p.from===s.location).map(p=>({...p,name:nodes[p.to].name,icon:icon('spells',p.spell)}))};}
+ return{skillUsesByTarget,skillUseReadyAt,...environmentView(s),...observationView(s),petControls:s.pet?{feedingUntil:s.pet.feeding?.until||0,food:petFoodOptions(s),...petIdentity(s.pet),focus:s.pet.focus??100,skills:petSkillsView(s,s.pet)}:null,classPortals:(s.portals||[]).filter(p=>p.until>s.clock&&p.from===s.location).map(p=>({...p,name:nodes[p.to].name,icon:icon('spells',p.spell)}))};}

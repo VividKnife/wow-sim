@@ -31,7 +31,7 @@ test('a redirected partial leg does not discover its virtual origin',()=>{
  assert.deepEqual(advance(s,3000).state.flightPoints,['sentinel']);
 });
 test('flying does not discover ground waypoints underneath the route',()=>{
- assert.deepEqual(advance(traveling({flight:true}),1000).state.flightPoints,[]);
+ assert.deepEqual(advance(traveling({flight:true,paidFlightLeg:0,path:[{a:'northshire',b:'sentinel',duration:3000,flight:true,cost:0}]}),1000).state.flightPoints,[]);
 });
 test('being at a flight point discovers it without talking to the flight master',()=>{
  const s=createGame('鸟点',11,0);s.location='stormwind';

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "referenceCommit": "d2d43b9041768603a0c52b8ce55c64b2a03fb6a2",
-  "contentHash": "8bc4eb1dfe3b0aee26876c005328158f18cd6cd7f32b2741946a4b712fb1aab5",
-  "capturedRuleset": "owned-v1:066285187e5a82f363b7f3804a99f54315cc5450c52b34799d429ac7f848b540",
-  "reviewReason": "Reviewed hunter pet stable, mailbox delivery, resident service, and GM reward flow changes; refreshed deterministic current scenarios against the generated rules manifest.",
+  "contentHash": "03b0aef76f7ef5328afd94817fa34630ec1c0afba09a452acba5aa2d419e2b0a",
+  "capturedRuleset": "owned-v1:3eb5f7340c804b9dc658687c12259893d94483d0a217dece6e07b7be12bc7fff",
+  "reviewReason": "Reviewed mount rewards, automatic flight, hunter pet presentation, and quest log updates; refreshed deterministic scenarios against the generated content manifest.",
   "sampleMs": 50,
   "durationMs": 15000,
   "referenceSummaryMatches": {
@@ -183,7 +183,7 @@
         {
           "wallAt": 5000,
           "simTime": 5000,
-          "hash": "9f72dcd21b698852ad36bb4a14f4a0d3f9478f7f2b5a9cf286065fb2ca00a2bc",
+          "hash": "2da231b1abd8994607efb83e4e034d50fceb44bb88d2470c1098fc078067b42e",
           "rngState": 283,
           "totals": {
             "kills": 0,
@@ -199,7 +199,7 @@
         {
           "wallAt": 10000,
           "simTime": 10000,
-          "hash": "76e303c2289b94fd83b15ddd92b2d4813b61eb8e487e2e4ee2344dee0b9355ee",
+          "hash": "e5de2eeae06eff339b8ee85b575aa783578ab0d715a40d0759aa16429c0776ea",
           "rngState": 283,
           "totals": {
             "kills": 0,
@@ -215,7 +215,7 @@
         {
           "wallAt": 15000,
           "simTime": 15000,
-          "hash": "e5a1a1613684e63335a02efc5d4042e884767c50de54e452257245a0654429b8",
+          "hash": "79afe519516812518f2be6b51f4170f12f1ec3ca8246b89e6f64ed9760ba1cf2",
           "rngState": 283,
           "totals": {
             "kills": 0,

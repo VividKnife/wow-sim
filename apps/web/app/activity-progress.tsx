@@ -57,7 +57,7 @@ export default function ActivityProgress({state:s,data:d,running=true,hideTravel
  else if(a.type==='teleport')label=label||'传送术';
  else if(a.type==='mount')label=`召唤${d.mounts?.collection.find(m=>m.id===a.mount)?.name||'坐骑'}`;
  else if(a.type==='questScene')label=d.quests?.find(q=>q.id===a.quest)?.scenes?.find(scene=>scene.key===a.target)?.name||'任务场景';
- else if(a.type==='gather')label=a.target==null?'等待采集目标刷新':'采集中';
+ else if(a.type==='gather')label=a.target==null?'寻找中':'采集中';
  else if(a.type==='professionGather')label=a.auto?'自动采集中':'采集中';
  else if(s.combat&&cast){start=cast.startedAt;end=cast.until;label=d.combatSkills?.find(skill=>skill.spellId===cast.spell)?.name||'施法';}
  else if(!s.combat&&s.rest){start=s.rest.startedAt;end=s.rest.until;label=s.rest.foodUntil>s.clock&&s.rest.waterUntil>s.clock?'进食与饮水':s.rest.foodUntil>s.clock?'进食':'饮水';}
