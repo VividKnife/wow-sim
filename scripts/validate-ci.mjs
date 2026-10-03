@@ -19,7 +19,7 @@ if(!buildId){
 }
 
 run('npm',['run','data:check']);
-run('node',['--test','scripts/game-version.test.mjs','scripts/publish-zeabur.test.mjs','scripts/publish-r2-assets.test.mjs','scripts/verify-deployment.test.mjs','apps/web/test/static-web.test.mjs','packages/simulation-tests/baseline.test.ts']);
+run('node',['--test','scripts/game-version.test.mjs','scripts/publish-zeabur.test.mjs','scripts/publish-r2-assets.test.mjs','scripts/verify-deployment.test.mjs','apps/web/test/static-web.test.mjs','packages/simulation-tests/baseline.test.ts','packages/game-domain/test/runtime-retirement.test.ts']);
 run('npm',['run','typecheck']);
 run('npm',['--prefix','apps/web','run','typecheck']);
 run('npm',['--prefix','apps/web','run','build'],{env:{WEB_BUILD_ID:buildId}});

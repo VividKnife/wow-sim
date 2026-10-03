@@ -8,7 +8,9 @@ import {rebaseSimulation} from '../../../packages/game-domain/src/simulation-clo
 import {addPeriodicEffect,simulationEventRuntime,preparePeriodicEffects} from '../../../packages/game-domain/src/rules/simulation-events.js';
 import {addEnemyAura} from '../../../packages/game-domain/src/rules/enemy-aura-events.js';
 import {tickClassEffects} from '../../../packages/game-domain/src/rules/class-mechanics.js';
-import {stats} from '../../../packages/game-domain/src/rules/character.js';
+import {stats,gainXp} from '../../../packages/game-domain/src/rules/character.js';
+import {applyExperienceBuff} from '../../../packages/game-domain/src/rules/experience.js';
+import {xpTable} from '../../../packages/game-domain/src/rules/catalog.js';
 import {advanceOwned} from '../../../packages/game-domain/src/rules/engine.js';
 import {ResidentInstance,type InstanceCheckpoint} from '../src/instance.ts';
 import {composeDungeonCheckpoint} from '../src/dungeon-composition.ts';
@@ -34,6 +36,26 @@ async function fixture(){
   return {sources:runtimes.map(r=>r.checkpoint()),ids};
 }
 const options=(sources:InstanceCheckpoint[])=>({instanceId:'shared:composed',ownerEpoch:1,primaryActorId:sources[0].state.id,roster:{groupId:'test:party',leaderId:sources[0].state.id,dungeonId:'deadmines',members:sources.flatMap(s=>[s.state,...s.state.party].map((c:Rules)=>({id:c.id,npc:!!c.npcPlayer}))) }});
+
+for(const rate of [0,1,2,3])test(`dungeon NPCs receive server XP rate ${rate} and retain it after restore`,async()=>{
+  const {sources}=await fixture();
+  for(const source of sources){
+    applyExperienceBuff(source.state,rate);
+    source.state.serverBuffs.push({id:'human-only',gm:true,xpMultiplier:5});
+    for(const npc of source.state.party)delete npc.serverBuffs;
+  }
+  const checkpoint=composeDungeonCheckpoint(sources,options(sources));
+  const state=ResidentInstance.restore(JSON.parse(JSON.stringify(checkpoint)),2).checkpoint().state;
+  for(const npc of state.party.filter((c:Rules)=>c.npcPlayer)){
+    assert.equal(npc.serverBuffs.find((b:Rules)=>b.id==='server-experience')?.xpMultiplier??1,rate);
+    assert.ok(!npc.serverBuffs.some((b:Rules)=>b.id==='human-only'));
+    const level=npc.level,threshold=xpTable[level].xp_for_next_level;
+    npc.xp=threshold-15;
+    gainXp(state,npc,10);
+    assert.equal(npc.level,level+(rate>=2?1:0));
+    assert.equal(npc.xp,rate>=2?10*rate-15:threshold-15+10*rate);
+  }
+});
 
 test('two personal clocks compose into five seats without losing identities, effects, private assets or input deduplication',async()=>{
   const {sources,ids}=await fixture(),before=structuredClone(sources);

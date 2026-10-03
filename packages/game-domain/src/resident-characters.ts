@@ -64,38 +64,68 @@ export class ResidentCharacters {
   }
   mail(accountId:string,actorId:string,id:string,requestId:string){return mailForClaim(this.store,accountId,actorId,id,requestId);}
   mailRecipient(name:string,senderId:string){return resolveMailRecipient(this.store,name,senderId);}
-  /** Start a new runtime from committed character/assets when an expired
-   * personal runtime belongs to a different rules/content release. */
-  async retireIncompatiblePersonal(accountId:string,characterId:string):Promise<void>{
+  /** Retire the entire incompatible room atomically. Any human participant may
+   * trigger recovery; each resumes from their own committed character/assets.
+   * Old checkpoints are inspected for identity only, never executed or migrated. */
+  async retireIncompatibleInstance(accountId:string,characterId:string):Promise<void>{
     await this.store.transaction(async tx=>{
-      const character=await owned(tx,accountId,characterId);
+      await owned(tx,accountId,characterId);
       const claim=await tx.get<CharacterClaim>('simulation_characters',characterId);
       if(!claim)return;
       const residency=await tx.get<Residency>('simulation_residencies',claim.instanceId);
       requireThat(residency&&claim.accountId===accountId,'SIMULATION_STATE','角色执行权记录不完整');
       if(residency.rulesetVersion===this.version.rulesetVersion&&residency.contentHash===this.version.contentHash)return;
-      requireThat(claim.instanceId.startsWith('personal:')&&residency.accountId===accountId&&
-        residency.characterId===characterId&&residency.participants.length===1&&
-        residency.participants[0].characterId===characterId&&residency.participants[0].accountId===accountId,
-        'SIMULATION_VERSION','共享实例需要先结束当前活动',503);
-      requireThat((this.retireState||!character.rules.combat&&!character.rules.dungeon)&&!await tx.get('actor_leases',characterId),
-        'SIMULATION_VERSION','旧活动需要先结束才能更新运行规则',503);
-      const claims=await tx.list<CharacterClaim>('simulation_characters',{instanceId:claim.instanceId});
-      requireThat(claims.some(row=>row.id===characterId)&&claims.every(row=>(row.accountId===accountId||row.accountId===null)),
+      validateParticipants(residency.participants,residency.characterId);
+      const participants=residency.participants,dungeon=claim.instanceId.startsWith('dungeon:');
+      requireThat(participants.some(p=>p.characterId===characterId&&p.accountId===accountId)&&
+        participants.some(p=>p.characterId===residency.characterId&&p.accountId===residency.accountId),
         'SIMULATION_STATE','实例角色归属无效');
+      requireThat(dungeon||claim.instanceId.startsWith('personal:')&&participants.length===1,
+        'SIMULATION_VERSION','当前实例类型无法自动结束旧活动',503);
+      const claims=await tx.list<CharacterClaim>('simulation_characters',{instanceId:claim.instanceId});
+      requireThat(participants.every(p=>claims.some(c=>c.id===p.characterId&&c.accountId===p.accountId))&&
+        claims.every(c=>c.accountId===null||participants.some(p=>p.characterId===c.id&&p.accountId===c.accountId)),
+        'SIMULATION_STATE','实例角色归属无效');
+      const characters:Character[]=[];
+      for(const p of participants){
+        const c=await owned(tx,p.accountId,p.characterId);
+        requireThat((this.retireState||!dungeon&&!c.rules.combat&&!c.rules.dungeon)&&!await tx.get('actor_leases',c.id),
+          'SIMULATION_VERSION','旧活动需要先结束才能更新运行规则',503);
+        characters.push(c);
+      }
       const saved=await tx.get<{encodedCheckpoint:string}>('simulation_checkpoints',claim.instanceId);
       if(saved){
         const checkpoint=JSON.parse(saved.encodedCheckpoint);
-        requireThat(checkpoint.state?.id===characterId&&checkpoint.state?.level===character.rules.level,
-          'SIMULATION_STATE','旧实例与已保存的角色状态不一致');
+        const actors=[checkpoint.state,...(checkpoint.state?.party??[])];
+        requireThat(checkpoint.state?.id===residency.characterId&&characters.every(c=>{
+          const matching=actors.filter(a=>a?.id===c.id);
+          return matching.length===1&&matching[0].level===c.rules.level;
+        }),'SIMULATION_STATE','旧实例与已保存的角色状态不一致');
       }
       await withResidentRetirement(tx,claim.instanceId,async()=>{
+        // Remove every human and NPC claim before writing any member. If any
+        // recovery fails, fencing, claims, group binding and all members roll back.
         for(const row of claims)await tx.delete('simulation_characters',row.id);
         await tx.delete('simulation_residencies',claim.instanceId);
         const now=Date.now();
-        await this.retireState?.(tx,character,now);
-        if(this.retireState){
-          const presence=await tx.get<AccountPresence>('account_presence',accountId);
+        if(dungeon){
+          for(const group of await tx.list('social_groups',{instanceId:claim.instanceId})){
+            delete group.instanceId;delete group.entry;
+            group.status='forming';group.dungeonId=null;group.updatedAt=now;
+            await tx.put('social_groups',group);
+          }
+        }
+        for(const character of characters){
+          if(dungeon){
+            // Discard encounter state without copying the leader's progress,
+            // inventory or unallocated loot into another participant's save.
+            for(const field of ['dungeonRoster','dungeonPresentNpcIds','sharedParty','groupLoot'])delete character.rules[field];
+            await tx.put('characters',character);
+          }
+          await this.retireState?.(tx,character,now);
+        }
+        if(this.retireState)for(const id of new Set(participants.map(p=>p.accountId))){
+          const presence=await tx.get<AccountPresence>('account_presence',id);
           if(!presence||!validAccountPresence(presence))throw new DomainError('ACCOUNT_STATE','账号在线状态无效');
           await tx.put('account_presence',{...presence,lastSeenAt:Math.max(presence.lastSeenAt,now)});
         }
