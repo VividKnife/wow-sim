@@ -2,6 +2,7 @@ import type {Admission, InstanceCheckpoint} from './instance.ts';
 import type {SimulationInput} from '../../../packages/protocol/src/simulation.ts';
 
 export type WorkerOperation =
+  | {kind:'contentPhase';instanceId:string;ownerEpoch:number;phase:number}
   | {kind: 'admit'; admission: Admission; leaseMs: number; realtime: boolean}
   | {kind: 'restore'; checkpoint: InstanceCheckpoint; ownerEpoch: number; leaseMs: number; realtime: boolean}
   | {kind: 'advance'; instanceId: string; ownerEpoch: number; until: number; maxTicks: number}

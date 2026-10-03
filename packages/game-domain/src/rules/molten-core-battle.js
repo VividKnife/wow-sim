@@ -20,7 +20,7 @@ export function beginMoltenCoreBattle(s,bossId,tactics){
  if(bossId==='majordomo')foes[0].auras.push({spell:20620,type:39,misc:127,until:s.clock+raidScaling.encounterLimitMs,positive:true});
  const area=node?.kind==='trash'?{shape:'rectangle',minX:-20,maxX:50,minY:-28,maxY:28}:requiredRaidRoom(bossId);
  startCombat(s,[],true,foes,area);
- s.combat.ground=bossId==='onyxia'?'onyxia':'molten';
+ s.combat.ground=['azuregos','kazzak'].includes(bossId)?'grass':bossId==='onyxia'?'onyxia':'molten';
  if(node?.kind==='trash')s.combat.area.name=def.name;
  s.combat.raidMode=s.goldRaid?.active?'gold':'demo';
  const actors=[s,...s.party],plan=raidPlan(s,bossId),allTanks=actors.filter(c=>combatRole(c)==='tank'),tanks=[allTanks.find(c=>c.id===plan.mainTank),allTanks.find(c=>c.id===plan.offTank)].filter(Boolean);

@@ -1,10 +1,11 @@
+import {applyContentPhase} from './content-release.ts';
 import {applyGmBuffs} from './gm-buffs.ts';
 import { createGame } from './rules/engine.js';
 import {syncNpcWorld} from './rules/npc-world.js';
 import type { ReadView, Transaction } from '../../persistence/src/store.ts';
 import { DomainError, requireThat } from './model.ts';
 import type { Account, AccountPresence, Character, Item, Wallet, Rules, Activity } from './model.ts';
-const separated = ['serverBuffs', 'id', 'money', 'bag', 'bags', 'bank', 'equipment', 'pending', 'auctions', 'party', 'activity', 'dungeon', 'receipts', 'npcGuests', 'npcWorld', 'npcFriendIds'];
+const separated = ['contentPhase', 'serverBuffs', 'id', 'money', 'bag', 'bags', 'bank', 'equipment', 'pending', 'auctions', 'party', 'activity', 'dungeon', 'receipts', 'npcGuests', 'npcWorld', 'npcFriendIds'];
 export const clone = <T>(value: T): T => structuredClone(value);
 import {rebaseSimulation} from './simulation-clock.ts';
 export {rebaseSimulation} from './simulation-clock.ts';
@@ -58,6 +59,7 @@ export async function context(tx: ReadView, character: Character, now: number, w
             s.rngState = active.rngState;
         }
     }
+    await applyContentPhase(tx,s);
     await applyGmBuffs(tx,s,character.accountId);
     return s;
 }

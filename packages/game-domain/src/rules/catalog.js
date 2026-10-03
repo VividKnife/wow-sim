@@ -90,7 +90,7 @@ export const icon=(kind,id)=>runtime.text[kind]?.[id]?.icon??null;
 /** @type {(rows:any[],key:string)=>Record<string,any[]>} */
 export const groupBy=(rows,key)=>groupRows(rows,r=>r[key]);
 /** @type {(node:string)=>number[]} */
-export const monsterIdsAt=node=>[...(runtime.monstersByNode[node]||[])];
+export const monsterIdsAt=node=>[...(runtime.monstersByNode[node]||[])].filter(id=>![6109,12397].includes(id));
 export function endpointNodes(endpoint){if(endpoint.type==='item')return [];return(endpoint.type==='creature'?creatureLocations:objectLocations)[endpoint.id]||[];}
 const world={dungeons:runtime.dungeonEntrances};
 const positionedNodes=Object.values(nodes).filter(n=>Number.isFinite(n.x)&&Number.isFinite(n.y)&&n.kind!=='dungeon');

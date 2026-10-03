@@ -1,3 +1,5 @@
+import {bagSpaceFor} from './bag-storage.js';
+import {weaponItemUse,useWeaponItem} from './epic-weapons.js';
 import {removeGroundEffects} from './ground-events.js';
 import {buffTooltip} from './buff-tooltip.js';
 import {drinkPotion} from './consumables.js';
@@ -6,7 +8,7 @@ import {beginHunterTaming} from './combat.js';
 import {classBookUse,useClassBook} from './class-acquisition.js';
 import {beginMount,mountView,mountItemUse,learnMountItem} from './mounts.js';
 import {items,nodes,nameOf,icon} from './catalog.js';
-import {spellInfo,stats,roll,log,bagCapacity,addItem} from './character.js';
+import {spellInfo,stats,roll,log,addItem} from './character.js';
 import {usableCount,consume} from './inventory.js';
 import {stopRecovery} from './recovery.js';
 import {beginHearth,hearthstoneView} from './hearthstone.js';
@@ -16,13 +18,13 @@ import {potions} from './profession-data.js';
 import {elixirEffects,elixirDurationMs} from './utility-data.js';
 import {classUtilityUse,beginClassUtility,classUtilityView} from './class-utility.js';
 import {classItemUse,useClassItem} from './class-items.js';
-import {handleTownAmmo} from './ammunition.js';
+import {handleTownSupplies} from './town-supplies.js';
 
 const teleports={3561:'stormwind',3562:'ironforge'};
 const mageBuffs=new Set(['Frost Armor','Arcane Intellect']);
 const unavailable=s=>s.hp<=0?'角色已死亡':s.escort?'正在护送，请先结束护送':s.combat?'战斗中无法使用':!['idle','hunt'].includes(s.activity.type)?'请先结束当前活动':'';
 const conjuredCount=(s,sp)=>Math.min(20,2+Math.max(0,s.level-sp.SpellLevel)*2);
-const bagRoom=(s,id)=>s.bag.reduce((n,i)=>n+(i.id===id?Math.max(0,(items[id]?.stackable||1)-i.count):0),0)+Math.max(0,bagCapacity(s)-s.bag.length)*(items[id]?.stackable||1);
+const bagRoom=bagSpaceFor;
 const reagents=sp=>Array.from({length:8},(_,i)=>({id:sp['Reagent'+(i+1)],count:sp['ReagentCount'+(i+1)]})).filter(r=>r.id>0&&r.count>0);
 
 export function skillUseView(s,id){
@@ -66,7 +68,7 @@ export function finishUtilitySpell(s){
   s.activity={type:'idle'};if(s.dungeon)leaveDungeon(s);
   s.location=a.to;if(!s.visited.includes(a.to))s.visited.push(a.to);removeGroundEffects(s);
   log(s,'传送至 '+nodes[a.to].name,'travel');
-  handleTownAmmo(s,'town');
+  handleTownSupplies(s,'town');
  }
  s.activity={type:'idle'};stopRecovery(s);
 }
@@ -97,6 +99,7 @@ function itemEffect(s,id){
 }
 
 export function itemUseView(s,instance){
+ const weapon=weaponItemUse(s,instance);if(weapon)return weapon;
  const mount=mountItemUse(s,instance);if(mount)return mount;
  const book=classBookUse(s,instance);if(book)return book;
  const classUse=classItemUse(s,instance);if(classUse)return classUse;
@@ -116,6 +119,7 @@ export function itemUseView(s,instance){
 
 export function useBagItem(s,uid,slot){
  const instance=s.bag.find(i=>i.uid===uid);if(!instance)throw new Error('背包中没有这件物品');
+ if(useWeaponItem(s,instance))return;
  if(learnMountItem(s,instance))return;
  if(useClassBook(s,instance)||useClassItem(s,instance,slot))return;
  const use=itemUseView(s,instance);if(!use)throw new Error('这件物品暂不支持直接使用');if(!use.canUse)throw new Error(use.reason);

@@ -1,3 +1,4 @@
+import {CONTENT_PHASES} from '../../../packages/game-domain/src/rules/content-phase.js';
 import {randomBytes, randomUUID, timingSafeEqual} from 'node:crypto';
 import {AccountStore, derive, digest, usernameOf, passwordOf, type Sql} from './account-store.ts';
 const fail = (message:string,status=400) => Object.assign(new Error(message),{status});
@@ -15,6 +16,26 @@ export class AdminStore {
    CREATE TABLE IF NOT EXISTS gm_audit (id text PRIMARY KEY, admin_id text NOT NULL, action text NOT NULL, target text NOT NULL, reason text NOT NULL, created_at bigint NOT NULL);
    CREATE INDEX IF NOT EXISTS gm_audit_time ON gm_audit(created_at DESC,id);
    COMMIT;`);
+ }
+ async contentRelease(){
+  const row=(await this.sql.query("SELECT data FROM content_releases WHERE id='world'")).rows[0]?.data;
+  return {phase:row?.phase??1,openedAt:row?.openedAt??null,phases:CONTENT_PHASES};
+ }
+ async openContentPhase(adminId:string,input:Record<string,unknown>){
+  const {phase,reason}=input;
+  if(!Number.isInteger(phase)||!CONTENT_PHASES.some(p=>p.phase===phase&&p.ready)||typeof reason!=='string'||!reason.trim()||reason.trim().length>500)throw fail('请选择已实现的版本并填写 1–500 字开放原因。');
+  if(phase===1)throw fail('只能按顺序开放下一版本，不能回退或重复开放。',409);
+  const now=this.now();
+  // Singleton CAS and audit are one statement: competing operators cannot open twice.
+  const result=await this.sql.query(`WITH changed AS (
+   INSERT INTO content_releases(id,data) SELECT 'world',jsonb_build_object('id','world','phase',$5::int,'openedAt',$1::bigint,'adminId',$2::text)
+   WHERE $5::int=2 OR EXISTS(SELECT 1 FROM content_releases WHERE id='world')
+   ON CONFLICT(id) DO UPDATE SET data=EXCLUDED.data WHERE (content_releases.data->>'phase')::int=$5::int-1
+   RETURNING data
+  ), audit AS (INSERT INTO gm_audit SELECT $3,$2,'openContentPhase','P'||$5::text,$4,$1 FROM changed)
+  SELECT data FROM changed`,[now,adminId,randomUUID(),reason.trim(),phase]);
+  if(!result.rows.length)throw fail('版本已发生变化，请刷新后重试。',409);
+  return this.contentRelease();
  }
  async playerExists(id:string){return !!(await this.sql.query('SELECT id FROM web_users WHERE id=$1',[id])).rows.length;}
  async setupRequired(){return !(await this.sql.query('SELECT id FROM gm_admin')).rows.length;}

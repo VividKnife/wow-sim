@@ -1,7 +1,7 @@
 import {itemIdentity,nextItemIdentity} from './item-identity.js';
 import {items,nameOf} from './catalog.js';
-import {makeItem,bagCapacity,log} from './character.js';
-import {put} from './inventory.js';
+import {makeItem,log} from './character.js';
+import {putInBag} from './inventory.js';
 import {canReceiveEquipment} from './npc-equipment.js';
 import {npcAward} from './npc-world.js';
 import {queueGroupLoot} from './group-loot.js';
@@ -54,7 +54,7 @@ export function collectLoot(s,uids){
   let remaining=item.count;
   while(remaining>0){
    const count=Math.min(remaining,max);
-   try{put(s.bag,{...instance,count,uid:remaining===item.count?item.uid:itemIdentity(s)},bagCapacity(s));}
+   try{putInBag(s,{...instance,count,uid:remaining===item.count?item.uid:itemIdentity(s)});}
    catch(error){break;}
    if(remaining!==item.count)s.itemSequence++;
    remaining-=count;

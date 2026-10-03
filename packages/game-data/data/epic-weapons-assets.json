@@ -1,0 +1,36 @@
+{
+  "items": {
+    "17182": {
+      "icon": "assets/inv_hammer_unique_sulfuras.png",
+      "source": "https://nether.wowhead.com/classic/tooltip/item/17182?locale=4",
+      "nameZhCN": "萨弗拉斯，炎魔拉格纳罗斯之手"
+    },
+    "18609": {
+      "icon": "assets/inv_staff_12.png",
+      "source": "https://nether.wowhead.com/classic/tooltip/item/18609?locale=4",
+      "nameZhCN": "咒逐"
+    },
+    "18715": {
+      "icon": "assets/inv_staff_21.png",
+      "source": "https://nether.wowhead.com/classic/tooltip/item/18715?locale=4",
+      "nameZhCN": "罗克迪洛尔，上古守护者的手杖"
+    },
+    "18489": {
+      "icon": "assets/inv_sword_47.png",
+      "source": "https://nether.wowhead.com/classic/tooltip/item/18489?locale=4",
+      "nameZhCN": "未淬火的上古之刃"
+    },
+    "18492": {
+      "icon": "assets/inv_sword_28.png",
+      "source": "https://nether.wowhead.com/classic/tooltip/item/18492?locale=4",
+      "nameZhCN": "精制上古之刃"
+    },
+    "22726": {
+      "icon": "assets/inv_qiraj_jewelblessed.jpg",
+      "source": "https://nether.wowhead.com/classic/tooltip/item/22726?locale=4",
+      "nameZhCN": "埃提耶什的碎片",
+      "imageSource": "https://wow.zamimg.com/images/wow/icons/large/inv_qiraj_jewelblessed.jpg",
+      "sha256": "cfbfc279d4a87fa8b3ed5231ecdf2a8601fed3956a8ee2d8e9f7dd11e566978e"
+    }
+  }
+}

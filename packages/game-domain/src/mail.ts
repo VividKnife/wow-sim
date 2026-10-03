@@ -1,10 +1,10 @@
+import {readContentPhase} from './content-release.ts';
 import {createHash} from 'node:crypto';
 import type {Store,Transaction,ReadView} from '../../persistence/src/store.ts';
 import {DomainError,requireThat,type Character,type Rules} from './model.ts';
 import {owned,bump} from './context.ts';
 import {items,nameOf,icon} from './rules/catalog.js';
-import {receive,put,tradable} from './rules/inventory.js';
-import {bagCapacity} from './rules/character.js';
+import {receive,putInBag,tradable} from './rules/inventory.js';
 import {nextItemIdentity} from './rules/item-identity.js';
 
 export type MailAttachment={kind:'catalog'|'instance';id:number;count:number;name:string;icon:string|null;item?:Rules};
@@ -59,7 +59,7 @@ export function applyMailClaim(actor:Rules,mail:{copper:number;attachments:MailA
         const held=[...actor.bag,...actor.bank,...actor.pending,...Object.values(actor.equipment)].filter((i:Rules)=>i.id===attachment.id).reduce((n:number,i:Rules)=>n+i.count,0);
         requireThat(held+attachment.count<=definition.maxcount,'MAIL_UNIQUE','超过唯一物品持有上限',400);
       }
-      put(actor.bag,{...structuredClone(attachment.item),uid:nextItemIdentity(actor)},bagCapacity(actor));
+      putInBag(actor,{...structuredClone(attachment.item),uid:nextItemIdentity(actor)});
     }
   }}catch(error){const message=(error as Error).message;throw new DomainError('MAIL_BAG',message.includes('空间不足')?'背包空间不足，请先清理背包再领取，邮件已为你保留。':message,400);}
   requireThat(Number.isSafeInteger(actor.money+mail.copper),'MAIL_BALANCE','金币已达上限，邮件暂未领取',400);
@@ -71,7 +71,7 @@ export function applyMailSend(actor:Rules,itemsToSend:{uid:string;count:number}[
   for(const selected of itemsToSend){
     requireThat(typeof selected.uid==='string'&&Number.isSafeInteger(selected.count)&&selected.count>0,'MAIL_ITEMS','物品数量无效',400);
     const item=actor.bag.find((i:Rules)=>i.uid===selected.uid);
-    requireThat(item&&tradable(item)&&item.count>=selected.count,'MAIL_ITEMS','物品不存在、数量不足或无法邮寄',400);
+    requireThat(item&&tradable(item,actor)&&item.count>=selected.count,'MAIL_ITEMS','物品不存在、数量不足或无法邮寄',400);
     item.count-=selected.count;if(!item.count)actor.bag.splice(actor.bag.indexOf(item),1);
   }
   actor.money-=copper;
@@ -81,10 +81,11 @@ export async function commitMailSend(tx:Transaction,row:{accountId:string;input:
   if(await tx.get('mail',id))return;
   const recipient=await tx.get<Character>('characters',command.recipientId);
   requireThat(recipient?.kind==='hero'&&recipient.accountId===command.recipientAccountId,'MAIL_RECIPIENT','收件人角色已不存在',404);
+  const phaseState={contentPhase:await readContentPhase(tx)};
   const attachments:MailAttachment[]=[];
   for(const selected of command.items){
     const item=await tx.get('items',selected.uid);
-    requireThat(item?.ownerCharacterId===sender.id&&item.container==='bag'&&item.data.count>=selected.count&&tradable(item.data),'MAIL_ITEMS','邮寄物品已变化',409);
+    requireThat(item?.ownerCharacterId===sender.id&&item.container==='bag'&&item.data.count>=selected.count&&tradable(item.data,phaseState),'MAIL_ITEMS','邮寄物品已变化',409);
     attachments.push({kind:'instance',id:item.data.id,count:selected.count,name:nameOf('items',item.data.id),icon:icon('items',item.data.id),item:{...item.data,count:selected.count}});
   }
   await tx.insert('mail',{id,accountId:recipient.accountId,recipientId:recipient.id,senderId:sender.id,senderName:sender.rules.name,

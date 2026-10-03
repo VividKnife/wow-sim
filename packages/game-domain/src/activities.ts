@@ -2,9 +2,8 @@ import { act, advance } from './rules/engine.js';
 import { recipes } from './rules/profession-data.js';
 import { items } from './rules/catalog.js';
 import { recipeQuote, professionAction } from './rules/professions.js';
-import { receive, put } from './rules/inventory.js';
+import { receive, putInBag } from './rules/inventory.js';
 import {nextItemIdentity} from './rules/item-identity.js';
-import { bagCapacity } from './rules/character.js';
 import type { Transaction } from '../../persistence/src/store.ts';
 import { requireThat } from './model.ts';
 import type { Character, Activity, Rules, Item } from './model.ts';
@@ -14,9 +13,9 @@ import type { GameService } from './service.ts';
 import { PAUSED_EVENT_AT } from './presence.ts';
 import {consumeCombatPlan, invalidateCombatPlan, combatExecutionMode} from './combat-execution.ts';
 import {OFFLINE_BATCH_TICKS, OFFLINE_BATCH_INTERVAL_MS} from './combat-playback.ts';
-function returnTool(state: Rules, tool: Rules) { (state.bag.length < bagCapacity(state) ? state.bag : state.pending).push(clone(tool.data)); }
+function returnTool(state: Rules, tool: Rules) { returnMaterial(state,tool); }
 function returnMaterial(state: Rules, material: Rules) {
-    try { put(state.bag, clone(material.data), bagCapacity(state)); }
+    try { putInBag(state, clone(material.data)); }
     catch (error) {
         if (!(error instanceof Error) || !error.message.startsWith('储物空间不足')) throw error;
         state.pending.push(clone(material.data));

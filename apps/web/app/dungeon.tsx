@@ -58,7 +58,7 @@ export default function Dungeon(props:GameProps){
     </>}
    </>:<><div className="eyebrow">地下城旅程</div><h2>路线已完成</h2><p>整理战利品，并在附近人物中交付已完成的副本任务。</p></>}
    {s.activity.reason&&<p className="dungeon-notice" role="status">{s.activity.reason}</p>}
-   {(s.pending.length>0||s.bag.length>=d.bagCapacity)&&<p className="dungeon-notice">背包需要整理。到「角色」装备新物品或拾取待领取战利品；也可离开副本后找商人出售。</p>}
+   {(s.pending.length>0||d.generalBagFree===0)&&<p className="dungeon-notice">背包需要整理。到「角色」装备新物品或拾取待领取战利品；也可离开副本后找商人出售。</p>}
    <RecoveryControls {...props}/>
   </section>
   <section className="panel dungeon-party"><div className="section-heading"><h2>小队状态</h2><small>5 人</small></div>{d.recovery.members.map((c:any)=><article key={c.id} className={'dungeon-member '+(c.hp<=0?'is-fallen':'')}><div className="section-heading"><strong>{c.name} <small>Lv.{c.level}</small></strong><small>{c.hp<=0?'已倒下':c.restUntil>s.clock?'休整 '+duration(c.restUntil-s.clock):c.role}</small></div><Bar label="生命" value={c.hp} max={c.maxHp}/>{c.maxMana>0&&<Bar label="法力" value={c.mana} max={c.maxMana} tone="mana"/>}</article>)}</section></div>

@@ -4,8 +4,7 @@ import {type Character, type Activity, type ActorLease, type Instance, type Item
 import {owned, context, persistAssets, economicEvent, clone} from './context.ts';
 import {advance} from './rules/engine.js';
 import {items} from './rules/catalog.js';
-import {bagCapacity} from './rules/character.js';
-import {put, quantity, transferBlockedReason} from './rules/inventory.js';
+import {putInBag, quantity, transferBlockedReason} from './rules/inventory.js';
 import {invalidateCombatPlan} from './combat-execution.ts';
 import {nextItemIdentity} from './rules/item-identity.js';
 
@@ -61,7 +60,7 @@ export async function transferItems(this:GameService, tx:Transaction, source:Cha
   requireThat(!maximum||held.filter(i=>i.id===item.id).reduce((n,i)=>n+i.count,0)+count<=maximum,'UNIQUE_ITEM','接收角色已达到唯一物品持有上限');
   const whole=count===item.count;
   const moved={...item,count,uid:whole?item.uid:nextItemIdentity(from),...(item.ownerId?{ownerId:target.id}:{})};
-  put(to.bag,moved,bagCapacity(to));
+  putInBag(to,moved);
   if(whole) {
    from.bag=from.bag.filter((i:Rules)=>i.uid!==item.uid);
    const row=(await tx.get<Item>('items',item.uid))!;

@@ -1,3 +1,4 @@
+import {view} from '../src/rules/engine.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MemoryStore} from '../../persistence/src/memory.ts';
@@ -89,4 +90,17 @@ test('party members can transfer items inside a dungeon between pulls but not du
  assert.ok((await f.store.read(tx=>tx.get<Character>('characters',f.helper)))!.rules.itemSequence>=cursor,'later instance persistence must not rewind item allocation');
  await assert.rejects(f.move([{uid:'cloth',count:1}],'in-combat',f.hero,f.helper),/战斗或赶路/);
  assert.equal((await f.row('cloth'))!.data.count,2);
+});
+
+test('persistent transfers use specialty capacity without accepting mismatched items',async()=>{
+ const f=await fixture();await f.add(f.helper,'quiver',2101);
+ await f.service.command('a',{type:'equipBag',characterId:f.helper,uid:'quiver',requestId:'equip-quiver'});
+ const used=(await f.service.snapshot('a',f.helper)).state.bag.length;
+ for(let n=used;n<16;n++)await f.add(f.helper,'bag-fill-'+n,80);
+ await f.add(f.hero,'arrows',2512,200);await f.add(f.hero,'water',159,1);
+ await f.move([{uid:'arrows',count:200}],'arrows-transfer');
+ await assert.rejects(f.move([{uid:'water',count:1}],'water-transfer'),/空间不足/);
+ const loaded=await f.service.snapshot('a',f.helper);
+ assert.equal(view(loaded.state).generalBagFree,0);assert.deepEqual(view(loaded.state).inventoryBags[1].uids,['arrows']);
+ assert.equal((await f.row('water'))!.ownerCharacterId,f.hero);
 });

@@ -1,3 +1,4 @@
+import {contentPhase,itemAvailableInPhase} from './content-phase.js';
 import {groupRows} from '../../../sim-core/src/collections.js';
 import {reserveMarket,marketOffer,marketAvailability} from './market.js';
 import {racialModifiers} from './racial-effects.js';
@@ -23,12 +24,12 @@ export function professionLearningBlockedReason(s,id){
 const rods=[6218,6339,11130,11145,16207];
 const hasTool=(s,id)=>countItem(s,id)>0||(rods.includes(id)&&rods.slice(rods.indexOf(id)+1).some(x=>countItem(s,x)>0));
 export function recipeQuote(s,r,count=1){
- const materials=r.materials.map(m=>({...m,count:m.count*count,have:usableCount(s,m.id),bank:(s.bank||[]).filter(i=>i.id===m.id).reduce((n,i)=>n+i.count,0)})).map(m=>({...m,missing:Math.max(0,m.count-m.have),price:marketPrice(m.id).buy,available:marketOffer(m.id)?marketAvailability(s.marketStock,s.marketClock??s.clock,marketOffer(m.id)).available:0,purchasable:!!marketOffer(m.id)}));
- const tools=r.tools.map(id=>({id,have:hasTool(s,id),price:marketPrice(id).buy,available:marketOffer(id)?marketAvailability(s.marketStock,s.marketClock??s.clock,marketOffer(id)).available:0,purchasable:!!marketOffer(id)}));
+ const materials=r.materials.map(m=>({...m,count:m.count*count,have:usableCount(s,m.id),bank:(s.bank||[]).filter(i=>i.id===m.id).reduce((n,i)=>n+i.count,0)})).map(m=>({...m,missing:Math.max(0,m.count-m.have),price:marketPrice(m.id).buy,available:marketOffer(m.id,contentPhase(s))?marketAvailability(s.marketStock,s.marketClock??s.clock,marketOffer(m.id,contentPhase(s))).available:0,purchasable:!!marketOffer(m.id,contentPhase(s))}));
+ const tools=r.tools.map(id=>({id,have:hasTool(s,id),price:marketPrice(id).buy,available:marketOffer(id,contentPhase(s))?marketAvailability(s.marketStock,s.marketClock??s.clock,marketOffer(id,contentPhase(s))).available:0,purchasable:!!marketOffer(id,contentPhase(s))}));
  return{...r,...recipeAvailability(s,r),materials,tools,readyAt:s.professionCooldowns?.[r.cooldownGroup]||0,facilityReady:!r.focus||canTrainProfession(s),missingCost:materials.reduce((n,m)=>n+m.missing*m.price,0)+tools.filter(t=>!t.have).reduce((n,t)=>n+t.price,0)};
 }
 export function recipeAvailability(s,r){
- const p=s.professions?.[r.profession],level=p?.skill||0,known=!!p&&skill(s,r.profession)>=r.skill&&specializationKnown(p,r.specialization);
+ const p=s.professions?.[r.profession],level=p?.skill||0,known=itemAvailableInPhase(r.item,contentPhase(s))&&!!p&&skill(s,r.profession)>=r.skill&&specializationKnown(p,r.specialization);
  const color=!known?'red':level<r.yellow?'orange':level<Math.floor((r.yellow+r.gray)/2)?'yellow':level<r.gray?'green':'gray';
  return{known,color,skillUpChance:known?skillUpChance(p,r.yellow,r.gray):0};
 }
@@ -98,6 +99,7 @@ export function professionAction(s,a){
  }
  if(['craft','buyMaterials'].includes(a.type)){
   quantity(a.count,100);const r=recipes.find(r=>r.id===a.id);if(!r||skill(s,r.profession)<r.skill||!specializationKnown(s.professions[r.profession],r.specialization))throw new Error('熟练度或专业专精不满足配方要求');
+  if(!itemAvailableInPhase(r.item,contentPhase(s)))throw new Error('配方尚未随服务器版本开放');
   const q=recipeQuote(s,r,a.count),buy=a.type==='buyMaterials'||a.buyMissing===true;
   if(a.type==='craft'){
    if(r.cooldown&&a.count!==1)throw new Error('有制造冷却的配方每次只能制造一次');

@@ -29,7 +29,7 @@ export default function GameSettings({state:s,busy,send,onClose}:{state:GameProp
   <Tabs.Content value="sound"><header className="settings-section-heading"><h3>声音</h3><p>调整艾泽拉斯的音乐与环境音效。</p></header><fieldset><legend>音量与播放</legend>
    <label className="cu-setting-toggle"><span>音乐<small>随当前区域播放背景音乐</small></span><input type="checkbox" checked={music} onChange={e=>setMusic(e.target.checked)} aria-label="音乐"/></label>
    <label className="cu-setting-volume"><span>音乐音量</span><input type="range" min="0" max="100" disabled={!music} value={Math.round(musicVolume*100)} onChange={e=>setMusicVolume(Number(e.target.value)/100)} aria-label="音乐音量"/><output>{Math.round(musicVolume*100)}%</output></label>
-   <label className="cu-setting-toggle"><span>音效<small>战斗技能、团队增益与任务提示音</small></span><input type="checkbox" checked={effects} onChange={e=>setEffects(e.target.checked)} aria-label="音效"/></label>
+   <label className="cu-setting-toggle"><span>音效<small>界面操作、战斗技能、团队增益与任务提示音</small></span><input type="checkbox" checked={effects} onChange={e=>setEffects(e.target.checked)} aria-label="音效"/></label>
    <label className="cu-setting-volume"><span>音效音量</span><input type="range" min="0" max="100" disabled={!effects} value={Math.round(effectsVolume*100)} onChange={e=>setEffectsVolume(Number(e.target.value)/100)} aria-label="音效音量"/><output>{Math.round(effectsVolume*100)}%</output></label>
   </fieldset></Tabs.Content>
   <Tabs.Content value="graphics"><header className="settings-section-heading"><h3>画面</h3><p>调整特效表现与战斗视野。</p></header><fieldset><legend>画面与特效</legend>

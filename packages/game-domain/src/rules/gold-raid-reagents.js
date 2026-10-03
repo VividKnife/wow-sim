@@ -1,6 +1,6 @@
-import {knownRank,spellInfo,makeItem,bagCapacity,log} from './character.js';
+import {knownRank,spellInfo,makeItem,log} from './character.js';
 import {items,nameOf} from './catalog.js';
-import {put,usableCount,marketPrice} from './inventory.js';
+import {putInBag,usableCount,marketPrice} from './inventory.js';
 import {groupBuffRoots} from './group-buffs.js';
 
 // Ten complete raid rebuff rounds per caster, even when another caster is absent.
@@ -31,7 +31,7 @@ export function stockGoldReagents(s,c){
    const count=Math.min(missing,Math.max(1,items[id].stackable),Math.floor(c.money/price));
    // Do not discard equipment or overfill a member's backpack to buy supplies.
    const bag=structuredClone(c.bag),item=makeItem(s,id,count);
-   try{put(bag,item,bagCapacity({...c,bags:c.bags||[]}));}catch(error){break;}
+   try{putInBag({...c,bag},item);}catch(error){break;}
    c.bag=bag;c.money-=price*count;c.goldProfile.consumableSpent+=price*count;missing-=count;
   }
   if(missing>0)log(s,`${c.name} 的${nameOf('items',id)}备料不足（${usableCount(c,id)}/${target}），需要更多金币或背包空间。`,'system');

@@ -219,6 +219,8 @@ export function createGameServer(options: GameServerOptions) {
         if(route==='logout'&&request.method==='POST'){
           await admin.logout(token);json(response,200,{ok:true},{'set-cookie':cookie('')});return;
         }
+        if(route==='content-release'&&request.method==='GET'){json(response,200,await admin.contentRelease());return;}
+        if(route==='content-release'&&request.method==='POST'){json(response,200,await admin.openContentPhase(user.id,await readJson(request,4096)));return;}
         if(route==='gm'||route==='gm-items'){
           if(!options.gm){json(response,503,{error:'发放服务尚未配置'});return;}
           if(route==='gm-items'&&request.method==='GET'){
@@ -329,7 +331,7 @@ export function createGameServer(options: GameServerOptions) {
         const selectedCharacterId = characterId(url);
         const scope = url.searchParams.get('scope') === 'combat' ? 'combat' : 'full';
         const snapshot = await readGame(options.service, accountId, selectedCharacterId,scope);
-        const etag = '"' + createHash('sha256').update(JSON.stringify([snapshot.response?.execution,accountId, selectedCharacterId || snapshot.state?.id, snapshot.revision, snapshot.instanceId, snapshot.instance?.sequence, getContent().contentVersion, scope, snapshot.state?.serverBuffs, snapshot.state?.party?.map((actor:any)=>actor.serverBuffs)])).digest('hex') + '"';
+        const etag = '"' + createHash('sha256').update(JSON.stringify([snapshot.response?.execution,accountId, selectedCharacterId || snapshot.state?.id, snapshot.revision, snapshot.instanceId, snapshot.instance?.sequence, getContent().contentVersion, scope, snapshot.state?.contentPhase, snapshot.state?.serverBuffs, snapshot.state?.party?.map((actor:any)=>actor.serverBuffs)])).digest('hex') + '"';
         if (request.headers['if-none-match']?.replace(/^W\//,'') === etag) {
           response.writeHead(304, {etag: acceptsGzip(request.headers['accept-encoding'])?'W/'+etag:etag, vary:'Accept-Encoding', 'cache-control': 'private, no-cache'});
           response.end();
@@ -444,7 +446,7 @@ export function createGameServer(options: GameServerOptions) {
         if (activeSubscription !== subscriptionId || socket.readyState !== socket.OPEN) return;
         if(scope==='full')lastFullAt=now;
         const sequence = snapshot.response?.execution?.streamSequence??snapshot.instance?.sequence ?? 0;
-        const key = `${snapshot.response?.execution?.ownerEpoch??0}:${snapshot.revision}:${sequence}:${activeCharacter || ''}:${JSON.stringify(snapshot.state?.serverBuffs||[])}`;
+        const key = `${snapshot.response?.execution?.ownerEpoch??0}:${snapshot.revision}:${sequence}:${activeCharacter || ''}:${snapshot.state?.contentPhase??1}:${JSON.stringify(snapshot.state?.serverBuffs||[])}`;
         if (force || key !== lastKey) {
           let next = {type: 'snapshot', sequence, ...gameResponse(snapshot,scope)} as GameSnapshotEvent;
           const sameOwner=baseline&&next.execution?.ownerEpoch===baseline.execution?.ownerEpoch&&next.execution?.instanceId===baseline.execution?.instanceId&&next.execution?.actorId===baseline.execution?.actorId&&next.execution?.controllerGeneration===baseline.execution?.controllerGeneration&&next.snapshot?.player.id===baseline.snapshot?.player.id&&next.contentVersion===baseline.contentVersion;

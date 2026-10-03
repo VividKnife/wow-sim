@@ -1,6 +1,7 @@
+import {applyContentPhase} from './content-release.ts';
 import {claimMail,resolveMailRecipientInView,validateMailDraft,commitMailSend} from './mail.ts';
 import {applyExperienceBuff} from './rules/experience.js';
-import {leaveGoldRaid,goldCommands} from './rules/gold-raid.js';
+import {leaveGoldRaid,goldCommands,goldRaidContents} from './rules/gold-raid.js';
 import {dungeonIdFor,dungeonDefinitions} from './rules/dungeon-registry.js';
 import { act, advance } from './rules/engine.js';
 import { stats } from './rules/character.js';
@@ -22,8 +23,8 @@ function rosterIds(value: unknown): asserts value is string[] { requireThat(Arra
 export async function createInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) {
     const contentId = cmd.contentId ?? (cmd.type === 'enterDungeon' ? dungeonIdFor(c.rules) : 'northshire-skirmish');
     requireThat(typeof contentId === 'string' && Object.hasOwn(instanceContents, contentId), 'CONTENT', '未知的副本内容', 400);
-    const capacity = cmd.capacity ?? (['molten-core-gold','onyxias-lair-gold'].includes(contentId) ? 40 : 5);
-    if(['molten-core-gold','onyxias-lair-gold'].includes(contentId))requireThat(capacity===40&&c.kind==='hero','RAID_ENTRY','团队副本需要主角发起40人金团');
+    const capacity = cmd.capacity ?? (Object.hasOwn(goldRaidContents,contentId) ? 40 : 5);
+    if(Object.hasOwn(goldRaidContents,contentId))requireThat(capacity===40&&c.kind==='hero','RAID_ENTRY','团队副本需要主角发起40人金团');
     requireThat([5, 10, 20, 25, 40].includes(capacity), 'CAPACITY', '副本席位必须为 5、10、20、25 或 40', 400);
     const a = await account(tx, c.accountId), party = await tx.get<Party>('parties', a.partyId);
     const ids = contentId.endsWith('-gold') ? [c.id] : cmd.characterIds === undefined ? (cmd.type === 'enterDungeon' ? party!.characterIds : [c.id]) : cmd.characterIds;
@@ -40,7 +41,7 @@ export async function createInstance(this: GameService, tx: Transaction, c: Char
         await this.startInstance(tx, c, { instanceId: instance.id }, now);
 }
 export async function instanceFor(this: GameService, tx: Transaction, c: Character, id: string) { const instance = await tx.get<Instance>('instances', id); requireThat(instance && instance.roster.some(r => r.characterId === c.id && r.accountId === c.accountId), 'FORBIDDEN', '未授权访问此副本', 403); return instance; }
-export async function joinInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) { const instance = await tx.get<Instance>('instances', cmd.instanceId); requireThat(instance, 'NOT_FOUND', '副本不存在', 404); requireThat(!['molten-core-gold','onyxias-lair-gold'].includes(instance.contentId),'RAID_SOLO','金团目前由单个账号率队'); requireThat(instance.status === 'forming', 'INSTANCE_STARTED', '副本已开始，不能加入'); const ids = cmd.characterIds === undefined ? [c.id] : cmd.characterIds; rosterIds(ids); requireThat(instance.roster.length + ids.length <= instance.capacity, 'CAPACITY', '副本名额已满'); for (const id of ids) {
+export async function joinInstance(this: GameService, tx: Transaction, c: Character, cmd: Rules, now: number) { const instance = await tx.get<Instance>('instances', cmd.instanceId); requireThat(instance, 'NOT_FOUND', '副本不存在', 404); requireThat(!Object.hasOwn(goldRaidContents,instance.contentId),'RAID_SOLO','金团目前由单个账号率队'); requireThat(instance.status === 'forming', 'INSTANCE_STARTED', '副本已开始，不能加入'); const ids = cmd.characterIds === undefined ? [c.id] : cmd.characterIds; rosterIds(ids); requireThat(instance.roster.length + ids.length <= instance.capacity, 'CAPACITY', '副本名额已满'); for (const id of ids) {
     const character = await owned(tx, c.accountId, id);
     await this.lock(tx, character, 'instance', instance.id);
     instance.roster.push({ characterId: id, accountId: c.accountId, controller: character.kind === 'hero' ? 'player' : 'companion' });
@@ -88,6 +89,7 @@ export async function bumpInstanceAccounts(this: GameService, tx: Transaction, i
 export async function instanceCommand(this: GameService, tx: Transaction, c: Character, id: string, cmd: Rules, now: number, observedPresence?: ReadonlyMap<string, number>) {
     const instance = await this.instanceFor(tx, c, id);
     requireThat(['running', 'completed'].includes(instance.status) && instance.simulation, 'INSTANCE_NOT_RUNNING', '副本尚未开始');
+    await applyContentPhase(tx,instance.simulation);
     requireThat(instanceCommands.has(cmd.type), 'INSTANCE_COMMAND', '请先离开实例再进行这项操作');
     if(instance.simulation?.goldRaid?.active){
         requireThat(goldCommands.includes(cmd.type)||['accept','turnin','abandon','abandonLowLevelQuests','claimMail','sendMail','combatCommand','partyBuffs','stop','raidPlan','raidOrder','abandonCombat','cast','loot','equip','strategy','settings'].includes(cmd.type),'GOLD_PHASE','请使用金团营地的操作');

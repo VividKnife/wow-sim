@@ -2,12 +2,12 @@ import {instancePresentation} from './instance-presentation.js';
 import {combatMembers} from './combat-members.js';
 import {characterAttributes} from './character-attributes.js';
 
-const playerKeys = [
+const playerKeys = ['contentPhase',
   'serverBuffs','id','name','classId','raceId','gender','growthPolicy','level','xp','hp','mana','rage','energy','power','form','stance','money','clock','wallAt',
   'activity','rest','location','visited','flightPoints','hearth','hearthReady','equipment','bag','bags','pending','bank','bankUpgrades',
   'auctions','marketHistory','marketStock','marketClock','party','pet','escort','combat','recentCorpses','lastCombat','dungeon','cast','groundEffects','learned','talents','quests',
   'completed','reputation','rules','settings','potions','mounts','riding','mounted','professions','professionCooldowns','resourceCooldowns','resourceStocks',
-  'journey','logs','logSequence','totals','soulstone','bandageReady','nextPull','ammunition','ammoPolicy','ammoRestockPrompt'
+  'journey','logs','logSequence','totals','soulstone','bandageReady','nextPull','selectedAmmoId','townSupplies','townSupplyVisit'
 ] as const;
 
 const viewKeys = [
@@ -19,10 +19,10 @@ const viewKeys = [
   'resources','disenchantable','className','raceName','faction','resource','raceTraits','talentTrees','talentResetCost','canResetTalents',
   'talentResetBlockedReason','buildChangeBlockedReason','bankCapacity','bankHere','bankUpgradeCost','inventoryActions','escort','escortNpc','hearthstone','mounts',
   'strategyMembers','journey','dungeon','dungeons','dungeonQuests','stockadesQuestEvent','recovery','combatSkills','party','nextXp','stats','characterAttributes','location','map','monsters','quests',
-  'questTools','shop','gatherables','bagCapacity','skills','talents','canTrain','hasFlight','city','flight','interactions','ammo','ammoPrompt'
+  'questTools','shop','gatherables','bagCapacity','inventoryBags','generalBagFree','skills','talents','canTrain','hasFlight','city','flight','interactions','ammo','townSupplies'
 ] as const;
 
-const actorKeys=['serverBuffs','npcPlayer','growthPolicy','serverBuffs','id','name','classId','raceId','gender','level','role','hp','mana','rage','energy','power','form','stance','position','positionY','maxHp','maxMana','spell','kind','autocastDisabled','mode','petUnit','totemUnit','ownerId','controlledBy','controlUntil','removed','dead','fleeing','stealthed','combatFacing','happiness','loyalty','trainingPoints','availableSkills','target','combo','comboTarget','nextSwing','swingStartedAt','nextAttack','nextRanged','rangedStartedAt','nextOffhand','offhandStartedAt','swing','moveSpeed','speed','rootUntil','stunUntil','fearUntil','polyUntil','slowUntil','slow','movementSlows','cast','cooldowns','categoryCooldowns','globalCooldowns','equipment','learned','rules','strategyPolicy','autoBuffs','potions','ammunition','ammoPolicy','buffs','classBuffs','talentBuffs','auras','dots','hots','periodicClass','absorb','manaShield','seal','judgement','reactiveClass','weaponEnchants','weaponEnchant','talentProcs','racialEffects','racialBuff','cannibalize','bloodrage','totemWeaponEnchant','lightwell','totems','stats','soulShardCount','creatureType','entry','rank','visual','sourceGuid','attackPower','armor','resistances','equippable'];
+const actorKeys=['serverBuffs','npcPlayer','growthPolicy','serverBuffs','id','name','classId','raceId','gender','level','role','hp','mana','rage','energy','power','form','stance','position','positionY','maxHp','maxMana','spell','kind','autocastDisabled','mode','petUnit','totemUnit','ownerId','controlledBy','controlUntil','removed','dead','fleeing','stealthed','combatFacing','happiness','loyalty','trainingPoints','availableSkills','target','combo','comboTarget','nextSwing','swingStartedAt','nextAttack','nextRanged','rangedStartedAt','nextOffhand','offhandStartedAt','swing','moveSpeed','speed','rootUntil','stunUntil','fearUntil','polyUntil','slowUntil','slow','movementSlows','cast','cooldowns','categoryCooldowns','globalCooldowns','equipment','learned','rules','strategyPolicy','autoBuffs','potions','selectedAmmoId','buffs','classBuffs','talentBuffs','auras','dots','hots','periodicClass','absorb','manaShield','seal','judgement','reactiveClass','weaponEnchants','weaponEnchant','talentProcs','racialEffects','racialBuff','cannibalize','bloodrage','totemWeaponEnchant','lightwell','totems','stats','soulShardCount','creatureType','entry','rank','visual','sourceGuid','attackPower','armor','resistances','equippable'];
 const enemyKeys=['modelAnimation',...actorKeys,'minDamage','maxDamage','attackTime','spells','threat','smite','capturePhase','captureUntil'];
 const combatKeys=['lootGold','area','ground','id','runId','routeId','encounterId','startedAt','endedAt','dungeon','pull','command','participantIds','metrics','projectiles','actorsSnapshot'];
 const dungeonKeys=['id','runId','cursor','position','startedAt','completedAt','metrics'];

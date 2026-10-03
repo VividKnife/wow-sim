@@ -1,3 +1,4 @@
+import {provisionAmmo,weaponAmmoType} from './rules/ammunition.js';
 import {createGame} from './rules/engine.js';
 import {createNpcMember} from './rules/party.js';
 import {items} from './rules/catalog.js';
@@ -28,7 +29,7 @@ function equipDemo(c:Rules) {
   if(slot===16&&item.InventoryType===17)delete c.equipment[17];
   c.equipment[slot]={id:item.entry,uid:`demo:${c.id}:${slot}`,count:1,bound:true,durability:item.MaxDurability||undefined};
  }
- if(c.classId===3){c.ammunition={11285:2000,11284:2000};c.learned=[...new Set([...c.learned,19801])];}
+ if(c.classId===3){provisionAmmo(c,{[weaponAmmoType(c)===3?11284:11285]:2000});c.learned=[...new Set([...c.learned,19801])];}
  c.hp=stats(c).maxHp;c.mana=stats(c).maxMana;
 }
 let preparedRoster:Rules[]|undefined;

@@ -78,6 +78,7 @@ export class SimulationHost {
     return this.install(checkpoint.instanceId, ownerEpoch,
       {kind: 'restore', checkpoint, ownerEpoch, leaseMs: options.leaseMs ?? 30_000, realtime: options.realtime ?? true});
   }
+  contentPhase(instanceId:string,phase:number){return this.call(instanceId,{kind:'contentPhase',phase});}
   checkpoint(instanceId: string): Promise<InstanceCheckpoint> { return this.call(instanceId, {kind: 'checkpoint'}); }
   quiesce(instanceId: string): Promise<InstanceCheckpoint> { return this.call(instanceId, {kind: 'quiesce'}); }
   alignQuiesced(instanceId: string, until: number): Promise<{complete:boolean;wallAt:number;simTime:number;pendingInputs:number}> {

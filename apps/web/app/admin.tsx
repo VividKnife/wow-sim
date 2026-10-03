@@ -1,3 +1,4 @@
+import AdminContentRelease from './admin-content-release';
 import AdminRewards from './admin-rewards';
 import {useEffect,useRef,useState,type FormEvent} from 'react';
 import {Activity,ArrowLeft,BookOpen,ChevronLeft,ChevronRight,LayoutDashboard,LogOut,RefreshCw,Search,ShieldCheck,Users,X} from 'lucide-react';
@@ -5,8 +6,8 @@ import './admin.css';
 
 type AdminUser={id:string;username:string};
 type Row=Record<string,unknown>;
-const sections=[{id:'overview',label:'运营概览',icon:LayoutDashboard},{id:'players',label:'玩家管理',icon:Users},{id:'saves',label:'存档与角色',icon:BookOpen},{id:'activities',label:'活动巡检',icon:Activity},{id:'rewards',label:'礼包与 Buff',icon:BookOpen},{id:'audit',label:'操作审计',icon:ShieldCheck}];
-const actions:Record<string,string>={ban:'封禁账号',unban:'解除封禁',revoke:'强制退出',register:'创建管理员',saveGift:'保存礼包',sendGift:'发放礼包',issueBuff:'发布 Buff',revokeBuff:'撤销 Buff'};
+const sections=[{id:'overview',label:'运营概览',icon:LayoutDashboard},{id:'players',label:'玩家管理',icon:Users},{id:'saves',label:'存档与角色',icon:BookOpen},{id:'activities',label:'活动巡检',icon:Activity},{id:'rewards',label:'礼包与 Buff',icon:BookOpen},{id:'content-release',label:'版本开放',icon:BookOpen},{id:'audit',label:'操作审计',icon:ShieldCheck}];
+const actions:Record<string,string>={ban:'封禁账号',unban:'解除封禁',revoke:'强制退出',register:'创建管理员',openContentPhase:'开放新版本',saveGift:'保存礼包',sendGift:'发放礼包',issueBuff:'发布 Buff',revokeBuff:'撤销 Buff'};
 const columns:Record<string,[string,string][]>= {
  players:[['username','玩家'],['id','账号 ID'],['saves','存档数'],['created_at','注册时间'],['blocked_reason','账号状态']],
  saves:[['name','角色'],['username','所属玩家'],['level','等级'],['class_id','职业 ID'],['created_at','创建时间']],
@@ -39,7 +40,7 @@ export default function Admin(){
  const failure=(value:Error&{status?:number})=>{setError(value.message);if(value.status===401){setAdmin(null);setData(null);setDetail(null);setPending(null);}};
  useEffect(()=>{let active=true;api('session').then(value=>{if(active){setAdmin(value.admin);setSetup(value.setupRequired);setReady(true);}}).catch(value=>{if(active){setError(value.message);setReady(true);}});return()=>{active=false;};},[]);
  useEffect(()=>{
-  if(!admin||section==='rewards')return;
+  if(!admin||['rewards','content-release'].includes(section))return;
   let active=true;
   api(`${section}?search=${encodeURIComponent(query)}&page=${page}`).then(value=>{if(active){setData(value);setError('');}}).catch(value=>{if(active){setData(null);failure(value);}}).finally(()=>{if(active)setLoadedKey(requestKey);});
   return()=>{active=false;};
@@ -73,9 +74,9 @@ export default function Admin(){
    <p className="gm-eyebrow">管理工作台</p><nav aria-label="管理导航">{sections.map(item=><button key={item.id} aria-current={section===item.id?'page':undefined} onClick={()=>{setSection(item.id);setQuery('');setSearch('');setPage(0);setNotice('');}}><item.icon size={18}/>{item.label}</button>)}</nav>
    <div className="gm-sidebar-footer"><span className="gm-indicator"/>管理员 · {admin.username}<a href="/"><ArrowLeft size={15}/>返回游戏</a><button disabled={busy} onClick={async()=>{setBusy(true);try{await api('logout',{});setAdmin(null);setData(null);setDetail(null);}catch(value){failure(value as Error);}finally{setBusy(false);}}}><LogOut size={15}/>退出登录</button></div>
   </aside>
-  <main className="gm-main"><header className="gm-header"><div><p className="gm-eyebrow">AZEROTH / OPERATIONS</p><h1>{sections.find(item=>item.id===section)?.label}</h1><p className="gm-muted">{section==='overview'?'掌握世界状态，管理每一段冒险。':section==='players'?'查询玩家账号，处理访问权限与登录会话。':section==='saves'?'查看存档归属与角色数据，辅助定位游戏问题。':section==='activities'?'检查活动状态与调度时间，定位运行异常。':section==='rewards'?'配置礼包、发放奖励和定制服务器增益。':'追溯管理行为、目标与处理原因。'}</p></div><button onClick={refresh} disabled={loading&&section!=='rewards'}><RefreshCw size={16}/>刷新</button></header>
+  <main className="gm-main"><header className="gm-header"><div><p className="gm-eyebrow">AZEROTH / OPERATIONS</p><h1>{sections.find(item=>item.id===section)?.label}</h1><p className="gm-muted">{section==='overview'?'掌握世界状态，管理每一段冒险。':section==='players'?'查询玩家账号，处理访问权限与登录会话。':section==='saves'?'查看存档归属与角色数据，辅助定位游戏问题。':section==='activities'?'检查活动状态与调度时间，定位运行异常。':section==='content-release'?'查看当前阶段并开放全服新内容。':section==='rewards'?'配置礼包、发放奖励和定制服务器增益。':'追溯管理行为、目标与处理原因。'}</p></div><button onClick={refresh} disabled={loading&&!['rewards','content-release'].includes(section)}><RefreshCw size={16}/>刷新</button></header>
    {error&&<p role="alert" className="gm-error">{error}</p>}{notice&&<p role="status" className="gm-notice">{notice}</p>}
-   {section==='rewards'?<AdminRewards key={revision}/>:section==='overview'?<><div className="gm-stats">{[['players','注册玩家'],['saves','游戏存档'],['characters','角色总数'],['online','近 1 分钟活跃存档'],['active','进行中活动'],['instances','进行中副本'],['blocked','已封禁玩家']].map(([key,label])=><article key={key}><span>{label}</span><strong>{loading?'…':String(data?.[key]??'—')}</strong></article>)}</div>
+   {section==='content-release'?<AdminContentRelease key={revision}/>:section==='rewards'?<AdminRewards key={revision}/>:section==='overview'?<><div className="gm-stats">{[['players','注册玩家'],['saves','游戏存档'],['characters','角色总数'],['online','近 1 分钟活跃存档'],['active','进行中活动'],['instances','进行中副本'],['blocked','已封禁玩家']].map(([key,label])=><article key={key}><span>{label}</span><strong>{loading?'…':String(data?.[key]??'—')}</strong></article>)}</div>
    <section className="gm-panel gm-guide"><h2>日常管理</h2><div><article><Users/><h3>玩家支持</h3><p>通过用户名定位账号；封禁、解封和强制退出均需填写原因。</p><button onClick={()=>setSection('players')}>查看玩家 →</button></article><article><BookOpen/><h3>问题排查</h3><p>检查角色存档与运行活动，了解等级、持有货币及角色状态。</p><button onClick={()=>setSection('saves')}>查看存档 →</button></article><article><ShieldCheck/><h3>操作追溯</h3><p>查询管理员执行的操作，核对目标账号、处理时间及原因。</p><button onClick={()=>setSection('audit')}>查看审计 →</button></article></div></section><p className="gm-muted gm-small">活跃存档按最近 1 分钟连接记录统计；点击刷新获取最新数据。</p></>:
    <section className="gm-panel"><form className="gm-search" onSubmit={event=>{event.preventDefault();setQuery(search.trim());setPage(0);refresh();}}><Search size={18}/><input aria-label="搜索" value={search} maxLength={100} placeholder={section==='players'?'搜索用户名或账号 ID':section==='saves'?'搜索角色名、玩家或存档 ID':'搜索 ID、状态或审计内容'} onChange={event=>setSearch(event.target.value)}/><button type="submit">搜索</button></form>
     <div className="gm-table-wrap" aria-busy={loading}><table><thead><tr>{columns[section].map(([key,label])=><th key={key}>{label}</th>)}{['players','saves'].includes(section)&&<th>操作</th>}</tr></thead><tbody>

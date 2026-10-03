@@ -81,6 +81,7 @@ export class SimulationSession {
     return this.enqueue(async () => {
       if (input.instanceId !== this.owner.id) throw new Error('Wrong instance');
       this.remainingLease();
+      await this.syncContentPhase();
       const applied = await this.host.input(accountId, input);
       const confirmation = inputConfirmation(input.command);
       if (confirmation === 'durable' && applied.status !== 'rejected') await this.persist();
@@ -99,7 +100,7 @@ export class SimulationSession {
   checkpoint(retireIdle = false) { return this.enqueue(() => this.persist(retireIdle)); }
   presentation(accountId:string,actorId:string,scope:'full'|'combat',online=false) {
     return this.enqueue(async()=>{
-      this.remainingLease();const response=await this.host.presentation(this.owner.id,accountId,actorId,scope,online);
+      this.remainingLease();await this.syncContentPhase();const response=await this.host.presentation(this.owner.id,accountId,actorId,scope,online);
       this.remainingLease();return response;
     });
   }
@@ -115,6 +116,7 @@ export class SimulationSession {
     if (this.timer) clearTimeout(this.timer);
     const prepared = this.enqueue(async () => {
       try {
+        await this.syncContentPhase();
         let checkpoint = await this.host.quiesce(this.owner.id);
         if(alignment){
           const until=await this.deadline(alignment(checkpoint),'Transfer alignment deadline exceeded');
@@ -227,9 +229,11 @@ export class SimulationSession {
     this.tail = result.catch(() => {});
     return result.finally(() => { this.pending--; });
   }
+  private async syncContentPhase(){await this.host.contentPhase(this.owner.id,await this.deadline(this.repository.contentPhase(),'Content phase read deadline exceeded'));}
   private async persist(retireIdle = false, captured?: InstanceCheckpoint) {
     try {
       this.remainingLease();
+      if(!captured)await this.syncContentPhase();
       const checkpoint = captured ?? await this.host.checkpoint(this.owner.id);
       const sequence = this.owner.commitSequence + 1;
       await this.deadline(this.repository.commit(this.owner, sequence, checkpoint));

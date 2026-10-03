@@ -1,3 +1,4 @@
+import {provisionAmmo,weaponAmmoType} from './ammunition.js';
 import {NPC_PROGRESS,recordNpcRaidVisit} from './npc-progression.js';
 import {trainNpcProfessions,wealthyNpc} from './npc-economy.js';
 import {roles,createNpcMember} from './party.js';
@@ -79,7 +80,7 @@ export function buildUnit(s,index,level,initial=true,behavior=behaviorFor(index)
  for(const key of ['bag','bags','bank','pending','auctions','raidCollection','raidPendingEquipment'])c[key]??=[];
  for(const [slot,item] of Object.entries(c.equipment)){item.uid=`${c.id}:starter:${slot}`;item.ownerId=c.id;}
  if(initial)initialEquipment(c,index);
- if(c.classId===3)c.ammunition={2512:2000,2516:2000};
+ if(c.classId===3)provisionAmmo(c,{[weaponAmmoType(c)===3?2516:2512]:2000});
  return c;
 }
 export function newResident(s,index,level=s.level){
@@ -121,7 +122,7 @@ export function syncNpcWorld(s){
  }
 }
 function syncNpcProfile(p,c,wallAt){
- for(const key of ['level','xp','itemSequence','professions','equipment','bag',...trainingFields,'hunterPet','ammunition','raidCollection','raidPendingEquipment'])if(c[key]!==undefined)p.unit[key]=structuredClone(c[key]);
+ for(const key of ['level','xp','itemSequence','professions','equipment','bag',...trainingFields,'hunterPet','selectedAmmoId','raidCollection','raidPendingEquipment'])if(c[key]!==undefined)p.unit[key]=structuredClone(c[key]);
  trainNpcProfessions(p.unit,p.index);
  if(Number.isSafeInteger(c.money))p.wallet=c.money;p.unit.money=p.wallet;
  p.lastProgressWall=wallAt;
@@ -140,7 +141,7 @@ export function npcRunStarted(s,memberIds=null){
   const p=npcProfile(s,c.id);p.runs++;p.protectedUntilWall=s.wallAt+NPC_PROGRESS.resetCooldownMs;note(p,`与你第${p.runs}次组队，前往${dungeonJournal.find(d=>d.id===s.dungeon.id)?.name||s.dungeon.id}。`);
   const training=buildUnit({...s,raceId:p.unit.raceId},p.index,c.level,false,{skill:p.raidProfile.skill,temperament:p.personality.id,spending:p.raidProfile.personality});
   Object.assign(c,npcTraining(training));
-  if(c.classId===3)for(const id of [2512,2516]){const missing=Math.max(0,2000-(c.ammunition?.[id]||0)),cost=Math.ceil(missing/200)*10;if(p.wallet>=cost){p.wallet-=cost;c.ammunition??={};c.ammunition[id]=2000;}}
+  if(c.classId===3){const missing=Math.max(0,2000-(c.bag||[]).filter(i=>[2512,2516].includes(i.id)).reduce((n,i)=>n+i.count,0)),cost=Math.ceil(missing/200)*10;if(p.wallet>=cost){p.wallet-=cost;provisionAmmo(c,{[weaponAmmoType(c)===3?2516:2512]:2000});}}
   c.money=p.wallet;c.location=s.location;c.time=s.clock;
  }
 }

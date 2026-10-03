@@ -2,7 +2,7 @@ import {racialHomes} from '../../../game-data/world-content.js';
 import {items,quests,classAbilities} from './catalog.js';
 import {canEquip,makeItem,slotOf,stats,log} from './character.js';
 import {boostMount} from './mounts.js';
-import {ammoOptions,DEFAULT_AMMO_TARGET} from './ammunition.js';
+import {ammoOptions,DEFAULT_AMMO_TARGET,provisionAmmo} from './ammunition.js';
 import {grantHunterTrainingLinks} from './pet-knowledge.js';
 
 export const LEVEL_20_BOOST_MONEY=500000;
@@ -59,7 +59,7 @@ export function applyLevel20Boost(s){
  if(items[s.equipment[16]?.id]?.InventoryType===17)delete s.equipment[17];
  if(s.classId===3){
   const ammo=ammoOptions(s)[0];
-  s.ammunition=ammo?{[ammo.entry]:DEFAULT_AMMO_TARGET}:{};
+  provisionAmmo(s,ammo?{[ammo.entry]:DEFAULT_AMMO_TARGET}:{});s.selectedAmmoId=ammo?.entry;
   s.hunterPet={entry:299,name:'森林狼',level:s.level,loyalty:6,happiness:1000000,learned:[2649]};
  }
  s.bags=Array.from({length:4},()=>makeItem(s,14046));

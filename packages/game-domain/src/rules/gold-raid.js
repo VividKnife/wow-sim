@@ -1,6 +1,6 @@
 import {recordNpcRaidAttendance,raidWeek as weekAt,RAID_WEEK_MS as WEEK} from './npc-progression.js';
 import {raidCompositionPresets,recommendRaidMembers,validateRaidComposition,raidCompositionWarnings} from './raid-composition.js';
-import {CURRENT_BIS_PHASE} from './item-bis.js';
+import {contentPhase} from './content-phase.js';
 import {stockGoldReagents} from './gold-raid-reagents.js';
 import {ensureNpcWorld,syncNpcWorld,recordNpcRaid} from './npc-world.js';
 import {equipNpcItem} from './npc-equipment.js';
@@ -20,7 +20,7 @@ import {GOLD,createGoldApplicants,goldNpcView,npcPriceLimit,npcBidValuation,prep
 import {meterRows} from '../../../sim-core/src/combat-meter.js';
 
 export const GOLD_RAID_ID='molten-core-gold';
-export const goldRaidContents=Object.freeze({'molten-core-gold':'molten-core','onyxias-lair-gold':'onyxias-lair'});
+export const goldRaidContents=Object.freeze({'molten-core-gold':'molten-core','onyxias-lair-gold':'onyxias-lair','azuregos-gold':'azuregos','kazzak-gold':'kazzak'});
 export const goldCommands=['goldNavigate','goldPause','goldRules','goldPublish','goldInvite','goldRecommend','goldLaunch','goldStart','goldRecover','goldTactics','goldBid','goldPass','goldBidLimit','goldAuctionStep','goldSettle','goldLeave'];
 const need=(ok,text)=>{if(!ok)throw new Error(text);};
 const active=s=>{need(s.goldRaid?.active,'请先创建金团。');return s.goldRaid;};
@@ -28,7 +28,7 @@ const announce=(s,text)=>{const g=s.goldRaid;g.chat.push({at:s.clock,text});g.ch
 const gold=amount=>`${(amount/GOLD).toFixed(1)}金`;
 
 export function enterGoldRaid(s,raidId='molten-core'){
- need(['molten-core','onyxias-lair'].includes(raidId),'未知团队副本。');
+ need(Object.values(goldRaidContents).includes(raidId),'未知团队副本。');
  need(s.level===60&&!s.npcPlayer&&s.hp>0&&!s.combat&&!s.dungeon&&!s.goldRaid?.active&&s.activity.type==='idle','需要空闲且存活的60级团长。');
  need(!raidAttunementReason(s,raidId),raidAttunementReason(s,raidId));
  ensureNpcWorld(s);syncNpcWorld(s);
@@ -37,7 +37,7 @@ export function enterGoldRaid(s,raidId='molten-core'){
  const progress=saved?.week===week?saved:{week,cleared:[],...raidRouteState()};
  need(progress.cleared.length<raidBossesFor(raidId).length,'本周已全通该金团，请下周再来。');
  s.party=[];
- s.goldRaid={...structuredClone(progress),raidId,active:true,serial,phase:'draft',rules:{leaderFee:5,dpsBonus:10,supportBonus:10},tactics:{...defaultRaidTactics},applicants:[],selected:[],coreIds:[s.id],seats:[],contributions:{},attempts:[],auctions:[],bisPhase:CURRENT_BIS_PHASE,sales:[],pot:0,paidOut:0,chat:[],settlement:null,recoverUntil:0,autoAdvance:false,destination:null};
+ s.goldRaid={...structuredClone(progress),raidId,active:true,serial,phase:'draft',rules:{leaderFee:5,dpsBonus:10,supportBonus:10},tactics:{...defaultRaidTactics},applicants:[],selected:[],coreIds:[s.id],seats:[],contributions:{},attempts:[],auctions:[],bisPhase:contentPhase(s),sales:[],pot:0,paidOut:0,chat:[],settlement:null,recoverUntil:0,autoAdvance:false,destination:null};
  s.activity={type:'idle'};s.lastCombat=null;announce(s,`你创建了${raidNameFor(raidId)}金团。先公告分金规则，再邀请39名熟悉的冒险者。本周进度保留。`);
 }
 function inPhase(g,...phases){need(phases.includes(g.phase),'当前阶段不能执行此操作。');}
@@ -206,7 +206,7 @@ export function emergencyGoldExit(s){
 export function leaveGoldRaid(s){const g=active(s);need(g.phase==='settled','请先结束拍卖并结算本团，即使提前散团也需要分金。');syncNpcWorld(s);g.active=false;s.party=[];s.activity={type:'idle'};}
 export function goldRaidView(s){
  const g=s.goldRaid,actors=[s,...s.party],r=s.combat?.raidEncounter;
- if(!g?.active)return {active:false,raids:['molten-core','onyxias-lair'].map(raidId=>{
+ if(!g?.active)return {active:false,raids:Object.values(goldRaidContents).map(raidId=>{
   const saved=s.goldRaidSaves?.[raidId],cleared=saved?.week===weekAt(s.wallAt)?saved.cleared:[];
   const reason=raidAttunementReason(s,raidId)||(cleared.length===raidBossesFor(raidId).length?'本周已全通，下周重置。':s.level!==60||s.hp<=0?'需要存活的60级团长。':s.combat||s.dungeon||s.activity.type!=='idle'?'请先结束当前活动。':'');
   return {id:raidId+'-gold',name:raidNameFor(raidId),canEnter:!reason,reason,cleared:cleared.length,bossCount:raidBossesFor(raidId).length};

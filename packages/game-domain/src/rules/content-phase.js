@@ -16,3 +16,17 @@ for(const recipe of recipes){
 }
 export const itemContentPhase=id=>phases.get(Number(id))||1;
 export const itemAvailableInPhase=(id,phase=CURRENT_CONTENT_PHASE)=>itemContentPhase(id)<=phase;
+
+// Phase is an authoritative property of a world, never a process-global toggle.
+export const CONTENT_PHASES=Object.freeze([
+ {phase:1,name:'经典启程',ready:true,features:['熔火之心','奥妮克希亚的巢穴','厄运之槌及 P1 专业商品']},
+ {phase:2,name:'世界首领',ready:true,features:['艾索雷葛斯','卡扎克','P2 掉落、无底包及相关配方']},
+ {phase:3,name:'黑翼之巢',ready:false,features:['后续内容尚未实现']},
+ {phase:4,name:'祖尔格拉布',ready:false,features:['后续内容尚未实现']},
+ {phase:5,name:'安其拉',ready:false,features:['后续内容尚未实现']},
+ {phase:6,name:'纳克萨玛斯',ready:false,features:['后续内容尚未实现']},
+]);
+export const LATEST_CONTENT_PHASE=Math.max(...CONTENT_PHASES.filter(p=>p.ready).map(p=>p.phase));
+export const contentPhase=s=>Number.isInteger(s?.contentPhase)&&s.contentPhase>=1&&s.contentPhase<=LATEST_CONTENT_PHASE?s.contentPhase:CURRENT_CONTENT_PHASE;
+export const raidContentPhase=id=>['azuregos','kazzak'].includes(id)?2:1;
+export const contentPhaseReason=(s,phase)=>contentPhase(s)<phase?`将在 P${phase} 开放，当前为 P${contentPhase(s)}`:'';

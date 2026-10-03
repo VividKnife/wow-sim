@@ -1,3 +1,4 @@
+import {bagSpaceFor} from './bag-storage.js';
 import {petIdentity,petSkillsView} from './pet-presentation.js';
 import {healAmount} from './healing.js';
 import {removeGroundEffects} from './ground-events.js';
@@ -9,14 +10,14 @@ import {environmentSpellUse,executeEnvironmentSpell,environmentView} from './cla
 import {observationUse,executeObservation,observationView} from './class-observation.js';
 import {racialActiveNames,racialAbilityBlocked,activateRacial} from './racial-effects.js';
 import {items,spells,nodes,nameOf,icon,monsterIdsAt,creatures} from './catalog.js';
-import {stats,spellInfo,effectRange,roll,log,countItem,addItem,bagCapacity} from './character.js';
+import {stats,spellInfo,effectRange,roll,log,countItem,addItem} from './character.js';
 import {usableCount,consume} from './inventory.js';
 import {classAbilityKind,classChannelTick,classChannelInterval} from './class-spell-effects.js';
 import {classEffect} from './class-mechanics.js';
 import {combatMembers} from './combat-members.js';
 import {teleportDestinations,utilitySpellNames} from './class-utility-data.js';
 import {healingMultiplier,ranks} from './talent-effects.js';
-import {handleTownAmmo} from './ammunition.js';
+import {handleTownSupplies} from './town-supplies.js';
 import {leaveDungeon} from './dungeon.js';
 
 const materials=sp=>Array.from({length:8},(_,n)=>({id:sp['Reagent'+(n+1)],count:sp['ReagentCount'+(n+1)]})).filter(r=>r.id>0&&r.count>0);
@@ -75,7 +76,7 @@ export function classUtilityUse(s,id,targetId){
  if(!reason&&racial)reason=racialAbilityBlocked(s,s,sp)||'';
  if(!reason&&item&&!items[item.id])reason='缺少制造物品数据';
  if(!reason&&item&&items[item.id].maxcount>0&&[...s.bag,...(s.bank||[]),...(s.pending||[]),...Object.values(s.equipment)].filter(i=>i.id===item.id).reduce((n,i)=>n+(i.count||1),0)>=items[item.id].maxcount)reason='已拥有这种唯一物品';
- if(!reason&&item){const capacity=s.bag.filter(i=>i.id===item.id).reduce((n,i)=>n+Math.max(0,(items[item.id].stackable||1)-i.count),0)+Math.max(0,bagCapacity(s)-s.bag.length)*(items[item.id].stackable||1);if(capacity<item.count)reason='背包空间不足';}
+ if(!reason&&item){const capacity=bagSpaceFor(s,item.id);if(capacity<item.count)reason='背包空间不足';}
  if(!reason&&to&&!nodes[to])reason='传送目的地尚不可用';
  if(!reason&&to&&!portal&&s.location===to&&!s.dungeon)reason='你已经在目的地';
  if(!reason&&kind==='heal'&&target.hp<=0&&sp.SpellName!=='Rebirth')reason='目标已死亡';
@@ -107,7 +108,7 @@ export function tickClassChannel(s){
  while(cast.nextTick<=s.clock&&cast.nextTick<=cast.until){classChannelTick(s,s,target,sp,cast,actors,{healAmount});cast.nextTick+=cast.interval;if(!s.cast){cancelClassChannel(s);return;}}
 }
 export function finishClassChannel(s){tickClassChannel(s);cancelClassChannel(s);}
-function relocate(s,to){if(s.dungeon)leaveDungeon(s);s.location=to;if(!s.visited.includes(to))s.visited.push(to);removeGroundEffects(s);log(s,'传送至 '+nodes[to].name,'travel');handleTownAmmo(s,'town');}
+function relocate(s,to){if(s.dungeon)leaveDungeon(s);s.location=to;if(!s.visited.includes(to))s.visited.push(to);removeGroundEffects(s);log(s,'传送至 '+nodes[to].name,'travel');handleTownSupplies(s,'town');}
 export function finishClassUtility(s){
  const a=s.activity,sp=spellInfo(s,a.spell);s.activity={type:'idle'};if(!sp)return;
  if(sp.SpellName==='Ritual of Summoning'&&!ritualUse(s,a.target).canUse){log(s,'召唤仪式条件不再满足','cancel');return;}

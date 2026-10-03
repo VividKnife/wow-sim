@@ -1,4 +1,5 @@
-import {bagCapacity,canEquip} from './character.js';
+import {fitsBags} from './bag-storage.js';
+import {canEquip} from './character.js';
 import {talents,spells,classAbilities,items} from './catalog.js';
 
 // Learn-spell talents (e.g. shaman two-handed weapons) grant a separate spell.
@@ -25,6 +26,6 @@ export function resetTalentGrants(c){
  c.talents={};c.talentBuffs=[];c.talentProcs={};
  if((c.form==='moonkin'&&activeNames.has('Moonkin Form'))||(c.form==='shadow'&&activeNames.has('Shadowform')))c.form=null;
  for(const key of ['classBuffs','auras','hots','periodicClass'])c[key]=(c[key]||[]).filter(b=>!granted.has(b.spell)&&!activeNames.has(spells[b.spell]?.SpellName));
- for(const [slot,item]of Object.entries(c.equipment||{}))if(!canEquip(c,items[item.id])){if(c.bag.length>=bagCapacity(c))throw new Error('背包需要空位存放洗点后无法使用的装备');c.bag.push(item);delete c.equipment[slot];}
+ for(const [slot,item]of Object.entries(c.equipment||{}))if(!canEquip(c,items[item.id])){if(!fitsBags(c,[...c.bag,item]))throw new Error('背包需要空位存放洗点后无法使用的装备');c.bag.push(item);delete c.equipment[slot];}
 
 }

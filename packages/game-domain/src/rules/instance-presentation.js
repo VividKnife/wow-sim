@@ -6,7 +6,7 @@ import {dungeonDefinition,dungeonRoute} from './dungeon-registry.js';
 import {raidNameFor,raidBossesFor} from './molten-core-content.js';
 
 // Validate authored room geometry once; projection reads never bake navigation.
-const preparationRooms=Object.fromEntries([...raidBossesFor('molten-core'),...raidBossesFor('onyxias-lair')].map(b=>[b.id,requiredRaidRoom(b.id)]));
+const preparationRooms=Object.fromEntries([...raidBossesFor('molten-core'),...raidBossesFor('onyxias-lair'),...raidBossesFor('azuregos'),...raidBossesFor('kazzak')].map(b=>[b.id,requiredRaidRoom(b.id)]));
 const appearanceKeys=['id','name','classId','raceId','gender','level','form','stance','kind','entry','petUnit','totemUnit','ownerId','hp','mana','rage','energy','power','polyUntil'];
 const appearance=unit=>Object.fromEntries(appearanceKeys.filter(k=>unit[k]!==undefined).map(k=>[k,unit[k]]));
 // A scene outlives individual encounters. This is a public preparation tableau,
@@ -37,5 +37,5 @@ export function instancePresentation(s){
  }
  const phase=raid?.phase==='draft'||raid?.phase==='recruiting'?'组建队伍':s.activity.type==='partyBuffs'?'补充增益':s.rest||['goldRecovery','resurrect','revive'].includes(s.activity.type)?'队伍休整':raid?.auctions?.some(a=>a.status==='open')?'分配战利品':raid?.phase==='settled'?'本团已结算':'等待指挥';
  return {id,kind:raid?'raid':'dungeon',roomId:room,name,roomName:area?.name||node?.name|| (room==='entrance'?'副本入口':name),phase,clock:s.clock,memberCount:owners.length,
-  ...(area?{area}:{}),ground:raid?(raid.raidId==='onyxias-lair'?'onyxia':'molten'):base.ground||'cave',units};
+  ...(area?{area}:{}),ground:raid?(['azuregos','kazzak'].includes(raid.raidId)?'grass':raid.raidId==='onyxias-lair'?'onyxia':'molten'):base.ground||'cave',units};
 }

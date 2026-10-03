@@ -35,6 +35,7 @@ function factEncoding(value: any): string {
 /** All ownership and checkpoint writes use the store's serializable transaction.
  * No database calls originate inside combat rules or the simulation worker. */
 export class SimulationRepository {
+  async contentPhase(){return this.store.read(async tx=>(await tx.get('content_releases','world'))?.phase??1);}
   private store: Store;
   private now: () => number;
   private boundary?: CheckpointBoundary;

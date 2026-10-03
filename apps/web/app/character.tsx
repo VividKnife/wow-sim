@@ -10,7 +10,7 @@ import ClassCompanion from './class-companion';
 import HunterPets from './hunter-pets';
 import Mailbox from './mailbox';
 import CharacterEquipment from './character-equipment';
-import AmmoControls from './ammo-controls';
+import TownSupplyControls from './town-supply-controls';
 import Professions from './professions';
 import Mounts from './mounts';
 import Strategy from './strategy';
@@ -68,7 +68,7 @@ export default function Character({state:s,data:d,busy,send,roster,section:contr
  {section==='宠物'&&s.classId===3&&<HunterPets state={s} data={d} busy={busy} send={send}/>}
  {section==='策略'&&<Strategy state={s} data={d} busy={busy} send={send} currentCharacterOnly/>}
  {section==='坐骑'&&<Mounts state={s} data={d} busy={busy} send={send}/>}
- {section==='装备与背包'&&<><CharacterEquipment roster={roster} state={s} data={d} busy={busy} send={send}/><AmmoControls state={s} data={d} busy={busy} send={send}/></>}
+ {section==='装备与背包'&&<><CharacterEquipment roster={roster} state={s} data={d} busy={busy} send={send}/><TownSupplyControls state={s} data={d} busy={busy} send={send}/></>}
  {section==='生活职业'&&<Professions state={s} data={d} busy={busy} send={send}/>}
  {section==='银行'&&<Bank state={s} data={d} busy={busy} send={send}/>}
  {section==='拍卖行'&&<Auction state={s} data={d} busy={busy} send={send}/>}

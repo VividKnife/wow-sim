@@ -1,3 +1,4 @@
+import {LATEST_CONTENT_PHASE} from '../../../packages/game-domain/src/rules/content-phase.js';
 import {isDeepStrictEqual} from 'node:util';
 import {participantState, participantPresentationState} from '../../../packages/game-domain/src/resident-participants.ts';
 import {controllerAction} from '../../../packages/game-domain/src/controller-actions.ts';
@@ -73,6 +74,14 @@ export class ResidentInstance {
     if (admission.presence) {
       this.presenceClock = new PresenceClock(admission.presence, this.controllers.map(c => c.accountId));
       if (this.wallAt > this.offlineDeadline) throw new Error('State exceeds offline allowance');
+    }
+  }
+  setContentPhase(phase:number){
+    if(!Number.isInteger(phase)||phase<1||phase>LATEST_CONTENT_PHASE)throw new Error('Invalid content phase');
+    if(phase<(this.state.contentPhase??1))throw new Error('Content phase cannot go backwards');
+    if([this.state,...this.state.party].some(actor=>actor.contentPhase!==phase)){
+      for(const actor of [this.state,...this.state.party])actor.contentPhase=phase;
+      this.presentationCache=undefined;this.presentationSequence++;
     }
   }
   get wallAt(): number { return this.state.wallAt; }
