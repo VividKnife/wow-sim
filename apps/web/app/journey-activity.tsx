@@ -7,7 +7,7 @@ type Props=GameProps&{hideTravelProgress?:boolean;hideGatherProgress?:boolean;ac
 export default function JourneyActivity({state:s,data:d,busy,send,activityLabel,onObserve,onOpenBag,hideTravelProgress=false,hideGatherProgress=false}:Props){
  if(!s.combat)return <>
   {(s.activity.reason||s.activity.type==='hunt')&&<section className="activity-strip journey-activity" role="status">
-   <strong>{s.activity.paused?(s.bag.length>=d.bagCapacity?'因背包满暂停':'等待拾取战利品'):activityLabel}</strong>
+   <strong>{s.activity.paused?(d.generalBagFree===0?'因背包满暂停':'等待拾取战利品'):activityLabel}</strong>
    <p>{s.activity.reason||'按已保存策略自动狩猎。'}{s.activity.paused&&' 清出空间并领取战利品后，将自动恢复原目标；也可停止狩猎。'}</p>
    <span>背包 {s.bag.length}/{d.bagCapacity} · 待拾取 {s.pending.length} 组</span>
    <div className="action-row">

@@ -6,7 +6,7 @@ import {combatRole,dominantTalentTree} from './combat-roles.js';
 // Membership in an authored loadout, not an item-level or stat-score ranking.
 // Missing phases are deliberately not extended into the next content tier.
 export const BIS_PHASES=data.phases;
-import {CURRENT_CONTENT_PHASE} from './content-phase.js';
+import {CURRENT_CONTENT_PHASE,contentPhase} from './content-phase.js';
 export const CURRENT_BIS_PHASE=CURRENT_CONTENT_PHASE;
 /**
  * @typedef {{phase: number, label: string, name: string, sourceUrl: string}} BisPhase
@@ -24,7 +24,7 @@ for(const source of [data,healers])for(const row of source.entries){
  byItem.set(row.itemId,entries);
 }
 export function itemBis(id){return byItem.get(Number(id))||[];}
-export function characterBis(c,itemId,phase=CURRENT_BIS_PHASE){
+export function characterBis(c,itemId,phase=contentPhase(c)){
  const tree=dominantTalentTree(c),specMatches=e=>e.spec!=='mage-frost'||tree===61;
  return itemBis(itemId).filter(e=>specMatches(e)&&e.classId===c.classId&&e.role===combatRole(c)&&e.phases.some(p=>p.phase===phase));
 }

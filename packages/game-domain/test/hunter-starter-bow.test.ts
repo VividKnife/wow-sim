@@ -15,7 +15,7 @@ test('level-one hunters receive race-appropriate weapons, proficiency and matchi
   const gun=raceId===3||raceId===6,weaponId=gun?2508:2504;
   assert.equal(snapshot.state.equipment[18]?.id,weaponId);
   assert.ok(snapshot.state.learned.includes(gun?266:264));
-  assert.equal(snapshot.state.ammunition[gun?2516:2512],200);
+  assert.equal(snapshot.state.bag.filter((item:any)=>item.id===(gun?2516:2512)).reduce((n:number,item:any)=>n+item.count,0),200);
   const items=await store.transaction(tx=>tx.list<Item>('items',{ownerCharacterId:snapshot.state.id}));
   assert.equal(items.filter(item=>item.data.id===weaponId&&item.container==='equipment'&&item.slot==='18').length,1);
  }

@@ -31,7 +31,7 @@ export default function City(props:GameProps){
  const visitService=(id:string)=>{const dest=id==='trainer'?city.trainer:districts.find(x=>x.services.some(a=>a.id===id))?.id;if(!dest)return;choose(dest);districtRef.current?.scrollIntoView({behavior:'smooth',block:'nearest'});if(dest===s.location){const service=current.services.find(a=>a.id===id);if(service)open(service);}};
  const moving=s.activity.type==='travel';
  const travelLocked=busy||!!s.combat||s.hp<=0||(locked&&!(moving&&!s.activity.flight));
- const free=d.bagCapacity-s.bag.length;
+ const free=d.generalBagFree;
  const hasFlightService=districts.some(district=>district.services.some(service=>service.id==='flight'));
  const checklist=[
   {label:'整理行囊',detail:`背包剩余 ${free} 格${city.junkCount?` · ${city.junkCount} 组灰色杂物`:''}`,ready:free>=4&&!city.junkCount,service:'shop',action:'拜访商人'},

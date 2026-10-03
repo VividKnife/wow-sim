@@ -1,3 +1,4 @@
+import {worldBossById,worldBossRoute,worldBossMap} from './world-boss-content.js';
 import {raidCreatureStats} from './raid-scaling.js';
 // 40-player encounters and routes; not a literal Classic spawn table.
 export const moltenCoreBosses=[
@@ -14,9 +15,9 @@ export const moltenCoreBosses=[
 ].map(b=>({...b,...raidCreatureStats(b.entry),reward:b.name+'战功'}));
 
 import {onyxiaBoss,onyxiaRoute,onyxiaMap} from './onyxia-content.js';
-export const raidBossesFor=id=>id==='onyxias-lair'?[onyxiaBoss]:moltenCoreBosses;
-export const raidNodesFor=id=>id==='onyxias-lair'?onyxiaRoute:moltenCoreRoute;
-export const raidNameFor=id=>id==='onyxias-lair'?'奥妮克希亚的巢穴':'熔火之心';
+export const raidBossesFor=id=>worldBossById[id]?[worldBossById[id]]:id==='onyxias-lair'?[onyxiaBoss]:moltenCoreBosses;
+export const raidNodesFor=id=>worldBossById[id]?worldBossRoute(id):id==='onyxias-lair'?onyxiaRoute:moltenCoreRoute;
+export const raidNameFor=id=>worldBossById[id]?worldBossById[id].name:id==='onyxias-lair'?'奥妮克希亚的巢穴':'熔火之心';
 export const moltenCoreTrash=Object.fromEntries(Object.entries({
  onyxiaWarder:{entry:12129,name:'奥妮克希亚守卫',ability:'火焰新星'},
  giant:{entry:11658,name:'熔核巨人',ability:'践踏'},
@@ -63,7 +64,7 @@ boss('ragnaros',559,361,'mc-core');
 export const moltenCoreRoute=route;
 export const moltenCoreMap={width:1002,height:668,points:{entrance:[262,151],...Object.fromEntries(route.map(n=>[n.id,n.position]))},edges:route.map(n=>[n.parent,n.id]),floorByNode:Object.fromEntries(['entrance',...route.map(n=>n.id)].map(id=>[id,1])),floors:[{id:1,name:'熔火之心',image:'/maps/dungeons/moltencore-1.webp'}],attribution:'原版地图 · 暴雪客户端纹理'};
 export function moltenCorePath(from,to,raidId='molten-core'){
- const map=raidId==='onyxias-lair'?onyxiaMap:moltenCoreMap;
+ const map=worldBossById[raidId]?worldBossMap(raidId):raidId==='onyxias-lair'?onyxiaMap:moltenCoreMap;
  const queue=[[from]],seen=new Set([from]);
  for(const path of queue){const last=path.at(-1);if(last===to)return path;for(const [a,b]of map.edges){const next=a===last?b:b===last?a:null;if(next&&!seen.has(next)){seen.add(next);queue.push([...path,next]);}}}return [];
 }
@@ -81,7 +82,7 @@ export function raidRouteLock(r,id){
  return '';
 }
 export function raidMapView(s,r,canNavigate){
- const route=raidNodesFor(r.raidId),bosses=raidBossesFor(r.raidId),map=r.raidId==='onyxias-lair'?onyxiaMap:moltenCoreMap;
+ const route=raidNodesFor(r.raidId),bosses=raidBossesFor(r.raidId),map=worldBossById[r.raidId]?worldBossMap(r.raidId):r.raidId==='onyxias-lair'?onyxiaMap:moltenCoreMap;
  const plan=r.destination?raidRoutePlan(r,r.destination):[];
  return {id:r.raidId||'molten-core',name:raidNameFor(r.raidId),locationId:r.locationId,destination:r.destination,path:plan,autoAdvance:r.autoAdvance,canFullClear:canNavigate&&route.some(n=>!r.cleared.includes(n.id)&&!r.clearedPacks.includes(n.id)),navigateReason:canNavigate?'':'请先结束战斗或休整，并处理待领取战利品。',map,
  route:route.map(n=>{const cleared=(n.kind==='boss'?r.cleared:r.clearedPacks).includes(n.id),lock=raidRouteLock(r,n.id);return {...n,status:cleared?'cleared':s.combat?.raidEncounter?.id===n.id?'current':'ahead',bossIds:n.kind==='boss'?[bosses.find(b=>b.id===n.id).entry]:[],quests:[],enemies:n.types?.map(t=>moltenCoreTrash[t])||[],path:moltenCorePath(r.locationId,n.id,r.raidId),canNavigate:canNavigate&&!cleared&&!lock,navigateReason:lock};})};

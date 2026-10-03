@@ -1,3 +1,4 @@
+import {bagSpaceFor} from './bag-storage.js';
 import {spellReady} from './spell-timing.js';
 import {partyLeader,partyLeaderId,controlledPartyMembers} from './party-control.js';
 import {hasBlockingLoot} from './loot.js';
@@ -7,7 +8,7 @@ import {dungeonRoute,dungeonEntryReason,dungeonResetReason,remainingDungeonEnemi
 import {dungeonMap,dungeonDestinationPath} from './dungeon-map.js';
 import {dungeonQuestObjectives,dungeonQuestTargets} from './dungeon-quest-targets.js';
 import {dungeonJournal} from './dungeon-journal.js';
-import {stats,spellInfo,knownRank,countItem,bagCapacity} from './character.js';
+import {stats,spellInfo,knownRank,countItem} from './character.js';
 import {items,spells,icon,nameOf} from './catalog.js';
 import {resurrectionFor} from './recovery.js';
 
@@ -48,7 +49,7 @@ export function dungeonView(s,id=dungeonIdFor(s)){
  if(!nextReason&&[s,...s.party].some(c=>c.rest))nextReason='小队正在恢复，休整结束后继续。';
  let interactionReason=controlReason||(!free?activityReason||'请先进入副本。':!encounter?.interaction?'这里没有待完成的交互。':remaining.length?'先击败看守的敌人。':'');
  if(!interactionReason&&encounter.id==='dm-cannon'&&!countItem(leader,5397))interactionReason='需要迪菲亚火药。';
- if(!interactionReason&&encounter.id==='dm-gunpowder'&&leader.bag.length>=bagCapacity(leader)&&!countItem(leader,5397))interactionReason='背包需要一个空位存放火药。';
+ if(!interactionReason&&encounter.id==='dm-gunpowder'&&bagSpaceFor(leader,5397)<1)interactionReason='背包需要一个空位存放火药。';
  if(!interactionReason)for(const [item,count]of encounter.interaction?.inputs||[])if(countItem(leader,item)<count)interactionReason='需要 '+nameOf('items',item)+' ×'+count+'。';
  const map=dungeonMap(id),objectives=run?dungeonQuestObjectives(s):[],bosses=dungeonJournal.find(d=>d.id===id).bosses;
  const navigateReason=controlReason||(!active?'请先进入副本。':[s,...s.party].some(c=>c.hp<=0)?'先让倒下的成员复活，再继续推进。':!s.combat&&!['idle','dungeonCannon'].includes(s.activity.type)?'请先结束当前活动。':'');

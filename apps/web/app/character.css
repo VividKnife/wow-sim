@@ -123,3 +123,5 @@ button.armory-slot:hover,button.armory-slot:focus-visible,.armory-slot.selected{
 .armory-attributes[open]>summary{margin-bottom:12px}
 
 .spellbook-icon{display:inline-flex;flex:0 0 40px;padding:0;border:0;border-radius:4px;background:none;cursor:help}.spellbook-icon:focus-visible{outline:2px solid #ffe39a;outline-offset:3px}
+
+.inventory-bag-sections{display:grid;gap:16px;padding:0 18px 18px}.inventory-bag-section>header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.inventory-bag-section>header div{display:grid;gap:3px}.inventory-bag-section>header strong{font-size:13px;color:#d9c394}.inventory-bag-section>header small{font-size:11px;color:#a89b80}.inventory-bag-section .bag-grid{padding:0}.bag-container.active-bag{outline:2px solid #d9b575;outline-offset:2px}.bag-bar{flex-wrap:wrap}.bag-free{white-space:normal}

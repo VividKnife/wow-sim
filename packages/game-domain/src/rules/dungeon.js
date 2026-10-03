@@ -1,3 +1,4 @@
+import {generalBagFree} from './bag-storage.js';
 import {recordNpcFiveMan} from './npc-progression.js';
 import {npcProfile} from './npc-world.js';
 import {partyLeader} from './party-control.js';
@@ -5,7 +6,7 @@ import {removeGroundEffects} from './ground-events.js';
 import {hasBlockingLoot} from './loot.js';
 import {dungeonDefinition,dungeonIdFor,dungeonRoute} from './dungeon-registry.js';
 export {dungeonRoute} from './dungeon-registry.js';
-import {clone,enemy,rng,log,countItem,takeItem,addItem,bagCapacity,stats} from './character.js';
+import {clone,enemy,rng,log,countItem,takeItem,addItem,stats} from './character.js';
 import {startCombat} from './combat.js';
 import {sceneCombatArea} from './combat-area.js';
 import {startRecovery,stopRecovery,resurrectionFor,beginResurrection} from './recovery.js';
@@ -87,7 +88,7 @@ function advanceRoute(s,e,skipped=false){const d=s.dungeon;if(current(s)?.id!==e
 function gateReason(s,e){const a=e.activation,d=s.dungeon;if(a?.afterDeathEntry&&!d.defeatedBosses[a.afterDeathEntry])return '通道尚未打开，请先击败前方首领。';if(a?.afterInteraction&&!d.interactions[a.afterInteraction])return '需要先使用火炮打开铁门。';return '';}
 function gate(s,e){const reason=gateReason(s,e);if(reason)throw new Error(reason);}
 export function dungeonInventoryReason(s){
- const c=[s,...s.party].find(c=>!c.npcPlayer&&c.quests&&(hasBlockingLoot(c)||c.bag.length>=bagCapacity(c)));
+ const c=[s,...s.party].find(c=>!c.npcPlayer&&c.quests&&(hasBlockingLoot(c)||generalBagFree(c)===0));
  return c?(c.id===s.id?'请先整理背包与待拾取战利品。':`等待 ${c.name} 整理背包与待拾取战利品。`):'';
 }
 export function dungeonAdvanceReason(s){

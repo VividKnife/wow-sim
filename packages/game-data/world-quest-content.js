@@ -1,3 +1,5 @@
+import {weaponItemActions,weaponQuestPhases} from './epic-weapons.js';
+import phases from './data/market-content-phases.json' with {type:'json'};
 // Classic quest journal categories. Wings share a category, including delivery
 // and follow-up quests whose immediate objectives are outside the instance.
 export const dungeonQuestZones={
@@ -31,7 +33,9 @@ export const excludedQuestIds=new Set([
  8508,8597,8598,8599,8733,8742,8743,
  ...Array.from({length:19},(_,i)=>7660+i), // Retired mount exchange records.
 ]);
-export function questScopeReason(q){
+export function questScopeReason(q,phase=phases.currentPhase){
+ if((weaponQuestPhases[q.entry]||1)>phase)return `此武器任务需要第 ${weaponQuestPhases[q.entry]} 阶段内容`;
+ if(q.entry===7509)return '';
  if(excludedQuestZones.has(q.ZoneOrSort))return '未开放的节日、战场或后续团队阶段';
  if(excludedQuestIds.has(q.entry))return '后续阶段或已废弃内容';
  return '';
@@ -39,6 +43,7 @@ export function questScopeReason(q){
 
 // Script rewards with no static loot row. Inputs and encounters remain required.
 export const questItemActions={
+ ...weaponItemActions,
  8072:{locations:['sludge-fen'],name:'潜入高塔并取得钥匙',classId:4},
  11522:{locations:['steamwheedle'],name:'召唤并挑战亚奎门塔斯',enemy:9453},
  11413:{locations:['terror-run'],name:'前往葛拉卡温泉装满娜玛拉之瓶'},

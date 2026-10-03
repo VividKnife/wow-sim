@@ -1,3 +1,4 @@
+import {provisionAmmo} from '../src/rules/ammunition.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createGame,act,advance,advanceOwned,stats} from '../src/rules/engine.js';
@@ -10,7 +11,7 @@ import {spells} from '../src/rules/catalog.js';
 
 function fixture(classId=8,learned=[133,143]){
  const s=createGame('指令验证',747,0,{classId,raceId:classId===3?3:classId===7?2:classId===11?4:1});
- s.id='caster';s.level=60;s.learned=[...new Set([...s.learned,...learned])];s.rules=[];s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rage=1000;s.energy=100;s.ammunition={2512:1000,2516:1000};
+ s.id='caster';s.level=60;s.learned=[...new Set([...s.learned,...learned])];s.rules=[];s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;s.rage=1000;s.energy=100;provisionAmmo(s,{2512:1000,2516:1000});
  const ally=newCharacter('指定队友',1,60,1);ally.id='ally';ally.rules=[];ally.hp=Math.floor(stats(ally).maxHp*.95);ally.mana=stats(ally).maxMana;ally.nextSwing=100000;
  const injured=newCharacter('较低血队友',1,60,1);injured.id='injured';injured.rules=[];injured.hp=Math.floor(stats(injured).maxHp*.5);injured.nextSwing=100000;
  s.party=[ally,injured];startCombat(s,[636,636],true);delete s.combat.pull;

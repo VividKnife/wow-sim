@@ -1,3 +1,5 @@
+import {contentPhase} from './content-phase.js';
+import {weaponItemActions,weaponQuestPhases} from '../../../game-data/epic-weapons.js';
 import {isLowLevelQuest} from '../../../sim-core/src/quest-level.js';
 import {runtime} from './runtime-content.js';
 import {groupRows} from '../../../sim-core/src/collections.js';
@@ -26,12 +28,13 @@ export function questTargetAction(q,n){
  const kind=q.entry===434?'encounter':spell?'spell':target<0?'object':combatLocations.length?'kill':attackableCreature(target)?'encounter':'interact';
  return {kind,locations:(kind==='kill'?combatLocations:locations).length?(kind==='kill'?combatLocations:locations):sceneLocation(q)};
 }
-const excludedQuests=new Map(Object.values(quests).filter(q=>questScopeReason(q)).map(q=>[q.entry,questScopeReason(q)]));
+const excludedQuests=new Map(Object.values(quests).filter(q=>questScopeReason(q,6)).map(q=>[q.entry,questScopeReason(q,6)]));
 for(let changed=true;changed;){changed=false;for(const q of Object.values(quests))if(!excludedQuests.has(q.entry)&&q.PrevQuestId&&excludedQuests.has(Math.abs(q.PrevQuestId))){excludedQuests.set(q.entry,'前置任务属于未开放内容');changed=true;}}
-export const questContentReason=q=>excludedQuests.get(q.entry)||'';
+export const questContentReason=(q,s)=>((weaponQuestPhases[q.entry]||1)>contentPhase(s)?`此武器任务需要第 ${weaponQuestPhases[q.entry]} 阶段内容`:'')||excludedQuests.get(q.entry)||'';
 export function meetsCondition(s,id,seen=new Set()){return evaluateCondition(s,id,{available:(qid,next)=>quests[qid]?questAvailable(s,quests[qid],next):false,complete:qid=>questObjectivesComplete(s,qid)},seen)===true;}
 function questObjectivesComplete(s,id){const q=quests[id],p=s.quests[id];return !!(q&&p&&[1,2,3,4].every(n=>(!q['ReqItemId'+n]||countItem(s,q['ReqItemId'+n])>=q['ReqItemCount'+n])&&(!q['ReqCreatureOrGOId'+n]&&!q['ReqSpellCast'+n]||(p.kills[q['ReqCreatureOrGOId'+n]||'spell:'+n]||0)>=q['ReqCreatureOrGOCount'+n]))&&(!(q.SpecialFlags&2)||p.event));}
-export function questAvailable(s,q,seen=new Set()){if(questContentReason(q))return false;if((s.questWaits?.[q.entry]||0)>s.clock)return false;if(s.quests[q.entry]||s.completed[q.entry]&&!(q.SpecialFlags&1)||s.level<q.MinLevel||q.MaxLevel&&s.level>q.MaxLevel)return false;if(q.RequiredClasses&&!(q.RequiredClasses&(1<<(s.classId-1))))return false;if(q.RequiredRaces&&!(q.RequiredRaces&(1<<((s.raceId||1)-1))))return false;if(q.PrevQuestId>0&&!s.completed[q.PrevQuestId]||q.PrevQuestId<0&&!s.quests[-q.PrevQuestId])return false;
+const hasDivinity=s=>countItem(s,18646)>0||Object.values(s.equipment||{}).some(i=>i?.id===18646);
+export function questAvailable(s,q,seen=new Set()){if([7621,7622].includes(q.entry)&&!hasDivinity(s))return false;if(questContentReason(q,s))return false;if((s.questWaits?.[q.entry]||0)>s.clock)return false;if(s.quests[q.entry]||s.completed[q.entry]&&!(q.SpecialFlags&1)||s.level<q.MinLevel||q.MaxLevel&&s.level>q.MaxLevel)return false;if(q.RequiredClasses&&!(q.RequiredClasses&(1<<(s.classId-1))))return false;if(q.RequiredRaces&&!(q.RequiredRaces&(1<<((s.raceId||1)-1))))return false;if(q.PrevQuestId>0&&!s.completed[q.PrevQuestId]||q.PrevQuestId<0&&!s.quests[-q.PrevQuestId])return false;
  if(q.RequiredSkill&&(s.professions?.[professionIds[q.RequiredSkill]]?.skill||0)<Math.max(1,q.RequiredSkillValue||0))return false;
  if(q.RequiredMinRepFaction&&(s.reputation[q.RequiredMinRepFaction]||0)<q.RequiredMinRepValue||q.RequiredMaxRepFaction&&(s.reputation[q.RequiredMaxRepFaction]||0)>=q.RequiredMaxRepValue)return false;
  const previous=previousQuests[q.entry]||[];if(previous.length&&!previous.some(p=>s.completed[p.entry]))return false;
@@ -124,20 +127,21 @@ export function questProgress(s,id){const q=quests[id],progress=s.quests[id];if(
 export function itemSources(id){return [...(runtime.itemSourceIndex[id]||[])];}
 const dedicatedEvents={62:['fargodeep'],76:['jasper'],155:['sentinel','moonbrook'],1861:['mirror'],1920:['magetower'],434:['keep']};
 const QUEST_SCENE_DURATION=10000;
+function specialReady(s,q,action){return (!action.classId||s.classId===action.classId)&&(!action.solo||!s.party.length&&!s.pet&&!s.escort)&&(!action.raidBoss||!!s.quests[q.entry]?.kills[10184]&&s.goldRaid?.active&&s.goldRaid.cleared.includes(action.raidBoss))&&(action.inputs||[]).every(([id,count])=>countItem(s,id)>=count);}
 const sceneLocation=q=>q.PointX||q.PointY?[nearestNode(q.PointX,q.PointY,q.PointMapId)].filter(Boolean):[...new Set((questLinks[q.entry]?.ends||[]).flatMap(endpointNodes))];
 export const eventNodes=id=>dedicatedEvents[id]||(quests[id]?sceneLocation(quests[id]):[]);
 // Scripts outside the bespoke Northshire/Defias story use explicit timed node
 // scenes. They are labelled as adaptations, never presented as original scripts.
 export function questScenes(s,id){
- const q=quests[id],p=s.quests[id];if(!q||!p)return [];
+ const q=quests[id],p=s.quests[id];if(!q||!p||questContentReason(q,s))return [];
  const scenes=[];
  if(q.SpecialFlags&2&&!dedicatedEvents[id]&&!p.event)scenes.push({key:'event',name:hasChinese(q.EndText)?q.EndText:'推进剧情事件',locations:eventNodes(id)});
  for(let n=1;n<=4;n++){
   const target=q['ReqCreatureOrGOId'+n],spell=q['ReqSpellCast'+n],item=q['ReqItemId'+n];
   const special=questItemActions[item];
   if(special&&countItem(s,item)<q['ReqItemCount'+n]){
-   const ready=(!special.classId||s.classId===special.classId)&&(special.inputs||[]).every(([id,count])=>countItem(s,id)>=count);
-   scenes.push({key:'special:'+n,name:special.name,locations:special.locations,ready,requirements:(special.inputs||[]).map(([id,count])=>nameOf('items',id)+' ×'+count).join('、')});
+   const ready=specialReady(s,q,special);
+   scenes.push({key:'special:'+n,name:special.name,locations:special.locations,ready,requirements:[...(special.inputs||[]).map(([id,count])=>nameOf('items',id)+' ×'+count),...(special.solo?['解散队伍并解散宠物']:[]),...(special.raidBoss?['携带未淬火之刃击败本次团队的奥妮克希亚']:[])].join('、')});
    for(const [source,count]of special.inputs||[])if([1,2,3,4].some(i=>q['ReqSourceId'+i]===source)&&countItem(s,source)<count)scenes.push({key:'source:'+source,name:'寻找 '+nameOf('items',source),locations:itemSources(source).length?itemSources(source):sceneLocation(q)});
   }
   const targetLocations=target>0?creatureLocations[target]||[]:target<0?objectLocations[-target]||[]:[];
@@ -146,21 +150,22 @@ export function questScenes(s,id){
    scenes.push({key:(combat?'encounter:':'objective:')+n,name:(combat?'召唤并挑战 ':q.SrcItemId?'使用 '+nameOf('items',q.SrcItemId)+'：':'交谈 / 调查：')+(target>0?questNpcName(target):questObjectName(-target)),locations:questTargetAction(q,n).locations});
   }
   if(spell&&(p.kills[target||'spell:'+n]||0)<q['ReqCreatureOrGOCount'+n])scenes.push({key:'spell:'+n,name:'使用任务法术：'+nameOf('spells',spell),locations:targetLocations.length?targetLocations:sceneLocation(q)});
-  if(item&&items[item]?.class===12&&item!==q.SrcItemId&&!itemSources(item).length&&countItem(s,item)<q['ReqItemCount'+n])scenes.push({key:'item:'+n,name:'调查并取得 '+nameOf('items',item),locations:sceneLocation(q)});
+  if(item&&!special&&items[item]?.class===12&&item!==q.SrcItemId&&!itemSources(item).length&&countItem(s,item)<q['ReqItemCount'+n])scenes.push({key:'item:'+n,name:'调查并取得 '+nameOf('items',item),locations:sceneLocation(q)});
  }
- return scenes.map(scene=>({...scene,duration:QUEST_SCENE_DURATION,name:scene.name+(scene.requirements?'（需要 '+scene.requirements+'）':''),adaptation:'节点式任务场景改编',available:scene.ready!==false&&scene.locations.includes(s.location)&&s.hp>0&&!s.combat&&['idle','hunt'].includes(s.activity.type)&&(!q.SrcItemId||countItem(s,q.SrcItemId)>0)&&(!s.dungeon||Object.keys(s.dungeon.defeatedBosses).length>0)}));
+ return scenes.map(scene=>({...scene,duration:id===7622?60000:QUEST_SCENE_DURATION,name:(id===7622&&scene.key==='event'?'保护逃离斯坦索姆的 50 名农民':scene.name)+(scene.requirements?'（需要 '+scene.requirements+'）':''),adaptation:'节点式任务场景改编',available:scene.ready!==false&&(id!==7622||hasDivinity(s))&&scene.locations.includes(s.location)&&s.hp>0&&!s.combat&&['idle','hunt'].includes(s.activity.type)&&(!q.SrcItemId||countItem(s,q.SrcItemId)>0)&&(!s.dungeon||Object.keys(s.dungeon.defeatedBosses).length>0)}));
 }
 export function beginQuestScene(s,id,key){
  const scene=questScenes(s,id).find(e=>e.key===key);if(!scene?.available)throw new Error('请携带任务物品，前往场景地点并结束当前活动。');
  s.rest=null;s.activity={type:'questScene',quest:id,target:key,from:s.location,startedAt:s.clock,endsAt:s.clock+scene.duration};log(s,scene.name+'（节点式改编）','quest');
 }
 export function finishQuestScene(s){
- const a=s.activity,q=quests[a.quest],p=s.quests[a.quest];if(!p||!q||s.location!==a.from||s.hp<=0||s.combat||s.clock<a.endsAt)return;
+ const a=s.activity,q=quests[a.quest],p=s.quests[a.quest];if(!p||!q||questContentReason(q,s)||s.location!==a.from||s.hp<=0||s.combat||s.clock<a.endsAt)return;
  if(q.SrcItemId&&!countItem(s,q.SrcItemId))return;
+ if(a.quest===7622&&!hasDivinity(s))return;
  const [actionKind,actionIndex]=a.target.split(':');
  if(actionKind==='special'){
   const item=q['ReqItemId'+Number(actionIndex)],action=questItemActions[item];
-  if(!action||action.classId&&action.classId!==s.classId||!action.locations.includes(s.location)||(action.inputs||[]).some(([id,count])=>countItem(s,id)<count))return;
+  if(!action||!specialReady(s,q,action)||!action.locations.includes(s.location)||countItem(s,item)>=q['ReqItemCount'+Number(actionIndex)])return;
   for(const [id,count]of action.inputs||[])takeItem(s,id,count);
   if(action.enemy){p.encounterReward={entry:action.enemy,item};return [action.enemy];}
   addItem(s,item,1);return;
@@ -170,7 +175,7 @@ export function finishQuestScene(s){
   if(n&&countItem(s,item)<q['ReqSourceCount'+n])addItem(s,item,1);return;
  }
  if(a.target==='event')p.event=true;
- else{const [kind,index]=a.target.split(':'),n=Number(index);if(kind==='encounter')return [q['ReqCreatureOrGOId'+n]];if(kind==='spell'||kind==='objective'){const target=q['ReqCreatureOrGOId'+n]||'spell:'+n;p.kills[target]=Math.min(q['ReqCreatureOrGOCount'+n],(p.kills[target]||0)+1);}else if(kind==='item'){const item=q['ReqItemId'+n],count=q['ReqItemCount'+n]-countItem(s,item);if(count>0)addItem(s,item,count);}}
+ else{const [kind,index]=a.target.split(':'),n=Number(index);if(kind==='encounter')return [q['ReqCreatureOrGOId'+n]];if(kind==='spell'||kind==='objective'){const target=q['ReqCreatureOrGOId'+n]||'spell:'+n;p.kills[target]=Math.min(q['ReqCreatureOrGOCount'+n],(p.kills[target]||0)+1);}else if(kind==='item'){const item=q['ReqItemId'+n],count=q['ReqItemCount'+n]-countItem(s,item);if(count>0&&!weaponItemActions[item])addItem(s,item,count);}}
  log(s,'任务场景推进：'+nameOf('quests',a.quest),'quest');
 }
 export function creditExploration(s){
@@ -197,8 +202,8 @@ export function abandonQuest(s,id){
  s.bag=s.bag.filter(i=>!removable.has(i.id));s.pending=s.pending.filter(i=>!removable.has(i.id));s.questObjects=(s.questObjects||[]).filter(o=>o.quest!==+id);
  log(s,'放弃任务：'+nameOf('quests',id),'quest');
 }
-export function turnIn(s,id,choice){const q=quests[id],p=questProgress(s,id);if(!q||!p?.complete||!atEndpoint(s,q,'ends'))throw new Error('任务未完成，或尚未到达交付地点。');if(p.choices.length&&!p.choices.some(i=>i.id===choice))throw new Error('请选择一件任务奖励。');for(let n=1;n<=4;n++)if(q['ReqItemId'+n])takeItem(s,q['ReqItemId'+n],q['ReqItemCount'+n]);s.money+=q.RewOrReqMoney;for(const reward of p.rewards)addItem(s,reward.id,reward.count);const selected=p.choices.find(i=>i.id===choice);if(selected)addItem(s,selected.id,selected.count);gainXp(s,s,p.xp);for(let n=1;n<=5;n++)if(q['RewRepFaction'+n])s.reputation[q['RewRepFaction'+n]]=(s.reputation[q['RewRepFaction'+n]]||0)+Math.floor(q['RewRepValue'+n]*(q['RewRepValue'+n]>0?1+racialModifiers(s).diplomacyPct:1));for(const entry of classContentManifest.entries)if(entry.acquisition==='classQuest'&&entry.actor==='player'&&entry.classId===s.classId&&entry.raceIds.includes(s.raceId)&&entry.questIds?.includes(+id)){s.learned=[...new Set([...s.learned,entry.spellId])];grantHunterTrainingLinks(s,entry.spellId);}delete s.quests[id];s.completed[id]=(s.completed[id]||0)+1;if(+id===1921){s.questWaits??={};s.questWaits[1941]=s.clock+9500;}log(s,`完成任务：${p.name} · ${p.xp} 经验`,'quest');}
-export function creditKill(s,id,battle=s.combat){const c=creatures[id];for(const[qid,p]of Object.entries(s.quests)){if(+qid===434&&(!s.stockadesQuestEvent||s.stockadesQuestEvent.cancelled||s.stockadesQuestEvent.stage!=='combat'||battle?.quest!==434||battle.questEventAttempt!==s.stockadesQuestEvent.attempt))continue;const q=quests[qid];if(p.encounterReward?.entry===id&&battle?.quest===+qid){addItem(s,p.encounterReward.item,1);delete p.encounterReward;}for(let n=1;n<=4;n++){const target=q['ReqCreatureOrGOId'+n];if(target>0&&!['spell','interact'].includes(questTargetAction(q,n).kind)&&[id,c?.KillCredit1,c?.KillCredit2].includes(target))p.kills[target]=Math.min(q['ReqCreatureOrGOCount'+n],(p.kills[target]||0)+1);}}}
+export function turnIn(s,id,choice){const q=quests[id],p=questProgress(s,id);if(!q||questContentReason(q,s)||!p?.complete||!atEndpoint(s,q,'ends'))throw new Error('任务未完成，或尚未到达交付地点。');if(p.choices.length&&!p.choices.some(i=>i.id===choice))throw new Error('请选择一件任务奖励。');for(let n=1;n<=4;n++)if(q['ReqItemId'+n])takeItem(s,q['ReqItemId'+n],q['ReqItemCount'+n]);s.money+=q.RewOrReqMoney;for(const reward of p.rewards)addItem(s,reward.id,reward.count);const selected=p.choices.find(i=>i.id===choice);if(selected)addItem(s,selected.id,selected.count);gainXp(s,s,p.xp);for(let n=1;n<=5;n++)if(q['RewRepFaction'+n])s.reputation[q['RewRepFaction'+n]]=(s.reputation[q['RewRepFaction'+n]]||0)+Math.floor(q['RewRepValue'+n]*(q['RewRepValue'+n]>0?1+racialModifiers(s).diplomacyPct:1));for(const entry of classContentManifest.entries)if(entry.acquisition==='classQuest'&&entry.actor==='player'&&entry.classId===s.classId&&entry.raceIds.includes(s.raceId)&&entry.questIds?.includes(+id)){s.learned=[...new Set([...s.learned,entry.spellId])];grantHunterTrainingLinks(s,entry.spellId);}delete s.quests[id];s.completed[id]=(s.completed[id]||0)+1;if(+id===1921){s.questWaits??={};s.questWaits[1941]=s.clock+9500;}log(s,`完成任务：${p.name} · ${p.xp} 经验`,'quest');}
+export function creditKill(s,id,battle=s.combat){const c=creatures[id];if(id===10184&&s.quests[7509]&&countItem(s,18489)>0&&battle?.raidEncounter?.id==='onyxia')s.quests[7509].kills[10184]=1;for(const[qid,p]of Object.entries(s.quests)){if(+qid===434&&(!s.stockadesQuestEvent||s.stockadesQuestEvent.cancelled||s.stockadesQuestEvent.stage!=='combat'||battle?.quest!==434||battle.questEventAttempt!==s.stockadesQuestEvent.attempt))continue;const q=quests[qid];if(p.encounterReward?.entry===id&&battle?.quest===+qid){addItem(s,p.encounterReward.item,1);delete p.encounterReward;}for(let n=1;n<=4;n++){const target=q['ReqCreatureOrGOId'+n];if(target>0&&!['spell','interact'].includes(questTargetAction(q,n).kind)&&[id,c?.KillCredit1,c?.KillCredit2].includes(target))p.kills[target]=Math.min(q['ReqCreatureOrGOCount'+n],(p.kills[target]||0)+1);}}}
 function canLootStarter(s,id){
  const item=items[id],quest=item?.startquest;if(!quest||item.ExtraFlags&2)return true;
  return !s.quests?.[quest]&&(!s.completed?.[quest]||!!(quests[quest]?.SpecialFlags&1));

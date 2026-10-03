@@ -17,7 +17,7 @@ export function ItemTooltip({item,instance,auction=false,details}:{item:any;inst
  return <div className="classic-item-tooltip" aria-label={`${item.name} · 物品详情`}>
   <strong className={`classic-item-name quality-${item.quality}`}>{item.name}</strong>
   {(instance?.bound||item.binding)&&<div>{instance?.bound?'已绑定':item.binding}</div>}{instance?.locked&&<div>已锁定</div>}{item.unique>0&&<div>唯一{item.unique>1?` (${item.unique})`:''}</div>}
-  {instance?.count>1&&<div>数量：{instance.count}</div>}{item.bagSlots>0&&<div>{item.bagSlots} 格容器</div>}
+  {instance?.count>1&&<div>数量：{instance.count}</div>}{item.bagSlots>0&&<div>{item.bagSlots} 格{item.bagType||'容器'}</div>}
   {instance?.enchant&&<div className="item-effect">{instance.enchantDescription||`附魔 ${instance.enchant}`}</div>}
   <div className="classic-item-pair"><span>{equipmentSlots[item.slot]||''}</span><span>{item.class===4?armorTypes[item.subclass]:item.class===2?weaponTypes[item.subclass]:''}</span></div>
   {item.damage&&<div className="classic-item-pair"><span>{item.damage.join(' - ')} 伤害</span><span>速度 {(item.speed/1000).toFixed(2)}</span></div>}

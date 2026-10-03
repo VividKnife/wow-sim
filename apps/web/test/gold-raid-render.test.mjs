@@ -17,10 +17,10 @@ before(async()=>{
 });
 after(async()=>{if(directory)await rm(directory,{recursive:true,force:true});});
 const render=snapshot=>renderToStaticMarkup(createElement(GoldRaid,{state:snapshot.player,data:{...snapshot.view,items:{}},busy:false,send:async()=>true,onObserve:()=>{}}));
-test('raid entry renders the actual server snapshot with both raid choices',()=>{
+test('raid entry renders the actual server snapshot with phase-gated world boss choices',()=>{
  const snapshot=buildGameResponse(createGame('团本入口',42,0),1).snapshot;
- assert.deepEqual(snapshot.view.goldRaid.raids.map(r=>r.id),['molten-core-gold','onyxias-lair-gold']);
- const html=render(snapshot);assert.match(html,/熔火之心/);assert.match(html,/奥妮克希亚/);assert.equal((html.match(/创建金团/g)||[]).length,2);
+ assert.deepEqual(snapshot.view.goldRaid.raids.map(r=>r.id),['molten-core-gold','onyxias-lair-gold','azuregos-gold','kazzak-gold']);
+ const html=render(snapshot);assert.match(html,/熔火之心/);assert.match(html,/奥妮克希亚/);assert.equal((html.match(/创建金团/g)||[]).length,4);
 });
 test('missing raid list shows a recoverable error instead of crashing or inventing entry permissions',()=>{
  const snapshot=buildGameResponse(createGame('缺失列表',43,0),1).snapshot;

@@ -1,3 +1,4 @@
+import {applyContentPhase} from './content-release.ts';
 import {residentStore} from './resident-store.ts';
 import {applyGmBuffs} from './gm-buffs.ts';
 import {claimMail,mailInbox,resolveMailRecipientInView,validateMailDraft,commitMailSend} from './mail.ts';
@@ -16,7 +17,7 @@ import {prepareCombatPlan, combatRecording, invalidateCombatPlan, combatExecutio
 import type { Account } from './model.ts';
 import { act, advance, quietIdle } from './rules/engine.js';
 import { refreshPresence, offlineLimit, recordPresence, activityDeadline, instanceDeadline } from './presence.ts';
-import { receive } from './rules/inventory.js';
+import { receive,putInBag } from './rules/inventory.js';
 import { canEquip, takeItem, bagCapacity } from './rules/character.js';
 import { transferItems } from './item-transfer.ts';
 import { items, quests } from './rules/catalog.js';
@@ -111,6 +112,7 @@ export class GameService {
             state.marketClock = !lease ? state.clock + Math.max(0, now - state.wallAt) : state.clock;
             // Views show the current wall-time window even when an idle simulation
             // has no reason to tick. This projection never persists into simulation.
+            await applyContentPhase(tx,state);
             await applyGmBuffs(tx,state,accountId,instance?new Map(instance.roster.map(row=>[row.characterId,row.accountId])):undefined,now);
             const roster = await Promise.all((await tx.list<Character>('characters', { accountId })).map(async row => {
                 const inventory = await context(tx, row, now, false);
@@ -403,7 +405,7 @@ export class GameService {
             requireThat(row.accountId === actor.accountId, 'ASSET_OWNER', '装备归属无效');
             if (item.ownerId && item.ownerId !== actor.id) {
                 const owner = await owned(tx, actor.accountId, item.ownerId), ownerState = await context(tx, owner, this.now(), false);
-                ownerState.bag.push(item);
+                putInBag(ownerState,item);
                 s.bag = s.bag.filter((i: Rules) => i.uid !== item.uid);
                 row.container = 'bag';
                 row.position = ownerState.bag.length;

@@ -1,0 +1,28 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {once} from 'node:events';
+import {PGlite} from '@electric-sql/pglite';
+import {schemaSql} from '../../../packages/persistence/src/schema.ts';
+import {AccountStore} from '../src/account-store.ts';
+import {AdminStore} from '../src/admin-store.ts';
+import {createGameServer} from '../src/server.ts';
+test('phase release authenticates, rejects unsupported phases, rolls back audit failures and opens once',async t=>{
+ const db=new PGlite();t.after(()=>db.close());await db.exec(schemaSql);
+ const sql={query:async(text:string,values?:any[])=>text.includes('CREATE TABLE')?(await db.exec(text),{rows:[]}):db.query(text,values)};
+ const accounts=new AccountStore(sql);await accounts.initialize();const admin=new AdminStore(sql,accounts);await admin.initialize();
+ const {admin:user,token}=await admin.authenticate('register',{username:'release-admin',password:'release-password-123'},'test');
+ const game=createGameServer({admin,accounts,appOrigin:'http://game.test',service:{} as any});game.server.listen(0,'127.0.0.1');await once(game.server,'listening');t.after(()=>game.close());
+ const base=`http://127.0.0.1:${(game.server.address() as {port:number}).port}/api/admin/content-release`;
+ assert.equal((await fetch(base)).status,401);
+ assert.equal((await fetch(base,{method:'POST',headers:{cookie:`wow_admin=${token}`,origin:'http://evil.test'},body:'{}'})).status,403);
+ assert.equal((await admin.contentRelease()).phase,1);
+ for(const phase of [0,3,6,'2',2.5])await assert.rejects(admin.openContentPhase(user.id,{phase,reason:'test'}),{status:400});
+ await assert.rejects(admin.openContentPhase(user.id,{phase:2,reason:' '}),{status:400});
+ await db.exec(`CREATE FUNCTION reject_release() RETURNS trigger AS $$ BEGIN RAISE EXCEPTION 'audit unavailable'; END; $$ LANGUAGE plpgsql; CREATE TRIGGER reject_release BEFORE INSERT ON gm_audit FOR EACH ROW EXECUTE FUNCTION reject_release();`);
+ await assert.rejects(admin.openContentPhase(user.id,{phase:2,reason:'test'}));assert.equal((await admin.contentRelease()).phase,1);
+ await db.exec('DROP TRIGGER reject_release ON gm_audit');
+ const post=()=>fetch(base,{method:'POST',headers:{cookie:`wow_admin=${token}`,origin:'http://game.test','content-type':'application/json'},body:JSON.stringify({phase:2,reason:'P2 上线'})});
+ const results=await Promise.all([post(),post()]);assert.deepEqual(results.map(r=>r.status).sort(),[200,409]);
+ assert.equal((await new AdminStore(sql,accounts).contentRelease()).phase,2);
+ assert.equal((await db.query("SELECT * FROM gm_audit WHERE action='openContentPhase'")).rows.length,1);
+});

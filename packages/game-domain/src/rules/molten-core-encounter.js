@@ -1,3 +1,4 @@
+import {worldBossTick} from './world-boss-encounter.js';
 import {raidSpellValue} from './raid-spells.js';
 import {roll} from './character.js';
 import {raidFieldsTick,addRaidField} from './raid-battlefield.js';
@@ -30,6 +31,7 @@ export function moltenCoreTick(s,actors,hurt) {
  const active=raid.kind==='trash'?s.combat.enemies.some(e=>e.hp>0&&!e.removed)
   :s.combat.enemies.some(e=>e.id===raid.bossId&&e.hp>0&&!e.removed);
  if(active)goldNpcTick(s,actors);
+ if(['azuregos','kazzak'].includes(raid.id)){worldBossTick(s,actors,hurt);publishRaidWarnings(s);return;}
  if(raid.id==='onyxia'){onyxiaTick(s,actors,hurt);publishRaidWarnings(s);return;}
  const original=s.combat.enemies.find(e=>e.id===raid.bossId);
  if(raid.id==='golemagg'&&original?.hp<=0)for(const e of s.combat.enemies)e.hp=0;

@@ -1,0 +1,55 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createMoltenCoreDemo} from '../src/molten-core-demo.ts';
+import {enterGoldRaid,goldRaidAction,goldRaidView} from '../src/rules/gold-raid.js';
+import {reserveMarket,marketView} from '../src/rules/market.js';
+import {recipeAvailability,professionAction} from '../src/rules/professions.js';
+import {recipes} from '../src/rules/profession-data.js';
+import {raidLoot,rollRaidLoot} from '../src/rules/raid-rewards.js';
+import {advance} from '../src/rules/engine.js';
+import {worldBossTick} from '../src/rules/world-boss-encounter.js';
+import {worldBosses} from '../src/rules/world-boss-content.js';
+import {MemoryStore} from '../../persistence/src/memory.ts';
+import {applyContentPhase} from '../src/content-release.ts';
+import {ResidentInstance} from '../../../apps/simulation-host/src/instance.ts';
+
+test('P2 goods and crafting are gated by state, future goods remain closed',()=>{
+ const s=createMoltenCoreDemo().state;s.money=100000000;
+ assert.throws(()=>reserveMarket(s,[{id:14156,count:1}]),/P2/);
+ s.contentPhase=2;reserveMarket(s,[{id:14156,count:1}]);assert.equal(s.marketStock[14156].purchased,1);
+ assert.throws(()=>reserveMarket(s,[{id:18562,count:1}]),/P3/);
+ const r=recipes.find(r=>r.item===14156)!;s.professions={tailoring:{skill:300,cap:300}};
+ s.contentPhase=1;assert.equal(recipeAvailability(s,r).known,false);
+ assert.throws(()=>professionAction(s,{type:'craft',id:r.id,count:1}),/版本/);
+ s.contentPhase=2;assert.equal(recipeAvailability(s,r).known,true);
+ assert.ok(marketView(2).length>marketView(1).length);
+});
+test('authoritative release replaces stored phase and resident refresh survives recovery',async()=>{
+ const store=new MemoryStore(),state=createMoltenCoreDemo().state;state.party=[];state.contentPhase=6;
+ await store.read(tx=>applyContentPhase(tx,state));assert.equal(state.contentPhase,1);
+ await store.transaction(tx=>tx.put('content_releases',{id:'world',phase:2}));
+ await store.read(tx=>applyContentPhase(tx,state));assert.equal(state.contentPhase,2);
+ const runtime=new ResidentInstance({instanceId:'phase-test',ownerEpoch:1,state,controllers:[]});
+ runtime.setContentPhase(2);assert.throws(()=>runtime.setContentPhase(1));
+ assert.equal(ResidentInstance.restore(runtime.checkpoint(),2).checkpoint().state.contentPhase,2);
+});
+for(const boss of worldBosses)test(`P2 ${boss.name} can recruit, fight and roll real loot`,()=>{
+ const s=createMoltenCoreDemo().state;s.party=[];s.contentPhase=1;
+ assert.match(goldRaidView(s).raids!.find(r=>r.id===boss.id+'-gold')!.reason,/P2/);
+ assert.throws(()=>enterGoldRaid(s,boss.id),/P2/);
+ s.contentPhase=2;enterGoldRaid(s,boss.id);
+ for(const type of ['goldPublish','goldRecommend','goldLaunch'])goldRaidAction(s,{type});
+ assert.equal(s.party.length,39);
+ goldRaidAction(s,{type:'goldStart',bossId:boss.id});
+ assert.equal(s.goldRaid.phase,'combat');
+ const stepped=advance(s,s.wallAt+1000).state;assert.ok(stepped.combat);
+ for(const enemy of stepped.combat.enemies)enemy.hp=0;
+ const won=advance(stepped,stepped.wallAt+1000).state;
+ assert.ok(won.goldRaid.cleared.includes(boss.id));
+ assert.ok(won.goldRaid.auctions.length>0);
+ assert.ok(won.goldRaidSaves[boss.id].cleared.includes(boss.id));
+ assert.equal(s.combat.enemies[0].entry,boss.entry);assert.equal(s.combat.enemies[0].maxHp,boss.maxHp);
+ s.clock+=31000;let hits=0;worldBossTick(s,[s,...s.party],()=>{hits++;});assert.ok(hits>0);
+ assert.ok(raidLoot[boss.id].length>=10);
+ const drops=Array.from({length:20},()=>rollRaidLoot(s,boss.id)).flat();assert.ok(drops.length>0);
+});

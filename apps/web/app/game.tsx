@@ -1,3 +1,4 @@
+import TownSupplyPlugin from './town-supply-plugin';
 import {connectGameStream,gameStreamUrl} from '@/lib/game-stream';
 import {SocialProvider} from './social';
 import InputProgress from './input-progress';
@@ -23,7 +24,6 @@ import ZoneMusic from './zone-music';
 import AccountControls from './account-controls';
 import UnstuckControl from './unstuck-control';
 import PlayerHud from './player-hud';
-import AmmoRestockDialog from './ammo-restock-dialog';
 import {BookOpen,Map as MapIcon,Castle,UserRound,UsersRound} from 'lucide-react';
 import {createInputReceiptTracker,inputReceiptPending} from '@/lib/input-receipts.js';
 import {createCommandQueue} from '@/lib/command-queue.js';
@@ -32,6 +32,8 @@ import {createSnapshotPoller} from '@/lib/snapshot-poller.js';
 import {combatPollDelay} from '@/lib/combat-playback.js';
 import {inlineWorldBattle,opensBattleDialog} from '@/lib/battle-presentation.js';
 import {playQuestSound} from '@/lib/quest-audio.js';
+import GameUiSounds from './game-ui-sounds';
+import {playUiSound} from '@/lib/ui-audio.js';
 import DungeonMap from './dungeon-map';
 import ClassicGame from './classic-game';
 import ExperienceNotifications from './experience-notifications';
@@ -98,7 +100,6 @@ export default function Game(){
    throw error;
   }
  });
- const getAmmoSnapshot=useCallback(()=>acceptedResponse.current?.snapshot?.player?.id===selectedCharacterRef.current?acceptedResponse.current.snapshot:null,[]);
  const send=useCallback(async(body:any)=>{manualPending.current++;setBusy(true);setError('');try{const characterId=selectedCharacterRef.current;const success=await queue.current!({...body,...(characterId?{characterId}:{}),requestId:crypto.randomUUID()});if(success){setConnectionError('');playQuestSound(body);}if(success&&['enterDungeon','goldLaunch'].includes(body.type)){setActiveTab('world');if(classicActive.current)setClassicPanel(null);}if(success&&classicActive.current&&['hunt','travel','navigateQuest','goldStart','raidStart','dungeonNext','dungeonNavigate','raidNavigate','goldNavigate'].includes(body.type))setClassicPanel(null);if(success&&!classicActive.current&&opensBattleDialog(body,inlineBattleRef.current))setBattleOpen(true);return success;}catch(e:any){if(e.status===401){setSignedIn(false);setConnectionError('');setError('');return false;}if(body.type==='goldBid'&&e.status>=400&&e.status<500){try{const id=selectedCharacterRef.current;await apply(await readGameResponse(await saveFetch(`/api/game?${new URLSearchParams(id?{characterId:id}:{})}`)));}catch{/* Keep the original rejection when refresh is unavailable. */}}setError(gameErrorMessage(e));return false;}finally{manualPending.current--;setBusy(manualPending.current>0);}},[]);
  useEffect(()=>{
   let cancelled=false;
@@ -109,6 +110,7 @@ export default function Game(){
   });
   return()=>{cancelled=true;poller.stop();};
  },[apply]);
+ const getSupplySnapshot=useCallback(()=>acceptedResponse.current?.snapshot?.player?.id===selectedCharacterRef.current?acceptedResponse.current.snapshot:null,[]);
  const selectCharacter=useCallback(async(characterId:string)=>{if(!characterId||characterId===selectedCharacterRef.current)return;setBusy(true);setError('');try{const select=async()=>{pollEtags.current.clear();selectedCharacterRef.current=characterId;setSelectedCharacter(characterId);lastRevision.current=-1;const response=await saveFetch(`/api/game?characterId=${encodeURIComponent(characterId)}`);await apply(await readGameResponse(response));};await select();}catch(e:any){setError(e.message||'连接失败，请稍后重试。');}finally{setBusy(false);}},[apply]);
  useEffect(()=>{
   if(!game?.state||!signedIn)return;
@@ -151,10 +153,10 @@ export default function Game(){
   <AccountControls game={game} busy={busy} send={send}/>
 </details>:null;
  if(!s||!d)return <main className="game-shell"><section className="panel"><h1>{loading?'正在读取存档…':'无法进入游戏'}</h1>{error&&<p role="alert">{error}</p>}<a href={signedIn?'/':'/login'}>{signedIn?'返回角色选择':'重新登录'}</a></section>{!loading&&signedIn&&error&&<UnstuckControl busy={busy} send={send}/>}</main>;
- const overlays=<>{signedIn&&<GroupLootPopup {...props}/>}{s&&signedIn&&!d.goldRaid?.active&&!d.groupLoot?.pending.length&&(!game.instance||game.instance.leaderId===s.id)&&<LootWindow settingsInMenu={interfaceStyle==='classic'} key={`${s.id}:${s.lastCombat?.id||'pending'}`} {...props}/>}
-{s&&d.ammoPrompt&&<AmmoRestockDialog key={`${s.id}:${d.ammoPrompt.memberId}:${d.ammoPrompt.visit}`} actorId={s.id} getSnapshot={getAmmoSnapshot} prompt={d.ammoPrompt} item={d.items[d.ammoPrompt.itemId]} busy={busy} send={send}/>}
+ const overlays=<>{signedIn&&<TownSupplyPlugin snapshot={acceptedResponse.current?.snapshot} busy={props.busy} send={send} getSnapshot={getSupplySnapshot}/>}{signedIn&&<GroupLootPopup {...props}/>}{s&&signedIn&&!d.goldRaid?.active&&!d.groupLoot?.pending.length&&(!game.instance||game.instance.leaderId===s.id)&&<LootWindow settingsInMenu={interfaceStyle==='classic'} key={`${s.id}:${s.lastCombat?.id||'pending'}`} {...props}/>}
 {error&&<div className="error toast" role="alert">{error}<button aria-label="关闭提示" onClick={()=>setError('')}>×</button></div>}</>;
  const toggleInterface=()=>{
+  playUiSound('switch');
   if(interfaceStyle==='classic'){setActiveTab(webTabForClassic(classicPanel));setInterfaceStyle('web');}
   else {setClassicPanel(activeTab==='world'?null:activeTab);setBattleOpen(false);setInterfaceStyle('classic');}
  };
@@ -174,8 +176,8 @@ export default function Game(){
   return null;
  };
  const mailNotice=signedIn?<MailNotice characterId={s.id} onOpen={()=>{setCharacterSection('邮箱');if(interfaceStyle==='classic')openClassic('character');else setActiveTab('character');}}/>:null;
- if(interfaceStyle==='classic')return <SocialProvider key={s.id} actorId={s.id} notificationsInPanel={!!classicPanel}><main className="classic-game-root" data-interface="classic">{mailNotice}<ExperienceNotifications key={s.id} state={s}/><LevelUpNotification key={`level-${s.id}`} state={s}/><ClassicGame {...props} canLead={!game.instance||game.instance.leaderId===s.id} panel={classicPanel} onPanelChange={openClassic} renderPanel={renderClassicPanel} onStyleChange={toggleInterface} modalBattleOpen={battleOpen} onObserve={()=>{setClassicPanel(null);setBattleOpen(true);}} activityLabel={labels[s.activity.type]||s.activity.type} overview={journeyOverview} status={status} utilities={<ZoneMusic location={d.location} dungeon={!!s.dungeon} active={signedIn} controls={false}/>}/>{battleOpen&&(s.combat||s.lastCombat)&&<Suspense fallback={<p role="status">正在加载界面…</p>}><Battle {...props} canLead={!game.instance||game.instance.leaderId===s.id} open={battleOpen} onOpenChange={setBattleOpen}/></Suspense>} {overlays}</main></SocialProvider>;
- return <SocialProvider key={s.id} actorId={s.id}><main className="game-shell journey-shell" data-interface="web">{mailNotice}
+ if(interfaceStyle==='classic')return <SocialProvider key={s.id} actorId={s.id} notificationsInPanel={!!classicPanel}><main className="classic-game-root" data-interface="classic"><GameUiSounds interfaceStyle={interfaceStyle} activeTab={activeTab} classicPanel={classicPanel}/>{mailNotice}<ExperienceNotifications key={s.id} state={s}/><LevelUpNotification key={`level-${s.id}`} state={s}/><ClassicGame {...props} canLead={!game.instance||game.instance.leaderId===s.id} panel={classicPanel} onPanelChange={openClassic} renderPanel={renderClassicPanel} onStyleChange={toggleInterface} modalBattleOpen={battleOpen} onObserve={()=>{setClassicPanel(null);setBattleOpen(true);}} activityLabel={labels[s.activity.type]||s.activity.type} overview={journeyOverview} status={status} utilities={<ZoneMusic location={d.location} dungeon={!!s.dungeon} active={signedIn} controls={false}/>}/>{battleOpen&&(s.combat||s.lastCombat)&&<Suspense fallback={<p role="status">正在加载界面…</p>}><Battle {...props} canLead={!game.instance||game.instance.leaderId===s.id} open={battleOpen} onOpenChange={setBattleOpen}/></Suspense>} {overlays}</main></SocialProvider>;
+ return <SocialProvider key={s.id} actorId={s.id}><main className="game-shell journey-shell" data-interface="web"><GameUiSounds interfaceStyle={interfaceStyle} activeTab={activeTab} classicPanel={classicPanel}/>{mailNotice}
  <ExperienceNotifications key={s.id} state={s}/><LevelUpNotification key={`level-${s.id}`} state={s}/>
  <div className="web-style-switch"><Button variant="outline" onClick={toggleInterface}>切换为经典 UI</Button></div>
 

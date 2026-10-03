@@ -5,7 +5,7 @@ import {npcIncome,buyNpcLuxury} from './npc-economy.js';
 import {equipmentUpgrade,equipNpcItem} from './npc-equipment.js';
 import {dungeonDefinitions} from './dungeon-registry.js';
 import {dungeonJournal} from './dungeon-journal.js';
-import {itemAvailableInPhase,CURRENT_CONTENT_PHASE} from './content-phase.js';
+import {itemAvailableInPhase,contentPhase} from './content-phase.js';
 import {rollClassicLoot,rollRaidLoot} from './raid-rewards.js';
 import {raidBossesFor} from './molten-core-content.js';
 import {npcBidValuation} from './gold-raid-npcs.js';
@@ -55,7 +55,7 @@ function levelingStep(p,ceiling,multiplier){
  note(p,`${level}级历练：击败${kills}个敌人${q?'并完成任务':''}，获得${Math.floor(xp*multiplier)}经验、${(money/10000).toFixed(2)}金。`);
 }
 const fiveMan=()=>dungeonJournal.filter(d=>d.playable&&dungeonDefinitions[d.id]?.recommendedLevel>=52&&dungeonDefinitions[d.id]?.recommendedLevel<=60);
-export function fiveManUpgrades(p){return fiveMan().flatMap(d=>d.bosses.flatMap(b=>b.loot.filter(l=>!l.shared&&itemAvailableInPhase(l.id)&&items[l.id]?.InventoryType&&equipmentUpgrade(p.unit,items[l.id]).need).map(l=>({dungeon:d,boss:b,id:l.id}))));}
+export function fiveManUpgrades(p){return fiveMan().flatMap(d=>d.bosses.flatMap(b=>b.loot.filter(l=>!l.shared&&itemAvailableInPhase(l.id,contentPhase(p.unit))&&items[l.id]?.InventoryType&&equipmentUpgrade(p.unit,items[l.id]).need).map(l=>({dungeon:d,boss:b,id:l.id}))));}
 export function recordNpcFiveMan(p,runKey,wall){
  const e=p.endgame??={};const day=Math.floor(wall/86400000),week=raidWeek(wall);
  if(e.day!==day){e.day=day;e.daily=0;}
@@ -75,7 +75,7 @@ export function recordNpcRaidAttendance(p,raidId,wall,bossId,source='player'){
 export function npcRaidEligible(p,raidId,wall){return p.unit.level===60&&p.raidLockouts?.[raidId]?.week!==raidWeek(wall);}
 function simulateFiveMan(p,wall){
  const e=p.endgame??={};
- const gearKey=JSON.stringify([CURRENT_CONTENT_PHASE,p.unit.equipment]);
+ const gearKey=JSON.stringify([contentPhase(p.unit),p.unit.equipment]);
  if(e.gearKey!==gearKey){e.gearKey=gearKey;e.targets=[...new Set(fiveManUpgrades(p).map(u=>u.dungeon.id))];e.graduated=!e.targets.length;}
  if(e.graduated)return;
  const day=Math.floor(wall/86400000),week=raidWeek(wall);
@@ -90,7 +90,7 @@ function simulateFiveMan(p,wall){
   const creature=creatures[boss.id];
   for(const drop of rollClassicLoot(creatureLoot[creature?.LootId]??[],referenceLoot,()=>rng(p),r=>r.ChanceOrQuestChance>=0&&!r.condition_id)){
    // A five-player group competes for needs; vendor proceeds are split five ways.
-   if(itemAvailableInPhase(drop.itemId)&&equipmentUpgrade(p.unit,items[drop.itemId]??{}).need&&rng(p)<.5){if(award(p,drop.itemId,'dungeon'))won++;}
+   if(itemAvailableInPhase(drop.itemId,contentPhase(p.unit))&&equipmentUpgrade(p.unit,items[drop.itemId]??{}).need&&rng(p)<.5){if(award(p,drop.itemId,'dungeon'))won++;}
    else p.wallet+=Math.floor((items[drop.itemId]?.SellPrice??0)*drop.count/5);
   }
   p.wallet+=Math.floor(((creature?.MinLootGold??0)+(creature?.MaxLootGold??0))/10);
@@ -122,7 +122,7 @@ export function simulateNpcRaid(profiles,raidId,wall){
    const loot=rollRaidLoot(s,boss.id);random.rngState=s.rngState;
    for(const p of group)recordNpcRaidAttendance(p,raidId,wall,boss.id,'simulation');
    for(const drop of loot){
-    const item=items[drop.itemId];if(!item||!itemAvailableInPhase(drop.itemId)||rng(random)>=group.length/40)continue;
+    const item=items[drop.itemId];if(!item||!itemAvailableInPhase(drop.itemId,contentPhase(random.unit))||rng(random)>=group.length/40)continue;
     const bids=group.map(p=>({p,limit:npcBidValuation({...p.unit,money:p.wallet,goldProfile:{personality:p.raidProfile.personality,initialWallet:p.wallet}},item,item.Quality>=4,s,{variation:1}).limit})).filter(b=>b.limit>=5*10000).sort((a,b)=>b.limit-a.limit);
     if(!bids.length)continue;
     const {p,limit}=bids[0],price=Math.min(limit,Math.max(5*10000,(bids[1]?.limit??Math.floor(limit*.5))+10000));

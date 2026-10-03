@@ -1,3 +1,6 @@
+import weaponAssets from '../../packages/game-data/data/epic-weapons-assets.json' with {type:'json'};
+import epicWeapons from '../../packages/game-data/data/epic-weapons-reference.json' with {type:'json'};
+import {weaponQuestOverrides,weaponQuestLinks} from '../../packages/game-data/epic-weapons.js';
 import {collectibleMounts} from '../../packages/game-data/mounts.js';
 import {groupRows} from '../../packages/sim-core/src/collections.js';
 import spellCoefficients from '../../packages/game-data/data/classic-spell-coefficients.json' with {type:'json'};
@@ -68,6 +71,8 @@ export function table(name) {
     for(const packed of world.tableData[name]?JSON.parse(world.tableData[name]):[]){const row=decode(world,packed);if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}}
     if(name==='npc_vendor')for(const c of table('creature_template'))if(c.VendorTemplateId)for(const r of table('npc_vendor_template').filter(r=>r.entry===c.VendorTemplateId)){const row={...r,entry:c.Entry};if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}}
     for(const row of raidCombatReference.tables[name]||[])if(!seen.has(key(row))){rows.push(row);seen.add(key(row));}
+    for(const row of epicWeapons.tables[name]||[])if(!seen.has(key(row))){rows.push({...row});seen.add(key(row));}
+    if(name==='quest_template')for(const row of rows)if(weaponQuestOverrides[row.entry])Object.assign(row,weaponQuestOverrides[row.entry]);
     cache.set(name,rows);
   }
   return cache.get(name);
@@ -112,6 +117,7 @@ export function localize(kind,id){
 }
 const questNpcNames={4073:'伐木机 XT:4',4074:'伐木机 XT:9',9623:'机器人 A-Me 01',15221:'弗兰卡尔的踪迹',15222:'鲁特加的踪迹'};
 export function nameOf(kind,id){
+ if(kind==='items'&&weaponAssets.items[id])return weaponAssets.items[id].nameZhCN;
  const localized=(kind==='npcs'?questNpcNames[id]:undefined)||localize(kind,id)?.nameZhCN;
  if(localized)return localized;
  if(kind==='items'){
@@ -121,7 +127,7 @@ export function nameOf(kind,id){
  return(kind==='spells'?dungeonSpellAssets.spells[id]?.nameZhCN||classReference.translations?.spellNamesByEnglish?.[spells[id]?.SpellName]||talentsBySpell[id]?.nameZhCN||spells[id]?.SpellName:kind==='quests'?quests[id]?.Title:creatures[id]?.Name)||String(id);
 }
 export const quests=index('quest_template','entry');
-export const questLinks={...world.questLinks,...source.links.quests,...stockades.questLinks};
+export const questLinks={...world.questLinks,...source.links.quests,...stockades.questLinks,...epicWeapons.questLinks,...weaponQuestLinks};
 export const xpTable=index('player_xp_for_level','lvl');
 export const questXp={...helpers.questXpByPlayerLevel,...stockades.questXpByPlayerLevel,...world.questXpByPlayerLevel};
 const talentNameCorrections={'4:Camouflage':'伪装','9:Devastation':'破坏'};
@@ -129,7 +135,7 @@ export const classTalentTrees=classReference.classTalentTrees.map(tree=>({...tre
 export const talentTrees=classTalentTrees.filter(tree=>tree.classId===8);
 export const talents=Object.fromEntries(classTalentTrees.flatMap(tree=>tree.talents.map(t=>[t.id,{...t,tree:tree.id,classId:tree.classId,rankEffects:t.rankEffects.map(effect=>({...effect,descriptionZhCN:talentDescriptionsZhCN.descriptions[effect.spellId]}))}])));
 const talentsBySpell=Object.fromEntries(Object.values(talents).flatMap(t=>t.ranks.map(id=>[id,t])));
-export const icon=(kind,id)=>kind==='items'&&items[id]?.mountId?(collectibleMounts.find(m=>m.id===Number(id))?.icon||'/icons/assets/ability_mount_ridinghorse.png'):kind==='items'&&moltenCoreLoot.assets[id]?.icon?'/icons/assets/'+moltenCoreLoot.assets[id].icon+'.png':kind==='items'&&items[id]?.appearanceItemId?icon('items',items[id].appearanceItemId):icons[kind]?.[id]?'/icons/'+icons[kind][id]:classIcons[kind]?.[id]?'/icons/'+classIcons[kind][id]:kind==='items'&&stockadesAssets.items[id]?.icon?'/icons/'+stockadesAssets.items[id].icon:kind==='items'&&journeyAssets.items[id]?.icon?'/icons/'+journeyAssets.items[id].icon:kind==='items'&&worldItemAssets.items[id]?.icon?'/icons/'+worldItemAssets.items[id].icon:kind==='spells'&&dungeonSpellAssets.spells[id]?.icon?'/icons/'+dungeonSpellAssets.spells[id].icon:kind==='spells'?((talentsBySpell[id]?icon('talents',talentsBySpell[id].id):null)||(spellIcons.icons[spells[id]?.SpellIconID]?'/icons/'+spellIcons.icons[spells[id].SpellIconID]:null)):null;
+export const icon=(kind,id)=>kind==='items'&&weaponAssets.items[id]?'/icons/'+weaponAssets.items[id].icon:kind==='items'&&items[id]?.mountId?(collectibleMounts.find(m=>m.id===Number(id))?.icon||'/icons/assets/ability_mount_ridinghorse.png'):kind==='items'&&moltenCoreLoot.assets[id]?.icon?'/icons/assets/'+moltenCoreLoot.assets[id].icon+'.png':kind==='items'&&items[id]?.appearanceItemId?icon('items',items[id].appearanceItemId):icons[kind]?.[id]?'/icons/'+icons[kind][id]:classIcons[kind]?.[id]?'/icons/'+classIcons[kind][id]:kind==='items'&&stockadesAssets.items[id]?.icon?'/icons/'+stockadesAssets.items[id].icon:kind==='items'&&journeyAssets.items[id]?.icon?'/icons/'+journeyAssets.items[id].icon:kind==='items'&&worldItemAssets.items[id]?.icon?'/icons/'+worldItemAssets.items[id].icon:kind==='spells'&&dungeonSpellAssets.spells[id]?.icon?'/icons/'+dungeonSpellAssets.spells[id].icon:kind==='spells'?((talentsBySpell[id]?icon('talents',talentsBySpell[id].id):null)||(spellIcons.icons[spells[id]?.SpellIconID]?'/icons/'+spellIcons.icons[spells[id].SpellIconID]:null)):null;
 export const provenance={database:source.meta,core:helpers.core,talents:talentSource.source,classes:classReference.meta};
 export const spellChain=index('spell_chain','spell_id');
 export const abilities=classAbilities[8];

@@ -3,7 +3,9 @@ import {combatRole} from './combat-roles.js';
 import {combatMembers} from './combat-members.js';
 import {raidBossesFor,raidNodesFor,raidRoutePlan} from './molten-core-content.js';
 
+import {worldBossById,worldBossRoom} from './world-boss-content.js';
 export function requiredRaidRoom(id){
+ if(worldBossById[id])return worldBossRoom(id);
  const area=bossCombatArea(id);
  if(!area)throw new Error(`团本首领 ${id} 缺少编译后的专属房间。`);
  return area;

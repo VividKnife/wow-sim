@@ -55,7 +55,7 @@ for(const profession of ['alchemy','blacksmithing','leatherworking','tailoring',
   while(s.professions[profession].skill<300){
    const p=s.professions[profession];
    if(p.skill===p.cap)s=action(s,{type:'upgradeProfession',id:profession});
-   const r=recipes.filter(r=>r.profession===profession&&r.skill<=p.skill&&r.gray>p.skill&&!r.specialization&&!r.cooldown).sort((a,b)=>b.yellow-a.yellow)[0];
+   const r=recipes.filter(r=>r.profession===profession&&recipeAvailability(s,r).known&&r.skill<=p.skill&&r.gray>p.skill&&!r.specialization&&!r.cooldown).sort((a,b)=>b.yellow-a.yellow)[0];
    assert.ok(r,`${profession} at ${p.skill}`);s.bag=[];
    for(const m of r.materials)addItem(s,m.id,m.count);for(const id of r.tools)if(!s.bag.some(i=>i.id===id))addItem(s,id);
    const before=s.professions[profession].skill,quote=recipeAvailability(s,r);

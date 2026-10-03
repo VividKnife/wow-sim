@@ -91,6 +91,7 @@ port.on('message', ({id, operation: op}: WorkerRequest) => {
         presence(resident, op.accountId, op.actorId);
       }
       switch (op.kind) {
+        case 'contentPhase': runtime.setContentPhase(op.phase);result=true;break;
         case 'advance':
           if (resident.realtime) throw new Error('Explicit advancement requires offline mode');
           result = runtime.advance(op.until, op.maxTicks); break;

@@ -14,6 +14,8 @@ function worldPossible(rows,group=0,depth=0){return depth>16?[]:[...new Set((row
 // References 34002/34003 are world-wide blue/green dragon loot, not signature boss loot.
 raidLoot.onyxia=worldPossible((creatureLoot[creatures[10184]?.LootId]||[]).filter(r=>![-34002,-34003].includes(r.mincountOrRef)));
 
+for(const [id,entry] of [['azuregos',6109],['kazzak',12397]])raidLoot[id]=worldPossible((creatureLoot[creatures[entry]?.LootId]||[]).filter(r=>![-34002,-34003].includes(r.mincountOrRef)));
+
 // In this pinned SQL schema a reference groupid selects a group INSIDE the
 // referenced template. References sharing group 1 are independent rolls.
 export function rollClassicLoot(rows,references,random,eligible=()=>true,group=0,depth=0){
@@ -38,6 +40,11 @@ export function rollClassicLoot(rows,references,random,eligible=()=>true,group=0
  return result;
 }
 export function rollRaidLoot(s,encounterId){
+ if(['azuregos','kazzak'].includes(encounterId)){
+  if((s.contentPhase??1)<2)throw new Error('世界首领将在 P2 开放');
+  const entry=encounterId==='azuregos'?6109:12397;
+  return rollClassicLoot(creatureLoot[creatures[entry].LootId],referenceLoot,()=>rng(s),row=>(!row.condition_id||[3,4].includes(row.condition_id)||meetsCondition(s,row.condition_id))&&(row.ChanceOrQuestChance>=0||needsQuestItem(s,row.item)));
+ }
  if(encounterId==='onyxia'||encounterId==='onyxia-warders')return (encounterId==='onyxia'?[10184]:[12129,12129]).flatMap(entry=>rollClassicLoot(creatureLoot[creatures[entry]?.LootId],referenceLoot,()=>rng(s),row=>(!row.condition_id||[3,4].includes(row.condition_id)||meetsCondition(s,row.condition_id))&&(row.ChanceOrQuestChance>=0||needsQuestItem(s,row.item))));
  const boss=source.bossSources[encounterId],node=moltenCoreRoute.find(n=>n.id===encounterId);
  const roots=boss?[boss]:(node?.types||[]).map(type=>({table:'creature_loot_template',entry:source.creatureLootIds[moltenCoreTrash[type].entry]}));

@@ -46,6 +46,8 @@ try {
  const portraitPaths=new Map(portraits.assets.map(asset=>[asset.id,'/'+asset.path]));
  data.npcPortraits=Object.fromEntries(Object.entries(portraits.entries).map(([id,entry])=>[id,portraitPaths.get(entry.assetId)||null]));
  const raid=JSON.parse(await fs.readFile(path.join(root,'packages/game-data/data/molten-core-loot.json'),'utf8'));
+ const weaponReference=JSON.parse(await fs.readFile(path.join(root,'packages/game-data/data/epic-weapons-reference.json'),'utf8'));
+ for(const row of weaponReference.tables.creature_loot_template.filter(r=>r.item===19017))if(!raid.tables.creature_loot_template.some(r=>r.entry===row.entry&&r.item===row.item))raid.tables.creature_loot_template.push(row);
  data.raidLootSource={bossSources:raid.bossSources,creatureLootIds:raid.creatureLootIds,tables:Object.fromEntries(Object.entries(raid.tables).filter(([key])=>key.endsWith('_loot_template')))};
  data.smiteObjects=JSON.parse(await fs.readFile(path.join(root,'packages/game-data/data/deadmines-reference.json'),'utf8')).scriptObjects;
  const escort=JSON.parse(await fs.readFile(path.join(root,'packages/game-data/data/escort-reference.json'),'utf8'));
@@ -58,7 +60,7 @@ try {
  const packed=packContent(data);packed.nodes=packed.nodes.map(row=>JSON.stringify(row));
  const bytes=JSON.stringify(packed)+'\n';
  const versionHash=createHash('sha256').update(bytes);
- const versionInputs=['packages/game-data/mounts.js','scripts/compile-runtime-content.mjs','scripts/content-source/pack.mjs','packages/sim-core/src/packed-content.js',
+ const versionInputs=['packages/game-data/epic-weapons.js','packages/game-data/world-quest-content.js','packages/game-data/mounts.js','scripts/compile-runtime-content.mjs','scripts/content-source/pack.mjs','packages/sim-core/src/packed-content.js',
   ...(await fs.readdir(path.join(root,'packages/game-domain/src/rules'))).filter(name=>name.endsWith('.js')).sort().map(name=>'packages/game-domain/src/rules/'+name)];
  for(const name of versionInputs)versionHash.update(name).update(await fs.readFile(path.join(root,name)));
  const versionFile=path.join(root,'packages/game-data/runtime/version.json');

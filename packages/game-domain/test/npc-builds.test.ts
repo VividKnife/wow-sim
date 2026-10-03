@@ -1,3 +1,4 @@
+import {provisionAmmo} from '../src/rules/ammunition.js';
 import {progressPublicNpc} from '../src/rules/npc-progression.js';
 import {xpTable} from '../src/rules/catalog.js';
 import test from 'node:test';
@@ -67,7 +68,7 @@ test('personality changes decisions and spending, while beginners retain functio
 });
 function combat(key:string,skill='expert'){
  const {s,c}=member(key,60,skill);s.rules=[];s.hp=stats(s).maxHp;s.mana=stats(s).maxMana;c.strategyPolicy.waitForTank=false;
- c.ammunition={2512:1000,2516:1000};
+ provisionAmmo(c,{2512:1000,2516:1000});
  startCombat(s,[636],true);const e=s.combat.enemies[0];
  Object.assign(e,{level:63,hp:1e8,maxHp:1e8,nextAttack:1e9,nextSpell:1e9,rootUntil:1e9,target:s.id,threat:{[s.id]:1e9}});
  s.position=27;s.positionY=0;s.nextSwing=1e9;c.position=key.endsWith('melee')?33:5;c.positionY=0;

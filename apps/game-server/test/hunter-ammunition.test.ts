@@ -13,7 +13,7 @@ import {SimulationClient} from '../src/simulation-client.ts';
 import {ResidentGameService} from '../src/resident-game-service.ts';
 import {createGameServer} from '../src/server.ts';
 import {accounts,issueSession,appOrigin} from './session-fixture.ts';
-import {restockHunterAmmo} from '../../web/lib/ammo-restock.js';
+import {restockTownSupplies,townSupplyRunKey} from '../../web/lib/town-supplies.js';
 import type {Rules} from '../../../packages/game-domain/src/model.ts';
 
 test('the frontend ammo flow reaches authenticated HTTP using ordinary shop requests',async t=>{
@@ -22,8 +22,8 @@ test('the frontend ammo flow reaches authenticated HTTP using ordinary shop requ
  const actorId=account.account.primaryCharacterId;
  await store.transaction(async tx=>{
   const character=await tx.get<any>('characters',actorId);
-  character.rules.location='northshire';character.rules.ammunition={};
-  character.rules.ammoRestockPrompt={memberId:actorId,trigger:'town',visit:0};
+  character.rules.location='northshire';
+  for(const item of await tx.list<any>('items',{ownerCharacterId:actorId}))if([2512,2516].includes(item.data.id))await tx.delete('items',item.id);
   await tx.put('characters',character);
   await tx.put('wallets',{id:actorId,characterId:actorId,accountId:'account-a',balance:1000});
  });
@@ -47,12 +47,10 @@ test('the frontend ammo flow reaches authenticated HTTP using ordinary shop requ
   assert.equal(response.status,200,JSON.stringify(result));
   current=result;actions.push(action);return true;
  };
- await restockHunterAmmo({getSnapshot:()=>current.snapshot,send,actorId,memberId:actorId,
-  visit:current.snapshot.view.ammoPrompt.visit,target:400});
- await send({type:'ammoSettings',memberId:actorId,enabled:true,target:400});
- assert.deepEqual(actions.map(a=>a.type),['buy','loadAmmo','buy','loadAmmo','ammoSettings']);
+ await restockTownSupplies({getSnapshot:()=>current.snapshot,send,runKey:townSupplyRunKey(current.snapshot)});
+ assert.deepEqual(actions.map(a=>a.type),['buy','selectAmmo','buy','selectAmmo']);
  assert.equal(current.snapshot.player.money,980);
- assert.equal(current.snapshot.view.ammo[0].count,400);
- assert.equal(current.snapshot.view.ammoPrompt,null);
- assert.equal(current.snapshot.player.ammoPolicy.enabled,true);
+ assert.equal(current.snapshot.view.ammo.count,400);
+ assert.equal(current.snapshot.player.bag.filter((item:any)=>item.id===2512).reduce((n:number,item:any)=>n+item.count,0),400);
+ assert.equal(current.snapshot.player.townSupplies[0].enabled,true);
 });

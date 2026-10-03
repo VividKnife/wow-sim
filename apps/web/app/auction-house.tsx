@@ -7,7 +7,7 @@ import {useContentPack} from '../lib/use-content-pack';
 import {auctionContentError} from '../lib/auction-content.js';
 import {marketAvailability} from '../../../packages/sim-core/src/market-stock.js';
 import type {MarketItem,AuctionListing,MarketRecord,InventoryItem} from './economy-types';
-import phaseReference from '../../../packages/game-data/data/market-content-phases.json';
+
 import './auction-house.css';
 
 const categories=[['all','所有物品'],['weapons','武器'],['armor','护甲'],['containers','容器'],['consumables','消耗品'],['materials','商品'],['projectiles','弹药'],['quivers','箭袋'],['recipes','配方'],['reagents','施法材料'],['enchants','附魔羊皮纸'],['misc','杂项']];
@@ -38,7 +38,7 @@ export function AuctionContent({state:s,data:d,busy,send}:GameProps){
  const marketClock=clockBase+(s.marketClock===undefined?0:elapsed);
  const locked=busy||!!s.combat||!!s.dungeon||!!s.escort||s.hp<=0||!['idle','hunt'].includes(s.activity.type);
  const valid=Number.isInteger(count)&&count>=1&&count<=100;
- const catalog=useMemo(()=>(d.market as MarketItem[]).filter(r=>r.phase<=phaseReference.currentPhase),[d.market]);
+ const catalog=useMemo(()=>(d.market as MarketItem[]).filter(r=>r.phase<=(s.contentPhase??1)),[d.market,s.contentPhase]);
  const children=useMemo(()=>Object.fromEntries(categories.map(([id])=>[id,[...new Set(catalog.filter(r=>r.category===id).map(r=>r.subcategory))].sort((a,b)=>id==='armor'?armorOrder.indexOf(a)-armorOrder.indexOf(b):a.localeCompare(b,'zh-CN'))])),[catalog]);
  const childSlots=(id:string,child:string)=>[...new Set(catalog.filter(r=>r.category===id&&r.subcategory===child&&r.slot).map(r=>r.slot))].sort((a,b)=>slotOrder.indexOf(a)-slotOrder.indexOf(b));
  function chooseCategory(id:string,child='',part=''){setCategory(id);setSubcategory(child);setSlot(part);setPage(0);setSelected(null);setNotice('');}
@@ -55,7 +55,7 @@ export function AuctionContent({state:s,data:d,busy,send}:GameProps){
  async function buy(){if(reason||!chosen)return;const ok=await send({type:'auctionBuy',id:chosen.id,count});if(ok)setNotice(`已购入 ${d.items[chosen.id].name} ×${count}，花费 ${money(total)}`);}
  const sortButton=(key:string,label:string)=><button type="button" onClick={()=>changeSort(key)}>{label}{sort===key?(descending?' ▾':' ▴'):''}</button>;
  return <section className="ah-frame" aria-label="拍卖行">
-  <header className="ah-title"><img src="/interface/classic/gossipframe/auctioneergossipicon.png" alt=""/><h2>拍卖行</h2><span>P{phaseReference.currentPhase} · 艾泽拉斯联合拍卖行</span></header>
+  <header className="ah-title"><img src="/interface/classic/gossipframe/auctioneergossipicon.png" alt=""/><h2>拍卖行</h2><span>P{(s.contentPhase??1)} · 艾泽拉斯联合拍卖行</span></header>
   <div className="ah-content">
   {tab==='浏览'&&<>
    <form className="ah-search" onSubmit={e=>{e.preventDefault();setQuery(search);setPage(0);setSelected(null);}}>
@@ -78,7 +78,7 @@ export function AuctionContent({state:s,data:d,busy,send}:GameProps){
      </div>;
     })}</div><label className="ah-level-only"><input type="checkbox" checked={levelOnly} onChange={e=>{setLevelOnly(e.target.checked);setPage(0);setSelected(null);}}/>等级符合</label><button type="button" className="ah-button ah-reset" onClick={reset}>重置筛选</button></aside>
     <div className="ah-results">
-     <div className="ah-breadcrumb">{[categories.find(([id])=>id===category)?.[1],subcategory,slot].filter(Boolean).join(' › ')}<span>P{phaseReference.currentPhase}</span></div>
+     <div className="ah-breadcrumb">{[categories.find(([id])=>id===category)?.[1],subcategory,slot].filter(Boolean).join(' › ')}<span>P{(s.contentPhase??1)}</span></div>
      <div className="ah-table-scroll"><table className="ah-table"><thead><tr><th aria-sort={sort==='name'?(descending?'descending':'ascending'):'none'}>{sortButton('name','物品名称')}</th><th aria-sort={sort==='level'?(descending?'descending':'ascending'):'none'}>{sortButton('level','等级')}</th><th>库存</th><th>卖家</th><th aria-sort={sort==='price'?(descending?'descending':'ascending'):'none'}>{sortButton('price','一口价 / 件')}<small>收购价 / 件</small></th></tr></thead><tbody>
       {visible.map(r=>{const availability=marketAvailability(s.marketStock,marketClock,r);return <tr key={r.id} className={`${selected===r.id?'is-selected':''} ${availability.available===0?'is-sold-out':''}`} onClick={()=>setSelected(r.id)}>
        <td><ItemDisplay inspectOnClick trigger={<button type="button" className="ah-item-button" aria-label={`选择 ${d.items[r.id].name}`} aria-pressed={selected===r.id} onClick={()=>setSelected(r.id)}/>} item={d.items[r.id]} focusable={false} size={32} details={<>售价 {money(r.buy)} / 件<br/>收购 {money(r.sell)} / 件（另扣 5%）</>}/></td>
@@ -96,6 +96,6 @@ export function AuctionContent({state:s,data:d,busy,send}:GameProps){
   <div className="ah-status"><span role="status" aria-live="polite">{notice||'一口价即时交货 · 收购成交扣除 5% 手续费'}</span><span className="ah-wallet">余额 <AuctionMoney value={s.money}/></span></div>
   </div>
   <nav className="ah-tabs" aria-label="拍卖行页面">{tabs.map(name=><button type="button" key={name} aria-pressed={tab===name} className={tab===name?'is-active':''} onClick={()=>{setTab(name);setNotice('');}}>{name}</button>)}</nav>
-  <details className="ah-help"><summary>交易规则</summary><p>当前开放 P{phaseReference.currentPhase} 商品，后续阶段成品、配方和专属材料随阶段开放。这是采用经典拍卖行界面的单人模拟市场：按参考价一口价购买或上架收购，无玩家竞标和邮寄等待。收购价为税前单价，每组扣除 5% 后取整到账；锁定、绑定、任务物品不可上架。普通材料、商人消耗品与施法材料每 5 分钟补货，普通成品每 15 分钟补货，较贵材料、装备、配方与附魔每 30 分钟补货，10 金以上或史诗货物每 60 分钟补货。每批补至库存上限，不累计囤货。附魔羊皮纸是本作便捷功能。历史市场价随服务器浮动，本作价格为参考估算。</p></details>
+  <details className="ah-help"><summary>交易规则</summary><p>当前开放 P{(s.contentPhase??1)} 商品，后续阶段成品、配方和专属材料随阶段开放。这是采用经典拍卖行界面的单人模拟市场：按参考价一口价购买或上架收购，无玩家竞标和邮寄等待。收购价为税前单价，每组扣除 5% 后取整到账；锁定、绑定、任务物品不可上架。普通材料、商人消耗品与施法材料每 5 分钟补货，普通成品每 15 分钟补货，较贵材料、装备、配方与附魔每 30 分钟补货，10 金以上或史诗货物每 60 分钟补货。每批补至库存上限，不累计囤货。附魔羊皮纸是本作便捷功能。历史市场价随服务器浮动，本作价格为参考估算。</p></details>
  </section>;
 }

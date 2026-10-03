@@ -1,3 +1,5 @@
+import {bagSpaceFor,fitsBags} from './bag-storage.js';
+export {bagCapacity} from './bag-storage.js';
 import {nextItemIdentity} from './item-identity.js';
 import {mightSetBonuses} from './might-set.js';
 import {scaledXp,activeServerBuffs} from './experience.js';
@@ -192,20 +194,20 @@ function calculateStats(c){
  result.armor=armorWithAuras(c,(result.armor+gearArmor*(1+(mods.itemArmorPct||0))*(formArmor-1))*(1+(mods.armorPct||0)),c.time||0);
  return result;
 }
-export function newCharacter(name,classId=8,level=1,raceId=1,gender='male'){const def=classDefinitions.find(c=>c.id===classId),learned=(classAbilities[classId]||[]).filter(a=>a.startingSpell&&(!a.startingRaces||a.startingRaces.includes(raceId))).map(a=>a.spellId);return{id:'player',name,classId,raceId,gender,pvpProfile:null,strategyProfiles:[],power:def?.power||'mana',level,xp:0,equipment:{},talents:{},talentResetCount:0,learned:[...new Set(learned)],cooldowns:{},buffs:{},hp:0,mana:0,rage:0,energy:100,time:0,lastManaUse:-5000,...(classId===3?{ammunition:{},ammoPolicy:{enabled:false,target:400},stableCapacity:0,stablePets:[null,null]}:{})};}
+export function newCharacter(name,classId=8,level=1,raceId=1,gender='male'){const def=classDefinitions.find(c=>c.id===classId),learned=(classAbilities[classId]||[]).filter(a=>a.startingSpell&&(!a.startingRaces||a.startingRaces.includes(raceId))).map(a=>a.spellId);return{id:'player',name,classId,raceId,gender,pvpProfile:null,strategyProfiles:[],power:def?.power||'mana',level,xp:0,equipment:{},talents:{},talentResetCount:0,learned:[...new Set(learned)],cooldowns:{},buffs:{},hp:0,mana:0,rage:0,energy:100,time:0,lastManaUse:-5000,...(classId===3?{stableCapacity:0,stablePets:[null,null]}:{})};}
 export function makeItem(s,id,count=1){const i=items[id];if(!i)throw new Error('物品数据缺失：'+id);return{uid:nextItemIdentity(s),id,count,durability:i.MaxDurability,bound:!!(i.bonding===1||i.bonding===4)};}
 export function equipStarter(s){
  for(const row of classStartingItems[`${s.raceId||1}:${s.classId}`]||[]){
   const i=items[row.itemId],item=makeItem(s,row.itemId,row.count||1);
-  if(i.class===6){s.ammunition??={};s.ammunition[row.itemId]=(s.ammunition[row.itemId]||0)+(row.count||1);}
+  if(i.class===6){s.bag.push(item);s.selectedAmmoId=row.itemId;}
   else if(i.ContainerSlots)s.bags.push(item);
   else if(i.InventoryType&&[2,4].includes(i.class))s.equipment[slotOf(i)]=item;
   else s.bag.push(item);
  }
+ s.townSupplies=s.classId===3?[{key:items[s.equipment[18]?.id]?.ammo_type===3?'bullets':'arrows',enabled:true,target:400}]:[];
  const st=stats(s);s.hp=st.maxHp;s.mana=st.maxMana;s.rage=0;s.energy=100;
 }
 export const countItem=(s,id)=>s.bag.filter(i=>i.id===id).reduce((n,i)=>n+i.count,0);
-export const bagCapacity=s=>16+s.bags.reduce((n,i)=>n+(items[i.id]?.ContainerSlots||0),0);
 export function equipmentBlockedReason(c,item,requestedSlot,partyState=c){
  const data=items[item?.id];
  if(!c||!item||!canEquip(c,data)||!data.InventoryType)return '当前角色无法装备：职业、等级或熟练度不符。';
@@ -222,7 +224,7 @@ export function equipFromBag(s,uid,target,requestedSlot){
  const blocked=equipmentBlockedReason(c,item,requestedSlot,s);if(blocked)throw new Error(blocked);
  const slot=requestedSlot??slotOf(data);
  const displaced=[c.equipment[slot],...(data.InventoryType===17?[c.equipment[17]]:[])].filter(Boolean),bag=s.bag.filter(i=>i.uid!==uid);
- bag.push(...displaced.filter(i=>!i.issued));if(bag.length>bagCapacity(s))throw new Error('背包需要空间存放换下的装备。');
+ bag.push(...displaced.filter(i=>!i.issued));if(!fitsBags(s,bag))throw new Error('背包需要空间存放换下的装备。');
  const bound=item.bound||data.bonding===2;
  c.equipment[slot]={...item,bound};if(bound)c.equipment[slot].ownerId=c.id;else delete c.equipment[slot].ownerId;
  if(data.InventoryType===17)delete c.equipment[17];s.bag=bag;
@@ -230,7 +232,7 @@ export function equipFromBag(s,uid,target,requestedSlot){
 }
 export function takeItem(s,id,count){if(countItem(s,id)<count)throw new Error('缺少 '+nameOf('items',id));for(const item of [...s.bag]){if(item.id!==id)continue;const used=Math.min(item.count,count);item.count-=used;count-=used;if(!item.count)s.bag.splice(s.bag.indexOf(item),1);if(!count)break;}}
 export function addItem(s,id,count=1,pending=true){const data=items[id];if(!data)return false;if(data.maxcount>0)count=Math.min(count,Math.max(0,data.maxcount-countItem(s,id)-Object.values(s.equipment).filter(i=>i.id===id).length));const max=Math.max(1,data.stackable);for(const item of s.bag.filter(i=>i.id===id&&i.count<max)){const n=Math.min(count,max-item.count);item.count+=n;count-=n;}
- while(count>0&&s.bag.length<bagCapacity(s)){const n=Math.min(max,count);s.bag.push(makeItem(s,id,n));count-=n;}
+ while(count>0&&bagSpaceFor(s,id)>0){const n=Math.min(max,count);s.bag.push(makeItem(s,id,n));count-=n;}
  if(count&&pending)s.pending.push(makeItem(s,id,count));return count===0;
 }
 export function gainXp(s,c,amount){amount=scaledXp(c,amount);const leader=s.sharedParty?[s,...s.party].find(a=>a.id===s.sharedParty.leaderId):s;const cap=c.npcPlayer?Math.max(c.level,Math.min(LEVEL_CAP,(leader?.level??s.level)+3)):LEVEL_CAP;if(c.level>=LEVEL_CAP)return;if(!Number.isFinite(amount)||amount<0)throw new Error('经验值无效');const wasPartyUnlocked=partyUnlocked(s);c.xp+=amount;if(c.totals)c.totals.xp+=amount;if(c===s&&amount>0)log(s,`获得 ${amount} 点经验`,'xp',{amount});while(c.level<cap&&c.xp>=xpTable[c.level].xp_for_next_level){c.xp-=xpTable[c.level].xp_for_next_level;c.level++;const st=stats(c);c.hp=st.maxHp;c.mana=st.maxMana;log(s,`${c.name} 升到了 ${c.level} 级！`,'level');}if(c.level===LEVEL_CAP)c.xp=0;else if(c.npcPlayer&&c.level>=cap)c.xp=Math.min(c.xp,xpTable[c.level].xp_for_next_level-1);if(!wasPartyUnlocked&&partyUnlocked(s)&&s.growthPolicy!=='companion')log(s,'地下城查找器已开放！可邀请公共 NPC 玩家并组建副本小队。','party');}

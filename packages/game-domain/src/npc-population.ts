@@ -1,3 +1,4 @@
+import {readContentPhase} from './content-release.ts';
 import type {Transaction} from '../../persistence/src/store.ts';
 import {loadNpcResident,persistNpcResident,type NpcCharacter} from './npc-characters.ts';
 import {requireThat,type Rules} from './model.ts';
@@ -14,6 +15,7 @@ export const PUBLIC_NPC_LIMIT=768;
 export async function updateNpcPopulation(tx:Transaction,now:number,demand?:{level:number;minimumLevel?:number;raidId?:string}){
  if(demand)requireThat(Number.isInteger(demand.level)&&demand.level>=10&&demand.level<=60&&(demand.minimumLevel===undefined||Number.isInteger(demand.minimumLevel)&&demand.minimumLevel>=10&&demand.minimumLevel<=demand.level),'NPC_LEVEL','公共 NPC 招募需要 10—60 级且满足副本准入等级');
  let meta=await tx.get('npc_population',key)??{id:key,cursor:0,sequence:0,wall:now,activeUntil:now};
+ const phase=await readContentPhase(tx);
  const records=await tx.list<NpcCharacter>('npc_characters');
  meta.cursor=Math.max(meta.cursor,...records.map(r=>r.profile.index+1));
  const busy=new Set([...await tx.list('simulation_characters'),...await tx.list('social_members')].map(r=>r.id));
@@ -28,6 +30,7 @@ export async function updateNpcPopulation(tx:Transaction,now:number,demand?:{lev
  const changed=new Set<string>();
  if(now-meta.wall>=60000||demand){
   for(const p of profiles){
+   p.unit.contentPhase=phase;
    const nearest=online.slice().sort((a,b)=>Math.abs(a.rules.level-p.unit.level)-Math.abs(b.rules.level-p.unit.level))[0];
    if(elapsed>0){progressPublicNpc(p,elapsed,now,Math.max(p.unit.level,Math.min(60,(nearest?.rules.level??p.growthLevel??p.unit.level)+3)));changed.add(p.id);}
   }
@@ -52,8 +55,8 @@ export async function updateNpcPopulation(tx:Transaction,now:number,demand?:{lev
    while(missing>0&&records.length+profiles.filter(p=>!records.some(r=>r.id===p.id)).length<PUBLIC_NPC_LIMIT){
     let index=meta.cursor++,def=roles[index%roles.length],selected=def.roles[Math.floor(index/roles.length)%def.roles.length];
     while((['tank','healer'].includes(selected)?selected:'dps')!==role){index=meta.cursor++;def=roles[index%roles.length];selected=def.roles[Math.floor(index/roles.length)%def.roles.length];}
-    const p:Rules=newResident({id:'realm',raceId:1,level:demand.level,clock:0,wallAt:now,location:'stormwind'},index,Math.max(minimum,demand.level));
-    p.growthLevel=demand.level;p.lastRedistributionWall=now;profiles.push(p);changed.add(p.id);missing--;
+    const p:Rules=newResident({id:'realm',raceId:1,level:demand.level,clock:0,wallAt:now,location:'stormwind',contentPhase:phase},index,Math.max(minimum,demand.level));
+    p.unit.contentPhase=phase;p.growthLevel=demand.level;p.lastRedistributionWall=now;profiles.push(p);changed.add(p.id);missing--;
    }
    requireThat(missing<=0,'NPC_CAPACITY','公共 NPC 候选池繁忙，请等待队伍结束活动');
   }

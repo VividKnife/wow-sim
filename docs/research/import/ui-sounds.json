@@ -1,0 +1,47 @@
+{
+  "status": "reference",
+  "versionCaveat": "Classic-served OGG encoding; Vanilla filename membership verified, not byte-certified against an original client.",
+  "listfile": "https://github.com/wowdev/wow-listfile/blob/master/parts/sound.csv",
+  "sounds": [
+    {
+      "cue": "ui-menu-open",
+      "fileDataId": 567490,
+      "original": "Sound/INTERFACE/uEscapeScreenOpen.ogg",
+      "sourceUrl": "https://wago.tools/api/casc/567490?product=wow_classic",
+      "sha256": "c1266a5866182b8185537530705ed5e075288fa49de39f7a84da5515678c60e8",
+      "bytes": 6914
+    },
+    {
+      "cue": "ui-menu-close",
+      "fileDataId": 567464,
+      "original": "Sound/INTERFACE/uEscapeScreenClose.ogg",
+      "sourceUrl": "https://wago.tools/api/casc/567464?product=wow_classic",
+      "sha256": "4a779a63cc502fea754d456e71ba989984c75405bd801f76700e6e94ea0a3154",
+      "bytes": 7086
+    },
+    {
+      "cue": "ui-tab",
+      "fileDataId": 567422,
+      "original": "Sound/INTERFACE/uCharacterSheetTab.ogg",
+      "sourceUrl": "https://wago.tools/api/casc/567422?product=wow_classic",
+      "sha256": "1752f34b3f0af011fcc87d48524b86af76bf6d38f888cdf68da972aaa6541e50",
+      "bytes": 4753
+    },
+    {
+      "cue": "ui-page-forward",
+      "fileDataId": 567472,
+      "original": "Sound/INTERFACE/iAbilitiesTurnPageA.ogg",
+      "sourceUrl": "https://wago.tools/api/casc/567472?product=wow_classic",
+      "sha256": "52af73dce3b53c8a1131ab281bc5921866031c3b0e2b6b7a81a88abc709583e7",
+      "bytes": 9381
+    },
+    {
+      "cue": "ui-page-back",
+      "fileDataId": 567502,
+      "original": "Sound/INTERFACE/iAbilitiesTurnPageB.ogg",
+      "sourceUrl": "https://wago.tools/api/casc/567502?product=wow_classic",
+      "sha256": "5c50273eba958404056992060808dc4bdce8a2736ae3fc35bfa6aa5077bb6ecd",
+      "bytes": 7036
+    }
+  ]
+}
