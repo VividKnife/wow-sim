@@ -72,6 +72,11 @@ export class ResidentGameService {
     }catch(error){
       this.routes.delete(JSON.stringify([accountId,actorId]));
       if(error instanceof DomainError)throw error;
+      // RPC errors are ordinary Errors after crossing the process boundary.
+      // Keep diagnostics server-side instead of silently losing the root cause.
+      const failure=error as Error&{code?:string;status?:number};
+      console.error('Resident snapshot failed',{accountId,actorId,code:failure?.code,status:failure?.status,message:failure?.message});
+      if(failure?.code==='SIMULATION_VERSION')throw new DomainError('SIMULATION_VERSION','当前活动的规则版本已过期，无法自动恢复，请联系管理员处理。',409);
       throw new DomainError('SIMULATION_UNAVAILABLE','模拟服务暂时不可用，正在恢复执行权',503);
     }
   }

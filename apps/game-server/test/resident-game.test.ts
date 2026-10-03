@@ -87,3 +87,19 @@ test('authenticated HTTP uses resident authority, rejects stale input, and never
  assert.ok(current.snapshot.player.combat,'owner advances hunting without a browser engine');
  assert.equal(Object.hasOwn(current.snapshot.player,'rngState'),false);
 });
+
+test('remote version failures retain a terminal code and server diagnostics, while transient failures can retry',async t=>{
+ const store=new MemoryStore(),domain=new GameService(store,{contentVersion:runtimeVersion.contentHash});
+ t.after(()=>store.close());
+ const actor=(await domain.createAccount('load-failure',{name:'恢复诊断',classId:8,raceId:1},'create')).state;
+ const logs:unknown[][]=[];t.mock.method(console,'error',(...args:unknown[])=>logs.push(args));
+ let attempts=0;
+ let failure=Object.assign(new Error('internal shared runtime details'),{code:'SIMULATION_VERSION',status:503});
+ const simulation={openCharacter:async()=>{attempts++;throw failure;}} as unknown as SimulationClient;
+ const service=new ResidentGameService(domain,simulation);
+ await assert.rejects(service.snapshot('load-failure'),(e:any)=>e.code==='SIMULATION_VERSION'&&e.status===409&&!e.message.includes('internal'));
+ failure=Object.assign(new Error('temporary ownership fence'),{code:'SIMULATION_FENCED',status:503});
+ await assert.rejects(service.snapshot('load-failure'),(e:any)=>e.code==='SIMULATION_UNAVAILABLE'&&e.status===503);
+ assert.equal(attempts,2,'the failed route is discarded before retry');
+ assert.deepEqual(logs[0],['Resident snapshot failed',{accountId:'load-failure',actorId:actor.id,code:'SIMULATION_VERSION',status:503,message:'internal shared runtime details'}]);
+});

@@ -31,7 +31,7 @@ for(const backend of ['memory','sql'] as const)test(`${backend}: retired persona
     const previous=new ResidentCharacters(store,{version:{...runtimeVersion,contentHash:'previous-release'}});
     const admission=await previous.admission('alice',state.id);
     const repo=new SimulationRepository(store),owner=await repo.acquire(admission.instanceId,'old-host');
-    await assert.rejects(new ResidentCharacters(store,{version:runtimeVersion}).retireIncompatiblePersonal('alice',state.id),/执行权/);
+    await assert.rejects(new ResidentCharacters(store,{version:runtimeVersion}).retireIncompatibleInstance('alice',state.id),/执行权/);
     await repo.release(owner);
     await store.transaction(async tx=>{
       const presence=(await tx.get<{id:string;lastSeenAt:number}>('account_presence','alice'))!;
@@ -39,7 +39,7 @@ for(const backend of ['memory','sql'] as const)test(`${backend}: retired persona
     });
     const current=new ResidentCharacters(store,{version:runtimeVersion,
       retireState:(tx,character,now)=>unstuck.call(game,tx,character,now,'release-update',true)});
-    await current.retireIncompatiblePersonal('alice',state.id);
+    await current.retireIncompatibleInstance('alice',state.id);
     assert.equal(await current.find('alice',state.id),null);
     assert.equal(await store.read(tx=>tx.get('simulation_residencies',admission.instanceId)),null);
     assert.equal((await store.read(tx=>tx.get<Character>('characters',state.id)))?.rules.level,state.level);

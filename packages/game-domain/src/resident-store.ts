@@ -133,8 +133,8 @@ export async function withResidentDeletion<T>(tx: Transaction, accountId: string
   try { return await work(); } finally { deletions.delete(tx); }
 }
 
-/** Retire an expired personal runtime after a rules/content update. Its durable
- * character and assets remain untouched; the old owner is permanently fenced. */
+/** Retire an expired runtime after a rules/content update. Its durable
+ * characters and assets remain authoritative; the old owner is permanently fenced. */
 export async function withResidentRetirement<T>(tx: Transaction, instanceId: string, work: () => Promise<T>): Promise<T> {
   if (retirements.has(tx) || deletions.has(tx) || authority.has(tx) || transfers.has(tx)) throw new Error('Nested resident retirement authority');
   const now=Date.now(),owner=await tx.get<Ownership>('simulation_owners',instanceId);

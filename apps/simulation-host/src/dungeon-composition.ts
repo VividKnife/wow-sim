@@ -8,6 +8,7 @@ import {runtimeVersion} from './version.ts';
 import {dungeonDefinition} from '../../../packages/game-domain/src/rules/dungeon-registry.js';
 import {npcRunStarted} from '../../../packages/game-domain/src/rules/npc-world.js';
 import type {DungeonRoster} from '../../../packages/game-domain/src/dungeon-roster.ts';
+import {applyExperienceBuff} from '../../../packages/game-domain/src/rules/experience.js';
 
 /** Pure, detached composition inside the existing transfer transaction. Source
  * checkpoints must be the sealed boundaries, not gateway state or DB profiles.
@@ -35,6 +36,10 @@ export function composeDungeonCheckpoint(sources: readonly InstanceCheckpoint[],
     state.dungeonSaves[options.roster.dungeonId]=rebaseSimulation(structuredClone(options.parked),state.clock).dungeon;
   }
   const actors=[state,...state.party];
+  // Public NPC profiles are loaded independently of human admission. Give
+  // every NPC the room's server rate without copying a human's personal GM buffs.
+  const xpRate=state.serverBuffs?.find((buff:Rules)=>buff.id==='server-experience')?.xpMultiplier??1;
+  for(const actor of actors)if(actor.npcPlayer)applyExperienceBuff(actor,xpRate);
   const incoming=existing?ordered.slice(1):ordered;
   const priorRun=state.dungeon??state.dungeonSaves?.[options.roster.dungeonId];
   const admitted=new Set<string>(priorRun?.admittedHumanIds??[]);

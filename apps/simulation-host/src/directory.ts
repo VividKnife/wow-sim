@@ -56,7 +56,7 @@ export class SimulationDirectory {
    try{existing=await characters.find(accountId,characterId);}
    catch(error){
     if(!(error instanceof DomainError)||error.code!=='SIMULATION_VERSION')throw error;
-    await characters.retireIncompatiblePersonal(accountId,characterId);
+    await characters.retireIncompatibleInstance(accountId,characterId);
     existing=await characters.find(accountId,characterId);
    }
    if(existing&&this.entries.has(existing.instanceId))return this.open(existing);
