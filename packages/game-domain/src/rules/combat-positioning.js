@@ -3,8 +3,31 @@ import {distance,point} from '../../../sim-core/src/geometry.js';
 import {combatMembers} from './combat-members.js';
 import {isBackline,combatRole} from './combat-roles.js';
 import {moveToward,moveAway,aliveEnemy,castRange,groundArea,selfArea,behindTarget,effectiveSpeed} from './combat-space.js';
-import {waitingTank,waitingForPull} from './combat-strategy.js';
+import {waitingTank,waitingForPull,protectCombatTarget} from './combat-strategy.js';
 import {stats} from './character.js';
+import {spells,table,creatures} from './catalog.js';
+
+// Scripted encounters and imported creature AI spells share this capability.
+const tailSweepEntries=new Set(Object.values(creatures).filter(c=>c.ScriptName==='boss_onyxia').map(c=>c.Entry));
+for(const row of table('creature_ai_scripts'))for(const n of [1,2,3])if(row[`action${n}_type`]===11&&/^Tail (Sweep|Lash)$/i.test(spells[row[`action${n}_param1`]]?.SpellName||''))tailSweepEntries.add(row.creature_id);
+export const hasTailSweep=target=>tailSweepEntries.has(target?.entry);
+
+export function meleePositionDestination(s,c,target){
+ if(s.combat?.pvp||!target||!aliveEnemy(target)||target.airborne||target.controlledBy||protectCombatTarget(s,target)||commandOrder(s,c)?.kind==='kite'||!target.target||target.target===c.id||!Number.isFinite(target.combatFacing)||c.cast||effectiveSpeed(c,s.clock)<=0||c.stealthed||c.totemUnit||c.escortNpc||s.combat.command?.holdFire||waitingForPull(s,c))return null;
+ if(c.petUnit?c.kind==='imp'||['passive','follow','stay'].includes(c.mode):!['melee','tank'].includes(combatRole(c)))return null;
+ const p=point(c),q=point(target),gap=distance(c,target),angle=gap?Math.atan2(p.y-q.y,p.x-q.x):target.combatFacing;
+ const relative=Math.atan2(Math.sin(angle-target.combatFacing),Math.cos(angle-target.combatFacing));
+ // Stay slightly forward of the exact flank: a 180-degree tail sector
+ // includes its boundary, and movement steering needs a little clearance.
+ const side=hasTailSweep(target),desired=target.combatFacing+(side?(relative<0?-1:1)*Math.PI*4/9:Math.PI);
+ // Take the direct route through the target and settle two yards away.
+ const radius=2,destination={x:q.x+radius*Math.cos(desired),y:q.y+radius*Math.sin(desired)};
+ return distance(c,destination)<=.2?null:destination;
+}
+export function positionMelee(s,c,target){
+ const destination=meleePositionDestination(s,c,target);
+ return !!destination&&moveToward(s,c,destination,0,s.clock);
+}
 
 function spreadFormation(s,c,enemies){
  if(s.combat?.raidEncounter?.command?.formation!=='spread')return false;

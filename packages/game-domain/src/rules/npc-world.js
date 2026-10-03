@@ -79,7 +79,7 @@ export function buildUnit(s,index,level,initial=true,behavior=behaviorFor(index)
  for(const key of ['bag','bags','bank','pending','auctions','raidCollection','raidPendingEquipment'])c[key]??=[];
  for(const [slot,item] of Object.entries(c.equipment)){item.uid=`${c.id}:starter:${slot}`;item.ownerId=c.id;}
  if(initial)initialEquipment(c,index);
- if(c.classId===3){c.ammunition={2512:2000,2516:2000};c.ammoPolicy={enabled:false,target:2000};}
+ if(c.classId===3)c.ammunition={2512:2000,2516:2000};
  return c;
 }
 export function newResident(s,index,level=s.level){

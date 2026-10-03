@@ -38,18 +38,27 @@ test('town arrival queues a client restock without changing money or ammunition'
  assert.equal(view(state).ammoPrompt.itemId,3030,'choose the highest usable tier in the local shop');
 });
 
-test('declining each hunter prompt ends the queue until the next town visit',()=>{
+test('party hunters manage their own ammunition, not the leader’s bag or settings',()=>{
  const state:any=createGame('Leader',12345,0,{classId:3,raceId:2});
  const companion:any=createGame('Friend',12346,0,{classId:3,raceId:2});
- companion.id='friend';state.party=[companion];
+ companion.id='friend';companion.ammunition={};state.party=[companion];
+ addItem(state,2512,200,false);
+ const stack=state.bag.find((item:any)=>item.id===2512);
+ assert.deepEqual(view(state).ammo.map((row:any)=>row.id),[state.id]);
  handleTownAmmo(state);
  assert.equal(state.ammoRestockPrompt.memberId,state.id);
  configureAmmo(state,{memberId:state.id,enabled:false,target:400});
- assert.equal(state.ammoRestockPrompt.memberId,companion.id);
- configureAmmo(state,{memberId:companion.id,enabled:false,target:400});
  assert.equal(state.ammoRestockPrompt,undefined);
+ assert.throws(()=>act(state,{type:'ammoSettings',memberId:companion.id,enabled:true,target:400},0));
+ assert.throws(()=>act(state,{type:'loadAmmo',memberId:companion.id,uid:stack.uid},0));
+ assert.ok(state.bag.some((item:any)=>item.uid===stack.uid));
+ assert.equal(ammoCount(companion),0);
  handleTownAmmo(state);
  assert.equal(state.ammoRestockPrompt.memberId,state.id);
+ const nonHunter:any=createGame('Warrior',12347,0,{classId:1,raceId:1});
+ nonHunter.party=[companion];handleTownAmmo(nonHunter);
+ assert.deepEqual(view(nonHunter).ammo,[]);
+ assert.equal(view(nonHunter).ammoPrompt,null);
 });
 
 test('shop ammunition can be loaded and consumed without duplicating its bag stack',()=>{

@@ -25,6 +25,14 @@ test('browsing never switches an active expedition and info-only dungeons have n
  assert.equal(journalSelection({...data,dungeon:{active:false}},'stockades').entry.id,'stockades');
  assert.equal(journalSelection(data,null).selected,null);
 });
+test('raid browsing selects raid content without showing five-player entry controls',()=>{
+ const data={raidJournal:[{id:'molten-core',playable:true,bosses:[{id:'ragnaros'}]}],dungeon:{id:'deadmines',active:true},dungeons:{'molten-core':{active:true}}};
+ const selected=journalSelection(data,'molten-core',null,'raid');
+ assert.equal(selected.selected.id,'molten-core');
+ assert.equal(selected.boss.id,'ragnaros');
+ assert.equal(selected.expedition,null);
+ assert.equal(selected.entry,null);
+});
 
 test('loot hides shared pools by default and paginates search results without dropping unique items',async()=>{
  const {journalLootPage}=await import('../lib/dungeon-journal.js');

@@ -1,4 +1,5 @@
 .dungeon-page{display:grid;gap:18px;min-width:0}
+.journal-category-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #69583d}
 .dungeon-page-intro{display:flex;align-items:center;justify-content:space-between;gap:20px;background:linear-gradient(120deg,#253336,#171e22);border-top:2px solid #b79b60}
 .dungeon-page-intro h1{margin:6px 0;font-size:30px}
 .dungeon-page-intro p{margin-bottom:0;color:#adb9b9}

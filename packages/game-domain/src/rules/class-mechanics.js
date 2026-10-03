@@ -12,7 +12,7 @@ import {combatSight} from './combat-space.js';
 import {weaponAttack} from './weapon-attacks.js';
 import {weaponDamage,effectiveArmor} from './companion-combat.js';
 import {spellPowerBonus} from './spell-scaling.js';
-import {mayApproachForSpell,approachRear} from './combat-positioning.js';
+import {mayApproachForSpell,approachRear,positionMelee,hasTailSweep} from './combat-positioning.js';
 import {beginSpellTiming,spellReady,cooldownUntil,resetSpellCooldowns} from './spell-timing.js';
 import {petHappinessMultiplier} from './pet-progression.js';
 import {usableCount,consume} from './inventory.js';
@@ -148,6 +148,7 @@ export function selectClass(s,c,e,actors,api,rules=c.rules||defaultClassRules(c.
   if(!pvpAbilityAllowed(c,target,sp,s.clock))continue;
   // The condition was checked above; selection has not changed gameplay state.
   if(!input&&target===e&&!strategyAllows(s,c,e,sp))continue;
+  if(!input&&hasTailSweep(target)&&['Backstab','Ambush','Shred'].includes(name))continue;
   if(!s.combat.pvp&&['Backstab','Ambush','Shred'].includes(name)&&(!behindTarget(c,target)||!inSpellRange(s,c,target,sp))){return {kind:'move',mode:'rear',targetId:target.id,range:sp.range||5};}
   if(target!==c&&!inSpellRange(s,c,target,sp)){if(target===e&&!mayApproachForSpell(s,c,target,sp))continue;if(distance(c,target)<sp.minRange){if(effectiveSpeed(c,s.clock)<=effectiveSpeed(target,s.clock))continue;return {kind:'move',mode:'away',targetId:target.id,range:0};}else return {kind:'move',mode:'toward',targetId:target.id,range:sp.range||5};}
   return {kind:'cast',family:'class',spellId:id,targetId:target.id};
@@ -196,6 +197,7 @@ export function petTick(s,pet,actors,damage){
  if(petSpellTick(s,pet,owner,null,actors,{damage:(s,p,t,v,l,m,d)=>damage(s,p,t,v,'宠物 · '+l,m,{...d,ownerId:owner.id}),healAmount,stats,rng}))return;
  const e=s.combat.enemies.find(e=>e.id===pet.target&&e.hp>0&&!e.removed);if(!e)return;
  if(s.combat.command?.holdFire)return;
+ if(positionMelee(s,pet,e))return;
  pet.ownerMasterDemonologist=ranks(owner)['Master Demonologist']||0;
  if(!combatSight(s,pet,e)){moveToward(s,pet,e,pet.kind==='imp'?25:5,s.clock);return;}
  pet.ownerMasterDemonologist=ranks(owner)['Master Demonologist']||0;const range=pet.kind==='imp'?25:5;if(distance(pet,e)>range){moveToward(s,pet,e,range,s.clock);return;}if(!autoAttackReady(s,pet))return;

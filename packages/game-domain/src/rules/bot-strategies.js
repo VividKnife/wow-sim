@@ -8,7 +8,7 @@ import {selectCompanion,selectPriestRescue,selectPriestDefense} from './companio
 import {raidHealingMode,selectRaidHealing,cancelWastefulRaidHeal} from './raid-healing-policy.js';
 import {selectStrategyPotion} from './consumables.js';
 import {strategyAllows} from './combat-strategy.js';
-import {positionPartyMember} from './combat-positioning.js';
+import {positionPartyMember,meleePositionDestination} from './combat-positioning.js';
 import {combatRole} from './combat-roles.js';
 import {classAbilityKind} from './class-spell-registry.js';
 import {commandDamageRules} from './combat-command.js';
@@ -30,6 +30,7 @@ function reactions(ctx){
 function positioning({state:s,actor:c,target:e}){
  const candidate={...c};
  if(positionPartyMember(s,candidate,e))return {kind:'move',mode:'toward',range:0,destination:{position:c.position+2*(candidate.position-c.position),positionY:(c.positionY||0)+2*((candidate.positionY||0)-(c.positionY||0))}};
+ if(meleePositionDestination(s,c,e))return {kind:'move',mode:'melee',targetId:e.id,range:5};
  return null;
 }
 function healing(ctx){

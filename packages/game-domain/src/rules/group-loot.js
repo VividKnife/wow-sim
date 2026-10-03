@@ -10,7 +10,6 @@ const lootEligible=(actor,item)=>item.mountId?!actor.npcPlayer:canReceiveEquipme
 const lootNeed=(actor,item)=>item.mountId?!(actor.mounts||[]).includes(item.mountId):equipmentUpgrade(actor,item).need;
 const activeLoot=s=>(s.groupLoot?.pending||[]).slice(0,GROUP_LOOT_WINDOW);
 function startActiveLoot(s){
- if(s.combat)return;
  for(const loot of activeLoot(s))if(loot.members.filter(m=>!m.npc).length>1)loot.deadline??=s.clock+GROUP_LOOT_TIMEOUT_MS;
 }
 
@@ -57,7 +56,6 @@ function finishGroupLoot(s,loot){
  startActiveLoot(s);
 }
 export function resolveGroupLoot(s,id,choice,actorId=s.id){
- if(s.combat)throw new Error('请在战斗结束后分配战利品。');
  const loot=s.groupLoot?.pending.find(l=>l.id===id);if(!loot)throw new Error('这件战利品已经分配。');
  if(!activeLoot(s).includes(loot))throw new Error('这件战利品尚在排队，请先处理前面的掉落。');
  if(!['need','greed','pass'].includes(choice))throw new Error('请选择需求、贪婪或放弃。');
@@ -69,7 +67,6 @@ export function resolveGroupLoot(s,id,choice,actorId=s.id){
  self.choice=choice;finishGroupLoot(s,loot);
 }
 export function tickGroupLoot(s){
- if(s.combat)return;
  startActiveLoot(s);
  for(const loot of activeLoot(s)){
   for(const member of loot.members){

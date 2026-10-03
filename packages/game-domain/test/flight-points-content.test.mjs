@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {flightNodes,flights,nodes,creatures,creatureLocations} from '../src/rules/catalog.js';
+import {flightNodes,flights,edges,nodes,creatures,creatureLocations} from '../src/rules/catalog.js';
 import {createGame,view} from '../src/rules/engine.js';
 
 test('Classic flight point locations match the playable world',()=>{
@@ -34,4 +34,20 @@ test('Classic flight point locations match the playable world',()=>{
  const orgrimmarCity=view(orgrimmar).city;
  assert.equal(orgrimmarCity.flightNode,'orgrimmar-district-1');
  assert.ok(orgrimmarCity.districts.find(district=>district.id==='orgrimmar-district-1').services.some(service=>service.id==='flight'));
+});
+
+test('neighboring flight points have local routes without adding duplicate or cross-continent flights',()=>{
+ const pairs=new Set();
+ for(const flight of flights){
+  const pair=[flight.a,flight.b].sort().join(':');
+  pairs.add(pair);
+  if(flight.status==='adapted local flight route'){
+   assert.equal(flights.filter(f=>[f.a,f.b].sort().join(':')===pair).length,1,pair+' should not duplicate a route');
+   assert.equal(nodes[flight.a].map,nodes[flight.b].map);
+  }
+ }
+ for(const e of edges){
+  if(e.transport||!flightNodes.includes(e.a)||!flightNodes.includes(e.b)||nodes[e.a].map!==nodes[e.b].map)continue;
+  assert.ok(pairs.has([e.a,e.b].sort().join(':')),e.a+' -> '+e.b+' needs a local flight');
+ }
 });

@@ -33,7 +33,7 @@ export function dungeonQuestPlan(s,id,seen=new Set()){
 }
 export function dungeonQuestJournal(s){
  const plans=new Map();
- return Object.fromEntries(dungeonJournal.filter(d=>d.playable).map(d=>[d.id,dungeonQuestIds(d.id).flatMap(id=>{
+ return Object.fromEntries([...dungeonJournal.filter(d=>d.playable),{id:'molten-core'},{id:'onyxias-lair'}].map(d=>[d.id,dungeonQuestIds(d.id).flatMap(id=>{
   if(!plans.has(id))plans.set(id,dungeonQuestPlan(s,id));
   const plan=plans.get(id);if(!plan)return [];
   return [{...plan,id,name:nameOf('quests',id),targetName:plan.name||nameOf('quests',plan.questId),level:quests[id].QuestLevel,prerequisite:plan.questId!==id}];

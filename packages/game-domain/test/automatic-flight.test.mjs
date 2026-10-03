@@ -100,3 +100,16 @@ test('redirecting on the ground replans flights without paying for abandoned fut
  assert.equal(arrived.location,'moonbrook');
  assert.equal(arrived.money,100);
 });
+
+test('Crossroads and Ratchet fly in either direction when both flight points are unlocked',()=>{
+ for(const raceId of [1,2])for(const [from,to] of [['crossroads','ratchet'],['ratchet','crossroads']]){
+  const s=createGame('贫瘠之地航线',11,0,{raceId,classId:1});
+  Object.assign(s,{location:from,flightPoints:[from,to],money:10000});
+  const moving=act(s,{type:'travel',to},0);
+  assert.equal(moving.activity.flight,true,from+' -> '+to);
+  assert.equal(moving.activity.path.length,1);
+  assert.ok(moving.money<s.money);
+  const arrived=advance(moving,moving.activity.endsAt).state;
+  assert.equal(arrived.location,to);
+ }
+});

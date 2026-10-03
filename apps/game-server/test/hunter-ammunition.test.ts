@@ -23,7 +23,7 @@ test('the frontend ammo flow reaches authenticated HTTP using ordinary shop requ
  await store.transaction(async tx=>{
   const character=await tx.get<any>('characters',actorId);
   character.rules.location='northshire';character.rules.ammunition={};
-  character.rules.ammoRestockPrompt={memberId:actorId,trigger:'town',visit:0,handled:[]};
+  character.rules.ammoRestockPrompt={memberId:actorId,trigger:'town',visit:0};
   await tx.put('characters',character);
   await tx.put('wallets',{id:actorId,characterId:actorId,accountId:'account-a',balance:1000});
  });

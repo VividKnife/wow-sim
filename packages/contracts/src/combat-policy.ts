@@ -3,7 +3,7 @@
 export type CombatIntent =
  | {kind:'cast'|'petCast';spellId:number;targetId:string}
  | {kind:'cancel';spellId:number;startedAt?:number}
- | {kind:'move';mode:'toward'|'away'|'rear';range:number;targetId:string}
+ | {kind:'move';mode:'toward'|'away'|'rear'|'melee';range:number;targetId:string}
  | {kind:'move';mode:'toward';range:number;destination:{position:number;positionY:number}}
  | {kind:'attack';targetId:string}
  | {kind:'stopAttack'}

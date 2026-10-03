@@ -55,21 +55,34 @@ test('every human votes independently; the leader cannot vote for members and hu
  assert.throws(()=>resolveGroupLoot(state,loot.id,'need',actors[2].id),/已经分配/);
 });
 
-test('automatic preferences and timeout apply separately per human and only after combat',()=>{
+test('automatic preferences and timeout apply separately per human during combat',()=>{
  const {state,actors}=fixture();
  state.groupLoot.pending=[];state.combat={id:'battle',dungeon:true};queueGroupLoot(state,5201,1);const loot=state.groupLoot.pending[0];
  actors[0].npcWorld={autoLoot:true};
- state.combat={id:'battle',dungeon:true};state.clock=100000;tickGroupLoot(state);
- assert.equal(loot.deadline,null);assert.ok(loot.members.every((m:Rules)=>m.choice===null));
- state.combat=null;tickGroupLoot(state);
- assert.equal(loot.deadline,160000);
+ assert.equal(loot.deadline,60000);
+ state.clock=1000;tickGroupLoot(state);
  assert.equal(loot.members[0].choice,'need');
  assert.ok(loot.members.slice(1).every((m:Rules)=>m.choice===null));
  resolveGroupLoot(state,loot.id,'pass',actors[1].id);
- state.clock=159999;tickGroupLoot(state);assert.equal(state.groupLoot.pending.length,1);
- state.clock=160000;tickGroupLoot(state);assert.equal(state.groupLoot.pending.length,0);
+ state.clock=59999;tickGroupLoot(state);assert.equal(state.groupLoot.pending.length,1);
+ state.clock=60000;tickGroupLoot(state);assert.equal(state.groupLoot.pending.length,0);
  assert.deepEqual(state.groupLoot.history[0].votes.map((m:Rules)=>m.choice),['need','pass','greed','greed','greed']);
  assert.equal(state.groupLoot.history[0].winner,actors[0].name,'need priority beats a higher greed roll');
+});
+
+test('shared party members can vote and receive rolled equipment during room combat',()=>{
+ const {admission,actors,input,loot}=fixture();
+ startCombat(admission.state,[636],true);
+ const runtime=new ResidentInstance(admission);
+ for(let i=0;i<actors.length;i++){
+  const receipt=runtime.input('account-'+i,input(i,{type:'groupLoot',id:loot.id,choice:i===2?'need':'pass'}));
+  assert.equal(receipt.status,'applied',receipt.reason);
+ }
+ const state=runtime.checkpoint().state;
+ assert.ok(state.combat);
+ assert.equal(state.groupLoot.pending.length,0);
+ assert.equal(state.party[1].pending[0].uid,loot.item.uid);
+ assert.equal(state.groupLoot.history[0].winner,actors[2].name);
 });
 
 test('shared loot votes survive a real worker recovery; private receipt/projection and pickup use the sender',async()=>{

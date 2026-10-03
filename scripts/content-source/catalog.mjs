@@ -250,6 +250,14 @@ export const trainerNodes=['northshire','goldshire','magetower',...Object.keys(c
 export const flightNodes=['stormwind','sentinel',...worldFlightNodes];
 export const flights=[{a:'stormwind',b:'sentinel',duration:fasterTravelDuration(78000),cost:110,status:'estimated flight time; reference base cost'}];
 for(const capital of capitals)for(const id of flightNodes){const origin={darnassus:'ruttheran',orgrimmar:'orgrimmar-district-1'}[capital.id]||capital.id,n=nodes[id];if(id===origin||n.map!==capital.map||n.faction!==capital.faction&&n.faction!=='Contested'||flights.some(f=>f.a===origin&&f.b===id))continue;flights.push({a:origin,b:id,duration:Math.max(30000,Math.ceil(Math.hypot(n.x-capital.x,n.y-capital.y)/32*1000)),cost:Math.max(10,n.min*10),faction:capital.faction,status:'adapted flight route'});}
+// Local roads between flight points also provide direct flights. Capital spokes
+// alone leave neighboring hubs such as Crossroads and Ratchet disconnected.
+for(const e of edges){
+ if(e.transport||!flightNodes.includes(e.a)||!flightNodes.includes(e.b)||nodes[e.a].map!==nodes[e.b].map
+  ||flights.some(f=>f.a===e.a&&f.b===e.b||f.a===e.b&&f.b===e.a))continue;
+ const a=nodes[e.a],b=nodes[e.b];
+ flights.push({a:e.a,b:e.b,duration:Math.max(30000,Math.ceil(Math.hypot(a.x-b.x,a.y-b.y)/32*1000)),cost:Math.max(10,a.min*10,b.min*10),status:'adapted local flight route'});
+}
 const routeCache=new Map();
 const adjacent=groupRows(edges.flatMap(e=>[{node:e.a,edge:e},{node:e.b,edge:e}]),e=>e.node);
 export function route(from,to,speed=baseTravelSpeed){
