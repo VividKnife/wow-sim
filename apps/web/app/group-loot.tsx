@@ -7,9 +7,9 @@ export function GroupLootPopup({state:s,data:d,busy,send}:GameProps){
  const loot=d.groupLoot;if(!loot?.pending.length)return null;
  return createPortal(<aside className="loot-roll-stack" aria-label="装备分配"><header><strong>装备掉落</strong>{loot.queued>0&&<span>另有 {loot.queued} 件排队</span>}</header>{loot.pending.slice(0,2).map((l:any)=><article className="loot-roll-card" key={l.id} aria-label={`分配 ${d.items[l.item.id]?.name||'装备'}`}>
   <ItemDisplay item={d.items[l.item.id]||{name:`物品 ${l.item.id}`}} instance={l.item}/>
-  <p role="status">{s.combat?'战斗结束后分配':l.choice?`已选择${choiceName(l.choice)}，等待 ${l.waiting} 位成员`:l.remaining===null?'不限时 · 请选择分配方式':`${Math.ceil(l.remaining/1000)} 秒后默认贪婪`}</p>
-  {l.remaining!==null&&!s.combat&&<div className="loot-roll-timer" role="progressbar" aria-label="分配剩余秒数" aria-valuemin={0} aria-valuemax={60} aria-valuenow={Math.ceil(l.remaining/1000)}><i style={{width:`${Math.max(0,Math.min(100,l.remaining/600))}%`}}/></div>}
-  <div className="loot-roll-actions"><Button disabled={busy||!!s.combat||!!l.choice||!l.canNeed} title={l.canNeed?'提升当前职责配装':'这件装备没有提升你的当前职责配装'} onClick={()=>send({type:'groupLoot',id:l.id,choice:'need'})}>需求</Button><Button variant="outline" disabled={busy||!!s.combat||!!l.choice||!l.canGreed} onClick={()=>send({type:'groupLoot',id:l.id,choice:'greed'})}>贪婪</Button><Button variant="ghost" disabled={busy||!!s.combat||!!l.choice} onClick={()=>send({type:'groupLoot',id:l.id,choice:'pass'})}>放弃</Button></div>
+  <p role="status">{l.choice?`已选择${choiceName(l.choice)}，等待 ${l.waiting} 位成员`:l.remaining===null?'不限时 · 请选择分配方式':`${Math.ceil(l.remaining/1000)} 秒后默认贪婪`}</p>
+  {l.remaining!==null&&<div className="loot-roll-timer" role="progressbar" aria-label="分配剩余秒数" aria-valuemin={0} aria-valuemax={60} aria-valuenow={Math.ceil(l.remaining/1000)}><i style={{width:`${Math.max(0,Math.min(100,l.remaining/600))}%`}}/></div>}
+  <div className="loot-roll-actions"><Button disabled={busy||!!l.choice||!l.canNeed} title={l.canNeed?'提升当前职责配装':'这件装备没有提升你的当前职责配装'} onClick={()=>send({type:'groupLoot',id:l.id,choice:'need'})}>需求</Button><Button variant="outline" disabled={busy||!!l.choice||!l.canGreed} onClick={()=>send({type:'groupLoot',id:l.id,choice:'greed'})}>贪婪</Button><Button variant="ghost" disabled={busy||!!l.choice} onClick={()=>send({type:'groupLoot',id:l.id,choice:'pass'})}>放弃</Button></div>
  </article>)}</aside>,document.body);
 }
 export function GroupLoot({data:d}:GameProps){

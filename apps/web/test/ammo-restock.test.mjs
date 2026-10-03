@@ -57,3 +57,9 @@ test('a character switch between purchase and loading stops further commands',as
  await assert.rejects(f.refill(400,{getSnapshot,send:async action=>{const result=await f.send(action);switched=true;return result;}}),/角色或补给任务已改变/);
  assert.equal(f.actions.length,1);assert.equal(f.actions[0].type,'buy');
 });
+
+test('the client refuses to restock a party hunter',async()=>{
+ const f=fixture();
+ await assert.rejects(f.refill(400,{memberId:'npc:hunter'}),/只能补给自己的猎人弹药/);
+ assert.deepEqual(f.actions,[]);
+});

@@ -46,6 +46,7 @@ export function createNpcMember(s,id,options={}){
  if(!def.races.includes(raceId))throw new Error('这个种族与职业组合不可用。');
  const name=options.name??candidate.name;
  const c={...newCharacter(name,candidate.classId,s.level,raceId),id:'npc-template-'+id+'-'+s.itemSequence,growthPolicy:'npcPlayer',roleId:id,role:roleNames[role],location:s.location,professions:{}};
+ if(c.classId===3)delete c.ammoPolicy;
  if(c.classId===3)c.hunterPet={entry:299,name:'森林狼',level:c.level,loyalty:6,happiness:1000000,learned:[2649]};
  c.learned=companionSkills(c);for(const spell of [...c.learned])grantHunterTrainingLinks(c,spell);
  const plan=npcBuildPlan(c,role,options.behavior);allocateNpcTalents(c,plan);

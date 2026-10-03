@@ -29,7 +29,7 @@ import {racialActiveNames} from './racial-effects.js';
 import {combatRole} from './combat-roles.js';
 import {sceneCombatArea,validateCombatArea,setCombatPosition,placeCombatUnit} from './combat-area.js';
 import {beginSpellTiming,finishSpellTiming,spellReady} from './spell-timing.js';
-import {approachRear,holdsBackline,mayApproachForSpell,spellApproachRange,recordCombatMotion} from './combat-positioning.js';
+import {approachRear,positionMelee,holdsBackline,mayApproachForSpell,spellApproachRange,recordCombatMotion} from './combat-positioning.js';
 import {receive} from './inventory.js';
 import {environmentDamage} from './class-environment.js';
 import {selectPetSpell,executePetSpell,classChannelTick,classIncoming,classMeleeProc,tameClassPet,gainHunterPetXp} from './class-spell-effects.js';
@@ -210,7 +210,8 @@ export function executeCombatIntent(s,c,intent,{manual=false}={}){
  if(intent?.kind==='potion')return {accepted:executeStrategyPotion(s,c,intent.itemId)};
  if(intent?.kind==='move'){
   if(teamMovementTask(s,c))return {accepted:false,reason:'assigned-position'};
-  if(c.cast||!target||!Number.isFinite(target.position)||!Number.isFinite(target.positionY??0)||target.hp<=0||target.removed||!['toward','away','rear'].includes(intent.mode)||!Number.isFinite(intent.range)||intent.range<0||intent.range>100)return {accepted:false,reason:'movement'};
+  if(c.cast||!target||!Number.isFinite(target.position)||!Number.isFinite(target.positionY??0)||target.hp<=0||target.removed||!['toward','away','rear','melee'].includes(intent.mode)||!Number.isFinite(intent.range)||intent.range<0||intent.range>100)return {accepted:false,reason:'movement'};
+  if(intent.mode==='melee'){if(!s.combat.enemies.includes(target))return {accepted:false,reason:'target'};c.target=target.id;}
   c.policyMovement={...intent};return {accepted:true};
  }
  if(intent?.kind!=='cast'||!c.learned.includes(intent.spellId))return {accepted:false,reason:'spell'};
@@ -251,6 +252,7 @@ function integratePolicyMovement(s,c){
  const move=c.policyMovement;if(!move||c.cast||c.hp<=0||controlled(c,s.clock))return false;
  const target=move.destination||[...combatMembers(s),...s.combat.enemies].find(a=>a.id===move.targetId);
  if(!target||target.hp<=0||target.removed){c.policyMovement=null;return false;}
+ if(move.mode==='melee')return positionMelee(s,c,target);
  if(move.mode==='rear')return approachRear(s,c,target,move.range);
  return move.mode==='away'?moveAway(s,c,target,s.clock):moveToward(s,c,target,move.range,s.clock);
 }

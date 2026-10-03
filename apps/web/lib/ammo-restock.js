@@ -2,6 +2,7 @@
 // Read the latest accepted snapshot after every command; never predict assets.
 export async function restockHunterAmmo({getSnapshot,send,actorId,memberId,visit,target}){
  if(!Number.isInteger(target)||target<1||target>10000)throw new Error('补齐数量必须是 1—10000 的整数。');
+ if(memberId!==actorId)throw new Error('只能补给自己的猎人弹药。');
  for(let step=0;step<200;step++){
   const snapshot=getSnapshot(),s=snapshot?.player,d=snapshot?.view,prompt=d?.ammoPrompt;
   if(s?.id!==actorId||prompt?.memberId!==memberId||prompt.visit!==visit)throw new Error('角色或补给任务已改变，请重新操作。');

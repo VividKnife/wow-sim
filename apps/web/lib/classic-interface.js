@@ -6,7 +6,6 @@ export const classicMenus=[
  {id:'bag',name:'背包',icon:'inv_misc_bag_08',key:'B'},
  {id:'finder',name:'地下城查找器',icon:'spell_holy_prayerofhealing',key:'I'},
  {id:'dungeon',name:'地下城手册',icon:'inv_misc_head_dragon_01',key:'J'},
- {id:'pvp',name:'PvP',icon:'inv_sword_04',key:'H'},
  {id:'party',name:'社交与组队',icon:'spell_holy_prayerofhealing',key:'P'},
  {id:'map',name:'世界地图',icon:'inv_misc_map_01',key:'M'},
 ];
